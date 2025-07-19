@@ -1,0 +1,149 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+use App\Models\Product;
+use App\Models\Facility;
+use App\Models\Category;
+use App\Models\User;
+use Illuminate\Support\Str;
+
+class ProductSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
+    {
+        $facilities = Facility::all();
+        $categories = Category::all();
+        $facilityUsers = User::where('primary_role', 'facility')->get();
+
+        $products = [
+            [
+                'title' => 'شقة فاخرة في الرياض',
+                'description' => 'شقة حديثة ومفروشة بالكامل في حي النرجس، الرياض',
+                'address' => 'حي النرجس، الرياض',
+                'rooms' => 3,
+                'bathrooms' => 2,
+                'area' => 120.50,
+                'floor' => 'الثالث',
+                'floors_count' => 15,
+                'parking_spaces' => 1,
+                'price' => 2500.00,
+                'property_type' => 'شقة',
+                'is_active' => true,
+                'is_featured' => true,
+                'is_verified' => true,
+                'rating' => 4.7,
+                'rating_count' => 12,
+                'available_from' => now(),
+                'contact_phone' => '+966501234567',
+                'contact_email' => 'info@excellent-realestate.com',
+            ],
+            [
+                'title' => 'فيلا فاخرة في جدة',
+                'description' => 'فيلا مستقلة مع حديقة ومسبح في حي الكورنيش، جدة',
+                'address' => 'حي الكورنيش، جدة',
+                'rooms' => 5,
+                'bathrooms' => 4,
+                'area' => 350.00,
+                'floor' => 'مستقل',
+                'floors_count' => 2,
+                'parking_spaces' => 3,
+                'price' => 8000.00,
+                'property_type' => 'فيلا',
+                'is_active' => true,
+                'is_featured' => true,
+                'is_verified' => true,
+                'rating' => 4.9,
+                'rating_count' => 8,
+                'available_from' => now(),
+                'contact_phone' => '+966502345678',
+                'contact_email' => 'contact@modern-housing.com',
+            ],
+            [
+                'title' => 'مكتب تجاري في الدمام',
+                'description' => 'مكتب حديث في مركز تجاري مميز في الدمام',
+                'address' => 'شارع الملك خالد، الدمام',
+                'rooms' => 2,
+                'bathrooms' => 1,
+                'area' => 80.00,
+                'floor' => 'الأول',
+                'floors_count' => 10,
+                'parking_spaces' => 2,
+                'price' => 4000.00,
+                'property_type' => 'مكتب',
+                'is_active' => true,
+                'is_featured' => false,
+                'is_verified' => true,
+                'rating' => 4.3,
+                'rating_count' => 5,
+                'available_from' => now(),
+                'contact_phone' => '+966503456789',
+                'contact_email' => 'info@luxury-villas.com',
+            ],
+            [
+                'title' => 'محل تجاري في الخبر',
+                'description' => 'محل في موقع مميز في الخبر، مناسب للمشاريع التجارية',
+                'address' => 'شارع الأمير محمد، الخبر',
+                'rooms' => 1,
+                'bathrooms' => 1,
+                'area' => 60.00,
+                'floor' => 'الأرضي',
+                'floors_count' => 3,
+                'parking_spaces' => 1,
+                'price' => 3000.00,
+                'property_type' => 'محل',
+                'is_active' => true,
+                'is_featured' => false,
+                'is_verified' => true,
+                'rating' => 4.1,
+                'rating_count' => 3,
+                'available_from' => now(),
+                'contact_phone' => '+966501234567',
+                'contact_email' => 'info@excellent-realestate.com',
+            ],
+            [
+                'title' => 'شقة استوديو في الرياض',
+                'description' => 'شقة استوديو حديثة ومناسبة للشباب في الرياض',
+                'address' => 'حي السليمانية، الرياض',
+                'rooms' => 1,
+                'bathrooms' => 1,
+                'area' => 45.00,
+                'floor' => 'الخامس',
+                'floors_count' => 12,
+                'parking_spaces' => 1,
+                'price' => 1800.00,
+                'property_type' => 'استوديو',
+                'is_active' => true,
+                'is_featured' => false,
+                'is_verified' => true,
+                'rating' => 4.5,
+                'rating_count' => 7,
+                'available_from' => now(),
+                'contact_phone' => '+966502345678',
+                'contact_email' => 'contact@modern-housing.com',
+            ],
+        ];
+
+        foreach ($products as $index => $productData) {
+            $facility = $facilities->get($index % $facilities->count());
+            $facilityUser = $facilityUsers->get($index % $facilityUsers->count());
+
+            $product = Product::updateOrCreate(
+                ['title' => $productData['title']],
+                array_merge($productData, [
+                    'facility_id' => $facility->id,
+                    'owner_user_id' => $facilityUser->id,
+                    'seller_user_id' => $facilityUser->id,
+                    'category_id' => $categories->random()->id,
+                    'booking_number' => 'BK' . strtoupper(Str::random(8)),
+                    'latitude' => 24.7136 + (rand(-10, 10) / 100),
+                    'longitude' => 46.6753 + (rand(-10, 10) / 100),
+                ])
+            );
+        }
+    }
+}

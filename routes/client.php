@@ -1,0 +1,97 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Client\ClientController;
+use App\Http\Controllers\Client\ClientBookingController;
+
+// Client Routes - جميع routes تحتاج middleware client
+Route::middleware(['auth', 'role:client'])->prefix('client')->name('client.')->group(function () {
+
+    // Dashboard
+    Route::get('/', [ClientController::class, 'dashboard'])->name('dashboard');
+    Route::get('/profile', [ClientController::class, 'profile'])->name('profile');
+    Route::post('/profile', [ClientController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/change-password', [ClientController::class, 'changePassword'])->name('change-password');
+    Route::post('/change-password', [ClientController::class, 'updatePassword'])->name('change-password.update');
+
+    // Favorites
+    Route::get('/favorites', [ClientController::class, 'favorites'])->name('favorites');
+    Route::get('/favorites/products', [ClientController::class, 'favoriteProducts'])->name('favorites.products');
+    Route::get('/favorites/facilities', [ClientController::class, 'favoriteFacilities'])->name('favorites.facilities');
+    Route::post('/favorites/products/{product}', [ClientController::class, 'addToFavorites'])->name('favorites.add-product');
+    Route::delete('/favorites/products/{product}', [ClientController::class, 'removeFromFavorites'])->name('favorites.remove-product');
+    Route::post('/favorites/facilities/{facility}', [ClientController::class, 'addFacilityToFavorites'])->name('favorites.add-facility');
+    Route::delete('/favorites/facilities/{facility}', [ClientController::class, 'removeFacilityFromFavorites'])->name('favorites.remove-facility');
+
+    // Activity Log
+    Route::get('/activity', [ClientController::class, 'activity'])->name('activity');
+    Route::get('/activity/bookings', [ClientController::class, 'bookingActivity'])->name('activity.bookings');
+    Route::get('/activity/views', [ClientController::class, 'viewActivity'])->name('activity.views');
+    Route::get('/activity/searches', [ClientController::class, 'searchActivity'])->name('activity.searches');
+
+    // Notifications
+    Route::get('/notifications', [ClientController::class, 'notifications'])->name('notifications');
+    Route::post('/notifications/mark-read', [ClientController::class, 'markNotificationsRead'])->name('notifications.mark-read');
+    Route::post('/notifications/mark-all-read', [ClientController::class, 'markAllNotificationsRead'])->name('notifications.mark-all-read');
+    Route::get('/notifications/settings', [ClientController::class, 'notificationSettings'])->name('notifications.settings');
+    Route::post('/notifications/settings', [ClientController::class, 'updateNotificationSettings'])->name('notifications.settings.update');
+
+    // Bookings Management
+    Route::resource('bookings', ClientBookingController::class);
+    Route::post('bookings/{booking}/cancel', [ClientBookingController::class, 'cancel'])->name('bookings.cancel');
+    Route::post('bookings/{booking}/reschedule', [ClientBookingController::class, 'reschedule'])->name('bookings.reschedule');
+    Route::post('bookings/{booking}/review', [ClientBookingController::class, 'review'])->name('bookings.review');
+    Route::get('bookings/statistics', [ClientBookingController::class, 'statistics'])->name('bookings.statistics');
+
+    // Contracts
+    Route::get('/contracts', [ClientController::class, 'contracts'])->name('contracts');
+    Route::get('/contracts/{contract}', [ClientController::class, 'showContract'])->name('contracts.show');
+    Route::get('/contracts/{contract}/download', [ClientController::class, 'downloadContract'])->name('contracts.download');
+
+    // Appointments
+    Route::get('/appointments', [ClientController::class, 'appointments'])->name('appointments');
+    Route::get('/appointments/create', [ClientController::class, 'createAppointment'])->name('appointments.create');
+    Route::post('/appointments', [ClientController::class, 'storeAppointment'])->name('appointments.store');
+    Route::get('/appointments/{appointment}', [ClientController::class, 'showAppointment'])->name('appointments.show');
+    Route::post('/appointments/{appointment}/cancel', [ClientController::class, 'cancelAppointment'])->name('appointments.cancel');
+    Route::post('/appointments/{appointment}/reschedule', [ClientController::class, 'rescheduleAppointment'])->name('appointments.reschedule');
+
+    // Comments & Reviews
+    Route::get('/comments', [ClientController::class, 'comments'])->name('comments');
+    Route::get('/comments/products', [ClientController::class, 'productComments'])->name('comments.products');
+    Route::get('/comments/facilities', [ClientController::class, 'facilityComments'])->name('comments.facilities');
+    Route::post('/comments/products/{product}', [ClientController::class, 'addProductComment'])->name('comments.add-product');
+    Route::post('/comments/facilities/{facility}', [ClientController::class, 'addFacilityComment'])->name('comments.add-facility');
+    Route::put('/comments/{comment}', [ClientController::class, 'updateComment'])->name('comments.update');
+    Route::delete('/comments/{comment}', [ClientController::class, 'deleteComment'])->name('comments.delete');
+
+    // Gallery
+    Route::get('/gallery', [ClientController::class, 'gallery'])->name('gallery');
+    Route::get('/gallery/products', [ClientController::class, 'productGallery'])->name('gallery.products');
+    Route::get('/gallery/facilities', [ClientController::class, 'facilityGallery'])->name('gallery.facilities');
+
+    // Reports & Analytics
+    Route::get('/reports', [ClientController::class, 'reports'])->name('reports');
+    Route::get('/reports/bookings', [ClientController::class, 'bookingReports'])->name('reports.bookings');
+    Route::get('/reports/spending', [ClientController::class, 'spendingReports'])->name('reports.spending');
+    Route::get('/reports/activity', [ClientController::class, 'activityReports'])->name('reports.activity');
+
+    // Settings
+    Route::get('/settings', [ClientController::class, 'settings'])->name('settings');
+    Route::post('/settings', [ClientController::class, 'updateSettings'])->name('settings.update');
+    Route::get('/settings/privacy', [ClientController::class, 'privacySettings'])->name('settings.privacy');
+    Route::post('/settings/privacy', [ClientController::class, 'updatePrivacySettings'])->name('settings.privacy.update');
+    Route::get('/settings/security', [ClientController::class, 'securitySettings'])->name('settings.security');
+    Route::post('/settings/security', [ClientController::class, 'updateSecuritySettings'])->name('settings.security.update');
+
+    // Help & Support
+    Route::get('/help', [ClientController::class, 'help'])->name('help');
+    Route::get('/help/faq', [ClientController::class, 'faq'])->name('help.faq');
+    Route::get('/help/contact', [ClientController::class, 'contact'])->name('help.contact');
+    Route::post('/help/contact', [ClientController::class, 'sendContactMessage'])->name('help.contact.send');
+    Route::get('/help/tickets', [ClientController::class, 'tickets'])->name('help.tickets');
+    Route::get('/help/tickets/create', [ClientController::class, 'createTicket'])->name('help.tickets.create');
+    Route::post('/help/tickets', [ClientController::class, 'storeTicket'])->name('help.tickets.store');
+    Route::get('/help/tickets/{ticket}', [ClientController::class, 'showTicket'])->name('help.tickets.show');
+    Route::post('/help/tickets/{ticket}/reply', [ClientController::class, 'replyTicket'])->name('help.tickets.reply');
+});
