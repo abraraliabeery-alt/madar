@@ -1,0 +1,252 @@
+@extends('admin.layouts.app')
+
+@section('content')
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">إدارة المنتجات</h5>
+            <a href="{{ route('admin.products.create') }}" class="btn btn-primary">
+                <i class="fas fa-plus me-2"></i>إضافة منتج جديد
+            </a>
+        </div>
+        <div class="card-body">
+            <!-- Filters -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-3">
+                    <select class="form-select" id="statusFilter" name="status">
+                        <option value="">كل الحالات</option>
+                        <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>نشط</option>
+                        <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>غير نشط</option>
+                        <option value="featured" {{ request('status') == 'featured' ? 'selected' : '' }}>مميز</option>
+                        <option value="verified" {{ request('status') == 'verified' ? 'selected' : '' }}>متحقق منه</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" id="categoryFilter" name="category_id">
+                        <option value="">كل الفئات</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
+                                {{ $category->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" id="facilityFilter" name="facility_id">
+                        <option value="">كل المنشآت</option>
+                        @foreach($facilities as $facility)
+                            <option value="{{ $facility->id }}" {{ request('facility_id') == $facility->id ? 'selected' : '' }}>
+                                {{ $facility->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="searchInput" name="q" value="{{ request('q') }}" placeholder="بحث...">
+                        <button class="btn btn-primary" id="searchBtn">
+                            <i class="fas fa-search"></i>
+                        </button>
+                        <button class="btn btn-secondary" id="resetFilters">
+                            <i class="fas fa-undo"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Table -->
+            <div class="table-responsive">
+                <table class="table table-hover datatable">
+                    <thead>
+                        <tr>
+                            <th>الصورة</th>
+                            <th>الاسم</th>
+                            <th>المنشأة</th>
+                            <th>الفئة</th>
+                            <th>السعر</th>
+                            <th>العنوان</th>
+                            <th>الحالة</th>
+                            <th>التفعيل</th>
+                            <th>التحقق</th>
+                            <th>مميز</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($products as $product)
+                        <tr>
+                            <td>
+                                @if($product->main_image)
+                                    <img src="{{ Storage::url($product->main_image) }}" alt="product" width="50" class="rounded">
+                                @else
+                                    <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                        <i class="fas fa-box text-muted"></i>
+                                    </div>
+                                @endif
+                            </td>
+                            <td>{{ $product->name }}</td>
+                            <td>
+                                <a href="{{ route('admin.facilities.show', $product->facility) }}">
+                                    {{ $product->facility->name }}
+                                </a>
+                            </td>
+                            <td>
+                                <span class="badge bg-info">{{ $product->category->name }}</span>
+                            </td>
+                            <td>{{ number_format($product->price, 2) }} ريال</td>
+                            <td>{{ Str::limit($product->address, 30) }}</td>
+                            <td>
+                                <span class="badge bg-{{ $product->status->color }}">
+                                    {{ $product->status->name }}
+                                </span>
+                            </td>
+                            <td>
+                                @if($product->is_active)
+                                    <span class="badge bg-success">نشط</span>
+                                @else
+                                    <span class="badge bg-danger">غير نشط</span>
+                                @endif
+                            </td>
+                            <td>
+                                @if($product->is_verified)
+                                    <span class="badge bg-success">متحقق منه</span>
+                                @else
+                                    <span class="badge bg-warning">غير متحقق منه</span>
+                                @endif
+                            </td>
+                            <td>
+                                @if($product->is_featured)
+                                    <span class="badge bg-warning">مميز</span>
+                                @else
+                                    <span class="badge bg-secondary">غير مميز</span>
+                                @endif
+                            </td>
+                            <td>
+                                <div class="btn-group">
+                                    <a href="{{ route('admin.products.show', $product) }}" class="btn btn-sm btn-info">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{{ route('admin.products.edit', $product) }}" class="btn btn-sm btn-warning">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <form action="{{ route('admin.products.destroy', $product) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger delete-confirm">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                    <form action="{{ route('admin.products.toggle-status', $product) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        <button type="submit" class="btn btn-sm {{ $product->is_active ? 'btn-danger' : 'btn-success' }}">
+                                            <i class="fas {{ $product->is_active ? 'fa-ban' : 'fa-check' }}"></i>
+                                        </button>
+                                    </form>
+                                    <form action="{{ route('admin.products.toggle-verification', $product) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        <button type="submit" class="btn btn-sm {{ $product->is_verified ? 'btn-warning' : 'btn-info' }}">
+                                            <i class="fas {{ $product->is_verified ? 'fa-times' : 'fa-shield-alt' }}"></i>
+                                        </button>
+                                    </form>
+                                    <form action="{{ route('admin.products.toggle-featured', $product) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        <button type="submit" class="btn btn-sm {{ $product->is_featured ? 'btn-secondary' : 'btn-warning' }}">
+                                            <i class="fas fa-star"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <div class="mt-4">
+                {{ $products->withQueryString()->links() }}
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
+@push('styles')
+<style>
+.datatable th, .datatable td {
+    vertical-align: middle;
+}
+</style>
+@endpush
+
+@push('scripts')
+<script>
+$(document).ready(function() {
+    // Initialize DataTable
+    let table = $('.datatable').DataTable({
+        language: {
+            url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/ar.json',
+        },
+        order: [[1, 'asc']],
+        columnDefs: [
+            { orderable: false, targets: [0, 10] }
+        ],
+        dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ]
+    });
+
+    // Initialize select2
+    $('.form-select').select2({
+        theme: 'bootstrap-5',
+        width: '100%'
+    });
+
+    // Handle filters
+    function applyFilters() {
+        let url = new URL(window.location.href);
+        let params = new URLSearchParams(url.search);
+
+        // Update parameters
+        params.set('status', $('#statusFilter').val() || '');
+        params.set('category_id', $('#categoryFilter').val() || '');
+        params.set('facility_id', $('#facilityFilter').val() || '');
+        params.set('q', $('#searchInput').val() || '');
+
+        // Redirect with new parameters
+        window.location.href = `${url.pathname}?${params.toString()}`;
+    }
+
+    // Bind events
+    $('#statusFilter, #categoryFilter, #facilityFilter').change(applyFilters);
+    $('#searchBtn').click(applyFilters);
+
+    // Reset filters
+    $('#resetFilters').click(function() {
+        window.location.href = window.location.pathname;
+    });
+
+    // Delete confirmation
+    $('.delete-confirm').click(function(e) {
+        e.preventDefault();
+        let form = $(this).closest('form');
+
+        Swal.fire({
+            title: 'هل أنت متأكد؟',
+            text: "لا يمكن التراجع عن هذا الإجراء!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'نعم، احذف المنتج',
+            cancelButtonText: 'إلغاء'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+    });
+});
+</script>
+@endpush

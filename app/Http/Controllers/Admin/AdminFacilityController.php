@@ -25,11 +25,6 @@ class AdminFacilityController extends Controller
             $query->where('category_id', $request->category_id);
         }
 
-        // فلترة حسب الحالة
-        if ($request->has('status_id') && $request->status_id) {
-            $query->where('status_id', $request->status_id);
-        }
-
         // البحث
         if ($request->has('search') && $request->search) {
             $query->where(function ($q) use ($request) {

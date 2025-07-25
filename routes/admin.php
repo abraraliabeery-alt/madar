@@ -10,11 +10,13 @@ use App\Http\Controllers\Admin\AdminRoleController;
 use App\Http\Controllers\Admin\AdminContractController;
 use App\Http\Controllers\Admin\AdminCategoryController;
 use App\Http\Controllers\Admin\AdminFeatureController;
+use App\Http\Controllers\Admin\AdminProfileController;
+use App\Http\Controllers\Admin\AdminUploadController;
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
 
     // Dashboard
-    Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/index', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/statistics', [AdminController::class, 'statistics'])->name('statistics');
     Route::get('/settings', [AdminController::class, 'settings'])->name('settings');
     Route::post('/settings', [AdminController::class, 'updateSettings'])->name('settings.update');
@@ -85,4 +87,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('profile', [AdminController::class, 'updateProfile'])->name('profile.update');
     Route::get('change-password', [AdminController::class, 'changePassword'])->name('change-password');
     Route::post('change-password', [AdminController::class, 'updatePassword'])->name('change-password.update');
+
+    // Profile Routes
+    Route::get('profile/edit', [AdminProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('profile/update', [AdminProfileController::class, 'update'])->name('profile.update');
+
+    // Upload Routes
+    Route::post('upload/image', [AdminUploadController::class, 'uploadImage'])->name('upload.image');
 });

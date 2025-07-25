@@ -76,16 +76,6 @@ class Facility extends Model
         return $this->hasMany(Role::class);
     }
 
-    public function statuses()
-    {
-        return $this->morphToMany(Status::class, 'statusable', 'statusables');
-    }
-
-    public function status()
-    {
-        return $this->statuses()->latest()->first();
-    }
-
     // Scopes
     public function scopeActive($query)
     {
