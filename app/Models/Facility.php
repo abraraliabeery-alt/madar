@@ -83,6 +83,18 @@ class Facility extends Model
         return collect();
     }
 
+    // Polymorphic relationship for statuses
+    public function statuses()
+    {
+        return $this->morphToMany(Status::class, 'statusable', 'statusables');
+    }
+
+    // Get current status - return null if no status exists
+    public function status()
+    {
+        return $this->statuses()->latest()->first();
+    }
+
     // Scopes
     public function scopeActive($query)
     {

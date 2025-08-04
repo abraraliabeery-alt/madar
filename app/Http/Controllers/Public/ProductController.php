@@ -90,7 +90,7 @@ class ProductController extends Controller
             abort(404);
         }
 
-        $product->load(['facility', 'category', 'status', 'features', 'attributes', 'gallery', 'comments.user']);
+        $product->load(['facility', 'category', 'statuses', 'features', 'attributes', 'gallery', 'comments.user']);
 
         // المنتجات المشابهة
         $similarProducts = Product::with(['facility', 'category'])
@@ -123,7 +123,7 @@ class ProductController extends Controller
         }
 
         $products = $category->products()
-            ->with(['facility', 'status'])
+            ->with(['facility', 'statuses'])
             ->where('is_active', true)
             ->where('is_verified', true)
             ->paginate(12);
@@ -141,7 +141,7 @@ class ProductController extends Controller
         }
 
         $products = $facility->products()
-            ->with(['category', 'status'])
+            ->with(['category', 'statuses'])
             ->where('is_active', true)
             ->where('is_verified', true)
             ->paginate(12);

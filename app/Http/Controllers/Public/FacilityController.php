@@ -88,7 +88,7 @@ class FacilityController extends Controller
 
         // منتجات المنشأة
         $products = $facility->products()
-            ->with(['category', 'status'])
+            ->with(['category', 'statuses'])
             ->where('is_active', true)
             ->where('is_verified', true)
             ->take(8)

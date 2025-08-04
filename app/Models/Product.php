@@ -108,7 +108,8 @@ class Product extends Model
 
     public function gallery()
     {
-        return $this->hasMany(Gallery::class);
+        // Return the image_gallery array as a collection
+        return collect($this->image_gallery ?? []);
     }
 
     // Polymorphic relationship for statuses

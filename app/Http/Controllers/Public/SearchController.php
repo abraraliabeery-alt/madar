@@ -18,7 +18,7 @@ class SearchController extends Controller
      */
     public function products(Request $request)
     {
-        $query = Product::with(['facility', 'category', 'status', 'features'])
+        $query = Product::with(['facility', 'category', 'statuses', 'features'])
             ->where('is_active', true);
 
         // البحث النصي
@@ -320,7 +320,7 @@ class SearchController extends Controller
     public function searchByCategory(Category $category, Request $request)
     {
         $query = $category->products()
-            ->with(['facility', 'status'])
+            ->with(['facility', 'statuses'])
             ->where('is_active', true);
 
         // تطبيق الفلاتر الإضافية
