@@ -17,6 +17,14 @@ use Illuminate\Support\Facades\Auth;
 // Laravel UI Auth Routes
 Auth::routes();
 
+// Profile routes for authenticated users
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile/edit', [App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
+    Route::post('/profile/update', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/profile/change-password', [App\Http\Controllers\ProfileController::class, 'changePassword'])->name('profile.change-password');
+    Route::post('/profile/change-password', [App\Http\Controllers\ProfileController::class, 'updatePassword'])->name('profile.change-password.update');
+});
+
 // Default Laravel home route
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 

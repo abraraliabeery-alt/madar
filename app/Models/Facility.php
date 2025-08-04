@@ -76,6 +76,13 @@ class Facility extends Model
         return $this->hasMany(Role::class);
     }
 
+    public function gallery()
+    {
+        // Since facilities don't have image_gallery field, we'll return an empty collection
+        // or you can add image_gallery field to facilities table if needed
+        return collect();
+    }
+
     // Scopes
     public function scopeActive($query)
     {
