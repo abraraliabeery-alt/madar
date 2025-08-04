@@ -142,7 +142,7 @@ class ClientBookingController extends Controller
                 ->with('error', 'غير مصرح لك بعرض هذا الحجز');
         }
 
-        $booking->load(['product', 'facility', 'status']);
+        $booking->load(['product', 'facility', 'statuses']);
         return view('client.bookings.show', compact('booking'));
     }
 

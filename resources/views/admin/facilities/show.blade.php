@@ -24,7 +24,11 @@
                                 <img src="{{ Storage::url($facility->logo) }}" alt="logo" class="img-fluid rounded mb-3" style="max-height: 100px;">
                             @endif
                             <div class="mb-3">
-                                <span class="badge bg-{{ $facility->status->color }} fs-5 px-4 py-2">{{ $facility->status->name }}</span>
+                                @if($facility->status)
+                                    <span class="badge bg-{{ $facility->status->color }} fs-5 px-4 py-2">{{ $facility->status->name }}</span>
+                                @else
+                                    <span class="badge bg-secondary fs-5 px-4 py-2">لا توجد حالة</span>
+                                @endif
                             </div>
                             <div class="mb-3">
                                 @if($facility->is_active)
@@ -326,9 +330,13 @@
                                             <td>{{ $booking->booking_date }}</td>
                                             <td>{{ number_format($booking->total_amount, 2) }} ريال</td>
                                             <td>
-                                                <span class="badge bg-{{ $booking->status->color }}">
-                                                    {{ $booking->status->name }}
-                                                </span>
+                                                @if($booking->status)
+                                                    <span class="badge bg-{{ $booking->status->color }}">
+                                                        {{ $booking->status->name }}
+                                                    </span>
+                                                @else
+                                                    <span class="badge bg-secondary">لا توجد حالة</span>
+                                                @endif
                                             </td>
                                             <td>
                                                 <a href="{{ route('admin.bookings.show', $booking) }}" class="btn btn-sm btn-info">

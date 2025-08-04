@@ -85,7 +85,7 @@
                                         {{ $facility->status->name }}
                                     </span>
                                 @else
-                                    <span class="badge bg-secondary">غير محدد</span>
+                                    <span class="badge bg-secondary">لا توجد حالة</span>
                                 @endif
                             </td>
                             <td>

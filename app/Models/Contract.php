@@ -53,4 +53,16 @@ class Contract extends Model
     {
         return $this->hasMany(Building::class);
     }
+
+    // Polymorphic relationship for statuses
+    public function statuses()
+    {
+        return $this->morphToMany(Status::class, 'statusable', 'statusables');
+    }
+
+    // Accessor to get the current status
+    public function getStatusAttribute()
+    {
+        return $this->statuses()->latest()->first();
+    }
 }

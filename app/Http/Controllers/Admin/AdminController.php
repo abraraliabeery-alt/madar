@@ -112,7 +112,7 @@ class AdminController extends Controller
      */
     private function getBookingRevenueReport()
     {
-        return Booking::selectRaw('DATE(created_at) as date, SUM(total_amount) as revenue')
+        return Booking::selectRaw('DATE(created_at) as date, SUM(COALESCE(total_amount, 0)) as revenue')
             ->whereBetween('created_at', [now()->subDays(30), now()])
             ->groupBy('date')
             ->orderBy('date')

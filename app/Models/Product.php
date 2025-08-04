@@ -106,9 +106,9 @@ class Product extends Model
         return $this->hasMany(Comment::class);
     }
 
-    public function gallery()
+    // Gallery accessor - since image_gallery is a JSON field, not a relationship
+    public function getGalleryAttribute()
     {
-        // Return the image_gallery array as a collection
         return collect($this->image_gallery ?? []);
     }
 
@@ -118,8 +118,8 @@ class Product extends Model
         return $this->morphToMany(Status::class, 'statusable', 'statusables');
     }
 
-    // Get current status - return null if no status exists
-    public function status()
+    // Accessor to get the current status
+    public function getStatusAttribute()
     {
         return $this->statuses()->latest()->first();
     }

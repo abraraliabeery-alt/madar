@@ -196,9 +196,13 @@
                             <td>{{ $contract->end_date }}</td>
                             <td>{{ number_format($contract->total_amount, 2) }} ريال</td>
                             <td>
-                                <span class="badge bg-{{ $contract->status->color }}">
-                                    {{ $contract->status->name }}
-                                </span>
+                                @if($contract->status)
+                                    <span class="badge bg-{{ $contract->status->color }}">
+                                        {{ $contract->status->name }}
+                                    </span>
+                                @else
+                                    <span class="badge bg-secondary">لا توجد حالة</span>
+                                @endif
                             </td>
                             <td>
                                 @if($contract->is_active)

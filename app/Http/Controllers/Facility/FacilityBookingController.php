@@ -146,7 +146,7 @@ class FacilityBookingController extends Controller
                 ->with('error', 'غير مصرح لك بتعديل هذا الحجز');
         }
 
-        $booking->load(['user', 'product', 'status']);
+        $booking->load(['user', 'product', 'statuses']);
         $products = $facility->products()->where('is_active', true)->get();
         $statuses = Status::all();
 
@@ -274,7 +274,7 @@ class FacilityBookingController extends Controller
                 ->with('error', 'غير مصرح لك بعرض هذا الحجز');
         }
 
-        $booking->load(['user', 'product', 'status']);
+        $booking->load(['user', 'product', 'statuses']);
         return view('facility.bookings.show', compact('booking'));
     }
 

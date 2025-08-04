@@ -158,7 +158,7 @@ class FacilityProductController extends Controller
                 ->with('error', 'غير مصرح لك بتعديل هذا المنتج');
         }
 
-        $product->load(['category', 'status', 'features', 'attributes']);
+        $product->load(['category', 'statuses', 'features', 'attributes']);
         $categories = Category::all();
         $statuses = Status::all();
         $features = Feature::all();
@@ -319,7 +319,7 @@ class FacilityProductController extends Controller
                 ->with('error', 'غير مصرح لك بعرض هذا المنتج');
         }
 
-        $product->load(['category', 'status', 'features', 'attributes', 'gallery', 'comments']);
+        $product->load(['category', 'statuses', 'features', 'attributes', 'gallery', 'comments']);
 
         return view('facility.products.show', compact('product'));
     }

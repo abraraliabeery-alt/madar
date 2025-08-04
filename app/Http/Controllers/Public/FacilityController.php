@@ -84,7 +84,7 @@ class FacilityController extends Controller
             abort(404);
         }
 
-        $facility->load(['category', 'owner', 'gallery']);
+        $facility->load(['category', 'owner']);
 
         // منتجات المنشأة
         $products = $facility->products()

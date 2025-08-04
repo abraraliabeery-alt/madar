@@ -156,9 +156,13 @@
                                             <td>{{ number_format($contract->total_amount, 2) }} ريال</td>
                                             <td>{{ $contract->created_at->format('Y-m-d') }}</td>
                                             <td>
-                                                <span class="badge bg-{{ $contract->status->color }}">
-                                                    {{ $contract->status->name }}
-                                                </span>
+                                                @if($contract->status)
+                                                    <span class="badge bg-{{ $contract->status->color }}">
+                                                        {{ $contract->status->name }}
+                                                    </span>
+                                                @else
+                                                    <span class="badge bg-secondary">لا توجد حالة</span>
+                                                @endif
                                             </td>
                                             <td>
                                                 <a href="{{ route('admin.contracts.show', $contract) }}" class="btn btn-sm btn-info">

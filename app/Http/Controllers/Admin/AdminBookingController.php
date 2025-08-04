@@ -97,20 +97,20 @@ class AdminBookingController extends Controller
         // إنشاء رقم الحجز
         $bookingNumber = 'BK-' . date('Ymd') . '-' . str_pad(Booking::whereDate('created_at', today())->count() + 1, 4, '0', STR_PAD_LEFT);
 
-        $booking = Booking::create([
-            'booking_number' => $bookingNumber,
-            'user_id' => $request->user_id,
-            'product_id' => $request->product_id,
-            'facility_id' => $request->facility_id,
-            'status_id' => $request->status_id,
-            'booking_date' => $request->booking_date,
-            'booking_time' => $request->booking_time,
-            'duration' => $request->duration,
-            'total_amount' => $request->total_amount,
-            'notes' => $request->notes,
-            'is_confirmed' => $request->is_confirmed ?? false,
-            'is_paid' => $request->is_paid ?? false,
-        ]);
+        $bookingData = $request->except(['status_id']);
+        $bookingData['booking_number'] = $bookingNumber;
+
+        $booking = Booking::create($bookingData);
+
+        // ربط الحالة
+        if ($request->has('status_id')) {
+            $booking->statuses()->attach($request->status_id, [
+                'notes' => 'تم تعيين الحالة عند إنشاء الحجز',
+                'user_id' => auth()->id(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
 
         return redirect()->route('admin.bookings.index')
             ->with('success', 'تم إنشاء الحجز بنجاح');
@@ -121,7 +121,7 @@ class AdminBookingController extends Controller
      */
     public function edit(Booking $booking)
     {
-        $booking->load(['user', 'product', 'facility', 'status']);
+        $booking->load(['user', 'product', 'facility', 'statuses']);
         $users = User::all();
         $products = Product::where('is_active', true)->get();
         $statuses = Status::all();
@@ -148,7 +148,20 @@ class AdminBookingController extends Controller
             'is_paid' => 'boolean',
         ]);
 
-        $booking->update($request->all());
+        $bookingData = $request->except(['status_id']);
+        $booking->update($bookingData);
+
+        // تحديث الحالة
+        if ($request->has('status_id')) {
+            // حذف الحالة القديمة وإضافة الحالة الجديدة
+            $booking->statuses()->detach();
+            $booking->statuses()->attach($request->status_id, [
+                'notes' => 'تم تحديث الحالة',
+                'user_id' => auth()->id(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
 
         return redirect()->route('admin.bookings.index')
             ->with('success', 'تم تحديث الحجز بنجاح');
@@ -201,7 +214,7 @@ class AdminBookingController extends Controller
      */
     public function show(Booking $booking)
     {
-        $booking->load(['user', 'product', 'facility', 'status']);
+        $booking->load(['user', 'product', 'facility', 'statuses']);
         return view('admin.bookings.show', compact('booking'));
     }
 

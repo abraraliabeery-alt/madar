@@ -66,6 +66,11 @@ class Facility extends Model
         return $this->hasMany(Product::class);
     }
 
+    public function bookings()
+    {
+        return $this->hasManyThrough(Booking::class, Product::class);
+    }
+
     public function translations()
     {
         return $this->hasMany(FacilityTranslation::class);
@@ -78,8 +83,8 @@ class Facility extends Model
 
     public function gallery()
     {
-        // Since facilities don't have image_gallery field, we'll return an empty collection
-        // or you can add image_gallery field to facilities table if needed
+        // Return an empty collection since facilities don't have image_gallery field
+        // This prevents eager loading issues
         return collect();
     }
 
@@ -89,8 +94,8 @@ class Facility extends Model
         return $this->morphToMany(Status::class, 'statusable', 'statusables');
     }
 
-    // Get current status - return null if no status exists
-    public function status()
+    // Accessor to get the current status
+    public function getStatusAttribute()
     {
         return $this->statuses()->latest()->first();
     }

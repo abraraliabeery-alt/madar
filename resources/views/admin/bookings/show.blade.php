@@ -21,9 +21,15 @@
                     <div class="card">
                         <div class="card-body text-center">
                             <div class="mb-3">
-                                <span class="badge bg-{{ $booking->status->color }} fs-5 px-4 py-2">
-                                    {{ $booking->status->name }}
-                                </span>
+                                @if($booking->status)
+                                    <span class="badge bg-{{ $booking->status->color }} fs-5 px-4 py-2">
+                                        {{ $booking->status->name }}
+                                    </span>
+                                @else
+                                    <span class="badge bg-secondary fs-5 px-4 py-2">
+                                        لا توجد حالة
+                                    </span>
+                                @endif
                             </div>
                             <div class="mb-3">
                                 @if($booking->is_confirmed)

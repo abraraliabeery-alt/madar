@@ -31,7 +31,7 @@
                             </button>
                         </div>
                     </div>
-                    
+
                     <!-- Map Placeholder -->
                     <div id="map" class="w-full h-96 bg-gray-200 rounded-lg flex items-center justify-center">
                         <div class="text-center">
@@ -47,20 +47,20 @@
             <div class="lg:col-span-1">
                 <div class="bg-white rounded-lg shadow-md p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">المنشآت القريبة</h3>
-                    
+
                     @if($facilities->count() > 0)
                         <div class="space-y-4 max-h-96 overflow-y-auto">
                             @foreach($facilities as $facility)
                                 <div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
                                     <div class="flex items-start space-x-3 space-x-reverse mb-3">
-                                        <img src="{{ $facility->logo ?? 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80' }}" 
+                                        <img src="{{ $facility->logo ?? 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80' }}"
                                              alt="{{ $facility->name }}" class="w-12 h-12 rounded object-cover">
                                         <div class="flex-1">
                                             <h4 class="font-medium text-gray-900">{{ $facility->name }}</h4>
                                             <p class="text-sm text-gray-600">{{ $facility->address ?? 'موقع غير محدد' }}</p>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="flex items-center justify-between text-sm text-gray-500 mb-3">
                                         <div class="flex items-center text-yellow-400">
                                             @for($i = 1; $i <= 5; $i++)
@@ -70,14 +70,14 @@
                                         </div>
                                         <span><i class="fas fa-home ml-1"></i>{{ $facility->products_count ?? 0 }}</span>
                                     </div>
-                                    
+
                                     <div class="flex space-x-2 space-x-reverse">
-                                        <a href="{{ route('public.facilities.show', $facility) }}" 
+                                        <a href="{{ route('public.facilities.show', $facility) }}"
                                            class="flex-1 bg-primary-600 text-white px-3 py-2 rounded text-sm font-medium text-center hover:bg-primary-700 transition-colors">
                                             عرض
                                         </a>
                                         @if($facility->phone)
-                                            <a href="tel:{{ $facility->phone }}" 
+                                            <a href="tel:{{ $facility->phone }}"
                                                class="bg-green-600 text-white px-3 py-2 rounded text-sm font-medium hover:bg-green-700 transition-colors">
                                                 <i class="fas fa-phone"></i>
                                             </a>
@@ -140,10 +140,10 @@ document.addEventListener('DOMContentLoaded', function() {
             navigator.geolocation.getCurrentPosition(function(position) {
                 const latitude = position.coords.latitude;
                 const longitude = position.coords.longitude;
-                
+
                 // Here you would typically update the map to center on user's location
                 console.log('User location:', latitude, longitude);
-                
+
                 // Show success message
                 alert('تم تحديد موقعك بنجاح!');
             }, function(error) {
@@ -157,4 +157,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 @endpush
-@endsection 
+@endsection

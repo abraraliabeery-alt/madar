@@ -96,9 +96,13 @@
                             <td>{{ number_format($product->price, 2) }} ريال</td>
                             <td>{{ Str::limit($product->address, 30) }}</td>
                             <td>
-                                <span class="badge bg-{{ $product->status->color }}">
-                                    {{ $product->status->name }}
-                                </span>
+                                @if($product->status)
+                                    <span class="badge bg-{{ $product->status->color }}">
+                                        {{ $product->status->name }}
+                                    </span>
+                                @else
+                                    <span class="badge bg-secondary">لا توجد حالة</span>
+                                @endif
                             </td>
                             <td>
                                 @if($product->is_active)

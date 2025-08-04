@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('product_id');
             $table->unsignedBigInteger('user_id');
+            $table->decimal('total_amount', 10, 2)->default(0);
             $table->string('payment_method')->nullable();
             $table->timestamp('expires_at')->nullable();
             $table->boolean('is_confirmed')->default(false);

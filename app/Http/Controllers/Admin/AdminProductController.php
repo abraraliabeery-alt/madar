@@ -118,7 +118,7 @@ class AdminProductController extends Controller
             'attributes.*.value' => 'required|string',
         ]);
 
-        $productData = $request->except(['main_image', 'features', 'attributes']);
+        $productData = $request->except(['main_image', 'features', 'attributes', 'status_id']);
 
         // معالجة الصورة الرئيسية
         if ($request->hasFile('main_image')) {
@@ -127,6 +127,16 @@ class AdminProductController extends Controller
         }
 
         $product = Product::create($productData);
+
+        // ربط الحالة
+        if ($request->has('status_id')) {
+            $product->statuses()->attach($request->status_id, [
+                'notes' => 'تم تعيين الحالة عند إنشاء المنتج',
+                'user_id' => auth()->id(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
 
         // ربط المميزات
         if ($request->has('features')) {
@@ -152,7 +162,7 @@ class AdminProductController extends Controller
      */
     public function edit(Product $product)
     {
-        $product->load(['facility', 'category', 'status', 'features', 'attributes']);
+        $product->load(['facility', 'category', 'statuses', 'features', 'attributes']);
         $facilities = Facility::all();
         $categories = Category::all();
         $statuses = Status::all();
@@ -201,7 +211,7 @@ class AdminProductController extends Controller
             'attributes.*.value' => 'required|string',
         ]);
 
-        $productData = $request->except(['main_image', 'features', 'attributes']);
+        $productData = $request->except(['main_image', 'features', 'attributes', 'status_id']);
 
         // معالجة الصورة الرئيسية
         if ($request->hasFile('main_image')) {
@@ -214,6 +224,18 @@ class AdminProductController extends Controller
         }
 
         $product->update($productData);
+
+        // تحديث الحالة
+        if ($request->has('status_id')) {
+            // حذف الحالة القديمة وإضافة الحالة الجديدة
+            $product->statuses()->detach();
+            $product->statuses()->attach($request->status_id, [
+                'notes' => 'تم تحديث الحالة',
+                'user_id' => auth()->id(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
 
         // تحديث المميزات
         if ($request->has('features')) {
@@ -291,7 +313,7 @@ class AdminProductController extends Controller
      */
     public function show(Product $product)
     {
-        $product->load(['facility', 'category', 'status', 'features', 'attributes', 'gallery', 'comments', 'bookings']);
+        $product->load(['facility', 'category', 'statuses', 'features', 'attributes', 'gallery', 'comments', 'bookings']);
         return view('admin.products.show', compact('product'));
     }
 }

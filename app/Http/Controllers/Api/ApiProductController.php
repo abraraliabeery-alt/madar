@@ -96,7 +96,7 @@ class ApiProductController extends Controller
             ], 404);
         }
 
-        $product->load(['facility', 'category', 'status', 'features', 'attributes', 'gallery', 'comments']);
+        $product->load(['facility', 'category', 'statuses', 'features', 'attributes', 'gallery', 'comments']);
 
         return response()->json([
             'success' => true,

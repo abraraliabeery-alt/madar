@@ -205,7 +205,11 @@
                                     <small class="text-muted">{{ $booking->product->name }}</small>
                                 </div>
                                 <div class="ms-auto text-end">
+                                    @if($booking->status)
                                     <span class="badge bg-{{ $booking->status->color }}">{{ $booking->status->name }}</span>
+                                @else
+                                    <span class="badge bg-secondary">لا توجد حالة</span>
+                                @endif
                                     <div>
                                         <small class="text-muted">{{ $booking->created_at->format('Y-m-d') }}</small>
                                     </div>

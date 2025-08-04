@@ -331,9 +331,13 @@
                                             <td>{{ $booking->booking_date }}</td>
                                             <td>{{ number_format($booking->total_amount, 2) }} ريال</td>
                                             <td>
-                                                <span class="badge bg-{{ $booking->status->color }}">
-                                                    {{ $booking->status->name }}
-                                                </span>
+                                                @if($booking->status)
+                                                    <span class="badge bg-{{ $booking->status->color }}">
+                                                        {{ $booking->status->name }}
+                                                    </span>
+                                                @else
+                                                    <span class="badge bg-secondary">لا توجد حالة</span>
+                                                @endif
                                             </td>
                                             <td>
                                                 <a href="{{ route('admin.bookings.show', $booking) }}" class="btn btn-sm btn-info">

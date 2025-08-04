@@ -115,7 +115,7 @@ class AdminFacilityController extends Controller
      */
     public function edit(Facility $facility)
     {
-        $facility->load(['owner', 'category', 'status']);
+        $facility->load(['owner', 'category', 'statuses']);
         $owners = User::whereHas('roles', function ($q) {
             $q->where('name', 'facility_owner');
         })->get();
@@ -243,9 +243,9 @@ class AdminFacilityController extends Controller
     /**
      * عرض تفاصيل المنشأة
      */
-    public function show(Facility $facility)
+        public function show(Facility $facility)
     {
-        $facility->load(['owner', 'category', 'status', 'products', 'users', 'bookings']);
+        $facility->load(['owner', 'category', 'statuses', 'products', 'users', 'bookings']);
 
         return view('admin.facilities.show', compact('facility'));
     }

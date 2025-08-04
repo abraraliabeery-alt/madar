@@ -110,26 +110,20 @@ class AdminContractController extends Controller
         // إنشاء رقم العقد
         $contractNumber = 'CT-' . date('Ymd') . '-' . str_pad(Contract::whereDate('created_at', today())->count() + 1, 4, '0', STR_PAD_LEFT);
 
-        $contract = Contract::create([
-            'contract_number' => $contractNumber,
-            'user_id' => $request->user_id,
-            'product_id' => $request->product_id,
-            'facility_id' => $request->facility_id,
-            'status_id' => $request->status_id,
-            'contract_type' => $request->contract_type,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
-            'total_amount' => $request->total_amount,
-            'down_payment' => $request->down_payment,
-            'monthly_payment' => $request->monthly_payment,
-            'bank_id' => $request->bank_id,
-            'loan_amount' => $request->loan_amount,
-            'interest_rate' => $request->interest_rate,
-            'loan_term' => $request->loan_term,
-            'notes' => $request->notes,
-            'is_active' => $request->is_active ?? true,
-            'is_verified' => $request->is_verified ?? false,
-        ]);
+        $contractData = $request->except(['status_id']);
+        $contractData['contract_number'] = $contractNumber;
+
+        $contract = Contract::create($contractData);
+
+        // ربط الحالة
+        if ($request->has('status_id')) {
+            $contract->statuses()->attach($request->status_id, [
+                'notes' => 'تم تعيين الحالة عند إنشاء العقد',
+                'user_id' => auth()->id(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
 
         return redirect()->route('admin.contracts.index')
             ->with('success', 'تم إنشاء العقد بنجاح');
@@ -140,7 +134,7 @@ class AdminContractController extends Controller
      */
     public function edit(Contract $contract)
     {
-        $contract->load(['user', 'product', 'facility', 'status', 'bank']);
+        $contract->load(['user', 'product', 'facility', 'statuses', 'bank']);
         $users = User::all();
         $products = Product::where('is_active', true)->get();
         $statuses = Status::all();
@@ -174,7 +168,20 @@ class AdminContractController extends Controller
             'is_verified' => 'boolean',
         ]);
 
-        $contract->update($request->all());
+        $contractData = $request->except(['status_id']);
+        $contract->update($contractData);
+
+        // تحديث الحالة
+        if ($request->has('status_id')) {
+            // حذف الحالة القديمة وإضافة الحالة الجديدة
+            $contract->statuses()->detach();
+            $contract->statuses()->attach($request->status_id, [
+                'notes' => 'تم تحديث الحالة',
+                'user_id' => auth()->id(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
 
         return redirect()->route('admin.contracts.index')
             ->with('success', 'تم تحديث العقد بنجاح');
@@ -218,7 +225,7 @@ class AdminContractController extends Controller
      */
     public function show(Contract $contract)
     {
-        $contract->load(['user', 'product', 'facility', 'status', 'bank']);
+        $contract->load(['user', 'product', 'facility', 'statuses', 'bank']);
         return view('admin.contracts.show', compact('contract'));
     }
 

@@ -30,7 +30,11 @@
 
                             <div class="mb-3">
                                 <h4 class="mb-2">{{ number_format($product->price, 2) }} ريال</h4>
-                                <span class="badge bg-{{ $product->status->color }} fs-6">{{ $product->status->name }}</span>
+                                @if($product->status)
+    <span class="badge bg-{{ $product->status->color }} fs-6">{{ $product->status->name }}</span>
+@else
+    <span class="badge bg-secondary fs-6">لا توجد حالة</span>
+@endif
                             </div>
 
                             <div class="mb-3">
@@ -309,9 +313,13 @@
                                             <td>{{ $booking->booking_date }}</td>
                                             <td>{{ number_format($booking->total_amount, 2) }} ريال</td>
                                             <td>
-                                                <span class="badge bg-{{ $booking->status->color }}">
-                                                    {{ $booking->status->name }}
-                                                </span>
+                                                @if($booking->status)
+                                                    <span class="badge bg-{{ $booking->status->color }}">
+                                                        {{ $booking->status->name }}
+                                                    </span>
+                                                @else
+                                                    <span class="badge bg-secondary">لا توجد حالة</span>
+                                                @endif
                                             </td>
                                             <td>
                                                 <a href="{{ route('admin.bookings.show', $booking) }}" class="btn btn-sm btn-info">

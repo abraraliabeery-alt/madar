@@ -21,7 +21,11 @@
                     <div class="card">
                         <div class="card-body text-center">
                             <div class="mb-3">
-                                <span class="badge bg-{{ $contract->status->color }} fs-5 px-4 py-2">{{ $contract->status->name }}</span>
+                                @if($contract->status)
+                                    <span class="badge bg-{{ $contract->status->color }} fs-5 px-4 py-2">{{ $contract->status->name }}</span>
+                                @else
+                                    <span class="badge bg-secondary fs-5 px-4 py-2">لا توجد حالة</span>
+                                @endif
                             </div>
                             <div class="mb-3">
                                 @if($contract->is_active)
