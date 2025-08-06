@@ -92,7 +92,7 @@ class ApiFacilityController extends Controller
             ], 404);
         }
 
-        $facility->load(['category', 'owner', 'products', 'gallery']);
+        $facility->load(['category', 'owner', 'products']);
 
         return response()->json([
             'success' => true,

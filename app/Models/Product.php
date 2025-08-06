@@ -101,10 +101,7 @@ class Product extends Model
         return $this->hasMany(Booking::class);
     }
 
-    public function comments()
-    {
-        return $this->hasMany(Comment::class);
-    }
+
 
     // Gallery accessor - since image_gallery is a JSON field, not a relationship
     public function getGalleryAttribute()

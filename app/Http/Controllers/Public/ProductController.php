@@ -90,7 +90,7 @@ class ProductController extends Controller
             abort(404);
         }
 
-        $product->load(['facility', 'category', 'statuses', 'features', 'attributes', 'comments.user']);
+        $product->load(['facility', 'category', 'statuses', 'features', 'attributes']);
 
         // المنتجات المشابهة
         $similarProducts = Product::with(['facility', 'category'])

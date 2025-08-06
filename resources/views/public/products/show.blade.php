@@ -127,28 +127,7 @@
                         </div>
                     @endauth
 
-                    @if($product->comments && $product->comments->count() > 0)
-                        <div class="space-y-4">
-                            @foreach($product->comments as $comment)
-                                <div class="border-b border-gray-200 pb-4">
-                                    <div class="flex items-start space-x-3 space-x-reverse mb-2">
-                                        <img src="{{ $comment->user->avatar ?? 'https://ui-avatars.com/api/?name=' . $comment->user->name . '&color=7C3AED&background=EBF4FF' }}"
-                                             alt="{{ $comment->user->name }}" class="w-10 h-10 rounded-full">
-                                        <div class="flex-1">
-                                            <h4 class="font-semibold text-gray-900">{{ $comment->user->name }}</h4>
-                                            <p class="text-sm text-gray-500">{{ $comment->created_at->diffForHumans() }}</p>
-                                        </div>
-                                    </div>
-                                    <p class="text-gray-700">{{ $comment->comment }}</p>
-                                </div>
-                            @endforeach
-                        </div>
-                    @else
-                        <div class="text-center py-8">
-                            <i class="fas fa-comments text-4xl text-gray-400 mb-4"></i>
-                            <p class="text-gray-600">لا توجد تعليقات بعد</p>
-                        </div>
-                    @endif
+
                 </div>
             </div>
 

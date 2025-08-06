@@ -319,7 +319,7 @@ class FacilityProductController extends Controller
                 ->with('error', 'غير مصرح لك بعرض هذا المنتج');
         }
 
-        $product->load(['category', 'statuses', 'features', 'attributes', 'gallery', 'comments']);
+        $product->load(['category', 'statuses', 'features', 'attributes']);
 
         return view('facility.products.show', compact('product'));
     }

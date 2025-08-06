@@ -85,7 +85,7 @@ class AdminProductController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'address' => 'required|string',
             'price' => 'required|numeric|min:0',
@@ -93,37 +93,33 @@ class AdminProductController extends Controller
             'category_id' => 'required|exists:categories,id',
             'status_id' => 'required|exists:statuses,id',
             'owner_user_id' => 'required|exists:users,id',
-            'building_id' => 'nullable|exists:buildings,id',
-            'project_id' => 'nullable|exists:projects,id',
-            'package_id' => 'nullable|exists:packages,id',
-            'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'latitude' => 'nullable|numeric',
-            'longitude' => 'nullable|numeric',
-            'google_maps_url' => 'nullable|url',
-            'bedrooms' => 'nullable|integer|min:0',
+            'rooms' => 'nullable|integer|min:0',
             'bathrooms' => 'nullable|integer|min:0',
             'area' => 'nullable|numeric|min:0',
-            'floor_number' => 'nullable|integer',
-            'total_floors' => 'nullable|integer|min:1',
+            'floor' => 'nullable|string',
+            'floors_count' => 'nullable|integer|min:1',
             'parking_spaces' => 'nullable|integer|min:0',
-            'furnished' => 'boolean',
-            'available_for_rent' => 'boolean',
-            'available_for_sale' => 'boolean',
+            'contact_phone' => 'nullable|string',
+            'contact_email' => 'nullable|email',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'is_active' => 'boolean',
             'is_featured' => 'boolean',
             'is_verified' => 'boolean',
             'features' => 'array',
             'features.*' => 'exists:features,id',
-            'attributes' => 'array',
-            'attributes.*.attribute_id' => 'exists:attributes,id',
-            'attributes.*.value' => 'required|string',
         ]);
 
-        $productData = $request->except(['main_image', 'features', 'attributes', 'status_id']);
+        $productData = $request->except(['image', 'features', 'status_id']);
+
+        // Handle checkbox fields - set to false if not present
+        $productData['is_active'] = $request->has('is_active');
+        $productData['is_featured'] = $request->has('is_featured');
+        $productData['is_verified'] = $request->has('is_verified');
 
         // معالجة الصورة الرئيسية
-        if ($request->hasFile('main_image')) {
-            $imagePath = $request->file('main_image')->store('products/images', 'public');
-            $productData['main_image'] = $imagePath;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('products/images', 'public');
+            $productData['image'] = $imagePath;
         }
 
         $product = Product::create($productData);
@@ -143,15 +139,7 @@ class AdminProductController extends Controller
             $product->features()->attach($request->features);
         }
 
-        // ربط الخصائص
-        if ($request->has('attributes')) {
-            foreach ($request->attributes as $attribute) {
-                $product->attributes()->create([
-                    'attribute_id' => $attribute['attribute_id'],
-                    'value' => $attribute['value'],
-                ]);
-            }
-        }
+
 
         return redirect()->route('admin.products.index')
             ->with('success', 'تم إنشاء المنتج بنجاح');
@@ -162,14 +150,13 @@ class AdminProductController extends Controller
      */
     public function edit(Product $product)
     {
-        $product->load(['facility', 'category', 'statuses', 'features', 'attributes']);
+        $product->load(['facility', 'category', 'statuses', 'features']);
         $facilities = Facility::all();
         $categories = Category::all();
         $statuses = Status::all();
         $features = Feature::all();
-        $attributes = Attribute::all();
 
-        return view('admin.products.edit', compact('product', 'facilities', 'categories', 'statuses', 'features', 'attributes'));
+        return view('admin.products.edit', compact('product', 'facilities', 'categories', 'statuses', 'features'));
     }
 
     /**
@@ -178,7 +165,7 @@ class AdminProductController extends Controller
     public function update(Request $request, Product $product)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'address' => 'required|string',
             'price' => 'required|numeric|min:0',
@@ -186,41 +173,37 @@ class AdminProductController extends Controller
             'category_id' => 'required|exists:categories,id',
             'status_id' => 'required|exists:statuses,id',
             'owner_user_id' => 'required|exists:users,id',
-            'building_id' => 'nullable|exists:buildings,id',
-            'project_id' => 'nullable|exists:projects,id',
-            'package_id' => 'nullable|exists:packages,id',
-            'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'latitude' => 'nullable|numeric',
-            'longitude' => 'nullable|numeric',
-            'google_maps_url' => 'nullable|url',
-            'bedrooms' => 'nullable|integer|min:0',
+            'rooms' => 'nullable|integer|min:0',
             'bathrooms' => 'nullable|integer|min:0',
             'area' => 'nullable|numeric|min:0',
-            'floor_number' => 'nullable|integer',
-            'total_floors' => 'nullable|integer|min:1',
+            'floor' => 'nullable|string',
+            'floors_count' => 'nullable|integer|min:1',
             'parking_spaces' => 'nullable|integer|min:0',
-            'furnished' => 'boolean',
-            'available_for_rent' => 'boolean',
-            'available_for_sale' => 'boolean',
+            'contact_phone' => 'nullable|string',
+            'contact_email' => 'nullable|email',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'is_active' => 'boolean',
             'is_featured' => 'boolean',
             'is_verified' => 'boolean',
             'features' => 'array',
             'features.*' => 'exists:features,id',
-            'attributes' => 'array',
-            'attributes.*.attribute_id' => 'exists:attributes,id',
-            'attributes.*.value' => 'required|string',
         ]);
 
-        $productData = $request->except(['main_image', 'features', 'attributes', 'status_id']);
+        $productData = $request->except(['image', 'features', 'status_id']);
+
+        // Handle checkbox fields - set to false if not present
+        $productData['is_active'] = $request->has('is_active');
+        $productData['is_featured'] = $request->has('is_featured');
+        $productData['is_verified'] = $request->has('is_verified');
 
         // معالجة الصورة الرئيسية
-        if ($request->hasFile('main_image')) {
+        if ($request->hasFile('image')) {
             // حذف الصورة القديمة
-            if ($product->main_image) {
-                Storage::disk('public')->delete($product->main_image);
+            if ($product->image) {
+                Storage::disk('public')->delete($product->image);
             }
-            $imagePath = $request->file('main_image')->store('products/images', 'public');
-            $productData['main_image'] = $imagePath;
+            $imagePath = $request->file('image')->store('products/images', 'public');
+            $productData['image'] = $imagePath;
         }
 
         $product->update($productData);
@@ -244,16 +227,7 @@ class AdminProductController extends Controller
             $product->features()->detach();
         }
 
-        // تحديث الخصائص
-        if ($request->has('attributes')) {
-            $product->attributes()->delete();
-            foreach ($request->attributes as $attribute) {
-                $product->attributes()->create([
-                    'attribute_id' => $attribute['attribute_id'],
-                    'value' => $attribute['value'],
-                ]);
-            }
-        }
+
 
         return redirect()->route('admin.products.index')
             ->with('success', 'تم تحديث المنتج بنجاح');
@@ -313,7 +287,7 @@ class AdminProductController extends Controller
      */
     public function show(Product $product)
     {
-        $product->load(['facility', 'category', 'statuses', 'features', 'attributes', 'gallery', 'comments', 'bookings']);
+        $product->load(['facility', 'category', 'statuses', 'features', 'attributes', 'bookings']);
         return view('admin.products.show', compact('product'));
     }
 }

@@ -342,52 +342,7 @@
                     </div>
                 </div>
 
-                <!-- Comments -->
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h6 class="mb-0">التعليقات</h6>
-                        </div>
-                        <div class="card-body">
-                            @forelse($product->comments as $comment)
-                                <div class="d-flex mb-3">
-                                    <div class="flex-shrink-0">
-                                        @if($comment->user->avatar)
-                                            <img src="{{ Storage::url($comment->user->avatar) }}" alt="avatar" class="rounded-circle" width="40">
-                                        @else
-                                            <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                                                {{ substr($comment->user->name, 0, 1) }}
-                                            </div>
-                                        @endif
-                                    </div>
-                                    <div class="flex-grow-1 ms-3">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div>
-                                                <a href="{{ route('admin.users.show', $comment->user) }}" class="fw-bold text-dark">
-                                                    {{ $comment->user->name }}
-                                                </a>
-                                                <small class="text-muted ms-2">{{ $comment->created_at->diffForHumans() }}</small>
-                                            </div>
-                                            <div>
-                                                @if($comment->rating)
-                                                    <span class="badge bg-warning">
-                                                        <i class="fas fa-star me-1"></i>{{ $comment->rating }}
-                                                    </span>
-                                                @endif
-                                            </div>
-                                        </div>
-                                        <p class="mb-0">{{ $comment->content }}</p>
-                                    </div>
-                                </div>
-                            @empty
-                                <div class="text-center py-4">
-                                    <i class="fas fa-comments fa-3x text-muted mb-3"></i>
-                                    <p class="mb-0">لا توجد تعليقات على هذا المنتج</p>
-                                </div>
-                            @endforelse
-                        </div>
-                    </div>
-                </div>
+
             </div>
         </div>
     </div>
