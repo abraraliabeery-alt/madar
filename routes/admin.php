@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\AdminRoleController;
 use App\Http\Controllers\Admin\AdminContractController;
 use App\Http\Controllers\Admin\AdminCategoryController;
 use App\Http\Controllers\Admin\AdminFeatureController;
+use App\Http\Controllers\Admin\AdminAttributeController;
 use App\Http\Controllers\Admin\AdminProfileController;
 use App\Http\Controllers\Admin\AdminUploadController;
 
@@ -79,6 +80,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('features/{feature}/toggle-status', [AdminFeatureController::class, 'toggleStatus'])->name('features.toggle-status');
     Route::post('features/reorder', [AdminFeatureController::class, 'reorder'])->name('features.reorder');
     Route::get('features/statistics', [AdminFeatureController::class, 'statistics'])->name('features.statistics');
+
+    // Attributes Management
+    Route::resource('attributes', AdminAttributeController::class);
+    Route::post('attributes/{attribute}/toggle-required', [AdminAttributeController::class, 'toggleRequired'])->name('attributes.toggle-required');
+    Route::get('attributes/statistics', [AdminAttributeController::class, 'statistics'])->name('attributes.statistics');
 
     // Additional Admin Routes
     Route::get('notifications', [AdminController::class, 'notifications'])->name('notifications');

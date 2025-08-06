@@ -82,6 +82,10 @@
                     <i class="fas fa-star"></i>
                     <span>المميزات</span>
                 </a>
+                <a href="{{ route('admin.attributes.index') }}" class="nav-link {{ request()->routeIs('admin.attributes.*') ? 'active' : '' }}">
+                    <i class="fas fa-tags"></i>
+                    <span>الخصائص</span>
+                </a>
                 <a href="{{ route('admin.products.index') }}" class="nav-link {{ request()->routeIs('admin.products.*') ? 'active' : '' }}">
                     <i class="fas fa-box"></i>
                     <span>المنتجات</span>
@@ -137,6 +141,9 @@
                         <h6 class="dropdown-header">إضافة جديد</h6>
                         <a href="{{ route('admin.users.create') }}" class="dropdown-item">
                             <i class="fas fa-user-plus ms-2"></i>مستخدم جديد
+                        </a>
+                        <a href="{{ route('admin.attributes.create') }}" class="dropdown-item">
+                            <i class="fas fa-tag ms-2"></i>خاصية جديدة
                         </a>
                         <a href="{{ route('admin.products.create') }}" class="dropdown-item">
                             <i class="fas fa-box-open ms-2"></i>منتج جديد

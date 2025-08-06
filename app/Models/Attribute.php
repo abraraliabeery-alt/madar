@@ -36,4 +36,12 @@ class Attribute extends Model
     {
         return $this->hasMany(AttributeTranslation::class);
     }
+
+    /**
+     * Get the products count for this attribute
+     */
+    public function getProductsCountAttribute()
+    {
+        return $this->products()->count();
+    }
 }

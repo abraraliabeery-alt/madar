@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             StatusSeeder::class,
             UserSeeder::class,
             FacilitySeeder::class,
+            AttributeSeeder::class,
             ProductSeeder::class,
             ProductStatusSeeder::class,
             FacilityStatusSeeder::class,
