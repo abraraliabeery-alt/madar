@@ -113,4 +113,4 @@ class AttributeSeeder extends Seeder
             ]);
         }
     }
-} 
+}

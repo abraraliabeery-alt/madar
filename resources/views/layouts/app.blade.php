@@ -125,6 +125,72 @@
                 <!-- Desktop User Menu -->
                 <div class="hidden md:flex items-center space-x-4 space-x-reverse">
                     @auth
+                        <!-- Notifications -->
+                        <div class="relative" x-data="{ open: false }">
+                            <button @click="open = !open" class="relative p-2 text-gray-700 hover:text-primary-600 transition-colors">
+                                <i class="fas fa-bell text-xl"></i>
+                                @if(auth()->user()->unreadNotifications->count() > 0)
+                                    <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                                        {{ auth()->user()->unreadNotifications->count() > 99 ? '99+' : auth()->user()->unreadNotifications->count() }}
+                                    </span>
+                                @endif
+                            </button>
+
+                            <div x-show="open" @click.away="open = false"
+                                 x-transition:enter="transition ease-out duration-100"
+                                 x-transition:enter-start="transform opacity-0 scale-95"
+                                 x-transition:enter-end="transform opacity-100 scale-100"
+                                 x-transition:leave="transition ease-in duration-75"
+                                 x-transition:leave-start="transform opacity-100 scale-100"
+                                 x-transition:leave-end="transform opacity-0 scale-95"
+                                 class="absolute left-0 mt-2 w-80 bg-white rounded-md shadow-lg py-1 z-50 max-h-96 overflow-y-auto">
+
+                                <div class="px-4 py-2 border-b border-gray-200">
+                                    <h3 class="text-sm font-semibold text-gray-900">الإشعارات</h3>
+                                </div>
+
+                                @if(auth()->user()->notifications->count() > 0)
+                                    @foreach(auth()->user()->notifications->take(5) as $notification)
+                                        <a href="#" class="block px-4 py-3 hover:bg-gray-50 transition-colors {{ $notification->read_at ? 'opacity-75' : '' }}">
+                                            <div class="flex items-start">
+                                                <div class="flex-shrink-0">
+                                                    @if($notification->data['type'] == 'booking_created')
+                                                        <i class="fas fa-calendar-check text-green-500"></i>
+                                                    @elseif($notification->data['type'] == 'new_product_added')
+                                                        <i class="fas fa-home text-blue-500"></i>
+                                                    @elseif($notification->data['type'] == 'booking_status_changed')
+                                                        <i class="fas fa-sync-alt text-yellow-500"></i>
+                                                    @else
+                                                        <i class="fas fa-bell text-gray-500"></i>
+                                                    @endif
+                                                </div>
+                                                <div class="flex-1 mr-3">
+                                                    <p class="text-sm text-gray-900">{{ $notification->data['message'] ?? 'إشعار جديد' }}</p>
+                                                    <p class="text-xs text-gray-500 mt-1">{{ $notification->created_at->diffForHumans() }}</p>
+                                                </div>
+                                                @if(!$notification->read_at)
+                                                    <div class="flex-shrink-0">
+                                                        <div class="w-2 h-2 bg-red-500 rounded-full"></div>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        </a>
+                                    @endforeach
+
+                                    <div class="border-t border-gray-200 px-4 py-2">
+                                        <a href="{{ route('client.notifications') }}" class="text-sm text-primary-600 hover:text-primary-700">
+                                            عرض كل الإشعارات
+                                        </a>
+                                    </div>
+                                @else
+                                    <div class="px-4 py-8 text-center">
+                                        <i class="fas fa-bell-slash text-gray-400 text-2xl mb-2"></i>
+                                        <p class="text-sm text-gray-500">لا توجد إشعارات جديدة</p>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+
                         <!-- Logged in user menu -->
                         <div class="relative" x-data="{ open: false }">
                             <button @click="open = !open" class="flex items-center space-x-2 space-x-reverse text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
@@ -222,6 +288,50 @@
                     </a>
 
                     @auth
+                        <!-- Mobile Notifications -->
+                        <hr class="my-2">
+                        <div class="px-3 py-2">
+                            <div class="flex items-center justify-between">
+                                <span class="text-base font-medium text-gray-700">الإشعارات</span>
+                                @if(auth()->user()->unreadNotifications->count() > 0)
+                                    <span class="bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                                        {{ auth()->user()->unreadNotifications->count() > 99 ? '99+' : auth()->user()->unreadNotifications->count() }}
+                                    </span>
+                                @endif
+                            </div>
+                            @if(auth()->user()->notifications->count() > 0)
+                                <div class="mt-2 space-y-2">
+                                    @foreach(auth()->user()->notifications->take(3) as $notification)
+                                        <div class="flex items-start p-2 bg-gray-50 rounded">
+                                            <div class="flex-shrink-0 mr-2">
+                                                @if($notification->data['type'] == 'booking_created')
+                                                    <i class="fas fa-calendar-check text-green-500"></i>
+                                                @elseif($notification->data['type'] == 'new_product_added')
+                                                    <i class="fas fa-home text-blue-500"></i>
+                                                @elseif($notification->data['type'] == 'booking_status_changed')
+                                                    <i class="fas fa-sync-alt text-yellow-500"></i>
+                                                @else
+                                                    <i class="fas fa-bell text-gray-500"></i>
+                                                @endif
+                                            </div>
+                                            <div class="flex-1">
+                                                <p class="text-sm text-gray-900">{{ $notification->data['message'] ?? 'إشعار جديد' }}</p>
+                                                <p class="text-xs text-gray-500">{{ $notification->created_at->diffForHumans() }}</p>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                    <a href="{{ route('client.notifications') }}" class="block text-sm text-primary-600 hover:text-primary-700 text-center py-2">
+                                        عرض كل الإشعارات
+                                    </a>
+                                </div>
+                            @else
+                                <div class="mt-2 text-center py-4">
+                                    <i class="fas fa-bell-slash text-gray-400 text-xl mb-2"></i>
+                                    <p class="text-sm text-gray-500">لا توجد إشعارات جديدة</p>
+                                </div>
+                            @endif
+                        </div>
+
                         <hr class="my-2">
                         @if(auth()->user()->hasRole('admin'))
                             <a href="{{ route('admin.dashboard') }}" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">

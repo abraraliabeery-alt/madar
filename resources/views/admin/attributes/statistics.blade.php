@@ -138,7 +138,7 @@
                                             ->groupBy('type')
                                             ->get();
                                     @endphp
-                                    
+
                                     @if($typeStats->count() > 0)
                                         <div class="table-responsive">
                                             <table class="table table-striped">
@@ -196,7 +196,7 @@
                                             ->take(10)
                                             ->get();
                                     @endphp
-                                    
+
                                     @if($recentAttributes->count() > 0)
                                         <div class="table-responsive">
                                             <table class="table table-striped">
@@ -264,4 +264,4 @@
         </div>
     </div>
 </div>
-@endsection 
+@endsection

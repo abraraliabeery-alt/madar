@@ -214,8 +214,7 @@ class ClientController extends Controller
     public function notifications()
     {
         $user = Auth::user();
-        // يمكن استخدام جدول notifications منفصل أو Laravel Notifications
-        $notifications = collect(); // سيتم استبدالها بجدول الإشعارات الفعلي
+        $notifications = $user->notifications()->paginate(20);
 
         return view('client.notifications', compact('notifications'));
     }
@@ -223,9 +222,61 @@ class ClientController extends Controller
     /**
      * تحديث حالة الإشعار
      */
-    public function markNotificationAsRead($id)
+    public function markNotificationsRead(Request $request)
     {
-        // تحديث حالة الإشعار كمقروء
+        $user = Auth::user();
+
+        $request->validate([
+            'notification_id' => 'required|string'
+        ]);
+
+        $notification = $user->notifications()->findOrFail($request->notification_id);
+        $notification->markAsRead();
+
         return redirect()->back()->with('success', 'تم تحديث حالة الإشعار');
+    }
+
+    /**
+     * تحديد جميع الإشعارات كمقروءة
+     */
+    public function markAllNotificationsRead()
+    {
+        $user = Auth::user();
+        $user->unreadNotifications->markAsRead();
+
+        return redirect()->back()->with('success', 'تم تحديد جميع الإشعارات كمقروءة');
+    }
+
+    /**
+     * إعدادات الإشعارات
+     */
+    public function notificationSettings()
+    {
+        $user = Auth::user();
+        return view('client.notification-settings', compact('user'));
+    }
+
+    /**
+     * تحديث إعدادات الإشعارات
+     */
+    public function updateNotificationSettings(Request $request)
+    {
+        $user = Auth::user();
+
+        $request->validate([
+            'notification_email' => 'boolean',
+            'notification_sms' => 'boolean',
+            'notification_push' => 'boolean',
+            'notification_frequency' => 'in:immediate,hourly,daily,weekly',
+        ]);
+
+        $user->update([
+            'notification_email' => $request->has('notification_email'),
+            'notification_sms' => $request->has('notification_sms'),
+            'notification_push' => $request->has('notification_push'),
+            'notification_frequency' => $request->notification_frequency ?? 'immediate',
+        ]);
+
+        return redirect()->back()->with('success', 'تم تحديث إعدادات الإشعارات بنجاح');
     }
 }

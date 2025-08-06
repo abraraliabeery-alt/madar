@@ -13,7 +13,7 @@
                 <div class="card-body">
                     <form method="POST" action="{{ route('admin.attributes.store') }}" enctype="multipart/form-data">
                         @csrf
-                        
+
                         <div class="row">
                             <!-- Basic Information -->
                             <div class="col-md-8">
@@ -26,7 +26,7 @@
                                             <div class="col-md-6">
                                                 <div class="mb-3">
                                                     <label for="name" class="form-label">اسم الخاصية <span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control @error('name') is-invalid @enderror" 
+                                                    <input type="text" class="form-control @error('name') is-invalid @enderror"
                                                            id="name" name="name" value="{{ old('name') }}" required>
                                                     @error('name')
                                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -74,7 +74,7 @@
                                             <div class="col-md-6">
                                                 <div class="mb-3">
                                                     <label for="Symbol" class="form-label">الرمز</label>
-                                                    <input type="text" class="form-control @error('Symbol') is-invalid @enderror" 
+                                                    <input type="text" class="form-control @error('Symbol') is-invalid @enderror"
                                                            id="Symbol" name="Symbol" value="{{ old('Symbol') }}" placeholder="مثال: m², km, etc.">
                                                     @error('Symbol')
                                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -87,7 +87,7 @@
                                             <div class="col-md-6">
                                                 <div class="mb-3">
                                                     <label for="symbol" class="form-label">الرمز المختصر</label>
-                                                    <input type="text" class="form-control @error('symbol') is-invalid @enderror" 
+                                                    <input type="text" class="form-control @error('symbol') is-invalid @enderror"
                                                            id="symbol" name="symbol" value="{{ old('symbol') }}" placeholder="رمز مختصر للعرض">
                                                     @error('symbol')
                                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -97,7 +97,7 @@
                                             <div class="col-md-6">
                                                 <div class="mb-3">
                                                     <div class="form-check">
-                                                        <input class="form-check-input @error('required') is-invalid @enderror" 
+                                                        <input class="form-check-input @error('required') is-invalid @enderror"
                                                                type="checkbox" id="required" name="required" value="1" {{ old('required') ? 'checked' : '' }}>
                                                         <label class="form-check-label" for="required">
                                                             خاصية إلزامية
@@ -122,14 +122,14 @@
                                     <div class="card-body">
                                         <div class="mb-3">
                                             <label for="icon" class="form-label">أيقونة الخاصية</label>
-                                            <input type="file" class="form-control @error('icon') is-invalid @enderror" 
+                                            <input type="file" class="form-control @error('icon') is-invalid @enderror"
                                                    id="icon" name="icon" accept="image/*">
                                             <small class="form-text text-muted">يفضل استخدام أيقونات SVG أو PNG بحجم صغير</small>
                                             @error('icon')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
-                                        
+
                                         <div id="icon-preview" class="text-center" style="display: none;">
                                             <img id="preview-image" src="" alt="Preview" class="img-thumbnail" style="max-width: 100px; max-height: 100px;">
                                         </div>
@@ -180,4 +180,4 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-@endpush 
+@endpush

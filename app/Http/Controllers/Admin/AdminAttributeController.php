@@ -210,4 +210,4 @@ class AdminAttributeController extends Controller
             'attributesByCategory'
         ));
     }
-} 
+}

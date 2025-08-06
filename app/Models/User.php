@@ -46,6 +46,10 @@ class User extends Authenticatable
         'youtube',
         'whatsapp_number',
         'telegram',
+        'notification_email',
+        'notification_sms',
+        'notification_push',
+        'notification_frequency',
     ];
 
     /**
@@ -70,6 +74,9 @@ class User extends Authenticatable
             'is_multilanguage_enabled' => 'boolean',
             'latitude' => 'float',
             'longitude' => 'float',
+            'notification_email' => 'boolean',
+            'notification_sms' => 'boolean',
+            'notification_push' => 'boolean',
         ];
     }
 

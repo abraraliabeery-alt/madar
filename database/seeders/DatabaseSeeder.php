@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             ProductSeeder::class,
             ProductStatusSeeder::class,
             FacilityStatusSeeder::class,
+            NotificationSeeder::class,
         ]);
     }
 }
