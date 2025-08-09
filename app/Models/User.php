@@ -123,12 +123,12 @@ class User extends Authenticatable
 
     public function favoriteProducts()
     {
-        return $this->belongsToMany(Product::class, 'user_favorites', 'user_id', 'product_id');
+        return $this->morphedByMany(Product::class, 'favoritable', 'favorites', 'user_id', 'favoritable_id');
     }
 
     public function favoriteFacilities()
     {
-        return $this->belongsToMany(Facility::class, 'user_favorites', 'user_id', 'facility_id');
+        return $this->morphedByMany(Facility::class, 'favoritable', 'favorites', 'user_id', 'favoritable_id');
     }
 
     public function contracts()

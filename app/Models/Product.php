@@ -108,6 +108,11 @@ class Product extends Model
         return $this->hasMany(Comment::class);
     }
 
+    public function favoredByUsers()
+    {
+        return $this->morphToMany(User::class, 'favoritable', 'favorites', 'favoritable_id', 'user_id');
+    }
+
 
 
     // Gallery accessor - since image_gallery is a JSON field, not a relationship

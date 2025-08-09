@@ -88,6 +88,11 @@ class Facility extends Model
         return collect();
     }
 
+    public function favoredByUsers()
+    {
+        return $this->morphToMany(User::class, 'favoritable', 'favorites', 'favoritable_id', 'user_id');
+    }
+
     // Polymorphic relationship for statuses
     public function statuses()
     {

@@ -107,6 +107,31 @@ class FacilityController extends Controller
     }
 
     /**
+     * عرض نموذج حجز الموعد
+     */
+    public function appointmentForm(Facility $facility)
+    {
+        if (!$facility->is_active || !$facility->is_verified) {
+            abort(404);
+        }
+
+        return view('public.facilities.appointment', compact('facility'));
+    }
+
+    /**
+     * عرض نموذج طلب عرض السعر
+     */
+    public function quoteForm(Facility $facility)
+    {
+        if (!$facility->is_active || !$facility->is_verified) {
+            abort(404);
+        }
+
+        // يمكن لاحقاً جلب الطلبات السابقة للمستخدم/المنشأة
+        return view('public.facilities.quote', compact('facility'));
+    }
+
+    /**
      * المنشآت حسب الفئة
      */
     public function byCategory(Category $category)

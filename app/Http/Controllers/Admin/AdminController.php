@@ -9,6 +9,7 @@ use App\Models\Facility;
 use App\Models\Product;
 use App\Models\Booking;
 use App\Models\Contract;
+use App\Models\Setting;
 
 class AdminController extends Controller
 {
@@ -64,10 +65,29 @@ class AdminController extends Controller
             'site_description' => 'nullable|string',
             'contact_email' => 'required|email',
             'contact_phone' => 'nullable|string',
+            'contact_address' => 'nullable|string',
+            'working_hours' => 'nullable|string',
+            'facebook_url' => 'nullable|url',
+            'twitter_url' => 'nullable|url',
+            'instagram_url' => 'nullable|url',
+            'linkedin_url' => 'nullable|url',
         ]);
 
-        // حفظ الإعدادات في قاعدة البيانات أو ملف الإعدادات
-        // يمكن استخدام Cache أو جدول settings منفصل
+        // حفظ الإعدادات في جدول settings
+        $keys = [
+            'site_name', 'site_url', 'site_description',
+            'contact_email', 'contact_phone', 'contact_address', 'working_hours',
+            'facebook_url', 'twitter_url', 'instagram_url', 'linkedin_url',
+            'maintenance_mode', 'allow_registration', 'email_verification', 'auto_approve_facilities'
+        ];
+
+        foreach ($keys as $key) {
+            $value = $request->has($key) ? $request->input($key) : null;
+            if (in_array($key, ['maintenance_mode','allow_registration','email_verification','auto_approve_facilities'])) {
+                $value = $request->has($key) ? '1' : '0';
+            }
+            Setting::setValue($key, $value);
+        }
 
         return redirect()->back()->with('success', 'تم تحديث الإعدادات بنجاح');
     }

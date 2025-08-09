@@ -204,19 +204,31 @@
                         {{ number_format($product->price) }} ريال
                     </div>
                     <div class="space-y-3">
-                        <a href="#" class="w-full btn-primary text-white py-3 rounded-lg font-medium text-center block">
-                            احجز الآن
-                        </a>
-                        <a href="#" class="w-full border border-primary-600 text-primary-600 py-3 rounded-lg font-medium text-center block hover:bg-primary-50 transition-colors">
-                            طلب عرض سعر
-                        </a>
+                        @if($product->facility)
+                            <a href="{{ route('public.facilities.appointment.form', $product->facility) }}" class="w-full btn-primary text-white py-3 rounded-lg font-medium text-center block">
+                                احجز الآن
+                            </a>
+                            <a href="{{ route('public.facilities.quote.form', $product->facility) }}" class="w-full border border-primary-600 text-primary-600 py-3 rounded-lg font-medium text-center block hover:bg-primary-50 transition-colors">
+                                طلب عرض سعر
+                            </a>
+                        @endif
                         @auth
-                            <form action="{{ route('public.products.favorite.add', $product) }}" method="POST" class="block">
-                                @csrf
-                                <button type="submit" class="w-full border border-gray-300 text-gray-700 py-3 rounded-lg font-medium text-center block hover:bg-gray-50 transition-colors">
-                                    <i class="fas fa-heart ml-2"></i>إضافة للمفضلة
-                                </button>
-                            </form>
+                            @if($isFavorited ?? false)
+                                <form action="{{ route('public.products.favorite.remove', $product) }}" method="POST" class="block">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="w-full border border-red-300 text-red-600 py-3 rounded-lg font-medium text-center block hover:bg-red-50 transition-colors">
+                                        <i class="fas fa-heart-broken ml-2"></i>إزالة من المفضلة
+                                    </button>
+                                </form>
+                            @else
+                                <form action="{{ route('public.products.favorite.add', $product) }}" method="POST" class="block">
+                                    @csrf
+                                    <button type="submit" class="w-full border border-gray-300 text-gray-700 py-3 rounded-lg font-medium text-center block hover:bg-gray-50 transition-colors">
+                                        <i class="fas fa-heart ml-2"></i>إضافة للمفضلة
+                                    </button>
+                                </form>
+                            @endif
                         @else
                             <a href="{{ route('login') }}" class="w-full border border-gray-300 text-gray-700 py-3 rounded-lg font-medium text-center block hover:bg-gray-50 transition-colors">
                                 <i class="fas fa-heart ml-2"></i>إضافة للمفضلة

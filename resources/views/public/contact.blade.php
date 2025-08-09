@@ -96,7 +96,7 @@
                             </div>
                             <div>
                                 <h4 class="font-semibold text-gray-900">العنوان</h4>
-                                <p class="text-gray-600">الرياض، المملكة العربية السعودية<br>شارع الملك فهد، برج المملكة</p>
+                    <p class="text-gray-600">{{ \App\Models\Setting::getValue('contact_address', 'الرياض، المملكة العربية السعودية') }}</p>
                             </div>
                         </div>
                         <div class="flex items-start space-x-4 space-x-reverse">
@@ -105,8 +105,7 @@
                             </div>
                             <div>
                                 <h4 class="font-semibold text-gray-900">الهاتف</h4>
-                                <p class="text-gray-600">+966 50 123 4567</p>
-                                <p class="text-gray-600">+966 11 234 5678</p>
+                                <p class="text-gray-600">{{ \App\Models\Setting::getValue('contact_phone', '+966 50 123 4567') }}</p>
                             </div>
                         </div>
                         <div class="flex items-start space-x-4 space-x-reverse">
@@ -115,8 +114,7 @@
                             </div>
                             <div>
                                 <h4 class="font-semibold text-gray-900">البريد الإلكتروني</h4>
-                                <p class="text-gray-600">info@aqar.com</p>
-                                <p class="text-gray-600">support@aqar.com</p>
+                                <p class="text-gray-600">{{ \App\Models\Setting::getValue('contact_email', 'info@aqar.com') }}</p>
                             </div>
                         </div>
                         <div class="flex items-start space-x-4 space-x-reverse">
@@ -125,8 +123,7 @@
                             </div>
                             <div>
                                 <h4 class="font-semibold text-gray-900">ساعات العمل</h4>
-                                <p class="text-gray-600">الأحد - الخميس: 8:00 ص - 6:00 م</p>
-                                <p class="text-gray-600">الجمعة - السبت: 9:00 ص - 2:00 م</p>
+                                <p class="text-gray-600">{{ \App\Models\Setting::getValue('working_hours', 'الأحد - الخميس: 8:00 ص - 6:00 م') }}</p>
                             </div>
                         </div>
                     </div>
@@ -136,16 +133,16 @@
                 <div class="bg-white rounded-lg shadow-md p-8">
                     <h3 class="text-xl font-bold text-gray-900 mb-6">تابعنا</h3>
                     <div class="flex space-x-4 space-x-reverse">
-                        <a href="#" class="bg-blue-600 text-white p-3 rounded-full hover:bg-blue-700 transition-colors">
+                        <a href="{{ \App\Models\Setting::getValue('facebook_url', '#') }}" class="bg-blue-600 text-white p-3 rounded-full hover:bg-blue-700 transition-colors">
                             <i class="fab fa-facebook-f"></i>
                         </a>
-                        <a href="#" class="bg-blue-400 text-white p-3 rounded-full hover:bg-blue-500 transition-colors">
+                        <a href="{{ \App\Models\Setting::getValue('twitter_url', '#') }}" class="bg-blue-400 text-white p-3 rounded-full hover:bg-blue-500 transition-colors">
                             <i class="fab fa-twitter"></i>
                         </a>
-                        <a href="#" class="bg-pink-600 text-white p-3 rounded-full hover:bg-pink-700 transition-colors">
+                        <a href="{{ \App\Models\Setting::getValue('instagram_url', '#') }}" class="bg-pink-600 text-white p-3 rounded-full hover:bg-pink-700 transition-colors">
                             <i class="fab fa-instagram"></i>
                         </a>
-                        <a href="#" class="bg-blue-700 text-white p-3 rounded-full hover:bg-blue-800 transition-colors">
+                        <a href="{{ \App\Models\Setting::getValue('linkedin_url', '#') }}" class="bg-blue-700 text-white p-3 rounded-full hover:bg-blue-800 transition-colors">
                             <i class="fab fa-linkedin-in"></i>
                         </a>
                         <a href="#" class="bg-green-500 text-white p-3 rounded-full hover:bg-green-600 transition-colors">

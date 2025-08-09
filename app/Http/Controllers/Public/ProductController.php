@@ -92,6 +92,12 @@ class ProductController extends Controller
 
         $product->load(['facility', 'category', 'statuses', 'features', 'attributes']);
 
+        // هل المنتج في المفضلة للمستخدم الحالي؟
+        $isFavorited = false;
+        if (auth()->check()) {
+            $isFavorited = auth()->user()->favoriteProducts()->where('products.id', $product->id)->exists();
+        }
+
         // المنتجات المشابهة
         $similarProducts = Product::with(['facility', 'category'])
             ->where('id', '!=', $product->id)
@@ -110,7 +116,7 @@ class ProductController extends Controller
             ->take(4)
             ->get();
 
-        return view('public.products.show', compact('product', 'similarProducts', 'facilityProducts'));
+        return view('public.products.show', compact('product', 'similarProducts', 'facilityProducts', 'isFavorited'));
     }
 
     /**
@@ -267,8 +273,8 @@ class ProductController extends Controller
                 ->with('error', 'يجب تسجيل الدخول لإضافة المنتج للمفضلة');
         }
 
-        if (!$user->products()->where('product_id', $product->id)->exists()) {
-            $user->products()->attach($product->id);
+        if (!$user->favoriteProducts()->where('products.id', $product->id)->exists()) {
+            $user->favoriteProducts()->attach($product->id);
             return redirect()->back()
                 ->with('success', 'تم إضافة المنتج للمفضلة بنجاح');
         }
@@ -289,7 +295,7 @@ class ProductController extends Controller
                 ->with('error', 'يجب تسجيل الدخول');
         }
 
-        $user->products()->detach($product->id);
+        $user->favoriteProducts()->detach($product->id);
 
         return redirect()->back()
             ->with('success', 'تم إزالة المنتج من المفضلة بنجاح');

@@ -178,11 +178,11 @@
                     </div>
 
                     <div class="mt-6 space-y-3">
-                        <a href="{{ route('public.facilities.appointment', $facility) }}"
+                        <a href="{{ route('public.facilities.appointment.form', $facility) }}"
                            class="w-full btn-primary text-white py-2 rounded-lg font-medium text-center block">
                             حجز موعد
                         </a>
-                        <a href="{{ route('public.facilities.quote', $facility) }}"
+                        <a href="{{ route('public.facilities.quote.form', $facility) }}"
                            class="w-full border border-primary-600 text-primary-600 py-2 rounded-lg font-medium text-center block hover:bg-primary-50 transition-colors">
                             طلب عرض سعر
                         </a>

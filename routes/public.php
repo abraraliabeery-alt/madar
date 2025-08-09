@@ -62,6 +62,9 @@ Route::name('public.')->group(function () {
     Route::get('/facilities/search', [FacilityController::class, 'search'])->name('facilities.search');
     Route::get('/facilities/map', [FacilityController::class, 'map'])->name('facilities.map');
     Route::get('/facilities/{facility}', [FacilityController::class, 'show'])->name('facilities.show');
+    // Public forms for appointment and quote
+    Route::get('/facilities/{facility}/appointment', [FacilityController::class, 'appointmentForm'])->name('facilities.appointment.form');
+    Route::get('/facilities/{facility}/quote', [FacilityController::class, 'quoteForm'])->name('facilities.quote.form');
     Route::get('/categories/{category}/facilities', [FacilityController::class, 'byCategory'])->name('facilities.by-category');
 
     // Category Routes
