@@ -21,45 +21,45 @@ class ProductController extends Controller
             ->where('is_verified', true);
 
         // Filter by category
-        if ($request->has('category_id')) {
+        if ($request->filled('category_id')) {
             $query->where('category_id', $request->category_id);
         }
 
         // Filter by facility
-        if ($request->has('facility_id')) {
+        if ($request->filled('facility_id')) {
             $query->where('facility_id', $request->facility_id);
         }
 
         // Filter by price range
-        if ($request->has('min_price')) {
+        if ($request->filled('min_price')) {
             $query->where('price', '>=', $request->min_price);
         }
 
-        if ($request->has('max_price')) {
+        if ($request->filled('max_price')) {
             $query->where('price', '<=', $request->max_price);
         }
 
         // Filter by property type
-        if ($request->has('property_type')) {
+        if ($request->filled('property_type')) {
             $query->where('property_type', $request->property_type);
         }
 
         // Filter by rooms
-        if ($request->has('rooms')) {
+        if ($request->filled('rooms')) {
             $query->where('rooms', $request->rooms);
         }
 
         // Filter by area range
-        if ($request->has('min_area')) {
+        if ($request->filled('min_area')) {
             $query->where('area', '>=', $request->min_area);
         }
 
-        if ($request->has('max_area')) {
+        if ($request->filled('max_area')) {
             $query->where('area', '<=', $request->max_area);
         }
 
         // Search by keyword
-        if ($request->has('q') && $request->q) {
+        if ($request->filled('q')) {
             $query->where(function($q) use ($request) {
                 $q->where('title', 'like', "%{$request->q}%")
                   ->orWhere('description', 'like', "%{$request->q}%")

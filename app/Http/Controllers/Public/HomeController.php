@@ -40,6 +40,14 @@ class HomeController extends Controller
             ->take(12)
             ->get();
 
+        // Coming soon products: available in the future
+        $comingSoonProducts = Product::with(['facility', 'category'])
+            ->where('is_active', true)
+            ->where('available_from', '>', now())
+            ->orderBy('available_from')
+            ->take(6)
+            ->get();
+
         $stats = [
             'total_products' => Product::where('is_active', true)->count(),
             'total_facilities' => Facility::where('is_active', true)->count(),
@@ -52,7 +60,8 @@ class HomeController extends Controller
             'featuredFacilities',
             'categories',
             'latestProducts',
-            'stats'
+            'stats',
+            'comingSoonProducts'
         ));
     }
 
