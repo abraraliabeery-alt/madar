@@ -302,13 +302,34 @@
                             </a>
                         @endif
                     </div>
+                    @push('styles')
+                        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+                        <style>
+                            #map { direction: ltr; }
+                        </style>
+                    @endpush
                     @push('scripts')
+                        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
                         <script>
-                            (function(){
-                                // Placeholder for map integration; can integrate Leaflet/Google Maps later.
+                            (function () {
                                 const el = document.getElementById('map');
-                                if (!el) return;
-                                el.innerHTML = '<div class="w-full h-full flex items-center justify-center text-sm text-gray-500">الخريطة ستظهر هنا</div>';
+                                if (!el || typeof L === 'undefined') return;
+
+                                const lat = @json($product->latitude);
+                                const lng = @json($product->longitude);
+                                const title = @json($product->title);
+                                const address = @json($product->address ?? '');
+
+                                const map = L.map('map', { scrollWheelZoom: false }).setView([lat, lng], 15);
+
+                                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                    maxZoom: 19,
+                                    attribution: '&copy; OpenStreetMap contributors'
+                                }).addTo(map);
+
+                                const marker = L.marker([lat, lng]).addTo(map);
+                                const popupContent = `<div class="text-sm"><div class="font-semibold mb-1">${title}</div>${address ? `<div class=\"text-gray-600\">${address}</div>` : ''}</div>`;
+                                marker.bindPopup(popupContent).openPopup();
                             })();
                         </script>
                     @endpush
