@@ -130,6 +130,47 @@
                             </div>
                         </div>
 
+                        <!-- Location -->
+                        <div class="card mt-4">
+                            <div class="card-header">
+                                <h6 class="mb-0">الموقع</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="latitude" class="form-label">خط العرض</label>
+                                            <input type="number" step="any" class="form-control @error('latitude') is-invalid @enderror" id="latitude" name="latitude" value="{{ old('latitude', $product->latitude) }}">
+                                            @error('latitude')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="longitude" class="form-label">خط الطول</label>
+                                            <input type="number" step="any" class="form-control @error('longitude') is-invalid @enderror" id="longitude" name="longitude" value="{{ old('longitude', $product->longitude) }}">
+                                            @error('longitude')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="google_maps_url" class="form-label">رابط خرائط جوجل</label>
+                                    <input type="url" class="form-control @error('google_maps_url') is-invalid @enderror" id="google_maps_url" name="google_maps_url" value="{{ old('google_maps_url', $product->google_maps_url) }}">
+                                    @error('google_maps_url')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="mb-2 d-flex align-items-center justify-content-between">
+                                    <label class="form-label mb-0">اختر الموقع على الخريطة</label>
+                                    <small class="text-muted">انقر لتثبيت المؤشر أو اسحب المؤشر لتغيير الموقع</small>
+                                </div>
+                                <div id="mapPicker" class="w-100" style="height: 350px; border-radius: .5rem; overflow: hidden; background: #eef2ff; direction: ltr;"></div>
+                            </div>
+                        </div>
+
                         <!-- Property Details -->
                         <div class="card mt-4">
                             <div class="card-header">
@@ -304,10 +345,70 @@
 </div>
 @endsection
 
+@push('styles')
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+@endpush
+
 @push('scripts')
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 $(document).ready(function() {
     // Initialize any JavaScript functionality here
+    (function initMapPicker() {
+        const mapEl = document.getElementById('mapPicker');
+        if (!mapEl || typeof L === 'undefined') return;
+
+        const latInput = document.getElementById('latitude');
+        const lngInput = document.getElementById('longitude');
+
+        const defaultLat = 24.7136; // Riyadh
+        const defaultLng = 46.6753;
+
+        const initialLat = latInput.value ? parseFloat(latInput.value) : defaultLat;
+        const initialLng = lngInput.value ? parseFloat(lngInput.value) : defaultLng;
+        const initialZoom = (latInput.value && lngInput.value) ? 14 : 11;
+
+        const map = L.map('mapPicker', { scrollWheelZoom: true }).setView([initialLat, initialLng], initialZoom);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        let marker = L.marker([initialLat, initialLng], { draggable: true }).addTo(map);
+
+        function setInputs(lat, lng) {
+            latInput.value = lat.toFixed(6);
+            lngInput.value = lng.toFixed(6);
+        }
+
+        map.on('click', function(e) {
+            const { lat, lng } = e.latlng;
+            marker.setLatLng([lat, lng]);
+            setInputs(lat, lng);
+        });
+
+        marker.on('dragend', function(e) {
+            const { lat, lng } = e.target.getLatLng();
+            setInputs(lat, lng);
+        });
+
+        latInput.addEventListener('change', function() {
+            const lat = parseFloat(latInput.value);
+            const lng = parseFloat(lngInput.value || defaultLng);
+            if (!isNaN(lat) && !isNaN(lng)) {
+                marker.setLatLng([lat, lng]);
+                map.setView([lat, lng], map.getZoom());
+            }
+        });
+        lngInput.addEventListener('change', function() {
+            const lat = parseFloat(latInput.value || defaultLat);
+            const lng = parseFloat(lngInput.value);
+            if (!isNaN(lat) && !isNaN(lng)) {
+                marker.setLatLng([lat, lng]);
+                map.setView([lat, lng], map.getZoom());
+            }
+        });
+    })();
 });
 </script>
 @endpush
