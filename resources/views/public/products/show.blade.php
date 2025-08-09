@@ -30,7 +30,7 @@
                     </div>
                 </div>
                 <div class="relative">
-                    <img src="{{ $product->image ?? 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' }}"
+                    <img src="{{ $product->image_url }}"
                          alt="{{ $product->title }}" class="rounded-lg shadow-xl w-full">
                 </div>
             </div>
@@ -48,6 +48,16 @@
                     <p class="text-gray-600 leading-relaxed mb-6">
                         {{ $product->description ?? 'لا يوجد وصف متاح لهذا العقار.' }}
                     </p>
+
+                    @if($product->statuses && $product->statuses->count())
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            @foreach($product->statuses as $status)
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-{{ $status->color_class }}-100 text-{{ $status->color_class }}-800">
+                                    <i class="{{ $status->icon_class }} ml-1"></i>{{ $status->display_name ?? $status->name }}
+                                </span>
+                            @endforeach
+                        </div>
+                    @endif
 
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div class="text-center">
@@ -89,6 +99,21 @@
                     </div>
                 @endif
 
+                <!-- Attributes Section -->
+                @if($product->attributes && $product->attributes->count() > 0)
+                    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4">الخصائص</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            @foreach($product->attributes as $attribute)
+                                <div class="flex items-center justify-between">
+                                    <span class="text-gray-600">{{ $attribute->translations->first()->name ?? $attribute->type }}</span>
+                                    <span class="font-medium text-gray-900">{{ $attribute->pivot->value ?? '-' }} {{ $attribute->translations->first()->symbol ?? '' }}</span>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+
                 <!-- Features Section -->
                 @if($product->features && $product->features->count() > 0)
                     <div class="bg-white rounded-lg shadow-md p-6 mb-8">
@@ -107,19 +132,31 @@
                 <!-- Comments Section -->
                 <div class="bg-white rounded-lg shadow-md p-6">
                     <h2 class="text-2xl font-bold text-gray-900 mb-4">التعليقات</h2>
-
                     @auth
                         <form action="{{ route('public.products.comment', $product) }}" method="POST" class="mb-6">
                             @csrf
-                            <div class="mb-4">
-                                <label for="comment" class="block text-sm font-medium text-gray-700 mb-2">أضف تعليقك</label>
-                                <textarea name="comment" id="comment" rows="3"
-                                          class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-                                          placeholder="اكتب تعليقك هنا..." required></textarea>
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-start">
+                                <div class="md:col-span-3">
+                                    <label for="comment" class="block text-sm font-medium text-gray-700 mb-2">أضف تعليقك</label>
+                                    <textarea name="comment" id="comment" rows="3"
+                                              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                                              placeholder="اكتب تعليقك هنا..." required></textarea>
+                                </div>
+                                <div>
+                                    <label for="rating" class="block text-sm font-medium text-gray-700 mb-2">التقييم</label>
+                                    <select id="rating" name="rating" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500" required>
+                                        <option value="">اختر</option>
+                                        @for($i=5;$i>=1;$i--)
+                                            <option value="{{ $i }}">{{ $i }}</option>
+                                        @endfor
+                                    </select>
+                                </div>
                             </div>
-                            <button type="submit" class="btn-primary text-white px-4 py-2 rounded-lg font-medium">
-                                إرسال التعليق
-                            </button>
+                            <div class="mt-4">
+                                <button type="submit" class="btn-primary text-white px-4 py-2 rounded-lg font-medium">
+                                    إرسال التعليق
+                                </button>
+                            </div>
                         </form>
                     @else
                         <div class="bg-gray-50 p-4 rounded-lg mb-6">
@@ -127,7 +164,34 @@
                         </div>
                     @endauth
 
-
+                    @php
+                        $comments = $product->comments()->latest()->take(10)->get();
+                    @endphp
+                    @if($comments->count())
+                        <div class="space-y-4">
+                            @foreach($comments as $comment)
+                                <div class="border border-gray-100 rounded-lg p-4">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <div class="flex items-center space-x-2 space-x-reverse">
+                                            <img src="{{ $comment->user->avatar ?? 'https://ui-avatars.com/api/?name=' . urlencode($comment->user->name) }}" class="w-8 h-8 rounded-full" alt="{{ $comment->user->name }}">
+                                            <span class="text-sm font-medium text-gray-900">{{ $comment->user->name }}</span>
+                                        </div>
+                                        @if($comment->rating)
+                                            <div class="text-yellow-500 text-sm">
+                                                @for($i=1;$i<=5;$i++)
+                                                    <i class="fa{{ $i <= $comment->rating ? 's' : 'r' }} fa-star"></i>
+                                                @endfor
+                                            </div>
+                                        @endif
+                                    </div>
+                                    <p class="text-gray-700 text-sm leading-relaxed">{{ $comment->comment }}</p>
+                                    <p class="text-xs text-gray-400 mt-2">{{ $comment->created_at->diffForHumans() }}</p>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <p class="text-sm text-gray-500">لا توجد تعليقات بعد.</p>
+                    @endif
                 </div>
             </div>
 
@@ -185,6 +249,12 @@
                             <span class="text-gray-600">متاح من</span>
                             <span class="font-semibold text-gray-900">{{ $product->available_from ? $product->available_from->format('Y/m/d') : 'غير محدد' }}</span>
                         </div>
+                        @if($product->available_to)
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">متاح حتى</span>
+                                <span class="font-semibold text-gray-900">{{ $product->available_to->format('Y/m/d') }}</span>
+                            </div>
+                        @endif
                     </div>
                 </div>
 
@@ -200,11 +270,36 @@
                                 <p class="text-sm text-gray-600">{{ $product->facility->category->name ?? '' }}</p>
                             </div>
                         </div>
+                        @if($product->facility->address)
+                            <p class="text-sm text-gray-600 mb-2"><i class="fas fa-map-marker-alt ml-2"></i>{{ $product->facility->address }}</p>
+                        @endif
                         <a href="{{ route('public.facilities.show', $product->facility) }}"
                            class="text-primary-600 hover:text-primary-700 text-sm font-medium">
                             عرض المنشأة
                         </a>
                     </div>
+                @endif
+
+                @if($product->latitude && $product->longitude)
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">الموقع على الخريطة</h3>
+                        <div class="w-full h-64 rounded" id="map" style="background:#eef2ff"></div>
+                        @if($product->google_maps_url)
+                            <a href="{{ $product->google_maps_url }}" target="_blank" class="inline-block mt-3 text-primary-600 hover:text-primary-700 text-sm font-medium">
+                                فتح في خرائط جوجل
+                            </a>
+                        @endif
+                    </div>
+                    @push('scripts')
+                        <script>
+                            (function(){
+                                // Placeholder for map integration; can integrate Leaflet/Google Maps later.
+                                const el = document.getElementById('map');
+                                if (!el) return;
+                                el.innerHTML = '<div class="w-full h-full flex items-center justify-center text-sm text-gray-500">الخريطة ستظهر هنا</div>';
+                            })();
+                        </script>
+                    @endpush
                 @endif
 
                 <!-- Contact Info -->

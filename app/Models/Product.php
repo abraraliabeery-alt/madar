@@ -88,7 +88,9 @@ class Product extends Model
 
     public function attributes()
     {
-        return $this->belongsToMany(Attribute::class, 'product_attribute_values');
+        return $this->belongsToMany(Attribute::class, 'product_attribute_values')
+            ->withPivot('value')
+            ->withTimestamps();
     }
 
     public function features()
@@ -99,6 +101,11 @@ class Product extends Model
     public function bookings()
     {
         return $this->hasMany(Booking::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
     }
 
 

@@ -350,34 +350,45 @@
         box-shadow: 0 10px 20px rgba(0,0,0,0.1);
     }
 </style>
+@endpush
+
+@push('scripts')
     <script>
         (function() {
-            const priceRange = document.getElementById('price_range');
-            if (!priceRange) return;
-            const minInput = document.getElementById('min_price');
-            const maxInput = document.getElementById('max_price');
+            function ready(fn){
+                if (document.readyState !== 'loading') fn();
+                else document.addEventListener('DOMContentLoaded', fn);
+            }
+            ready(function(){
+                const priceRange = document.getElementById('price_range');
+                const minInput = document.getElementById('min_price');
+                const maxInput = document.getElementById('max_price');
+                const form = document.getElementById('home-search-form');
+                if (!priceRange || !minInput || !maxInput || !form) return;
 
-            const applyRange = (value) => {
-                switch (value) {
-                    case 'lt-500000':
-                        minInput.value = '';
-                        maxInput.value = '500000';
-                        break;
-                    case '500000-1000000':
-                        minInput.value = '500000';
-                        maxInput.value = '1000000';
-                        break;
-                    case 'gt-1000000':
-                        minInput.value = '1000000';
-                        maxInput.value = '';
-                        break;
-                    default:
-                        minInput.value = '';
-                        maxInput.value = '';
-                }
-            };
+                const applyRange = (value) => {
+                    switch (value) {
+                        case 'lt-500000':
+                            minInput.value = '';
+                            maxInput.value = '500000';
+                            break;
+                        case '500000-1000000':
+                            minInput.value = '500000';
+                            maxInput.value = '1000000';
+                            break;
+                        case 'gt-1000000':
+                            minInput.value = '1000000';
+                            maxInput.value = '';
+                            break;
+                        default:
+                            minInput.value = '';
+                            maxInput.value = '';
+                    }
+                };
 
-            priceRange.addEventListener('change', (e) => applyRange(e.target.value));
+                priceRange.addEventListener('change', (e) => applyRange(e.target.value));
+                form.addEventListener('submit', () => applyRange(priceRange.value));
+            });
         })();
     </script>
 @endpush
