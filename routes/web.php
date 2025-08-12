@@ -17,6 +17,9 @@ use Illuminate\Support\Facades\Auth;
 // Laravel UI Auth Routes
 Auth::routes();
 
+// Public profile route - accessible by anyone
+Route::get('/profile/{id}', [App\Http\Controllers\ProfileController::class, 'publicProfile'])->name('profile.public');
+
 // Profile routes for authenticated users
 Route::middleware(['auth'])->group(function () {
     Route::get('/profile/edit', [App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
