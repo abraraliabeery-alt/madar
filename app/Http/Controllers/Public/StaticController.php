@@ -96,4 +96,78 @@ class StaticController extends Controller
 
         return redirect()->back()->with('success', 'تم إرسال طلب التوظيف بنجاح');
     }
+
+    /**
+     * Terms of service page
+     */
+    public function terms()
+    {
+        return view('public.static.terms');
+    }
+
+    /**
+     * Privacy policy page
+     */
+    public function privacy()
+    {
+        return view('public.static.privacy');
+    }
+
+    /**
+     * Cookie policy page
+     */
+    public function cookies()
+    {
+        return view('public.static.cookies');
+    }
+
+    /**
+     * Advertising policy page
+     */
+    public function advertising()
+    {
+        return view('public.static.advertising');
+    }
+
+    /**
+     * Generic dynamic page handler for any public.* route
+     * This method will handle routes like public.cities.index, public.terms, etc.
+     */
+    public function dynamicPage($slug)
+    {
+        // Handle special cases for cities
+        if ($slug === 'cities') {
+            return $this->citiesIndex();
+        }
+
+        // Try to find a page with this slug
+        $page = \App\Models\Page::where('slug', $slug)->first();
+        
+        if ($page) {
+            // If it's a link type page, redirect to the URL
+            if ($page->type === 'link' && $page->url) {
+                return redirect($page->url);
+            }
+            
+            // Otherwise, show the page content
+            return view('public.static.page', compact('page'));
+        }
+
+        // If no page found, try to handle as a model index
+        if ($slug === 'cities') {
+            return $this->citiesIndex();
+        }
+
+        // If nothing found, return 404
+        abort(404);
+    }
+
+    /**
+     * Cities index page
+     */
+    public function citiesIndex()
+    {
+        $cities = \App\Models\City::active()->featured()->ordered()->take(6)->get();
+        return view('public.cities.index', compact('cities'));
+    }
 }

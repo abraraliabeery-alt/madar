@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\AdminContractController;
 use App\Http\Controllers\Admin\AdminCategoryController;
 use App\Http\Controllers\Admin\AdminFeatureController;
 use App\Http\Controllers\Admin\AdminAttributeController;
+use App\Http\Controllers\Admin\AdminFaqController;
 use App\Http\Controllers\Admin\AdminProfileController;
 use App\Http\Controllers\Admin\AdminUploadController;
 
@@ -85,6 +86,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('attributes', AdminAttributeController::class);
     Route::post('attributes/{attribute}/toggle-required', [AdminAttributeController::class, 'toggleRequired'])->name('attributes.toggle-required');
     Route::get('attributes/statistics', [AdminAttributeController::class, 'statistics'])->name('attributes.statistics');
+
+    // FAQ Management
+    Route::resource('faqs', AdminFaqController::class);
+    Route::post('faqs/{faq}/toggle-status', [AdminFaqController::class, 'toggleStatus'])->name('faqs.toggle-status');
+    Route::post('faqs/update-order', [AdminFaqController::class, 'updateOrder'])->name('faqs.update-order');
 
     // Additional Admin Routes
     Route::get('notifications', [AdminController::class, 'notifications'])->name('notifications');

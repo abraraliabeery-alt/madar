@@ -93,5 +93,7 @@ class AppServiceProvider extends ServiceProvider
             $view->with('isRTL', $languageService->isRTL());
             $view->with('languageSwitcher', $languageService->getLanguageSwitcherData());
         });
+
+
     }
 }

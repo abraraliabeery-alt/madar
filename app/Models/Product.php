@@ -35,6 +35,7 @@ class Product extends Model
         'owner_user_id',
         'seller_user_id',
         'category_id',
+        'city_id',
         'views_count',
         'rating',
         'rating_count',
@@ -79,6 +80,11 @@ class Product extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function city()
+    {
+        return $this->belongsTo(City::class);
     }
 
     public function translations()

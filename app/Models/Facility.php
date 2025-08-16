@@ -31,6 +31,7 @@ class Facility extends Model
         'rating_count',
         'products_count',
         'category_id',
+        'city_id',
         'owner_user_id',
     ];
 
@@ -49,6 +50,11 @@ class Facility extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function city()
+    {
+        return $this->belongsTo(City::class);
     }
 
     public function owner()

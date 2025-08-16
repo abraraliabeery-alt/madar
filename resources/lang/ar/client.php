@@ -1,0 +1,201 @@
+<?php
+
+return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | Client Language Lines
+    |--------------------------------------------------------------------------
+    |
+    | The following language lines are used in the client panel for various
+    | messages, labels, and interface elements.
+    |
+    */
+
+    'dashboard' => [
+        'title' => 'لوحة التحكم',
+        'welcome' => 'مرحباً بعودتك، :name!',
+        'subtitle' => 'إليك ما يحدث في حسابك.',
+        'my_bookings' => 'حجوزاتي',
+        'my_appointments' => 'مواعيدي',
+        'favorite_facilities' => 'المنشآت المفضلة',
+        'recent_activities' => 'النشاطات الأخيرة',
+        'quick_actions' => 'إجراءات سريعة',
+        'total_bookings' => 'إجمالي الحجوزات',
+        'total_contracts' => 'إجمالي العقود',
+        'total_appointments' => 'إجمالي المواعيد',
+        'favorite_products' => 'المنتجات المفضلة',
+        'pending_actions' => 'الإجراءات المعلقة',
+        'pending_bookings_text' => 'حجوزات معلقة',
+        'pending_bookings_description' => 'راجع وأكد حجوزاتك المعلقة',
+        'active_contracts_text' => 'عقود نشطة',
+        'active_contracts_description' => 'إدارة عقودك النشطة',
+    ],
+
+    'navigation' => [
+        'dashboard' => 'لوحة التحكم',
+        'profile' => 'الملف الشخصي',
+        'bookings' => 'حجوزاتي',
+        'appointments' => 'مواعيدي',
+        'favorites' => 'المفضلة',
+        'notifications' => 'الإشعارات',
+        'settings' => 'الإعدادات',
+        'logout' => 'تسجيل الخروج',
+    ],
+
+    'profile' => [
+        'title' => 'الملف الشخصي',
+        'personal_info' => 'المعلومات الشخصية',
+        'contact_info' => 'معلومات الاتصال',
+        'preferences' => 'التفضيلات',
+        'security' => 'الأمان',
+        'save' => 'حفظ التغييرات',
+        'updated' => 'تم تحديث الملف الشخصي بنجاح!',
+        'avatar' => 'الصورة الشخصية',
+        'change_password' => 'تغيير كلمة المرور',
+        'notification_settings' => 'إعدادات الإشعارات',
+    ],
+
+    'bookings' => [
+        'title' => 'حجوزاتي',
+        'upcoming' => 'الحجوزات القادمة',
+        'past' => 'الحجوزات السابقة',
+        'cancelled' => 'الحجوزات الملغاة',
+        'view' => 'عرض التفاصيل',
+        'cancel' => 'إلغاء الحجز',
+        'reschedule' => 'إعادة جدولة',
+        'rate' => 'تقييم ومراجعة',
+        'no_bookings' => 'ليس لديك أي حجوزات بعد.',
+        'booking_details' => 'تفاصيل الحجز',
+        'facility' => 'المنشأة',
+        'product' => 'المنتج/الخدمة',
+        'date' => 'التاريخ',
+        'time' => 'الوقت',
+        'status' => 'الحالة',
+        'amount' => 'المبلغ',
+        'notes' => 'ملاحظات',
+    ],
+
+    'appointments' => [
+        'title' => 'مواعيدي',
+        'upcoming' => 'المواعيد القادمة',
+        'past' => 'المواعيد السابقة',
+        'cancelled' => 'المواعيد الملغاة',
+        'view' => 'عرض التفاصيل',
+        'cancel' => 'إلغاء الموعد',
+        'reschedule' => 'إعادة جدولة',
+        'no_appointments' => 'ليس لديك أي مواعيد بعد.',
+        'appointment_details' => 'تفاصيل الموعد',
+        'facility' => 'المنشأة',
+        'service' => 'الخدمة',
+        'date' => 'التاريخ',
+        'time' => 'الوقت',
+        'duration' => 'المدة',
+        'status' => 'الحالة',
+        'notes' => 'ملاحظات',
+    ],
+
+    'favorites' => [
+        'title' => 'المفضلة',
+        'subtitle' => 'إدارة منتجاتك والمنشآت المفضلة',
+        'facilities' => 'المنشآت المفضلة',
+        'products' => 'المنتجات المفضلة',
+        'add_to_favorites' => 'إضافة للمفضلة',
+        'remove_from_favorites' => 'إزالة من المفضلة',
+        'no_favorites' => 'ليس لديك أي مفضلات بعد.',
+        'no_products' => 'لا توجد منتجات مفضلة بعد',
+        'no_products_description' => 'ابدأ بإضافة منتجات للمفضلة لرؤيتها هنا.',
+        'no_facilities' => 'لا توجد منشآت مفضلة بعد',
+        'no_facilities_description' => 'ابدأ بإضافة منشآت للمفضلة لرؤيتها هنا.',
+        'view_facility' => 'عرض المنشأة',
+        'view_product' => 'عرض المنتج',
+        'book_now' => 'احجز الآن',
+        'book_appointment' => 'حجز موعد',
+        'browse_products' => 'تصفح المنتجات',
+        'browse_facilities' => 'تصفح المنشآت',
+    ],
+
+    'notifications' => [
+        'title' => 'الإشعارات',
+        'all' => 'جميع الإشعارات',
+        'unread' => 'غير مقروء',
+        'mark_all_read' => 'تحديد الكل كمقروء',
+        'no_notifications' => 'ليس لديك أي إشعارات.',
+        'booking_confirmed' => 'تم تأكيد حجزك!',
+        'booking_cancelled' => 'تم إلغاء حجزك.',
+        'appointment_reminder' => 'تذكير بالموعد غداً.',
+        'new_offers' => 'عروض جديدة متاحة في منشآتك المفضلة!',
+    ],
+
+    'settings' => [
+        'title' => 'الإعدادات',
+        'account' => 'إعدادات الحساب',
+        'privacy' => 'إعدادات الخصوصية',
+        'notifications' => 'تفضيلات الإشعارات',
+        'language' => 'اللغة',
+        'timezone' => 'المنطقة الزمنية',
+        'currency' => 'العملة',
+        'save' => 'حفظ الإعدادات',
+        'saved' => 'تم حفظ الإعدادات بنجاح!',
+    ],
+
+    'actions' => [
+        'book' => 'احجز الآن',
+        'reschedule' => 'إعادة جدولة',
+        'cancel' => 'إلغاء',
+        'view' => 'عرض',
+        'edit' => 'تعديل',
+        'save' => 'حفظ',
+        'update' => 'تحديث',
+        'delete' => 'حذف',
+        'confirm' => 'تأكيد',
+        'back' => 'رجوع',
+        'search' => 'بحث',
+        'filter' => 'تصفية',
+        'sort' => 'ترتيب',
+        'all' => 'الكل',
+    ],
+
+    'messages' => [
+        'booking_created' => 'تم إنشاء الحجز بنجاح!',
+        'booking_cancelled' => 'تم إلغاء الحجز بنجاح!',
+        'booking_rescheduled' => 'تم إعادة جدولة الحجز بنجاح!',
+        'appointment_created' => 'تم إنشاء الموعد بنجاح!',
+        'appointment_cancelled' => 'تم إلغاء الموعد بنجاح!',
+        'appointment_rescheduled' => 'تم إعادة جدولة الموعد بنجاح!',
+        'profile_updated' => 'تم تحديث الملف الشخصي بنجاح!',
+        'password_changed' => 'تم تغيير كلمة المرور بنجاح!',
+        'settings_saved' => 'تم حفظ الإعدادات بنجاح!',
+        'error' => 'حدث خطأ. يرجى المحاولة مرة أخرى.',
+        'confirm_cancel' => 'هل أنت متأكد من إلغاء هذا :item؟',
+        'confirm_delete' => 'هل أنت متأكد من حذف هذا :item؟',
+    ],
+
+    'status' => [
+        'pending' => 'في الانتظار',
+        'confirmed' => 'مؤكد',
+        'cancelled' => 'ملغي',
+        'completed' => 'مكتمل',
+        'rescheduled' => 'أعيدت الجدولة',
+        'active' => 'نشط',
+        'inactive' => 'غير نشط',
+    ],
+
+    'common' => [
+        'name' => 'الاسم',
+        'email' => 'البريد الإلكتروني',
+        'phone' => 'الهاتف',
+        'address' => 'العنوان',
+        'city' => 'المدينة',
+        'country' => 'البلد',
+        'postal_code' => 'الرمز البريدي',
+        'date' => 'التاريخ',
+        'time' => 'الوقت',
+        'status' => 'الحالة',
+        'actions' => 'الإجراءات',
+        'created_at' => 'تاريخ الإنشاء',
+        'updated_at' => 'تاريخ التحديث',
+        'no_records' => 'لا توجد سجلات.',
+    ],
+
+];

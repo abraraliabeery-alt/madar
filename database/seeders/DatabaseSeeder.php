@@ -25,6 +25,8 @@ class DatabaseSeeder extends Seeder
             ProductStatusSeeder::class,
             FacilityStatusSeeder::class,
             NotificationSeeder::class,
+            FavoriteSeeder::class,
+            FaqSeeder::class,
         ]);
     }
 }

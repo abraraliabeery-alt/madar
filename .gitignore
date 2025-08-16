@@ -23,5 +23,6 @@ Homestead.json
 Homestead.yaml
 Thumbs.db
 public/categories/icons/*
-public/products/images/*
+public/product-images/images/*
 public/categories/images/*
+public/uploads/*

@@ -28,11 +28,8 @@ class NotificationSeeder extends Seeder
                     $booking = Booking::create([
                         'user_id' => $user->id,
                         'product_id' => $product->id,
-                        'facility_id' => $product->facility_id,
-                        'booking_date' => now()->addDays(rand(1, 30)),
                         'total_amount' => rand(1000, 50000),
                         'status' => 'pending',
-                        'payment_status' => 'pending',
                     ]);
 
                     // Send booking created notification

@@ -15,11 +15,21 @@ return [
     'dashboard' => [
         'title' => 'My Dashboard',
         'welcome' => 'Welcome back, :name!',
+        'subtitle' => 'Here\'s what\'s happening with your account.',
         'my_bookings' => 'My Bookings',
         'my_appointments' => 'My Appointments',
         'favorite_facilities' => 'Favorite Facilities',
         'recent_activities' => 'Recent Activities',
         'quick_actions' => 'Quick Actions',
+        'total_bookings' => 'Total Bookings',
+        'total_contracts' => 'Total Contracts',
+        'total_appointments' => 'Total Appointments',
+        'favorite_products' => 'Favorite Products',
+        'pending_actions' => 'Pending Actions',
+        'pending_bookings_text' => 'pending bookings',
+        'pending_bookings_description' => 'Review and confirm your pending bookings',
+        'active_contracts_text' => 'active contracts',
+        'active_contracts_description' => 'Manage your active contracts',
     ],
 
     'navigation' => [
@@ -87,14 +97,22 @@ return [
 
     'favorites' => [
         'title' => 'My Favorites',
+        'subtitle' => 'Manage your favorite products and facilities',
         'facilities' => 'Favorite Facilities',
         'products' => 'Favorite Products',
         'add_to_favorites' => 'Add to Favorites',
         'remove_from_favorites' => 'Remove from Favorites',
         'no_favorites' => 'You don\'t have any favorites yet.',
+        'no_products' => 'No favorite products yet',
+        'no_products_description' => 'Start adding products to your favorites to see them here.',
+        'no_facilities' => 'No favorite facilities yet',
+        'no_facilities_description' => 'Start adding facilities to your favorites to see them here.',
         'view_facility' => 'View Facility',
         'view_product' => 'View Product',
         'book_now' => 'Book Now',
+        'book_appointment' => 'Book Appointment',
+        'browse_products' => 'Browse Products',
+        'browse_facilities' => 'Browse Facilities',
     ],
 
     'notifications' => [
@@ -135,6 +153,7 @@ return [
         'search' => 'Search',
         'filter' => 'Filter',
         'sort' => 'Sort',
+        'all' => 'All',
     ],
 
     'messages' => [

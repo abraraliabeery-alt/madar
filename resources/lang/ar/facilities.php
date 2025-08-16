@@ -114,7 +114,7 @@ return [
         'officially_verified' => 'معتمدة رسمياً',
         'officially_verified_desc' => 'جميع المنشآت المميزة معتمدة من الجهات الرسمية',
         'customer_experience' => 'تجربة عملاء',
-        'officially_verified_desc' => 'تقييمات عالية من العملاء السابقين',
+        'customer_experience_desc' => 'تقييمات عالية من العملاء السابقين',
     ],
 
     'map' => [
@@ -132,6 +132,11 @@ return [
         'routes_paths_desc' => 'احصل على أفضل الطرق للوصول',
         'detailed_info' => 'معلومات مفصلة',
         'detailed_info_desc' => 'عرض تفاصيل كل منشأة على الخريطة',
+        'interactive_map' => 'خريطة تفاعلية للمنشآت',
+        'coming_soon' => 'سيتم إضافة الخريطة قريباً',
+        'location_success' => 'تم تحديد موقعك بنجاح!',
+        'location_error' => 'تعذر تحديد موقعك. يرجى المحاولة مرة أخرى.',
+        'location_not_supported' => 'متصفحك لا يدعم تحديد الموقع.',
     ],
 
     'search_results' => [
@@ -152,6 +157,7 @@ return [
         'use_different_words' => '• استخدام كلمات مختلفة',
         'search_single_word' => '• البحث بكلمة واحدة فقط',
         'new_search' => 'بحث جديد',
+        'no_results_message' => 'لم نتمكن من العثور على منشآت تطابق ":search"',
     ],
 
     'appointment' => [
@@ -187,6 +193,14 @@ return [
         'facility_category' => 'فئة المنشأة',
     ],
 
+    'product' => [
+        'rooms' => 'غرف',
+        'bathrooms' => 'حمامات',
+        'area' => 'م²',
+        'currency' => 'ريال',
+        'view_details' => 'عرض التفاصيل',
+    ],
+
     'common' => [
         'loading' => 'جاري التحميل...',
         'error' => 'خطأ',
@@ -199,6 +213,7 @@ return [
         'next' => 'التالي',
         'previous' => 'السابق',
         'close' => 'إغلاق',
+        'view' => 'عرض',
         'yes' => 'نعم',
         'no' => 'لا',
         'or' => 'أو',
@@ -227,5 +242,14 @@ return [
         'its' => 'له',
         'our' => 'لنا',
         'their' => 'لهم',
+    ],
+
+    'stats' => [
+        'title' => 'إحصائيات المنشآت',
+        'subtitle' => 'أرقام تعكس ثقة عملائنا في منشآتنا المعتمدة',
+        'total_facilities' => 'منشأة معتمدة',
+        'verified_facilities' => 'منشأة موثقة',
+        'total_products' => 'عقار متاح',
+        'satisfied_clients' => 'عميل راضي',
     ],
 ];

@@ -161,15 +161,45 @@
                 <h2 class="text-3xl font-bold text-gray-900 mb-4">موقعنا</h2>
                 <p class="text-lg text-gray-600">يمكنك زيارة مكتبنا أو التواصل معنا عبر الخريطة</p>
             </div>
-            <div class="bg-gray-200 rounded-lg h-96 flex items-center justify-center">
-                <div class="text-center">
-                    <i class="fas fa-map text-4xl text-gray-400 mb-4"></i>
-                    <p class="text-gray-600">خريطة تفاعلية ستظهر هنا</p>
-                    <p class="text-sm text-gray-500 mt-2">يمكن إضافة خريطة Google Maps أو أي خدمة خرائط أخرى</p>
-                </div>
-            </div>
+            <div class="bg-gray-200 rounded-lg h-96" id="contact-map"></div>
         </div>
     </div>
+
+    @push('styles')
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+        <style>
+            #contact-map { direction: ltr; }
+        </style>
+    @endpush
+    @push('scripts')
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+        <script>
+            (function () {
+                const el = document.getElementById('contact-map');
+                if (!el || typeof L === 'undefined') return;
+
+                // Default coordinates for Riyadh, Saudi Arabia
+                const defaultLat = 24.7136;
+                const defaultLng = 46.6753;
+                const contactAddress = '{{ \App\Models\Setting::getValue("contact_address", "الرياض، المملكة العربية السعودية") }}';
+
+                // Try to get coordinates from settings, fallback to default
+                const lat = {{ \App\Models\Setting::getValue('contact_latitude', 24.7136) }};
+                const lng = {{ \App\Models\Setting::getValue('contact_longitude', 46.6753) }};
+
+                const map = L.map('contact-map', { scrollWheelZoom: false }).setView([lat, lng], 15);
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '&copy; OpenStreetMap contributors'
+                }).addTo(map);
+
+                const marker = L.marker([lat, lng]).addTo(map);
+                const popupContent = `<div class="text-sm"><div class="font-semibold mb-1">مكتبنا</div><div class="text-gray-600">${contactAddress}</div></div>`;
+                marker.bindPopup(popupContent).openPopup();
+            })();
+        </script>
+    @endpush
 
     <!-- FAQ Section -->
     <div class="bg-gray-50 py-16">
@@ -179,18 +209,29 @@
                 <p class="text-lg text-gray-600">إجابات على أكثر الأسئلة شيوعاً</p>
             </div>
             <div class="space-y-6">
-                <div class="bg-white rounded-lg shadow-md p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-3">كيف يمكنني البحث عن عقار؟</h3>
-                    <p class="text-gray-600">يمكنك استخدام صفحة البحث المتقدم أو تصفح العقارات المتاحة حسب الفئة أو المنطقة.</p>
-                </div>
-                <div class="bg-white rounded-lg shadow-md p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-3">كيف يمكنني التواصل مع مالك العقار؟</h3>
-                    <p class="text-gray-600">يمكنك إرسال رسالة مباشرة من صفحة العقار أو الاتصال بالرقم المرفق.</p>
-                </div>
-                <div class="bg-white rounded-lg shadow-md p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-3">هل الخدمة مجانية؟</h3>
-                    <p class="text-gray-600">نعم، خدمات البحث والتصفح مجانية. بعض الخدمات المتقدمة قد تتطلب اشتراك.</p>
-                </div>
+                @php
+                    $faqs = \App\Models\Faq::getActiveFaqs(app()->getLocale());
+                @endphp
+                
+                @forelse($faqs as $faq)
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3">{{ $faq->question }}</h3>
+                        <p class="text-gray-600">{{ $faq->answer }}</p>
+                    </div>
+                @empty
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3">كيف يمكنني البحث عن عقار؟</h3>
+                        <p class="text-gray-600">يمكنك استخدام صفحة البحث المتقدم أو تصفح العقارات المتاحة حسب الفئة أو المنطقة.</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3">كيف يمكنني التواصل مع مالك العقار؟</h3>
+                        <p class="text-gray-600">يمكنك إرسال رسالة مباشرة من صفحة العقار أو الاتصال بالرقم المرفق.</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3">هل الخدمة مجانية؟</h3>
+                        <p class="text-gray-600">نعم، خدمات البحث والتصفح مجانية. بعض الخدمات المتقدمة قد تتطلب اشتراك.</p>
+                    </div>
+                @endforelse
             </div>
         </div>
     </div>

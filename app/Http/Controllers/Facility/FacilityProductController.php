@@ -121,7 +121,7 @@ class FacilityProductController extends Controller
 
         // معالجة الصورة الرئيسية
         if ($request->hasFile('main_image')) {
-            $imagePath = $request->file('main_image')->store('products/images', 'public');
+            $imagePath = $request->file('main_image')->store('uploads/products/images', 'public');
             $productData['main_image'] = $imagePath;
         }
 
@@ -220,7 +220,7 @@ class FacilityProductController extends Controller
             if ($product->main_image) {
                 Storage::disk('public')->delete($product->main_image);
             }
-            $imagePath = $request->file('main_image')->store('products/images', 'public');
+            $imagePath = $request->file('main_image')->store('uploads/products/images', 'public');
             $productData['main_image'] = $imagePath;
         }
 

@@ -8,6 +8,8 @@ use App\Models\Product;
 use App\Models\Facility;
 use App\Models\Category;
 use App\Models\Status;
+use App\Models\City;
+use App\Models\Page;
 
 class HomeController extends Controller
 {
@@ -55,13 +57,38 @@ class HomeController extends Controller
             'featured_products' => Product::where('is_featured', true)->where('is_active', true)->count(),
         ];
 
+        // Get featured cities with products count
+        $featuredCities = City::withCount(['products' => function ($query) {
+            $query->where('is_active', true);
+        }])
+        ->where('is_featured', true)
+        ->where('is_active', true)
+        ->ordered()
+        ->take(6)
+        ->get();
+
+        // Get footer links
+        $footerLinks = Page::ofType('footer')
+            ->active()
+            ->ordered()
+            ->get();
+
+        // Get main navigation links
+        $navLinks = Page::ofType('link')
+            ->active()
+            ->ordered()
+            ->get();
+
         return view('public.home', compact(
             'featuredProducts',
             'featuredFacilities',
             'categories',
             'latestProducts',
             'stats',
-            'comingSoonProducts'
+            'comingSoonProducts',
+            'featuredCities',
+            'footerLinks',
+            'navLinks'
         ));
     }
 

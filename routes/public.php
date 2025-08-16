@@ -77,6 +77,9 @@ Route::name('public.')->group(function () {
     Route::get('/features', [FeatureController::class, 'index'])->name('features.index');
     Route::get('/features/{feature}', [FeatureController::class, 'show'])->name('features.show');
 
+    // Cities Routes
+    Route::get('/cities', [StaticController::class, 'citiesIndex'])->name('cities.index');
+
     // User Actions (require authentication)
     Route::middleware('auth')->group(function () {
 
@@ -118,6 +121,12 @@ Route::name('public.')->group(function () {
     Route::get('/careers', [StaticController::class, 'careers'])->name('careers');
     Route::get('/careers/{job}', [StaticController::class, 'jobDetails'])->name('careers.job');
     Route::post('/careers/{job}/apply', [StaticController::class, 'applyForJob'])->name('careers.apply');
+    
+    // Footer Pages
+    Route::get('/terms', [StaticController::class, 'terms'])->name('terms');
+    Route::get('/privacy', [StaticController::class, 'privacy'])->name('privacy');
+    Route::get('/cookies', [StaticController::class, 'cookies'])->name('cookies');
+    Route::get('/advertising', [StaticController::class, 'advertising'])->name('advertising');
 
     // Newsletter
     Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
@@ -127,4 +136,9 @@ Route::name('public.')->group(function () {
     Route::get('/404', [ErrorController::class, 'notFound'])->name('404');
     Route::get('/500', [ErrorController::class, 'serverError'])->name('500');
     Route::get('/maintenance', [ErrorController::class, 'maintenance'])->name('maintenance');
+
+    // Dynamic Routes - This should be the LAST route to catch any remaining public.* routes
+    Route::get('/{slug}', function ($slug) {
+        return \App\Services\DynamicRouteService::handleRoute('public.' . $slug);
+    })->name('dynamic.public')->where('slug', '.*');
 });

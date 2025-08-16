@@ -114,7 +114,7 @@ return [
         'officially_verified' => 'Officially Verified',
         'officially_verified_desc' => 'All featured facilities are verified by official authorities',
         'customer_experience' => 'Customer Experience',
-        'officially_verified_desc' => 'High ratings from previous customers',
+        'customer_experience_desc' => 'High ratings from previous customers',
     ],
 
     'map' => [
@@ -132,6 +132,11 @@ return [
         'routes_paths_desc' => 'Get the best routes to reach',
         'detailed_info' => 'Detailed Information',
         'detailed_info_desc' => 'View details of each facility on the map',
+        'interactive_map' => 'Interactive facilities map',
+        'coming_soon' => 'Map will be added soon',
+        'location_success' => 'Your location has been determined successfully!',
+        'location_error' => 'Unable to determine your location. Please try again.',
+        'location_not_supported' => 'Your browser does not support location detection.',
     ],
 
     'search_results' => [
@@ -152,6 +157,7 @@ return [
         'use_different_words' => '• Use different words',
         'search_single_word' => '• Search with a single word only',
         'new_search' => 'New Search',
+        'no_results_message' => 'We could not find facilities matching ":search"',
     ],
 
     'appointment' => [
@@ -187,6 +193,14 @@ return [
         'facility_category' => 'Facility Category',
     ],
 
+    'product' => [
+        'rooms' => 'rooms',
+        'bathrooms' => 'bathrooms',
+        'area' => 'm²',
+        'currency' => 'SAR',
+        'view_details' => 'View Details',
+    ],
+
     'common' => [
         'loading' => 'Loading...',
         'error' => 'Error',
@@ -199,6 +213,7 @@ return [
         'next' => 'Next',
         'previous' => 'Previous',
         'close' => 'Close',
+        'view' => 'View',
         'yes' => 'Yes',
         'no' => 'No',
         'or' => 'or',
@@ -227,5 +242,14 @@ return [
         'its' => 'its',
         'our' => 'our',
         'their' => 'their',
+    ],
+
+    'stats' => [
+        'title' => 'Facility Statistics',
+        'subtitle' => 'Numbers that reflect our clients\' trust in our verified facilities',
+        'total_facilities' => 'Verified Facilities',
+        'verified_facilities' => 'Documented Facilities',
+        'total_products' => 'Available Properties',
+        'satisfied_clients' => 'Satisfied Clients',
     ],
 ];

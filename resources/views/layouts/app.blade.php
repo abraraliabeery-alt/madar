@@ -108,6 +108,63 @@
                     <a href="{{ route('public.home') }}" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
                         الرئيسية
                     </a>
+                    
+                    <!-- Categories Dropdown -->
+                    <div class="relative" x-data="{ open: false }">
+                        <button @click="open = !open" @click.away="open = false" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center">
+                            الفئات
+                            <i class="fas fa-chevron-down mr-1 text-xs"></i>
+                        </button>
+                        <div x-show="open" x-transition class="absolute left-0 mt-2 w-64 bg-white rounded-md shadow-lg py-1 z-50">
+                            @php
+                                $categories = \App\Models\Category::withCount(['products' => function ($query) {
+                                    $query->where('is_active', true);
+                                }])->where('is_active', true)->take(8)->get();
+                            @endphp
+                            @foreach($categories as $category)
+                                <a href="{{ route('public.products.by-category', $category->id) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary-600">
+                                    <div class="flex justify-between items-center">
+                                        <span>{{ $category->display_name ?? $category->name }}</span>
+                                        <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">{{ $category->products_count }}</span>
+                                    </div>
+                                </a>
+                            @endforeach
+                            <div class="border-t border-gray-200 mt-2 pt-2">
+                                <a href="{{ route('public.categories.index') }}" class="block px-4 py-2 text-sm text-primary-600 hover:bg-gray-100">
+                                    عرض جميع الفئات
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cities Dropdown -->
+                    <div class="relative" x-data="{ open: false }">
+                        <button @click="open = !open" @click.away="open = false" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center">
+                            المدن
+                            <i class="fas fa-chevron-down mr-1 text-xs"></i>
+                        </button>
+                        <div x-show="open" x-transition class="absolute left-0 mt-2 w-64 bg-white rounded-md shadow-lg py-1 z-50">
+                            @php
+                                $cities = \App\Models\City::withCount(['products' => function ($query) {
+                                    $query->where('is_active', true);
+                                }])->where('is_active', true)->take(8)->get();
+                            @endphp
+                            @foreach($cities as $city)
+                                <a href="{{ route('public.products.index', ['city' => $city->id]) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary-600">
+                                    <div class="flex justify-between items-center">
+                                        <span>{{ $city->name }}</span>
+                                        <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">{{ $city->products_count }}</span>
+                                    </div>
+                                </a>
+                            @endforeach
+                            <div class="border-t border-gray-200 mt-2 pt-2">
+                                <a href="{{ route('public.cities.index') }}" class="block px-4 py-2 text-sm text-primary-600 hover:bg-gray-100">
+                                    عرض جميع المدن
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <a href="{{ route('public.products.index') }}" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
                         العقارات
                     </a>
@@ -116,6 +173,7 @@
                             المنشآت
                         </a>
                     @endif
+                    
                     <a href="{{ route('public.about') }}" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
                         من نحن
                     </a>
@@ -410,6 +468,14 @@
                         <li><a href="{{ route('public.products.index') }}" class="hover:text-white transition-colors">العقارات</a></li>
                         <li><a href="{{ route('public.facilities.index') }}" class="hover:text-white transition-colors">المنشآت</a></li>
                         <li><a href="{{ route('public.contact') }}" class="hover:text-white transition-colors">اتصل بنا</a></li>
+                        
+                        <!-- Dynamic Footer Links -->
+                        @php
+                            $footerLinks = \App\Models\Page::ofType('footer')->active()->ordered()->take(4)->get();
+                        @endphp
+                        @foreach($footerLinks as $link)
+                            <li><a href="{{ route('public.' . $link->slug) }}" class="hover:text-white transition-colors">{{ $link->title }}</a></li>
+                        @endforeach
                     </ul>
                 </div>
                 <div>
@@ -420,18 +486,52 @@
                         <p><i class="fas fa-map-marker-alt ml-2"></i>الرياض، المملكة العربية السعودية</p>
                     </div>
                     <div class="flex space-x-4 space-x-reverse mt-4">
-                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                            <i class="fab fa-facebook text-xl"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                            <i class="fab fa-twitter text-xl"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                            <i class="fab fa-instagram text-xl"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                            <i class="fab fa-linkedin text-xl"></i>
-                        </a>
+                        @php
+                            $socialLinks = [
+                                'facebook' => \App\Models\Setting::getValue('social_facebook'),
+                                'twitter' => \App\Models\Setting::getValue('social_twitter'),
+                                'instagram' => \App\Models\Setting::getValue('social_instagram'),
+                                'linkedin' => \App\Models\Setting::getValue('social_linkedin'),
+                                'youtube' => \App\Models\Setting::getValue('social_youtube'),
+                                'snapchat' => \App\Models\Setting::getValue('social_snapchat'),
+                            ];
+                        @endphp
+                        
+                        @if($socialLinks['facebook'])
+                            <a href="{{ $socialLinks['facebook'] }}" target="_blank" class="text-gray-400 hover:text-white transition-colors">
+                                <i class="fab fa-facebook text-xl"></i>
+                            </a>
+                        @endif
+                        
+                        @if($socialLinks['twitter'])
+                            <a href="{{ $socialLinks['twitter'] }}" target="_blank" class="text-gray-400 hover:text-white transition-colors">
+                                <i class="fab fa-twitter text-xl"></i>
+                            </a>
+                        @endif
+                        
+                        @if($socialLinks['instagram'])
+                            <a href="{{ $socialLinks['instagram'] }}" target="_blank" class="text-gray-400 hover:text-white transition-colors">
+                                <i class="fab fa-instagram text-xl"></i>
+                            </a>
+                        @endif
+                        
+                        @if($socialLinks['linkedin'])
+                            <a href="{{ $socialLinks['linkedin'] }}" target="_blank" class="text-gray-400 hover:text-white transition-colors">
+                                <i class="fab fa-linkedin text-xl"></i>
+                            </a>
+                        @endif
+                        
+                        @if($socialLinks['youtube'])
+                            <a href="{{ $socialLinks['youtube'] }}" target="_blank" class="text-gray-400 hover:text-white transition-colors">
+                                <i class="fab fa-youtube text-xl"></i>
+                            </a>
+                        @endif
+                        
+                        @if($socialLinks['snapchat'])
+                            <a href="{{ $socialLinks['snapchat'] }}" target="_blank" class="text-gray-400 hover:text-white transition-colors">
+                                <i class="fab fa-snapchat text-xl"></i>
+                            </a>
+                        @endif
                     </div>
                 </div>
             </div>

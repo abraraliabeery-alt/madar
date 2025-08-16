@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'طلب عرض سعر')
+@section('title', __('facilities.quote.title'))
 
 @section('content')
 <div class="min-h-screen bg-gray-50">
     <div class="bg-gradient-to-r from-primary-600 to-primary-800 text-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <h1 class="text-3xl md:text-4xl font-bold">طلب عرض سعر من {{ $facility->name }}</h1>
-            <p class="text-primary-100 mt-2">املأ البيانات وسيتم التواصل معك لتقديم العرض المناسب</p>
+            <h1 class="text-3xl md:text-4xl font-bold">{{ __('facilities.quote.title') }} {{ __('facilities.common.from') }} {{ $facility->name }}</h1>
+            <p class="text-primary-100 mt-2">{{ __('facilities.quote.subtitle') }}</p>
         </div>
     </div>
 
@@ -20,41 +20,41 @@
             @endif
 
             <div class="bg-white rounded-lg shadow-md p-6">
-                <h2 class="text-xl font-semibold text-gray-900 mb-4">نموذج طلب عرض السعر</h2>
+                <h2 class="text-xl font-semibold text-gray-900 mb-4">{{ __('facilities.quote.form_title') }}</h2>
                 <form action="{{ route('public.facilities.quote', $facility) }}" method="POST" class="space-y-4">
                     @csrf
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">الاسم</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('facilities.appointment.name') }}</label>
                             <input type="text" name="name" value="{{ old('name', auth()->user()->name ?? '') }}" required class="w-full px-3 py-2 border rounded-md focus:ring-primary-500 focus:border-primary-500 @error('name') border-red-300 @enderror">
                             @error('name')
                                 <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
                             @enderror
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">البريد الإلكتروني</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('facilities.appointment.email') }}</label>
                             <input type="email" name="email" value="{{ old('email', auth()->user()->email ?? '') }}" required class="w-full px-3 py-2 border rounded-md focus:ring-primary-500 focus:border-primary-500 @error('email') border-red-300 @enderror">
                             @error('email')
                                 <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
                             @enderror
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">رقم الهاتف</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('facilities.appointment.phone') }}</label>
                             <input type="text" name="phone" value="{{ old('phone') }}" required class="w-full px-3 py-2 border rounded-md focus:ring-primary-500 focus:border-primary-500 @error('phone') border-red-300 @enderror">
                             @error('phone')
                                 <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
                             @enderror
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">نوع العقار المطلوب</label>
-                            <input type="text" name="product_type" value="{{ old('product_type') }}" class="w-full px-3 py-2 border rounded-md focus:ring-primary-500 focus:border-primary-500 @error('product_type') border-red-300 @enderror" placeholder="مثال: شقة، فيلا، مكتب...">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('facilities.quote.product_type') }}</label>
+                            <input type="text" name="product_type" value="{{ old('product_type') }}" class="w-full px-3 py-2 border rounded-md focus:ring-primary-500 focus:border-primary-500 @error('product_type') border-red-300 @enderror" placeholder="{{ __('facilities.quote.product_type_placeholder') }}">
                             @error('product_type')
                                 <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
                             @enderror
                         </div>
                         <div class="md:col-span-2">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">الميزانية المتوقعة</label>
-                            <input type="text" name="budget" value="{{ old('budget') }}" class="w-full px-3 py-2 border rounded-md focus:ring-primary-500 focus:border-primary-500 @error('budget') border-red-300 @enderror" placeholder="مثال: حتى 500,000 ريال">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('facilities.quote.budget') }}</label>
+                            <input type="text" name="budget" value="{{ old('budget') }}" class="w-full px-3 py-2 border rounded-md focus:ring-primary-500 focus:border-primary-500 @error('budget') border-red-300 @enderror" placeholder="{{ __('facilities.quote.budget_placeholder') }}">
                             @error('budget')
                                 <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
                             @enderror
@@ -62,16 +62,16 @@
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">التفاصيل</label>
-                        <textarea name="message" rows="5" required class="w-full px-3 py-2 border rounded-md focus:ring-primary-500 focus:border-primary-500 @error('message') border-red-300 @enderror" placeholder="صف طلبك ومتطلباتك بشكل مختصر">{{ old('message') }}</textarea>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('facilities.quote.details') }}</label>
+                        <textarea name="message" rows="5" required class="w-full px-3 py-2 border rounded-md focus:ring-primary-500 focus:border-primary-500 @error('message') border-red-300 @enderror" placeholder="{{ __('facilities.quote.details_placeholder') }}">{{ old('message') }}</textarea>
                         @error('message')
                             <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <div class="flex items-center gap-3">
-                        <button type="submit" class="btn-primary text-white px-6 py-2 rounded-lg font-medium">إرسال الطلب</button>
-                        <a href="{{ route('public.facilities.show', $facility) }}" class="text-primary-600 hover:text-primary-700">العودة للمنشأة</a>
+                        <button type="submit" class="btn-primary text-white px-6 py-2 rounded-lg font-medium">{{ __('facilities.quote.submit_request') }}</button>
+                        <a href="{{ route('public.facilities.show', $facility) }}" class="text-primary-600 hover:text-primary-700">{{ __('facilities.quote.back_to_facility') }}</a>
                     </div>
                 </form>
             </div>
@@ -79,7 +79,7 @@
 
         <div>
             <div class="bg-white rounded-lg shadow-md p-6">
-                <h2 class="text-xl font-semibold text-gray-900 mb-4">معلومات المنشأة</h2>
+                <h2 class="text-xl font-semibold text-gray-900 mb-4">{{ __('facilities.quote.facility_info') }}</h2>
                 <div class="flex items-center space-x-3 space-x-reverse mb-4">
                     <img src="{{ $facility->logo ?? 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=100&q=80' }}" class="w-12 h-12 rounded object-cover" alt="{{ $facility->name }}">
                     <div>

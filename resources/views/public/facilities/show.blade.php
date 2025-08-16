@@ -14,12 +14,12 @@
                     @if(\App\Helpers\FacilityHelper::isSingleMode())
                         <!-- في حالة المنشأة الواحدة، إظهار اسم الموقع -->
                         <p class="text-xl text-primary-100 mb-6">
-                            {{ config('app.name') }} - {{ $facility->description ?? 'منشأة عقارية معتمدة وموثوقة' }}
+                            {{ config('app.name') }} - {{ $facility->description ?? __('facilities.show.no_description') }}
                         </p>
                     @else
                         <!-- في حالة المنشآت المتعددة، إظهار اسم المنشأة فقط -->
                         <p class="text-xl text-primary-100 mb-6">
-                            {{ $facility->description ?? 'منشأة عقارية معتمدة وموثوقة' }}
+                            {{ $facility->description ?? __('facilities.show.no_description') }}
                         </p>
                     @endif
                     <div class="flex items-center space-x-6 space-x-reverse">
@@ -31,12 +31,12 @@
                         </div>
                         @if($facility->is_verified)
                             <div class="bg-green-600 text-white px-3 py-1 rounded-full text-sm">
-                                <i class="fas fa-check ml-1"></i>معتمدة
+                                <i class="fas fa-check ml-1"></i>{{ __('facilities.facility_card.verified') }}
                             </div>
                         @endif
                         @if($facility->is_featured)
                             <div class="bg-yellow-600 text-white px-3 py-1 rounded-full text-sm">
-                                <i class="fas fa-star ml-1"></i>مميزة
+                                <i class="fas fa-star ml-1"></i>{{ __('facilities.facility_card.featured') }}
                             </div>
                         @endif
                     </div>
@@ -56,9 +56,9 @@
             <div class="lg:col-span-2">
                 <!-- About Section -->
                 <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-4">عن المنشأة</h2>
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">{{ __('facilities.show.about_facility') }}</h2>
                     <p class="text-gray-600 leading-relaxed mb-6">
-                        {{ $facility->description ?? 'لا يوجد وصف متاح لهذه المنشأة.' }}
+                        {{ $facility->description ?? __('facilities.show.no_description') }}
                     </p>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -67,8 +67,8 @@
                                 <i class="fas fa-map-marker-alt text-primary-600"></i>
                             </div>
                             <div>
-                                <h3 class="font-semibold text-gray-900">العنوان</h3>
-                                <p class="text-gray-600">{{ $facility->address ?? 'غير محدد' }}</p>
+                                <h3 class="font-semibold text-gray-900">{{ __('facilities.show.address') }}</h3>
+                                <p class="text-gray-600">{{ $facility->address ?? __('facilities.show.not_specified') }}</p>
                             </div>
                         </div>
                         <div class="flex items-center">
@@ -76,8 +76,8 @@
                                 <i class="fas fa-phone text-primary-600"></i>
                             </div>
                             <div>
-                                <h3 class="font-semibold text-gray-900">الهاتف</h3>
-                                <p class="text-gray-600">{{ $facility->phone ?? 'غير محدد' }}</p>
+                                <h3 class="font-semibold text-gray-900">{{ __('facilities.show.phone') }}</h3>
+                                <p class="text-gray-600">{{ $facility->phone ?? __('facilities.show.not_specified') }}</p>
                             </div>
                         </div>
                         <div class="flex items-center">
@@ -85,8 +85,8 @@
                                 <i class="fas fa-envelope text-primary-600"></i>
                             </div>
                             <div>
-                                <h3 class="font-semibold text-gray-900">البريد الإلكتروني</h3>
-                                <p class="text-gray-600">{{ $facility->email ?? 'غير محدد' }}</p>
+                                <h3 class="font-semibold text-gray-900">{{ __('facilities.show.email') }}</h3>
+                                <p class="text-gray-600">{{ $facility->email ?? __('facilities.show.not_specified') }}</p>
                             </div>
                         </div>
                         <div class="flex items-center">
@@ -94,14 +94,14 @@
                                 <i class="fas fa-globe text-primary-600"></i>
                             </div>
                             <div>
-                                <h3 class="font-semibold text-gray-900">الموقع الإلكتروني</h3>
+                                <h3 class="font-semibold text-gray-900">{{ __('facilities.show.website') }}</h3>
                                 <p class="text-gray-600">
                                     @if($facility->website)
                                         <a href="{{ $facility->website }}" target="_blank" class="text-primary-600 hover:text-primary-700">
                                             {{ $facility->website }}
                                         </a>
                                     @else
-                                        غير محدد
+                                        {{ __('facilities.show.not_specified') }}
                                     @endif
                                 </p>
                             </div>
@@ -112,9 +112,9 @@
                 <!-- Products Section -->
                 <div class="bg-white rounded-lg shadow-md p-6">
                     <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-2xl font-bold text-gray-900">العقارات المتاحة</h2>
+                        <h2 class="text-2xl font-bold text-gray-900">{{ __('facilities.show.available_properties') }}</h2>
                         <a href="{{ route('public.products.by-facility', $facility) }}" class="text-primary-600 hover:text-primary-700 font-medium">
-                            عرض جميع العقارات
+                            {{ __('facilities.show.view_all_properties') }}
                         </a>
                     </div>
 
@@ -130,21 +130,21 @@
                                                 {{ $product->title }}
                                             </a>
                                         </h3>
-                                        <p class="text-gray-600 text-sm mb-3">{{ $product->address ?? 'موقع غير محدد' }}</p>
+                                        <p class="text-gray-600 text-sm mb-3">{{ $product->address ?? __('facilities.facility_card.location_unknown') }}</p>
 
                                         <div class="flex items-center justify-between text-sm text-gray-500 mb-3">
-                                            <span><i class="fas fa-bed ml-1"></i>{{ $product->rooms ?? 0 }} غرف</span>
-                                            <span><i class="fas fa-bath ml-1"></i>{{ $product->bathrooms ?? 0 }} حمامات</span>
-                                            <span><i class="fas fa-ruler-combined ml-1"></i>{{ $product->area ?? 0 }} م²</span>
+                                            <span><i class="fas fa-bed ml-1"></i>{{ $product->rooms ?? 0 }} {{ __('facilities.product.rooms') }}</span>
+                                            <span><i class="fas fa-bath ml-1"></i>{{ $product->bathrooms ?? 0 }} {{ __('facilities.product.bathrooms') }}</span>
+                                            <span><i class="fas fa-ruler-combined ml-1"></i>{{ $product->area ?? 0 }} {{ __('facilities.product.area') }}</span>
                                         </div>
 
                                         <div class="flex items-center justify-between">
                                             <div class="text-lg font-bold text-primary-600">
-                                                {{ number_format($product->price) }} ريال
+                                                {{ number_format($product->price) }} {{ __('facilities.product.currency') }}
                                             </div>
                                             <a href="{{ route('public.products.show', $product) }}"
                                                class="text-primary-600 hover:text-primary-700 text-sm font-medium">
-                                                عرض التفاصيل
+                                                {{ __('facilities.product.view_details') }}
                                             </a>
                                         </div>
                                     </div>
@@ -154,7 +154,7 @@
                     @else
                         <div class="text-center py-8">
                             <i class="fas fa-home text-4xl text-gray-400 mb-4"></i>
-                            <p class="text-gray-600">لا توجد عقارات متاحة حالياً</p>
+                            <p class="text-gray-600">{{ __('facilities.show.no_properties') }}</p>
                         </div>
                     @endif
                 </div>
@@ -164,7 +164,7 @@
             <div class="space-y-6">
                 <!-- Contact Card -->
                 <div class="bg-white rounded-lg shadow-md p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">تواصل مع المنشأة</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ __('facilities.show.contact_facility') }}</h3>
                     <div class="space-y-4">
                         @if($facility->phone)
                             <a href="tel:{{ $facility->phone }}" class="flex items-center text-gray-600 hover:text-primary-600 transition-colors">
@@ -181,7 +181,7 @@
                         @if($facility->website)
                             <a href="{{ $facility->website }}" target="_blank" class="flex items-center text-gray-600 hover:text-primary-600 transition-colors">
                                 <i class="fas fa-globe ml-3"></i>
-                                <span>الموقع الإلكتروني</span>
+                                <span>{{ __('facilities.show.website') }}</span>
                             </a>
                         @endif
                     </div>
@@ -189,30 +189,30 @@
                     <div class="mt-6 space-y-3">
                         <a href="{{ route('public.facilities.appointment.form', $facility) }}"
                            class="w-full btn-primary text-white py-2 rounded-lg font-medium text-center block">
-                            حجز موعد
+                            {{ __('facilities.show.book_appointment') }}
                         </a>
                         <a href="{{ route('public.facilities.quote.form', $facility) }}"
                            class="w-full border border-primary-600 text-primary-600 py-2 rounded-lg font-medium text-center block hover:bg-primary-50 transition-colors">
-                            طلب عرض سعر
+                            {{ __('facilities.show.request_quote') }}
                         </a>
                     </div>
                 </div>
 
                 <!-- Stats Card -->
                 <div class="bg-white rounded-lg shadow-md p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">إحصائيات المنشأة</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ __('facilities.show.facility_stats') }}</h3>
                     <div class="space-y-4">
                         <div class="flex justify-between items-center">
-                            <span class="text-gray-600">عدد العقارات</span>
+                            <span class="text-gray-600">{{ __('facilities.show.properties_count') }}</span>
                             <span class="font-semibold text-gray-900">{{ $facility->products_count ?? 0 }}</span>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="text-gray-600">التقييم</span>
+                            <span class="text-gray-600">{{ __('facilities.show.rating') }}</span>
                             <span class="font-semibold text-gray-900">{{ $facility->rating ?? 0 }}/5</span>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="text-gray-600">تاريخ الإنشاء</span>
-                            <span class="font-semibold text-gray-900">{{ $facility->created_at ? $facility->created_at->format('Y/m/d') : 'غير محدد' }}</span>
+                            <span class="text-gray-600">{{ __('facilities.show.creation_date') }}</span>
+                            <span class="font-semibold text-gray-900">{{ $facility->created_at ? $facility->created_at->format('Y/m/d') : __('facilities.show.not_specified') }}</span>
                         </div>
                     </div>
                 </div>
@@ -220,7 +220,7 @@
                 <!-- Similar Facilities - إخفاؤها في حالة المنشأة الواحدة -->
                 @if(\App\Helpers\FacilityHelper::isMultiMode() && $similarFacilities->count() > 0)
                     <div class="bg-white rounded-lg shadow-md p-6">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-4">منشآت مشابهة</h3>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ __('facilities.show.similar_facilities') }}</h3>
                         <div class="space-y-4">
                             @foreach($similarFacilities as $similar)
                                 <a href="{{ route('public.facilities.show', $similar) }}"

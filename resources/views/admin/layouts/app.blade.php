@@ -450,6 +450,10 @@
                     <i class="fas fa-tags"></i>
                     <span>الخصائص</span>
                 </a>
+                <a href="{{ route('admin.faqs.index') }}" class="nav-link {{ request()->routeIs('admin.faqs.*') ? 'active' : '' }}">
+                    <i class="fas fa-question-circle"></i>
+                    <span>الأسئلة الشائعة</span>
+                </a>
                 <a href="{{ route('admin.products.index') }}" class="nav-link {{ request()->routeIs('admin.products.*') ? 'active' : '' }}">
                     <i class="fas fa-box"></i>
                     <span>المنتجات</span>
@@ -528,6 +532,9 @@
                         </a>
                         <a href="{{ route('admin.attributes.create') }}" class="dropdown-item">
                             <i class="fas fa-tag ms-2"></i>خاصية جديدة
+                        </a>
+                        <a href="{{ route('admin.faqs.create') }}" class="dropdown-item">
+                            <i class="fas fa-question-circle ms-2"></i>سؤال جديد
                         </a>
                         <a href="{{ route('admin.products.create') }}" class="dropdown-item">
                             <i class="fas fa-box-open ms-2"></i>منتج جديد

@@ -30,6 +30,11 @@ class ProductController extends Controller
             $query->where('facility_id', $request->facility_id);
         }
 
+        // Filter by city
+        if ($request->filled('city')) {
+            $query->where('city_id', $request->city);
+        }
+
         // Filter by price range
         if ($request->filled('min_price')) {
             $query->where('price', '>=', $request->min_price);

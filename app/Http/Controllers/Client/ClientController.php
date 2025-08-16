@@ -9,6 +9,7 @@ use App\Models\Contract;
 use App\Models\Appointment;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Facility;
 
 class ClientController extends Controller
 {
@@ -96,9 +97,32 @@ class ClientController extends Controller
     public function favorites()
     {
         $user = Auth::user();
-        $favorites = $user->products()->with(['facility', 'category', 'status'])->paginate(12);
+        $favoriteProducts = $user->favoriteProducts()->with(['facility', 'category', 'status'])->paginate(12);
+        $favoriteFacilities = $user->favoriteFacilities()->with(['category', 'owner'])->paginate(12);
 
-        return view('client.favorites', compact('favorites'));
+        return view('client.favorites', compact('favoriteProducts', 'favoriteFacilities'));
+    }
+
+    /**
+     * عرض المنتجات المفضلة فقط
+     */
+    public function favoriteProducts()
+    {
+        $user = Auth::user();
+        $favorites = $user->favoriteProducts()->with(['facility', 'category', 'status'])->paginate(12);
+
+        return view('client.favorites', compact('favorites', 'favoriteProducts', 'favoriteFacilities'));
+    }
+
+    /**
+     * عرض المنشآت المفضلة فقط
+     */
+    public function favoriteFacilities()
+    {
+        $user = Auth::user();
+        $favorites = $user->favoriteFacilities()->with(['category', 'owner'])->paginate(12);
+
+        return view('client.favorites', compact('favorites', 'favoriteProducts', 'favoriteFacilities'));
     }
 
     /**
@@ -108,8 +132,8 @@ class ClientController extends Controller
     {
         $user = Auth::user();
 
-        if (!$user->products()->where('product_id', $product->id)->exists()) {
-            $user->products()->attach($product->id);
+        if (!$user->favoriteProducts()->where('products.id', $product->id)->exists()) {
+            $user->favoriteProducts()->attach($product->id);
             return redirect()->back()->with('success', 'تم إضافة المنتج للمفضلة بنجاح');
         }
 
@@ -122,9 +146,35 @@ class ClientController extends Controller
     public function removeFromFavorites(Product $product)
     {
         $user = Auth::user();
-        $user->products()->detach($product->id);
+        $user->favoriteProducts()->detach($product->id);
 
         return redirect()->back()->with('success', 'تم إزالة المنتج من المفضلة بنجاح');
+    }
+
+    /**
+     * إضافة منشأة للمفضلة
+     */
+    public function addFacilityToFavorites(Facility $facility)
+    {
+        $user = Auth::user();
+
+        if (!$user->favoriteFacilities()->where('facilities.id', $facility->id)->exists()) {
+            $user->favoriteFacilities()->attach($facility->id);
+            return redirect()->back()->with('success', 'تم إضافة المنشأة للمفضلة بنجاح');
+        }
+
+        return redirect()->back()->with('info', 'المنشأة موجودة بالفعل في المفضلة');
+    }
+
+    /**
+     * إزالة منشأة من المفضلة
+     */
+    public function removeFacilityFromFavorites(Facility $facility)
+    {
+        $user = Auth::user();
+        $user->favoriteFacilities()->detach($facility->id);
+
+        return redirect()->back()->with('success', 'تم إزالة المنشأة من المفضلة بنجاح');
     }
 
     /**

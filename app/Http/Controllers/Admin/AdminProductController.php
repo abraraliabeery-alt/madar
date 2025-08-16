@@ -118,7 +118,7 @@ class AdminProductController extends Controller
 
         // معالجة الصورة الرئيسية
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('products/images', 'public');
+            $imagePath = $request->file('image')->store('uploads/products/images', 'public');
             $productData['image'] = $imagePath;
         }
 
@@ -202,7 +202,7 @@ class AdminProductController extends Controller
             if ($product->image) {
                 Storage::disk('public')->delete($product->image);
             }
-            $imagePath = $request->file('image')->store('products/images', 'public');
+            $imagePath = $request->file('image')->store('uploads/products/images', 'public');
             $productData['image'] = $imagePath;
         }
 
