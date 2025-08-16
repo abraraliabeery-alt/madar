@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'العقارات')
+@section('title', __('products.hero.title'))
 
 @section('content')
 <div class="min-h-screen bg-gray-50">
@@ -8,9 +8,9 @@
     <div class="bg-gradient-to-r from-primary-600 to-primary-800 text-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
             <div class="text-center">
-                <h1 class="text-4xl md:text-5xl font-bold mb-6">العقارات المتاحة</h1>
+                <h1 class="text-4xl md:text-5xl font-bold mb-6">{{ __('products.hero.title') }}</h1>
                 <p class="text-xl text-primary-100 max-w-3xl mx-auto">
-                    اكتشف مجموعة واسعة من العقارات السكنية والتجارية في أفضل المواقع
+                    {{ __('products.hero.subtitle') }}
                 </p>
             </div>
         </div>
@@ -22,16 +22,16 @@
             <form action="{{ route('public.products.index') }}" method="GET" class="space-y-6" id="products-filter-form">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div>
-                        <label for="q" class="block text-sm font-medium text-gray-700 mb-2">البحث</label>
+                        <label for="q" class="block text-sm font-medium text-gray-700 mb-2">{{ __('products.search.title') }}</label>
                         <input type="text" name="q" id="q" value="{{ request('q') }}"
                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-                               placeholder="ابحث عن عنوان، وصف، أو موقع...">
+                               placeholder="{{ __('products.search.placeholder') }}">
                     </div>
                     <div>
-                        <label for="category_id" class="block text-sm font-medium text-gray-700 mb-2">الفئة</label>
+                        <label for="category_id" class="block text-sm font-medium text-gray-700 mb-2">{{ __('products.search.category') }}</label>
                         <select name="category_id" id="category_id"
                                 class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
-                            <option value="">جميع الفئات</option>
+                            <option value="">{{ __('products.search.all_categories') }}</option>
                             @foreach($categories ?? [] as $category)
                                 <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
                                     {{ $category->name }}
@@ -40,26 +40,26 @@
                         </select>
                     </div>
                     <div>
-                        <label for="property_type" class="block text-sm font-medium text-gray-700 mb-2">نوع العقار</label>
+                        <label for="property_type" class="block text-sm font-medium text-gray-700 mb-2">{{ __('products.search.property_type') }}</label>
                         <select name="property_type" id="property_type"
                                 class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
-                            <option value="">جميع الأنواع</option>
-                            <option value="شقة" {{ request('property_type') == 'شقة' ? 'selected' : '' }}>شقة</option>
-                            <option value="فيلا" {{ request('property_type') == 'فيلا' ? 'selected' : '' }}>فيلا</option>
-                            <option value="مكتب" {{ request('property_type') == 'مكتب' ? 'selected' : '' }}>مكتب</option>
-                            <option value="محل تجاري" {{ request('property_type') == 'محل تجاري' ? 'selected' : '' }}>محل تجاري</option>
-                            <option value="استوديو" {{ request('property_type') == 'استوديو' ? 'selected' : '' }}>استوديو</option>
+                            <option value="">{{ __('products.search.all_types') }}</option>
+                            <option value="شقة" {{ request('property_type') == 'شقة' ? 'selected' : '' }}>{{ __('products.search.apartment') }}</option>
+                            <option value="فيلا" {{ request('property_type') == 'فيلا' ? 'selected' : '' }}>{{ __('products.search.villa') }}</option>
+                            <option value="مكتب" {{ request('property_type') == 'مكتب' ? 'selected' : '' }}>{{ __('products.search.office') }}</option>
+                            <option value="محل تجاري" {{ request('property_type') == 'محل تجاري' ? 'selected' : '' }}>{{ __('products.search.commercial_shop') }}</option>
+                            <option value="استوديو" {{ request('property_type') == 'استوديو' ? 'selected' : '' }}>{{ __('products.search.studio') }}</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">نطاق السعر (ريال)</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('products.search.price_range') }}</label>
                         <div class="grid grid-cols-2 gap-2">
                             <input type="number" name="min_price" id="min_price" value="{{ request('min_price') }}" min="0"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-                                   placeholder="الحد الأدنى">
+                                   placeholder="{{ __('products.search.min_price') }}">
                             <input type="number" name="max_price" id="max_price" value="{{ request('max_price') }}" min="0"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-                                   placeholder="الحد الأعلى">
+                                   placeholder="{{ __('products.search.max_price') }}">
                         </div>
                     </div>
                 </div>
@@ -67,10 +67,10 @@
                 <input type="hidden" name="sort_order" id="sort_order" value="{{ request('sort_order', 'desc') }}">
                 <div class="flex justify-between items-center">
                     <button type="submit" class="btn-primary text-white px-6 py-2 rounded-lg font-medium">
-                        <i class="fas fa-search ml-2"></i>بحث
+                        <i class="fas fa-search ml-2"></i>{{ __('products.search.button') }}
                     </button>
                     <a href="{{ route('public.products.index') }}" class="text-primary-600 hover:text-primary-700 font-medium">
-                        مسح الفلاتر
+                        {{ __('products.search.clear_filters') }}
                     </a>
                 </div>
             </form>
@@ -82,16 +82,16 @@
         <!-- Results Info -->
         <div class="flex justify-between items-center mb-8">
             <div>
-                <h2 class="text-2xl font-bold text-gray-900">نتائج البحث</h2>
-                <p class="text-gray-600">{{ $products->total() ?? 0 }} عقار متاح</p>
+                <h2 class="text-2xl font-bold text-gray-900">{{ __('products.results.title') }}</h2>
+                <p class="text-gray-600">{{ $products->total() ?? 0 }} {{ __('products.results.properties_available') }}</p>
             </div>
             <div class="flex items-center space-x-4 space-x-reverse">
-                <span class="text-sm text-gray-600">ترتيب حسب:</span>
+                <span class="text-sm text-gray-600">{{ __('products.search.sort_by') }}:</span>
                 <select id="sort_selector" class="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
-                    <option value="created_at_desc" {{ (request('sort_by','created_at')==='created_at' && request('sort_order','desc')==='desc') ? 'selected' : '' }}>الأحدث</option>
-                    <option value="price_asc" {{ (request('sort_by')==='price' && request('sort_order')==='asc') ? 'selected' : '' }}>السعر: من الأقل</option>
-                    <option value="price_desc" {{ (request('sort_by')==='price' && request('sort_order')==='desc') ? 'selected' : '' }}>السعر: من الأعلى</option>
-                    <option value="title_asc" {{ (request('sort_by')==='title' && request('sort_order')==='asc') ? 'selected' : '' }}>الاسم</option>
+                    <option value="created_at_desc" {{ (request('sort_by','created_at')==='created_at' && request('sort_order','desc')==='desc') ? 'selected' : '' }}>{{ __('products.search.latest') }}</option>
+                    <option value="price_asc" {{ (request('sort_by')==='price' && request('sort_order')==='asc') ? 'selected' : '' }}>{{ __('products.search.price_low_to_high') }}</option>
+                    <option value="price_desc" {{ (request('sort_by')==='price' && request('sort_order')==='desc') ? 'selected' : '' }}>{{ __('products.search.price_high_to_low') }}</option>
+                    <option value="title_asc" {{ (request('sort_by')==='title' && request('sort_order')==='asc') ? 'selected' : '' }}>{{ __('products.search.name') }}</option>
                 </select>
             </div>
         </div>
@@ -105,7 +105,7 @@
                                  alt="{{ $product->title }}" class="w-full h-48 object-cover">
                             @if($product->is_featured)
                                 <div class="absolute top-2 right-2 bg-primary-600 text-white px-2 py-1 rounded text-xs font-medium">
-                                    مميز
+                                    {{ __('products.property_card.featured') }}
                                 </div>
                             @endif
                             @if($product->property_type)
@@ -120,12 +120,12 @@
                                     {{ $product->title }}
                                 </a>
                             </h3>
-                            <p class="text-gray-600 text-sm mb-3">{{ $product->address ?? 'موقع غير محدد' }}</p>
+                            <p class="text-gray-600 text-sm mb-3">{{ $product->address ?? __('products.property_card.location_unknown') }}</p>
 
                             <div class="flex items-center justify-between text-sm text-gray-500 mb-3">
-                                <span><i class="fas fa-bed ml-1"></i>{{ $product->rooms ?? 0 }} غرف</span>
-                                <span><i class="fas fa-bath ml-1"></i>{{ $product->bathrooms ?? 0 }} حمامات</span>
-                                <span><i class="fas fa-ruler-combined ml-1"></i>{{ $product->area ?? 0 }} م²</span>
+                                <span><i class="fas fa-bed ml-1"></i>{{ $product->rooms ?? 0 }} {{ __('products.property_card.rooms') }}</span>
+                                <span><i class="fas fa-bath ml-1"></i>{{ $product->bathrooms ?? 0 }} {{ __('products.property_card.bathrooms') }}</span>
+                                <span><i class="fas fa-ruler-combined ml-1"></i>{{ $product->area ?? 0 }} {{ __('products.property_card.square_meters') }}</span>
                             </div>
 
                             <div class="flex items-center justify-between">
@@ -134,7 +134,7 @@
                                 </div>
                                 <a href="{{ route('public.products.show', $product) }}"
                                    class="text-primary-600 hover:text-primary-700 text-sm font-medium">
-                                    عرض التفاصيل
+                                    {{ __('products.property_card.view_details') }}
                                 </a>
                             </div>
                         </div>
@@ -153,10 +153,10 @@
             <div class="text-center py-12">
                 <div class="bg-white rounded-lg shadow-md p-8">
                     <i class="fas fa-search text-4xl text-gray-400 mb-4"></i>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2">لا توجد نتائج</h3>
-                    <p class="text-gray-600 mb-6">لم نتمكن من العثور على عقارات تطابق معايير البحث الخاصة بك.</p>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ __('products.results.no_results') }}</h3>
+                    <p class="text-gray-600 mb-6">{{ __('products.results.no_results_message') }}</p>
                     <a href="{{ route('public.products.index') }}" class="btn-primary text-white px-6 py-2 rounded-lg font-medium">
-                        عرض جميع العقارات
+                        {{ __('products.results.view_all_properties') }}
                     </a>
                 </div>
             </div>
@@ -167,8 +167,8 @@
     <div class="bg-white py-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-gray-900 mb-4">الفئات المميزة</h2>
-                <p class="text-lg text-gray-600">تصفح العقارات حسب الفئة</p>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">{{ __('products.categories.title') }}</h2>
+                <p class="text-lg text-gray-600">{{ __('products.categories.subtitle') }}</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 @foreach($categories ?? [] as $category)
@@ -179,7 +179,7 @@
                         </div>
                         <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ $category->name }}</h3>
                         <p class="text-gray-600 text-sm">
-                            {{ \App\Models\Product::where('category_id', $category->id)->count() }} عقار
+                            {{ \App\Models\Product::where('category_id', $category->id)->count() }} {{ __('products.categories.properties_count') }}
                         </p>
                     </a>
                 @endforeach
@@ -207,5 +207,5 @@
             form.submit();
         });
     })();
-    </script>
+</script>
 @endpush

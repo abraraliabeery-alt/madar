@@ -11,7 +11,7 @@
                 <div>
                     <h1 class="text-4xl md:text-5xl font-bold mb-6">{{ $product->title }}</h1>
                     <p class="text-xl text-primary-100 mb-6">
-                        {{ $product->address ?? 'موقع غير محدد' }}
+                        {{ $product->address ?? __('products.property_card.location_unknown') }}
                     </p>
                     <div class="flex items-center space-x-6 space-x-reverse">
                         <div class="text-2xl font-bold">
@@ -19,12 +19,12 @@
                         </div>
                         @if($product->is_featured)
                             <div class="bg-yellow-600 text-white px-3 py-1 rounded-full text-sm">
-                                <i class="fas fa-star ml-1"></i>مميز
+                                <i class="fas fa-star ml-1"></i>{{ __('products.property_card.featured') }}
                             </div>
                         @endif
                         @if($product->is_verified)
                             <div class="bg-green-600 text-white px-3 py-1 rounded-full text-sm">
-                                <i class="fas fa-check ml-1"></i>موثق
+                                <i class="fas fa-check ml-1"></i>{{ __('products.property_card.verified') }}
                             </div>
                         @endif
                     </div>
@@ -44,9 +44,9 @@
             <div class="lg:col-span-2">
                 <!-- Description Section -->
                 <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-4">وصف العقار</h2>
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">{{ __('products.show.description') }}</h2>
                     <p class="text-gray-600 leading-relaxed mb-6">
-                        {{ $product->description ?? 'لا يوجد وصف متاح لهذا العقار.' }}
+                        {{ $product->description ?? __('products.show.no_description') }}
                     </p>
 
                     @if($product->statuses && $product->statuses->count())
@@ -65,21 +65,21 @@
                                 <i class="fas fa-bed text-2xl text-primary-600"></i>
                             </div>
                             <h3 class="font-semibold text-gray-900">{{ $product->rooms ?? 0 }}</h3>
-                            <p class="text-gray-600 text-sm">غرف النوم</p>
+                            <p class="text-gray-600 text-sm">{{ __('products.show.bedrooms') }}</p>
                         </div>
                         <div class="text-center">
                             <div class="bg-primary-100 p-4 rounded-lg mb-3">
                                 <i class="fas fa-bath text-2xl text-primary-600"></i>
                             </div>
                             <h3 class="font-semibold text-gray-900">{{ $product->bathrooms ?? 0 }}</h3>
-                            <p class="text-gray-600 text-sm">الحمامات</p>
+                            <p class="text-gray-600 text-sm">{{ __('products.show.bathrooms') }}</p>
                         </div>
                         <div class="text-center">
                             <div class="bg-primary-100 p-4 rounded-lg mb-3">
                                 <i class="fas fa-ruler-combined text-2xl text-primary-600"></i>
                             </div>
                             <h3 class="font-semibold text-gray-900">{{ number_format($product->area ?? 0) }}</h3>
-                            <p class="text-gray-600 text-sm">متر مربع</p>
+                            <p class="text-gray-600 text-sm">{{ __('products.show.square_meters') }}</p>
                         </div>
                     </div>
                 </div>
@@ -87,7 +87,7 @@
                 <!-- Gallery Section -->
                 @if($product->gallery && $product->gallery->count() > 0)
                     <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-                        <h2 class="text-2xl font-bold text-gray-900 mb-4">معرض الصور</h2>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4">{{ __('products.show.gallery') }}</h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             @foreach($product->gallery as $image)
                                 <div class="aspect-w-16 aspect-h-9">
@@ -102,7 +102,7 @@
                 <!-- Attributes Section -->
                 @if($product->attributes && $product->attributes->count() > 0)
                     <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-                        <h2 class="text-2xl font-bold text-gray-900 mb-4">الخصائص</h2>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4">{{ __('products.show.attributes') }}</h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             @foreach($product->attributes as $attribute)
                                 <div class="flex items-center justify-between">
@@ -117,7 +117,7 @@
                 <!-- Features Section -->
                 @if($product->features && $product->features->count() > 0)
                     <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-                        <h2 class="text-2xl font-bold text-gray-900 mb-4">المميزات</h2>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4">{{ __('products.show.features') }}</h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             @foreach($product->features as $feature)
                                 <div class="flex items-center">
@@ -131,21 +131,21 @@
 
                 <!-- Comments Section -->
                 <div class="bg-white rounded-lg shadow-md p-6">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-4">التعليقات</h2>
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">{{ __('products.show.comments') }}</h2>
                     @auth
                         <form action="{{ route('public.products.comment', $product) }}" method="POST" class="mb-6">
                             @csrf
                             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-start">
                                 <div class="md:col-span-3">
-                                    <label for="comment" class="block text-sm font-medium text-gray-700 mb-2">أضف تعليقك</label>
+                                    <label for="comment" class="block text-sm font-medium text-gray-700 mb-2">{{ __('products.show.add_comment') }}</label>
                                     <textarea name="comment" id="comment" rows="3"
                                               class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-                                              placeholder="اكتب تعليقك هنا..." required></textarea>
+                                              placeholder="{{ __('products.show.comment_placeholder') }}" required></textarea>
                                 </div>
                                 <div>
-                                    <label for="rating" class="block text-sm font-medium text-gray-700 mb-2">التقييم</label>
+                                    <label for="rating" class="block text-sm font-medium text-gray-700 mb-2">{{ __('products.show.rating') }}</label>
                                     <select id="rating" name="rating" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500" required>
-                                        <option value="">اختر</option>
+                                        <option value="">{{ __('products.show.select_rating') }}</option>
                                         @for($i=5;$i>=1;$i--)
                                             <option value="{{ $i }}">{{ $i }}</option>
                                         @endfor
@@ -154,13 +154,13 @@
                             </div>
                             <div class="mt-4">
                                 <button type="submit" class="btn-primary text-white px-4 py-2 rounded-lg font-medium">
-                                    إرسال التعليق
+                                    {{ __('products.show.submit_comment') }}
                                 </button>
                             </div>
                         </form>
                     @else
                         <div class="bg-gray-50 p-4 rounded-lg mb-6">
-                            <p class="text-gray-600">يجب <a href="{{ route('login') }}" class="text-primary-600 hover:text-primary-700">تسجيل الدخول</a> لإضافة تعليق.</p>
+                            <p class="text-gray-600">{{ __('products.show.login_to_comment') }} <a href="{{ route('login') }}" class="text-primary-600 hover:text-primary-700">{{ __('products.show.login') }}</a> {{ __('products.show.to_add_comment') }}</p>
                         </div>
                     @endauth
 
@@ -190,7 +190,7 @@
                             @endforeach
                         </div>
                     @else
-                        <p class="text-sm text-gray-500">لا توجد تعليقات بعد.</p>
+                        <p class="text-sm text-gray-500">{{ __('products.show.no_comments') }}</p>
                     @endif
                 </div>
             </div>
@@ -199,17 +199,17 @@
             <div class="space-y-6">
                 <!-- Price Card -->
                 <div class="bg-white rounded-lg shadow-md p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">السعر</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ __('products.show.price') }}</h3>
                     <div class="text-3xl font-bold text-primary-600 mb-4">
                         {{ number_format($product->price) }} ريال
                     </div>
                     <div class="space-y-3">
                         @if($product->facility)
                             <a href="{{ route('public.facilities.appointment.form', $product->facility) }}" class="w-full btn-primary text-white py-3 rounded-lg font-medium text-center block">
-                                احجز الآن
+                                {{ __('products.show.book_now') }}
                             </a>
                             <a href="{{ route('public.facilities.quote.form', $product->facility) }}" class="w-full border border-primary-600 text-primary-600 py-3 rounded-lg font-medium text-center block hover:bg-primary-50 transition-colors">
-                                طلب عرض سعر
+                                {{ __('products.show.request_quote') }}
                             </a>
                         @endif
                         @auth
@@ -218,20 +218,20 @@
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="w-full border border-red-300 text-red-600 py-3 rounded-lg font-medium text-center block hover:bg-red-50 transition-colors">
-                                        <i class="fas fa-heart-broken ml-2"></i>إزالة من المفضلة
+                                        <i class="fas fa-heart-broken ml-2"></i>{{ __('products.show.remove_from_favorites') }}
                                     </button>
                                 </form>
                             @else
                                 <form action="{{ route('public.products.favorite.add', $product) }}" method="POST" class="block">
                                     @csrf
                                     <button type="submit" class="w-full border border-gray-300 text-gray-700 py-3 rounded-lg font-medium text-center block hover:bg-gray-50 transition-colors">
-                                        <i class="fas fa-heart ml-2"></i>إضافة للمفضلة
+                                        <i class="fas fa-heart ml-2"></i>{{ __('products.show.add_to_favorites') }}
                                     </button>
                                 </form>
                             @endif
                         @else
                             <a href="{{ route('login') }}" class="w-full border border-gray-300 text-gray-700 py-3 rounded-lg font-medium text-center block hover:bg-gray-50 transition-colors">
-                                <i class="fas fa-heart ml-2"></i>إضافة للمفضلة
+                                <i class="fas fa-heart ml-2"></i>{{ __('products.show.add_to_favorites') }}
                             </a>
                         @endauth
                     </div>
@@ -239,31 +239,31 @@
 
                 <!-- Property Details -->
                 <div class="bg-white rounded-lg shadow-md p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">تفاصيل العقار</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ __('products.show.property_details') }}</h3>
                     <div class="space-y-4">
                         <div class="flex justify-between items-center">
-                            <span class="text-gray-600">النوع</span>
-                            <span class="font-semibold text-gray-900">{{ $product->property_type ?? 'غير محدد' }}</span>
+                            <span class="text-gray-600">{{ __('products.show.type') }}</span>
+                            <span class="font-semibold text-gray-900">{{ $product->property_type ?? __('products.show.not_specified') }}</span>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="text-gray-600">الطابق</span>
-                            <span class="font-semibold text-gray-900">{{ $product->floor ?? 'غير محدد' }}</span>
+                            <span class="text-gray-600">{{ __('products.show.floor') }}</span>
+                            <span class="font-semibold text-gray-900">{{ $product->floor ?? __('products.show.not_specified') }}</span>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="text-gray-600">عدد الطوابق</span>
-                            <span class="font-semibold text-gray-900">{{ $product->floors_count ?? 'غير محدد' }}</span>
+                            <span class="text-gray-600">{{ __('products.show.floors_count') }}</span>
+                            <span class="font-semibold text-gray-900">{{ $product->floors_count ?? __('products.show.not_specified') }}</span>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="text-gray-600">مواقف السيارات</span>
-                            <span class="font-semibold text-gray-900">{{ $product->parking_spaces ?? 'غير محدد' }}</span>
+                            <span class="text-gray-600">{{ __('products.show.parking_spaces') }}</span>
+                            <span class="font-semibold text-gray-900">{{ $product->parking_spaces ?? __('products.show.not_specified') }}</span>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="text-gray-600">متاح من</span>
-                            <span class="font-semibold text-gray-900">{{ $product->available_from ? $product->available_from->format('Y/m/d') : 'غير محدد' }}</span>
+                            <span class="text-gray-600">{{ __('products.show.available_from') }}</span>
+                            <span class="font-semibold text-gray-900">{{ $product->available_from ? $product->available_from->format('Y/m/d') : __('products.show.not_specified') }}</span>
                         </div>
                         @if($product->available_to)
                             <div class="flex justify-between items-center">
-                                <span class="text-gray-600">متاح حتى</span>
+                                <span class="text-gray-600">{{ __('products.show.available_until') }}</span>
                                 <span class="font-semibold text-gray-900">{{ $product->available_to->format('Y/m/d') }}</span>
                             </div>
                         @endif
@@ -273,7 +273,7 @@
                 <!-- Facility Info -->
                 @if($product->facility)
                     <div class="bg-white rounded-lg shadow-md p-6">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-4">المنشأة</h3>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ __('products.show.facility') }}</h3>
                         <div class="flex items-center space-x-3 space-x-reverse mb-4">
                             <img src="{{ $product->facility->logo ?? 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80' }}"
                                  alt="{{ $product->facility->name }}" class="w-12 h-12 rounded object-cover">
@@ -287,18 +287,18 @@
                         @endif
                         <a href="{{ route('public.facilities.show', $product->facility) }}"
                            class="text-primary-600 hover:text-primary-700 text-sm font-medium">
-                            عرض المنشأة
+                            {{ __('products.show.view_facility') }}
                         </a>
                     </div>
                 @endif
 
                 @if($product->latitude && $product->longitude)
                     <div class="bg-white rounded-lg shadow-md p-6">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-4">الموقع على الخريطة</h3>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ __('products.show.map_location') }}</h3>
                         <div class="w-full h-64 rounded" id="map" style="background:#eef2ff"></div>
                         @if($product->google_maps_url)
                             <a href="{{ $product->google_maps_url }}" target="_blank" class="inline-block mt-3 text-primary-600 hover:text-primary-700 text-sm font-medium">
-                                فتح في خرائط جوجل
+                                {{ __('products.show.open_in_google_maps') }}
                             </a>
                         @endif
                     </div>
@@ -337,7 +337,7 @@
 
                 <!-- Contact Info -->
                 <div class="bg-white rounded-lg shadow-md p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">معلومات التواصل</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ __('products.show.contact_info') }}</h3>
                     <div class="space-y-3">
                         @if($product->contact_phone)
                             <a href="tel:{{ $product->contact_phone }}" class="flex items-center text-gray-600 hover:text-primary-600 transition-colors">
