@@ -1,64 +1,109 @@
 <?php
 
 return [
-
-    /*
-    |--------------------------------------------------------------------------
-    | Authentication Language Lines
-    |--------------------------------------------------------------------------
-    |
-    | The following language lines are used during authentication for various
-    | messages that we need to display to the user. You are free to modify
-    | these language lines according to your application's requirements.
-    |
-    */
-
-    'failed' => 'These credentials do not match our records.',
-    'password' => 'The provided password is incorrect.',
-    'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
-
     'login' => [
         'title' => 'Login',
-        'email' => 'Email Address',
+        'welcome_back' => 'Welcome back',
+        'login_to_account' => 'Sign in to access your account',
+        'email' => 'Email',
+        'email_placeholder' => 'Enter your email',
         'password' => 'Password',
-        'remember' => 'Remember Me',
-        'submit' => 'Login',
-        'forgot' => 'Forgot Your Password?',
-        'register' => 'Don\'t have an account? Register here',
+        'password_placeholder' => 'Enter your password',
+        'remember_me' => 'Remember me',
+        'forgot_password' => 'Forgot your password?',
+        'login_button' => 'Sign In',
+        'or' => 'or',
+        'login_with_google' => 'Sign in with Google',
+        'login_with_facebook' => 'Sign in with Facebook',
+        'no_account' => 'Don\'t have an account?',
+        'create_account' => 'Create new account',
+        'back_to_home' => 'Back to Home',
     ],
-
+    
     'register' => [
-        'title' => 'Register',
-        'name' => 'Full Name',
-        'email' => 'Email Address',
+        'title' => 'Create New Account',
+        'join_us' => 'Join us and enjoy all services',
+        'full_name' => 'Full Name',
+        'full_name_placeholder' => 'Enter your full name',
+        'email' => 'Email',
+        'email_placeholder' => 'Enter your email',
+        'phone' => 'Phone Number',
+        'phone_placeholder' => 'Enter your phone number',
+        'account_type' => 'Account Type',
+        'select_account_type' => 'Select account type',
+        'client' => 'Client',
+        'facility' => 'Real Estate Facility',
         'password' => 'Password',
-        'password_confirmation' => 'Confirm Password',
-        'submit' => 'Register',
-        'login' => 'Already have an account? Login here',
+        'password_placeholder' => 'Enter your password',
+        'confirm_password' => 'Confirm Password',
+        'confirm_password_placeholder' => 'Re-enter your password',
+        'terms_agreement' => 'I agree to the',
+        'terms_conditions' => 'Terms and Conditions',
+        'privacy_policy' => 'Privacy Policy',
+        'create_account_button' => 'Create Account',
+        'or' => 'or',
+        'register_with_google' => 'Register with Google',
+        'register_with_facebook' => 'Register with Facebook',
+        'have_account' => 'Already have an account?',
+        'sign_in' => 'Sign In',
+        'back_to_home' => 'Back to Home',
     ],
-
+    
+    'passwords' => [
+        'confirm' => [
+            'title' => 'Confirm Password',
+            'description' => 'Please confirm your password before continuing.',
+            'password' => 'Password',
+            'confirm_button' => 'Confirm Password',
+            'forgot_password' => 'Forgot Your Password?',
+        ],
+        
+        'email' => [
+            'title' => 'Reset Password',
+            'forgot_password' => 'Forgot your password?',
+            'enter_email_reset' => 'Enter your email and we\'ll send you a reset link',
+            'email' => 'Email',
+            'email_placeholder' => 'Enter your email',
+            'send_reset_link' => 'Send Reset Link',
+            'back_to_login' => 'Back to Login',
+            'important_tips' => 'Important Tips:',
+            'tips' => [
+                'correct_email' => 'Make sure to enter the correct email address',
+                'check_spam' => 'Check your spam folder',
+                'link_valid' => 'The link is valid for 60 minutes only',
+            ],
+            'back_to_home' => 'Back to Home',
+        ],
+        
+        'reset' => [
+            'title' => 'Reset Password',
+            'enter_new_password' => 'Enter your new password',
+            'email' => 'Email',
+            'email_placeholder' => 'Enter your email',
+            'new_password' => 'New Password',
+            'new_password_placeholder' => 'Enter your new password',
+            'confirm_password' => 'Confirm Password',
+            'confirm_password_placeholder' => 'Re-enter your new password',
+            'password_requirements' => 'Password Requirements:',
+            'requirements' => [
+                'min_length' => 'Must be at least 8 characters',
+                'uppercase_lowercase' => 'Contains uppercase and lowercase letters',
+                'number' => 'Contains at least one number',
+                'special_char' => 'Contains a special character (@#$%^&*)',
+            ],
+            'save_new_password' => 'Save New Password',
+            'back_to_login' => 'Back to Login',
+            'security_notice' => 'Security Notice',
+            'security_description' => 'Make sure to choose a strong and unique password for your account. Do not share your password with anyone.',
+            'back_to_home' => 'Back to Home',
+        ],
+    ],
+    
     'verify' => [
         'title' => 'Verify Your Email Address',
-        'message' => 'A fresh verification link has been sent to your email address.',
-        'check' => 'Before proceeding, please check your email for a verification link.',
-        'resend' => 'If you did not receive the email',
-        'click' => 'click here to request another',
+        'description' => 'Before proceeding, please check your email for a verification link.',
+        'no_email' => 'If you did not receive the email',
+        'request_another' => 'click here to request another',
+        'fresh_link_sent' => 'A fresh verification link has been sent to your email address.',
     ],
-
-    'reset' => [
-        'title' => 'Reset Password',
-        'email' => 'Email Address',
-        'password' => 'New Password',
-        'password_confirmation' => 'Confirm New Password',
-        'submit' => 'Reset Password',
-        'send' => 'Send Password Reset Link',
-    ],
-
-    'confirm' => [
-        'title' => 'Confirm Password',
-        'message' => 'This is a secure area of the application. Please confirm your password before continuing.',
-        'password' => 'Password',
-        'submit' => 'Confirm',
-    ],
-
 ];

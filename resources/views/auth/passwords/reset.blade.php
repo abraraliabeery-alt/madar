@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'إعادة تعيين كلمة المرور')
+@section('title', __('auth.passwords.reset.title'))
 
 @section('content')
 <div class="min-h-screen bg-gradient-to-br from-orange-50 to-amber-100 py-12 px-4 sm:px-6 lg:px-8">
@@ -10,8 +10,8 @@
             <div class="w-20 h-20 bg-gradient-to-br from-orange-500 to-amber-600 rounded-full flex items-center justify-center mx-auto mb-4">
                 <i class="fas fa-lock text-white text-3xl"></i>
             </div>
-            <h2 class="text-3xl font-bold text-gray-900">إعادة تعيين كلمة المرور</h2>
-            <p class="text-gray-600 mt-2">أدخل كلمة المرور الجديدة</p>
+            <h2 class="text-3xl font-bold text-gray-900">{{ __('auth.passwords.reset.title') }}</h2>
+            <p class="text-gray-600 mt-2">{{ __('auth.passwords.reset.enter_new_password') }}</p>
         </div>
 
         <!-- Reset Form -->

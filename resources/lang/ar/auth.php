@@ -1,64 +1,109 @@
 <?php
 
 return [
-
-    /*
-    |--------------------------------------------------------------------------
-    | Authentication Language Lines
-    |--------------------------------------------------------------------------
-    |
-    | The following language lines are used during authentication for various
-    | messages that we need to display to the user. You are free to modify
-    | these language lines according to your application's requirements.
-    |
-    */
-
-    'failed' => 'بيانات الاعتماد هذه لا تتطابق مع سجلاتنا.',
-    'password' => 'كلمة المرور المقدمة غير صحيحة.',
-    'throttle' => 'محاولات تسجيل دخول كثيرة جداً. يرجى المحاولة مرة أخرى في :seconds ثانية.',
-
     'login' => [
         'title' => 'تسجيل الدخول',
-        'email' => 'عنوان البريد الإلكتروني',
+        'welcome_back' => 'مرحباً بك مرة أخرى',
+        'login_to_account' => 'سجل دخولك للوصول إلى حسابك',
+        'email' => 'البريد الإلكتروني',
+        'email_placeholder' => 'أدخل بريدك الإلكتروني',
         'password' => 'كلمة المرور',
-        'remember' => 'تذكرني',
-        'submit' => 'تسجيل الدخول',
-        'forgot' => 'نسيت كلمة المرور؟',
-        'register' => 'ليس لديك حساب؟ سجل هنا',
+        'password_placeholder' => 'أدخل كلمة المرور',
+        'remember_me' => 'تذكرني',
+        'forgot_password' => 'نسيت كلمة المرور؟',
+        'login_button' => 'تسجيل الدخول',
+        'or' => 'أو',
+        'login_with_google' => 'تسجيل الدخول بـ Google',
+        'login_with_facebook' => 'تسجيل الدخول بـ Facebook',
+        'no_account' => 'ليس لديك حساب؟',
+        'create_account' => 'إنشاء حساب جديد',
+        'back_to_home' => 'العودة للرئيسية',
     ],
-
+    
     'register' => [
-        'title' => 'التسجيل',
-        'name' => 'الاسم الكامل',
-        'email' => 'عنوان البريد الإلكتروني',
+        'title' => 'إنشاء حساب جديد',
+        'join_us' => 'انضم إلينا واستمتع بجميع الخدمات',
+        'full_name' => 'الاسم الكامل',
+        'full_name_placeholder' => 'أدخل اسمك الكامل',
+        'email' => 'البريد الإلكتروني',
+        'email_placeholder' => 'أدخل بريدك الإلكتروني',
+        'phone' => 'رقم الهاتف',
+        'phone_placeholder' => 'أدخل رقم هاتفك',
+        'account_type' => 'نوع الحساب',
+        'select_account_type' => 'اختر نوع الحساب',
+        'client' => 'عميل',
+        'facility' => 'منشأة عقارية',
         'password' => 'كلمة المرور',
-        'password_confirmation' => 'تأكيد كلمة المرور',
-        'submit' => 'التسجيل',
-        'login' => 'لديك حساب بالفعل؟ سجل دخول هنا',
+        'password_placeholder' => 'أدخل كلمة المرور',
+        'confirm_password' => 'تأكيد كلمة المرور',
+        'confirm_password_placeholder' => 'أعد إدخال كلمة المرور',
+        'terms_agreement' => 'أوافق على',
+        'terms_conditions' => 'الشروط والأحكام',
+        'privacy_policy' => 'سياسة الخصوصية',
+        'create_account_button' => 'إنشاء الحساب',
+        'or' => 'أو',
+        'register_with_google' => 'التسجيل بـ Google',
+        'register_with_facebook' => 'التسجيل بـ Facebook',
+        'have_account' => 'لديك حساب بالفعل؟',
+        'sign_in' => 'تسجيل الدخول',
+        'back_to_home' => 'العودة للرئيسية',
     ],
-
+    
+    'passwords' => [
+        'confirm' => [
+            'title' => 'تأكيد كلمة المرور',
+            'description' => 'يرجى تأكيد كلمة المرور قبل المتابعة.',
+            'password' => 'كلمة المرور',
+            'confirm_button' => 'تأكيد كلمة المرور',
+            'forgot_password' => 'نسيت كلمة المرور؟',
+        ],
+        
+        'email' => [
+            'title' => 'إعادة تعيين كلمة المرور',
+            'forgot_password' => 'نسيت كلمة المرور؟',
+            'enter_email_reset' => 'أدخل بريدك الإلكتروني وسنرسل لك رابط إعادة التعيين',
+            'email' => 'البريد الإلكتروني',
+            'email_placeholder' => 'أدخل بريدك الإلكتروني',
+            'send_reset_link' => 'إرسال رابط إعادة التعيين',
+            'back_to_login' => 'العودة لتسجيل الدخول',
+            'important_tips' => 'نصائح مهمة:',
+            'tips' => [
+                'correct_email' => 'تأكد من إدخال البريد الإلكتروني الصحيح',
+                'check_spam' => 'تحقق من مجلد الرسائل غير المرغوب فيها',
+                'link_valid' => 'الرابط صالح لمدة 60 دقيقة فقط',
+            ],
+            'back_to_home' => 'العودة للرئيسية',
+        ],
+        
+        'reset' => [
+            'title' => 'إعادة تعيين كلمة المرور',
+            'enter_new_password' => 'أدخل كلمة المرور الجديدة',
+            'email' => 'البريد الإلكتروني',
+            'email_placeholder' => 'أدخل بريدك الإلكتروني',
+            'new_password' => 'كلمة المرور الجديدة',
+            'new_password_placeholder' => 'أدخل كلمة المرور الجديدة',
+            'confirm_password' => 'تأكيد كلمة المرور',
+            'confirm_password_placeholder' => 'أعد إدخال كلمة المرور الجديدة',
+            'password_requirements' => 'متطلبات كلمة المرور:',
+            'requirements' => [
+                'min_length' => 'يجب أن تكون 8 أحرف على الأقل',
+                'uppercase_lowercase' => 'تحتوي على حرف كبير وحرف صغير',
+                'number' => 'تحتوي على رقم واحد على الأقل',
+                'special_char' => 'تحتوي على رمز خاص (@#$%^&*)',
+            ],
+            'save_new_password' => 'حفظ كلمة المرور الجديدة',
+            'back_to_login' => 'العودة لتسجيل الدخول',
+            'security_notice' => 'ملاحظة أمنية',
+            'security_description' => 'تأكد من اختيار كلمة مرور قوية وفريدة لحسابك. لا تشارك كلمة المرور مع أي شخص.',
+            'back_to_home' => 'العودة للرئيسية',
+        ],
+    ],
+    
     'verify' => [
-        'title' => 'تحقق من عنوان بريدك الإلكتروني',
-        'message' => 'تم إرسال رابط تحقق جديد إلى عنوان بريدك الإلكتروني.',
-        'check' => 'قبل المتابعة، يرجى التحقق من بريدك الإلكتروني للحصول على رابط التحقق.',
-        'resend' => 'إذا لم تستلم البريد الإلكتروني',
-        'click' => 'انقر هنا لطلب آخر',
+        'title' => 'تأكيد عنوان البريد الإلكتروني',
+        'description' => 'قبل المتابعة، يرجى التحقق من بريدك الإلكتروني للحصول على رابط التحقق.',
+        'no_email' => 'إذا لم تستلم البريد الإلكتروني',
+        'request_another' => 'انقر هنا لطلب رابط آخر',
+        'fresh_link_sent' => 'تم إرسال رابط تحقق جديد إلى عنوان بريدك الإلكتروني.',
     ],
-
-    'reset' => [
-        'title' => 'إعادة تعيين كلمة المرور',
-        'email' => 'عنوان البريد الإلكتروني',
-        'password' => 'كلمة المرور الجديدة',
-        'password_confirmation' => 'تأكيد كلمة المرور الجديدة',
-        'submit' => 'إعادة تعيين كلمة المرور',
-        'send' => 'إرسال رابط إعادة تعيين كلمة المرور',
-    ],
-
-    'confirm' => [
-        'title' => 'تأكيد كلمة المرور',
-        'message' => 'هذه منطقة آمنة من التطبيق. يرجى تأكيد كلمة المرور قبل المتابعة.',
-        'password' => 'كلمة المرور',
-        'submit' => 'تأكيد',
-    ],
-
 ];

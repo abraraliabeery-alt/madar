@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'إعادة تعيين كلمة المرور')
+@section('title', __('auth.passwords.email.title'))
 
 @section('content')
 <div class="min-h-screen bg-gradient-to-br from-purple-50 to-violet-100 py-12 px-4 sm:px-6 lg:px-8">
@@ -10,8 +10,8 @@
             <div class="w-20 h-20 bg-gradient-to-br from-purple-500 to-violet-600 rounded-full flex items-center justify-center mx-auto mb-4">
                 <i class="fas fa-key text-white text-3xl"></i>
             </div>
-            <h2 class="text-3xl font-bold text-gray-900">نسيت كلمة المرور؟</h2>
-            <p class="text-gray-600 mt-2">أدخل بريدك الإلكتروني وسنرسل لك رابط إعادة التعيين</p>
+            <h2 class="text-3xl font-bold text-gray-900">{{ __('auth.passwords.email.forgot_password') }}</h2>
+            <p class="text-gray-600 mt-2">{{ __('auth.passwords.email.enter_email_reset') }}</p>
         </div>
 
         <!-- Reset Form -->
@@ -31,7 +31,7 @@
                 <!-- Email -->
                 <div class="mb-6">
                     <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
-                        البريد الإلكتروني
+                        {{ __('auth.passwords.email.email') }}
                     </label>
                     <div class="relative">
                         <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
@@ -46,7 +46,7 @@
                             autocomplete="email" 
                             autofocus
                             class="w-full pr-10 pl-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors"
-                            placeholder="أدخل بريدك الإلكتروني"
+                            placeholder="{{ __('auth.passwords.email.email_placeholder') }}"
                         >
                     </div>
                     @error('email')
@@ -60,7 +60,7 @@
                     class="w-full bg-gradient-to-r from-purple-500 to-violet-600 text-white py-3 rounded-lg font-medium text-lg hover:shadow-lg transition-all duration-300"
                 >
                     <i class="fas fa-paper-plane ml-2"></i>
-                    إرسال رابط إعادة التعيين
+                    {{ __('auth.passwords.email.send_reset_link') }}
                 </button>
             </form>
 
@@ -68,7 +68,7 @@
             <div class="mt-8 text-center">
                 <a href="{{ route('login') }}" class="text-purple-600 hover:text-purple-700 font-medium">
                     <i class="fas fa-arrow-right ml-2"></i>
-                    العودة لتسجيل الدخول
+                    {{ __('auth.passwords.email.back_to_login') }}
                 </a>
             </div>
         </div>
@@ -76,11 +76,11 @@
         <!-- Help Text -->
         <div class="mt-6 text-center">
             <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
-                <h3 class="text-sm font-semibold text-purple-900 mb-2">نصائح مهمة:</h3>
+                <h3 class="text-sm font-semibold text-purple-900 mb-2">{{ __('auth.passwords.email.important_tips') }}</h3>
                 <ul class="text-sm text-purple-700 space-y-1 text-right">
-                    <li>• تأكد من إدخال البريد الإلكتروني الصحيح</li>
-                    <li>• تحقق من مجلد الرسائل غير المرغوب فيها</li>
-                    <li>• الرابط صالح لمدة 60 دقيقة فقط</li>
+                    <li>• {{ __('auth.passwords.email.tips.correct_email') }}</li>
+                    <li>• {{ __('auth.passwords.email.tips.check_spam') }}</li>
+                    <li>• {{ __('auth.passwords.email.tips.link_valid') }}</li>
                 </ul>
             </div>
         </div>
@@ -89,7 +89,7 @@
         <div class="text-center mt-6">
             <a href="{{ route('home') }}" class="text-gray-600 hover:text-gray-900 font-medium">
                 <i class="fas fa-arrow-right ml-2"></i>
-                العودة للرئيسية
+                {{ __('auth.passwords.email.back_to_home') }}
             </a>
         </div>
     </div>

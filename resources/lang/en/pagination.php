@@ -33,5 +33,11 @@ return [
 
     'per_page' => 'per page',
     'showing_per_page' => 'Showing :from to :to of :total results per page',
-
+    
+    // Additional missing keys
+    'showing' => 'Showing',
+    'to' => 'to',
+    'of' => 'of',
+    'results' => 'results',
+    'navigation' => 'Pagination Navigation',
 ];

@@ -16,11 +16,11 @@
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div class="flex items-center space-x-4 space-x-reverse">
                     <span class="text-sm text-gray-600">
-                        {{ auth()->user()->notifications->count() }} إشعار إجمالي
+                        {{ auth()->user()->notifications->count() }} {{ __('client.notifications.total_notifications') }}
                     </span>
                     @if(auth()->user()->unreadNotifications->count() > 0)
                         <span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                            {{ auth()->user()->unreadNotifications->count() }} غير مقروء
+                            {{ auth()->user()->unreadNotifications->count() }} {{ __('client.notifications.unread') }}
                         </span>
                     @endif
                 </div>
@@ -29,14 +29,14 @@
                     @if(auth()->user()->unreadNotifications->count() > 0)
                         <form method="POST" action="{{ route('client.notifications.mark-all-read') }}" class="inline">
                             @csrf
-                            <button type="submit" class="text-sm text-primary-600 hover:text-primary-700 font-medium">
-                                تحديد الكل كمقروء
-                            </button>
+                                                    <button type="submit" class="text-sm text-primary-600 hover:text-primary-700 font-medium">
+                            {{ __('client.notifications.mark_all_read') }}
+                        </button>
                         </form>
                     @endif
 
                     <a href="{{ route('client.notifications.settings') }}" class="text-sm text-gray-600 hover:text-gray-700 font-medium">
-                        إعدادات الإشعارات
+                        {{ __('client.notifications.settings') }}
                     </a>
                 </div>
             </div>
@@ -73,25 +73,25 @@
                                     <div class="flex items-start justify-between">
                                         <div class="flex-1">
                                             <p class="text-sm font-medium text-gray-900">
-                                                {{ $notification->data['message'] ?? 'إشعار جديد' }}
+                                                {{ $notification->data['message'] ?? __('client.notifications.new_notification') }}
                                             </p>
 
                                             @if(isset($notification->data['booking_id']))
                                                 <p class="text-sm text-gray-600 mt-1">
-                                                    رقم الحجز: #{{ $notification->data['booking_id'] }}
+                                                    {{ __('client.notifications.booking_number') }}: #{{ $notification->data['booking_id'] }}
                                                 </p>
                                             @endif
 
                                             @if(isset($notification->data['product_name']))
                                                 <p class="text-sm text-gray-600 mt-1">
-                                                    العقار: {{ $notification->data['product_name'] }}
+                                                    {{ __('client.notifications.product') }}: {{ $notification->data['product_name'] }}
                                                 </p>
                                             @endif
 
                                             @if(isset($notification->data['old_status']) && isset($notification->data['new_status']))
                                                 <p class="text-sm text-gray-600 mt-1">
-                                                    تغيير الحالة من <span class="font-medium">{{ $notification->data['old_status'] }}</span>
-                                                    إلى <span class="font-medium">{{ $notification->data['new_status'] }}</span>
+                                                    {{ __('client.notifications.status_change_from') }} <span class="font-medium">{{ $notification->data['old_status'] }}</span>
+                                                    {{ __('client.notifications.status_change_to') }} <span class="font-medium">{{ $notification->data['new_status'] }}</span>
                                                 </p>
                                             @endif
 
@@ -104,7 +104,7 @@
                                         <div class="flex items-center space-x-2 space-x-reverse">
                                             @if(!$notification->read_at)
                                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                                                    جديد
+                                                    {{ __('client.notifications.new') }}
                                                 </span>
                                             @endif
 
