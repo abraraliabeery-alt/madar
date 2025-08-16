@@ -24,7 +24,6 @@ Route::name('public.')->group(function () {
     Route::get('/services', [HomeController::class, 'services'])->name('services');
     Route::get('/team', [HomeController::class, 'team'])->name('team');
     Route::get('/terms', [HomeController::class, 'terms'])->name('terms');
-    Route::get('/privacy', [HomeController::class, 'privacy'])->name('privacy');
     Route::get('/faq', [HomeController::class, 'faq'])->name('faq');
     Route::get('/sitemap', [HomeController::class, 'sitemap'])->name('sitemap');
 

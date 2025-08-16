@@ -87,7 +87,7 @@
 
                                 @if($product->price)
                                     <p class="text-lg font-bold text-primary-600 mb-3">
-                                        {{ number_format($product->price) }} {{ __('products.currency', ['default' => 'SAR']) }}
+                                        {{ number_format($product->price) }} ريال
                                     </p>
                                 @endif
 

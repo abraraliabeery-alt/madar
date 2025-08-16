@@ -140,7 +140,7 @@
 
                                         <div class="flex items-center justify-between">
                                             <div class="text-lg font-bold text-primary-600">
-                                                {{ number_format($product->price) }} {{ __('facilities.product.currency') }}
+                                                {{ number_format($product->price) }} ريال
                                             </div>
                                             <a href="{{ route('public.products.show', $product) }}"
                                                class="text-primary-600 hover:text-primary-700 text-sm font-medium">

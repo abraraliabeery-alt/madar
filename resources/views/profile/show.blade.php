@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'الملف الشخصي')
+@section('title', __('profile.title'))
 
 @section('content')
 <div class="min-h-screen bg-gray-50 py-8">
@@ -26,8 +26,8 @@
                             <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
                                 {{ $primaryRole === 'admin' ? 'bg-red-100 text-red-800' :
                                    ($primaryRole === 'facility' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800') }}">
-                                {{ $primaryRole === 'admin' ? 'مدير النظام' :
-                                   ($primaryRole === 'facility' ? 'مرفق' : 'عميل') }}
+                                {{ $primaryRole === 'admin' ? __('profile.admin') :
+                                   ($primaryRole === 'facility' ? __('profile.facility') : __('profile.client')) }}
                             </span>
                         @endif
                     </div>
@@ -71,7 +71,7 @@
                             <svg class="w-4 h-4 ml-2" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path>
                             </svg>
-                            تعديل الملف
+                            {{ __('profile.edit_profile') }}
                         </a>
 
                         <a href="{{ route('profile.public', $user->id) }}" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
@@ -79,7 +79,7 @@
                                 <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path>
                                 <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"></path>
                             </svg>
-                            عرض عام
+                            {{ __('profile.view_public') }}
                         </a>
                     </div>
                 </div>
@@ -94,30 +94,30 @@
 
                 <!-- About Section -->
                 <div class="bg-white rounded-lg shadow-md p-6">
-                    <h2 class="text-xl font-semibold text-gray-900 mb-4">معلومات عامة</h2>
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">{{ __('profile.general_info') }}</h2>
                     <div class="space-y-3">
                         <div class="flex justify-between">
-                            <span class="text-gray-600">تاريخ الانضمام:</span>
+                            <span class="text-gray-600">{{ __('profile.join_date') }}</span>
                             <span class="font-medium">{{ $user->created_at->format('d/m/Y') }}</span>
                         </div>
 
                         @if($user->email_verified_at)
                             <div class="flex justify-between">
-                                <span class="text-gray-600">حالة الحساب:</span>
+                                <span class="text-gray-600">{{ __('profile.account_status') }}</span>
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                     <svg class="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                                     </svg>
-                                    موثق
+                                    {{ __('profile.verified') }}
                                 </span>
                             </div>
                         @endif
 
                         @if($user->is_active !== null)
                             <div class="flex justify-between">
-                                <span class="text-gray-600">حالة النشاط:</span>
+                                <span class="text-gray-600">{{ __('profile.activity_status') }}</span>
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $user->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                    {{ $user->is_active ? 'نشط' : 'غير نشط' }}
+                                    {{ $user->is_active ? __('profile.active') : __('profile.inactive') }}
                                 </span>
                             </div>
                         @endif
@@ -128,32 +128,32 @@
                 @if($primaryRole === 'facility')
                     <!-- Facility Information -->
                     <div class="bg-white rounded-lg shadow-md p-6">
-                        <h2 class="text-xl font-semibold text-gray-900 mb-4">معلومات المرفق</h2>
+                        <h2 class="text-xl font-semibold text-gray-900 mb-4">{{ __('profile.facility_info') }}</h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             @if($user->bank_account)
                                 <div>
-                                    <span class="text-gray-600">رقم الحساب البنكي:</span>
+                                    <span class="text-gray-600">{{ __('profile.bank_account') }}:</span>
                                     <span class="block font-medium">{{ $user->bank_account }}</span>
                                 </div>
                             @endif
 
                             @if($user->bank)
                                 <div>
-                                    <span class="text-gray-600">البنك:</span>
+                                    <span class="text-gray-600">{{ __('profile.bank') }}:</span>
                                     <span class="block font-medium">{{ $user->bank->name ?? 'Bank ' . $user->bank->id }}</span>
                                 </div>
                             @endif
 
                             @if($user->latitude && $user->longitude)
                                 <div class="md:col-span-2">
-                                    <span class="text-gray-600">إحداثيات الموقع:</span>
+                                    <span class="text-gray-600">{{ __('profile.coordinates') }}</span>
                                     <span class="block font-medium">{{ $user->latitude }}, {{ $user->longitude }}</span>
                                 </div>
                             @endif
 
                             @if($user->google_maps_url)
                                 <div class="md:col-span-2">
-                                    <span class="text-gray-600">رابط الخريطة:</span>
+                                    <span class="text-gray-600">{{ __('profile.map_link') }}</span>
                                     <a href="{{ $user->google_maps_url }}" target="_blank" class="block font-medium text-blue-600 hover:text-blue-800">
                                         {{ $user->google_maps_url }}
                                     </a>
@@ -166,53 +166,53 @@
                 @if($primaryRole === 'admin')
                     <!-- Admin Information -->
                     <div class="bg-white rounded-lg shadow-md p-6">
-                        <h2 class="text-xl font-semibold text-gray-900 mb-4">معلومات المدير</h2>
+                        <h2 class="text-xl font-semibold text-gray-900 mb-4">{{ __('profile.admin_info') }}</h2>
                         <div class="space-y-3">
                             <div class="flex justify-between">
-                                <span class="text-gray-600">صلاحيات:</span>
-                                <span class="font-medium">مدير النظام</span>
+                                <span class="text-gray-600">{{ __('profile.permissions') }}</span>
+                                <span class="font-medium">{{ __('profile.admin') }}</span>
                             </div>
                             <div class="flex justify-between">
-                                <span class="text-gray-600">إدارة:</span>
-                                <span class="font-medium">جميع أجزاء النظام</span>
+                                <span class="text-gray-600">{{ __('profile.manages') }}</span>
+                                <span class="font-medium">{{ __('profile.all_system_parts') }}</span>
                             </div>
 
                             @if($user->notification_email !== null || $user->notification_sms !== null || $user->notification_push !== null)
                                 <div class="pt-3 border-t">
-                                    <h4 class="font-medium text-gray-900 mb-2">إعدادات الإشعارات:</h4>
+                                    <h4 class="font-medium text-gray-900 mb-2">{{ __('profile.notification_settings') }}:</h4>
                                     <div class="space-y-2">
                                         @if($user->notification_email !== null)
                                             <div class="flex items-center">
-                                                <span class="text-gray-600 text-sm">البريد الإلكتروني:</span>
+                                                <span class="text-gray-600 text-sm">{{ __('profile.email_notifications') }}:</span>
                                                 <span class="mr-auto text-sm font-medium {{ $user->notification_email ? 'text-green-600' : 'text-red-600' }}">
-                                                    {{ $user->notification_email ? 'مفعل' : 'معطل' }}
+                                                    {{ $user->notification_email ? __('profile.active') : __('profile.inactive') }}
                                                 </span>
                                             </div>
                                         @endif
 
                                         @if($user->notification_sms !== null)
                                             <div class="flex items-center">
-                                                <span class="text-gray-600 text-sm">الرسائل النصية:</span>
+                                                <span class="text-gray-600 text-sm">{{ __('profile.sms_notifications') }}:</span>
                                                 <span class="mr-auto text-sm font-medium {{ $user->notification_sms ? 'text-green-600' : 'text-red-600' }}">
-                                                    {{ $user->notification_sms ? 'مفعل' : 'معطل' }}
+                                                    {{ $user->notification_sms ? __('profile.active') : __('profile.inactive') }}
                                                 </span>
                                             </div>
                                         @endif
 
                                         @if($user->notification_push !== null)
                                             <div class="flex items-center">
-                                                <span class="text-gray-600 text-sm">إشعارات الدفع:</span>
+                                                <span class="text-gray-600 text-sm">{{ __('profile.push_notifications') }}:</span>
                                                 <span class="mr-auto text-sm font-medium {{ $user->notification_push ? 'text-green-600' : 'text-red-600' }}">
-                                                    {{ $user->notification_push ? 'مفعل' : 'معطل' }}
+                                                    {{ $user->notification_push ? __('profile.active') : __('profile.inactive') }}
                                                 </span>
                                             </div>
                                         @endif
 
                                         @if($user->notification_frequency)
                                             <div class="flex items-center">
-                                                <span class="text-gray-600 text-sm">تكرار الإشعارات:</span>
+                                                <span class="text-gray-600 text-sm">{{ __('profile.notification_frequency') }}:</span>
                                                 <span class="mr-auto text-sm font-medium">
-                                                    {{ $user->notification_frequency === 'daily' ? 'يومياً' : ($user->notification_frequency === 'weekly' ? 'أسبوعياً' : 'شهرياً') }}
+                                                    {{ $user->notification_frequency === 'daily' ? __('profile.daily') : ($user->notification_frequency === 'weekly' ? __('profile.weekly') : __('profile.monthly')) }}
                                                 </span>
                                             </div>
                                         @endif
@@ -226,7 +226,7 @@
                 <!-- Social Media Section -->
                 @if($user->facebook || $user->twitter || $user->instagram || $user->linkedin || $user->whatsapp_number)
                     <div class="bg-white rounded-lg shadow-md p-6">
-                        <h2 class="text-xl font-semibold text-gray-900 mb-4">وسائل التواصل الاجتماعي</h2>
+                        <h2 class="text-xl font-semibold text-gray-900 mb-4">{{ __('profile.social_media') }}</h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             @if($user->facebook)
                                 <div class="flex items-center">
@@ -282,20 +282,20 @@
 
                 <!-- Quick Actions -->
                 <div class="bg-white rounded-lg shadow-md p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">إجراءات سريعة</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ __('profile.quick_actions') }}</h3>
                     <div class="space-y-3">
                         <a href="{{ route('profile.edit') }}" class="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700">
                             <svg class="w-4 h-4 ml-2" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path>
                             </svg>
-                            تعديل الملف
+                            {{ __('profile.edit_profile_btn') }}
                         </a>
 
                         <a href="{{ route('profile.change-password') }}" class="w-full flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
                             <svg class="w-4 h-4 ml-2" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path>
                             </svg>
-                            تغيير كلمة المرور
+                            {{ __('profile.change_password_btn') }}
                         </a>
 
                         <a href="{{ route('profile.public', $user->id) }}" class="w-full flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
@@ -303,45 +303,45 @@
                                 <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path>
                                 <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"></path>
                             </svg>
-                            عرض البروفايل العام
+                            {{ __('profile.view_public_profile') }}
                         </a>
                     </div>
                 </div>
 
                 <!-- Account Status -->
                 <div class="bg-white rounded-lg shadow-md p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">حالة الحساب</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ __('profile.account_status_title') }}</h3>
                     <div class="space-y-3">
                         <div class="flex justify-between items-center">
-                            <span class="text-gray-600">البريد الإلكتروني:</span>
+                            <span class="text-gray-600">{{ __('profile.email_status') }}</span>
                             @if($user->email_verified_at)
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                     <svg class="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                                     </svg>
-                                    موثق
+                                    {{ __('profile.verified') }}
                                 </span>
                             @else
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
                                     <svg class="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
                                     </svg>
-                                    غير موثق
+                                    {{ __('profile.unverified') }}
                                 </span>
                             @endif
                         </div>
 
                         @if($user->is_active !== null)
                             <div class="flex justify-between items-center">
-                                <span class="text-gray-600">النشاط:</span>
+                                <span class="text-gray-600">{{ __('profile.activity_status') }}</span>
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $user->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                    {{ $user->is_active ? 'نشط' : 'غير نشط' }}
+                                    {{ $user->is_active ? __('profile.active') : __('profile.inactive') }}
                                 </span>
                             </div>
                         @endif
 
                         <div class="flex justify-between items-center">
-                            <span class="text-gray-600">تاريخ الانضمام:</span>
+                            <span class="text-gray-600">{{ __('profile.join_date') }}</span>
                             <span class="text-sm font-medium">{{ $user->created_at->format('d/m/Y') }}</span>
                         </div>
                     </div>

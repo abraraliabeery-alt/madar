@@ -159,7 +159,7 @@
                         
                         <div class="flex justify-between items-center">
                             @if($product->price)
-                                <span class="text-2xl font-bold text-primary-600">${{ number_format($product->price) }}</span>
+                                <span class="text-2xl font-bold text-primary-600">{{ number_format($product->price) }} ريال</span>
                             @else
                                 <span class="text-lg text-gray-500">السعر عند الطلب</span>
                             @endif

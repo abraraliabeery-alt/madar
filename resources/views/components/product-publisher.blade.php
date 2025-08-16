@@ -25,8 +25,8 @@
                     <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium
                         {{ $user->primary_role === 'admin' ? 'bg-red-100 text-red-800' :
                            ($user->primary_role === 'facility' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800') }}">
-                        {{ $user->primary_role === 'admin' ? 'مدير' :
-                           ($user->primary_role === 'facility' ? 'مرفق' : 'عميل') }}
+                        {{ $user->primary_role === 'admin' ? __('components.user_roles.admin') :
+                           ($user->primary_role === 'facility' ? __('components.user_roles.facility') : __('components.user_roles.customer')) }}
                     </span>
                 @endif
             </div>
@@ -37,7 +37,7 @@
                         <svg class="w-3 h-3 text-green-500 ml-1" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                         </svg>
-                        <span>حساب موثق</span>
+                        <span>{{ __('components.verification.verified_account') }}</span>
                     </div>
                 @endif
 
@@ -57,7 +57,7 @@
                     <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path>
                     <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"></path>
                 </svg>
-                عرض البروفايل
+                {{ __('components.profile.view_profile') }}
             </a>
         </div>
     </div>
@@ -72,8 +72,8 @@
         </div>
 
         <div class="min-w-0 flex-1">
-            <div class="text-sm font-medium text-gray-500">مستخدم غير محدد</div>
-            <div class="text-xs text-gray-400">معلومات الناشر غير متاحة</div>
+            <div class="text-sm font-medium text-gray-500">{{ __('components.profile.undefined_user') }}</div>
+            <div class="text-xs text-gray-400">{{ __('components.profile.publisher_info_unavailable') }}</div>
         </div>
     </div>
 @endif

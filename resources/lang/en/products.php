@@ -1,172 +1,99 @@
 <?php
 
 return [
-    /*
-    |--------------------------------------------------------------------------
-    | Products Language Lines
-    |--------------------------------------------------------------------------
-    |
-    | The following language lines are used in the products-related views
-    | for various messages, labels, and interface elements.
-    |
-    */
-
-    'hero' => [
-        'title' => 'Available Properties',
-        'subtitle' => 'Discover a wide range of residential and commercial properties in the best locations',
+    'page_titles' => [
+        'products' => 'Products',
+        'product_details' => 'Product Details',
     ],
-
-    'search' => [
-        'title' => 'Search',
-        'placeholder' => 'Search for address, description, or location...',
-        'button' => 'Search',
-        'clear_filters' => 'Clear Filters',
+    
+    'headers' => [
+        'products' => 'Products',
+        'browse_products' => 'Browse all available products',
+        'product_details' => 'Product Details',
+        'product_information' => 'Product Information',
+        'product_features' => 'Features',
+        'product_attributes' => 'Attributes',
+        'product_status' => 'Product Status',
+        'product_comments' => 'Comments',
+        'publisher_information' => 'Publisher Information',
+        'actions' => 'Actions',
+        'product_details_section' => 'Product Details',
+        'share_product' => 'Share Product',
+    ],
+    
+    'filters' => [
+        'search' => 'Search',
+        'search_placeholder' => 'Search in products...',
         'category' => 'Category',
         'all_categories' => 'All Categories',
-        'property_type' => 'Property Type',
-        'all_types' => 'All Types',
-        'apartment' => 'Apartment',
-        'villa' => 'Villa',
-        'office' => 'Office',
-        'commercial_shop' => 'Commercial Shop',
-        'studio' => 'Studio',
-        'price_range' => 'Price Range (SAR)',
-        'min_price' => 'Minimum',
-        'max_price' => 'Maximum',
-        'sort_by' => 'Sort by',
-        'latest' => 'Latest',
-        'price_low_to_high' => 'Price: Low to High',
-        'price_high_to_low' => 'Price: High to Low',
-        'name' => 'Name',
-    ],
-
-    'results' => [
-        'title' => 'Search Results',
-        'properties_available' => 'properties available',
-        'no_results' => 'No Results',
-        'no_results_message' => 'We could not find properties matching your search criteria.',
-        'view_all_properties' => 'View All Properties',
-    ],
-
-    'property_card' => [
+        'status' => 'Status',
+        'all_statuses' => 'All Statuses',
+        'active' => 'Available',
+        'inactive' => 'Unavailable',
         'featured' => 'Featured',
         'verified' => 'Verified',
-        'rooms' => 'rooms',
-        'bathrooms' => 'bathrooms',
-        'square_meters' => 'm²',
-        'view_details' => 'View Details',
-        'location_unknown' => 'Location not specified',
-        'no_description' => 'No description available',
-    ],
-
-    'categories' => [
-        'title' => 'Featured Categories',
-        'subtitle' => 'Browse properties by category',
-        'properties_count' => 'properties',
-    ],
-
-    'show' => [
-        'description' => 'Property Description',
-        'no_description' => 'No description available for this property.',
-        'bedrooms' => 'Bedrooms',
-        'bathrooms' => 'Bathrooms',
-        'square_meters' => 'Square Meters',
-        'gallery' => 'Photo Gallery',
-        'attributes' => 'Features',
-        'features' => 'Amenities',
-        'comments' => 'Comments',
-        'add_comment' => 'Add Your Comment',
-        'comment_placeholder' => 'Write your comment here...',
-        'rating' => 'Rating',
-        'select_rating' => 'Select',
-        'submit_comment' => 'Submit Comment',
-        'login_to_comment' => 'You must',
-        'login' => 'login',
-        'to_add_comment' => 'to add a comment.',
-        'no_comments' => 'No comments yet.',
+        'apply_filters' => 'Apply Filters',
+        'reset' => 'Reset',
+        'sort_by' => 'Sort by:',
+        'latest' => 'Latest',
+        'oldest' => 'Oldest',
+        'name' => 'Name',
         'price' => 'Price',
-        'book_now' => 'Book Now',
-        'request_quote' => 'Request Quote',
-        'add_to_favorites' => 'Add to Favorites',
-        'remove_from_favorites' => 'Remove from Favorites',
-        'property_details' => 'Property Details',
-        'type' => 'Type',
-        'floor' => 'Floor',
-        'floors_count' => 'Floors Count',
-        'parking_spaces' => 'Parking Spaces',
-        'available_from' => 'Available From',
-        'available_until' => 'Available Until',
-        'not_specified' => 'Not specified',
+    ],
+    
+    'status_badges' => [
+        'featured' => 'Featured',
+        'verified' => 'Verified',
+        'available' => 'Available',
+        'unavailable' => 'Unavailable',
+    ],
+    
+    'product_info' => [
+        'description' => 'Description',
+        'features' => 'Features',
+        'attributes' => 'Attributes',
+        'category' => 'Category',
         'facility' => 'Facility',
-        'view_facility' => 'View Facility',
-        'map_location' => 'Location on Map',
-        'open_in_google_maps' => 'Open in Google Maps',
-        'contact_info' => 'Contact Information',
+        'publish_date' => 'Publish Date',
+        'last_update' => 'Last Update',
+        'undefined' => 'Undefined',
+        'view_all_comments' => 'View all comments',
     ],
-
-    'by_category' => [
-        'title' => 'Properties - :category',
-        'subtitle' => 'Discover the best properties in :category category',
-        'properties_available' => 'properties available',
-        'view_all_properties' => 'View All Properties',
-        'no_properties' => 'No Properties',
-        'no_properties_message' => 'No properties available in :category category currently.',
-        'category_description' => 'About :category Category',
-        'other_categories' => 'Other Categories',
-        'browse_other_categories' => 'Browse properties in other categories',
+    
+    'actions' => [
+        'view_details' => 'View Details',
+        'add_to_favorites' => 'Add to Favorites',
+        'contact_publisher' => 'Contact Publisher',
+        'book_now' => 'Book Now',
+        'login_to_interact' => 'Login to interact with the product',
+        'login' => 'Login',
     ],
-
-    'by_facility' => [
-        'title' => 'Properties of :facility',
-        'subtitle' => 'Discover all available properties from :facility',
-        'properties_available' => 'properties available',
-        'view_facility' => 'View Facility',
-        'view_all_properties' => 'View All Properties',
-        'no_properties' => 'No Properties',
-        'no_properties_message' => 'No properties available from :facility currently.',
-        'about_facility' => 'About :facility',
-        'facility_description' => 'A verified and trusted real estate facility that provides the best real estate services.',
+    
+    'social_media' => [
+        'facebook' => 'Facebook',
+        'twitter' => 'Twitter',
+        'whatsapp' => 'WhatsApp',
     ],
-
-    'common' => [
-        'loading' => 'Loading...',
-        'error' => 'Error',
-        'success' => 'Success',
-        'cancel' => 'Cancel',
-        'save' => 'Save',
-        'edit' => 'Edit',
-        'delete' => 'Delete',
-        'back' => 'Back',
-        'next' => 'Next',
+    
+    'empty_state' => [
+        'no_products' => 'No products found',
+        'no_products_message' => 'No products match the search criteria.',
+        'add_new_product' => 'Add New Product',
+    ],
+    
+    'pagination' => [
         'previous' => 'Previous',
-        'close' => 'Close',
-        'yes' => 'Yes',
-        'no' => 'No',
-        'or' => 'or',
-        'and' => 'and',
-        'with' => 'with',
-        'without' => 'without',
-        'from' => 'from',
-        'to' => 'to',
-        'at' => 'at',
-        'in' => 'in',
-        'on' => 'on',
-        'by' => 'by',
-        'for' => 'for',
-        'of' => 'of',
-        'the' => 'the',
-        'a' => 'a',
-        'an' => 'an',
-        'this' => 'this',
-        'that' => 'that',
-        'these' => 'these',
-        'those' => 'those',
-        'my' => 'my',
-        'your' => 'your',
-        'his' => 'his',
-        'her' => 'her',
-        'its' => 'its',
-        'our' => 'our',
-        'their' => 'their',
+        'next' => 'Next',
+    ],
+    
+    'breadcrumb' => [
+        'home' => 'Home',
+        'products' => 'Products',
+        'product' => 'Product',
+    ],
+    
+    'comments' => [
+        'comments_count' => 'Comments',
+        'view_all_comments' => 'View all comments',
     ],
 ];

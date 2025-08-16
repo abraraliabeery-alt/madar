@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
-@section('title', 'الإشعارات')
+@section('title', __('client.notifications.title'))
 
 @section('content')
 <div class="bg-gray-50 min-h-screen py-8">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Header -->
         <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-900 mb-2">الإشعارات</h1>
-            <p class="text-gray-600">إدارة إشعاراتك وتفضيلاتك</p>
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ __('client.notifications.title') }}</h1>
+            <p class="text-gray-600">{{ __('client.notifications.subtitle') }}</p>
         </div>
 
         <!-- Notification Actions -->

@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
-@section('title', 'تغيير كلمة المرور')
+@section('title', __('profile.change_password_title'))
 
 @section('content')
 <div class="min-h-screen bg-gray-50 py-8">
     <div class="max-w-md mx-auto px-4 sm:px-6 lg:px-8">
         <div class="bg-white rounded-lg shadow-md p-6">
             <div class="mb-6">
-                <h1 class="text-2xl font-bold text-gray-900 mb-2">تغيير كلمة المرور</h1>
-                <p class="text-gray-600">قم بتحديث كلمة المرور الخاصة بك</p>
+                <h1 class="text-2xl font-bold text-gray-900 mb-2">{{ __('profile.change_password_title') }}</h1>
+                <p class="text-gray-600">{{ __('profile.update_personal_info') }}</p>
             </div>
 
             @if(session('success'))
@@ -32,7 +32,7 @@
 
                 <!-- Current Password -->
                 <div class="mb-4">
-                    <label for="current_password" class="block text-sm font-medium text-gray-700 mb-2">كلمة المرور الحالية</label>
+                    <label for="current_password" class="block text-sm font-medium text-gray-700 mb-2">{{ __('profile.current_password') }}</label>
                     <input type="password" name="current_password" id="current_password"
                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 @error('current_password') border-red-500 @enderror"
                            required>
@@ -43,7 +43,7 @@
 
                 <!-- New Password -->
                 <div class="mb-4">
-                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">كلمة المرور الجديدة</label>
+                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">{{ __('profile.new_password') }}</label>
                     <input type="password" name="password" id="password"
                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 @error('password') border-red-500 @enderror"
                            required>
@@ -54,7 +54,7 @@
 
                 <!-- Confirm New Password -->
                 <div class="mb-6">
-                    <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-2">تأكيد كلمة المرور الجديدة</label>
+                    <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-2">{{ __('profile.confirm_new_password') }}</label>
                     <input type="password" name="password_confirmation" id="password_confirmation"
                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
                            required>
@@ -63,10 +63,10 @@
                 <!-- Submit Button -->
                 <div class="flex justify-between items-center">
                     <button type="submit" class="btn-primary text-white px-6 py-2 rounded-lg font-medium">
-                        تغيير كلمة المرور
+                        {{ __('profile.update_password') }}
                     </button>
                     <a href="{{ route('profile.edit') }}" class="text-primary-600 hover:text-primary-700 text-sm font-medium">
-                        العودة للملف الشخصي
+                        {{ __('profile.back_to_profile') }}
                     </a>
                 </div>
             </form>

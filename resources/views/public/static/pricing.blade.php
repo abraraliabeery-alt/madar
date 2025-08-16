@@ -17,8 +17,8 @@
                         <div class="card-header bg-light text-center py-4">
                             <h3 class="h4 text-primary">{{ __('Basic') }}</h3>
                             <div class="pricing-price">
-                                <span class="display-6 text-primary">$0</span>
-                                <span class="text-muted">/{{ __('month') }}</span>
+                                <span class="display-6 text-primary">0</span>
+                                <span class="text-muted"> ريال/{{ __('month') }}</span>
                             </div>
                         </div>
                         <div class="card-body">
@@ -42,8 +42,8 @@
                         <div class="card-header bg-primary text-white text-center py-4">
                             <h3 class="h4">{{ __('Professional') }}</h3>
                             <div class="pricing-price">
-                                <span class="display-6">$29</span>
-                                <span>/{{ __('month') }}</span>
+                                <span class="display-6">29</span>
+                                <span> ريال/{{ __('month') }}</span>
                             </div>
                             <span class="badge bg-warning text-dark">{{ __('Most Popular') }}</span>
                         </div>
@@ -68,8 +68,8 @@
                         <div class="card-header bg-dark text-white text-center py-4">
                             <h3 class="h4">{{ __('Enterprise') }}</h3>
                             <div class="pricing-price">
-                                <span class="display-6">$99</span>
-                                <span>/{{ __('month') }}</span>
+                                <span class="display-6">99</span>
+                                <span> ريال/{{ __('month') }}</span>
                             </div>
                         </div>
                         <div class="card-body">

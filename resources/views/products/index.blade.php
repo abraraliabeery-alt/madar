@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'المنتجات')
+@section('title', __('products.page_titles.products'))
 
 @section('content')
 <div class="min-h-screen bg-gray-50 py-8">
@@ -8,8 +8,13 @@
 
         <!-- Page Header -->
         <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-900 mb-2">المنتجات</h1>
-            <p class="text-gray-600">تصفح جميع المنتجات المتاحة</p>
+            <div class="flex justify-between items-start mb-4">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ __('products.headers.products') }}</h1>
+                    <p class="text-gray-600">{{ __('products.headers.browse_products') }}</p>
+                </div>
+                <x-language-switcher />
+            </div>
         </div>
 
         <!-- Filters & Search -->
@@ -17,10 +22,10 @@
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <!-- Search -->
                 <div class="md:col-span-2">
-                    <label for="search" class="block text-sm font-medium text-gray-700 mb-2">البحث</label>
+                    <label for="search" class="block text-sm font-medium text-gray-700 mb-2">{{ __('products.filters.search') }}</label>
                     <div class="relative">
                         <input type="text" id="search" name="search"
-                               placeholder="ابحث في المنتجات..."
+                               placeholder="{{ __('products.filters.search_placeholder') }}"
                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <svg class="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
@@ -32,9 +37,9 @@
 
                 <!-- Category Filter -->
                 <div>
-                    <label for="category" class="block text-sm font-medium text-gray-700 mb-2">الفئة</label>
+                    <label for="category" class="block text-sm font-medium text-gray-700 mb-2">{{ __('products.filters.category') }}</label>
                     <select id="category" name="category" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">جميع الفئات</option>
+                        <option value="">{{ __('products.filters.all_categories') }}</option>
                         @foreach(\App\Models\Category::all() as $category)
                             <option value="{{ $category->id }}">{{ $category->name ?? 'Category ' . $category->id }}</option>
                         @endforeach
@@ -43,13 +48,13 @@
 
                 <!-- Status Filter -->
                 <div>
-                    <label for="status" class="block text-sm font-medium text-gray-700 mb-2">الحالة</label>
+                    <label for="status" class="block text-sm font-medium text-gray-700 mb-2">{{ __('products.filters.status') }}</label>
                     <select id="status" name="status" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">جميع الحالات</option>
-                        <option value="active">متاح</option>
-                        <option value="inactive">غير متاح</option>
-                        <option value="featured">مميز</option>
-                        <option value="verified">موثق</option>
+                        <option value="">{{ __('products.filters.all_statuses') }}</option>
+                        <option value="active">{{ __('products.filters.active') }}</option>
+                        <option value="inactive">{{ __('products.filters.inactive') }}</option>
+                        <option value="featured">{{ __('products.filters.featured') }}</option>
+                        <option value="verified">{{ __('products.filters.verified') }}</option>
                     </select>
                 </div>
             </div>
@@ -58,20 +63,20 @@
             <div class="flex justify-between items-center mt-4 pt-4 border-t border-gray-200">
                 <div class="flex items-center space-x-3 space-x-reverse">
                     <button type="button" class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
-                        تطبيق الفلاتر
+                        {{ __('products.filters.apply_filters') }}
                     </button>
                     <button type="button" class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
-                        إعادة تعيين
+                        {{ __('products.filters.reset') }}
                     </button>
                 </div>
 
                 <div class="flex items-center space-x-2 space-x-reverse">
-                    <span class="text-sm text-gray-600">ترتيب حسب:</span>
+                    <span class="text-sm text-gray-600">{{ __('products.filters.sort_by') }}</span>
                     <select class="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                        <option value="latest">الأحدث</option>
-                        <option value="oldest">الأقدم</option>
-                        <option value="name">الاسم</option>
-                        <option value="price">السعر</option>
+                        <option value="latest">{{ __('products.filters.latest') }}</option>
+                        <option value="oldest">{{ __('products.filters.oldest') }}</option>
+                        <option value="name">{{ __('products.filters.name') }}</option>
+                        <option value="price">{{ __('products.filters.price') }}</option>
                     </select>
                 </div>
             </div>
@@ -103,7 +108,7 @@
                                     <svg class="w-3 h-3 ml-1" fill="currentColor" viewBox="0 0 20 20">
                                         <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
                                     </svg>
-                                    مميز
+                                    {{ __('products.status_badges.featured') }}
                                 </span>
                             @endif
 
@@ -112,7 +117,7 @@
                                     <svg class="w-3 h-3 ml-1" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                                     </svg>
-                                    موثق
+                                    {{ __('products.status_badges.verified') }}
                                 </span>
                             @endif
                         </div>
@@ -180,11 +185,11 @@
                         <div class="flex space-x-2 space-x-reverse">
                             <a href="{{ route('products.show', $product->id) }}"
                                class="flex-1 bg-blue-600 text-white text-center py-2 px-4 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors duration-200">
-                                عرض التفاصيل
+                                {{ __('products.actions.view_details') }}
                             </a>
 
                             @auth
-                                <button class="p-2 text-gray-400 hover:text-red-500 transition-colors duration-200" title="إضافة للمفضلة">
+                                <button class="p-2 text-gray-400 hover:text-red-500 transition-colors duration-200" title="{{ __('products.actions.add_to_favorites') }}">
                                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                         <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
                                     </svg>
@@ -199,14 +204,14 @@
                     <svg class="mx-auto h-12 w-12 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path>
                     </svg>
-                    <h3 class="mt-2 text-sm font-medium text-gray-900">لا توجد منتجات</h3>
-                    <p class="mt-1 text-sm text-gray-500">لم يتم العثور على منتجات تطابق معايير البحث.</p>
+                    <h3 class="mt-2 text-sm font-medium text-gray-900">{{ __('products.empty_state.no_products') }}</h3>
+                    <p class="mt-1 text-sm text-gray-500">{{ __('products.empty_state.no_products_message') }}</p>
                     <div class="mt-6">
                         <button type="button" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
                             <svg class="w-4 h-4 ml-2" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"></path>
                             </svg>
-                            إضافة منتج جديد
+                            {{ __('products.empty_state.add_new_product') }}
                         </button>
                     </div>
                 </div>
@@ -219,11 +224,11 @@
                 <nav class="flex items-center space-x-2 space-x-reverse" aria-label="Pagination">
                     @if($products->onFirstPage())
                         <span class="px-3 py-2 text-sm font-medium text-gray-400 bg-white border border-gray-300 rounded-md cursor-not-allowed">
-                            السابق
+                            {{ __('products.pagination.previous') }}
                         </span>
                     @else
                         <a href="{{ $products->previousPageUrl() }}" class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
-                            السابق
+                            {{ __('products.pagination.previous') }}
                         </a>
                     @endif
 
@@ -241,11 +246,11 @@
 
                     @if($products->hasMorePages())
                         <a href="{{ $products->nextPageUrl() }}" class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
-                            التالي
+                            {{ __('products.pagination.next') }}
                         </a>
                     @else
                         <span class="px-3 py-2 text-sm font-medium text-gray-400 bg-white border border-gray-300 rounded-md cursor-not-allowed">
-                            التالي
+                            {{ __('products.pagination.next') }}
                         </span>
                     @endif
                 </nav>

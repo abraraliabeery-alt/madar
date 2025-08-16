@@ -1,172 +1,99 @@
 <?php
 
 return [
-    /*
-    |--------------------------------------------------------------------------
-    | Products Language Lines
-    |--------------------------------------------------------------------------
-    |
-    | The following language lines are used in the products-related views
-    | for various messages, labels, and interface elements.
-    |
-    */
-
-    'hero' => [
-        'title' => 'العقارات المتاحة',
-        'subtitle' => 'اكتشف مجموعة واسعة من العقارات السكنية والتجارية في أفضل المواقع',
+    'page_titles' => [
+        'products' => 'المنتجات',
+        'product_details' => 'تفاصيل المنتج',
     ],
-
-    'search' => [
-        'title' => 'البحث',
-        'placeholder' => 'ابحث عن عنوان، وصف، أو موقع...',
-        'button' => 'بحث',
-        'clear_filters' => 'مسح الفلاتر',
+    
+    'headers' => [
+        'products' => 'المنتجات',
+        'browse_products' => 'تصفح جميع المنتجات المتاحة',
+        'product_details' => 'تفاصيل المنتج',
+        'product_information' => 'معلومات المنتج',
+        'product_features' => 'المميزات',
+        'product_attributes' => 'الخصائص',
+        'product_status' => 'حالة المنتج',
+        'product_comments' => 'التعليقات',
+        'publisher_information' => 'معلومات الناشر',
+        'actions' => 'إجراءات',
+        'product_details_section' => 'تفاصيل المنتج',
+        'share_product' => 'مشاركة المنتج',
+    ],
+    
+    'filters' => [
+        'search' => 'البحث',
+        'search_placeholder' => 'ابحث في المنتجات...',
         'category' => 'الفئة',
         'all_categories' => 'جميع الفئات',
-        'property_type' => 'نوع العقار',
-        'all_types' => 'جميع الأنواع',
-        'apartment' => 'شقة',
-        'villa' => 'فيلا',
-        'office' => 'مكتب',
-        'commercial_shop' => 'محل تجاري',
-        'studio' => 'استوديو',
-        'price_range' => 'نطاق السعر (ريال)',
-        'min_price' => 'الحد الأدنى',
-        'max_price' => 'الحد الأعلى',
-        'sort_by' => 'ترتيب حسب',
-        'latest' => 'الأحدث',
-        'price_low_to_high' => 'السعر: من الأقل',
-        'price_high_to_low' => 'السعر: من الأعلى',
-        'name' => 'الاسم',
-    ],
-
-    'results' => [
-        'title' => 'نتائج البحث',
-        'properties_available' => 'عقار متاح',
-        'no_results' => 'لا توجد نتائج',
-        'no_results_message' => 'لم نتمكن من العثور على عقارات تطابق معايير البحث الخاصة بك.',
-        'view_all_properties' => 'عرض جميع العقارات',
-    ],
-
-    'property_card' => [
+        'status' => 'الحالة',
+        'all_statuses' => 'جميع الحالات',
+        'active' => 'متاح',
+        'inactive' => 'غير متاح',
         'featured' => 'مميز',
         'verified' => 'موثق',
-        'rooms' => 'غرف',
-        'bathrooms' => 'حمامات',
-        'square_meters' => 'م²',
-        'view_details' => 'عرض التفاصيل',
-        'location_unknown' => 'موقع غير محدد',
-        'no_description' => 'لا يوجد وصف متاح',
-    ],
-
-    'categories' => [
-        'title' => 'الفئات المميزة',
-        'subtitle' => 'تصفح العقارات حسب الفئة',
-        'properties_count' => 'عقار',
-    ],
-
-    'show' => [
-        'description' => 'وصف العقار',
-        'no_description' => 'لا يوجد وصف متاح لهذا العقار.',
-        'bedrooms' => 'غرف النوم',
-        'bathrooms' => 'الحمامات',
-        'square_meters' => 'متر مربع',
-        'gallery' => 'معرض الصور',
-        'attributes' => 'الخصائص',
-        'features' => 'المميزات',
-        'comments' => 'التعليقات',
-        'add_comment' => 'أضف تعليقك',
-        'comment_placeholder' => 'اكتب تعليقك هنا...',
-        'rating' => 'التقييم',
-        'select_rating' => 'اختر',
-        'submit_comment' => 'إرسال التعليق',
-        'login_to_comment' => 'يجب',
-        'login' => 'تسجيل الدخول',
-        'to_add_comment' => 'لإضافة تعليق.',
-        'no_comments' => 'لا توجد تعليقات بعد.',
+        'apply_filters' => 'تطبيق الفلاتر',
+        'reset' => 'إعادة تعيين',
+        'sort_by' => 'ترتيب حسب:',
+        'latest' => 'الأحدث',
+        'oldest' => 'الأقدم',
+        'name' => 'الاسم',
         'price' => 'السعر',
-        'book_now' => 'احجز الآن',
-        'request_quote' => 'طلب عرض سعر',
+    ],
+    
+    'status_badges' => [
+        'featured' => 'مميز',
+        'verified' => 'موثق',
+        'available' => 'متاح',
+        'unavailable' => 'غير متاح',
+    ],
+    
+    'product_info' => [
+        'description' => 'الوصف',
+        'features' => 'المميزات',
+        'attributes' => 'الخصائص',
+        'category' => 'الفئة',
+        'facility' => 'المرفق',
+        'publish_date' => 'تاريخ النشر:',
+        'last_update' => 'آخر تحديث:',
+        'undefined' => 'غير محدد',
+        'view_all_comments' => 'عرض جميع التعليقات',
+    ],
+    
+    'actions' => [
+        'view_details' => 'عرض التفاصيل',
         'add_to_favorites' => 'إضافة للمفضلة',
-        'remove_from_favorites' => 'إزالة من المفضلة',
-        'property_details' => 'تفاصيل العقار',
-        'type' => 'النوع',
-        'floor' => 'الطابق',
-        'floors_count' => 'عدد الطوابق',
-        'parking_spaces' => 'مواقف السيارات',
-        'available_from' => 'متاح من',
-        'available_until' => 'متاح حتى',
-        'not_specified' => 'غير محدد',
-        'facility' => 'المنشأة',
-        'view_facility' => 'عرض المنشأة',
-        'map_location' => 'الموقع على الخريطة',
-        'open_in_google_maps' => 'فتح في خرائط جوجل',
-        'contact_info' => 'معلومات التواصل',
+        'contact_publisher' => 'تواصل مع الناشر',
+        'book_now' => 'احجز الآن',
+        'login_to_interact' => 'سجل دخولك للتفاعل مع المنتج',
+        'login' => 'تسجيل الدخول',
     ],
-
-    'by_category' => [
-        'title' => 'العقارات - :category',
-        'subtitle' => 'اكتشف أفضل العقارات في فئة :category',
-        'properties_available' => 'عقار متاح',
-        'view_all_properties' => 'عرض جميع العقارات',
-        'no_properties' => 'لا توجد عقارات',
-        'no_properties_message' => 'لا توجد عقارات متاحة في فئة :category حالياً.',
-        'category_description' => 'عن فئة :category',
-        'other_categories' => 'فئات أخرى',
-        'browse_other_categories' => 'تصفح العقارات في فئات أخرى',
+    
+    'social_media' => [
+        'facebook' => 'فيسبوك',
+        'twitter' => 'تويتر',
+        'whatsapp' => 'واتساب',
     ],
-
-    'by_facility' => [
-        'title' => 'عقارات :facility',
-        'subtitle' => 'اكتشف جميع العقارات المتاحة من :facility',
-        'properties_available' => 'عقار متاح',
-        'view_facility' => 'عرض المنشأة',
-        'view_all_properties' => 'عرض جميع العقارات',
-        'no_properties' => 'لا توجد عقارات',
-        'no_properties_message' => 'لا توجد عقارات متاحة من :facility حالياً.',
-        'about_facility' => 'عن :facility',
-        'facility_description' => 'منشأة عقارية معتمدة وموثوقة تقدم أفضل الخدمات العقارية.',
+    
+    'empty_state' => [
+        'no_products' => 'لا توجد منتجات',
+        'no_products_message' => 'لم يتم العثور على منتجات تطابق معايير البحث.',
+        'add_new_product' => 'إضافة منتج جديد',
     ],
-
-    'common' => [
-        'loading' => 'جاري التحميل...',
-        'error' => 'خطأ',
-        'success' => 'نجح',
-        'cancel' => 'إلغاء',
-        'save' => 'حفظ',
-        'edit' => 'تعديل',
-        'delete' => 'حذف',
-        'back' => 'رجوع',
-        'next' => 'التالي',
+    
+    'pagination' => [
         'previous' => 'السابق',
-        'close' => 'إغلاق',
-        'yes' => 'نعم',
-        'no' => 'لا',
-        'or' => 'أو',
-        'and' => 'و',
-        'with' => 'مع',
-        'without' => 'بدون',
-        'from' => 'من',
-        'to' => 'إلى',
-        'at' => 'في',
-        'in' => 'في',
-        'on' => 'على',
-        'by' => 'بواسطة',
-        'for' => 'لـ',
-        'of' => 'من',
-        'the' => 'ال',
-        'a' => 'أ',
-        'an' => 'أ',
-        'this' => 'هذا',
-        'that' => 'ذلك',
-        'these' => 'هذه',
-        'those' => 'تلك',
-        'my' => 'لي',
-        'your' => 'لك',
-        'his' => 'له',
-        'her' => 'لها',
-        'its' => 'له',
-        'our' => 'لنا',
-        'their' => 'لهم',
+        'next' => 'التالي',
+    ],
+    
+    'breadcrumb' => [
+        'home' => 'الرئيسية',
+        'products' => 'المنتجات',
+        'product' => 'المنتج',
+    ],
+    
+    'comments' => [
+        'comments_count' => 'التعليقات',
+        'view_all_comments' => 'عرض جميع التعليقات',
     ],
 ];
