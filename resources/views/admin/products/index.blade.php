@@ -126,38 +126,63 @@
                                 @endif
                             </td>
                             <td>
-                                <div class="btn-group">
-                                    <a href="{{ route('admin.products.show', $product) }}" class="btn btn-sm btn-info">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    <a href="{{ route('admin.products.edit', $product) }}" class="btn btn-sm btn-warning">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <form action="{{ route('admin.products.destroy', $product) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger delete-confirm">
+                                <div class="d-flex flex-column gap-1">
+                                    <!-- Primary Actions Row -->
+                                    <div class="d-flex gap-1 mb-1">
+                                        <a href="{{ route('admin.products.show', $product) }}" 
+                                           class="btn btn-sm btn-outline-info" 
+                                           data-bs-toggle="tooltip" 
+                                           title="عرض التفاصيل">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{{ route('admin.products.edit', $product) }}" 
+                                           class="btn btn-sm btn-outline-warning" 
+                                           data-bs-toggle="tooltip" 
+                                           title="تعديل المنتج">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <button type="button" 
+                                                class="btn btn-sm btn-outline-danger delete-confirm" 
+                                                data-bs-toggle="tooltip" 
+                                                title="حذف المنتج"
+                                                data-product-id="{{ $product->id }}"
+                                                data-product-name="{{ $product->name }}">
                                             <i class="fas fa-trash"></i>
                                         </button>
-                                    </form>
-                                    <form action="{{ route('admin.products.toggle-status', $product) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        <button type="submit" class="btn btn-sm {{ $product->is_active ? 'btn-danger' : 'btn-success' }}">
-                                            <i class="fas {{ $product->is_active ? 'fa-ban' : 'fa-check' }}"></i>
-                                        </button>
-                                    </form>
-                                    <form action="{{ route('admin.products.toggle-verification', $product) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        <button type="submit" class="btn btn-sm {{ $product->is_verified ? 'btn-warning' : 'btn-info' }}">
-                                            <i class="fas {{ $product->is_verified ? 'fa-times' : 'fa-shield-alt' }}"></i>
-                                        </button>
-                                    </form>
-                                    <form action="{{ route('admin.products.toggle-featured', $product) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        <button type="submit" class="btn btn-sm {{ $product->is_featured ? 'btn-secondary' : 'btn-warning' }}">
-                                            <i class="fas fa-star"></i>
-                                        </button>
-                                    </form>
+                                    </div>
+                                    
+                                    <!-- Status Toggle Row -->
+                                    <div class="d-flex gap-1 mb-1">
+                                        <form action="{{ route('admin.products.toggle-status', $product) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            <button type="submit" 
+                                                    class="btn btn-sm {{ $product->is_active ? 'btn-outline-danger' : 'btn-outline-success' }}" 
+                                                    data-bs-toggle="tooltip" 
+                                                    title="{{ $product->is_active ? 'إلغاء التفعيل' : 'تفعيل المنتج' }}">
+                                                <i class="fas {{ $product->is_active ? 'fa-ban' : 'fa-check' }}"></i>
+                                            </button>
+                                        </form>
+                                        
+                                        <form action="{{ route('admin.products.toggle-verification', $product) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            <button type="submit" 
+                                                    class="btn btn-sm {{ $product->is_verified ? 'btn-outline-warning' : 'btn-outline-info' }}" 
+                                                    data-bs-toggle="tooltip" 
+                                                    title="{{ $product->is_verified ? 'إلغاء التحقق' : 'التحقق من المنتج' }}">
+                                                <i class="fas {{ $product->is_verified ? 'fa-times' : 'fa-shield-alt' }}"></i>
+                                            </button>
+                                        </form>
+                                        
+                                        <form action="{{ route('admin.products.toggle-featured', $product) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            <button type="submit" 
+                                                    class="btn btn-sm {{ $product->is_featured ? 'btn-outline-secondary' : 'btn-outline-warning' }}" 
+                                                    data-bs-toggle="tooltip" 
+                                                    title="{{ $product->is_featured ? 'إلغاء التمييز' : 'تمييز المنتج' }}">
+                                                <i class="fas fa-star {{ $product->is_featured ? 'text-warning' : '' }}"></i>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
                             </td>
                         </tr>
@@ -179,6 +204,83 @@
 <style>
 .datatable th, .datatable td {
     vertical-align: middle;
+}
+
+/* Action Buttons Styling */
+.action-buttons .btn {
+    transition: all 0.2s ease-in-out;
+    border-width: 1.5px;
+    font-size: 0.875rem;
+    min-width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.action-buttons .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.action-buttons .btn:active {
+    transform: translateY(0);
+}
+
+/* Primary Actions Row */
+.action-buttons .btn-outline-info:hover {
+    background-color: #0dcaf0;
+    border-color: #0dcaf0;
+    color: white;
+}
+
+.action-buttons .btn-outline-warning:hover {
+    background-color: #ffc107;
+    border-color: #ffc107;
+    color: black;
+}
+
+.action-buttons .btn-outline-danger:hover {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: white;
+}
+
+/* Status Toggle Row */
+.action-buttons .btn-outline-success:hover {
+    background-color: #198754;
+    border-color: #198754;
+    color: white;
+}
+
+.action-buttons .btn-outline-secondary:hover {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: white;
+}
+
+/* Featured Star Button */
+.action-buttons .btn .fa-star.text-warning {
+    color: #ffc107 !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .action-buttons .d-flex {
+        flex-direction: column !important;
+    }
+    
+    .action-buttons .btn {
+        min-width: 28px;
+        height: 28px;
+        font-size: 0.8rem;
+    }
+}
+
+/* Table cell padding for actions */
+.datatable td:last-child {
+    padding: 0.5rem;
+    min-width: 120px;
 }
 </style>
 @endpush
@@ -205,6 +307,12 @@ $(document).ready(function() {
     $('.form-select').select2({
         theme: 'bootstrap-5',
         width: '100%'
+    });
+
+    // Initialize tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
     });
 
     // Handle filters
@@ -234,19 +342,40 @@ $(document).ready(function() {
     // Delete confirmation
     $('.delete-confirm').click(function(e) {
         e.preventDefault();
-        let form = $(this).closest('form');
+        let productId = $(this).data('product-id');
+        let productName = $(this).data('product-name');
 
         Swal.fire({
             title: 'هل أنت متأكد؟',
-            text: "لا يمكن التراجع عن هذا الإجراء!",
+            text: `سيتم حذف المنتج "${productName}" نهائياً. لا يمكن التراجع عن هذا الإجراء!`,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#d33',
             cancelButtonColor: '#3085d6',
             confirmButtonText: 'نعم، احذف المنتج',
-            cancelButtonText: 'إلغاء'
+            cancelButtonText: 'إلغاء',
+            reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
+                // Create and submit delete form
+                let form = $('<form>', {
+                    'method': 'POST',
+                    'action': `/admin/products/${productId}`
+                });
+                
+                form.append($('<input>', {
+                    'type': 'hidden',
+                    'name': '_token',
+                    'value': $('meta[name="csrf-token"]').attr('content')
+                }));
+                
+                form.append($('<input>', {
+                    'type': 'hidden',
+                    'name': '_method',
+                    'value': 'DELETE'
+                }));
+                
+                $('body').append(form);
                 form.submit();
             }
         });

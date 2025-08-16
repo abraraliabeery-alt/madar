@@ -193,41 +193,65 @@
                                 @endif
                             </td>
                             <td>
-                                <div class="btn-group">
-                                    <a href="{{ route('admin.bookings.show', $booking) }}" class="btn btn-sm btn-info">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    <a href="{{ route('admin.bookings.edit', $booking) }}" class="btn btn-sm btn-warning">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <form action="{{ route('admin.bookings.destroy', $booking) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger delete-confirm">
+                                <div class="d-flex flex-column gap-1 action-buttons">
+                                    <!-- Primary Actions Row -->
+                                    <div class="d-flex gap-1 mb-1">
+                                        <a href="{{ route('admin.bookings.show', $booking) }}" 
+                                           class="btn btn-sm btn-outline-info" 
+                                           data-bs-toggle="tooltip" 
+                                           title="عرض التفاصيل">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{{ route('admin.bookings.edit', $booking) }}" 
+                                           class="btn btn-sm btn-outline-warning" 
+                                           data-bs-toggle="tooltip" 
+                                           title="تعديل الحجز">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <button type="button" 
+                                                class="btn btn-sm btn-outline-danger delete-confirm" 
+                                                data-bs-toggle="tooltip" 
+                                                title="حذف الحجز"
+                                                data-booking-id="{{ $booking->id }}"
+                                                data-booking-number="{{ $booking->booking_number }}">
                                             <i class="fas fa-trash"></i>
                                         </button>
-                                    </form>
-                                    <form action="{{ route('admin.bookings.update-payment-status', $booking) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        <button type="submit" class="btn btn-sm {{ $booking->is_paid ? 'btn-danger' : 'btn-success' }}">
-                                            <i class="fas {{ $booking->is_paid ? 'fa-times' : 'fa-check' }}"></i>
-                                        </button>
-                                    </form>
-                                    @if(!$booking->is_confirmed)
-                                        <form action="{{ route('admin.bookings.confirm', $booking) }}" method="POST" class="d-inline">
+                                    </div>
+                                    
+                                    <!-- Status Toggle Row -->
+                                    <div class="d-flex gap-1 mb-1">
+                                        <form action="{{ route('admin.bookings.update-payment-status', $booking) }}" method="POST" class="d-inline">
                                             @csrf
-                                            <button type="submit" class="btn btn-sm btn-success">
-                                                <i class="fas fa-check-circle"></i>
+                                            <button type="submit" 
+                                                    class="btn btn-sm {{ $booking->is_paid ? 'btn-outline-danger' : 'btn-outline-success' }}" 
+                                                    data-bs-toggle="tooltip" 
+                                                    title="{{ $booking->is_paid ? 'إلغاء الدفع' : 'تأكيد الدفع' }}">
+                                                <i class="fas {{ $booking->is_paid ? 'fa-times' : 'fa-check' }}"></i>
                                             </button>
                                         </form>
-                                    @else
-                                        <form action="{{ route('admin.bookings.unconfirm', $booking) }}" method="POST" class="d-inline">
-                                            @csrf
-                                            <button type="submit" class="btn btn-sm btn-warning">
-                                                <i class="fas fa-times-circle"></i>
-                                            </button>
-                                        </form>
-                                    @endif
+                                        
+                                        @if(!$booking->is_confirmed)
+                                            <form action="{{ route('admin.bookings.confirm', $booking) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                <button type="submit" 
+                                                        class="btn btn-sm btn-outline-success" 
+                                                        data-bs-toggle="tooltip" 
+                                                        title="تأكيد الحجز">
+                                                    <i class="fas fa-check-circle"></i>
+                                                </button>
+                                            </form>
+                                        @else
+                                            <form action="{{ route('admin.bookings.unconfirm', $booking) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                <button type="submit" 
+                                                        class="btn btn-sm btn-outline-warning" 
+                                                        data-bs-toggle="tooltip" 
+                                                        title="إلغاء التأكيد">
+                                                    <i class="fas fa-times-circle"></i>
+                                                </button>
+                                            </form>
+                                        @endif
+                                    </div>
                                 </div>
                             </td>
                         </tr>
@@ -252,6 +276,12 @@ $(document).ready(function() {
         buttons: [
             'copy', 'csv', 'excel', 'pdf', 'print'
         ]
+    });
+
+    // Initialize tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
     });
 
     // Apply filters
@@ -291,6 +321,118 @@ $(document).ready(function() {
         theme: 'bootstrap-5',
         width: '100%'
     });
+
+    // Delete confirmation
+    $('.delete-confirm').click(function(e) {
+        e.preventDefault();
+        let bookingId = $(this).data('booking-id');
+        let bookingNumber = $(this).data('booking-number');
+
+        Swal.fire({
+            title: 'هل أنت متأكد؟',
+            text: `سيتم حذف الحجز رقم "${bookingNumber}" نهائياً. لا يمكن التراجع عن هذا الإجراء!`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'نعم، احذف الحجز',
+            cancelButtonText: 'إلغاء',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Create and submit delete form
+                let form = $('<form>', {
+                    'method': 'POST',
+                    'action': `/admin/bookings/${bookingId}`
+                });
+                
+                form.append($('<input>', {
+                    'type': 'hidden',
+                    'name': '_token',
+                    'value': $('meta[name="csrf-token"]').attr('content')
+                }));
+                
+                form.append($('<input>', {
+                    'type': 'hidden',
+                    'name': '_method',
+                    'value': 'DELETE'
+                }));
+                
+                $('body').append(form);
+                form.submit();
+            }
+        });
+    });
 });
 </script>
+@endpush
+
+@push('styles')
+<style>
+/* Action Buttons Styling */
+.action-buttons .btn {
+    transition: all 0.2s ease-in-out;
+    border-width: 1.5px;
+    font-size: 0.875rem;
+    min-width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.action-buttons .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.action-buttons .btn:active {
+    transform: translateY(0);
+}
+
+/* Primary Actions Row */
+.action-buttons .btn-outline-info:hover {
+    background-color: #0dcaf0;
+    border-color: #0dcaf0;
+    color: white;
+}
+
+.action-buttons .btn-outline-warning:hover {
+    background-color: #ffc107;
+    border-color: #ffc107;
+    color: black;
+}
+
+.action-buttons .btn-outline-danger:hover {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: white;
+}
+
+/* Status Toggle Row */
+.action-buttons .btn-outline-success:hover {
+    background-color: #198754;
+    border-color: #198754;
+    color: white;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .action-buttons .d-flex {
+        flex-direction: column !important;
+    }
+    
+    .action-buttons .btn {
+        min-width: 28px;
+        height: 28px;
+        font-size: 0.8rem;
+    }
+}
+
+/* Table cell padding for actions */
+.datatable td:last-child {
+    padding: 0.5rem;
+    min-width: 120px;
+}
+</style>
 @endpush

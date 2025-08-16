@@ -140,32 +140,53 @@
                                 @endif
                             </td>
                             <td>
-                                <div class="btn-group">
-                                    <a href="{{ route('admin.categories.show', $category) }}" class="btn btn-sm btn-info">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    <a href="{{ route('admin.categories.edit', $category) }}" class="btn btn-sm btn-warning">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <form action="{{ route('admin.categories.destroy', $category) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger delete-confirm">
+                                <div class="d-flex flex-column gap-1 action-buttons">
+                                    <!-- Primary Actions Row -->
+                                    <div class="d-flex gap-1 mb-1">
+                                        <a href="{{ route('admin.categories.show', $category) }}" 
+                                           class="btn btn-sm btn-outline-info" 
+                                           data-bs-toggle="tooltip" 
+                                           title="عرض التفاصيل">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{{ route('admin.categories.edit', $category) }}" 
+                                           class="btn btn-sm btn-outline-warning" 
+                                           data-bs-toggle="tooltip" 
+                                           title="تعديل الفئة">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <button type="button" 
+                                                class="btn btn-sm btn-outline-danger delete-confirm" 
+                                                data-bs-toggle="tooltip" 
+                                                title="حذف الفئة"
+                                                data-category-id="{{ $category->id }}"
+                                                data-category-name="{{ $category->name }}">
                                             <i class="fas fa-trash"></i>
                                         </button>
-                                    </form>
-                                    <form action="{{ route('admin.categories.toggle-status', $category) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        <button type="submit" class="btn btn-sm {{ $category->is_active ? 'btn-danger' : 'btn-success' }}">
-                                            <i class="fas {{ $category->is_active ? 'fa-ban' : 'fa-check' }}"></i>
-                                        </button>
-                                    </form>
-                                    <form action="{{ route('admin.categories.toggle-featured', $category) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        <button type="submit" class="btn btn-sm {{ $category->is_featured ? 'btn-secondary' : 'btn-warning' }}">
-                                            <i class="fas fa-star"></i>
-                                        </button>
-                                    </form>
+                                    </div>
+                                    
+                                    <!-- Status Toggle Row -->
+                                    <div class="d-flex gap-1 mb-1">
+                                        <form action="{{ route('admin.categories.toggle-status', $category) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            <button type="submit" 
+                                                    class="btn btn-sm {{ $category->is_active ? 'btn-outline-danger' : 'btn-outline-success' }}" 
+                                                    data-bs-toggle="tooltip" 
+                                                    title="{{ $category->is_active ? 'إلغاء التفعيل' : 'تفعيل الفئة' }}">
+                                                <i class="fas {{ $category->is_active ? 'fa-ban' : 'fa-check' }}"></i>
+                                            </button>
+                                        </form>
+                                        
+                                        <form action="{{ route('admin.categories.toggle-featured', $category) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            <button type="submit" 
+                                                    class="btn btn-sm {{ $category->is_featured ? 'btn-outline-secondary' : 'btn-outline-warning' }}" 
+                                                    data-bs-toggle="tooltip" 
+                                                    title="{{ $category->is_featured ? 'إلغاء التمييز' : 'تمييز الفئة' }}">
+                                                <i class="fas fa-star {{ $category->is_featured ? 'text-warning' : '' }}"></i>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
                             </td>
                         </tr>
@@ -188,6 +209,83 @@
 .datatable th, .datatable td {
     vertical-align: middle;
 }
+
+/* Action Buttons Styling */
+.action-buttons .btn {
+    transition: all 0.2s ease-in-out;
+    border-width: 1.5px;
+    font-size: 0.875rem;
+    min-width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.action-buttons .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.action-buttons .btn:active {
+    transform: translateY(0);
+}
+
+/* Primary Actions Row */
+.action-buttons .btn-outline-info:hover {
+    background-color: #0dcaf0;
+    border-color: #0dcaf0;
+    color: white;
+}
+
+.action-buttons .btn-outline-warning:hover {
+    background-color: #ffc107;
+    border-color: #ffc107;
+    color: black;
+}
+
+.action-buttons .btn-outline-danger:hover {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: white;
+}
+
+/* Status Toggle Row */
+.action-buttons .btn-outline-success:hover {
+    background-color: #198754;
+    border-color: #198754;
+    color: white;
+}
+
+.action-buttons .btn-outline-secondary:hover {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: white;
+}
+
+/* Featured Star Button */
+.action-buttons .btn .fa-star.text-warning {
+    color: #ffc107 !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .action-buttons .d-flex {
+        flex-direction: column !important;
+    }
+    
+    .action-buttons .btn {
+        min-width: 28px;
+        height: 28px;
+        font-size: 0.8rem;
+    }
+}
+
+/* Table cell padding for actions */
+.datatable td:last-child {
+    padding: 0.5rem;
+    min-width: 120px;
+}
 </style>
 @endpush
 
@@ -207,6 +305,12 @@ $(document).ready(function() {
         buttons: [
             'copy', 'csv', 'excel', 'pdf', 'print'
         ]
+    });
+
+    // Initialize tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
     });
 
     // Initialize Sortable for categories reordering
@@ -243,6 +347,48 @@ $(document).ready(function() {
                 }
             });
         }
+    });
+
+    // Delete confirmation
+    $('.delete-confirm').click(function(e) {
+        e.preventDefault();
+        let categoryId = $(this).data('category-id');
+        let categoryName = $(this).data('category-name');
+
+        Swal.fire({
+            title: 'هل أنت متأكد؟',
+            text: `سيتم حذف الفئة "${categoryName}" نهائياً. لا يمكن التراجع عن هذا الإجراء!`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'نعم، احذف الفئة',
+            cancelButtonText: 'إلغاء',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Create and submit delete form
+                let form = $('<form>', {
+                    'method': 'POST',
+                    'action': `/admin/categories/${categoryId}`
+                });
+                
+                form.append($('<input>', {
+                    'type': 'hidden',
+                    'name': '_token',
+                    'value': $('meta[name="csrf-token"]').attr('content')
+                }));
+                
+                form.append($('<input>', {
+                    'type': 'hidden',
+                    'name': '_method',
+                    'value': 'DELETE'
+                }));
+                
+                $('body').append(form);
+                form.submit();
+            }
+        });
     });
 });
 </script>
