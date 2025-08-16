@@ -14,6 +14,10 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
+// Language switching routes
+Route::get('/language/{language}', [App\Http\Controllers\LanguageController::class, 'switch'])->name('language.switch');
+Route::get('/language-info', [App\Http\Controllers\LanguageController::class, 'info'])->name('language.info');
+
 // Laravel UI Auth Routes
 Auth::routes();
 

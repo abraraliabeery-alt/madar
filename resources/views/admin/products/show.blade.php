@@ -20,8 +20,8 @@
                 <div class="col-md-4">
                     <div class="card">
                         <div class="card-body text-center">
-                            @if($product->main_image)
-                                <img src="{{ asset($product->main_image) }}" alt="product" class="img-fluid rounded mb-3" style="max-height: 200px;">
+                            @if($product->image)
+                                <img src="{{ asset($product->image) }}" alt="product" class="img-fluid rounded mb-3" style="max-height: 200px;">
                             @else
                                 <div class="rounded bg-light d-flex align-items-center justify-content-center mb-3" style="height: 200px;">
                                     <i class="fas fa-box text-muted fa-3x"></i>
@@ -242,7 +242,13 @@
                                     <div class="col-md-4">
                                         <div class="d-flex align-items-center p-2 border rounded">
                                             @if($feature->icon)
-                                                <img src="{{ asset($feature->icon) }}" alt="icon" width="20" class="me-2">
+                                                @if(Str::startsWith($feature->icon, 'fas ') || Str::startsWith($feature->icon, 'fa ') || Str::startsWith($feature->icon, 'fab '))
+                                                    <!-- FontAwesome Icon -->
+                                                    <i class="{{ $feature->icon }} text-primary me-2"></i>
+                                                @else
+                                                    <!-- Image Icon -->
+                                                    <img src="{{ Storage::url($feature->icon) }}" alt="icon" width="20" class="me-2">
+                                                @endif
                                             @endif
                                             {{ $feature->name }}
                                         </div>
