@@ -52,7 +52,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('bookings', AdminBookingController::class);
     Route::post('bookings/{booking}/confirm', [AdminBookingController::class, 'confirm'])->name('bookings.confirm');
     Route::post('bookings/{booking}/unconfirm', [AdminBookingController::class, 'unconfirm'])->name('bookings.unconfirm');
-    Route::post('bookings/{booking}/update-payment', [AdminBookingController::class, 'updatePaymentStatus'])->name('bookings.update-payment');
+    Route::post('bookings/{booking}/update-payment-status', [AdminBookingController::class, 'updatePaymentStatus'])->name('bookings.update-payment-status');
     Route::get('bookings/statistics', [AdminBookingController::class, 'statistics'])->name('bookings.statistics');
     Route::get('bookings/export', [AdminBookingController::class, 'export'])->name('bookings.export');
 
@@ -89,6 +89,15 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     // Additional Admin Routes
     Route::get('notifications', [AdminController::class, 'notifications'])->name('notifications');
     Route::post('notifications/mark-read', [AdminController::class, 'markNotificationsRead'])->name('notifications.mark-read');
+    Route::post('notifications/mark-all-read', [AdminController::class, 'markAllNotificationsRead'])->name('notifications.mark-all-read');
+    Route::get('notifications/settings', [AdminController::class, 'notificationSettings'])->name('notifications.settings');
+    Route::post('notifications/settings', [AdminController::class, 'updateNotificationSettings'])->name('notifications.settings.update');
+    Route::get('notifications/count', [AdminController::class, 'getUnreadNotificationsCount'])->name('notifications.count');
+    Route::get('notifications/latest', [AdminController::class, 'getLatestNotifications'])->name('notifications.latest');
+
+    // Search Routes
+    Route::get('search/global', [AdminController::class, 'globalSearch'])->name('search.global');
+    Route::get('search/results', [AdminController::class, 'searchResults'])->name('search.results');
     Route::get('profile', [AdminController::class, 'profile'])->name('profile');
     Route::post('profile', [AdminController::class, 'updateProfile'])->name('profile.update');
     Route::get('change-password', [AdminController::class, 'changePassword'])->name('change-password');

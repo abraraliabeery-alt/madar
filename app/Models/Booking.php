@@ -37,6 +37,11 @@ class Booking extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function facility()
+    {
+        return $this->hasOneThrough(Facility::class, Product::class, 'id', 'id', 'product_id', 'facility_id');
+    }
+
     // Polymorphic relationship for statuses
     public function statuses()
     {

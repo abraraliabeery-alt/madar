@@ -16,7 +16,7 @@ class AdminBookingController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Booking::with(['user', 'product', 'facility', 'status']);
+        $query = Booking::with(['user', 'product', 'facility', 'statuses']);
 
         // فلترة حسب الحالة
         if ($request->has('status_id') && $request->status_id) {
