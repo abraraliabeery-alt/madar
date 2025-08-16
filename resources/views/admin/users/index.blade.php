@@ -12,7 +12,7 @@
         <div class="card-body">
             <!-- Filters -->
             <div class="row g-3 mb-4">
-                <div class="col-md-4">
+                <div class="col-12 col-md-6 col-lg-4">
                     <select class="form-select" id="roleFilter" name="role_id">
                         <option value="">كل الأدوار</option>
                         @foreach($roles as $role)
@@ -22,7 +22,7 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-4">
+                <div class="col-12 col-md-6 col-lg-4">
                     <select class="form-select" id="facilityFilter" name="facility_id">
                         <option value="">كل المنشآت</option>
                         @foreach($facilities as $facility)
@@ -32,7 +32,7 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-4">
+                <div class="col-12 col-md-12 col-lg-4">
                     <div class="input-group">
                         <input type="text" class="form-control" id="searchInput" name="search" value="{{ request('search') }}" placeholder="بحث...">
                         <button class="btn btn-primary" id="searchBtn">
@@ -50,44 +50,62 @@
                 <table class="table table-hover datatable">
                     <thead>
                         <tr>
-                            <th>الصورة</th>
+                            <th class="d-none d-md-table-cell">الصورة</th>
                             <th>الاسم</th>
-                            <th>البريد الإلكتروني</th>
-                            <th>رقم الهاتف</th>
-                            <th>الدور</th>
-                            <th>المنشأة</th>
-                            <th>الحالة</th>
+                            <th class="d-none d-lg-table-cell">البريد الإلكتروني</th>
+                            <th class="d-none d-md-table-cell">رقم الهاتف</th>
+                            <th class="d-none d-lg-table-cell">الدور</th>
+                            <th class="d-none d-lg-table-cell">المنشأة</th>
+                            <th class="d-none d-md-table-cell">الحالة</th>
                             <th>الإجراءات</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($users as $user)
                         <tr>
-                            <td>
+                            <td class="d-none d-md-table-cell">
                                 @if($user->avatar)
                                     <img src="{{ asset($user->avatar) }}" alt="avatar" class="rounded-circle" width="40">
                                 @else
-                                    <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                                        {{ substr($user->name, 0, 1) }}
+                                    <div class="avatar-placeholder rounded-circle" style="width: 40px; height: 40px;">
+                                        <i class="fas fa-user"></i>
                                     </div>
                                 @endif
                             </td>
-                            <td>{{ $user->name }}</td>
-                            <td>{{ $user->email }}</td>
-                            <td>{{ $user->phone_number }}</td>
                             <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar me-2 d-md-none">
+                                        @if($user->avatar)
+                                            <img src="{{ asset($user->avatar) }}" alt="avatar" class="rounded-circle" width="32">
+                                        @else
+                                            <div class="avatar-placeholder rounded-circle" style="width: 32px; height: 32px;">
+                                                <i class="fas fa-user"></i>
+                                            </div>
+                                        @endif
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold">{{ $user->name }}</div>
+                                        <div class="small text-muted d-md-none">
+                                            {{ $user->email }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="d-none d-lg-table-cell">{{ $user->email }}</td>
+                            <td class="d-none d-md-table-cell">{{ $user->phone_number }}</td>
+                            <td class="d-none d-lg-table-cell">
                                 @foreach($user->roles as $role)
                                     <span class="badge bg-primary">{{ $role->name }}</span>
                                 @endforeach
                             </td>
-                            <td>
+                            <td class="d-none d-lg-table-cell">
                                 @foreach($user->facilities as $facility)
                                     <a href="{{ route('admin.facilities.show', $facility) }}" class="badge bg-info text-decoration-none">
                                         {{ $facility->name }}
                                     </a>
                                 @endforeach
                             </td>
-                            <td>
+                            <td class="d-none d-md-table-cell">
                                 @if($user->is_active)
                                     <span class="badge bg-success">نشط</span>
                                 @else
@@ -220,6 +238,56 @@
     padding: 0.5rem;
     min-width: 120px;
 }
+
+/* Avatar placeholder styling */
+.avatar-placeholder {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.avatar-placeholder i {
+    font-size: 16px;
+}
+
+/* Mobile-friendly table */
+@media (max-width: 768px) {
+    .datatable thead th,
+    .datatable tbody td {
+        padding: 0.5rem 0.25rem;
+    }
+    
+    .datatable .btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+}
+
+/* Filter improvements for mobile */
+@media (max-width: 576px) {
+    .form-select,
+    .form-control {
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
+    
+    .row.g-3 > [class*="col-"] {
+        margin-bottom: 1rem;
+    }
+    
+    .card-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch !important;
+    }
+    
+    .card-header .btn {
+        width: 100%;
+    }
+}
 </style>
 @endpush
 
@@ -238,7 +306,11 @@ $(document).ready(function() {
         dom: 'Bfrtip',
         buttons: [
             'copy', 'csv', 'excel', 'pdf', 'print'
-        ]
+        ],
+        responsive: true,
+        pageLength: window.innerWidth < 768 ? 10 : 15,
+        scrollX: true,
+        autoWidth: false
     });
 
     // Initialize select2

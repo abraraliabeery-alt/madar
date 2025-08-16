@@ -20,7 +20,7 @@
         <div class="card-body">
             <!-- Filters -->
             <div class="row g-3 mb-4">
-                <div class="col-md-3">
+                <div class="col-12 col-md-6 col-lg-3">
                     <select class="form-select" id="statusFilter" name="status_id">
                         <option value="">كل الحالات</option>
                         @foreach($statuses as $status)
@@ -30,7 +30,7 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-3">
+                <div class="col-12 col-md-6 col-lg-3">
                     <select class="form-select" id="userFilter" name="user_id">
                         <option value="">كل المستخدمين</option>
                         @foreach($users as $user)
@@ -40,7 +40,7 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-3">
+                <div class="col-12 col-md-6 col-lg-3">
                     <select class="form-select" id="productFilter" name="product_id">
                         <option value="">كل المنتجات</option>
                         @foreach($products as $product)
@@ -50,7 +50,7 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-3">
+                <div class="col-12 col-md-6 col-lg-3">
                     <select class="form-select" id="contractTypeFilter" name="contract_type">
                         <option value="">كل أنواع العقود</option>
                         <option value="sale" {{ request('contract_type') == 'sale' ? 'selected' : '' }}>بيع</option>
@@ -58,13 +58,13 @@
                         <option value="lease" {{ request('contract_type') == 'lease' ? 'selected' : '' }}>تأجير</option>
                     </select>
                 </div>
-                <div class="col-md-3">
+                <div class="col-12 col-md-6 col-lg-3">
                     <input type="date" class="form-control" id="dateFrom" name="date_from" value="{{ request('date_from') }}" placeholder="من تاريخ">
                 </div>
-                <div class="col-md-3">
+                <div class="col-12 col-md-6 col-lg-3">
                     <input type="date" class="form-control" id="dateTo" name="date_to" value="{{ request('date_to') }}" placeholder="إلى تاريخ">
                 </div>
-                <div class="col-md-4">
+                <div class="col-12 col-md-6 col-lg-6">
                     <div class="input-group">
                         <input type="text" class="form-control" id="searchInput" name="search" value="{{ request('search') }}" placeholder="بحث...">
                         <button class="btn btn-primary" id="searchBtn">
@@ -78,8 +78,8 @@
             </div>
 
             <!-- Statistics Cards -->
-            <div class="row g-3 mb-4">
-                <div class="col-md-3">
+            <div class="row g-3 mb-4 statistics-cards">
+                <div class="col-12 col-sm-6 col-lg-3">
                     <div class="card bg-primary text-white">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center">
@@ -87,14 +87,14 @@
                                     <h6 class="mb-0">إجمالي العقود</h6>
                                     <h3 class="mb-0">{{ $contracts->total() }}</h3>
                                 </div>
-                                <div class="fs-1">
+                                <div class="fs-1 d-none d-sm-block">
                                     <i class="fas fa-file-contract"></i>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-12 col-sm-6 col-lg-3">
                     <div class="card bg-success text-white">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center">
@@ -102,14 +102,14 @@
                                     <h6 class="mb-0">العقود النشطة</h6>
                                     <h3 class="mb-0">{{ $contracts->where('is_active', true)->count() }}</h3>
                                 </div>
-                                <div class="fs-1">
+                                <div class="fs-1 d-none d-sm-block">
                                     <i class="fas fa-check-circle"></i>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-12 col-sm-6 col-lg-3">
                     <div class="card bg-info text-white">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center">
@@ -117,14 +117,14 @@
                                     <h6 class="mb-0">العقود المتحقق منها</h6>
                                     <h3 class="mb-0">{{ $contracts->where('is_verified', true)->count() }}</h3>
                                 </div>
-                                <div class="fs-1">
+                                <div class="fs-1 d-none d-sm-block">
                                     <i class="fas fa-shield-alt"></i>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-12 col-sm-6 col-lg-3">
                     <div class="card bg-warning text-white">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center">
@@ -132,7 +132,7 @@
                                     <h6 class="mb-0">إجمالي القيمة</h6>
                                     <h3 class="mb-0">{{ number_format($contracts->sum('total_amount'), 2) }} ريال</h3>
                                 </div>
-                                <div class="fs-1">
+                                <div class="fs-1 d-none d-sm-block">
                                     <i class="fas fa-money-bill-wave"></i>
                                 </div>
                             </div>
@@ -146,40 +146,56 @@
                 <table class="table table-hover datatable">
                     <thead>
                         <tr>
-                            <th>رقم العقد</th>
+                            <th class="d-none d-md-table-cell">رقم العقد</th>
                             <th>المستخدم</th>
-                            <th>المنتج</th>
-                            <th>المنشأة</th>
-                            <th>نوع العقد</th>
-                            <th>تاريخ البداية</th>
-                            <th>تاريخ النهاية</th>
-                            <th>المبلغ الإجمالي</th>
-                            <th>الحالة</th>
-                            <th>التفعيل</th>
-                            <th>التحقق</th>
+                            <th class="d-none d-lg-table-cell">المنتج</th>
+                            <th class="d-none d-lg-table-cell">المنشأة</th>
+                            <th class="d-none d-md-table-cell">نوع العقد</th>
+                            <th class="d-none d-md-table-cell">تاريخ البداية</th>
+                            <th class="d-none d-lg-table-cell">تاريخ النهاية</th>
+                            <th class="d-none d-md-table-cell">المبلغ الإجمالي</th>
+                            <th class="d-none d-md-table-cell">الحالة</th>
+                            <th class="d-none d-lg-table-cell">التفعيل</th>
+                            <th class="d-none d-lg-table-cell">التحقق</th>
                             <th>الإجراءات</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($contracts as $contract)
                         <tr>
-                            <td>{{ $contract->contract_number }}</td>
+                            <td class="d-none d-md-table-cell">{{ $contract->contract_number }}</td>
                             <td>
-                                <a href="{{ route('admin.users.show', $contract->user) }}">
-                                    {{ $contract->user->name }}
-                                </a>
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar me-2 d-none d-sm-inline-block">
+                                        @if($contract->user->avatar)
+                                            <img src="{{ asset($contract->user->avatar) }}" alt="avatar" class="rounded-circle" width="32">
+                                        @else
+                                            <div class="avatar-placeholder rounded-circle">
+                                                <i class="fas fa-user"></i>
+                                            </div>
+                                        @endif
+                                    </div>
+                                    <div>
+                                        <a href="{{ route('admin.users.show', $contract->user) }}" class="text-decoration-none">
+                                            {{ $contract->user->name }}
+                                        </a>
+                                        <div class="small text-muted d-md-none">
+                                            {{ $contract->product->name ?? 'منتج' }}
+                                        </div>
+                                    </div>
+                                </div>
                             </td>
-                            <td>
+                            <td class="d-none d-lg-table-cell">
                                 <a href="{{ route('admin.products.show', $contract->product) }}">
                                     {{ $contract->product->name }}
                                 </a>
                             </td>
-                            <td>
+                            <td class="d-none d-lg-table-cell">
                                 <a href="{{ route('admin.facilities.show', $contract->facility) }}">
                                     {{ $contract->facility->name }}
                                 </a>
                             </td>
-                            <td>
+                            <td class="d-none d-md-table-cell">
                                 @switch($contract->contract_type)
                                     @case('sale')
                                         <span class="badge bg-success">بيع</span>
@@ -192,10 +208,10 @@
                                         @break
                                 @endswitch
                             </td>
-                            <td>{{ $contract->start_date }}</td>
-                            <td>{{ $contract->end_date }}</td>
-                            <td>{{ number_format($contract->total_amount, 2) }} ريال</td>
-                            <td>
+                            <td class="d-none d-md-table-cell">{{ $contract->start_date }}</td>
+                            <td class="d-none d-lg-table-cell">{{ $contract->end_date }}</td>
+                            <td class="d-none d-md-table-cell">{{ number_format($contract->total_amount, 2) }} ريال</td>
+                            <td class="d-none d-md-table-cell">
                                 @if($contract->status)
                                     <span class="badge bg-{{ $contract->status->color }}">
                                         {{ $contract->status->name }}
@@ -204,14 +220,14 @@
                                     <span class="badge bg-secondary">لا توجد حالة</span>
                                 @endif
                             </td>
-                            <td>
+                            <td class="d-none d-lg-table-cell">
                                 @if($contract->is_active)
                                     <span class="badge bg-success">نشط</span>
                                 @else
                                     <span class="badge bg-danger">غير نشط</span>
                                 @endif
                             </td>
-                            <td>
+                            <td class="d-none d-lg-table-cell">
                                 @if($contract->is_verified)
                                     <span class="badge bg-success">متحقق منه</span>
                                 @else
@@ -407,6 +423,62 @@
         text-align: center;
     }
 }
+
+/* Avatar placeholder styling */
+.avatar-placeholder {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.avatar-placeholder i {
+    font-size: 14px;
+}
+
+/* Mobile-friendly table */
+@media (max-width: 768px) {
+    .datatable thead th,
+    .datatable tbody td {
+        padding: 0.5rem 0.25rem;
+    }
+    
+    .datatable .btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+}
+
+/* Filter improvements for mobile */
+@media (max-width: 576px) {
+    .form-select,
+    .form-control {
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
+    
+    .row.g-3 > [class*="col-"] {
+        margin-bottom: 1rem;
+    }
+    
+    .statistics-cards .card {
+        margin-bottom: 1rem;
+    }
+    
+    .card-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch !important;
+    }
+    
+    .card-header .btn {
+        width: 100%;
+    }
+}
 </style>
 @endpush
 
@@ -425,7 +497,11 @@ $(document).ready(function() {
         dom: 'Bfrtip',
         buttons: [
             'copy', 'csv', 'excel', 'pdf', 'print'
-        ]
+        ],
+        responsive: true,
+        pageLength: window.innerWidth < 768 ? 10 : 15,
+        scrollX: true,
+        autoWidth: false
     });
 
     // Initialize Select2

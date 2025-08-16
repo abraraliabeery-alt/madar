@@ -382,6 +382,21 @@
         text-align: center;
     }
 }
+
+/* Avatar placeholder styling */
+.avatar-placeholder {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.avatar-placeholder i {
+    font-size: 18px;
+}
 </style>
 @endpush
 

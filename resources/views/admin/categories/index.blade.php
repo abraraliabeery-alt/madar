@@ -11,8 +11,8 @@
         </div>
         <div class="card-body">
             <!-- Statistics Cards -->
-            <div class="row g-4 mb-4">
-                <div class="col-md-3">
+            <div class="row g-4 mb-4 statistics-cards">
+                <div class="col-12 col-sm-6 col-lg-3">
                     <div class="card bg-primary text-white">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center">
@@ -20,14 +20,14 @@
                                     <h6 class="mb-0">إجمالي الفئات</h6>
                                     <h3 class="mb-0">{{ $categories->total() }}</h3>
                                 </div>
-                                <div class="fs-1">
+                                <div class="fs-1 d-none d-sm-block">
                                     <i class="fas fa-tags"></i>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-12 col-sm-6 col-lg-3">
                     <div class="card bg-success text-white">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center">
@@ -35,14 +35,14 @@
                                     <h6 class="mb-0">الفئات النشطة</h6>
                                     <h3 class="mb-0">{{ $categories->where('is_active', true)->count() }}</h3>
                                 </div>
-                                <div class="fs-1">
+                                <div class="fs-1 d-none d-sm-block">
                                     <i class="fas fa-check-circle"></i>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-12 col-sm-6 col-lg-3">
                     <div class="card bg-info text-white">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center">
@@ -50,14 +50,14 @@
                                     <h6 class="mb-0">الفئات المميزة</h6>
                                     <h3 class="mb-0">{{ $categories->where('is_featured', true)->count() }}</h3>
                                 </div>
-                                <div class="fs-1">
+                                <div class="fs-1 d-none d-sm-block">
                                     <i class="fas fa-star"></i>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-12 col-sm-6 col-lg-3">
                     <div class="card bg-warning text-white">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center">
@@ -65,7 +65,7 @@
                                     <h6 class="mb-0">إجمالي المنتجات</h6>
                                     <h3 class="mb-0">{{ $categories->sum('products_count') }}</h3>
                                 </div>
-                                <div class="fs-1">
+                                <div class="fs-1 d-none d-sm-block">
                                     <i class="fas fa-box"></i>
                                 </div>
                             </div>
@@ -79,22 +79,22 @@
                 <table class="table table-hover datatable">
                     <thead>
                         <tr>
-                            <th>#</th>
-                            <th>الأيقونة</th>
+                            <th class="d-none d-md-table-cell">#</th>
+                            <th class="d-none d-md-table-cell">الأيقونة</th>
                             <th>الاسم</th>
-                            <th>الفئة الأب</th>
-                            <th>عدد المنتجات</th>
-                            <th>الترتيب</th>
-                            <th>الحالة</th>
-                            <th>مميزة</th>
+                            <th class="d-none d-lg-table-cell">الفئة الأب</th>
+                            <th class="d-none d-md-table-cell">عدد المنتجات</th>
+                            <th class="d-none d-lg-table-cell">الترتيب</th>
+                            <th class="d-none d-md-table-cell">الحالة</th>
+                            <th class="d-none d-lg-table-cell">مميزة</th>
                             <th>الإجراءات</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($categories as $category)
                         <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>
+                            <td class="d-none d-md-table-cell">{{ $loop->iteration }}</td>
+                            <td class="d-none d-md-table-cell">
                                 @if($category->icon)
                                     @if(Str::startsWith($category->icon, 'fas ') || Str::startsWith($category->icon, 'fa ') || Str::startsWith($category->icon, 'fab '))
                                         <!-- FontAwesome Icon -->
@@ -115,30 +115,37 @@
                                     <div>
                                         <h6 class="mb-0">{{ $category->name }}</h6>
                                         @if($category->description)
-                                            <small class="text-muted">{{ Str::limit($category->description, 50) }}</small>
+                                            <small class="text-muted d-none d-md-block">{{ Str::limit($category->description, 50) }}</small>
                                         @endif
+                                        <div class="small text-muted d-md-none">
+                                            @if($category->parent)
+                                                <span class="badge bg-info">{{ $category->parent->name }}</span>
+                                            @else
+                                                <span class="badge bg-secondary">فئة رئيسية</span>
+                                            @endif
+                                        </div>
                                     </div>
                                 </div>
                             </td>
-                            <td>
+                            <td class="d-none d-lg-table-cell">
                                 @if($category->parent)
                                     <span class="badge bg-info">{{ $category->parent->name }}</span>
                                 @else
                                     <span class="badge bg-secondary">فئة رئيسية</span>
                                 @endif
                             </td>
-                            <td>
+                            <td class="d-none d-md-table-cell">
                                 <span class="badge bg-primary">{{ $category->products_count }}</span>
                             </td>
-                            <td>{{ $category->order ?? '-' }}</td>
-                            <td>
+                            <td class="d-none d-lg-table-cell">{{ $category->order ?? '-' }}</td>
+                            <td class="d-none d-md-table-cell">
                                 @if($category->is_active)
                                     <span class="badge bg-success">نشط</span>
                                 @else
                                     <span class="badge bg-danger">غير نشط</span>
                                 @endif
                             </td>
-                            <td>
+                            <td class="d-none d-lg-table-cell">
                                 @if($category->is_featured)
                                     <span class="badge bg-warning">مميزة</span>
                                 @else
@@ -292,6 +299,40 @@
     padding: 0.5rem;
     min-width: 120px;
 }
+
+/* Mobile-friendly table */
+@media (max-width: 768px) {
+    .datatable thead th,
+    .datatable tbody td {
+        padding: 0.5rem 0.25rem;
+    }
+    
+    .datatable .btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+}
+
+/* Filter improvements for mobile */
+@media (max-width: 576px) {
+    .row.g-4 > [class*="col-"] {
+        margin-bottom: 1rem;
+    }
+    
+    .statistics-cards .card {
+        margin-bottom: 1rem;
+    }
+    
+    .card-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch !important;
+    }
+    
+    .card-header .btn {
+        width: 100%;
+    }
+}
 </style>
 @endpush
 
@@ -310,7 +351,11 @@ $(document).ready(function() {
         dom: 'Bfrtip',
         buttons: [
             'copy', 'csv', 'excel', 'pdf', 'print'
-        ]
+        ],
+        responsive: true,
+        pageLength: window.innerWidth < 768 ? 10 : 15,
+        scrollX: true,
+        autoWidth: false
     });
 
     // Initialize tooltips
