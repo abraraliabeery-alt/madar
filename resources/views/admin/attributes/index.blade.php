@@ -81,9 +81,13 @@
                                     <td>{{ $attribute->id }}</td>
                                     <td>
                                         <div class="d-flex align-items-center">
-                                            @if($attribute->icon)
-                                                <img src="{{ asset($attribute->icon) }}" alt="{{ $attribute->translations->first()->name ?? 'N/A' }}" class="me-2" style="width: 20px; height: 20px;">
-                                            @endif
+                                                                                    @if($attribute->icon)
+                                            <img src="{{ asset($attribute->icon) }}" alt="{{ $attribute->translations->first()->name ?? 'N/A' }}" class="me-2" style="width: 20px; height: 20px;">
+                                        @else
+                                            <div class="avatar-placeholder me-2" style="width: 20px; height: 20px;">
+                                                <i class="fas fa-tag"></i>
+                                            </div>
+                                        @endif
                                             <span>{{ $attribute->translations->first()->name ?? 'N/A' }}</span>
                                         </div>
                                     </td>
@@ -109,46 +113,84 @@
                                         <span class="badge bg-primary">{{ $attribute->products_count }}</span>
                                     </td>
                                     <td>{{ $attribute->created_at->format('Y-m-d') }}</td>
-                                    <td>
-                                        <div class="d-flex flex-column gap-1 action-buttons">
-                                            <!-- Primary Actions Row -->
-                                            <div class="d-flex gap-1 mb-1">
-                                                <a href="{{ route('admin.attributes.show', $attribute) }}"
-                                                   class="btn btn-sm btn-outline-info"
-                                                   data-bs-toggle="tooltip"
-                                                   title="عرض التفاصيل">
-                                                    <i class="fas fa-eye"></i>
-                                                </a>
-                                                <a href="{{ route('admin.attributes.edit', $attribute) }}"
-                                                   class="btn btn-sm btn-outline-warning"
-                                                   data-bs-toggle="tooltip"
-                                                   title="تعديل الخاصية">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                                <button type="button"
-                                                        class="btn btn-sm btn-outline-danger delete-confirm"
-                                                        data-bs-toggle="tooltip"
-                                                        title="حذف الخاصية"
-                                                        data-attribute-id="{{ $attribute->id }}"
-                                                        data-attribute-name="{{ $attribute->translations->first()->name ?? 'N/A' }}">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </div>
-
-                                            <!-- Toggle Required Row -->
-                                            <div class="d-flex gap-1 mb-1">
-                                                <form method="POST" action="{{ route('admin.attributes.toggle-required', $attribute) }}" class="d-inline">
-                                                    @csrf
-                                                    <button type="submit"
-                                                            class="btn btn-sm btn-outline-secondary"
-                                                            data-bs-toggle="tooltip"
-                                                            title="{{ $attribute->required ? 'جعل اختيارية' : 'جعل إلزامية' }}">
-                                                        <i class="fas fa-toggle-{{ $attribute->required ? 'on' : 'off' }}"></i>
-                                                    </button>
-                                                </form>
-                                            </div>
+                                                                <td>
+                                <div class="action-buttons">
+                                    <!-- Mobile View: Compact Horizontal Layout -->
+                                    <div class="d-flex d-md-none gap-1 flex-wrap">
+                                        <a href="{{ route('admin.attributes.show', $attribute) }}"
+                                           class="btn btn-sm btn-outline-info action-btn-mobile"
+                                           data-bs-toggle="tooltip"
+                                           title="عرض">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{{ route('admin.attributes.edit', $attribute) }}"
+                                           class="btn btn-sm btn-outline-warning action-btn-mobile"
+                                           data-bs-toggle="tooltip"
+                                           title="تعديل">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-danger action-btn-mobile delete-confirm"
+                                                data-bs-toggle="tooltip"
+                                                title="حذف"
+                                                data-attribute-id="{{ $attribute->id }}"
+                                                data-attribute-name="{{ $attribute->translations->first()->name ?? 'N/A' }}">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                        
+                                        <!-- Toggle Required -->
+                                        <form method="POST" action="{{ route('admin.attributes.toggle-required', $attribute) }}" class="d-inline">
+                                            @csrf
+                                            <button type="submit"
+                                                    class="btn btn-sm btn-outline-secondary action-btn-mobile"
+                                                    data-bs-toggle="tooltip"
+                                                    title="{{ $attribute->required ? 'اختيارية' : 'إلزامية' }}">
+                                                <i class="fas fa-toggle-{{ $attribute->required ? 'on' : 'off' }}"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                    
+                                    <!-- Desktop View: Vertical Layout -->
+                                    <div class="d-none d-md-flex flex-column gap-1">
+                                        <!-- Primary Actions Row -->
+                                        <div class="d-flex gap-1 mb-1">
+                                            <a href="{{ route('admin.attributes.show', $attribute) }}"
+                                               class="btn btn-sm btn-outline-info"
+                                               data-bs-toggle="tooltip"
+                                               title="عرض التفاصيل">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a href="{{ route('admin.attributes.edit', $attribute) }}"
+                                               class="btn btn-sm btn-outline-warning"
+                                               data-bs-toggle="tooltip"
+                                               title="تعديل الخاصية">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <button type="button"
+                                                    class="btn btn-sm btn-outline-danger delete-confirm"
+                                                    data-bs-toggle="tooltip"
+                                                    title="حذف الخاصية"
+                                                    data-attribute-id="{{ $attribute->id }}"
+                                                    data-attribute-name="{{ $attribute->translations->first()->name ?? 'N/A' }}">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
                                         </div>
-                                    </td>
+
+                                        <!-- Toggle Required Row -->
+                                        <div class="d-flex gap-1 mb-1">
+                                            <form method="POST" action="{{ route('admin.attributes.toggle-required', $attribute) }}" class="d-inline">
+                                                @csrf
+                                                <button type="submit"
+                                                        class="btn btn-sm btn-outline-secondary"
+                                                        data-bs-toggle="tooltip"
+                                                        title="{{ $attribute->required ? 'جعل اختيارية' : 'جعل إلزامية' }}">
+                                                    <i class="fas fa-toggle-{{ $attribute->required ? 'on' : 'off' }}"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
                                 </tr>
                                 @empty
                                 <tr>
@@ -219,6 +261,40 @@
     color: white;
 }
 
+/* Mobile Action Buttons */
+.action-btn-mobile {
+    min-width: 36px !important;
+    height: 36px !important;
+    padding: 0.375rem !important;
+    font-size: 0.875rem !important;
+    border-radius: 8px !important;
+    margin: 1px !important;
+}
+
+.action-btn-mobile:hover {
+    transform: scale(1.05) !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
+}
+
+/* Mobile action buttons container */
+@media (max-width: 767px) {
+    .action-buttons {
+        min-width: auto;
+        padding: 0.25rem;
+    }
+    
+    .action-buttons .d-flex {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 0.25rem !important;
+    }
+    
+    /* Ensure buttons don't wrap awkwardly */
+    .action-btn-mobile {
+        flex-shrink: 0;
+    }
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .action-buttons .d-flex {
@@ -236,6 +312,29 @@
 .table td:last-child {
     padding: 0.5rem;
     min-width: 120px;
+}
+
+@media (max-width: 767px) {
+    .table td:last-child {
+        min-width: auto;
+        padding: 0.25rem;
+        text-align: center;
+    }
+}
+
+/* Avatar placeholder styling */
+.avatar-placeholder {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.avatar-placeholder i {
+    font-size: 12px;
 }
 </style>
 @endpush

@@ -219,32 +219,71 @@
                                 @endif
                             </td>
                             <td>
-                                <div class="btn-group">
-                                    <a href="{{ route('admin.contracts.show', $contract) }}" class="btn btn-sm btn-info">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    <a href="{{ route('admin.contracts.edit', $contract) }}" class="btn btn-sm btn-warning">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <form action="{{ route('admin.contracts.destroy', $contract) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger delete-confirm">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
-                                    <form action="{{ route('admin.contracts.toggle-status', $contract) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        <button type="submit" class="btn btn-sm {{ $contract->is_active ? 'btn-danger' : 'btn-success' }}">
-                                            <i class="fas {{ $contract->is_active ? 'fa-ban' : 'fa-check' }}"></i>
-                                        </button>
-                                    </form>
-                                    <form action="{{ route('admin.contracts.toggle-verification', $contract) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        <button type="submit" class="btn btn-sm {{ $contract->is_verified ? 'btn-warning' : 'btn-info' }}">
-                                            <i class="fas {{ $contract->is_verified ? 'fa-times' : 'fa-shield-alt' }}"></i>
-                                        </button>
-                                    </form>
+                                <div class="action-buttons">
+                                    <!-- Mobile View: Compact Horizontal Layout -->
+                                    <div class="d-flex d-md-none gap-1 flex-wrap">
+                                        <a href="{{ route('admin.contracts.show', $contract) }}" class="btn btn-sm btn-outline-info action-btn-mobile">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{{ route('admin.contracts.edit', $contract) }}" class="btn btn-sm btn-outline-warning action-btn-mobile">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <form action="{{ route('admin.contracts.destroy', $contract) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-outline-danger action-btn-mobile delete-confirm">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                        <form action="{{ route('admin.contracts.toggle-status', $contract) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            <button type="submit" class="btn btn-sm {{ $contract->is_active ? 'btn-outline-danger' : 'btn-outline-success' }} action-btn-mobile">
+                                                <i class="fas {{ $contract->is_active ? 'fa-ban' : 'fa-check' }}"></i>
+                                            </button>
+                                        </form>
+                                        <form action="{{ route('admin.contracts.toggle-verification', $contract) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            <button type="submit" class="btn btn-sm {{ $contract->is_verified ? 'btn-outline-warning' : 'btn-outline-info' }} action-btn-mobile">
+                                                <i class="fas {{ $contract->is_verified ? 'fa-times' : 'fa-shield-alt' }}"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                    
+                                    <!-- Desktop View: Vertical Layout -->
+                                    <div class="d-none d-md-flex flex-column gap-1">
+                                        <!-- Primary Actions Row -->
+                                        <div class="d-flex gap-1 mb-1">
+                                            <a href="{{ route('admin.contracts.show', $contract) }}" class="btn btn-sm btn-outline-info">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a href="{{ route('admin.contracts.edit', $contract) }}" class="btn btn-sm btn-outline-warning">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <form action="{{ route('admin.contracts.destroy', $contract) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-outline-danger delete-confirm">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                        
+                                        <!-- Status Toggle Row -->
+                                        <div class="d-flex gap-1 mb-1">
+                                            <form action="{{ route('admin.contracts.toggle-status', $contract) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                <button type="submit" class="btn btn-sm {{ $contract->is_active ? 'btn-outline-danger' : 'btn-outline-success' }}">
+                                                    <i class="fas {{ $contract->is_active ? 'fa-ban' : 'fa-check' }}"></i>
+                                                </button>
+                                            </form>
+                                            <form action="{{ route('admin.contracts.toggle-verification', $contract) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                <button type="submit" class="btn btn-sm {{ $contract->is_verified ? 'btn-outline-warning' : 'btn-outline-info' }}">
+                                                    <i class="fas {{ $contract->is_verified ? 'fa-times' : 'fa-shield-alt' }}"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
                                 </div>
                             </td>
                         </tr>
@@ -266,6 +305,107 @@
 <style>
 .datatable th, .datatable td {
     vertical-align: middle;
+}
+
+/* Action Buttons Styling */
+.action-buttons .btn {
+    transition: all 0.2s ease-in-out;
+    border-width: 1.5px;
+    font-size: 0.875rem;
+    min-width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.action-buttons .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.action-buttons .btn:active {
+    transform: translateY(0);
+}
+
+/* Primary Actions Row */
+.action-buttons .btn-outline-info:hover {
+    background-color: #0dcaf0;
+    border-color: #0dcaf0;
+    color: white;
+}
+
+.action-buttons .btn-outline-warning:hover {
+    background-color: #ffc107;
+    border-color: #ffc107;
+    color: black;
+}
+
+.action-buttons .btn-outline-danger:hover {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: white;
+}
+
+/* Status Toggle Row */
+.action-buttons .btn-outline-success:hover {
+    background-color: #198754;
+    border-color: #198754;
+    color: white;
+}
+
+.action-buttons .btn-outline-secondary:hover {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: white;
+}
+
+/* Mobile Action Buttons */
+.action-btn-mobile {
+    min-width: 36px !important;
+    height: 36px !important;
+    padding: 0.375rem !important;
+    font-size: 0.875rem !important;
+    border-radius: 8px !important;
+    margin: 1px !important;
+}
+
+.action-btn-mobile:hover {
+    transform: scale(1.05) !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
+}
+
+/* Mobile action buttons container */
+@media (max-width: 767px) {
+    .action-buttons {
+        min-width: auto;
+        padding: 0.25rem;
+    }
+    
+    .action-buttons .d-flex {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 0.25rem !important;
+    }
+    
+    /* Ensure buttons don't wrap awkwardly */
+    .action-btn-mobile {
+        flex-shrink: 0;
+    }
+}
+
+/* Table cell padding for actions */
+.datatable td:last-child {
+    padding: 0.5rem;
+    min-width: 120px;
+}
+
+@media (max-width: 767px) {
+    .datatable td:last-child {
+        min-width: auto;
+        padding: 0.25rem;
+        text-align: center;
+    }
 }
 </style>
 @endpush

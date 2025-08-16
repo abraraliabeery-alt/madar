@@ -12,7 +12,7 @@
         <div class="card-body">
             <!-- Filters -->
             <div class="row g-3 mb-4">
-                <div class="col-md-3">
+                <div class="col-12 col-md-6 col-lg-3">
                     <select class="form-select" id="statusFilter">
                         <option value="">كل الحالات</option>
                         @foreach($statuses as $status)
@@ -20,7 +20,7 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-3">
+                <div class="col-12 col-md-6 col-lg-3">
                     <select class="form-select" id="userFilter">
                         <option value="">كل المستخدمين</option>
                         @foreach($users as $user)
@@ -28,7 +28,7 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-3">
+                <div class="col-12 col-md-6 col-lg-3">
                     <select class="form-select" id="productFilter">
                         <option value="">كل المنتجات</option>
                         @foreach($products as $product)
@@ -36,25 +36,25 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-3">
+                <div class="col-12 col-md-6 col-lg-3">
                     <button class="btn btn-secondary w-100" id="resetFilters">
                         <i class="fas fa-redo me-2"></i>إعادة تعيين
                     </button>
                 </div>
-                <div class="col-md-3">
+                <div class="col-12 col-md-6 col-lg-3">
                     <input type="date" class="form-control" id="dateFrom" placeholder="من تاريخ">
                 </div>
-                <div class="col-md-3">
+                <div class="col-12 col-md-6 col-lg-3">
                     <input type="date" class="form-control" id="dateTo" placeholder="إلى تاريخ">
                 </div>
-                <div class="col-md-3">
+                <div class="col-12 col-md-6 col-lg-3">
                     <select class="form-select" id="paymentFilter">
                         <option value="">حالة الدفع</option>
                         <option value="1">مدفوع</option>
                         <option value="0">غير مدفوع</option>
                     </select>
                 </div>
-                <div class="col-md-3">
+                <div class="col-12 col-md-6 col-lg-3">
                     <select class="form-select" id="confirmationFilter">
                         <option value="">حالة التأكيد</option>
                         <option value="1">مؤكد</option>
@@ -64,8 +64,8 @@
             </div>
 
             <!-- Statistics Cards -->
-            <div class="row g-3 mb-4">
-                <div class="col-md-3">
+            <div class="row g-3 mb-4 statistics-cards">
+                <div class="col-12 col-sm-6 col-lg-3">
                     <div class="card bg-primary text-white">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center">
@@ -73,14 +73,14 @@
                                     <h6 class="mb-0">إجمالي الحجوزات</h6>
                                     <h3 class="mb-0">{{ $bookings->total() }}</h3>
                                 </div>
-                                <div class="fs-1">
+                                <div class="fs-1 d-none d-sm-block">
                                     <i class="fas fa-calendar"></i>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-12 col-sm-6 col-lg-3">
                     <div class="card bg-success text-white">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center">
@@ -88,14 +88,14 @@
                                     <h6 class="mb-0">الحجوزات المؤكدة</h6>
                                     <h3 class="mb-0">{{ $bookings->where('is_confirmed', true)->count() }}</h3>
                                 </div>
-                                <div class="fs-1">
+                                <div class="fs-1 d-none d-sm-block">
                                     <i class="fas fa-check-circle"></i>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-12 col-sm-6 col-lg-3">
                     <div class="card bg-info text-white">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center">
@@ -103,14 +103,14 @@
                                     <h6 class="mb-0">الحجوزات المدفوعة</h6>
                                     <h3 class="mb-0">{{ $bookings->where('is_paid', true)->count() }}</h3>
                                 </div>
-                                <div class="fs-1">
+                                <div class="fs-1 d-none d-sm-block">
                                     <i class="fas fa-money-bill"></i>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-12 col-sm-6 col-lg-3">
                     <div class="card bg-warning text-white">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center">
@@ -118,7 +118,7 @@
                                     <h6 class="mb-0">قيد الانتظار</h6>
                                     <h3 class="mb-0">{{ $bookings->where('is_confirmed', false)->count() }}</h3>
                                 </div>
-                                <div class="fs-1">
+                                <div class="fs-1 d-none d-sm-block">
                                     <i class="fas fa-clock"></i>
                                 </div>
                             </div>
@@ -132,44 +132,60 @@
                 <table class="table table-hover datatable">
                     <thead>
                         <tr>
-                            <th>رقم الحجز</th>
+                            <th class="d-none d-md-table-cell">رقم الحجز</th>
                             <th>المستخدم</th>
-                            <th>المنتج</th>
-                            <th>المنشأة</th>
-                            <th>التاريخ</th>
-                            <th>الوقت</th>
-                            <th>المدة</th>
-                            <th>المبلغ</th>
-                            <th>الحالة</th>
-                            <th>الدفع</th>
-                            <th>التأكيد</th>
+                            <th class="d-none d-lg-table-cell">المنتج</th>
+                            <th class="d-none d-lg-table-cell">المنشأة</th>
+                            <th class="d-none d-md-table-cell">التاريخ</th>
+                            <th class="d-none d-md-table-cell">الوقت</th>
+                            <th class="d-none d-lg-table-cell">المدة</th>
+                            <th class="d-none d-md-table-cell">المبلغ</th>
+                            <th class="d-none d-md-table-cell">الحالة</th>
+                            <th class="d-none d-md-table-cell">الدفع</th>
+                            <th class="d-none d-md-table-cell">التأكيد</th>
                             <th>الإجراءات</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($bookings as $booking)
                         <tr>
-                            <td>{{ $booking->booking_number }}</td>
+                            <td class="d-none d-md-table-cell">{{ $booking->booking_number }}</td>
                             <td>
-                                <a href="{{ route('admin.users.show', $booking->user) }}">
-                                    {{ $booking->user->name }}
-                                </a>
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar me-2 d-none d-sm-inline-block">
+                                        @if($booking->user->avatar)
+                                            <img src="{{ asset($booking->user->avatar) }}" alt="avatar" class="rounded-circle" width="32">
+                                        @else
+                                            <div class="avatar-placeholder rounded-circle">
+                                                <i class="fas fa-user"></i>
+                                            </div>
+                                        @endif
+                                    </div>
+                                    <div>
+                                        <a href="{{ route('admin.users.show', $booking->user) }}" class="text-decoration-none">
+                                            {{ $booking->user->name }}
+                                        </a>
+                                        <div class="small text-muted d-md-none">
+                                            {{ $booking->product->name ?? 'منتج' }}
+                                        </div>
+                                    </div>
+                                </div>
                             </td>
-                            <td>
+                            <td class="d-none d-lg-table-cell">
                                 <a href="{{ route('admin.products.show', $booking->product) }}">
                                     {{ $booking->product->name }}
                                 </a>
                             </td>
-                            <td>
+                            <td class="d-none d-lg-table-cell">
                                 <a href="{{ route('admin.facilities.show', $booking->facility) }}">
                                     {{ $booking->facility->name }}
                                 </a>
                             </td>
-                            <td>{{ $booking->booking_date }}</td>
-                            <td>{{ $booking->booking_time }}</td>
-                            <td>{{ $booking->duration }} ساعة</td>
-                            <td>{{ number_format($booking->total_amount, 2) }} ريال</td>
-                            <td>
+                            <td class="d-none d-md-table-cell">{{ $booking->booking_date }}</td>
+                            <td class="d-none d-md-table-cell">{{ $booking->booking_time }}</td>
+                            <td class="d-none d-lg-table-cell">{{ $booking->duration }} ساعة</td>
+                            <td class="d-none d-md-table-cell">{{ number_format($booking->total_amount, 2) }} ريال</td>
+                            <td class="d-none d-md-table-cell">
                                 @if($booking->status)
                                     <span class="badge bg-{{ $booking->status->color }}">
                                         {{ $booking->status->name }}
@@ -178,14 +194,14 @@
                                     <span class="badge bg-secondary">لا توجد حالة</span>
                                 @endif
                             </td>
-                            <td>
+                            <td class="d-none d-md-table-cell">
                                 @if($booking->is_paid)
                                     <span class="badge bg-success">مدفوع</span>
                                 @else
                                     <span class="badge bg-danger">غير مدفوع</span>
                                 @endif
                             </td>
-                            <td>
+                            <td class="d-none d-md-table-cell">
                                 @if($booking->is_confirmed)
                                     <span class="badge bg-success">مؤكد</span>
                                 @else
@@ -193,50 +209,49 @@
                                 @endif
                             </td>
                             <td>
-                                <div class="d-flex flex-column gap-1 action-buttons">
-                                    <!-- Primary Actions Row -->
-                                    <div class="d-flex gap-1 mb-1">
+                                <div class="action-buttons">
+                                    <!-- Mobile View: Compact Horizontal Layout -->
+                                    <div class="d-flex d-md-none gap-1 flex-wrap">
                                         <a href="{{ route('admin.bookings.show', $booking) }}" 
-                                           class="btn btn-sm btn-outline-info" 
+                                           class="btn btn-sm btn-outline-info action-btn-mobile" 
                                            data-bs-toggle="tooltip" 
-                                           title="عرض التفاصيل">
+                                           title="عرض">
                                             <i class="fas fa-eye"></i>
                                         </a>
                                         <a href="{{ route('admin.bookings.edit', $booking) }}" 
-                                           class="btn btn-sm btn-outline-warning" 
+                                           class="btn btn-sm btn-outline-warning action-btn-mobile" 
                                            data-bs-toggle="tooltip" 
-                                           title="تعديل الحجز">
+                                           title="تعديل">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <button type="button" 
-                                                class="btn btn-sm btn-outline-danger delete-confirm" 
+                                                class="btn btn-sm btn-outline-danger action-btn-mobile delete-confirm" 
                                                 data-bs-toggle="tooltip" 
-                                                title="حذف الحجز"
+                                                title="حذف"
                                                 data-booking-id="{{ $booking->id }}"
                                                 data-booking-number="{{ $booking->booking_number }}">
                                             <i class="fas fa-trash"></i>
                                         </button>
-                                    </div>
-                                    
-                                    <!-- Status Toggle Row -->
-                                    <div class="d-flex gap-1 mb-1">
+                                        
+                                        <!-- Payment Status Toggle -->
                                         <form action="{{ route('admin.bookings.update-payment-status', $booking) }}" method="POST" class="d-inline">
                                             @csrf
                                             <button type="submit" 
-                                                    class="btn btn-sm {{ $booking->is_paid ? 'btn-outline-danger' : 'btn-outline-success' }}" 
+                                                    class="btn btn-sm {{ $booking->is_paid ? 'btn-outline-danger' : 'btn-outline-success' }} action-btn-mobile" 
                                                     data-bs-toggle="tooltip" 
-                                                    title="{{ $booking->is_paid ? 'إلغاء الدفع' : 'تأكيد الدفع' }}">
+                                                    title="{{ $booking->is_paid ? 'إلغاء الدفع' : 'دفع' }}">
                                                 <i class="fas {{ $booking->is_paid ? 'fa-times' : 'fa-check' }}"></i>
                                             </button>
                                         </form>
                                         
+                                        <!-- Confirmation Toggle -->
                                         @if(!$booking->is_confirmed)
                                             <form action="{{ route('admin.bookings.confirm', $booking) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 <button type="submit" 
-                                                        class="btn btn-sm btn-outline-success" 
+                                                        class="btn btn-sm btn-outline-success action-btn-mobile" 
                                                         data-bs-toggle="tooltip" 
-                                                        title="تأكيد الحجز">
+                                                        title="تأكيد">
                                                     <i class="fas fa-check-circle"></i>
                                                 </button>
                                             </form>
@@ -244,13 +259,75 @@
                                             <form action="{{ route('admin.bookings.unconfirm', $booking) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 <button type="submit" 
-                                                        class="btn btn-sm btn-outline-warning" 
+                                                        class="btn btn-sm btn-outline-warning action-btn-mobile" 
                                                         data-bs-toggle="tooltip" 
-                                                        title="إلغاء التأكيد">
+                                                        title="إلغاء">
                                                     <i class="fas fa-times-circle"></i>
                                                 </button>
                                             </form>
                                         @endif
+                                    </div>
+                                    
+                                    <!-- Desktop View: Vertical Layout -->
+                                    <div class="d-none d-md-flex flex-column gap-1">
+                                        <!-- Primary Actions Row -->
+                                        <div class="d-flex gap-1 mb-1">
+                                            <a href="{{ route('admin.bookings.show', $booking) }}" 
+                                               class="btn btn-sm btn-outline-info" 
+                                               data-bs-toggle="tooltip" 
+                                               title="عرض التفاصيل">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a href="{{ route('admin.bookings.edit', $booking) }}" 
+                                               class="btn btn-sm btn-outline-warning" 
+                                               data-bs-toggle="tooltip" 
+                                               title="تعديل الحجز">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <button type="button" 
+                                                    class="btn btn-sm btn-outline-danger delete-confirm" 
+                                                    data-bs-toggle="tooltip" 
+                                                    title="حذف الحجز"
+                                                    data-booking-id="{{ $booking->id }}"
+                                                    data-booking-number="{{ $booking->booking_number }}">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                        
+                                        <!-- Status Toggle Row -->
+                                        <div class="d-flex gap-1 mb-1">
+                                            <form action="{{ route('admin.bookings.update-payment-status', $booking) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                <button type="submit" 
+                                                        class="btn btn-sm {{ $booking->is_paid ? 'btn-outline-danger' : 'btn-outline-success' }}" 
+                                                        data-bs-toggle="tooltip" 
+                                                        title="{{ $booking->is_paid ? 'إلغاء الدفع' : 'تأكيد الدفع' }}">
+                                                    <i class="fas {{ $booking->is_paid ? 'fa-times' : 'fa-check' }}"></i>
+                                                </button>
+                                            </form>
+                                            
+                                            @if(!$booking->is_confirmed)
+                                                <form action="{{ route('admin.bookings.confirm', $booking) }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    <button type="submit" 
+                                                            class="btn btn-sm btn-outline-success" 
+                                                            data-bs-toggle="tooltip" 
+                                                            title="تأكيد الحجز">
+                                                        <i class="fas fa-check-circle"></i>
+                                                    </button>
+                                                </form>
+                                            @else
+                                                <form action="{{ route('admin.bookings.unconfirm', $booking) }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    <button type="submit" 
+                                                            class="btn btn-sm btn-outline-warning" 
+                                                            data-bs-toggle="tooltip" 
+                                                            title="إلغاء التأكيد">
+                                                        <i class="fas fa-times-circle"></i>
+                                                    </button>
+                                                </form>
+                                            @endif
+                                        </div>
                                     </div>
                                 </div>
                             </td>
@@ -275,7 +352,11 @@ $(document).ready(function() {
         dom: 'Bfrtip',
         buttons: [
             'copy', 'csv', 'excel', 'pdf', 'print'
-        ]
+        ],
+        responsive: true,
+        pageLength: window.innerWidth < 768 ? 10 : 15,
+        scrollX: true,
+        autoWidth: false
     });
 
     // Initialize tooltips
@@ -416,6 +497,40 @@ $(document).ready(function() {
     color: white;
 }
 
+/* Mobile Action Buttons */
+.action-btn-mobile {
+    min-width: 36px !important;
+    height: 36px !important;
+    padding: 0.375rem !important;
+    font-size: 0.875rem !important;
+    border-radius: 8px !important;
+    margin: 1px !important;
+}
+
+.action-btn-mobile:hover {
+    transform: scale(1.05) !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
+}
+
+/* Mobile action buttons container */
+@media (max-width: 767px) {
+    .action-buttons {
+        min-width: auto;
+        padding: 0.25rem;
+    }
+    
+    .action-buttons .d-flex {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 0.25rem !important;
+    }
+    
+    /* Ensure buttons don't wrap awkwardly */
+    .action-btn-mobile {
+        flex-shrink: 0;
+    }
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .action-buttons .d-flex {
@@ -427,12 +542,82 @@ $(document).ready(function() {
         height: 28px;
         font-size: 0.8rem;
     }
+    
+    .card-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch !important;
+    }
+    
+    .card-header .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .row.g-3 > [class*="col-"] {
+        margin-bottom: 1rem;
+    }
+    
+    .statistics-cards .card {
+        margin-bottom: 1rem;
+    }
+    
+    .table-responsive {
+        font-size: 0.875rem;
+    }
 }
 
 /* Table cell padding for actions */
 .datatable td:last-child {
     padding: 0.5rem;
     min-width: 120px;
+}
+
+@media (max-width: 767px) {
+    .datatable td:last-child {
+        min-width: auto;
+        padding: 0.25rem;
+        text-align: center;
+    }
+}
+
+/* Avatar placeholder styling */
+.avatar-placeholder {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.avatar-placeholder i {
+    font-size: 14px;
+}
+
+/* Mobile-friendly table */
+@media (max-width: 768px) {
+    .datatable thead th,
+    .datatable tbody td {
+        padding: 0.5rem 0.25rem;
+    }
+    
+    .datatable .btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+}
+
+/* Filter improvements for mobile */
+@media (max-width: 576px) {
+    .form-select,
+    .form-control {
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
 }
 </style>
 @endpush
