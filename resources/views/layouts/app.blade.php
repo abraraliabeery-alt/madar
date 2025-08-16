@@ -111,9 +111,11 @@
                     <a href="{{ route('public.products.index') }}" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
                         العقارات
                     </a>
-                    <a href="{{ route('public.facilities.index') }}" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                        المنشآت
-                    </a>
+                    @if(\App\Helpers\FacilityHelper::isMultiMode())
+                        <a href="{{ route('public.facilities.index') }}" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                            المنشآت
+                        </a>
+                    @endif
                     <a href="{{ route('public.about') }}" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
                         من نحن
                     </a>
@@ -277,9 +279,11 @@
                     <a href="{{ route('public.products.index') }}" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
                         العقارات
                     </a>
-                    <a href="{{ route('public.facilities.index') }}" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
-                        المنشآت
-                    </a>
+                    @if(\App\Helpers\FacilityHelper::isMultiMode())
+                        <a href="{{ route('public.facilities.index') }}" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
+                            المنشآت
+                        </a>
+                    @endif
                     <a href="{{ route('public.about') }}" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
                         من نحن
                     </a>

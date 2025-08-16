@@ -123,4 +123,18 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Facility Mode Configuration
+    |--------------------------------------------------------------------------
+    |
+    | This configuration determines whether the application runs in single
+    | facility mode (like a regular real estate website) or multi-facility
+    | mode (SAAS platform for multiple facilities).
+    |
+    */
+
+    'facility_mode' => env('FACILITY_MODE', 'multi'), // 'single' or 'multi'
+    'single_facility_id' => env('SINGLE_FACILITY_ID', 1),
+
 ];

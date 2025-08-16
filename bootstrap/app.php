@@ -17,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'permission' => \App\Http\Middleware\CheckPermission::class,
             'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
             'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
+            'facility.mode' => \App\Http\Middleware\FacilityModeMiddleware::class,
         ]);
     })
     ->withProviders([

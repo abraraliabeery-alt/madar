@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Facility;
 use App\Models\Category;
 use App\Models\Product;
+use App\Helpers\FacilityHelper;
+use Illuminate\Http\Request;
 
 class FacilityController extends Controller
 {
@@ -15,6 +16,15 @@ class FacilityController extends Controller
      */
     public function index(Request $request)
     {
+        if (FacilityHelper::isSingleMode()) {
+            // في حالة المنشأة الواحدة، توجيه مباشر لصفحة المنشأة
+            $facility = FacilityHelper::getSingleFacility();
+            if ($facility) {
+                return redirect()->route('public.facilities.show', $facility);
+            }
+        }
+
+        // في حالة المنشآت المتعددة، عرض قائمة المنشآت
         $query = Facility::with(['category', 'owner'])
             ->where('is_active', true)
             ->where('is_verified', true);
@@ -80,6 +90,13 @@ class FacilityController extends Controller
      */
     public function show(Facility $facility)
     {
+        if (FacilityHelper::isSingleMode()) {
+            // التأكد من أن المنشأة هي المنشأة الوحيدة المسموحة
+            if ($facility->id != FacilityHelper::getFacilityId()) {
+                abort(404);
+            }
+        }
+
         if (!$facility->is_active || !$facility->is_verified) {
             abort(404);
         }
@@ -111,6 +128,13 @@ class FacilityController extends Controller
      */
     public function appointmentForm(Facility $facility)
     {
+        if (FacilityHelper::isSingleMode()) {
+            // التأكد من أن المنشأة هي المنشأة الوحيدة المسموحة
+            if ($facility->id != FacilityHelper::getFacilityId()) {
+                abort(404);
+            }
+        }
+
         if (!$facility->is_active || !$facility->is_verified) {
             abort(404);
         }
@@ -123,6 +147,13 @@ class FacilityController extends Controller
      */
     public function quoteForm(Facility $facility)
     {
+        if (FacilityHelper::isSingleMode()) {
+            // التأكد من أن المنشأة هي المنشأة الوحيدة المسموحة
+            if ($facility->id != FacilityHelper::getFacilityId()) {
+                abort(404);
+            }
+        }
+
         if (!$facility->is_active || !$facility->is_verified) {
             abort(404);
         }
@@ -136,6 +167,14 @@ class FacilityController extends Controller
      */
     public function byCategory(Category $category)
     {
+        if (FacilityHelper::isSingleMode()) {
+            // في حالة المنشأة الواحدة، التأكد من أن الفئة صحيحة
+            $facility = FacilityHelper::getSingleFacility();
+            if ($facility && $facility->category_id != $category->id) {
+                abort(404);
+            }
+        }
+
         if (!$category->is_active) {
             abort(404);
         }
@@ -154,6 +193,14 @@ class FacilityController extends Controller
      */
     public function featured()
     {
+        if (FacilityHelper::isSingleMode()) {
+            // في حالة المنشأة الواحدة، التأكد من أن المنشأة المميزة هي المنشأة الوحيدة
+            $facility = FacilityHelper::getSingleFacility();
+            if ($facility && $facility->is_featured) {
+                return redirect()->route('public.facilities.show', $facility);
+            }
+        }
+
         $facilities = Facility::with(['category', 'owner'])
             ->where('is_active', true)
             ->where('is_verified', true)

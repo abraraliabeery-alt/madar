@@ -57,15 +57,17 @@ Route::name('public.')->group(function () {
     Route::get('/facilities/{facility}/products', [ProductController::class, 'byFacility'])->name('products.by-facility');
 
     // Facility Routes
-    Route::get('/facilities', [FacilityController::class, 'index'])->name('facilities.index');
-    Route::get('/facilities/featured', [FacilityController::class, 'featured'])->name('facilities.featured');
-    Route::get('/facilities/search', [FacilityController::class, 'search'])->name('facilities.search');
-    Route::get('/facilities/map', [FacilityController::class, 'map'])->name('facilities.map');
-    Route::get('/facilities/{facility}', [FacilityController::class, 'show'])->name('facilities.show');
-    // Public forms for appointment and quote
-    Route::get('/facilities/{facility}/appointment', [FacilityController::class, 'appointmentForm'])->name('facilities.appointment.form');
-    Route::get('/facilities/{facility}/quote', [FacilityController::class, 'quoteForm'])->name('facilities.quote.form');
-    Route::get('/categories/{category}/facilities', [FacilityController::class, 'byCategory'])->name('facilities.by-category');
+    Route::middleware(['facility.mode'])->group(function () {
+        Route::get('/facilities', [FacilityController::class, 'index'])->name('facilities.index');
+        Route::get('/facilities/featured', [FacilityController::class, 'featured'])->name('facilities.featured');
+        Route::get('/facilities/search', [FacilityController::class, 'search'])->name('facilities.search');
+        Route::get('/facilities/map', [FacilityController::class, 'map'])->name('facilities.map');
+        Route::get('/facilities/{facility}', [FacilityController::class, 'show'])->name('facilities.show');
+        // Public forms for appointment and quote
+        Route::get('/facilities/{facility}/appointment', [FacilityController::class, 'appointmentForm'])->name('facilities.appointment.form');
+        Route::get('/facilities/{facility}/quote', [FacilityController::class, 'quoteForm'])->name('facilities.quote.form');
+        Route::get('/categories/{category}/facilities', [FacilityController::class, 'byCategory'])->name('facilities.by-category');
+    });
 
     // Category Routes
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');

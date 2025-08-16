@@ -10,9 +10,18 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
                 <div>
                     <h1 class="text-4xl md:text-5xl font-bold mb-6">{{ $facility->name }}</h1>
-                    <p class="text-xl text-primary-100 mb-6">
-                        {{ $facility->description ?? 'منشأة عقارية معتمدة وموثوقة' }}
-                    </p>
+                    
+                    @if(\App\Helpers\FacilityHelper::isSingleMode())
+                        <!-- في حالة المنشأة الواحدة، إظهار اسم الموقع -->
+                        <p class="text-xl text-primary-100 mb-6">
+                            {{ config('app.name') }} - {{ $facility->description ?? 'منشأة عقارية معتمدة وموثوقة' }}
+                        </p>
+                    @else
+                        <!-- في حالة المنشآت المتعددة، إظهار اسم المنشأة فقط -->
+                        <p class="text-xl text-primary-100 mb-6">
+                            {{ $facility->description ?? 'منشأة عقارية معتمدة وموثوقة' }}
+                        </p>
+                    @endif
                     <div class="flex items-center space-x-6 space-x-reverse">
                         <div class="flex items-center text-yellow-400">
                             @for($i = 1; $i <= 5; $i++)
@@ -208,8 +217,8 @@
                     </div>
                 </div>
 
-                <!-- Similar Facilities -->
-                @if($similarFacilities->count() > 0)
+                <!-- Similar Facilities - إخفاؤها في حالة المنشأة الواحدة -->
+                @if(\App\Helpers\FacilityHelper::isMultiMode() && $similarFacilities->count() > 0)
                     <div class="bg-white rounded-lg shadow-md p-6">
                         <h3 class="text-lg font-semibold text-gray-900 mb-4">منشآت مشابهة</h3>
                         <div class="space-y-4">

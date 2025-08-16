@@ -178,7 +178,9 @@
                             <i class="fas fa-home text-primary-600"></i>
                         </div>
                         <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ $category->name }}</h3>
-                        <p class="text-gray-600 text-sm">{{ $category->products_count ?? 0 }} عقار</p>
+                        <p class="text-gray-600 text-sm">
+                            {{ \App\Models\Product::where('category_id', $category->id)->count() }} عقار
+                        </p>
                     </a>
                 @endforeach
             </div>
