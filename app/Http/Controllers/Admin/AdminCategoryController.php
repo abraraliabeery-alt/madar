@@ -40,7 +40,7 @@ class AdminCategoryController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'is_active' => 'boolean',
             'is_featured' => 'boolean',
-            'sort_order' => 'nullable|integer|min:0',
+            'order' => 'nullable|integer|min:0',
         ]);
 
         $categoryData = $request->except(['icon', 'image']);
@@ -87,7 +87,7 @@ class AdminCategoryController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'is_active' => 'boolean',
             'is_featured' => 'boolean',
-            'sort_order' => 'nullable|integer|min:0',
+            'order' => 'nullable|integer|min:0',
         ]);
 
         $categoryData = $request->except(['icon', 'image']);
@@ -129,13 +129,7 @@ class AdminCategoryController extends Controller
                 ->with('error', 'لا يمكن حذف الفئة لوجود منتجات مرتبطة بها');
         }
 
-        // التحقق من وجود فئات فرعية
-        if ($category->children()->count() > 0) {
-            return redirect()->back()
-                ->with('error', 'لا يمكن حذف الفئة لوجود فئات فرعية مرتبطة بها');
-        }
-
-        // حذف الأيقونة والصورة
+        // حذف الصور
         if ($category->icon) {
             Storage::disk('public')->delete($category->icon);
         }
@@ -156,19 +150,19 @@ class AdminCategoryController extends Controller
     {
         $category->update(['is_active' => !$category->is_active]);
 
-        $status = $category->is_active ? 'تفعيل' : 'إلغاء تفعيل';
-        return redirect()->back()->with('success', "تم {$status} الفئة بنجاح");
+        return redirect()->back()
+            ->with('success', 'تم تحديث حالة الفئة بنجاح');
     }
 
     /**
-     * إضافة/إزالة من المميزات
+     * تفعيل/إلغاء تفعيل مميزة الفئة
      */
     public function toggleFeatured(Category $category)
     {
         $category->update(['is_featured' => !$category->is_featured]);
 
-        $status = $category->is_featured ? 'إضافة' : 'إزالة من';
-        return redirect()->back()->with('success', "تم {$status} المميزات بنجاح");
+        return redirect()->back()
+            ->with('success', 'تم تحديث حالة مميزة الفئة بنجاح');
     }
 
     /**
@@ -177,6 +171,16 @@ class AdminCategoryController extends Controller
     public function show(Category $category)
     {
         $category->load(['parent', 'children', 'products']);
+        
+        // Load counts for main category
+        $category->products_count = $category->products()->count();
+        $category->children_count = $category->children()->count();
+        
+        // Load counts for child categories
+        foreach ($category->children as $child) {
+            $child->products_count = $child->products()->count();
+        }
+        
         return view('admin.categories.show', compact('category'));
     }
 
@@ -188,12 +192,12 @@ class AdminCategoryController extends Controller
         $request->validate([
             'categories' => 'required|array',
             'categories.*.id' => 'required|exists:categories,id',
-            'categories.*.sort_order' => 'required|integer|min:0',
+            'categories.*.order' => 'required|integer|min:0',
         ]);
 
         foreach ($request->categories as $categoryData) {
             Category::where('id', $categoryData['id'])
-                ->update(['sort_order' => $categoryData['sort_order']]);
+                ->update(['order' => $categoryData['order']]);
         }
 
         return response()->json([

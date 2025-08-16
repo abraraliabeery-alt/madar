@@ -21,7 +21,7 @@
                     <div class="card">
                         <div class="card-body text-center">
                             @if($feature->icon)
-                                <img src="{{ Storage::url($feature->icon) }}" alt="icon" class="img-fluid rounded mb-3" style="max-height: 100px;">
+                                <img src="{{ asset($feature->icon) }}" alt="icon" class="img-fluid rounded mb-3" style="max-height: 100px;">
                             @else
                                 <div class="rounded bg-light d-flex align-items-center justify-content-center mb-3" style="height: 100px;">
                                     <i class="fas fa-star text-muted fa-3x"></i>
@@ -128,7 +128,7 @@
                                         <tr>
                                             <td>
                                                 @if($product->main_image)
-                                                    <img src="{{ Storage::url($product->main_image) }}" alt="product" width="50" class="rounded">
+                                                    <img src="{{ asset($product->main_image) }}" alt="product" width="50" class="rounded">
                                                 @else
                                                     <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
                                                         <i class="fas fa-box text-muted"></i>

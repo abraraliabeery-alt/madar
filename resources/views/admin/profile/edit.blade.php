@@ -18,7 +18,7 @@
                             <div class="col-12 text-center mb-4">
                                 <div class="position-relative d-inline-block">
                                     @if($user->avatar)
-                                        <img src="{{ Storage::url($user->avatar) }}" alt="avatar" class="rounded-circle img-thumbnail" style="width: 150px; height: 150px; object-fit: cover;">
+                                        <img src="{{ asset($user->avatar) }}" alt="avatar" class="rounded-circle img-thumbnail" style="width: 150px; height: 150px; object-fit: cover;">
                                     @else
                                         <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center" style="width: 150px; height: 150px;">
                                             <span class="display-4">{{ substr($user->name, 0, 1) }}</span>

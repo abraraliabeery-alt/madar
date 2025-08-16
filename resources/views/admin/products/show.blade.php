@@ -21,7 +21,7 @@
                     <div class="card">
                         <div class="card-body text-center">
                             @if($product->main_image)
-                                <img src="{{ Storage::url($product->main_image) }}" alt="product" class="img-fluid rounded mb-3" style="max-height: 200px;">
+                                <img src="{{ asset($product->main_image) }}" alt="product" class="img-fluid rounded mb-3" style="max-height: 200px;">
                             @else
                                 <div class="rounded bg-light d-flex align-items-center justify-content-center mb-3" style="height: 200px;">
                                     <i class="fas fa-box text-muted fa-3x"></i>
@@ -242,7 +242,7 @@
                                     <div class="col-md-4">
                                         <div class="d-flex align-items-center p-2 border rounded">
                                             @if($feature->icon)
-                                                <img src="{{ Storage::url($feature->icon) }}" alt="icon" width="20" class="me-2">
+                                                <img src="{{ asset($feature->icon) }}" alt="icon" width="20" class="me-2">
                                             @endif
                                             {{ $feature->name }}
                                         </div>

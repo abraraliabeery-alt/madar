@@ -120,7 +120,7 @@
                         <div class="list-group-item">
                             <div class="d-flex align-items-center">
                                 @if($user->avatar)
-                                    <img src="{{ Storage::url($user->avatar) }}" alt="avatar" class="rounded-circle me-3" width="40">
+                                    <img src="{{ asset($user->avatar) }}" alt="avatar" class="rounded-circle me-3" width="40">
                                 @else
                                     <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
                                         {{ substr($user->name, 0, 1) }}
@@ -158,7 +158,7 @@
                         <div class="list-group-item">
                             <div class="d-flex align-items-center">
                                 @if($facility->logo)
-                                    <img src="{{ Storage::url($facility->logo) }}" alt="logo" class="rounded me-3" width="40">
+                                    <img src="{{ asset($facility->logo) }}" alt="logo" class="rounded me-3" width="40">
                                 @else
                                     <div class="rounded bg-light d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
                                         <i class="fas fa-building text-muted"></i>

@@ -269,7 +269,7 @@
                             <div class="card-body">
                                 @if($product->image)
                                     <div class="mb-3">
-                                        <img src="{{ Storage::url($product->image) }}" alt="Current Image" class="img-fluid rounded" style="max-height: 200px;">
+                                        <img src="{{ asset($product->image) }}" alt="Current Image" class="img-fluid rounded" style="max-height: 200px;">
                                     </div>
                                 @endif
                                 <div class="mb-3">

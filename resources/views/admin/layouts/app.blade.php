@@ -41,7 +41,7 @@
             <div class="d-flex align-items-center">
                 <div class="avatar ms-2">
                     @if(auth()->user()->avatar)
-                        <img src="{{ Storage::url(auth()->user()->avatar) }}" alt="avatar">
+                        <img src="{{ asset(auth()->user()->avatar) }}" alt="avatar">
                     @else
                         <div class="avatar-placeholder">
                             {{ substr(auth()->user()->name, 0, 1) }}

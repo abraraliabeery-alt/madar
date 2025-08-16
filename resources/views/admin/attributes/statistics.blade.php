@@ -216,7 +216,7 @@
                                                         <td>
                                                             <div class="d-flex align-items-center">
                                                                 @if($attribute->icon)
-                                                                    <img src="{{ Storage::url($attribute->icon) }}" alt="Icon" class="me-2" style="width: 20px; height: 20px;">
+                                                                    <img src="{{ asset($attribute->icon) }}" alt="Icon" class="me-2" style="width: 20px; height: 20px;">
                                                                 @endif
                                                                 <span>{{ $attribute->translations->first()->name ?? 'N/A' }}</span>
                                                             </div>

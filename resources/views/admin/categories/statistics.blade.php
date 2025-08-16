@@ -126,7 +126,13 @@
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     @if($category->icon)
-                                                        <img src="{{ Storage::url($category->icon) }}" alt="icon" width="32" class="me-2">
+                                                        @if(Str::startsWith($category->icon, 'fas ') || Str::startsWith($category->icon, 'fa ') || Str::startsWith($category->icon, 'fab '))
+                                                            <!-- FontAwesome Icon -->
+                                                            <i class="{{ $category->icon }} fa-lg text-primary me-2"></i>
+                                                        @else
+                                                            <!-- Image Icon -->
+                                                            <img src="{{ asset($category->icon) }}" alt="icon" width="32" class="me-2">
+                                                        @endif
                                                     @endif
                                                     {{ $category->name }}
                                                 </div>

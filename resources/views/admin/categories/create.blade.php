@@ -10,7 +10,7 @@
             </a>
         </div>
         <div class="card-body">
-            <form action="{{ route('admin.categories.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('admin.categories.store') }}" method="POST" enctype="multipart/form-data" id="categoryForm">
                 @csrf
 
                 <div class="row g-4">
@@ -53,9 +53,9 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="sort_order" class="form-label">ترتيب الفئة</label>
-                                    <input type="number" class="form-control @error('sort_order') is-invalid @enderror" id="sort_order" name="sort_order" value="{{ old('sort_order', 0) }}" min="0">
-                                    @error('sort_order')
+                                    <label for="order" class="form-label">ترتيب الفئة</label>
+                                    <input type="number" class="form-control @error('order') is-invalid @enderror" id="order" name="order" value="{{ old('order', 0) }}" min="0">
+                                    @error('order')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
@@ -72,22 +72,24 @@
                             <div class="card-body">
                                 <div class="mb-3">
                                     <label for="icon" class="form-label">الأيقونة</label>
-                                    <input type="file" class="form-control @error('icon') is-invalid @enderror" id="icon" name="icon" accept="image/*">
-                                    <small class="text-muted d-block mt-2">الأبعاد المثالية: 32x32 بكسل</small>
+                                    <input type="file" class="form-control @error('icon') is-invalid @enderror" id="icon" name="icon" accept="image/*" data-max-size="2048">
+                                    <small class="text-muted d-block mt-2">الأبعاد المثالية: 32x32 بكسل - الحد الأقصى: 2 ميجابايت</small>
                                     <div class="mt-2" id="icon-preview"></div>
                                     @error('icon')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <div class="invalid-feedback d-block">{{ $message }}</div>
                                     @enderror
+                                    <div class="invalid-feedback" id="icon-error"></div>
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="image" class="form-label">صورة الفئة</label>
-                                    <input type="file" class="form-control @error('image') is-invalid @enderror" id="image" name="image" accept="image/*">
-                                    <small class="text-muted d-block mt-2">الأبعاد المثالية: 800x600 بكسل</small>
+                                    <input type="file" class="form-control @error('image') is-invalid @enderror" id="image" name="image" accept="image/*" data-max-size="2048">
+                                    <small class="text-muted d-block mt-2">الأبعاد المثالية: 800x600 بكسل - الحد الأقصى: 2 ميجابايت</small>
                                     <div class="mt-2" id="image-preview"></div>
                                     @error('image')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <div class="invalid-feedback d-block">{{ $message }}</div>
                                     @enderror
+                                    <div class="invalid-feedback" id="image-error"></div>
                                 </div>
 
                                 <div class="form-check mb-3">
@@ -105,7 +107,7 @@
 
                     <!-- Submit Button -->
                     <div class="col-12">
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn-primary" id="submitBtn">
                             <i class="fas fa-save me-2"></i>حفظ
                         </button>
                     </div>
@@ -135,29 +137,142 @@ $(document).ready(function() {
         width: '100%'
     });
 
-    // Preview icon
+    // File validation function
+    function validateFile(file, maxSizeMB, allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/svg+xml']) {
+        const maxSizeBytes = maxSizeMB * 1024 * 1024;
+        
+        if (file.size > maxSizeBytes) {
+            return `حجم الملف يجب أن يكون أقل من ${maxSizeMB} ميجابايت`;
+        }
+        
+        if (!allowedTypes.includes(file.type)) {
+            return 'نوع الملف غير مدعوم. يرجى اختيار صورة بصيغة JPEG, PNG, JPG, GIF, أو SVG';
+        }
+        
+        return null;
+    }
+
+    // Preview icon with validation
     $('#icon').change(function() {
         const file = this.files[0];
+        const maxSize = parseInt($(this).data('max-size'));
+        const previewDiv = $('#icon-preview');
+        const errorDiv = $('#icon-error');
+        
+        // Clear previous preview and errors
+        previewDiv.html('');
+        errorDiv.html('').hide();
+        $(this).removeClass('is-invalid');
+        
         if (file) {
+            // Validate file
+            const error = validateFile(file, maxSize);
+            if (error) {
+                $(this).addClass('is-invalid');
+                errorDiv.html(error).show();
+                return;
+            }
+            
+            // Show preview
             const reader = new FileReader();
             reader.onload = function(e) {
-                $('#icon-preview').html(`<img src="${e.target.result}" class="img-thumbnail" width="64">`);
+                previewDiv.html(`
+                    <div class="position-relative">
+                        <img src="${e.target.result}" class="img-thumbnail" width="64" alt="Icon Preview">
+                        <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0" onclick="clearFileInput('icon')">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `);
             }
             reader.readAsDataURL(file);
         }
     });
 
-    // Preview image
+    // Preview image with validation
     $('#image').change(function() {
         const file = this.files[0];
+        const maxSize = parseInt($(this).data('max-size'));
+        const previewDiv = $('#image-preview');
+        const errorDiv = $('#image-error');
+        
+        // Clear previous preview and errors
+        previewDiv.html('');
+        errorDiv.html('').hide();
+        $(this).removeClass('is-invalid');
+        
         if (file) {
+            // Validate file
+            const error = validateFile(file, maxSize);
+            if (error) {
+                $(this).addClass('is-invalid');
+                errorDiv.html(error).show();
+                return;
+            }
+            
+            // Show preview
             const reader = new FileReader();
             reader.onload = function(e) {
-                $('#image-preview').html(`<img src="${e.target.result}" class="img-thumbnail" width="200">`);
+                previewDiv.html(`
+                    <div class="position-relative">
+                        <img src="${e.target.result}" class="img-thumbnail" width="200" alt="Image Preview">
+                        <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0" onclick="clearFileInput('image')">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `);
             }
             reader.readAsDataURL(file);
         }
     });
+
+    // Form submission validation
+    $('#categoryForm').on('submit', function(e) {
+        let hasErrors = false;
+        
+        // Check if required fields are filled
+        if (!$('#name').val().trim()) {
+            $('#name').addClass('is-invalid');
+            hasErrors = true;
+        }
+        
+        // Check file sizes if files are selected
+        const iconFile = $('#icon')[0].files[0];
+        const imageFile = $('#image')[0].files[0];
+        
+        if (iconFile) {
+            const maxSize = parseInt($('#icon').data('max-size'));
+            if (iconFile.size > maxSize * 1024 * 1024) {
+                $('#icon').addClass('is-invalid');
+                $('#icon-error').html(`حجم الملف يجب أن يكون أقل من ${maxSize} ميجابايت`).show();
+                hasErrors = true;
+            }
+        }
+        
+        if (imageFile) {
+            const maxSize = parseInt($('#image').data('max-size'));
+            if (imageFile.size > maxSize * 1024 * 1024) {
+                $('#image').addClass('is-invalid');
+                $('#image-error').html(`حجم الملف يجب أن يكون أقل من ${maxSize} ميجابايت`).show();
+                hasErrors = true;
+            }
+        }
+        
+        if (hasErrors) {
+            e.preventDefault();
+            $('html, body').animate({
+                scrollTop: $('.is-invalid:first').offset().top - 100
+            }, 500);
+        }
+    });
+
+    // Clear file input function
+    window.clearFileInput = function(inputId) {
+        $(`#${inputId}`).val('');
+        $(`#${inputId}-preview`).html('');
+        $(`#${inputId}`).removeClass('is-invalid');
+        $(`#${inputId}-error`).html('').hide();
+    };
 });
 </script>
 @endpush

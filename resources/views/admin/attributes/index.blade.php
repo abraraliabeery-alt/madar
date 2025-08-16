@@ -82,7 +82,7 @@
                                     <td>
                                         <div class="d-flex align-items-center">
                                             @if($attribute->icon)
-                                                <img src="{{ Storage::url($attribute->icon) }}" alt="{{ $attribute->translations->first()->name ?? 'N/A' }}" class="me-2" style="width: 20px; height: 20px;">
+                                                <img src="{{ asset($attribute->icon) }}" alt="{{ $attribute->translations->first()->name ?? 'N/A' }}" class="me-2" style="width: 20px; height: 20px;">
                                             @endif
                                             <span>{{ $attribute->translations->first()->name ?? 'N/A' }}</span>
                                         </div>
@@ -113,35 +113,35 @@
                                         <div class="d-flex flex-column gap-1 action-buttons">
                                             <!-- Primary Actions Row -->
                                             <div class="d-flex gap-1 mb-1">
-                                                <a href="{{ route('admin.attributes.show', $attribute) }}" 
-                                                   class="btn btn-sm btn-outline-info" 
-                                                   data-bs-toggle="tooltip" 
+                                                <a href="{{ route('admin.attributes.show', $attribute) }}"
+                                                   class="btn btn-sm btn-outline-info"
+                                                   data-bs-toggle="tooltip"
                                                    title="عرض التفاصيل">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
-                                                <a href="{{ route('admin.attributes.edit', $attribute) }}" 
-                                                   class="btn btn-sm btn-outline-warning" 
-                                                   data-bs-toggle="tooltip" 
+                                                <a href="{{ route('admin.attributes.edit', $attribute) }}"
+                                                   class="btn btn-sm btn-outline-warning"
+                                                   data-bs-toggle="tooltip"
                                                    title="تعديل الخاصية">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
-                                                <button type="button" 
-                                                        class="btn btn-sm btn-outline-danger delete-confirm" 
-                                                        data-bs-toggle="tooltip" 
+                                                <button type="button"
+                                                        class="btn btn-sm btn-outline-danger delete-confirm"
+                                                        data-bs-toggle="tooltip"
                                                         title="حذف الخاصية"
                                                         data-attribute-id="{{ $attribute->id }}"
                                                         data-attribute-name="{{ $attribute->translations->first()->name ?? 'N/A' }}">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </div>
-                                            
+
                                             <!-- Toggle Required Row -->
                                             <div class="d-flex gap-1 mb-1">
                                                 <form method="POST" action="{{ route('admin.attributes.toggle-required', $attribute) }}" class="d-inline">
                                                     @csrf
-                                                    <button type="submit" 
-                                                            class="btn btn-sm btn-outline-secondary" 
-                                                            data-bs-toggle="tooltip" 
+                                                    <button type="submit"
+                                                            class="btn btn-sm btn-outline-secondary"
+                                                            data-bs-toggle="tooltip"
                                                             title="{{ $attribute->required ? 'جعل اختيارية' : 'جعل إلزامية' }}">
                                                         <i class="fas fa-toggle-{{ $attribute->required ? 'on' : 'off' }}"></i>
                                                     </button>
@@ -224,7 +224,7 @@
     .action-buttons .d-flex {
         flex-direction: column !important;
     }
-    
+
     .action-buttons .btn {
         min-width: 28px;
         height: 28px;
@@ -272,19 +272,19 @@ $(document).ready(function() {
                     'method': 'POST',
                     'action': `/admin/attributes/${attributeId}`
                 });
-                
+
                 form.append($('<input>', {
                     'type': 'hidden',
                     'name': '_token',
                     'value': $('meta[name="csrf-token"]').attr('content')
                 }));
-                
+
                 form.append($('<input>', {
                     'type': 'hidden',
                     'name': '_method',
                     'value': 'DELETE'
                 }));
-                
+
                 $('body').append(form);
                 form.submit();
             }

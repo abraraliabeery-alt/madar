@@ -125,7 +125,7 @@
                         <div class="card-body">
                             <div class="d-flex align-items-center mb-3">
                                 @if($booking->user->avatar)
-                                    <img src="{{ Storage::url($booking->user->avatar) }}" alt="avatar" class="rounded-circle me-3" width="60">
+                                    <img src="{{ asset($booking->user->avatar) }}" alt="avatar" class="rounded-circle me-3" width="60">
                                 @else
                                     <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center me-3" style="width: 60px; height: 60px;">
                                         {{ substr($booking->user->name, 0, 1) }}
@@ -160,7 +160,7 @@
                         <div class="card-body">
                             <div class="d-flex align-items-center mb-3">
                                 @if($booking->product->main_image)
-                                    <img src="{{ Storage::url($booking->product->main_image) }}" alt="product" class="rounded me-3" width="80">
+                                    <img src="{{ asset($booking->product->main_image) }}" alt="product" class="rounded me-3" width="80">
                                 @else
                                     <div class="rounded bg-light d-flex align-items-center justify-content-center me-3" style="width: 80px; height: 80px;">
                                         <i class="fas fa-box fa-2x text-muted"></i>

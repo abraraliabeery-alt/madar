@@ -57,7 +57,7 @@
                         <tr>
                             <td>
                                 @if($facility->logo)
-                                    <img src="{{ Storage::url($facility->logo) }}" alt="logo" width="40" class="rounded">
+                                    <img src="{{ asset($facility->logo) }}" alt="logo" width="40" class="rounded">
                                 @else
                                     <div class="rounded bg-light d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
                                         <i class="fas fa-building text-muted"></i>
@@ -113,55 +113,55 @@
                                 <div class="d-flex flex-column gap-1 action-buttons">
                                     <!-- Primary Actions Row -->
                                     <div class="d-flex gap-1 mb-1">
-                                        <a href="{{ route('admin.facilities.show', $facility) }}" 
-                                           class="btn btn-sm btn-outline-info" 
-                                           data-bs-toggle="tooltip" 
+                                        <a href="{{ route('admin.facilities.show', $facility) }}"
+                                           class="btn btn-sm btn-outline-info"
+                                           data-bs-toggle="tooltip"
                                            title="عرض التفاصيل">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a href="{{ route('admin.facilities.edit', $facility) }}" 
-                                           class="btn btn-sm btn-outline-warning" 
-                                           data-bs-toggle="tooltip" 
+                                        <a href="{{ route('admin.facilities.edit', $facility) }}"
+                                           class="btn btn-sm btn-outline-warning"
+                                           data-bs-toggle="tooltip"
                                            title="تعديل المنشأة">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <button type="button" 
-                                                class="btn btn-sm btn-outline-danger delete-confirm" 
-                                                data-bs-toggle="tooltip" 
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-danger delete-confirm"
+                                                data-bs-toggle="tooltip"
                                                 title="حذف المنشأة"
                                                 data-facility-id="{{ $facility->id }}"
                                                 data-facility-name="{{ $facility->name }}">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </div>
-                                    
+
                                     <!-- Status Toggle Row -->
                                     <div class="d-flex gap-1 mb-1">
                                         <form action="{{ route('admin.facilities.toggle-status', $facility) }}" method="POST" class="d-inline">
                                             @csrf
-                                            <button type="submit" 
-                                                    class="btn btn-sm {{ $facility->is_active ? 'btn-outline-danger' : 'btn-outline-success' }}" 
-                                                    data-bs-toggle="tooltip" 
+                                            <button type="submit"
+                                                    class="btn btn-sm {{ $facility->is_active ? 'btn-outline-danger' : 'btn-outline-success' }}"
+                                                    data-bs-toggle="tooltip"
                                                     title="{{ $facility->is_active ? 'إلغاء التفعيل' : 'تفعيل المنشأة' }}">
                                                 <i class="fas {{ $facility->is_active ? 'fa-ban' : 'fa-check' }}"></i>
                                             </button>
                                         </form>
-                                        
+
                                         <form action="{{ route('admin.facilities.toggle-verification', $facility) }}" method="POST" class="d-inline">
                                             @csrf
-                                            <button type="submit" 
-                                                    class="btn btn-sm {{ $facility->is_verified ? 'btn-outline-warning' : 'btn-outline-info' }}" 
-                                                    data-bs-toggle="tooltip" 
+                                            <button type="submit"
+                                                    class="btn btn-sm {{ $facility->is_verified ? 'btn-outline-warning' : 'btn-outline-info' }}"
+                                                    data-bs-toggle="tooltip"
                                                     title="{{ $facility->is_verified ? 'إلغاء التحقق' : 'التحقق من المنشأة' }}">
                                                 <i class="fas {{ $facility->is_verified ? 'fa-times' : 'fa-shield-alt' }}"></i>
                                             </button>
                                         </form>
-                                        
+
                                         <form action="{{ route('admin.facilities.toggle-featured', $facility) }}" method="POST" class="d-inline">
                                             @csrf
-                                            <button type="submit" 
-                                                    class="btn btn-sm {{ $facility->is_featured ? 'btn-outline-secondary' : 'btn-outline-warning' }}" 
-                                                    data-bs-toggle="tooltip" 
+                                            <button type="submit"
+                                                    class="btn btn-sm {{ $facility->is_featured ? 'btn-outline-secondary' : 'btn-outline-warning' }}"
+                                                    data-bs-toggle="tooltip"
                                                     title="{{ $facility->is_featured ? 'إلغاء التمييز' : 'تمييز المنشأة' }}">
                                                 <i class="fas fa-star {{ $facility->is_featured ? 'text-warning' : '' }}"></i>
                                             </button>
@@ -253,7 +253,7 @@
     .action-buttons .d-flex {
         flex-direction: column !important;
     }
-    
+
     .action-buttons .btn {
         min-width: 28px;
         height: 28px;
@@ -344,19 +344,19 @@ $(document).ready(function() {
                     'method': 'POST',
                     'action': `/admin/facilities/${facilityId}`
                 });
-                
+
                 form.append($('<input>', {
                     'type': 'hidden',
                     'name': '_token',
                     'value': $('meta[name="csrf-token"]').attr('content')
                 }));
-                
+
                 form.append($('<input>', {
                     'type': 'hidden',
                     'name': '_method',
                     'value': 'DELETE'
                 }));
-                
+
                 $('body').append(form);
                 form.submit();
             }

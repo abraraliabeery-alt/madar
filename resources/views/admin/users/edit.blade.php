@@ -128,7 +128,7 @@
                                     <input type="file" class="form-control @error('avatar') is-invalid @enderror" id="avatar" name="avatar" accept="image/*">
                                     @if($user->avatar)
                                         <div class="mt-2">
-                                            <img src="{{ Storage::url($user->avatar) }}" alt="avatar" class="rounded" width="100" id="avatar-preview">
+                                            <img src="{{ asset($user->avatar) }}" alt="avatar" class="rounded" width="100" id="avatar-preview">
                                         </div>
                                     @endif
                                     @error('avatar')

@@ -112,7 +112,7 @@
                                 </div>
                                 <div class="card-body text-center">
                                     @if($attribute->icon)
-                                        <img src="{{ Storage::url($attribute->icon) }}" alt="Attribute Icon" class="img-thumbnail" style="max-width: 150px; max-height: 150px;">
+                                        <img src="{{ asset($attribute->icon) }}" alt="Attribute Icon" class="img-thumbnail" style="max-width: 150px; max-height: 150px;">
                                     @else
                                         <div class="text-muted">
                                             <i class="fas fa-image fa-3x"></i>

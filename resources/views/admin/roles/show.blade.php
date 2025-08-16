@@ -101,7 +101,7 @@
                                         <tr>
                                             <td>
                                                 @if($user->avatar)
-                                                    <img src="{{ Storage::url($user->avatar) }}" alt="avatar" class="rounded-circle" width="40">
+                                                    <img src="{{ asset($user->avatar) }}" alt="avatar" class="rounded-circle" width="40">
                                                 @else
                                                     <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
                                                         {{ substr($user->name, 0, 1) }}

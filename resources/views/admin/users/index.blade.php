@@ -65,7 +65,7 @@
                         <tr>
                             <td>
                                 @if($user->avatar)
-                                    <img src="{{ Storage::url($user->avatar) }}" alt="avatar" class="rounded-circle" width="40">
+                                    <img src="{{ asset($user->avatar) }}" alt="avatar" class="rounded-circle" width="40">
                                 @else
                                     <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
                                         {{ substr($user->name, 0, 1) }}
@@ -98,35 +98,35 @@
                                 <div class="d-flex flex-column gap-1 action-buttons">
                                     <!-- Primary Actions Row -->
                                     <div class="d-flex gap-1 mb-1">
-                                        <a href="{{ route('admin.users.show', $user) }}" 
-                                           class="btn btn-sm btn-outline-info" 
-                                           data-bs-toggle="tooltip" 
+                                        <a href="{{ route('admin.users.show', $user) }}"
+                                           class="btn btn-sm btn-outline-info"
+                                           data-bs-toggle="tooltip"
                                            title="عرض التفاصيل">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a href="{{ route('admin.users.edit', $user) }}" 
-                                           class="btn btn-sm btn-outline-warning" 
-                                           data-bs-toggle="tooltip" 
+                                        <a href="{{ route('admin.users.edit', $user) }}"
+                                           class="btn btn-sm btn-outline-warning"
+                                           data-bs-toggle="tooltip"
                                            title="تعديل المستخدم">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <button type="button" 
-                                                class="btn btn-sm btn-outline-danger delete-confirm" 
-                                                data-bs-toggle="tooltip" 
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-danger delete-confirm"
+                                                data-bs-toggle="tooltip"
                                                 title="حذف المستخدم"
                                                 data-user-id="{{ $user->id }}"
                                                 data-user-name="{{ $user->name }}">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </div>
-                                    
+
                                     <!-- Status Toggle Row -->
                                     <div class="d-flex gap-1 mb-1">
                                         <form action="{{ route('admin.users.toggle-status', $user) }}" method="POST" class="d-inline">
                                             @csrf
-                                            <button type="submit" 
-                                                    class="btn btn-sm {{ $user->is_active ? 'btn-outline-danger' : 'btn-outline-success' }}" 
-                                                    data-bs-toggle="tooltip" 
+                                            <button type="submit"
+                                                    class="btn btn-sm {{ $user->is_active ? 'btn-outline-danger' : 'btn-outline-success' }}"
+                                                    data-bs-toggle="tooltip"
                                                     title="{{ $user->is_active ? 'إلغاء التفعيل' : 'تفعيل المستخدم' }}">
                                                 <i class="fas {{ $user->is_active ? 'fa-ban' : 'fa-check' }}"></i>
                                             </button>
@@ -207,7 +207,7 @@
     .action-buttons .d-flex {
         flex-direction: column !important;
     }
-    
+
     .action-buttons .btn {
         min-width: 28px;
         height: 28px;
@@ -299,19 +299,19 @@ $(document).ready(function() {
                     'method': 'POST',
                     'action': `/admin/users/${userId}`
                 });
-                
+
                 form.append($('<input>', {
                     'type': 'hidden',
                     'name': '_token',
                     'value': $('meta[name="csrf-token"]').attr('content')
                 }));
-                
+
                 form.append($('<input>', {
                     'type': 'hidden',
                     'name': '_method',
                     'value': 'DELETE'
                 }));
-                
+
                 $('body').append(form);
                 form.submit();
             }

@@ -21,11 +21,17 @@
                     <div class="card">
                         <div class="card-body text-center">
                             @if($category->image)
-                                <img src="{{ Storage::url($category->image) }}" alt="category" class="img-fluid rounded mb-3" style="max-height: 200px;">
+                                <img src="{{ asset($category->image) }}" alt="category" class="img-fluid rounded mb-3" style="max-height: 200px;">
                             @endif
                             <div class="mb-3">
                                 @if($category->icon)
-                                    <img src="{{ Storage::url($category->icon) }}" alt="icon" width="32" class="me-2">
+                                    @if(Str::startsWith($category->icon, 'fas ') || Str::startsWith($category->icon, 'fa ') || Str::startsWith($category->icon, 'fab '))
+                                        <!-- FontAwesome Icon -->
+                                        <i class="{{ $category->icon }} fa-2x text-primary me-2"></i>
+                                    @else
+                                        <!-- Image Icon -->
+                                        <img src="{{ asset($category->icon) }}" alt="icon" width="32" class="me-2">
+                                    @endif
                                 @endif
                                 <h4 class="d-inline-block mb-0">{{ $category->name }}</h4>
                             </div>
@@ -93,7 +99,7 @@
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label text-muted">ترتيب الفئة</label>
-                                    <p>{{ $category->sort_order ?? '-' }}</p>
+                                    <p>{{ $category->order ?? '-' }}</p>
                                 </div>
                                 <div class="col-12 mb-3">
                                     <label class="form-label text-muted">الوصف</label>
@@ -121,7 +127,13 @@
                                         <div class="card-body">
                                             <div class="d-flex align-items-center">
                                                 @if($child->icon)
-                                                    <img src="{{ Storage::url($child->icon) }}" alt="icon" width="32" class="me-2">
+                                                    @if(Str::startsWith($child->icon, 'fas ') || Str::startsWith($child->icon, 'fa ') || Str::startsWith($child->icon, 'fab '))
+                                                        <!-- FontAwesome Icon -->
+                                                        <i class="{{ $child->icon }} fa-lg text-primary me-2"></i>
+                                                    @else
+                                                        <!-- Image Icon -->
+                                                        <img src="{{ asset($child->icon) }}" alt="icon" width="32" class="me-2">
+                                                    @endif
                                                 @endif
                                                 <div>
                                                     <h6 class="mb-1">{{ $child->name }}</h6>
@@ -168,7 +180,7 @@
                                         <tr>
                                             <td>
                                                 @if($product->main_image)
-                                                    <img src="{{ Storage::url($product->main_image) }}" alt="product" width="50" class="rounded">
+                                                    <img src="{{ asset($product->main_image) }}" alt="product" width="50" class="rounded">
                                                 @else
                                                     <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
                                                         <i class="fas fa-box text-muted"></i>

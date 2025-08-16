@@ -126,7 +126,7 @@
                                             <div class="mb-3">
                                                 <label class="form-label">الأيقونة الحالية</label>
                                                 <div class="text-center">
-                                                    <img src="{{ Storage::url($attribute->icon) }}" alt="Current Icon" class="img-thumbnail" style="max-width: 100px; max-height: 100px;">
+                                                    <img src="{{ asset($attribute->icon) }}" alt="Current Icon" class="img-thumbnail" style="max-width: 100px; max-height: 100px;">
                                                 </div>
                                             </div>
                                         @endif

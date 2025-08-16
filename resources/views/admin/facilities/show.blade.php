@@ -21,7 +21,7 @@
                     <div class="card">
                         <div class="card-body text-center">
                             @if($facility->logo)
-                                <img src="{{ Storage::url($facility->logo) }}" alt="logo" class="img-fluid rounded mb-3" style="max-height: 100px;">
+                                <img src="{{ asset($facility->logo) }}" alt="logo" class="img-fluid rounded mb-3" style="max-height: 100px;">
                             @endif
                             <div class="mb-3">
                                 @if($facility->status)
@@ -92,7 +92,7 @@
                         </div>
                         <div class="card-body">
                             @if($facility->cover_image)
-                                <img src="{{ Storage::url($facility->cover_image) }}" alt="cover" class="img-fluid rounded mb-3" style="max-height: 200px; width: 100%; object-fit: cover;">
+                                <img src="{{ asset($facility->cover_image) }}" alt="cover" class="img-fluid rounded mb-3" style="max-height: 200px; width: 100%; object-fit: cover;">
                             @endif
                             <div class="row">
                                 <div class="col-md-6 mb-3">
@@ -263,7 +263,7 @@
                                         <tr>
                                             <td>
                                                 @if($product->main_image)
-                                                    <img src="{{ Storage::url($product->main_image) }}" alt="product" width="50" class="rounded">
+                                                    <img src="{{ asset($product->main_image) }}" alt="product" width="50" class="rounded">
                                                 @else
                                                     <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
                                                         <i class="fas fa-box text-muted"></i>

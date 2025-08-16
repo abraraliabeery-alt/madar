@@ -34,7 +34,7 @@
                             </td>
                             <td>
                                 @if($feature->icon)
-                                    <img src="{{ Storage::url($feature->icon) }}" alt="icon" width="30" class="rounded">
+                                    <img src="{{ asset($feature->icon) }}" alt="icon" width="30" class="rounded">
                                 @else
                                     <div class="rounded bg-light d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;">
                                         <i class="fas fa-star text-muted"></i>
@@ -67,35 +67,35 @@
                                 <div class="d-flex flex-column gap-1 action-buttons">
                                     <!-- Primary Actions Row -->
                                     <div class="d-flex gap-1 mb-1">
-                                        <a href="{{ route('admin.features.show', $feature) }}" 
-                                           class="btn btn-sm btn-outline-info" 
-                                           data-bs-toggle="tooltip" 
+                                        <a href="{{ route('admin.features.show', $feature) }}"
+                                           class="btn btn-sm btn-outline-info"
+                                           data-bs-toggle="tooltip"
                                            title="عرض التفاصيل">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a href="{{ route('admin.features.edit', $feature) }}" 
-                                           class="btn btn-sm btn-outline-warning" 
-                                           data-bs-toggle="tooltip" 
+                                        <a href="{{ route('admin.features.edit', $feature) }}"
+                                           class="btn btn-sm btn-outline-warning"
+                                           data-bs-toggle="tooltip"
                                            title="تعديل المميزة">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <button type="button" 
-                                                class="btn btn-sm btn-outline-danger delete-confirm" 
-                                                data-bs-toggle="tooltip" 
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-danger delete-confirm"
+                                                data-bs-toggle="tooltip"
                                                 title="حذف المميزة"
                                                 data-feature-id="{{ $feature->id }}"
                                                 data-feature-name="{{ $feature->name }}">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </div>
-                                    
+
                                     <!-- Status Toggle Row -->
                                     <div class="d-flex gap-1 mb-1">
                                         <form action="{{ route('admin.features.toggle-status', $feature) }}" method="POST" class="d-inline">
                                             @csrf
-                                            <button type="submit" 
-                                                    class="btn btn-sm {{ $feature->is_active ? 'btn-outline-danger' : 'btn-outline-success' }}" 
-                                                    data-bs-toggle="tooltip" 
+                                            <button type="submit"
+                                                    class="btn btn-sm {{ $feature->is_active ? 'btn-outline-danger' : 'btn-outline-success' }}"
+                                                    data-bs-toggle="tooltip"
                                                     title="{{ $feature->is_active ? 'إلغاء التفعيل' : 'تفعيل المميزة' }}">
                                                 <i class="fas {{ $feature->is_active ? 'fa-ban' : 'fa-check' }}"></i>
                                             </button>
@@ -180,7 +180,7 @@
     .action-buttons .d-flex {
         flex-direction: column !important;
     }
-    
+
     .action-buttons .btn {
         min-width: 28px;
         height: 28px;
@@ -287,19 +287,19 @@ $(document).ready(function() {
                     'method': 'POST',
                     'action': `/admin/features/${featureId}`
                 });
-                
+
                 form.append($('<input>', {
                     'type': 'hidden',
                     'name': '_token',
                     'value': $('meta[name="csrf-token"]').attr('content')
                 }));
-                
+
                 form.append($('<input>', {
                     'type': 'hidden',
                     'name': '_method',
                     'value': 'DELETE'
                 }));
-                
+
                 $('body').append(form);
                 form.submit();
             }

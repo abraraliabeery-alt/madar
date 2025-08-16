@@ -96,7 +96,13 @@
                             <td>{{ $loop->iteration }}</td>
                             <td>
                                 @if($category->icon)
-                                    <img src="{{ Storage::url($category->icon) }}" alt="icon" width="30">
+                                    @if(Str::startsWith($category->icon, 'fas ') || Str::startsWith($category->icon, 'fa ') || Str::startsWith($category->icon, 'fab '))
+                                        <!-- FontAwesome Icon -->
+                                        <i class="{{ $category->icon }} fa-lg text-primary"></i>
+                                    @else
+                                        <!-- Image Icon -->
+                                        <img src="{{ asset($category->icon) }}" alt="icon" width="30">
+                                    @endif
                                 @else
                                     <i class="fas fa-folder fa-2x text-muted"></i>
                                 @endif
@@ -104,7 +110,7 @@
                             <td>
                                 <div class="d-flex align-items-center">
                                     @if($category->image)
-                                        <img src="{{ Storage::url($category->image) }}" alt="category" class="rounded me-2" width="40">
+                                        <img src="{{ asset($category->image) }}" alt="category" class="rounded me-2" width="40">
                                     @endif
                                     <div>
                                         <h6 class="mb-0">{{ $category->name }}</h6>
@@ -124,7 +130,7 @@
                             <td>
                                 <span class="badge bg-primary">{{ $category->products_count }}</span>
                             </td>
-                            <td>{{ $category->sort_order ?? '-' }}</td>
+                            <td>{{ $category->order ?? '-' }}</td>
                             <td>
                                 @if($category->is_active)
                                     <span class="badge bg-success">نشط</span>
@@ -143,45 +149,45 @@
                                 <div class="d-flex flex-column gap-1 action-buttons">
                                     <!-- Primary Actions Row -->
                                     <div class="d-flex gap-1 mb-1">
-                                        <a href="{{ route('admin.categories.show', $category) }}" 
-                                           class="btn btn-sm btn-outline-info" 
-                                           data-bs-toggle="tooltip" 
+                                        <a href="{{ route('admin.categories.show', $category) }}"
+                                           class="btn btn-sm btn-outline-info"
+                                           data-bs-toggle="tooltip"
                                            title="عرض التفاصيل">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a href="{{ route('admin.categories.edit', $category) }}" 
-                                           class="btn btn-sm btn-outline-warning" 
-                                           data-bs-toggle="tooltip" 
+                                        <a href="{{ route('admin.categories.edit', $category) }}"
+                                           class="btn btn-sm btn-outline-warning"
+                                           data-bs-toggle="tooltip"
                                            title="تعديل الفئة">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <button type="button" 
-                                                class="btn btn-sm btn-outline-danger delete-confirm" 
-                                                data-bs-toggle="tooltip" 
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-danger delete-confirm"
+                                                data-bs-toggle="tooltip"
                                                 title="حذف الفئة"
                                                 data-category-id="{{ $category->id }}"
                                                 data-category-name="{{ $category->name }}">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </div>
-                                    
+
                                     <!-- Status Toggle Row -->
                                     <div class="d-flex gap-1 mb-1">
                                         <form action="{{ route('admin.categories.toggle-status', $category) }}" method="POST" class="d-inline">
                                             @csrf
-                                            <button type="submit" 
-                                                    class="btn btn-sm {{ $category->is_active ? 'btn-outline-danger' : 'btn-outline-success' }}" 
-                                                    data-bs-toggle="tooltip" 
+                                            <button type="submit"
+                                                    class="btn btn-sm {{ $category->is_active ? 'btn-outline-danger' : 'btn-outline-success' }}"
+                                                    data-bs-toggle="tooltip"
                                                     title="{{ $category->is_active ? 'إلغاء التفعيل' : 'تفعيل الفئة' }}">
                                                 <i class="fas {{ $category->is_active ? 'fa-ban' : 'fa-check' }}"></i>
                                             </button>
                                         </form>
-                                        
+
                                         <form action="{{ route('admin.categories.toggle-featured', $category) }}" method="POST" class="d-inline">
                                             @csrf
-                                            <button type="submit" 
-                                                    class="btn btn-sm {{ $category->is_featured ? 'btn-outline-secondary' : 'btn-outline-warning' }}" 
-                                                    data-bs-toggle="tooltip" 
+                                            <button type="submit"
+                                                    class="btn btn-sm {{ $category->is_featured ? 'btn-outline-secondary' : 'btn-outline-warning' }}"
+                                                    data-bs-toggle="tooltip"
                                                     title="{{ $category->is_featured ? 'إلغاء التمييز' : 'تمييز الفئة' }}">
                                                 <i class="fas fa-star {{ $category->is_featured ? 'text-warning' : '' }}"></i>
                                             </button>
@@ -273,7 +279,7 @@
     .action-buttons .d-flex {
         flex-direction: column !important;
     }
-    
+
     .action-buttons .btn {
         min-width: 28px;
         height: 28px;
@@ -372,19 +378,19 @@ $(document).ready(function() {
                     'method': 'POST',
                     'action': `/admin/categories/${categoryId}`
                 });
-                
+
                 form.append($('<input>', {
                     'type': 'hidden',
                     'name': '_token',
                     'value': $('meta[name="csrf-token"]').attr('content')
                 }));
-                
+
                 form.append($('<input>', {
                     'type': 'hidden',
                     'name': '_method',
                     'value': 'DELETE'
                 }));
-                
+
                 $('body').append(form);
                 form.submit();
             }

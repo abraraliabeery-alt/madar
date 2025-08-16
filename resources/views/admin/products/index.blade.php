@@ -77,7 +77,7 @@
                         <tr>
                             <td>
                                 @if($product->main_image)
-                                    <img src="{{ Storage::url($product->main_image) }}" alt="product" width="50" class="rounded">
+                                    <img src="{{ asset($product->main_image) }}" alt="product" width="50" class="rounded">
                                 @else
                                     <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
                                         <i class="fas fa-box text-muted"></i>
@@ -129,55 +129,55 @@
                                 <div class="d-flex flex-column gap-1">
                                     <!-- Primary Actions Row -->
                                     <div class="d-flex gap-1 mb-1">
-                                        <a href="{{ route('admin.products.show', $product) }}" 
-                                           class="btn btn-sm btn-outline-info" 
-                                           data-bs-toggle="tooltip" 
+                                        <a href="{{ route('admin.products.show', $product) }}"
+                                           class="btn btn-sm btn-outline-info"
+                                           data-bs-toggle="tooltip"
                                            title="عرض التفاصيل">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a href="{{ route('admin.products.edit', $product) }}" 
-                                           class="btn btn-sm btn-outline-warning" 
-                                           data-bs-toggle="tooltip" 
+                                        <a href="{{ route('admin.products.edit', $product) }}"
+                                           class="btn btn-sm btn-outline-warning"
+                                           data-bs-toggle="tooltip"
                                            title="تعديل المنتج">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <button type="button" 
-                                                class="btn btn-sm btn-outline-danger delete-confirm" 
-                                                data-bs-toggle="tooltip" 
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-danger delete-confirm"
+                                                data-bs-toggle="tooltip"
                                                 title="حذف المنتج"
                                                 data-product-id="{{ $product->id }}"
                                                 data-product-name="{{ $product->name }}">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </div>
-                                    
+
                                     <!-- Status Toggle Row -->
                                     <div class="d-flex gap-1 mb-1">
                                         <form action="{{ route('admin.products.toggle-status', $product) }}" method="POST" class="d-inline">
                                             @csrf
-                                            <button type="submit" 
-                                                    class="btn btn-sm {{ $product->is_active ? 'btn-outline-danger' : 'btn-outline-success' }}" 
-                                                    data-bs-toggle="tooltip" 
+                                            <button type="submit"
+                                                    class="btn btn-sm {{ $product->is_active ? 'btn-outline-danger' : 'btn-outline-success' }}"
+                                                    data-bs-toggle="tooltip"
                                                     title="{{ $product->is_active ? 'إلغاء التفعيل' : 'تفعيل المنتج' }}">
                                                 <i class="fas {{ $product->is_active ? 'fa-ban' : 'fa-check' }}"></i>
                                             </button>
                                         </form>
-                                        
+
                                         <form action="{{ route('admin.products.toggle-verification', $product) }}" method="POST" class="d-inline">
                                             @csrf
-                                            <button type="submit" 
-                                                    class="btn btn-sm {{ $product->is_verified ? 'btn-outline-warning' : 'btn-outline-info' }}" 
-                                                    data-bs-toggle="tooltip" 
+                                            <button type="submit"
+                                                    class="btn btn-sm {{ $product->is_verified ? 'btn-outline-warning' : 'btn-outline-info' }}"
+                                                    data-bs-toggle="tooltip"
                                                     title="{{ $product->is_verified ? 'إلغاء التحقق' : 'التحقق من المنتج' }}">
                                                 <i class="fas {{ $product->is_verified ? 'fa-times' : 'fa-shield-alt' }}"></i>
                                             </button>
                                         </form>
-                                        
+
                                         <form action="{{ route('admin.products.toggle-featured', $product) }}" method="POST" class="d-inline">
                                             @csrf
-                                            <button type="submit" 
-                                                    class="btn btn-sm {{ $product->is_featured ? 'btn-outline-secondary' : 'btn-outline-warning' }}" 
-                                                    data-bs-toggle="tooltip" 
+                                            <button type="submit"
+                                                    class="btn btn-sm {{ $product->is_featured ? 'btn-outline-secondary' : 'btn-outline-warning' }}"
+                                                    data-bs-toggle="tooltip"
                                                     title="{{ $product->is_featured ? 'إلغاء التمييز' : 'تمييز المنتج' }}">
                                                 <i class="fas fa-star {{ $product->is_featured ? 'text-warning' : '' }}"></i>
                                             </button>
@@ -269,7 +269,7 @@
     .action-buttons .d-flex {
         flex-direction: column !important;
     }
-    
+
     .action-buttons .btn {
         min-width: 28px;
         height: 28px;
@@ -362,19 +362,19 @@ $(document).ready(function() {
                     'method': 'POST',
                     'action': `/admin/products/${productId}`
                 });
-                
+
                 form.append($('<input>', {
                     'type': 'hidden',
                     'name': '_token',
                     'value': $('meta[name="csrf-token"]').attr('content')
                 }));
-                
+
                 form.append($('<input>', {
                     'type': 'hidden',
                     'name': '_method',
                     'value': 'DELETE'
                 }));
-                
+
                 $('body').append(form);
                 form.submit();
             }

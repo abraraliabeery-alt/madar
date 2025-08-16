@@ -155,7 +155,7 @@
                                             <input type="checkbox" class="form-check-input" id="feature_{{ $feature->id }}" name="features[]" value="{{ $feature->id }}" {{ in_array($feature->id, old('features', [])) ? 'checked' : '' }}>
                                             <label class="form-check-label" for="feature_{{ $feature->id }}">
                                                 @if($feature->icon)
-                                                    <img src="{{ Storage::url($feature->icon) }}" alt="icon" width="20" class="me-1">
+                                                    <img src="{{ asset($feature->icon) }}" alt="icon" width="20" class="me-1">
                                                 @endif
                                                 {{ $feature->name }}
                                             </label>

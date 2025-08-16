@@ -21,7 +21,7 @@
                     <div class="card">
                         <div class="card-body text-center">
                             @if($user->avatar)
-                                <img src="{{ Storage::url($user->avatar) }}" alt="avatar" class="img-fluid rounded-circle mb-3" style="max-height: 200px;">
+                                <img src="{{ asset($user->avatar) }}" alt="avatar" class="img-fluid rounded-circle mb-3" style="max-height: 200px;">
                             @else
                                 <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 200px; height: 200px;">
                                     <span class="display-4">{{ substr($user->name, 0, 1) }}</span>
@@ -211,7 +211,7 @@
                                     <a href="{{ route('admin.facilities.show', $facility) }}" class="list-group-item list-group-item-action">
                                         <div class="d-flex align-items-center">
                                             @if($facility->logo)
-                                                <img src="{{ Storage::url($facility->logo) }}" alt="logo" width="40" class="rounded me-3">
+                                                <img src="{{ asset($facility->logo) }}" alt="logo" width="40" class="rounded me-3">
                                             @else
                                                 <div class="rounded bg-light d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
                                                     <i class="fas fa-building text-muted"></i>
@@ -258,7 +258,7 @@
                                         <tr>
                                             <td>
                                                 @if($product->main_image)
-                                                    <img src="{{ Storage::url($product->main_image) }}" alt="product" width="50" class="rounded">
+                                                    <img src="{{ asset($product->main_image) }}" alt="product" width="50" class="rounded">
                                                 @else
                                                     <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
                                                         <i class="fas fa-box text-muted"></i>
