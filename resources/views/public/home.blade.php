@@ -25,8 +25,27 @@
     <!-- Featured Products -->
     @if(isset($featuredProducts) && $featuredProducts->count() > 0)
     <section class="mb-16">
-        <h2 class="text-2xl font-semibold text-gray-900 mb-8">أحدث العقارات</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-2xl font-semibold text-gray-900">أحدث العقارات</h2>
+            
+            <!-- View Toggle -->
+            <div class="flex items-center space-x-2 rtl:space-x-reverse">
+                <span class="text-sm text-gray-600 mr-3 rtl:ml-3 rtl:mr-0">عرض:</span>
+                <button id="grid-view" 
+                        class="view-toggle-btn bg-primary-600 text-white p-2 rounded-lg transition-colors"
+                        onclick="switchView('grid')">
+                    <i class="fas fa-th-large"></i>
+                </button>
+                <button id="row-view" 
+                        class="view-toggle-btn bg-gray-200 text-gray-600 p-2 rounded-lg hover:bg-gray-300 transition-colors"
+                        onclick="switchView('row')">
+                    <i class="fas fa-list"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Grid View -->
+        <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach($featuredProducts->take(6) as $product)
             <div class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
                 <!-- Product Image -->
@@ -85,6 +104,74 @@
                            class="text-primary-600 hover:text-primary-700 font-medium">
                             عرض التفاصيل
                         </a>
+                    </div>
+                </div>
+            </div>
+            @endforeach
+        </div>
+
+        <!-- Row View (Hidden by default) -->
+        <div id="products-row" class="hidden space-y-4">
+            @foreach($featuredProducts->take(6) as $product)
+            <div class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                <div class="flex">
+                    <!-- Product Image -->
+                    <div class="relative w-48 h-32 bg-gray-100 flex-shrink-0">
+                        @if($product->image)
+                            <img src="{{ asset('storage/' . $product->image) }}" 
+                                 alt="{{ $product->title }}" 
+                                 class="w-full h-full object-cover">
+                        @else
+                            <div class="w-full h-full flex items-center justify-center">
+                                <i class="fas fa-home text-2xl text-gray-400"></i>
+                            </div>
+                        @endif
+                        
+                        <!-- Status Badges -->
+                        @if($product->is_featured)
+                            <span class="absolute top-2 right-2 bg-yellow-500 text-white text-xs px-2 py-1 rounded">مميز</span>
+                        @endif
+                        @if($product->is_verified)
+                            <span class="absolute top-2 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded">متحقق</span>
+                        @endif
+                    </div>
+                    
+                    <!-- Product Info -->
+                    <div class="flex-1 p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-medium text-gray-900 text-lg">{{ $product->title }}</h3>
+                            @if($product->price)
+                                <span class="text-xl font-bold text-primary-600">{{ number_format($product->price) }} ريال</span>
+                            @else
+                                <span class="text-gray-500">السعر عند الطلب</span>
+                            @endif
+                        </div>
+                        
+                        <!-- Key Details -->
+                        <div class="flex items-center gap-6 text-sm text-gray-600 mb-3">
+                            @if($product->area)
+                                <span><i class="fas fa-ruler-combined ml-1"></i>{{ $product->area }} م²</span>
+                            @endif
+                            @if($product->rooms)
+                                <span><i class="fas fa-bed ml-1"></i>{{ $product->rooms }}</span>
+                            @endif
+                            @if($product->bathrooms)
+                                <span><i class="fas fa-bath ml-1"></i>{{ $product->bathrooms }}</span>
+                            @endif
+                        </div>
+                        
+                        <!-- Location and Action -->
+                        <div class="flex justify-between items-center">
+                            @if($product->city)
+                                <div class="text-sm text-gray-500">
+                                    <i class="fas fa-map-marker-alt ml-1"></i>{{ $product->city->name }}
+                                </div>
+                            @endif
+                            <a href="{{ route('public.products.show', $product->id) }}" 
+                               class="text-primary-600 hover:text-primary-700 font-medium">
+                                عرض التفاصيل
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -200,5 +287,49 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
+
+.view-toggle-btn {
+    transition: all 0.2s ease-in-out;
+}
+
+.view-toggle-btn:hover {
+    transform: scale(1.05);
+}
 </style>
+@endpush
+
+@push('scripts')
+<script>
+function switchView(viewType) {
+    const gridView = document.getElementById('products-grid');
+    const rowView = document.getElementById('products-row');
+    const gridBtn = document.getElementById('grid-view');
+    const rowBtn = document.getElementById('row-view');
+    
+    if (viewType === 'grid') {
+        gridView.classList.remove('hidden');
+        rowView.classList.add('hidden');
+        gridBtn.classList.remove('bg-gray-200', 'text-gray-600');
+        gridBtn.classList.add('bg-primary-600', 'text-white');
+        rowBtn.classList.remove('bg-primary-600', 'text-white');
+        rowBtn.classList.add('bg-gray-200', 'text-gray-600');
+    } else {
+        rowView.classList.remove('hidden');
+        gridView.classList.add('hidden');
+        rowBtn.classList.remove('bg-gray-200', 'text-gray-600');
+        rowBtn.classList.add('bg-primary-600', 'text-white');
+        gridBtn.classList.remove('bg-primary-600', 'text-white');
+        gridBtn.classList.add('bg-gray-200', 'text-gray-600');
+    }
+    
+    // Store user preference in localStorage
+    localStorage.setItem('preferredView', viewType);
+}
+
+// Set initial view based on user preference
+document.addEventListener('DOMContentLoaded', function() {
+    const preferredView = localStorage.getItem('preferredView') || 'grid';
+    switchView(preferredView);
+});
+</script>
 @endpush
