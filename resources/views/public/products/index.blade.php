@@ -96,8 +96,26 @@
             </div>
         </div>
 
+        <!-- Global View Toggle -->
+        <div class="flex justify-end items-center mb-8">
+            <div class="flex items-center space-x-2 rtl:space-x-reverse">
+                <span class="text-sm text-gray-600 mr-3 rtl:ml-3 rtl:mr-0">عرض:</span>
+                <button id="grid-view" 
+                        class="view-toggle-btn bg-primary-600 text-white p-2 rounded-lg transition-colors"
+                        onclick="switchView('grid')">
+                    <i class="fas fa-th-large"></i>
+                </button>
+                <button id="row-view" 
+                        class="view-toggle-btn bg-gray-200 text-gray-600 p-2 rounded-lg hover:bg-gray-300 transition-colors"
+                        onclick="switchView('row')">
+                    <i class="fas fa-list"></i>
+                </button>
+            </div>
+        </div>
+
         @if(isset($products) && $products->count() > 0)
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <!-- Grid View -->
+            <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 @foreach($products as $product)
                     <div class="bg-white rounded-lg shadow-md overflow-hidden card-hover">
                         <div class="relative">
@@ -136,6 +154,56 @@
                                    class="text-primary-600 hover:text-primary-700 text-sm font-medium">
                                     {{ __('products.property_card.view_details') }}
                                 </a>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+
+            <!-- Row View (Hidden by default) -->
+            <div id="products-row" class="hidden space-y-4">
+                @foreach($products as $product)
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden card-hover">
+                        <div class="flex">
+                            <div class="relative w-48 h-32 bg-gray-100 flex-shrink-0">
+                                <img src="{{ $product->image_url }}"
+                                     alt="{{ $product->title }}" class="w-full h-full object-cover">
+                                @if($product->is_featured)
+                                    <div class="absolute top-2 right-2 bg-primary-600 text-white px-2 py-1 rounded text-xs font-medium">
+                                        {{ __('products.property_card.featured') }}
+                                    </div>
+                                @endif
+                                @if($product->property_type)
+                                    <div class="absolute top-2 left-2 bg-white text-gray-800 px-2 py-1 rounded text-xs font-medium">
+                                        {{ $product->property_type }}
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="flex-1 p-4">
+                                <div class="flex justify-between items-start mb-3">
+                                    <h3 class="text-lg font-semibold text-gray-900">
+                                        <a href="{{ route('public.products.show', $product) }}" class="hover:text-primary-600 transition-colors">
+                                            {{ $product->title }}
+                                        </a>
+                                    </h3>
+                                    <div class="text-lg font-bold text-primary-600">
+                                        {{ number_format($product->price) }} ريال
+                                    </div>
+                                </div>
+                                <p class="text-gray-600 text-sm mb-3">{{ $product->address ?? __('products.property_card.location_unknown') }}</p>
+
+                                <div class="flex items-center justify-between text-sm text-gray-500 mb-3">
+                                    <span><i class="fas fa-bed ml-1"></i>{{ $product->rooms ?? 0 }} {{ __('products.property_card.rooms') }}</span>
+                                    <span><i class="fas fa-bath ml-1"></i>{{ $product->bathrooms ?? 0 }} {{ __('products.property_card.bathrooms') }}</span>
+                                    <span><i class="fas fa-ruler-combined ml-1"></i>{{ $product->area ?? 0 }} {{ __('products.property_card.square_meters') }}</span>
+                                </div>
+
+                                <div class="flex justify-end">
+                                    <a href="{{ route('public.products.show', $product) }}"
+                                       class="text-primary-600 hover:text-primary-700 text-sm font-medium">
+                                        {{ __('products.property_card.view_details') }}
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -187,25 +255,70 @@
         </div>
     </div>
 </div>
-@endsection
+
+@push('styles')
+<style>
+.view-toggle-btn {
+    transition: all 0.2s ease-in-out;
+}
+
+.view-toggle-btn:hover {
+    transform: scale(1.05);
+}
+</style>
+@endpush
 
 @push('scripts')
 <script>
-    (function(){
-        const sortSelector = document.getElementById('sort_selector');
-        if (!sortSelector) return;
-        const sortBy = document.getElementById('sort_by');
-        const sortOrder = document.getElementById('sort_order');
-        const form = document.getElementById('products-filter-form');
+function switchView(viewType) {
+    const productsGridView = document.getElementById('products-grid');
+    const productsRowView = document.getElementById('products-row');
+    const gridBtn = document.getElementById('grid-view');
+    const rowBtn = document.getElementById('row-view');
+    
+    if (viewType === 'grid') {
+        productsGridView.classList.remove('hidden');
+        productsRowView.classList.add('hidden');
+        gridBtn.classList.remove('bg-gray-200', 'text-gray-600');
+        gridBtn.classList.add('bg-primary-600', 'text-white');
+        rowBtn.classList.remove('bg-primary-600', 'text-white');
+        rowBtn.classList.add('bg-gray-200', 'text-gray-600');
+    } else {
+        productsRowView.classList.remove('hidden');
+        productsGridView.classList.add('hidden');
+        rowBtn.classList.remove('bg-gray-200', 'text-gray-600');
+        rowBtn.classList.add('bg-primary-600', 'text-white');
+        gridBtn.classList.remove('bg-primary-600', 'text-white');
+        gridBtn.classList.add('bg-gray-200', 'text-gray-600');
+    }
+    
+    // Store user preference in localStorage
+    localStorage.setItem('productsPreferredView', viewType);
+}
 
-        sortSelector.addEventListener('change', function(){
-            const value = this.value;
-            if (value === 'price_asc') { sortBy.value = 'price'; sortOrder.value = 'asc'; }
-            else if (value === 'price_desc') { sortBy.value = 'price'; sortOrder.value = 'desc'; }
-            else if (value === 'title_asc') { sortBy.value = 'title'; sortOrder.value = 'asc'; }
-            else { sortBy.value = 'created_at'; sortOrder.value = 'desc'; }
-            form.submit();
-        });
-    })();
+// Set initial view based on user preference
+document.addEventListener('DOMContentLoaded', function() {
+    const preferredView = localStorage.getItem('productsPreferredView') || 'grid';
+    switchView(preferredView);
+});
+
+// Sort functionality
+(function(){
+    const sortSelector = document.getElementById('sort_selector');
+    if (!sortSelector) return;
+    const sortBy = document.getElementById('sort_by');
+    const sortOrder = document.getElementById('sort_order');
+    const form = document.getElementById('products-filter-form');
+
+    sortSelector.addEventListener('change', function(){
+        const value = this.value;
+        if (value === 'price_asc') { sortBy.value = 'price'; sortOrder.value = 'asc'; }
+        else if (value === 'price_desc') { sortBy.value = 'price'; sortOrder.value = 'desc'; }
+        else if (value === 'title_asc') { sortBy.value = 'title'; sortOrder.value = 'asc'; }
+        else { sortBy.value = 'created_at'; sortOrder.value = 'desc'; }
+        form.submit();
+    });
+})();
 </script>
 @endpush
+@endsection
