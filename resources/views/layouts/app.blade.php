@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="rtl">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ app()->getLocale() == 'ar' ? 'rtl' : 'ltr' }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -64,6 +64,99 @@
             font-family: 'Cairo', sans-serif;
         }
 
+        /* RTL/LTR specific styles */
+        [dir="rtl"] .rtl\:text-right {
+            text-align: right;
+        }
+
+        [dir="rtl"] .rtl\:text-left {
+            text-align: left;
+        }
+
+        [dir="rtl"] .rtl\:mr-2 {
+            margin-right: 0.5rem;
+        }
+
+        [dir="rtl"] .rtl\:ml-2 {
+            margin-left: 0.5rem;
+        }
+
+        [dir="rtl"] .rtl\:mr-1 {
+            margin-right: 0.25rem;
+        }
+
+        [dir="rtl"] .rtl\:ml-1 {
+            margin-left: 0.25rem;
+        }
+
+        [dir="rtl"] .rtl\:mr-3 {
+            margin-right: 0.75rem;
+        }
+
+        [dir="rtl"] .rtl\:ml-3 {
+            margin-left: 0.75rem;
+        }
+
+        [dir="rtl"] .rtl\:space-x-8 {
+            margin-right: 2rem;
+        }
+
+        [dir="rtl"] .rtl\:space-x-4 {
+            margin-right: 1rem;
+        }
+
+        [dir="rtl"] .rtl\:space-x-2 {
+            margin-right: 0.5rem;
+        }
+
+        [dir="rtl"] .rtl\:space-x-reverse {
+            direction: rtl;
+        }
+
+        [dir="ltr"] .ltr\:text-left {
+            text-align: left;
+        }
+
+        [dir="ltr"] .ltr\:text-right {
+            text-align: right;
+        }
+
+        [dir="ltr"] .ltr\:ml-2 {
+            margin-left: 0.5rem;
+        }
+
+        [dir="ltr"] .ltr\:mr-2 {
+            margin-right: 0.5rem;
+        }
+
+        [dir="ltr"] .ltr\:ml-1 {
+            margin-left: 0.25rem;
+        }
+
+        [dir="ltr"] .ltr\:mr-1 {
+            margin-right: 0.25rem;
+        }
+
+        [dir="ltr"] .ltr\:ml-3 {
+            margin-left: 0.75rem;
+        }
+
+        [dir="ltr"] .ltr\:mr-3 {
+            margin-right: 0.75rem;
+        }
+
+        [dir="ltr"] .ltr\:space-x-8 {
+            margin-left: 2rem;
+        }
+
+        [dir="ltr"] .ltr\:space-x-4 {
+            margin-left: 1rem;
+        }
+
+        [dir="ltr"] .ltr\:space-x-2 {
+            margin-left: 0.5rem;
+        }
+
         .gradient-bg {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
@@ -98,13 +191,14 @@
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
                         <a href="{{ route('public.home') }}" class="text-2xl font-bold text-primary-600">
-                            <i class="fas fa-home mr-2"></i>عقار
+                            <i class="fas fa-home {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>
+                            {{ app()->getLocale() == 'ar' ? 'عقار' : 'Aqar' }}
                         </a>
                     </div>
                 </div>
 
                 <!-- Desktop Navigation -->
-                <div class="hidden md:flex items-center space-x-8 space-x-reverse">
+                <div class="hidden md:flex items-center {{ app()->getLocale() == 'ar' ? 'space-x-8 space-x-reverse' : 'space-x-8' }}">
                     <a href="{{ route('public.home') }}" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
                         {{ __('layout.navigation.home') }}
                     </a>
@@ -113,9 +207,9 @@
                     <div class="relative" x-data="{ open: false }">
                         <button @click="open = !open" @click.away="open = false" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center">
                             {{ __('layout.navigation.categories') }}
-                            <i class="fas fa-chevron-down mr-1 text-xs"></i>
+                            <i class="fas fa-chevron-down {{ app()->getLocale() == 'ar' ? 'mr-1' : 'ml-1' }} text-xs"></i>
                         </button>
-                        <div x-show="open" x-transition class="absolute left-0 mt-2 w-64 bg-white rounded-md shadow-lg py-1 z-50">
+                        <div x-show="open" x-transition class="absolute {{ app()->getLocale() == 'ar' ? 'left-0' : 'right-0' }} mt-2 w-64 bg-white rounded-md shadow-lg py-1 z-50">
                             @php
                                 $categories = \App\Models\Category::withCount(['products' => function ($query) {
                                     $query->where('is_active', true);
@@ -141,9 +235,9 @@
                     <div class="relative" x-data="{ open: false }">
                         <button @click="open = !open" @click.away="open = false" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center">
                             {{ __('layout.navigation.cities') }}
-                            <i class="fas fa-chevron-down mr-1 text-xs"></i>
+                            <i class="fas fa-chevron-down {{ app()->getLocale() == 'ar' ? 'mr-1' : 'ml-1' }} text-xs"></i>
                         </button>
-                        <div x-show="open" x-transition class="absolute left-0 mt-2 w-64 bg-white rounded-md shadow-lg py-1 z-50">
+                        <div x-show="open" x-transition class="absolute {{ app()->getLocale() == 'ar' ? 'left-0' : 'right-0' }} mt-2 w-64 bg-white rounded-md shadow-lg py-1 z-50">
                             @php
                                 $cities = \App\Models\City::withCount(['products' => function ($query) {
                                     $query->where('is_active', true);
@@ -181,19 +275,21 @@
                         {{ __('layout.navigation.contact_us') }}
                     </a>
                     
-                    <!-- Language Switcher -->
-                    <x-language-switcher />
+                    <!-- Language Switcher - Only for guest users -->
+                    @guest
+                        <x-language-switcher />
+                    @endguest
                 </div>
 
                 <!-- Desktop User Menu -->
-                <div class="hidden md:flex items-center space-x-4 space-x-reverse">
+                <div class="hidden md:flex items-center {{ app()->getLocale() == 'ar' ? 'space-x-4 space-x-reverse' : 'space-x-4' }}">
                     @auth
                         <!-- Notifications -->
                         <div class="relative" x-data="{ open: false }">
                             <button @click="open = !open" class="relative p-2 text-gray-700 hover:text-primary-600 transition-colors">
                                 <i class="fas fa-bell text-xl"></i>
                                 @if(auth()->user()->unreadNotifications->count() > 0)
-                                    <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                                    <span class="absolute -top-1 {{ app()->getLocale() == 'ar' ? '-right-1' : '-left-1' }} bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                                         {{ auth()->user()->unreadNotifications->count() > 99 ? '99+' : auth()->user()->unreadNotifications->count() }}
                                     </span>
                                 @endif
@@ -206,7 +302,7 @@
                                  x-transition:leave="transition ease-in duration-75"
                                  x-transition:leave-start="transform opacity-100 scale-100"
                                  x-transition:leave-end="transform opacity-0 scale-95"
-                                 class="absolute left-0 mt-2 w-80 bg-white rounded-md shadow-lg py-1 z-50 max-h-96 overflow-y-auto">
+                                 class="absolute {{ app()->getLocale() == 'ar' ? 'left-0' : 'right-0' }} mt-2 w-80 bg-white rounded-md shadow-lg py-1 z-50 max-h-96 overflow-y-auto">
 
                                 <div class="px-4 py-2 border-b border-gray-200">
                                     <h3 class="text-sm font-semibold text-gray-900">{{ __('layout.notifications.title') }}</h3>
@@ -227,7 +323,7 @@
                                                         <i class="fas fa-bell text-gray-500"></i>
                                                     @endif
                                                 </div>
-                                                <div class="flex-1 mr-3">
+                                                <div class="flex-1 {{ app()->getLocale() == 'ar' ? 'mr-3' : 'ml-3' }}">
                                                     <p class="text-sm text-gray-900">{{ $notification->data['message'] ?? __('layout.notifications.new_notification') }}</p>
                                                     <p class="text-xs text-gray-500 mt-1">{{ $notification->created_at->diffForHumans() }}</p>
                                                 </div>
@@ -256,7 +352,7 @@
 
                         <!-- Logged in user menu -->
                         <div class="relative" x-data="{ open: false }">
-                            <button @click="open = !open" class="flex items-center space-x-2 space-x-reverse text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                            <button @click="open = !open" class="flex items-center {{ app()->getLocale() == 'ar' ? 'space-x-2 space-x-reverse' : 'space-x-2' }} text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
                                 <img src="{{ auth()->user()->avatar ?? 'https://ui-avatars.com/api/?name=' . auth()->user()->name . '&color=7C3AED&background=EBF4FF' }}"
                                      alt="{{ auth()->user()->name }}"
                                      class="w-8 h-8 rounded-full object-cover">
@@ -271,36 +367,61 @@
                                  x-transition:leave="transition ease-in duration-75"
                                  x-transition:leave-start="transform opacity-100 scale-100"
                                  x-transition:leave-end="transform opacity-0 scale-95"
-                                 class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                                 class="absolute {{ app()->getLocale() == 'ar' ? 'left-0' : 'right-0' }} mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
 
                                 @if(auth()->user()->hasRole('admin'))
                                     <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        <i class="fas fa-tachometer-alt ml-2"></i>{{ __('layout.user_menu.dashboard') }}
+                                        <i class="fas fa-tachometer-alt {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>{{ __('layout.user_menu.dashboard') }}
                                     </a>
                                 @endif
 
                                 @if(auth()->user()->hasRole('facility'))
                                     <a href="{{ route('facility.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        <i class="fas fa-building ml-2"></i>{{ __('layout.user_menu.facility_management') }}
+                                        <i class="fas fa-building {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>{{ __('layout.user_menu.facility_management') }}
                                     </a>
                                 @endif
 
                                 @if(auth()->user()->hasRole('client'))
                                     <a href="{{ route('client.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        <i class="fas fa-user ml-2"></i>{{ __('layout.user_menu.my_account') }}
+                                        <i class="fas fa-user {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>{{ __('layout.user_menu.my_account') }}
                                     </a>
                                 @endif
 
                                 <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    <i class="fas fa-user-edit ml-2"></i>{{ __('layout.user_menu.edit_profile') }}
+                                    <i class="fas fa-user-edit {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>{{ __('layout.user_menu.edit_profile') }}
                                 </a>
+
+                                <hr class="my-1">
+
+                                <!-- Language Switcher in Profile Menu -->
+                                <div class="px-4 py-2 border-t border-gray-200">
+                                    <div class="text-xs text-gray-500 mb-2">{{ __('layout.navigation.language') }}</div>
+                                    <div class="space-y-1">
+                                        <a href="{{ route('public.language.change', 'ar') }}" 
+                                           class="flex items-center px-2 py-1 text-sm text-gray-700 hover:bg-gray-100 rounded {{ app()->getLocale() === 'ar' ? 'bg-primary-50 text-primary-700' : '' }}">
+                                            <span class="w-4 h-3 bg-green-500 rounded {{ app()->getLocale() == 'ar' ? 'mr-2' : 'ml-2' }} flex-shrink-0"></span>
+                                            <span>{{ __('layout.navigation.arabic') }}</span>
+                                            @if(app()->getLocale() === 'ar')
+                                                <i class="fas fa-check text-primary-600 {{ app()->getLocale() == 'ar' ? 'mr-auto' : 'ml-auto' }} text-xs"></i>
+                                            @endif
+                                        </a>
+                                        <a href="{{ route('public.language.change', 'en') }}" 
+                                           class="flex items-center px-2 py-1 text-sm text-gray-700 hover:bg-gray-100 rounded {{ app()->getLocale() === 'en' ? 'bg-primary-50 text-primary-700' : '' }}">
+                                            <span class="w-4 h-3 bg-blue-500 rounded {{ app()->getLocale() == 'ar' ? 'mr-2' : 'ml-2' }} flex-shrink-0"></span>
+                                            <span>{{ __('layout.navigation.english') }}</span>
+                                            @if(app()->getLocale() === 'en')
+                                                <i class="fas fa-check text-primary-600 {{ app()->getLocale() == 'ar' ? 'mr-auto' : 'ml-auto' }} text-xs"></i>
+                                            @endif
+                                        </a>
+                                    </div>
+                                </div>
 
                                 <hr class="my-1">
 
                                 <form method="POST" action="{{ route('logout') }}" class="block">
                                     @csrf
-                                    <button type="submit" class="w-full text-right px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
-                                        <i class="fas fa-sign-out-alt ml-2"></i>{{ __('layout.user_menu.logout') }}
+                                    <button type="submit" class="w-full {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }} px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
+                                        <i class="fas fa-sign-out-alt {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>{{ __('layout.user_menu.logout') }}
                                     </button>
                                 </form>
                             </div>
@@ -373,7 +494,7 @@
                                 <div class="mt-2 space-y-2">
                                     @foreach(auth()->user()->notifications->take(3) as $notification)
                                         <div class="flex items-start p-2 bg-gray-50 rounded">
-                                            <div class="flex-shrink-0 mr-2">
+                                            <div class="flex-shrink-0 {{ app()->getLocale() == 'ar' ? 'mr-2' : 'ml-2' }}">
                                                 @if($notification->data['type'] == 'booking_created')
                                                     <i class="fas fa-calendar-check text-green-500"></i>
                                                 @elseif($notification->data['type'] == 'new_product_added')
@@ -405,39 +526,66 @@
                         <hr class="my-2">
                         @if(auth()->user()->hasRole('admin'))
                             <a href="{{ route('admin.dashboard') }}" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
-                                <i class="fas fa-tachometer-alt ml-2"></i>{{ __('layout.user_menu.dashboard') }}
+                                <i class="fas fa-tachometer-alt {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>{{ __('layout.user_menu.dashboard') }}
                             </a>
                         @endif
 
                         @if(auth()->user()->hasRole('facility'))
                             <a href="{{ route('facility.dashboard') }}" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
-                                <i class="fas fa-building ml-2"></i>{{ __('layout.user_menu.facility_management') }}
+                                <i class="fas fa-building {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>{{ __('layout.user_menu.facility_management') }}
                             </a>
                         @endif
 
                         @if(auth()->user()->hasRole('client'))
                             <a href="{{ route('client.dashboard') }}" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
-                                <i class="fas fa-user ml-2"></i>{{ __('layout.user_menu.my_account') }}
+                                <i class="fas fa-user {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>{{ __('layout.user_menu.my_account') }}
                             </a>
                         @endif
 
                         <a href="{{ route('profile.edit') }}" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
-                            <i class="fas fa-user-edit ml-2"></i>{{ __('layout.user_menu.edit_profile') }}
+                            <i class="fas fa-user-edit {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>{{ __('layout.user_menu.edit_profile') }}
                         </a>
+
+                        <hr class="my-2">
+
+                        <!-- Mobile Language Switcher in Profile Menu -->
+                        <div class="px-3 py-2 border-t border-gray-200">
+                            <div class="text-sm text-gray-500 mb-2">{{ __('layout.navigation.language') }}</div>
+                            <div class="space-y-1">
+                                <a href="{{ route('public.language.change', 'ar') }}" 
+                                   class="flex items-center px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded {{ app()->getLocale() === 'ar' ? 'bg-primary-50 text-primary-700' : '' }}">
+                                    <span class="w-4 h-3 bg-green-500 rounded {{ app()->getLocale() == 'ar' ? 'mr-2' : 'ml-2' }} flex-shrink-0"></span>
+                                    <span>{{ __('layout.navigation.arabic') }}</span>
+                                    @if(app()->getLocale() === 'ar')
+                                        <i class="fas fa-check text-primary-600 {{ app()->getLocale() == 'ar' ? 'mr-auto' : 'ml-auto' }} text-xs"></i>
+                                    @endif
+                                </a>
+                                <a href="{{ route('public.language.change', 'en') }}" 
+                                   class="flex items-center px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded {{ app()->getLocale() === 'en' ? 'bg-primary-50 text-primary-700' : '' }}">
+                                    <span class="w-4 h-3 bg-blue-500 rounded {{ app()->getLocale() == 'ar' ? 'mr-2' : 'ml-2' }} flex-shrink-0"></span>
+                                    <span>{{ __('layout.navigation.english') }}</span>
+                                    @if(app()->getLocale() === 'en')
+                                        <i class="fas fa-check text-primary-600 {{ app()->getLocale() == 'ar' ? 'mr-auto' : 'ml-auto' }} text-xs"></i>
+                                    @endif
+                                </a>
+                            </div>
+                        </div>
+
+                        <hr class="my-2">
 
                         <form method="POST" action="{{ route('logout') }}" class="block">
                             @csrf
-                            <button type="submit" class="w-full text-right px-3 py-2 text-red-600 hover:text-red-700 text-base font-medium">
-                                <i class="fas fa-sign-out-alt ml-2"></i>{{ __('layout.user_menu.logout') }}
+                            <button type="submit" class="w-full {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }} px-3 py-2 text-red-600 hover:text-red-700 text-base font-medium">
+                                <i class="fas fa-sign-out-alt {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>{{ __('layout.user_menu.logout') }}
                             </button>
                         </form>
                     @else
                         <hr class="my-2">
                         <a href="{{ route('login') }}" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
-                            تسجيل الدخول
+                            {{ __('layout.user_menu.login') }}
                         </a>
                         <a href="{{ route('register') }}" class="btn-primary text-white block px-3 py-2 rounded-md text-base font-medium text-center">
-                            إنشاء حساب
+                            {{ __('layout.user_menu.create_account') }}
                         </a>
                     @endauth
                 </div>
@@ -453,47 +601,54 @@
     <!-- Footer -->
     <footer class="bg-gray-900 text-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-8">
                 <div>
-                    <h3 class="text-xl font-bold mb-4">عقار</h3>
+                    <h3 class="text-xl font-bold mb-4">{{ app()->getLocale() == 'ar' ? 'عقار' : 'Aqar' }}</h3>
                     <p class="text-gray-400 text-sm leading-relaxed">
-                        منصة عقارية متكاملة تقدم أفضل الخدمات في مجال العقارات
+                        {{ app()->getLocale() == 'ar' ? 'منصة عقارية متكاملة تقدم أفضل الخدمات في مجال العقارات' : 'An integrated real estate platform offering the best services in the real estate field' }}
                     </p>
                 </div>
                 <div>
-                    <h4 class="text-lg font-semibold mb-4">خدماتنا</h4>
+                    <h4 class="text-lg font-semibold mb-4">{{ app()->getLocale() == 'ar' ? 'خدماتنا' : 'Our Services' }}</h4>
                     <ul class="space-y-2 text-sm text-gray-400">
-                        <li><a href="{{ route('public.services') }}" class="hover:text-white transition-colors">بيع العقارات</a></li>
-                        <li><a href="{{ route('public.services') }}" class="hover:text-white transition-colors">تأجير العقارات</a></li>
-                        <li><a href="{{ route('public.services') }}" class="hover:text-white transition-colors">إدارة الممتلكات</a></li>
-                        <li><a href="{{ route('public.services') }}" class="hover:text-white transition-colors">الاستشارات العقارية</a></li>
+                        <li><a href="{{ route('public.services') }}" class="hover:text-white transition-colors">{{ app()->getLocale() == 'ar' ? 'بيع العقارات' : 'Property Sales' }}</a></li>
+                        <li><a href="{{ route('public.services') }}" class="hover:text-white transition-colors">{{ app()->getLocale() == 'ar' ? 'تأجير العقارات' : 'Property Rentals' }}</a></li>
+                        <li><a href="{{ route('public.services') }}" class="hover:text-white transition-colors">{{ app()->getLocale() == 'ar' ? 'إدارة الممتلكات' : 'Property Management' }}</a></li>
+                        <li><a href="{{ route('public.services') }}" class="hover:text-white transition-colors">{{ app()->getLocale() == 'ar' ? 'الاستشارات العقارية' : 'Real Estate Consultations' }}</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="text-lg font-semibold mb-4">روابط سريعة</h4>
+                    <h4 class="text-lg font-semibold mb-4">{{ app()->getLocale() == 'ar' ? 'روابط سريعة' : 'Quick Links' }}</h4>
                     <ul class="space-y-2 text-sm text-gray-400">
-                        <li><a href="{{ route('public.home') }}" class="hover:text-white transition-colors">الرئيسية</a></li>
-                        <li><a href="{{ route('public.products.index') }}" class="hover:text-white transition-colors">العقارات</a></li>
-                        <li><a href="{{ route('public.facilities.index') }}" class="hover:text-white transition-colors">المنشآت</a></li>
-                        <li><a href="{{ route('public.contact') }}" class="hover:text-white transition-colors">اتصل بنا</a></li>
-                        
-                        <!-- Dynamic Footer Links -->
-                        @php
-                            $footerLinks = \App\Models\Page::ofType('footer')->active()->ordered()->take(4)->get();
-                        @endphp
-                        @foreach($footerLinks as $link)
-                            <li><a href="{{ route('public.' . $link->slug) }}" class="hover:text-white transition-colors">{{ $link->title }}</a></li>
-                        @endforeach
+                        <li><a href="{{ route('public.home') }}" class="hover:text-white transition-colors">{{ app()->getLocale() == 'ar' ? 'الرئيسية' : 'Home' }}</a></li>
+                        <li><a href="{{ route('public.products.index') }}" class="hover:text-white transition-colors">{{ app()->getLocale() == 'ar' ? 'العقارات' : 'Properties' }}</a></li>
+                        <li><a href="{{ route('public.facilities.index') }}" class="hover:text-white transition-colors">{{ app()->getLocale() == 'ar' ? 'المنشآت' : 'Facilities' }}</a></li>
+                        <li><a href="{{ route('public.contact') }}" class="hover:text-white transition-colors">{{ app()->getLocale() == 'ar' ? 'اتصل بنا' : 'Contact Us' }}</a></li>
+                        <li><a href="{{ route('public.how-it-works') }}" class="hover:text-white transition-colors">{{ app()->getLocale() == 'ar' ? 'كيف يعمل' : 'How It Works' }}</a></li>
+                        <li><a href="{{ route('public.pricing') }}" class="hover:text-white transition-colors">{{ app()->getLocale() == 'ar' ? 'الأسعار' : 'Pricing' }}</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="text-lg font-semibold mb-4">تواصل معنا</h4>
+                    <h4 class="text-lg font-semibold mb-4">{{ app()->getLocale() == 'ar' ? 'صفحات إضافية' : 'Additional Pages' }}</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="{{ route('public.testimonials') }}" class="hover:text-white transition-colors">{{ app()->getLocale() == 'ar' ? 'آراء العملاء' : 'Testimonials' }}</a></li>
+                        <li><a href="{{ route('public.blog') }}" class="hover:text-white transition-colors">{{ app()->getLocale() == 'ar' ? 'المدونة' : 'Blog' }}</a></li>
+                        <li><a href="{{ route('public.news') }}" class="hover:text-white transition-colors">{{ app()->getLocale() == 'ar' ? 'الأخبار' : 'News' }}</a></li>
+                        <li><a href="{{ route('public.careers') }}" class="hover:text-white transition-colors">{{ app()->getLocale() == 'ar' ? 'الوظائف' : 'Careers' }}</a></li>
+                        <li><a href="{{ route('public.terms') }}" class="hover:text-white transition-colors">{{ app()->getLocale() == 'ar' ? 'الشروط والأحكام' : 'Terms of Service' }}</a></li>
+                        <li><a href="{{ route('public.privacy') }}" class="hover:text-white transition-colors">{{ app()->getLocale() == 'ar' ? 'سياسة الخصوصية' : 'Privacy Policy' }}</a></li>
+                        <li><a href="{{ route('public.cookies') }}" class="hover:text-white transition-colors">{{ app()->getLocale() == 'ar' ? 'سياسة ملفات تعريف الارتباط' : 'Cookies Policy' }}</a></li>
+                        <li><a href="{{ route('public.advertising') }}" class="hover:text-white transition-colors">{{ app()->getLocale() == 'ar' ? 'سياسة الإعلانات' : 'Advertising Policy' }}</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">{{ app()->getLocale() == 'ar' ? 'تواصل معنا' : 'Contact Us' }}</h4>
                     <div class="space-y-2 text-sm text-gray-400">
-                        <p><i class="fas fa-phone ml-2"></i>+966 50 123 4567</p>
-                        <p><i class="fas fa-envelope ml-2"></i>info@aqar.com</p>
-                        <p><i class="fas fa-map-marker-alt ml-2"></i>الرياض، المملكة العربية السعودية</p>
+                        <p><i class="fas fa-phone {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>+966 50 123 4567</p>
+                        <p><i class="fas fa-envelope {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>info@aqar.com</p>
+                        <p><i class="fas fa-map-marker-alt {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>{{ app()->getLocale() == 'ar' ? 'الرياض، المملكة العربية السعودية' : 'Riyadh, Saudi Arabia' }}</p>
                     </div>
-                    <div class="flex space-x-4 space-x-reverse mt-4">
+                    <div class="flex {{ app()->getLocale() == 'ar' ? 'space-x-4 space-x-reverse' : 'space-x-4' }} mt-4">
                         @php
                             $socialLinks = [
                                 'facebook' => \App\Models\Setting::getValue('social_facebook'),
@@ -544,7 +699,7 @@
                 </div>
             </div>
             <div class="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-400">
-                <p>&copy; {{ date('Y') }} عقار. جميع الحقوق محفوظة.</p>
+                <p>&copy; {{ date('Y') }} {{ app()->getLocale() == 'ar' ? 'عقار' : 'Aqar' }}. {{ app()->getLocale() == 'ar' ? 'جميع الحقوق محفوظة.' : 'All rights reserved.' }}</p>
             </div>
         </div>
     </footer>

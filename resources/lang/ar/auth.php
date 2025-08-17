@@ -1,10 +1,25 @@
 <?php
 
 return [
+    /*
+    |--------------------------------------------------------------------------
+    | Authentication Language Lines
+    |--------------------------------------------------------------------------
+    |
+    | The following language lines are used during authentication for various
+    | messages that we need to display to the user. You are free to modify
+    | these language lines according to your application's requirements.
+    |
+    */
+
+    'failed' => 'بيانات الاعتماد هذه لا تتطابق مع سجلاتنا.',
+    'password' => 'كلمة المرور المقدمة غير صحيحة.',
+    'throttle' => 'محاولات تسجيل دخول كثيرة جداً. يرجى المحاولة مرة أخرى في :seconds ثانية.',
+
     'login' => [
         'title' => 'تسجيل الدخول',
-        'welcome_back' => 'مرحباً بك مرة أخرى',
-        'login_to_account' => 'سجل دخولك للوصول إلى حسابك',
+        'welcome_back' => 'مرحباً بعودتك!',
+        'login_to_account' => 'سجل دخولك إلى حسابك',
         'email' => 'البريد الإلكتروني',
         'email_placeholder' => 'أدخل بريدك الإلكتروني',
         'password' => 'كلمة المرور',
@@ -13,16 +28,16 @@ return [
         'forgot_password' => 'نسيت كلمة المرور؟',
         'login_button' => 'تسجيل الدخول',
         'or' => 'أو',
-        'login_with_google' => 'تسجيل الدخول بـ Google',
-        'login_with_facebook' => 'تسجيل الدخول بـ Facebook',
+        'login_with_google' => 'تسجيل الدخول بحساب جوجل',
+        'login_with_facebook' => 'تسجيل الدخول بحساب فيسبوك',
         'no_account' => 'ليس لديك حساب؟',
         'create_account' => 'إنشاء حساب جديد',
         'back_to_home' => 'العودة للرئيسية',
     ],
-    
+
     'register' => [
         'title' => 'إنشاء حساب جديد',
-        'join_us' => 'انضم إلينا واستمتع بجميع الخدمات',
+        'join_us' => 'انضم إلينا اليوم!',
         'full_name' => 'الاسم الكامل',
         'full_name_placeholder' => 'أدخل اسمك الكامل',
         'email' => 'البريد الإلكتروني',
@@ -32,7 +47,7 @@ return [
         'account_type' => 'نوع الحساب',
         'select_account_type' => 'اختر نوع الحساب',
         'client' => 'عميل',
-        'facility' => 'منشأة عقارية',
+        'facility' => 'منشأة',
         'password' => 'كلمة المرور',
         'password_placeholder' => 'أدخل كلمة المرور',
         'confirm_password' => 'تأكيد كلمة المرور',
@@ -42,26 +57,18 @@ return [
         'privacy_policy' => 'سياسة الخصوصية',
         'create_account_button' => 'إنشاء الحساب',
         'or' => 'أو',
-        'register_with_google' => 'التسجيل بـ Google',
-        'register_with_facebook' => 'التسجيل بـ Facebook',
+        'register_with_google' => 'إنشاء حساب بحساب جوجل',
+        'register_with_facebook' => 'إنشاء حساب بحساب فيسبوك',
         'have_account' => 'لديك حساب بالفعل؟',
         'sign_in' => 'تسجيل الدخول',
         'back_to_home' => 'العودة للرئيسية',
     ],
-    
+
     'passwords' => [
-        'confirm' => [
-            'title' => 'تأكيد كلمة المرور',
-            'description' => 'يرجى تأكيد كلمة المرور قبل المتابعة.',
-            'password' => 'كلمة المرور',
-            'confirm_button' => 'تأكيد كلمة المرور',
-            'forgot_password' => 'نسيت كلمة المرور؟',
-        ],
-        
         'email' => [
             'title' => 'إعادة تعيين كلمة المرور',
             'forgot_password' => 'نسيت كلمة المرور؟',
-            'enter_email_reset' => 'أدخل بريدك الإلكتروني وسنرسل لك رابط إعادة التعيين',
+            'enter_email_reset' => 'أدخل بريدك الإلكتروني وسنرسل لك رابط إعادة تعيين كلمة المرور.',
             'email' => 'البريد الإلكتروني',
             'email_placeholder' => 'أدخل بريدك الإلكتروني',
             'send_reset_link' => 'إرسال رابط إعادة التعيين',
@@ -74,36 +81,22 @@ return [
             ],
             'back_to_home' => 'العودة للرئيسية',
         ],
-        
         'reset' => [
             'title' => 'إعادة تعيين كلمة المرور',
             'enter_new_password' => 'أدخل كلمة المرور الجديدة',
-            'email' => 'البريد الإلكتروني',
-            'email_placeholder' => 'أدخل بريدك الإلكتروني',
-            'new_password' => 'كلمة المرور الجديدة',
-            'new_password_placeholder' => 'أدخل كلمة المرور الجديدة',
-            'confirm_password' => 'تأكيد كلمة المرور',
-            'confirm_password_placeholder' => 'أعد إدخال كلمة المرور الجديدة',
-            'password_requirements' => 'متطلبات كلمة المرور:',
-            'requirements' => [
-                'min_length' => 'يجب أن تكون 8 أحرف على الأقل',
-                'uppercase_lowercase' => 'تحتوي على حرف كبير وحرف صغير',
-                'number' => 'تحتوي على رقم واحد على الأقل',
-                'special_char' => 'تحتوي على رمز خاص (@#$%^&*)',
-            ],
-            'save_new_password' => 'حفظ كلمة المرور الجديدة',
-            'back_to_login' => 'العودة لتسجيل الدخول',
-            'security_notice' => 'ملاحظة أمنية',
-            'security_description' => 'تأكد من اختيار كلمة مرور قوية وفريدة لحسابك. لا تشارك كلمة المرور مع أي شخص.',
-            'back_to_home' => 'العودة للرئيسية',
         ],
     ],
-    
-    'verify' => [
+
+    'verification' => [
         'title' => 'تأكيد عنوان البريد الإلكتروني',
-        'description' => 'قبل المتابعة، يرجى التحقق من بريدك الإلكتروني للحصول على رابط التحقق.',
-        'no_email' => 'إذا لم تستلم البريد الإلكتروني',
+        'fresh_link_sent' => 'تم إرسال رابط تأكيد جديد إلى بريدك الإلكتروني.',
+        'check_email' => 'قبل المتابعة، يرجى التحقق من بريدك الإلكتروني للحصول على رابط التأكيد.',
+        'did_not_receive' => 'إذا لم تستلم البريد الإلكتروني',
         'request_another' => 'انقر هنا لطلب رابط آخر',
-        'fresh_link_sent' => 'تم إرسال رابط تحقق جديد إلى عنوان بريدك الإلكتروني.',
+    ],
+
+    'confirm' => [
+        'title' => 'تأكيد كلمة المرور',
+        'please_confirm' => 'يرجى تأكيد كلمة المرور قبل المتابعة.',
     ],
 ];

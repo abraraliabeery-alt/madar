@@ -1,132 +1,106 @@
 <?php
 
 return [
-    'title' => 'الملف الشخصي',
-    'edit_title' => 'تعديل الملف الشخصي',
+    /*
+    |--------------------------------------------------------------------------
+    | Profile Language Lines
+    |--------------------------------------------------------------------------
+    |
+    | The following language lines are used in the profile-related views
+    | for various messages, labels, and interface elements.
+    |
+    */
+
     'change_password_title' => 'تغيير كلمة المرور',
-    'public_title' => 'الملف الشخصي العام',
-    
-    // Profile Header
-    'update_personal_info' => 'قم بتحديث معلوماتك الشخصية',
-    'user_type' => 'نوع المستخدم:',
-    'admin' => 'مدير النظام',
-    'facility' => 'مرفق',
+    'update_personal_info' => 'تحديث المعلومات الشخصية',
+    'current_password' => 'كلمة المرور الحالية',
+    'new_password' => 'كلمة المرور الجديدة',
+    'confirm_new_password' => 'تأكيد كلمة المرور الجديدة',
+    'update_password' => 'تحديث كلمة المرور',
+    'back_to_profile' => 'العودة للملف الشخصي',
+    'edit_title' => 'تعديل الملف الشخصي',
+    'user_type' => 'نوع المستخدم',
+    'admin' => 'مدير',
+    'facility' => 'منشأة',
     'client' => 'عميل',
-    
-    // Avatar Section
     'profile_picture' => 'الصورة الشخصية',
-    'avatar_help' => 'PNG, JPG, GIF حتى 2MB',
-    
-    // Basic Information
+    'avatar_help' => 'انقر لتغيير الصورة الشخصية',
     'name' => 'الاسم',
     'email' => 'البريد الإلكتروني',
     'phone_number' => 'رقم الهاتف',
     'whatsapp_number' => 'رقم الواتساب',
-    
-    // Facility Information
-    'facility_info' => 'معلومات المرفق',
-    'bank_account' => 'رقم الحساب البنكي',
+    'facility_info' => 'معلومات المنشأة',
+    'bank_account' => 'الحساب البنكي',
     'bank' => 'البنك',
     'select_bank' => 'اختر البنك',
     'latitude' => 'خط العرض',
-    'latitude_placeholder' => 'مثال: 24.7136',
+    'latitude_placeholder' => 'أدخل خط العرض',
     'longitude' => 'خط الطول',
-    'longitude_placeholder' => 'مثال: 46.6753',
+    'longitude_placeholder' => 'أدخل خط الطول',
     'google_maps_url' => 'رابط خرائط جوجل',
-    'google_maps_placeholder' => 'https://maps.google.com/...',
-    
-    // Admin Information
-    'admin_info' => 'معلومات المدير',
+    'google_maps_placeholder' => 'أدخل رابط خرائط جوجل',
     'notification_settings' => 'إعدادات الإشعارات',
     'email_notifications' => 'إشعارات البريد الإلكتروني',
     'sms_notifications' => 'إشعارات الرسائل النصية',
     'push_notifications' => 'إشعارات الدفع',
     'notification_frequency' => 'تكرار الإشعارات',
     'select_frequency' => 'اختر التكرار',
-    'daily' => 'يومياً',
-    'weekly' => 'أسبوعياً',
-    'monthly' => 'شهرياً',
-    
-    // Social Media
+    'daily' => 'يومي',
+    'weekly' => 'أسبوعي',
+    'monthly' => 'شهري',
     'social_media' => 'وسائل التواصل الاجتماعي',
     'facebook' => 'فيسبوك',
-    'facebook_placeholder' => 'https://facebook.com/username',
+    'facebook_placeholder' => 'أدخل رابط فيسبوك',
     'twitter' => 'تويتر',
-    'twitter_placeholder' => 'https://twitter.com/username',
-    'instagram' => 'انستغرام',
-    'instagram_placeholder' => 'https://instagram.com/username',
+    'twitter_placeholder' => 'أدخل رابط تويتر',
+    'instagram' => 'إنستغرام',
+    'instagram_placeholder' => 'أدخل رابط إنستغرام',
     'linkedin' => 'لينكد إن',
-    'linkedin_placeholder' => 'https://linkedin.com/in/username',
+    'linkedin_placeholder' => 'أدخل رابط لينكد إن',
     'snapchat' => 'سناب شات',
-    'snapchat_placeholder' => 'username',
+    'snapchat_placeholder' => 'أدخل اسم المستخدم في سناب شات',
     'tiktok' => 'تيك توك',
-    'tiktok_placeholder' => 'https://tiktok.com/@username',
+    'tiktok_placeholder' => 'أدخل رابط تيك توك',
     'pinterest' => 'بينتريست',
-    'pinterest_placeholder' => 'https://pinterest.com/username',
+    'pinterest_placeholder' => 'أدخل رابط بينتريست',
     'youtube' => 'يوتيوب',
-    'youtube_placeholder' => 'https://youtube.com/channel/...',
+    'youtube_placeholder' => 'أدخل رابط يوتيوب',
     'telegram' => 'تليجرام',
-    'telegram_placeholder' => '@username',
-    
-    // Actions
+    'telegram_placeholder' => 'أدخل اسم المستخدم في تليجرام',
     'save_changes' => 'حفظ التغييرات',
     'change_password' => 'تغيير كلمة المرور',
-    'back_to_profile' => 'العودة للملف الشخصي',
-    'edit_profile' => 'تعديل الملف',
-    'view_public' => 'عرض عام',
-    
-    // Password Change
-    'current_password' => 'كلمة المرور الحالية',
-    'new_password' => 'كلمة المرور الجديدة',
-    'confirm_new_password' => 'تأكيد كلمة المرور الجديدة',
-    'update_password' => 'تحديث كلمة المرور',
-    
-    // Profile Show
-    'general_info' => 'معلومات عامة',
-    'join_date' => 'تاريخ الانضمام:',
-    'account_status' => 'حالة الحساب:',
+    'public_title' => 'الملف الشخصي العام',
+    'facility_location_available' => 'موقع المنشأة متاح',
+    'view_on_map' => 'عرض على الخريطة',
+    'general_info' => 'المعلومات العامة',
+    'join_date' => 'تاريخ الانضمام',
+    'account_status' => 'حالة الحساب',
     'verified' => 'موثق',
-    'unverified' => 'غير موثق',
-    'activity_status' => 'حالة النشاط:',
+    'activity_status' => 'حالة النشاط',
     'active' => 'نشط',
     'inactive' => 'غير نشط',
-    'permissions' => 'صلاحيات:',
-    'manages' => 'إدارة:',
+    'coordinates' => 'الإحداثيات',
+    'admin_info' => 'معلومات المدير',
+    'permissions' => 'الصلاحيات',
+    'manages' => 'يدير',
     'all_system_parts' => 'جميع أجزاء النظام',
-    
-    // Products & Facilities
     'products' => 'المنتجات',
     'view_all' => 'عرض الكل',
-    'facilities' => 'المرافق',
-    
-    // Social Media Links
-    'communication_channels' => 'وسائل التواصل',
-    
-    // Contact Actions
-    'contact' => 'تواصل مع',
+    'facilities' => 'المنشآت',
+    'communication_channels' => 'قنوات الاتصال',
+    'contact' => 'اتصال',
     'call_now' => 'اتصل الآن',
     'whatsapp' => 'واتساب',
-    'send_email' => 'إرسال بريد',
-    
-    // Quick Actions
+    'send_email' => 'إرسال بريد إلكتروني',
+    'title' => 'الملف الشخصي',
+    'edit_profile' => 'تعديل الملف الشخصي',
+    'view_public' => 'عرض الملف العام',
+    'map_link' => 'رابط الخريطة',
     'quick_actions' => 'إجراءات سريعة',
-    'edit_profile_btn' => 'تعديل الملف',
+    'edit_profile_btn' => 'تعديل الملف الشخصي',
     'change_password_btn' => 'تغيير كلمة المرور',
-    'view_public_profile' => 'عرض البروفايل العام',
-    
-    // Account Status
+    'view_public_profile' => 'عرض الملف الشخصي العام',
     'account_status_title' => 'حالة الحساب',
-    'email_status' => 'البريد الإلكتروني:',
-    
-    // Location
-    'facility_location_available' => 'موقع المرفق متاح',
-    'view_on_map' => 'عرض على الخريطة',
-    'coordinates' => 'إحداثيات الموقع:',
-    'map_link' => 'رابط الخريطة:',
-    
-    // Messages
-    'success' => 'نجح',
-    'error' => 'خطأ',
-    'loading' => 'جاري التحميل...',
-    'saving' => 'جاري الحفظ...',
+    'email_status' => 'حالة البريد الإلكتروني',
+    'unverified' => 'غير موثق',
 ];
