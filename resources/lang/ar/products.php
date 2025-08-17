@@ -175,11 +175,15 @@ return [
     ],
     
     'by_category' => [
+        'title' => 'عقارات :category',
+        'subtitle' => 'اكتشف أفضل عقارات :category في منطقتك',
         'properties_available' => 'عقار متاح',
         'view_all_properties' => 'عرض جميع العقارات',
         'no_properties' => 'لم يتم العثور على عقارات',
+        'no_properties_message' => 'لا توجد عقارات :category متاحة حالياً.',
         'other_categories' => 'فئات أخرى',
         'browse_other_categories' => 'تصفح العقارات في فئات أخرى',
+        'category_description' => 'حول عقارات :category',
     ],
     
     'property_card' => [

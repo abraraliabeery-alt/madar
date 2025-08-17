@@ -195,5 +195,10 @@ return [
         'its' => 'its',
         'our' => 'our',
         'their' => 'their',
+        'results' => 'results',
+        'showing' => 'Showing',
+        'of' => 'of',
+        'go_to_page' => 'Go to page :page',
+        'page' => 'page',
     ],
 ];

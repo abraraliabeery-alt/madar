@@ -174,11 +174,15 @@ return [
     ],
     
     'by_category' => [
+        'title' => ':category Properties',
+        'subtitle' => 'Discover the best :category properties in your area',
         'properties_available' => 'properties available',
         'view_all_properties' => 'View All Properties',
         'no_properties' => 'No properties found',
+        'no_properties_message' => 'No :category properties are currently available.',
         'other_categories' => 'Other Categories',
         'browse_other_categories' => 'Browse properties in other categories',
+        'category_description' => 'About :category Properties',
     ],
     
     'property_card' => [
