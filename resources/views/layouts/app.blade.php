@@ -244,7 +244,7 @@
                                 }])->where('is_active', true)->take(8)->get();
                             @endphp
                             @foreach($cities as $city)
-                                <a href="{{ route('public.products.index', ['city' => $city->id]) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary-600">
+                                <a href="{{ route('public.cities.products', $city) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary-600">
                                     <div class="flex justify-between items-center">
                                         <span>{{ $city->name }}</span>
                                         <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">{{ $city->products_count }}</span>

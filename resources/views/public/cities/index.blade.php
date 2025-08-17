@@ -76,11 +76,11 @@
                         </div>
                         
                         <div class="flex space-x-2 space-x-reverse">
-                            <a href="{{ route('public.products.index', ['city' => $city->id]) }}" 
+                            <a href="{{ route('public.cities.products', $city) }}" 
                                class="flex-1 bg-primary-600 text-white text-center py-2 px-4 rounded-md hover:bg-primary-700 transition-colors duration-200 text-sm">
                                 {{ __('cities.view_properties') }}
                             </a>
-                            <a href="{{ route('public.facilities.index', ['city' => $city->id]) }}" 
+                            <a href="{{ route('public.cities.facilities', $city) }}" 
                                class="flex-1 bg-gray-600 text-white text-center py-2 px-4 rounded-md hover:bg-gray-700 transition-colors duration-200 text-sm">
                                 {{ __('cities.view_facilities') }}
                             </a>

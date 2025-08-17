@@ -12,6 +12,7 @@ use App\Http\Controllers\Public\LanguageController;
 use App\Http\Controllers\Public\SitemapController;
 use App\Http\Controllers\Public\RssController;
 use App\Http\Controllers\Public\StaticController;
+use App\Http\Controllers\Public\CityController;
 use App\Http\Controllers\Public\NewsletterController;
 use App\Http\Controllers\Public\ErrorController;
 
@@ -76,7 +77,10 @@ Route::name('public.')->group(function () {
     Route::get('/features/{feature}', [FeatureController::class, 'show'])->name('features.show');
 
     // Cities Routes
-    Route::get('/cities', [StaticController::class, 'citiesIndex'])->name('cities.index');
+    Route::get('/cities', [CityController::class, 'index'])->name('cities.index');
+    Route::get('/cities/{city}', [CityController::class, 'show'])->name('cities.show');
+    Route::get('/cities/{city}/products', [CityController::class, 'products'])->name('cities.products');
+    Route::get('/cities/{city}/facilities', [CityController::class, 'facilities'])->name('cities.facilities');
 
     // User Actions (require authentication)
     Route::middleware('auth')->group(function () {
