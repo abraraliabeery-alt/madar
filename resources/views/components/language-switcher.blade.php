@@ -1,120 +1,49 @@
-@props(['class' => '', 'showFlags' => true, 'showNames' => true, 'dropdown' => true])
+@php
+    $currentLocale = app()->getLocale();
+    $otherLocale = $currentLocale === 'ar' ? 'en' : 'ar';
+    $currentRoute = request()->route();
+    $routeParams = $currentRoute ? $currentRoute->parameters() : [];
+    $routeName = $currentRoute ? $currentRoute->getName() : 'public.home';
+@endphp
 
-@if($dropdown)
-    <div class="language-switcher dropdown {{ $class }}">
-        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            @if($showFlags)
-                <span class="flag">{{ $currentLanguageData['flag'] }}</span>
-            @endif
-            @if($showNames)
-                <span class="language-name">{{ $currentLanguageData['native'] }}</span>
-            @endif
-        </button>
-        <ul class="dropdown-menu">
-            @foreach($languageSwitcher as $language)
-                <li>
-                    <a class="dropdown-item {{ $language['current'] ? 'active' : '' }}" 
-                       href="{{ $language['url'] }}"
-                       data-language="{{ $language['code'] }}">
-                        @if($showFlags)
-                            <span class="flag me-2">{{ $language['flag'] }}</span>
-                        @endif
-                        @if($showNames)
-                            <span class="language-name">{{ $language['native'] }}</span>
-                        @endif
-                    </a>
-                </li>
-            @endforeach
-        </ul>
-    </div>
-@else
-    <div class="language-switcher-inline {{ $class }}">
-        @foreach($languageSwitcher as $language)
-            <a href="{{ $language['url'] }}" 
-               class="language-link {{ $language['current'] ? 'active' : '' }}"
-               data-language="{{ $language['code'] }}">
-                @if($showFlags)
-                    <span class="flag">{{ $language['flag'] }}</span>
+<div class="relative" x-data="{ open: false }">
+    <button @click="open = !open" @click.away="open = false" 
+            class="flex items-center space-x-2 space-x-reverse text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+        <i class="fas fa-globe text-lg"></i>
+        <span class="hidden sm:inline">{{ __('layout.navigation.language') }}</span>
+        <span class="font-semibold">{{ strtoupper($currentLocale) }}</span>
+        <i class="fas fa-chevron-down text-xs"></i>
+    </button>
+    
+    <div x-show="open" @click.away="open = false"
+         x-transition:enter="transition ease-out duration-100"
+         x-transition:enter-start="transform opacity-0 scale-95"
+         x-transition:enter-end="transform opacity-100 scale-100"
+         x-transition:leave="transition ease-in duration-75"
+         x-transition:leave-start="transform opacity-100 scale-100"
+         x-transition:leave-end="transform opacity-0 scale-95"
+         class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+        
+        <a href="{{ route($routeName, array_merge($routeParams, ['locale' => 'ar'])) }}" 
+           class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ $currentLocale === 'ar' ? 'bg-primary-50 text-primary-700' : '' }}">
+            <div class="flex items-center">
+                <span class="w-6 h-4 bg-green-500 rounded mr-3 flex-shrink-0"></span>
+                <span>{{ __('layout.navigation.arabic') }}</span>
+                @if($currentLocale === 'ar')
+                    <i class="fas fa-check text-primary-600 mr-auto"></i>
                 @endif
-                @if($showNames)
-                    <span class="language-name">{{ $language['native'] }}</span>
+            </div>
+        </a>
+        
+        <a href="{{ route($routeName, array_merge($routeParams, ['locale' => 'en'])) }}" 
+           class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ $currentLocale === 'en' ? 'bg-primary-50 text-primary-700' : '' }}">
+            <div class="flex items-center">
+                <span class="w-6 h-4 bg-blue-500 rounded mr-3 flex-shrink-0"></span>
+                <span>{{ __('layout.navigation.english') }}</span>
+                @if($currentLocale === 'en')
+                    <i class="fas fa-check text-primary-600 mr-auto"></i>
                 @endif
-            </a>
-        @endforeach
+            </div>
+        </a>
     </div>
-@endif
-
-<style>
-.language-switcher .dropdown-toggle {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.language-switcher .flag {
-    font-size: 1.2rem;
-}
-
-.language-switcher .language-name {
-    font-weight: 500;
-}
-
-.language-switcher .dropdown-item.active {
-    background-color: var(--bs-primary);
-    color: white;
-}
-
-.language-switcher-inline {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-}
-
-.language-switcher-inline .language-link {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    text-decoration: none;
-    color: var(--bs-body-color);
-    padding: 0.5rem;
-    border-radius: 0.375rem;
-    transition: all 0.2s ease;
-}
-
-.language-switcher-inline .language-link:hover {
-    background-color: var(--bs-light);
-    color: var(--bs-body-color);
-}
-
-.language-switcher-inline .language-link.active {
-    background-color: var(--bs-primary);
-    color: white;
-}
-
-.language-switcher-inline .flag {
-    font-size: 1.2rem;
-}
-
-.language-switcher-inline .language-name {
-    font-weight: 500;
-}
-
-/* RTL Support */
-[dir="rtl"] .language-switcher .dropdown-toggle {
-    flex-direction: row-reverse;
-}
-
-[dir="rtl"] .language-switcher-inline .language-link {
-    flex-direction: row-reverse;
-}
-
-[dir="rtl"] .language-switcher .flag {
-    margin-left: 0.5rem;
-    margin-right: 0;
-}
-
-[dir="rtl"] .language-switcher-inline .flag {
-    margin-left: 0.5rem;
-    margin-right: 0;
-}
-</style>
+</div>

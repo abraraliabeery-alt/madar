@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', '404 - الصفحة غير موجودة')
+@section('title', __('errors.404.title'))
 
 @section('content')
 <div class="min-h-screen bg-gray-50 flex items-center justify-center">

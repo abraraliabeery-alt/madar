@@ -106,13 +106,13 @@
                 <!-- Desktop Navigation -->
                 <div class="hidden md:flex items-center space-x-8 space-x-reverse">
                     <a href="{{ route('public.home') }}" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                        الرئيسية
+                        {{ __('layout.navigation.home') }}
                     </a>
                     
                     <!-- Categories Dropdown -->
                     <div class="relative" x-data="{ open: false }">
                         <button @click="open = !open" @click.away="open = false" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center">
-                            الفئات
+                            {{ __('layout.navigation.categories') }}
                             <i class="fas fa-chevron-down mr-1 text-xs"></i>
                         </button>
                         <div x-show="open" x-transition class="absolute left-0 mt-2 w-64 bg-white rounded-md shadow-lg py-1 z-50">
@@ -131,7 +131,7 @@
                             @endforeach
                             <div class="border-t border-gray-200 mt-2 pt-2">
                                 <a href="{{ route('public.categories.index') }}" class="block px-4 py-2 text-sm text-primary-600 hover:bg-gray-100">
-                                    عرض جميع الفئات
+                                    {{ __('layout.navigation.view_all_categories') }}
                                 </a>
                             </div>
                         </div>
@@ -140,7 +140,7 @@
                     <!-- Cities Dropdown -->
                     <div class="relative" x-data="{ open: false }">
                         <button @click="open = !open" @click.away="open = false" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center">
-                            المدن
+                            {{ __('layout.navigation.cities') }}
                             <i class="fas fa-chevron-down mr-1 text-xs"></i>
                         </button>
                         <div x-show="open" x-transition class="absolute left-0 mt-2 w-64 bg-white rounded-md shadow-lg py-1 z-50">
@@ -159,27 +159,30 @@
                             @endforeach
                             <div class="border-t border-gray-200 mt-2 pt-2">
                                 <a href="{{ route('public.cities.index') }}" class="block px-4 py-2 text-sm text-primary-600 hover:bg-gray-100">
-                                    عرض جميع المدن
+                                    {{ __('layout.navigation.view_all_cities') }}
                                 </a>
                             </div>
                         </div>
                     </div>
                     
                     <a href="{{ route('public.products.index') }}" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                        العقارات
+                        {{ __('layout.navigation.properties') }}
                     </a>
                     @if(\App\Helpers\FacilityHelper::isMultiMode())
                         <a href="{{ route('public.facilities.index') }}" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                            المنشآت
+                            {{ __('layout.navigation.facilities') }}
                         </a>
                     @endif
                     
                     <a href="{{ route('public.about') }}" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                        من نحن
+                        {{ __('layout.navigation.about_us') }}
                     </a>
                     <a href="{{ route('public.contact') }}" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                        اتصل بنا
+                        {{ __('layout.navigation.contact_us') }}
                     </a>
+                    
+                    <!-- Language Switcher -->
+                    <x-language-switcher />
                 </div>
 
                 <!-- Desktop User Menu -->
@@ -206,7 +209,7 @@
                                  class="absolute left-0 mt-2 w-80 bg-white rounded-md shadow-lg py-1 z-50 max-h-96 overflow-y-auto">
 
                                 <div class="px-4 py-2 border-b border-gray-200">
-                                    <h3 class="text-sm font-semibold text-gray-900">الإشعارات</h3>
+                                    <h3 class="text-sm font-semibold text-gray-900">{{ __('layout.notifications.title') }}</h3>
                                 </div>
 
                                 @if(auth()->user()->notifications->count() > 0)
@@ -225,7 +228,7 @@
                                                     @endif
                                                 </div>
                                                 <div class="flex-1 mr-3">
-                                                    <p class="text-sm text-gray-900">{{ $notification->data['message'] ?? 'إشعار جديد' }}</p>
+                                                    <p class="text-sm text-gray-900">{{ $notification->data['message'] ?? __('layout.notifications.new_notification') }}</p>
                                                     <p class="text-xs text-gray-500 mt-1">{{ $notification->created_at->diffForHumans() }}</p>
                                                 </div>
                                                 @if(!$notification->read_at)
@@ -239,13 +242,13 @@
 
                                     <div class="border-t border-gray-200 px-4 py-2">
                                         <a href="{{ route('client.notifications') }}" class="text-sm text-primary-600 hover:text-primary-700">
-                                            عرض كل الإشعارات
+                                            {{ __('layout.notifications.view_all_notifications') }}
                                         </a>
                                     </div>
                                 @else
                                     <div class="px-4 py-8 text-center">
                                         <i class="fas fa-bell-slash text-gray-400 text-2xl mb-2"></i>
-                                        <p class="text-sm text-gray-500">لا توجد إشعارات جديدة</p>
+                                        <p class="text-sm text-gray-500">{{ __('layout.notifications.no_new_notifications') }}</p>
                                     </div>
                                 @endif
                             </div>
@@ -272,24 +275,24 @@
 
                                 @if(auth()->user()->hasRole('admin'))
                                     <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        <i class="fas fa-tachometer-alt ml-2"></i>لوحة التحكم
+                                        <i class="fas fa-tachometer-alt ml-2"></i>{{ __('layout.user_menu.dashboard') }}
                                     </a>
                                 @endif
 
                                 @if(auth()->user()->hasRole('facility'))
                                     <a href="{{ route('facility.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        <i class="fas fa-building ml-2"></i>إدارة المنشأة
+                                        <i class="fas fa-building ml-2"></i>{{ __('layout.user_menu.facility_management') }}
                                     </a>
                                 @endif
 
                                 @if(auth()->user()->hasRole('client'))
                                     <a href="{{ route('client.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        <i class="fas fa-user ml-2"></i>حسابي
+                                        <i class="fas fa-user ml-2"></i>{{ __('layout.user_menu.my_account') }}
                                     </a>
                                 @endif
 
                                 <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    <i class="fas fa-user-edit ml-2"></i>تعديل الملف الشخصي
+                                    <i class="fas fa-user-edit ml-2"></i>{{ __('layout.user_menu.edit_profile') }}
                                 </a>
 
                                 <hr class="my-1">
@@ -297,7 +300,7 @@
                                 <form method="POST" action="{{ route('logout') }}" class="block">
                                     @csrf
                                     <button type="submit" class="w-full text-right px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
-                                        <i class="fas fa-sign-out-alt ml-2"></i>تسجيل الخروج
+                                        <i class="fas fa-sign-out-alt ml-2"></i>{{ __('layout.user_menu.logout') }}
                                     </button>
                                 </form>
                             </div>
@@ -305,10 +308,10 @@
                     @else
                         <!-- Guest user buttons -->
                         <a href="{{ route('login') }}" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                            تسجيل الدخول
+                            {{ __('layout.user_menu.login') }}
                         </a>
-                        <a href="{{ route('register') }}" class="btn-primary text-white px-4 py-2 rounded-lg text-sm font-medium">
-                            إنشاء حساب
+                        <a href="{{ route('register') }}" class="btn-primary text-white px-4 py-2 rounded-md text-sm font-medium">
+                            {{ __('layout.user_menu.create_account') }}
                         </a>
                     @endauth
                 </div>
@@ -332,29 +335,34 @@
                  class="md:hidden">
                 <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t">
                     <a href="{{ route('public.home') }}" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
-                        الرئيسية
+                        {{ __('layout.navigation.home') }}
                     </a>
                     <a href="{{ route('public.products.index') }}" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
-                        العقارات
+                        {{ __('layout.navigation.properties') }}
                     </a>
                     @if(\App\Helpers\FacilityHelper::isMultiMode())
                         <a href="{{ route('public.facilities.index') }}" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
-                            المنشآت
+                            {{ __('layout.navigation.facilities') }}
                         </a>
                     @endif
                     <a href="{{ route('public.about') }}" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
-                        من نحن
+                        {{ __('layout.navigation.about_us') }}
                     </a>
                     <a href="{{ route('public.contact') }}" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
-                        اتصل بنا
+                        {{ __('layout.navigation.contact_us') }}
                     </a>
+                    
+                    <!-- Mobile Language Switcher -->
+                    <div class="px-3 py-2">
+                        <x-language-switcher />
+                    </div>
 
                     @auth
                         <!-- Mobile Notifications -->
                         <hr class="my-2">
                         <div class="px-3 py-2">
                             <div class="flex items-center justify-between">
-                                <span class="text-base font-medium text-gray-700">الإشعارات</span>
+                                <span class="text-base font-medium text-gray-700">{{ __('layout.notifications.title') }}</span>
                                 @if(auth()->user()->unreadNotifications->count() > 0)
                                     <span class="bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                                         {{ auth()->user()->unreadNotifications->count() > 99 ? '99+' : auth()->user()->unreadNotifications->count() }}
@@ -377,19 +385,19 @@
                                                 @endif
                                             </div>
                                             <div class="flex-1">
-                                                <p class="text-sm text-gray-900">{{ $notification->data['message'] ?? 'إشعار جديد' }}</p>
+                                                <p class="text-sm text-gray-900">{{ $notification->data['message'] ?? __('layout.notifications.new_notification') }}</p>
                                                 <p class="text-xs text-gray-500">{{ $notification->created_at->diffForHumans() }}</p>
                                             </div>
                                         </div>
                                     @endforeach
                                     <a href="{{ route('client.notifications') }}" class="block text-sm text-primary-600 hover:text-primary-700 text-center py-2">
-                                        عرض كل الإشعارات
+                                        {{ __('layout.notifications.view_all_notifications') }}
                                     </a>
                                 </div>
                             @else
                                 <div class="mt-2 text-center py-4">
                                     <i class="fas fa-bell-slash text-gray-400 text-xl mb-2"></i>
-                                    <p class="text-sm text-gray-500">لا توجد إشعارات جديدة</p>
+                                    <p class="text-sm text-gray-500">{{ __('layout.notifications.no_new_notifications') }}</p>
                                 </div>
                             @endif
                         </div>
@@ -397,30 +405,30 @@
                         <hr class="my-2">
                         @if(auth()->user()->hasRole('admin'))
                             <a href="{{ route('admin.dashboard') }}" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
-                                <i class="fas fa-tachometer-alt ml-2"></i>لوحة التحكم
+                                <i class="fas fa-tachometer-alt ml-2"></i>{{ __('layout.user_menu.dashboard') }}
                             </a>
                         @endif
 
                         @if(auth()->user()->hasRole('facility'))
                             <a href="{{ route('facility.dashboard') }}" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
-                                <i class="fas fa-building ml-2"></i>إدارة المنشأة
+                                <i class="fas fa-building ml-2"></i>{{ __('layout.user_menu.facility_management') }}
                             </a>
                         @endif
 
                         @if(auth()->user()->hasRole('client'))
                             <a href="{{ route('client.dashboard') }}" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
-                                <i class="fas fa-user ml-2"></i>حسابي
+                                <i class="fas fa-user ml-2"></i>{{ __('layout.user_menu.my_account') }}
                             </a>
                         @endif
 
                         <a href="{{ route('profile.edit') }}" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
-                            <i class="fas fa-user-edit ml-2"></i>تعديل الملف الشخصي
+                            <i class="fas fa-user-edit ml-2"></i>{{ __('layout.user_menu.edit_profile') }}
                         </a>
 
                         <form method="POST" action="{{ route('logout') }}" class="block">
                             @csrf
                             <button type="submit" class="w-full text-right px-3 py-2 text-red-600 hover:text-red-700 text-base font-medium">
-                                <i class="fas fa-sign-out-alt ml-2"></i>تسجيل الخروج
+                                <i class="fas fa-sign-out-alt ml-2"></i>{{ __('layout.user_menu.logout') }}
                             </button>
                         </form>
                     @else

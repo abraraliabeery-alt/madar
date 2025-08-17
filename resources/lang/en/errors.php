@@ -1,34 +1,14 @@
 <?php
 
 return [
-    /*
-    |--------------------------------------------------------------------------
-    | Error Language Lines
-    |--------------------------------------------------------------------------
-    |
-    | The following language lines are used in the error-related views
-    | for various messages, labels, and interface elements.
-    |
-    */
-
-    'unauthorized' => 'Unauthorized',
-    'payment_required' => 'Payment Required',
-    'forbidden' => 'Forbidden',
-    'not_found' => 'Not Found',
-    'page_expired' => 'Page Expired',
-    'too_many_requests' => 'Too Many Requests',
-    'server_error' => 'Server Error',
-    'service_unavailable' => 'Service Unavailable',
-    
-    'all_rights_reserved' => 'All rights reserved.',
-    
-    'pagination' => [
-        'previous' => 'pagination.previous',
-        'next' => 'pagination.next',
-        'showing' => 'Showing',
-        'to' => 'to',
-        'of' => 'of',
-        'results' => 'results',
-        'navigation' => 'Pagination Navigation',
+    '404' => [
+        'title' => '404 - Page Not Found',
+        'page_not_found' => 'Page Not Found',
+        'description' => 'Sorry, the page you are looking for does not exist.',
+        'additional_info' => 'It may have been moved or deleted, or the link may be incorrect.',
+        'home_page' => 'Home Page',
+        'go_back' => 'Go Back',
+        'contact_us' => 'Contact Us',
+        'contact_message' => 'If you believe this is an error, please',
     ],
 ];
