@@ -59,29 +59,31 @@
                         </div>
                     @endif
 
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="text-center">
-                            <div class="bg-primary-100 p-4 rounded-lg mb-3">
-                                <i class="fas fa-bed text-2xl text-primary-600"></i>
+                    @if($product->card_attributes && $product->card_attributes->count() > 0)
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            @foreach($product->card_attributes as $attribute)
+                            <div class="text-center">
+                                <div class="bg-primary-100 p-4 rounded-lg mb-3">
+                                    @if($attribute->icon)
+                                        <i class="{{ $attribute->icon }} text-2xl text-primary-600"></i>
+                                    @else
+                                        <i class="fas fa-info-circle text-2xl text-primary-600"></i>
+                                    @endif
+                                </div>
+                                <h3 class="font-semibold text-gray-900">{{ $attribute->pivot->value }}</h3>
+                                <p class="text-gray-600 text-sm">
+                                    @if($attribute->Symbol)
+                                        {{ $attribute->Symbol }}
+                                    @else
+                                        {{ $attribute->translations->first()->name ?? ucfirst($attribute->type) }}
+                                    @endif
+                                </p>
                             </div>
-                            <h3 class="font-semibold text-gray-900">{{ $product->rooms ?? 0 }}</h3>
-                            <p class="text-gray-600 text-sm">{{ __('products.show.bedrooms') }}</p>
+                            @endforeach
                         </div>
-                        <div class="text-center">
-                            <div class="bg-primary-100 p-4 rounded-lg mb-3">
-                                <i class="fas fa-bath text-2xl text-primary-600"></i>
-                            </div>
-                            <h3 class="font-semibold text-gray-900">{{ $product->bathrooms ?? 0 }}</h3>
-                            <p class="text-gray-600 text-sm">{{ __('products.show.bathrooms') }}</p>
-                        </div>
-                        <div class="text-center">
-                            <div class="bg-primary-100 p-4 rounded-lg mb-3">
-                                <i class="fas fa-ruler-combined text-2xl text-primary-600"></i>
-                            </div>
-                            <h3 class="font-semibold text-gray-900">{{ number_format($product->area ?? 0) }}</h3>
-                            <p class="text-gray-600 text-sm">{{ __('products.show.square_meters') }}</p>
-                        </div>
-                    </div>
+                    @else
+                        <p class="text-gray-500 text-center py-8">{{ __('products.show.no_attributes') }}</p>
+                    @endif
                 </div>
 
                 <!-- Gallery Section -->
@@ -99,15 +101,28 @@
                     </div>
                 @endif
 
-                <!-- Attributes Section -->
+                <!-- All Attributes Section -->
                 @if($product->attributes && $product->attributes->count() > 0)
                     <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-                        <h2 class="text-2xl font-bold text-gray-900 mb-4">{{ __('products.show.attributes') }}</h2>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4">{{ __('products.show.all_attributes') }}</h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             @foreach($product->attributes as $attribute)
-                                <div class="flex items-center justify-between">
-                                    <span class="text-gray-600">{{ $attribute->translations->first()->name ?? $attribute->type }}</span>
-                                    <span class="font-medium text-gray-900">{{ $attribute->pivot->value ?? '-' }} {{ $attribute->translations->first()->symbol ?? '' }}</span>
+                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                    <span class="text-gray-600 font-medium">
+                                        @if($attribute->translations->first())
+                                            {{ $attribute->translations->first()->name }}
+                                        @else
+                                            {{ ucfirst($attribute->type) }}
+                                        @endif
+                                    </span>
+                                    <span class="font-semibold text-gray-900">
+                                        {{ $attribute->pivot->value ?? '-' }}
+                                        @if($attribute->Symbol)
+                                            {{ $attribute->Symbol }}
+                                        @elseif($attribute->translations->first() && $attribute->translations->first()->symbol)
+                                            {{ $attribute->translations->first()->symbol }}
+                                        @endif
+                                    </span>
                                 </div>
                             @endforeach
                         </div>
@@ -245,18 +260,26 @@
                             <span class="text-gray-600">{{ __('products.show.type') }}</span>
                             <span class="font-semibold text-gray-900">{{ $product->property_type ?? __('products.show.not_specified') }}</span>
                         </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-600">{{ __('products.show.floor') }}</span>
-                            <span class="font-semibold text-gray-900">{{ $product->floor ?? __('products.show.not_specified') }}</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-600">{{ __('products.show.floors_count') }}</span>
-                            <span class="font-semibold text-gray-900">{{ $product->floors_count ?? __('products.show.not_specified') }}</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-600">{{ __('products.show.parking_spaces') }}</span>
-                            <span class="font-semibold text-gray-900">{{ $product->parking_spaces ?? __('products.show.not_specified') }}</span>
-                        </div>
+                        
+                        <!-- Dynamic Attributes -->
+                        @foreach($product->attributes as $attribute)
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">
+                                    @if($attribute->translations->first())
+                                        {{ $attribute->translations->first()->name }}
+                                    @else
+                                        {{ ucfirst($attribute->type) }}
+                                    @endif
+                                </span>
+                                <span class="font-semibold text-gray-900">
+                                    {{ $attribute->pivot->value ?? __('products.show.not_specified') }}
+                                    @if($attribute->Symbol)
+                                        {{ $attribute->Symbol }}
+                                    @endif
+                                </span>
+                            </div>
+                        @endforeach
+                        
                         <div class="flex justify-between items-center">
                             <span class="text-gray-600">{{ __('products.show.available_from') }}</span>
                             <span class="font-semibold text-gray-900">{{ $product->available_from ? $product->available_from->format('Y/m/d') : __('products.show.not_specified') }}</span>

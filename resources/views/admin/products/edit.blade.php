@@ -178,34 +178,7 @@
                             </div>
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-md-3">
-                                        <div class="mb-3">
-                                            <label for="rooms" class="form-label">عدد الغرف</label>
-                                            <input type="number" class="form-control @error('rooms') is-invalid @enderror" id="rooms" name="rooms" value="{{ old('rooms', $product->rooms) }}">
-                                            @error('rooms')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="mb-3">
-                                            <label for="bathrooms" class="form-label">عدد الحمامات</label>
-                                            <input type="number" class="form-control @error('bathrooms') is-invalid @enderror" id="bathrooms" name="bathrooms" value="{{ old('bathrooms', $product->bathrooms) }}">
-                                            @error('bathrooms')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="mb-3">
-                                            <label for="area" class="form-label">المساحة (متر مربع)</label>
-                                            <input type="number" step="0.01" class="form-control @error('area') is-invalid @enderror" id="area" name="area" value="{{ old('area', $product->area) }}">
-                                            @error('area')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="parking_spaces" class="form-label">مواقف السيارات</label>
                                             <input type="number" class="form-control @error('parking_spaces') is-invalid @enderror" id="parking_spaces" name="parking_spaces" value="{{ old('parking_spaces', $product->parking_spaces) }}">
@@ -214,24 +187,27 @@
                                             @enderror
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Attributes -->
+                        <div class="card mt-4">
+                            <div class="card-header">
+                                <h6 class="mb-0">الخصائص</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    @foreach($attributes as $attribute)
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="floor" class="form-label">الطابق</label>
-                                            <input type="text" class="form-control @error('floor') is-invalid @enderror" id="floor" name="floor" value="{{ old('floor', $product->floor) }}">
-                                            @error('floor')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
+                                            <label for="attribute_{{ $attribute->id }}" class="form-label">{{ $attribute->name }}</label>
+                                            <input type="text" class="form-control" id="attribute_{{ $attribute->id }}" name="attributes[{{ $attribute->id }}][value]" 
+                                                   value="{{ old('attributes.'.$attribute->id.'.value', $product->attributes->where('id', $attribute->id)->first() ? $product->attributes->where('id', $attribute->id)->first()->pivot->value : '') }}">
+                                            <input type="hidden" name="attributes[{{ $attribute->id }}][attribute_id]" value="{{ $attribute->id }}">
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="floors_count" class="form-label">عدد الطوابق</label>
-                                            <input type="number" class="form-control @error('floors_count') is-invalid @enderror" id="floors_count" name="floors_count" value="{{ old('floors_count', $product->floors_count) }}">
-                                            @error('floors_count')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>

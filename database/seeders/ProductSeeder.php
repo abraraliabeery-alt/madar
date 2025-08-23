@@ -19,18 +19,23 @@ class ProductSeeder extends Seeder
         $facilities = Facility::all();
         $categories = Category::all();
         $facilityUsers = User::where('primary_role', 'facility')->get();
+        
+        // Get or create attributes that should be shown in product cards
+        $attributes = $this->getOrCreateAttributes();
 
         $products = [
             [
                 'title' => 'شقة فاخرة في الرياض',
                 'description' => 'شقة حديثة ومفروشة بالكامل في حي النرجس، الرياض',
                 'address' => 'حي النرجس، الرياض',
-                'rooms' => 3,
-                'bathrooms' => 2,
-                'area' => 120.50,
-                'floor' => 'الثالث',
-                'floors_count' => 15,
-                'parking_spaces' => 1,
+                'attributes' => [
+                    'rooms' => 3,
+                    'bathrooms' => 2,
+                    'area' => 120.50,
+                    'floor' => 'الثالث',
+                    'floors_count' => 15,
+                    'parking_spaces' => 1,
+                ],
                 'price' => 2500.00,
                 'property_type' => 'شقة',
                 'is_active' => true,
@@ -46,12 +51,14 @@ class ProductSeeder extends Seeder
                 'title' => 'فيلا فاخرة في جدة',
                 'description' => 'فيلا مستقلة مع حديقة ومسبح في حي الكورنيش، جدة',
                 'address' => 'حي الكورنيش، جدة',
-                'rooms' => 5,
-                'bathrooms' => 4,
-                'area' => 350.00,
-                'floor' => 'مستقل',
-                'floors_count' => 2,
-                'parking_spaces' => 3,
+                'attributes' => [
+                    'rooms' => 5,
+                    'bathrooms' => 4,
+                    'area' => 350.00,
+                    'floor' => 'مستقل',
+                    'floors_count' => 2,
+                    'parking_spaces' => 3,
+                ],
                 'price' => 8000.00,
                 'property_type' => 'فيلا',
                 'is_active' => true,
@@ -67,12 +74,14 @@ class ProductSeeder extends Seeder
                 'title' => 'مكتب تجاري في الدمام',
                 'description' => 'مكتب حديث في مركز تجاري مميز في الدمام',
                 'address' => 'شارع الملك خالد، الدمام',
-                'rooms' => 2,
-                'bathrooms' => 1,
-                'area' => 80.00,
-                'floor' => 'الأول',
-                'floors_count' => 10,
-                'parking_spaces' => 2,
+                'attributes' => [
+                    'rooms' => 2,
+                    'bathrooms' => 1,
+                    'area' => 80.00,
+                    'floor' => 'الأول',
+                    'floors_count' => 10,
+                    'parking_spaces' => 2,
+                ],
                 'price' => 4000.00,
                 'property_type' => 'مكتب',
                 'is_active' => true,
@@ -88,12 +97,14 @@ class ProductSeeder extends Seeder
                 'title' => 'محل تجاري في الخبر',
                 'description' => 'محل في موقع مميز في الخبر، مناسب للمشاريع التجارية',
                 'address' => 'شارع الأمير محمد، الخبر',
-                'rooms' => 1,
-                'bathrooms' => 1,
-                'area' => 60.00,
-                'floor' => 'الأرضي',
-                'floors_count' => 3,
-                'parking_spaces' => 1,
+                'attributes' => [
+                    'rooms' => 1,
+                    'bathrooms' => 1,
+                    'area' => 60.00,
+                    'floor' => 'الأرضي',
+                    'floors_count' => 3,
+                    'parking_spaces' => 1,
+                ],
                 'price' => 3000.00,
                 'property_type' => 'محل',
                 'is_active' => true,
@@ -109,12 +120,14 @@ class ProductSeeder extends Seeder
                 'title' => 'شقة استوديو في الرياض',
                 'description' => 'شقة استوديو حديثة ومناسبة للشباب في الرياض',
                 'address' => 'حي السليمانية، الرياض',
-                'rooms' => 1,
-                'bathrooms' => 1,
-                'area' => 45.00,
-                'floor' => 'الخامس',
-                'floors_count' => 12,
-                'parking_spaces' => 1,
+                'attributes' => [
+                    'rooms' => 1,
+                    'bathrooms' => 1,
+                    'area' => 45.00,
+                    'floor' => 'الخامس',
+                    'floors_count' => 12,
+                    'parking_spaces' => 1,
+                ],
                 'price' => 1800.00,
                 'property_type' => 'استوديو',
                 'is_active' => true,
@@ -132,6 +145,10 @@ class ProductSeeder extends Seeder
             $facility = $facilities->get($index % $facilities->count());
             $facilityUser = $facilityUsers->get($index % $facilityUsers->count());
 
+            // Extract attributes from product data
+            $productAttributes = $productData['attributes'] ?? [];
+            unset($productData['attributes']); // Remove attributes from main data
+
             $product = Product::updateOrCreate(
                 ['title' => $productData['title']],
                 array_merge($productData, [
@@ -144,6 +161,59 @@ class ProductSeeder extends Seeder
                     'longitude' => 46.6753 + (rand(-10, 10) / 100),
                 ])
             );
+
+            // Attach attributes to the product
+            $this->attachAttributesToProduct($product, $productAttributes, $attributes);
+        }
+    }
+
+    /**
+     * Get or create attributes that should be shown in product cards
+     */
+    private function getOrCreateAttributes()
+    {
+        $attributeTypes = [
+            'rooms' => 'fas fa-bed',
+            'bathrooms' => 'fas fa-bath',
+            'area' => 'fas fa-ruler-combined',
+            'floor' => 'fas fa-building',
+            'floors_count' => 'fas fa-layer-group',
+            'parking_spaces' => 'fas fa-car',
+        ];
+
+        $attributes = [];
+        foreach ($attributeTypes as $type => $icon) {
+            $attribute = \App\Models\Attribute::firstOrCreate(
+                ['type' => $type],
+                [
+                    'type' => $type,
+                    'required' => false,
+                    'category_id' => null, // Global attribute
+                    'icon' => $icon,
+                    'Symbol' => null,
+                    'show_in_card' => true,
+                ]
+            );
+            $attributes[$type] = $attribute;
+        }
+
+        return $attributes;
+    }
+
+    /**
+     * Attach attributes to a product
+     */
+    private function attachAttributesToProduct($product, $productAttributes, $availableAttributes)
+    {
+        foreach ($productAttributes as $type => $value) {
+            if (isset($availableAttributes[$type])) {
+                $attribute = $availableAttributes[$type];
+                
+                // Attach the attribute with its value
+                $product->attributes()->syncWithoutDetaching([
+                    $attribute->id => ['value' => $value]
+                ]);
+            }
         }
     }
 }

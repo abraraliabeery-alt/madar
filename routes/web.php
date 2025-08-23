@@ -14,6 +14,17 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
+Route::get('/migration', function () {
+    try {
+        Artisan::call('migrate', ['--force' => true]);
+        return nl2br(Artisan::output()); // يعرض الإخراج بالتنسيق المناسب
+    } catch (\Exception $e) {
+        return response()->make(
+            "<h3>Error:</h3><pre>" . $e->getMessage() . "</pre>",
+            500
+        );
+    }
+});
 // Language switching routes
 Route::get('/language/{language}', [App\Http\Controllers\LanguageController::class, 'switch'])->name('language.switch');
 Route::get('/language-info', [App\Http\Controllers\LanguageController::class, 'info'])->name('language.info');

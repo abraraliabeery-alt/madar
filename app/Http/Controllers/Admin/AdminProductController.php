@@ -93,11 +93,6 @@ class AdminProductController extends Controller
             'category_id' => 'required|exists:categories,id',
             'status_id' => 'required|exists:statuses,id',
             'owner_user_id' => 'required|exists:users,id',
-            'rooms' => 'nullable|integer|min:0',
-            'bathrooms' => 'nullable|integer|min:0',
-            'area' => 'nullable|numeric|min:0',
-            'floor' => 'nullable|string',
-            'floors_count' => 'nullable|integer|min:1',
             'parking_spaces' => 'nullable|integer|min:0',
             'contact_phone' => 'nullable|string',
             'contact_email' => 'nullable|email',
@@ -107,6 +102,8 @@ class AdminProductController extends Controller
             'is_verified' => 'boolean',
             'features' => 'array',
             'features.*' => 'exists:features,id',
+            'attributes' => 'array',
+            'attributes.*.value' => 'nullable|string',
         ]);
 
         $productData = $request->except(['image', 'features', 'status_id']);
@@ -139,6 +136,17 @@ class AdminProductController extends Controller
             $product->features()->attach($request->features);
         }
 
+        // ربط الخصائص
+        if ($request->has('attributes')) {
+            foreach ($request->attributes as $attributeId => $attributeData) {
+                if (!empty($attributeData['value'])) {
+                    $product->attributes()->attach($attributeId, [
+                        'value' => $attributeData['value']
+                    ]);
+                }
+            }
+        }
+
 
 
         return redirect()->route('admin.products.index')
@@ -150,13 +158,14 @@ class AdminProductController extends Controller
      */
     public function edit(Product $product)
     {
-        $product->load(['facility', 'category', 'statuses', 'features']);
+        $product->load(['facility', 'category', 'statuses', 'features', 'attributes']);
         $facilities = Facility::all();
         $categories = Category::all();
         $statuses = Status::all();
         $features = Feature::all();
+        $attributes = Attribute::all();
 
-        return view('admin.products.edit', compact('product', 'facilities', 'categories', 'statuses', 'features'));
+        return view('admin.products.edit', compact('product', 'facilities', 'categories', 'statuses', 'features', 'attributes'));
     }
 
     /**
@@ -173,11 +182,6 @@ class AdminProductController extends Controller
             'category_id' => 'required|exists:categories,id',
             'status_id' => 'required|exists:statuses,id',
             'owner_user_id' => 'required|exists:users,id',
-            'rooms' => 'nullable|integer|min:0',
-            'bathrooms' => 'nullable|integer|min:0',
-            'area' => 'nullable|numeric|min:0',
-            'floor' => 'nullable|string',
-            'floors_count' => 'nullable|integer|min:1',
             'parking_spaces' => 'nullable|integer|min:0',
             'contact_phone' => 'nullable|string',
             'contact_email' => 'nullable|email',
@@ -187,6 +191,8 @@ class AdminProductController extends Controller
             'is_verified' => 'boolean',
             'features' => 'array',
             'features.*' => 'exists:features,id',
+            'attributes' => 'array',
+            'attributes.*.value' => 'nullable|string',
         ]);
 
         $productData = $request->except(['image', 'features', 'status_id']);
@@ -225,6 +231,18 @@ class AdminProductController extends Controller
             $product->features()->sync($request->features);
         } else {
             $product->features()->detach();
+        }
+
+        // تحديث الخصائص
+        $product->attributes()->detach();
+        if ($request->has('attributes')) {
+            foreach ($request->attributes as $attributeId => $attributeData) {
+                if (!empty($attributeData['value'])) {
+                    $product->attributes()->attach($attributeId, [
+                        'value' => $attributeData['value']
+                    ]);
+                }
+            }
         }
 
 

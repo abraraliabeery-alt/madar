@@ -128,29 +128,7 @@
                             </select>
                         </div>
 
-                        <!-- Rooms -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('cities.products.rooms') }}</label>
-                            <select name="rooms" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500">
-                                <option value="">{{ __('cities.products.any_rooms') }}</option>
-                                @for($i = 1; $i <= 5; $i++)
-                                    <option value="{{ $i }}" {{ request('rooms') == $i ? 'selected' : '' }}>{{ $i }}+</option>
-                                @endfor
-                            </select>
-                        </div>
 
-                        <!-- Area Range -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('cities.products.area_range') }}</label>
-                            <div class="grid grid-cols-2 gap-2">
-                                <input type="number" name="min_area" value="{{ request('min_area') }}" 
-                                       class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
-                                       placeholder="{{ __('cities.products.min_area') }}">
-                                <input type="number" name="max_area" value="{{ request('max_area') }}" 
-                                       class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
-                                       placeholder="{{ __('cities.products.max_area') }}">
-                            </div>
-                        </div>
 
                         <!-- Sort -->
                         <div>
@@ -233,9 +211,21 @@
                                     <p class="text-gray-600 text-sm mb-3">{{ $product->address ?? __('products.property_card.location_unknown') }}</p>
 
                                     <div class="flex items-center justify-between text-sm text-gray-500 mb-3">
-                                        <span><i class="fas fa-bed ml-1"></i>{{ $product->rooms ?? 0 }} {{ __('products.property_card.rooms') }}</span>
-                                        <span><i class="fas fa-bath ml-1"></i>{{ $product->bathrooms ?? 0 }} {{ __('products.property_card.bathrooms') }}</span>
-                                        <span><i class="fas fa-ruler-combined ml-1"></i>{{ $product->area ?? 0 }} {{ __('products.property_card.square_meters') }}</span>
+                                        @foreach($product->card_attributes as $attribute)
+                                            <span>
+                                                @if($attribute->icon)
+                                                    <i class="{{ $attribute->icon }} ml-1"></i>
+                                                @else
+                                                    <i class="fas fa-info-circle ml-1"></i>
+                                                @endif
+                                                {{ $attribute->pivot->value }}
+                                                @if($attribute->Symbol)
+                                                    {{ $attribute->Symbol }}
+                                                @else
+                                                    {{ $attribute->translations->first()->name ?? $attribute->type }}
+                                                @endif
+                                            </span>
+                                        @endforeach
                                     </div>
 
                                     <div class="flex items-center justify-between">
@@ -285,9 +275,21 @@
                                         <p class="text-gray-600 text-sm mb-3">{{ $product->address ?? __('products.property_card.location_unknown') }}</p>
 
                                         <div class="flex items-center justify-between text-sm text-gray-500 mb-3">
-                                            <span><i class="fas fa-bed ml-1"></i>{{ $product->rooms ?? 0 }} {{ __('products.property_card.rooms') }}</span>
-                                            <span><i class="fas fa-bath ml-1"></i>{{ $product->bathrooms ?? 0 }} {{ __('products.property_card.bathrooms') }}</span>
-                                            <span><i class="fas fa-ruler-combined ml-1"></i>{{ $product->area ?? 0 }} {{ __('products.property_card.square_meters') }}</span>
+                                            @foreach($product->card_attributes as $attribute)
+                                                <span>
+                                                    @if($attribute->icon)
+                                                        <i class="{{ $attribute->icon }} ml-1"></i>
+                                                    @else
+                                                        <i class="fas fa-info-circle ml-1"></i>
+                                                    @endif
+                                                    {{ $attribute->pivot->value }}
+                                                    @if($attribute->Symbol)
+                                                        {{ $attribute->Symbol }}
+                                                    @else
+                                                        {{ $attribute->translations->first()->name ?? $attribute->type }}
+                                                    @endif
+                                                </span>
+                                            @endforeach
                                         </div>
 
                                         <div class="flex justify-end">

@@ -75,18 +75,24 @@
                 <div class="p-4">
                     <h3 class="font-medium text-gray-900 mb-2 line-clamp-2">{{ $product->title }}</h3>
                     
-                    <!-- Key Details -->
-                    <div class="flex items-center gap-4 text-sm text-gray-600 mb-3">
-                        @if($product->area)
-                            <span><i class="fas fa-ruler-combined ml-1"></i>{{ $product->area }} م²</span>
-                        @endif
-                        @if($product->rooms)
-                            <span><i class="fas fa-bed ml-1"></i>{{ $product->rooms }}</span>
-                        @endif
-                        @if($product->bathrooms)
-                            <span><i class="fas fa-bath ml-1"></i>{{ $product->bathrooms }}</span>
-                        @endif
-                    </div>
+                                            <!-- Key Details -->
+                        <div class="flex items-center gap-4 text-sm text-gray-600 mb-3">
+                            @foreach($product->card_attributes as $attribute)
+                                <span>
+                                    @if($attribute->icon)
+                                        <i class="{{ $attribute->icon }} ml-1"></i>
+                                    @else
+                                        <i class="fas fa-info-circle ml-1"></i>
+                                    @endif
+                                    {{ $attribute->pivot->value }}
+                                    @if($attribute->Symbol)
+                                        {{ $attribute->Symbol }}
+                                    @else
+                                        {{ $attribute->translations->first()->name ?? $attribute->type }}
+                                    @endif
+                                </span>
+                            @endforeach
+                        </div>
                     
                     <!-- Location -->
                     @if($product->city)
@@ -151,15 +157,21 @@
                         
                         <!-- Key Details -->
                         <div class="flex items-center gap-6 text-sm text-gray-600 mb-3">
-                            @if($product->area)
-                                <span><i class="fas fa-ruler-combined ml-1"></i>{{ $product->area }} م²</span>
-                            @endif
-                            @if($product->rooms)
-                                <span><i class="fas fa-bed ml-1"></i>{{ $product->rooms }}</span>
-                            @endif
-                            @if($product->bathrooms)
-                                <span><i class="fas fa-bath ml-1"></i>{{ $product->bathrooms }}</span>
-                            @endif
+                            @foreach($product->card_attributes as $attribute)
+                                <span>
+                                    @if($attribute->icon)
+                                        <i class="{{ $attribute->icon }} ml-1"></i>
+                                    @else
+                                        <i class="fas fa-info-circle ml-1"></i>
+                                    @endif
+                                    {{ $attribute->pivot->value }}
+                                    @if($attribute->Symbol)
+                                        {{ $attribute->Symbol }}
+                                    @else
+                                        {{ $attribute->translations->first()->name ?? $attribute->type }}
+                                    @endif
+                                </span>
+                            @endforeach
                         </div>
                         
                         <!-- Location and Action -->

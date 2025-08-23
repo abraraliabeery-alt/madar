@@ -14,11 +14,6 @@ class Product extends Model
         'title',
         'description',
         'address',
-        'rooms',
-        'bathrooms',
-        'area',
-        'floor',
-        'floors_count',
         'parking_spaces',
         'is_active',
         'is_featured',
@@ -55,7 +50,6 @@ class Product extends Model
         'latitude' => 'float',
         'longitude' => 'float',
         'image_gallery' => 'array',
-        'area' => 'float',
         'rating' => 'float',
         'available_from' => 'date',
         'available_to' => 'date',
@@ -97,6 +91,20 @@ class Product extends Model
         return $this->belongsToMany(Attribute::class, 'product_attribute_values')
             ->withPivot('value')
             ->withTimestamps();
+    }
+
+    /**
+     * Get attributes that should be displayed in product cards
+     */
+    public function getCardAttributesAttribute()
+    {
+        return $this->attributes()
+            ->where('show_in_card', true)
+            ->where(function($query) {
+                $query->where('category_id', $this->category_id)
+                      ->orWhereNull('category_id');
+            })
+            ->get();
     }
 
     public function features()
@@ -170,10 +178,7 @@ class Product extends Model
         return $query->whereBetween('price', [$minPrice, $maxPrice]);
     }
 
-    public function scopeByAreaRange($query, $minArea, $maxArea)
-    {
-        return $query->whereBetween('area', [$minArea, $maxArea]);
-    }
+
 
     // Accessors
     public function getFormattedPriceAttribute()
@@ -181,10 +186,7 @@ class Product extends Model
         return number_format($this->price, 2) . ' ريال';
     }
 
-    public function getFormattedAreaAttribute()
-    {
-        return number_format($this->area, 2) . ' متر مربع';
-    }
+
 
     public function getImageUrlAttribute()
     {

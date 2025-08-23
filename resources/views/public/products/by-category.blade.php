@@ -83,9 +83,21 @@
                             <p class="text-gray-600 text-sm mb-3">{{ $product->address ?? __('products.property_card.location_unknown') }}</p>
 
                             <div class="flex items-center justify-between text-sm text-gray-500 mb-3">
-                                <span><i class="fas fa-bed ml-1"></i>{{ $product->rooms ?? 0 }} {{ __('products.property_card.rooms') }}</span>
-                                <span><i class="fas fa-bath ml-1"></i>{{ $product->bathrooms ?? 0 }} {{ __('products.property_card.bathrooms') }}</span>
-                                <span><i class="fas fa-ruler-combined ml-1"></i>{{ $product->area ?? 0 }} {{ __('products.property_card.square_meters') }}</span>
+                                @foreach($product->card_attributes as $attribute)
+                                    <span>
+                                        @if($attribute->icon)
+                                            <i class="{{ $attribute->icon }} ml-1"></i>
+                                        @else
+                                            <i class="fas fa-info-circle ml-1"></i>
+                                        @endif
+                                        {{ $attribute->pivot->value }}
+                                        @if($attribute->Symbol)
+                                            {{ $attribute->Symbol }}
+                                        @else
+                                            {{ $attribute->translations->first()->name ?? $attribute->type }}
+                                        @endif
+                                    </span>
+                                @endforeach
                             </div>
 
                             <div class="flex items-center justify-between">
@@ -135,9 +147,21 @@
                                 <p class="text-gray-600 text-sm mb-3">{{ $product->address ?? __('products.property_card.location_unknown') }}</p>
 
                                 <div class="flex items-center justify-between text-sm text-gray-500 mb-3">
-                                    <span><i class="fas fa-bed ml-1"></i>{{ $product->rooms ?? 0 }} {{ __('products.property_card.rooms') }}</span>
-                                    <span><i class="fas fa-bath ml-1"></i>{{ $product->bathrooms ?? 0 }} {{ __('products.property_card.bathrooms') }}</span>
-                                    <span><i class="fas fa-ruler-combined ml-1"></i>{{ $product->area ?? 0 }} {{ __('products.property_card.square_meters') }}</span>
+                                    @foreach($product->card_attributes as $attribute)
+                                        <span>
+                                            @if($attribute->icon)
+                                                <i class="{{ $attribute->icon }} ml-1"></i>
+                                            @else
+                                                <i class="fas fa-info-circle ml-1"></i>
+                                            @endif
+                                            {{ $attribute->pivot->value }}
+                                            @if($attribute->Symbol)
+                                                {{ $attribute->Symbol }}
+                                            @else
+                                                {{ $attribute->translations->first()->name ?? $attribute->type }}
+                                            @endif
+                                        </span>
+                                    @endforeach
                                 </div>
 
                                 <div class="flex justify-end">

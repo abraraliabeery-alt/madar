@@ -142,26 +142,6 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label text-muted">عدد غرف النوم</label>
-                                    <p class="fs-5">{{ $product->bedrooms ?? '-' }}</p>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label text-muted">عدد الحمامات</label>
-                                    <p class="fs-5">{{ $product->bathrooms ?? '-' }}</p>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label text-muted">المساحة</label>
-                                    <p class="fs-5">{{ $product->area ? number_format($product->area, 2) . ' متر مربع' : '-' }}</p>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label text-muted">رقم الطابق</label>
-                                    <p class="fs-5">{{ $product->floor_number ?? '-' }}</p>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label text-muted">عدد الطوابق</label>
-                                    <p class="fs-5">{{ $product->total_floors ?? '-' }}</p>
-                                </div>
-                                <div class="col-md-6 mb-3">
                                     <label class="form-label text-muted">عدد مواقف السيارات</label>
                                     <p class="fs-5">{{ $product->parking_spaces ?? '-' }}</p>
                                 </div>
@@ -196,6 +176,29 @@
                                     </p>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Attributes -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="mb-0">الخصائص</h6>
+                        </div>
+                        <div class="card-body">
+                            @if($product->attributes->count() > 0)
+                                <div class="row">
+                                    @foreach($product->attributes as $attribute)
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label text-muted">{{ $attribute->name }}</label>
+                                            <p class="fs-5">{{ $attribute->pivot->value }}</p>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @else
+                                <p class="text-muted">لا توجد خصائص محددة</p>
+                            @endif
                         </div>
                     </div>
                 </div>

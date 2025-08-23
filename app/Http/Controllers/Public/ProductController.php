@@ -49,19 +49,7 @@ class ProductController extends Controller
             $query->where('property_type', $request->property_type);
         }
 
-        // Filter by rooms
-        if ($request->filled('rooms')) {
-            $query->where('rooms', $request->rooms);
-        }
 
-        // Filter by area range
-        if ($request->filled('min_area')) {
-            $query->where('area', '>=', $request->min_area);
-        }
-
-        if ($request->filled('max_area')) {
-            $query->where('area', '<=', $request->max_area);
-        }
 
         // Search by keyword
         if ($request->filled('q')) {

@@ -15,10 +15,12 @@ class Attribute extends Model
         'category_id',
         'icon',
         'Symbol',
+        'show_in_card',
     ];
 
     protected $casts = [
         'required' => 'boolean',
+        'show_in_card' => 'boolean',
     ];
 
     // العلاقات
@@ -43,5 +45,25 @@ class Attribute extends Model
     public function getProductsCountAttribute()
     {
         return $this->products()->count();
+    }
+
+    /**
+     * Scope to get attributes that should be shown in product cards
+     */
+    public function scopeShowInCard($query)
+    {
+        return $query->where('show_in_card', true);
+    }
+
+    /**
+     * Scope to get attributes for a specific category that should be shown in cards
+     */
+    public function scopeShowInCardForCategory($query, $categoryId)
+    {
+        return $query->where('show_in_card', true)
+                    ->where(function($q) use ($categoryId) {
+                        $q->where('category_id', $categoryId)
+                          ->orWhereNull('category_id');
+                    });
     }
 }

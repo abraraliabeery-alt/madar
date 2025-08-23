@@ -199,54 +199,6 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="bedrooms" class="form-label">عدد غرف النوم</label>
-                                            <input type="number" class="form-control @error('bedrooms') is-invalid @enderror" id="bedrooms" name="bedrooms" value="{{ old('bedrooms') }}" min="0">
-                                            @error('bedrooms')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="bathrooms" class="form-label">عدد الحمامات</label>
-                                            <input type="number" class="form-control @error('bathrooms') is-invalid @enderror" id="bathrooms" name="bathrooms" value="{{ old('bathrooms') }}" min="0">
-                                            @error('bathrooms')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="area" class="form-label">المساحة</label>
-                                            <div class="input-group">
-                                                <input type="number" step="0.01" class="form-control @error('area') is-invalid @enderror" id="area" name="area" value="{{ old('area') }}" min="0">
-                                                <span class="input-group-text">متر مربع</span>
-                                            </div>
-                                            @error('area')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="floor_number" class="form-label">رقم الطابق</label>
-                                            <input type="number" class="form-control @error('floor_number') is-invalid @enderror" id="floor_number" name="floor_number" value="{{ old('floor_number') }}">
-                                            @error('floor_number')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="total_floors" class="form-label">عدد الطوابق</label>
-                                            <input type="number" class="form-control @error('total_floors') is-invalid @enderror" id="total_floors" name="total_floors" value="{{ old('total_floors') }}" min="1">
-                                            @error('total_floors')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
                                             <label for="parking_spaces" class="form-label">عدد مواقف السيارات</label>
                                             <input type="number" class="form-control @error('parking_spaces') is-invalid @enderror" id="parking_spaces" name="parking_spaces" value="{{ old('parking_spaces') }}" min="0">
                                             @error('parking_spaces')
