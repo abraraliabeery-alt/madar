@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Category;
+use App\Models\CategoryTranslation;
 use Illuminate\Support\Facades\Storage;
 
 class AdminCategoryController extends Controller
@@ -24,7 +25,8 @@ class AdminCategoryController extends Controller
     public function create()
     {
         $categories = Category::where('parent_id', null)->get();
-        return view('admin.categories.create', compact('categories'));
+        $locales = config('locales.available');
+        return view('admin.categories.create', compact('categories', 'locales'));
     }
 
     /**
@@ -41,23 +43,41 @@ class AdminCategoryController extends Controller
             'is_active' => 'boolean',
             'is_featured' => 'boolean',
             'order' => 'nullable|integer|min:0',
+            'translations' => 'nullable|array',
+            'translations.*.locale' => 'required|string|in:' . implode(',', array_keys(config('locales.available'))),
+            'translations.*.name' => 'required|string|max:255',
+            'translations.*.description' => 'nullable|string',
         ]);
 
-        $categoryData = $request->except(['icon', 'image']);
+        $categoryData = $request->except(['icon', 'image', 'translations']);
 
         // معالجة الأيقونة
         if ($request->hasFile('icon')) {
-            $iconPath = $request->file('icon')->store('categories/icons', 'public');
+            $iconPath = $request->file('icon')->store('uploads/categories/icons', 'public');
             $categoryData['icon'] = $iconPath;
         }
 
         // معالجة الصورة
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('categories/images', 'public');
+            $imagePath = $request->file('image')->store('uploads/categories/images', 'public');
             $categoryData['image'] = $imagePath;
         }
 
         $category = Category::create($categoryData);
+
+        // حفظ الترجمات
+        if ($request->has('translations')) {
+            foreach ($request->translations as $translationData) {
+                if (!empty($translationData['name'])) {
+                    CategoryTranslation::create([
+                        'category_id' => $category->id,
+                        'locale' => $translationData['locale'],
+                        'name' => $translationData['name'],
+                        'description' => $translationData['description'] ?? null,
+                    ]);
+                }
+            }
+        }
 
         return redirect()->route('admin.categories.index')
             ->with('success', 'تم إنشاء الفئة بنجاح');
@@ -71,7 +91,9 @@ class AdminCategoryController extends Controller
         $categories = Category::where('parent_id', null)
             ->where('id', '!=', $category->id)
             ->get();
-        return view('admin.categories.edit', compact('category', 'categories'));
+        $locales = config('locales.available');
+        $translations = $category->translations->keyBy('locale');
+        return view('admin.categories.edit', compact('category', 'categories', 'locales', 'translations'));
     }
 
     /**
@@ -88,9 +110,13 @@ class AdminCategoryController extends Controller
             'is_active' => 'boolean',
             'is_featured' => 'boolean',
             'order' => 'nullable|integer|min:0',
+            'translations' => 'nullable|array',
+            'translations.*.locale' => 'required|string|in:' . implode(',', array_keys(config('locales.available'))),
+            'translations.*.name' => 'required|string|max:255',
+            'translations.*.description' => 'nullable|string',
         ]);
 
-        $categoryData = $request->except(['icon', 'image']);
+        $categoryData = $request->except(['icon', 'image', 'translations']);
 
         // معالجة الأيقونة
         if ($request->hasFile('icon')) {
@@ -98,7 +124,7 @@ class AdminCategoryController extends Controller
             if ($category->icon) {
                 Storage::disk('public')->delete($category->icon);
             }
-            $iconPath = $request->file('icon')->store('categories/icons', 'public');
+            $iconPath = $request->file('icon')->store('uploads/categories/icons', 'public');
             $categoryData['icon'] = $iconPath;
         }
 
@@ -108,11 +134,29 @@ class AdminCategoryController extends Controller
             if ($category->image) {
                 Storage::disk('public')->delete($category->image);
             }
-            $imagePath = $request->file('image')->store('categories/images', 'public');
+            $imagePath = $request->file('image')->store('uploads/categories/images', 'public');
             $categoryData['image'] = $imagePath;
         }
 
         $category->update($categoryData);
+
+        // تحديث الترجمات
+        if ($request->has('translations')) {
+            foreach ($request->translations as $translationData) {
+                if (!empty($translationData['name'])) {
+                    CategoryTranslation::updateOrCreate(
+                        [
+                            'category_id' => $category->id,
+                            'locale' => $translationData['locale'],
+                        ],
+                        [
+                            'name' => $translationData['name'],
+                            'description' => $translationData['description'] ?? null,
+                        ]
+                    );
+                }
+            }
+        }
 
         return redirect()->route('admin.categories.index')
             ->with('success', 'تم تحديث الفئة بنجاح');

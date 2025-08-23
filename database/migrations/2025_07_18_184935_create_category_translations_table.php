@@ -16,7 +16,11 @@ return new class extends Migration
             $table->unsignedBigInteger('category_id');
             $table->string('locale');
             $table->string('name');
+            $table->text('description')->nullable();
             $table->timestamps();
+            
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+            $table->unique(['category_id', 'locale']);
         });
     }
 

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'اتصل بنا')
+@section('title', __('general.contact.title'))
 
 @section('content')
 <div class="min-h-screen bg-gray-50">
@@ -8,9 +8,9 @@
     <div class="bg-gradient-to-r from-primary-600 to-primary-800 text-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
             <div class="text-center">
-                <h1 class="text-4xl md:text-5xl font-bold mb-6">اتصل بنا</h1>
+                <h1 class="text-4xl md:text-5xl font-bold mb-6">{{ __('general.contact.title') }}</h1>
                 <p class="text-xl text-primary-100 max-w-3xl mx-auto">
-                    نحن هنا لمساعدتك. لا تتردد في التواصل معنا لأي استفسار أو مساعدة تحتاجها
+                    {{ __('general.contact.subtitle') }}
                 </p>
             </div>
         </div>
@@ -21,7 +21,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <!-- Contact Form -->
             <div class="bg-white rounded-lg shadow-md p-8">
-                <h2 class="text-2xl font-bold text-gray-900 mb-6">أرسل لنا رسالة</h2>
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">{{ __('general.contact.form_title') }}</h2>
 
                 @if(session('success'))
                     <div class="mb-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
@@ -43,44 +43,44 @@
                     @csrf
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                         <div>
-                            <label for="name" class="block text-sm font-medium text-gray-700 mb-2">الاسم الكامل</label>
+                            <label for="name" class="block text-sm font-medium text-gray-700 mb-2">{{ __('general.contact.full_name') }}</label>
                             <input type="text" name="name" id="name" value="{{ old('name') }}"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
                                    required>
                         </div>
                         <div>
-                            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">البريد الإلكتروني</label>
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">{{ __('general.contact.email') }}</label>
                             <input type="email" name="email" id="email" value="{{ old('email') }}"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
                                    required>
                         </div>
                     </div>
                     <div class="mb-6">
-                        <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">رقم الهاتف</label>
+                        <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">{{ __('general.contact.phone') }}</label>
                         <input type="tel" name="phone" id="phone" value="{{ old('phone') }}"
                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
                     </div>
                     <div class="mb-6">
-                        <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">الموضوع</label>
+                        <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">{{ __('general.contact.subject') }}</label>
                         <select name="subject" id="subject"
                                 class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
                                 required>
-                            <option value="">اختر الموضوع</option>
-                            <option value="استفسار عام" {{ old('subject') == 'استفسار عام' ? 'selected' : '' }}>استفسار عام</option>
-                            <option value="طلب عرض سعر" {{ old('subject') == 'طلب عرض سعر' ? 'selected' : '' }}>طلب عرض سعر</option>
-                            <option value="شكوى" {{ old('subject') == 'شكوى' ? 'selected' : '' }}>شكوى</option>
-                            <option value="اقتراح" {{ old('subject') == 'اقتراح' ? 'selected' : '' }}>اقتراح</option>
-                            <option value="دعم فني" {{ old('subject') == 'دعم فني' ? 'selected' : '' }}>دعم فني</option>
+                            <option value="">{{ __('general.contact.select_subject') }}</option>
+                            <option value="استفسار عام" {{ old('subject') == 'استفسار عام' ? 'selected' : '' }}>{{ __('general.contact.general_inquiry') }}</option>
+                            <option value="طلب عرض سعر" {{ old('subject') == 'طلب عرض سعر' ? 'selected' : '' }}>{{ __('general.contact.price_quote') }}</option>
+                            <option value="شكوى" {{ old('subject') == 'شكوى' ? 'selected' : '' }}>{{ __('general.contact.complaint') }}</option>
+                            <option value="اقتراح" {{ old('subject') == 'اقتراح' ? 'selected' : '' }}>{{ __('general.contact.suggestion') }}</option>
+                            <option value="دعم فني" {{ old('subject') == 'دعم فني' ? 'selected' : '' }}>{{ __('general.contact.technical_support') }}</option>
                         </select>
                     </div>
                     <div class="mb-6">
-                        <label for="message" class="block text-sm font-medium text-gray-700 mb-2">الرسالة</label>
+                        <label for="message" class="block text-sm font-medium text-gray-700 mb-2">{{ __('general.contact.message') }}</label>
                         <textarea name="message" id="message" rows="5"
                                   class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-                                  placeholder="اكتب رسالتك هنا..." required>{{ old('message') }}</textarea>
+                                  placeholder="{{ __('general.contact.message_placeholder') }}" required>{{ old('message') }}</textarea>
                     </div>
                     <button type="submit" class="w-full btn-primary text-white py-3 rounded-lg font-medium">
-                        إرسال الرسالة
+                        {{ __('general.contact.send_message') }}
                     </button>
                 </form>
             </div>
@@ -88,14 +88,14 @@
             <!-- Contact Information -->
             <div class="space-y-8">
                 <div class="bg-white rounded-lg shadow-md p-8">
-                    <h3 class="text-xl font-bold text-gray-900 mb-6">معلومات التواصل</h3>
+                    <h3 class="text-xl font-bold text-gray-900 mb-6">{{ __('general.contact.contact_info') }}</h3>
                     <div class="space-y-4">
                         <div class="flex items-start space-x-4 space-x-reverse">
                             <div class="bg-primary-100 p-3 rounded-full">
                                 <i class="fas fa-map-marker-alt text-primary-600"></i>
                             </div>
                             <div>
-                                <h4 class="font-semibold text-gray-900">العنوان</h4>
+                                <h4 class="font-semibold text-gray-900">{{ __('general.contact.address') }}</h4>
                     <p class="text-gray-600">{{ \App\Models\Setting::getValue('contact_address', 'الرياض، المملكة العربية السعودية') }}</p>
                             </div>
                         </div>
@@ -104,7 +104,7 @@
                                 <i class="fas fa-phone text-primary-600"></i>
                             </div>
                             <div>
-                                <h4 class="font-semibold text-gray-900">الهاتف</h4>
+                                <h4 class="font-semibold text-gray-900">{{ __('general.contact.phone_label') }}</h4>
                                 <p class="text-gray-600">{{ \App\Models\Setting::getValue('contact_phone', '+966 50 123 4567') }}</p>
                             </div>
                         </div>
@@ -113,7 +113,7 @@
                                 <i class="fas fa-envelope text-primary-600"></i>
                             </div>
                             <div>
-                                <h4 class="font-semibold text-gray-900">البريد الإلكتروني</h4>
+                                <h4 class="font-semibold text-gray-900">{{ __('general.contact.email_label') }}</h4>
                                 <p class="text-gray-600">{{ \App\Models\Setting::getValue('contact_email', 'info@aqar.com') }}</p>
                             </div>
                         </div>
@@ -122,7 +122,7 @@
                                 <i class="fas fa-clock text-primary-600"></i>
                             </div>
                             <div>
-                                <h4 class="font-semibold text-gray-900">ساعات العمل</h4>
+                                <h4 class="font-semibold text-gray-900">{{ __('general.contact.working_hours') }}</h4>
                                 <p class="text-gray-600">{{ \App\Models\Setting::getValue('working_hours', 'الأحد - الخميس: 8:00 ص - 6:00 م') }}</p>
                             </div>
                         </div>
@@ -131,7 +131,7 @@
 
                 <!-- Social Media -->
                 <div class="bg-white rounded-lg shadow-md p-8">
-                    <h3 class="text-xl font-bold text-gray-900 mb-6">تابعنا</h3>
+                    <h3 class="text-xl font-bold text-gray-900 mb-6">{{ __('general.contact.follow_us') }}</h3>
                     <div class="flex space-x-4 space-x-reverse">
                         <a href="{{ \App\Models\Setting::getValue('facebook_url', '#') }}" class="bg-blue-600 text-white p-3 rounded-full hover:bg-blue-700 transition-colors">
                             <i class="fab fa-facebook-f"></i>
@@ -158,8 +158,8 @@
     <div class="bg-white py-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-8">
-                <h2 class="text-3xl font-bold text-gray-900 mb-4">موقعنا</h2>
-                <p class="text-lg text-gray-600">يمكنك زيارة مكتبنا أو التواصل معنا عبر الخريطة</p>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">{{ __('general.contact.location_title') }}</h2>
+                <p class="text-lg text-gray-600">{{ __('general.contact.location_subtitle') }}</p>
             </div>
             <div class="bg-gray-200 rounded-lg h-96" id="contact-map"></div>
         </div>
@@ -205,8 +205,8 @@
     <div class="bg-gray-50 py-16">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-gray-900 mb-4">الأسئلة الشائعة</h2>
-                <p class="text-lg text-gray-600">إجابات على أكثر الأسئلة شيوعاً</p>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">{{ __('general.contact.faq_title') }}</h2>
+                <p class="text-lg text-gray-600">{{ __('general.contact.faq_subtitle') }}</p>
             </div>
             <div class="space-y-6">
                 @php
@@ -220,16 +220,16 @@
                     </div>
                 @empty
                     <div class="bg-white rounded-lg shadow-md p-6">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-3">كيف يمكنني البحث عن عقار؟</h3>
-                        <p class="text-gray-600">يمكنك استخدام صفحة البحث المتقدم أو تصفح العقارات المتاحة حسب الفئة أو المنطقة.</p>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3">{{ __('general.contact.faq_1_q') }}</h3>
+                        <p class="text-gray-600">{{ __('general.contact.faq_1_a') }}</p>
                     </div>
                     <div class="bg-white rounded-lg shadow-md p-6">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-3">كيف يمكنني التواصل مع مالك العقار؟</h3>
-                        <p class="text-gray-600">يمكنك إرسال رسالة مباشرة من صفحة العقار أو الاتصال بالرقم المرفق.</p>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3">{{ __('general.contact.faq_2_q') }}</h3>
+                        <p class="text-gray-600">{{ __('general.contact.faq_2_a') }}</p>
                     </div>
                     <div class="bg-white rounded-lg shadow-md p-6">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-3">هل الخدمة مجانية؟</h3>
-                        <p class="text-gray-600">نعم، خدمات البحث والتصفح مجانية. بعض الخدمات المتقدمة قد تتطلب اشتراك.</p>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3">{{ __('general.contact.faq_3_q') }}</h3>
+                        <p class="text-gray-600">{{ __('general.contact.faq_3_a') }}</p>
                     </div>
                 @endforelse
             </div>

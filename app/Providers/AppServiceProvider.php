@@ -85,6 +85,22 @@ class AppServiceProvider extends ServiceProvider
             return "<?php echo App\Helpers\LanguageHelper::getOrder($position); ?>";
         });
 
+        Blade::directive('cityName', function ($expression) {
+            return "<?php echo App\Helpers\LanguageHelper::getCityName($expression); ?>";
+        });
+
+        Blade::directive('cityDescription', function ($expression) {
+            return "<?php echo App\Helpers\LanguageHelper::getCityDescription($expression); ?>";
+        });
+
+        Blade::directive('categoryName', function ($expression) {
+            return "<?php echo App\Helpers\LanguageHelper::getCategoryName($expression); ?>";
+        });
+
+        Blade::directive('categoryDescription', function ($expression) {
+            return "<?php echo App\Helpers\LanguageHelper::getCategoryDescription($expression); ?>";
+        });
+
         // Share language data with all views
         view()->composer('*', function ($view) {
             $languageService = app(LanguageService::class);

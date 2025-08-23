@@ -13,30 +13,55 @@ return [
 
     'home' => [
         'title' => 'Welcome to Aqar',
-        'subtitle' => 'Find the best properties and real estate facilities in your area',
+        'subtitle' => 'Discover the best properties and real estate facilities in your area',
         'search_placeholder' => 'Search for properties, facilities, or areas...',
         'search_button' => 'Search',
         'featured_categories' => 'Featured Categories',
-        'apartments' => 'Apartments',
-        'apartments_desc' => 'Discover the best residential apartments for rent or sale',
-        'browse_apartments' => 'Browse Apartments',
-        'villas' => 'Villas',
-        'villas_desc' => 'Luxury and distinctive villas in the best locations',
-        'browse_villas' => 'Browse Villas',
-        'offices' => 'Offices',
-        'offices_desc' => 'Commercial offices for investment or use',
-        'browse_offices' => 'Browse Offices',
         'latest_properties' => 'Latest Properties',
-        'featured_facilities' => 'Featured Facilities',
-        'facility_desc' => 'Brief description of the facility with services provided and location.',
-        'verified' => 'Verified',
-        'view_details' => 'View Details',
+        'featured_cities' => 'Featured Cities',
         'view_all_properties' => 'View All Properties',
-        'view_all_facilities' => 'View All Facilities',
+        'view_all_cities' => 'View All Cities',
         'cta_title' => 'Do you want to sell or rent your property?',
         'cta_subtitle' => 'Join us and get the best real estate services',
         'register_now' => 'Register Now',
         'contact_us' => 'Contact Us',
+    ],
+    
+    'view_toggle' => [
+        'display' => 'Display:',
+        'grid' => 'Grid View',
+        'list' => 'List View',
+    ],
+    
+    'status' => [
+        'featured' => 'Featured',
+        'verified' => 'Verified',
+        'price_on_request' => 'Price on Request',
+        'property' => 'property',
+        'properties' => 'properties',
+    ],
+    
+    'actions' => [
+        'view_details' => 'View Details',
+        'browse_category' => 'Browse Category',
+        'browse_properties' => 'Browse Properties',
+    ],
+    
+    'currency' => [
+        'sar' => 'SAR',
+        'usd' => 'USD',
+        'eur' => 'EUR',
+    ],
+    
+    'attributes' => [
+        'bedrooms' => 'Bedrooms',
+        'bathrooms' => 'Bathrooms',
+        'area' => 'Area',
+        'floor' => 'Floor',
+        'parking' => 'Parking',
+        'furnished' => 'Furnished',
+        'unfurnished' => 'Unfurnished',
+        'semi_furnished' => 'Semi-Furnished',
     ],
 
     'about' => [

@@ -9,14 +9,14 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
                 <div>
-                    <h1 class="text-4xl md:text-5xl font-bold mb-6">{{ __('cities.products.title', ['city' => $city->name]) }}</h1>
+                    <h1 class="text-4xl md:text-5xl font-bold mb-6">{{ __('cities.products.title', ['city' => @cityName($city)]) }}</h1>
                     <p class="text-xl text-primary-100 mb-6">
-                        {{ __('cities.products.subtitle', ['city' => $city->name, 'count' => $products->total()]) }}
+                        {{ __('cities.products.subtitle', ['city' => @cityName($city), 'count' => $products->total()]) }}
                     </p>
                     <div class="flex items-center space-x-6 space-x-reverse">
                         <div class="flex items-center text-yellow-400">
                             <i class="fas fa-map-marker-alt text-xl mr-2"></i>
-                            <span class="text-white">{{ $city->name }}</span>
+                            <span class="text-white">@cityName($city)</span>
                         </div>
                         <div class="bg-white text-primary-600 px-3 py-1 rounded-full text-sm font-medium">
                             {{ $products->total() }} {{ __('cities.products.properties_available') }}
@@ -46,7 +46,7 @@
                         <i class="fas fa-city text-primary-600 text-xl"></i>
                     </div>
                     <div>
-                        <h2 class="text-2xl font-bold text-gray-900">{{ $city->name }}</h2>
+                        <h2 class="text-2xl font-bold text-gray-900">@cityName($city)</h2>
                         <p class="text-gray-600">{{ $products->total() }} {{ __('cities.products.properties_available') }}</p>
                     </div>
                 </div>
@@ -169,7 +169,7 @@
                         {{ __('cities.products.showing_results', ['from' => $products->firstItem() ?? 0, 'to' => $products->lastItem() ?? 0, 'total' => $products->total()]) }}
                     </div>
                     <div class="flex items-center space-x-2 rtl:space-x-reverse">
-                        <span class="text-sm text-gray-600 mr-3 rtl:ml-3 rtl:mr-0">عرض:</span>
+                        <span class="text-sm text-gray-600 mr-3 rtl:ml-3 rtl:mr-0">{{ __('general.view_toggle.display') }}</span>
                         <button id="grid-view" 
                                 class="view-toggle-btn bg-primary-600 text-white p-2 rounded-lg transition-colors"
                                 onclick="switchView('grid')">
@@ -230,7 +230,7 @@
 
                                     <div class="flex items-center justify-between">
                                         <div class="text-lg font-bold text-primary-600">
-                                            {{ number_format($product->price) }} ريال
+                                            {{ number_format($product->price) }} {{ __('general.currency.sar') }}
                                         </div>
                                         <a href="{{ route('public.products.show', $product) }}"
                                            class="text-primary-600 hover:text-primary-700 text-sm font-medium">
@@ -269,7 +269,7 @@
                                                 </a>
                                             </h3>
                                             <div class="text-lg font-bold text-primary-600">
-                                                {{ number_format($product->price) }} ريال
+                                                {{ number_format($product->price) }} {{ __('general.currency.sar') }}
                                             </div>
                                         </div>
                                         <p class="text-gray-600 text-sm mb-3">{{ $product->address ?? __('products.property_card.location_unknown') }}</p>
@@ -316,7 +316,7 @@
                         <div class="bg-white rounded-lg shadow-md p-8">
                             <i class="fas fa-home text-4xl text-gray-400 mb-4"></i>
                             <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ __('cities.products.no_properties') }}</h3>
-                            <p class="text-gray-600 mb-6">{{ __('cities.products.no_properties_message', ['city' => $city->name]) }}</p>
+                            <p class="text-gray-600 mb-6">{{ __('cities.products.no_properties_message', ['city' => @cityName($city)]) }}</p>
                             <a href="{{ route('public.products.index') }}" class="btn-primary text-white px-6 py-2 rounded-lg font-medium">
                                 {{ __('cities.products.view_all_properties') }}
                             </a>

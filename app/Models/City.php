@@ -11,7 +11,6 @@ class City extends Model
 
     protected $fillable = [
         'name',
-        'name_en',
         'slug',
         'description',
         'image',
@@ -35,6 +34,59 @@ class City extends Model
     public function facilities()
     {
         return $this->hasMany(Facility::class);
+    }
+
+    /**
+     * Get all translations for this city
+     */
+    public function translations()
+    {
+        return $this->hasMany(CityTranslation::class);
+    }
+
+    /**
+     * Get translation for a specific locale
+     */
+    public function translation($locale = null)
+    {
+        $locale = $locale ?: app()->getLocale();
+        return $this->translations()->where('locale', $locale)->first();
+    }
+
+    /**
+     * Get localized name
+     */
+    public function getLocalizedNameAttribute()
+    {
+        $translation = $this->translation();
+        return $translation ? $translation->name : $this->name;
+    }
+
+    /**
+     * Get localized description
+     */
+    public function getLocalizedDescriptionAttribute()
+    {
+        $translation = $this->translation();
+        return $translation ? $translation->description : $this->description;
+    }
+
+    /**
+     * Get name in English (for backward compatibility)
+     */
+    public function getNameEnAttribute()
+    {
+        $translation = $this->translation('en');
+        return $translation ? $translation->name : null;
+    }
+
+    /**
+     * Get description in English (for backward compatibility)
+     */
+    public function getDescriptionEnAttribute()
+    {
+        $translation = $this->translation('en');
+        return $translation ? $translation->description : null;
     }
 
     /**

@@ -9,14 +9,14 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
                 <div>
-                    <h1 class="text-4xl md:text-5xl font-bold mb-6">{{ __('cities.facilities.title', ['city' => $city->name]) }}</h1>
+                    <h1 class="text-4xl md:text-5xl font-bold mb-6">{{ __('cities.facilities.title', ['city' => @cityName($city)]) }}</h1>
                     <p class="text-xl text-primary-100 mb-6">
-                        {{ __('cities.facilities.subtitle', ['city' => $city->name, 'count' => $facilities->total()]) }}
+                        {{ __('cities.facilities.subtitle', ['city' => @cityName($city), 'count' => $facilities->total()]) }}
                     </p>
                     <div class="flex items-center space-x-6 space-x-reverse">
                         <div class="flex items-center text-yellow-400">
                             <i class="fas fa-map-marker-alt text-xl mr-2"></i>
-                            <span class="text-white">{{ $city->name }}</span>
+                            <span class="text-white">@cityName($city)</span>
                         </div>
                         <div class="bg-white text-primary-600 px-3 py-1 rounded-full text-sm font-medium">
                             {{ $facilities->total() }} {{ __('cities.facilities.facilities_available') }}
@@ -46,7 +46,7 @@
                         <i class="fas fa-city text-primary-600 text-xl"></i>
                     </div>
                     <div>
-                        <h2 class="text-2xl font-bold text-gray-900">{{ $city->name }}</h2>
+                        <h2 class="text-2xl font-bold text-gray-900">@cityName($city)</h2>
                         <p class="text-gray-600">{{ $facilities->total() }} {{ __('cities.facilities.facilities_available') }}</p>
                     </div>
                 </div>
@@ -130,7 +130,7 @@
                         {{ __('cities.facilities.showing_results', ['from' => $facilities->firstItem() ?? 0, 'to' => $facilities->lastItem() ?? 0, 'total' => $facilities->total()]) }}
                     </div>
                     <div class="flex items-center space-x-2 rtl:space-x-reverse">
-                        <span class="text-sm text-gray-600 mr-3 rtl:ml-3 rtl:mr-0">عرض:</span>
+                        <span class="text-sm text-gray-600 mr-3 rtl:ml-3 rtl:mr-0">{{ __('general.view_toggle.display') }}</span>
                         <button id="grid-view" 
                                 class="view-toggle-btn bg-primary-600 text-white p-2 rounded-lg transition-colors"
                                 onclick="switchView('grid')">
@@ -257,7 +257,7 @@
                         <div class="bg-white rounded-lg shadow-md p-8">
                             <i class="fas fa-building text-4xl text-gray-400 mb-4"></i>
                             <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ __('cities.facilities.no_facilities') }}</h3>
-                            <p class="text-gray-600 mb-6">{{ __('cities.facilities.no_facilities_message', ['city' => $city->name]) }}</p>
+                            <p class="text-gray-600 mb-6">{{ __('cities.facilities.no_facilities_message', ['city' => @cityName($city)]) }}</p>
                             <a href="{{ route('public.facilities.index') }}" class="btn-primary text-white px-6 py-2 rounded-lg font-medium">
                                 {{ __('cities.facilities.view_all_facilities') }}
                             </a>

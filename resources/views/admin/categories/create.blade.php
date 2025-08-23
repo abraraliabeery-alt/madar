@@ -16,37 +16,111 @@
                 <div class="row g-4">
                     <!-- Basic Information -->
                     <div class="col-md-8">
+                        <!-- Hierarchy Warning -->
+                        <div class="alert alert-info mb-3">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-info-circle fa-lg me-3"></i>
+                                <div>
+                                    <h6 class="mb-1">خيارات إنشاء الفئات</h6>
+                                    <p class="mb-0">
+                                        <strong>1. فئة رئيسية:</strong> إنشاء فئة جديدة بدون أب (مستوى أول)<br>
+                                        <strong>2. فئة فرعية:</strong> إنشاء فئة فرعية من فئة رئيسية موجودة (مستوى ثاني)<br>
+                                        <em>لا يمكن إنشاء فئات فرعية من فئات فرعية (مستوى ثالث)</em>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <div class="card">
                             <div class="card-header">
                                 <h6 class="mb-0">المعلومات الأساسية</h6>
                             </div>
                             <div class="card-body">
+                                <!-- Locale Tabs -->
                                 <div class="mb-3">
-                                    <label for="name" class="form-label">اسم الفئة <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name') }}" required>
-                                    @error('name')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
+                                    <ul class="nav nav-tabs" id="localeTabs" role="tablist">
+                                        @foreach($locales as $localeCode => $localeData)
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link {{ $loop->first ? 'active' : '' }}" 
+                                                    id="tab-{{ $localeCode }}" 
+                                                    data-bs-toggle="tab" 
+                                                    data-bs-target="#content-{{ $localeCode }}" 
+                                                    type="button" 
+                                                    role="tab" 
+                                                    aria-controls="content-{{ $localeCode }}" 
+                                                    aria-selected="{{ $loop->first ? 'true' : 'false' }}">
+                                                <span class="me-2">{{ $localeData['flag'] }}</span>
+                                                {{ $localeData['name'] }}
+                                            </button>
+                                        </li>
+                                        @endforeach
+                                    </ul>
+                                    
+                                    <div class="tab-content mt-3" id="localeTabContent">
+                                        @foreach($locales as $localeCode => $localeData)
+                                        <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}" 
+                                             id="content-{{ $localeCode }}" 
+                                             role="tabpanel" 
+                                             aria-labelledby="tab-{{ $localeCode }}">
+                                            
+                                            <div class="mb-3">
+                                                <label for="name_{{ $localeCode }}" class="form-label">
+                                                    اسم الفئة <span class="text-danger">*</span>
+                                                    <span class="badge bg-secondary ms-2">{{ $localeData['flag'] }} {{ $localeData['name'] }}</span>
+                                                </label>
+                                                <input type="text" 
+                                                       class="form-control @error('translations.'.$localeCode.'.name') is-invalid @enderror" 
+                                                       id="name_{{ $localeCode }}" 
+                                                       name="translations[{{ $localeCode }}][name]" 
+                                                       value="{{ old('translations.'.$localeCode.'.name') }}" 
+                                                       {{ $loop->first ? 'required' : '' }}
+                                                       placeholder="أدخل اسم الفئة بـ {{ $localeData['name'] }}">
+                                                <input type="hidden" name="translations[{{ $localeCode }}][locale]" value="{{ $localeCode }}">
+                                                @error('translations.'.$localeCode.'.name')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+                                            </div>
 
-                                <div class="mb-3">
-                                    <label for="description" class="form-label">وصف الفئة</label>
-                                    <textarea class="form-control summernote @error('description') is-invalid @enderror" id="description" name="description" rows="4">{{ old('description') }}</textarea>
-                                    @error('description')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                            <div class="mb-3">
+                                                <label for="description_{{ $localeCode }}" class="form-label">
+                                                    وصف الفئة
+                                                    <span class="badge bg-secondary ms-2">{{ $localeData['flag'] }} {{ $localeData['name'] }}</span>
+                                                </label>
+                                                <textarea class="form-control summernote @error('translations.'.$localeCode.'.description') is-invalid @enderror" 
+                                                          id="description_{{ $localeCode }}" 
+                                                          name="translations[{{ $localeCode }}][description]" 
+                                                          rows="4" 
+                                                          placeholder="أدخل وصف الفئة بـ {{ $localeData['name'] }}">{{ old('translations.'.$localeCode.'.description') }}</textarea>
+                                                @error('translations.'.$localeCode.'.description')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        @endforeach
+                                    </div>
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="parent_id" class="form-label">الفئة الأب</label>
                                     <select class="form-select @error('parent_id') is-invalid @enderror" id="parent_id" name="parent_id">
-                                        <option value="">فئة رئيسية</option>
-                                        @foreach($categories as $category)
-                                            <option value="{{ $category->id }}" {{ old('parent_id') == $category->id ? 'selected' : '' }}>
-                                                {{ $category->name }}
-                                            </option>
-                                        @endforeach
+                                        <option value="" class="main-category-option">
+                                            <i class="fas fa-folder me-2"></i>فئة رئيسية (بدون أب)
+                                        </option>
+                                        @if($categories->where('parent_id', null)->count() > 0)
+                                            <optgroup label="الفئات الرئيسية المتاحة">
+                                                @foreach($categories->where('parent_id', null) as $category)
+                                                    <option value="{{ $category->id }}" {{ old('parent_id') == $category->id ? 'selected' : '' }}>
+                                                        <i class="fas fa-folder-open me-2"></i>{{ $category->name }}
+                                                    </option>
+                                                @endforeach
+                                            </optgroup>
+                                        @endif
                                     </select>
+                                    <small class="text-muted">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        <strong>فئة رئيسية:</strong> اختر "فئة رئيسية" لإنشاء فئة جديدة بدون أب. 
+                                        <strong>فئة فرعية:</strong> اختر فئة رئيسية موجودة لإنشاء فئة فرعية منها.
+                                    </small>
                                     @error('parent_id')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -118,10 +192,133 @@
 </div>
 @endsection
 
+@push('styles')
+<style>
+.alert-info {
+    border-left: 4px solid #17a2b8;
+    background-color: #f8f9fa;
+}
+
+.alert-info .fas {
+    color: #17a2b8;
+}
+
+.alert-info h6 {
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.alert-info p {
+    color: #6c757d;
+    margin-bottom: 0;
+}
+
+/* Locale Tabs Styling */
+.nav-tabs {
+    border-bottom: 2px solid #dee2e6;
+}
+
+.nav-tabs .nav-link {
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: #6c757d;
+    font-weight: 500;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.nav-tabs .nav-link:hover {
+    border-color: transparent;
+    color: #495057;
+    background-color: #f8f9fa;
+}
+
+.nav-tabs .nav-link.active {
+    color: #007bff;
+    background-color: transparent;
+    border-bottom-color: #007bff;
+    font-weight: 600;
+}
+
+.nav-tabs .nav-link .badge {
+    font-size: 0.75rem;
+    padding: 0.25em 0.5em;
+}
+
+/* Parent category select styling */
+#parent_id option {
+    padding: 8px;
+}
+
+#parent_id option.main-category-option {
+    font-weight: 600;
+    color: #28a745;
+    background-color: #f8fff9;
+}
+
+#parent_id optgroup {
+    font-weight: 600;
+    color: #495057;
+    background-color: #f8f9fa;
+}
+
+#parent_id optgroup option {
+    font-weight: normal;
+    color: #6c757d;
+    padding-left: 20px;
+}
+
+/* Validation feedback styling */
+.invalid-feedback {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.875em;
+    color: #dc3545;
+}
+
+/* Valid state styling */
+.form-select.is-valid {
+    border-color: #28a745;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}
+
+.form-select.is-valid:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}
+
+/* Help text styling */
+small.text-muted {
+    line-height: 1.4;
+}
+
+small.text-muted strong {
+    color: #495057;
+}
+
+small.text-muted .text-success {
+    color: #28a745 !important;
+}
+
+/* Tab content styling */
+.tab-content {
+    border: 1px solid #dee2e6;
+    border-top: none;
+    padding: 1.5rem;
+    background-color: #fff;
+    border-radius: 0 0 0.375rem 0.375rem;
+}
+
+.tab-pane {
+    min-height: 200px;
+}
+</style>
+@endpush
+
 @push('scripts')
 <script>
 $(document).ready(function() {
-    // Initialize summernote
+    // Initialize summernote for all textareas
     $('.summernote').summernote({
         height: 150,
         toolbar: [
@@ -230,9 +427,19 @@ $(document).ready(function() {
     $('#categoryForm').on('submit', function(e) {
         let hasErrors = false;
         
-        // Check if required fields are filled
-        if (!$('#name').val().trim()) {
-            $('#name').addClass('is-invalid');
+        // Check if at least one translation name is filled
+        let hasTranslation = false;
+        $('input[name*="[name]"]').each(function() {
+            if ($(this).val().trim()) {
+                hasTranslation = true;
+                return false;
+            }
+        });
+        
+        if (!hasTranslation) {
+            // Show error on first tab
+            $('#tab-ar').tab('show');
+            $('#name_ar').addClass('is-invalid');
             hasErrors = true;
         }
         
@@ -273,6 +480,62 @@ $(document).ready(function() {
         $(`#${inputId}`).removeClass('is-invalid');
         $(`#${inputId}-error`).html('').hide();
     };
+
+    // Parent category validation and feedback
+    $('#parent_id').change(function() {
+        const selectedValue = $(this).val();
+        const parentSelect = $(this);
+        const helpText = parentSelect.next('small');
+        
+        // Clear any previous validation states
+        parentSelect.removeClass('is-invalid is-valid');
+        parentSelect.next('.invalid-feedback').hide();
+        
+        if (selectedValue === '') {
+            // Main category selected
+            parentSelect.addClass('is-valid');
+            helpText.html(`
+                <i class="fas fa-check-circle text-success me-1"></i>
+                <strong>فئة رئيسية:</strong> ستقوم بإنشاء فئة جديدة بدون أب (مستوى أول)
+            `);
+        } else if (selectedValue) {
+            // Subcategory selected - check if parent is valid
+            $.ajax({
+                url: '{{ route("admin.categories.check-parent") }}',
+                method: 'GET',
+                data: { category_id: selectedValue },
+                success: function(response) {
+                    if (response.is_main_category) {
+                        parentSelect.addClass('is-valid');
+                        helpText.html(`
+                            <i class="fas fa-check-circle text-success me-1"></i>
+                            <strong>فئة فرعية:</strong> ستقوم بإنشاء فئة فرعية من "${response.name}" (مستوى ثاني)
+                        `);
+                    } else {
+                        parentSelect.addClass('is-invalid');
+                        parentSelect.next('.invalid-feedback').html('لا يمكن اختيار فئة فرعية كفئة أب').show();
+                        parentSelect.val(''); // Reset selection
+                        helpText.html(`
+                            <i class="fas fa-info-circle me-1"></i>
+                            <strong>فئة رئيسية:</strong> اختر "فئة رئيسية" لإنشاء فئة جديدة بدون أب. 
+                            <strong>فئة فرعية:</strong> اختر فئة رئيسية موجودة لإنشاء فئة فرعية منها.
+                        `);
+                    }
+                },
+                error: function() {
+                    parentSelect.addClass('is-invalid');
+                    parentSelect.next('.invalid-feedback').html('خطأ في التحقق من الفئة').show();
+                }
+            });
+        } else {
+            // No selection - show default help text
+            helpText.html(`
+                <i class="fas fa-info-circle me-1"></i>
+                <strong>فئة رئيسية:</strong> اختر "فئة رئيسية" لإنشاء فئة جديدة بدون أب. 
+                <strong>فئة فرعية:</strong> اختر فئة رئيسية موجودة لإنشاء فئة فرعية منها.
+            `);
+        }
+    });
 });
 </script>
 @endpush

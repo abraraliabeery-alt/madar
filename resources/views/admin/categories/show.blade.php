@@ -112,38 +112,119 @@
                     </div>
                 </div>
 
+                <!-- Translations -->
+                @if($category->translations->count() > 0)
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="mb-0">
+                                <i class="fas fa-language text-info me-2"></i>
+                                الترجمات المتاحة ({{ $category->translations->count() }})
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                @foreach($category->translations as $translation)
+                                <div class="col-md-6">
+                                    <div class="card h-100 translation-card">
+                                        <div class="card-header d-flex align-items-center">
+                                            <span class="me-2">{{ config('locales.flags.' . $translation->locale, '🌐') }}</span>
+                                            <strong>{{ config('locales.names.' . $translation->locale, $translation->locale) }}</strong>
+                                            @if($translation->locale === config('app.locale'))
+                                                <span class="badge bg-primary ms-auto">افتراضي</span>
+                                            @endif
+                                        </div>
+                                        <div class="card-body">
+                                            <h6 class="mb-2">{{ $translation->name }}</h6>
+                                            @if($translation->description)
+                                                <p class="text-muted small mb-0">{{ Str::limit($translation->description, 100) }}</p>
+                                            @else
+                                                <p class="text-muted small mb-0">لا يوجد وصف</p>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endif
+
                 <!-- Sub Categories -->
                 @if($category->children->count() > 0)
                 <div class="col-12">
                     <div class="card">
-                        <div class="card-header">
-                            <h6 class="mb-0">الفئات الفرعية</h6>
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0">
+                                <i class="fas fa-sitemap text-info me-2"></i>
+                                الفئات الفرعية ({{ $category->children->count() }})
+                            </h6>
+                            <span class="badge bg-info">{{ $category->children->sum('products_count') }} منتج إجمالي</span>
                         </div>
                         <div class="card-body">
                             <div class="row g-3">
                                 @foreach($category->children as $child)
-                                <div class="col-md-4">
-                                    <div class="card">
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="card h-100 subcategory-card">
                                         <div class="card-body">
-                                            <div class="d-flex align-items-center">
+                                            <div class="d-flex align-items-center mb-3">
                                                 @if($child->icon)
                                                     @if(Str::startsWith($child->icon, 'fas ') || Str::startsWith($child->icon, 'fa ') || Str::startsWith($child->icon, 'fab '))
-                                                        <!-- FontAwesome Icon -->
-                                                        <i class="{{ $child->icon }} fa-lg text-primary me-2"></i>
+                                                        <i class="{{ $child->icon }} fa-2x text-info me-3"></i>
                                                     @else
-                                                        <!-- Image Icon -->
-                                                        <img src="{{ asset($child->icon) }}" alt="icon" width="32" class="me-2">
+                                                        <img src="{{ asset($child->icon) }}" alt="icon" width="40" class="me-3">
                                                     @endif
+                                                @else
+                                                    <i class="fas fa-folder fa-2x text-muted me-3"></i>
                                                 @endif
-                                                <div>
+                                                <div class="flex-grow-1">
                                                     <h6 class="mb-1">{{ $child->name }}</h6>
-                                                    <small class="text-muted">{{ $child->products_count }} منتج</small>
+                                                    <div class="d-flex gap-2">
+                                                        @if($child->is_active)
+                                                            <span class="badge bg-success">نشط</span>
+                                                        @else
+                                                            <span class="badge bg-danger">غير نشط</span>
+                                                        @endif
+                                                        @if($child->is_featured)
+                                                            <span class="badge bg-warning">مميزة</span>
+                                                        @endif
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="mt-2">
-                                                <a href="{{ route('admin.categories.show', $child) }}" class="btn btn-sm btn-primary">
-                                                    <i class="fas fa-eye"></i>
+                                            
+                                            @if($child->description)
+                                                <p class="text-muted small mb-3">{{ Str::limit($child->description, 80) }}</p>
+                                            @endif
+                                            
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <span class="text-muted">
+                                                    <i class="fas fa-box me-1"></i>
+                                                    {{ $child->products_count }} منتج
+                                                </span>
+                                                <span class="text-muted">
+                                                    <i class="fas fa-calendar me-1"></i>
+                                                    {{ $child->created_at->format('Y/m/d') }}
+                                                </span>
+                                            </div>
+                                            
+                                            <div class="d-flex gap-2">
+                                                <a href="{{ route('admin.categories.show', $child) }}" 
+                                                   class="btn btn-sm btn-outline-info flex-fill">
+                                                    <i class="fas fa-eye me-1"></i>عرض
                                                 </a>
+                                                <a href="{{ route('admin.categories.edit', $child) }}" 
+                                                   class="btn btn-sm btn-outline-warning">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                @if($child->products_count == 0)
+                                                    <button type="button" 
+                                                            class="btn btn-sm btn-outline-danger delete-confirm"
+                                                            data-category-id="{{ $child->id }}"
+                                                            data-category-name="{{ $child->name }}">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
@@ -220,3 +301,73 @@
     </div>
 </div>
 @endsection
+
+@push('styles')
+<style>
+.subcategory-card {
+    transition: all 0.3s ease-in-out;
+    border: 1px solid #e9ecef;
+}
+
+.subcategory-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    border-color: #17a2b8;
+}
+
+.subcategory-card .card-body {
+    padding: 1.25rem;
+}
+
+.subcategory-card h6 {
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.subcategory-card .badge {
+    font-size: 0.75rem;
+    padding: 0.35em 0.65em;
+}
+
+.translation-card {
+    transition: all 0.3s ease-in-out;
+    border: 1px solid #e9ecef;
+}
+
+.translation-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border-color: #17a2b8;
+}
+
+.translation-card .card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    padding: 0.75rem 1rem;
+}
+
+.translation-card .card-body {
+    padding: 1rem;
+}
+
+.translation-card h6 {
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+@media (max-width: 768px) {
+    .subcategory-card .card-body {
+        padding: 1rem;
+    }
+    
+    .subcategory-card h6 {
+        font-size: 1rem;
+    }
+    
+    .translation-card .card-body {
+        padding: 0.75rem;
+    }
+}
+</style>
+@endpush

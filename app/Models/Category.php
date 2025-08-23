@@ -56,6 +56,33 @@ class Category extends Model
     }
 
     /**
+     * Get translation for specific locale
+     */
+    public function getTranslation($locale = null)
+    {
+        $locale = $locale ?: app()->getLocale();
+        return $this->translations()->where('locale', $locale)->first();
+    }
+
+    /**
+     * Get name for specific locale
+     */
+    public function getTranslatedName($locale = null)
+    {
+        $translation = $this->getTranslation($locale);
+        return $translation ? $translation->name : $this->name;
+    }
+
+    /**
+     * Get description for specific locale
+     */
+    public function getTranslatedDescription($locale = null)
+    {
+        $translation = $this->getTranslation($locale);
+        return $translation ? $translation->description : $this->description;
+    }
+
+    /**
      * Get the active categories
      */
     public function scopeActive($query)

@@ -21,7 +21,7 @@
         <!-- Global View Toggle -->
         <div class="flex justify-end items-center mb-8">
             <div class="flex items-center space-x-2 rtl:space-x-reverse">
-                <span class="text-sm text-gray-600 mr-3 rtl:ml-3 rtl:mr-0">عرض:</span>
+                <span class="text-sm text-gray-600 mr-3 rtl:ml-3 rtl:mr-0">{{ __('general.view_toggle.display') }}</span>
                 <button id="grid-view" 
                         class="view-toggle-btn bg-primary-600 text-white p-2 rounded-lg transition-colors"
                         onclick="switchView('grid')">
@@ -53,7 +53,7 @@
                     
                     <div class="p-6">
                         <h3 class="text-xl font-semibold text-gray-900 mb-2">
-                            {{ app()->getLocale() === 'en' && $city->name_en ? $city->name_en : $city->name }}
+                            @cityName($city)
                         </h3>
                         
                         @if($city->description)
@@ -119,9 +119,9 @@
                         
                         <div class="flex-1 p-6">
                             <div class="flex justify-between items-start mb-3">
-                                <h3 class="text-xl font-semibold text-gray-900">
-                                    {{ app()->getLocale() === 'en' && $city->name_en ? $city->name_en : $city->name }}
-                                </h3>
+                                                            <h3 class="text-xl font-semibold text-gray-900">
+                                @cityName($city)
+                            </h3>
                                 <div class="flex items-center gap-4 text-sm text-gray-500">
                                     <span>
                                         <i class="fas fa-building ml-1"></i>

@@ -96,7 +96,7 @@
         <!-- Global View Toggle -->
         <div class="flex justify-end items-center mb-8">
             <div class="flex items-center space-x-2 rtl:space-x-reverse">
-                <span class="text-sm text-gray-600 mr-3 rtl:ml-3 rtl:mr-0">عرض:</span>
+                <span class="text-sm text-gray-600 mr-3 rtl:ml-3 rtl:mr-0">{{ __('general.view_toggle.display') }}
                 <button id="grid-view" 
                         class="view-toggle-btn bg-primary-600 text-white p-2 rounded-lg transition-colors"
                         onclick="switchView('grid')">

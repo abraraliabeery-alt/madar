@@ -238,6 +238,78 @@ class LanguageHelper
     }
 
     /**
+     * Get localized city name
+     */
+    public static function getCityName($city, $locale = null)
+    {
+        if (!$city) {
+            return '';
+        }
+        
+        $locale = $locale ?: app()->getLocale();
+        
+        // Get translation for the requested locale
+        $translation = $city->translation($locale);
+        return $translation ? $translation->name : '';
+    }
+
+    /**
+     * Get localized city description
+     */
+    public static function getCityDescription($city, $locale = null)
+    {
+        if (!$city) {
+            return '';
+        }
+        
+        $locale = $locale ?: app()->getLocale();
+        
+        // Get translation for the requested locale
+        $translation = $city->translation($locale);
+        return $translation ? $translation->description : '';
+    }
+
+    /**
+     * Get localized category name
+     */
+    public static function getCategoryName($category, $locale = null)
+    {
+        if (!$category) {
+            return '';
+        }
+        
+        $locale = $locale ?: app()->getLocale();
+        
+        // Check if category has English name and current locale is English
+        if ($locale === 'en' && !empty($category->name_en)) {
+            return $category->name_en;
+        }
+        
+        // Fallback to Arabic name
+        return $category->name;
+    }
+
+    /**
+     * Get localized category description
+     */
+    public static function getCategoryDescription($category, $locale = null)
+    {
+        if (!$category) {
+            return '';
+        }
+        
+        $locale = $locale ?: app()->getLocale();
+        
+        // Check if category has English description and current locale is English
+        if ($locale === 'en' && !empty($category->description_en)) {
+            return $category->description_en;
+        }
+        
+        // Fallback to Arabic description
+        return $category->description;
+    }
+
+    /**
      * Get language switcher HTML
      */
     public static function getLanguageSwitcherHTML($class = '', $showFlags = true, $showNames = true, $dropdown = true)

@@ -74,138 +74,203 @@
                 </div>
             </div>
 
-            <!-- Categories Table -->
-            <div class="table-responsive">
-                <table class="table table-hover datatable">
-                    <thead>
-                        <tr>
-                            <th class="d-none d-md-table-cell">#</th>
-                            <th class="d-none d-md-table-cell">الأيقونة</th>
-                            <th>الاسم</th>
-                            <th class="d-none d-lg-table-cell">الفئة الأب</th>
-                            <th class="d-none d-md-table-cell">عدد المنتجات</th>
-                            <th class="d-none d-lg-table-cell">الترتيب</th>
-                            <th class="d-none d-md-table-cell">الحالة</th>
-                            <th class="d-none d-lg-table-cell">مميزة</th>
-                            <th>الإجراءات</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($categories as $category)
-                        <tr>
-                            <td class="d-none d-md-table-cell">{{ $loop->iteration }}</td>
-                            <td class="d-none d-md-table-cell">
-                                @if($category->icon)
-                                    @if(Str::startsWith($category->icon, 'fas ') || Str::startsWith($category->icon, 'fa ') || Str::startsWith($category->icon, 'fab '))
-                                        <!-- FontAwesome Icon -->
-                                        <i class="{{ $category->icon }} fa-lg text-primary"></i>
-                                    @else
-                                        <!-- Image Icon -->
-                                        <img src="{{ asset($category->icon) }}" alt="icon" width="30">
-                                    @endif
-                                @else
-                                    <i class="fas fa-folder fa-2x text-muted"></i>
-                                @endif
-                            </td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    @if($category->image)
-                                        <img src="{{ asset($category->image) }}" alt="category" class="rounded me-2" width="40">
-                                    @endif
-                                    <div>
-                                        <h6 class="mb-0">{{ $category->name }}</h6>
-                                        @if($category->description)
-                                            <small class="text-muted d-none d-md-block">{{ Str::limit($category->description, 50) }}</small>
-                                        @endif
-                                        <div class="small text-muted d-md-none">
-                                            @if($category->parent)
-                                                <span class="badge bg-info">{{ $category->parent->name }}</span>
+            <!-- Categories Hierarchy View -->
+            <div class="row g-4">
+                <!-- Main Categories -->
+                <div class="col-12">
+                    <h5 class="mb-3">
+                        <i class="fas fa-folder-open text-primary me-2"></i>
+                        الفئات الرئيسية
+                    </h5>
+                    <div class="row g-3">
+                        @foreach($categories->where('parent_id', null) as $mainCategory)
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card h-100 category-card">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-3">
+                                        @if($mainCategory->icon)
+                                            @if(Str::startsWith($mainCategory->icon, 'fas ') || Str::startsWith($mainCategory->icon, 'fa ') || Str::startsWith($mainCategory->icon, 'fab '))
+                                                <i class="{{ $mainCategory->icon }} fa-2x text-primary me-3"></i>
                                             @else
-                                                <span class="badge bg-secondary">فئة رئيسية</span>
+                                                <img src="{{ asset($mainCategory->icon) }}" alt="icon" width="40" class="me-3">
                                             @endif
+                                        @else
+                                            <i class="fas fa-folder fa-2x text-muted me-3"></i>
+                                        @endif
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-1">{{ $mainCategory->name }}</h6>
+                                            <div class="d-flex gap-2">
+                                                @if($mainCategory->is_active)
+                                                    <span class="badge bg-success">نشط</span>
+                                                @else
+                                                    <span class="badge bg-danger">غير نشط</span>
+                                                @endif
+                                                @if($mainCategory->is_featured)
+                                                    <span class="badge bg-warning">مميزة</span>
+                                                @endif
+                                                @if($mainCategory->translations->count() > 0)
+                                                    <span class="badge bg-info" title="لدى هذه الفئة {{ $mainCategory->translations->count() }} ترجمة">
+                                                        <i class="fas fa-language me-1"></i>{{ $mainCategory->translations->count() }}
+                                                    </span>
+                                                @endif
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </td>
-                            <td class="d-none d-lg-table-cell">
-                                @if($category->parent)
-                                    <span class="badge bg-info">{{ $category->parent->name }}</span>
-                                @else
-                                    <span class="badge bg-secondary">فئة رئيسية</span>
-                                @endif
-                            </td>
-                            <td class="d-none d-md-table-cell">
-                                <span class="badge bg-primary">{{ $category->products_count }}</span>
-                            </td>
-                            <td class="d-none d-lg-table-cell">{{ $category->order ?? '-' }}</td>
-                            <td class="d-none d-md-table-cell">
-                                @if($category->is_active)
-                                    <span class="badge bg-success">نشط</span>
-                                @else
-                                    <span class="badge bg-danger">غير نشط</span>
-                                @endif
-                            </td>
-                            <td class="d-none d-lg-table-cell">
-                                @if($category->is_featured)
-                                    <span class="badge bg-warning">مميزة</span>
-                                @else
-                                    <span class="badge bg-secondary">غير مميزة</span>
-                                @endif
-                            </td>
-                            <td>
-                                <div class="d-flex flex-column gap-1 action-buttons">
-                                    <!-- Primary Actions Row -->
-                                    <div class="d-flex gap-1 mb-1">
-                                        <a href="{{ route('admin.categories.show', $category) }}"
-                                           class="btn btn-sm btn-outline-info"
-                                           data-bs-toggle="tooltip"
-                                           title="عرض التفاصيل">
-                                            <i class="fas fa-eye"></i>
+                                    
+                                    @if($mainCategory->description)
+                                        <p class="text-muted small mb-3">{{ Str::limit($mainCategory->description, 80) }}</p>
+                                    @endif
+                                    
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <span class="text-muted">
+                                            <i class="fas fa-box me-1"></i>
+                                            {{ $mainCategory->products_count }} منتج
+                                        </span>
+                                        <span class="text-muted">
+                                            <i class="fas fa-sitemap me-1"></i>
+                                            {{ $mainCategory->children->count() }} فئة فرعية
+                                        </span>
+                                    </div>
+                                    
+                                    <!-- Subcategories Preview -->
+                                    @if($mainCategory->children->count() > 0)
+                                        <div class="mb-3">
+                                            <small class="text-muted d-block mb-2">الفئات الفرعية:</small>
+                                            <div class="d-flex flex-wrap gap-1">
+                                                @foreach($mainCategory->children->take(3) as $child)
+                                                    <span class="badge bg-light text-dark">{{ $child->name }}</span>
+                                                @endforeach
+                                                @if($mainCategory->children->count() > 3)
+                                                    <span class="badge bg-secondary">+{{ $mainCategory->children->count() - 3 }}</span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    @endif
+                                    
+                                    <div class="d-flex gap-2">
+                                        <a href="{{ route('admin.categories.show', $mainCategory) }}" 
+                                           class="btn btn-sm btn-outline-primary flex-fill">
+                                            <i class="fas fa-eye me-1"></i>عرض
                                         </a>
-                                        <a href="{{ route('admin.categories.edit', $category) }}"
-                                           class="btn btn-sm btn-outline-warning"
-                                           data-bs-toggle="tooltip"
-                                           title="تعديل الفئة">
+                                        <a href="{{ route('admin.categories.edit', $mainCategory) }}" 
+                                           class="btn btn-sm btn-outline-warning">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <button type="button"
-                                                class="btn btn-sm btn-outline-danger delete-confirm"
-                                                data-bs-toggle="tooltip"
-                                                title="حذف الفئة"
-                                                data-category-id="{{ $category->id }}"
-                                                data-category-name="{{ $category->name }}">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </div>
-
-                                    <!-- Status Toggle Row -->
-                                    <div class="d-flex gap-1 mb-1">
-                                        <form action="{{ route('admin.categories.toggle-status', $category) }}" method="POST" class="d-inline">
-                                            @csrf
-                                            <button type="submit"
-                                                    class="btn btn-sm {{ $category->is_active ? 'btn-outline-danger' : 'btn-outline-success' }}"
-                                                    data-bs-toggle="tooltip"
-                                                    title="{{ $category->is_active ? 'إلغاء التفعيل' : 'تفعيل الفئة' }}">
-                                                <i class="fas {{ $category->is_active ? 'fa-ban' : 'fa-check' }}"></i>
+                                        @if($mainCategory->products_count == 0 && $mainCategory->children->count() == 0)
+                                            <button type="button" 
+                                                    class="btn btn-sm btn-outline-danger delete-confirm"
+                                                    data-category-id="{{ $mainCategory->id }}"
+                                                    data-category-name="{{ $mainCategory->name }}">
+                                                <i class="fas fa-trash"></i>
                                             </button>
-                                        </form>
-
-                                        <form action="{{ route('admin.categories.toggle-featured', $category) }}" method="POST" class="d-inline">
-                                            @csrf
-                                            <button type="submit"
-                                                    class="btn btn-sm {{ $category->is_featured ? 'btn-outline-secondary' : 'btn-outline-warning' }}"
-                                                    data-bs-toggle="tooltip"
-                                                    title="{{ $category->is_featured ? 'إلغاء التمييز' : 'تمييز الفئة' }}">
-                                                <i class="fas fa-star {{ $category->is_featured ? 'text-warning' : '' }}"></i>
-                                            </button>
-                                        </form>
+                                        @endif
                                     </div>
                                 </div>
-                            </td>
-                        </tr>
+                            </div>
+                        </div>
                         @endforeach
-                    </tbody>
-                </table>
+                    </div>
+                </div>
+
+                <!-- Subcategories -->
+                @if($categories->where('parent_id', '!=', null)->count() > 0)
+                <div class="col-12">
+                    <h5 class="mb-3 mt-4">
+                        <i class="fas fa-folder text-info me-2"></i>
+                        الفئات الفرعية
+                    </h5>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>الأيقونة</th>
+                                    <th>الاسم</th>
+                                    <th>الفئة الأب</th>
+                                    <th>عدد المنتجات</th>
+                                    <th>الحالة</th>
+                                    <th>الترجمات</th>
+                                    <th>الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($categories->where('parent_id', '!=', null) as $subCategory)
+                                <tr>
+                                    <td>
+                                        @if($subCategory->icon)
+                                            @if(Str::startsWith($subCategory->icon, 'fas ') || Str::startsWith($subCategory->icon, 'fa ') || Str::startsWith($subCategory->icon, 'fab '))
+                                                <i class="{{ $subCategory->icon }} fa-lg text-primary"></i>
+                                            @else
+                                                <img src="{{ asset($subCategory->icon) }}" alt="icon" width="30">
+                                            @endif
+                                        @else
+                                            <i class="fas fa-folder text-muted"></i>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            @if($subCategory->image)
+                                                <img src="{{ asset($subCategory->image) }}" alt="category" class="rounded me-2" width="40">
+                                            @endif
+                                            <div>
+                                                <h6 class="mb-0">{{ $subCategory->name }}</h6>
+                                                @if($subCategory->description)
+                                                    <small class="text-muted">{{ Str::limit($subCategory->description, 50) }}</small>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <a href="{{ route('admin.categories.show', $subCategory->parent) }}" 
+                                           class="badge bg-info text-decoration-none">
+                                            {{ $subCategory->parent->name }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-primary">{{ $subCategory->products_count }}</span>
+                                    </td>
+                                    <td>
+                                        @if($subCategory->is_active)
+                                            <span class="badge bg-success">نشط</span>
+                                        @else
+                                            <span class="badge bg-danger">غير نشط</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if($subCategory->translations->count() > 0)
+                                            <span class="badge bg-info" title="لدى هذه الفئة {{ $subCategory->translations->count() }} ترجمة">
+                                                <i class="fas fa-language me-1"></i>{{ $subCategory->translations->count() }}
+                                            </span>
+                                        @else
+                                            <span class="badge bg-light text-muted">لا توجد</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <div class="d-flex gap-1">
+                                            <a href="{{ route('admin.categories.show', $subCategory) }}" 
+                                               class="btn btn-sm btn-outline-info">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a href="{{ route('admin.categories.edit', $subCategory) }}" 
+                                               class="btn btn-sm btn-outline-warning">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            @if($subCategory->products_count == 0)
+                                                <button type="button" 
+                                                        class="btn btn-sm btn-outline-danger delete-confirm"
+                                                        data-category-id="{{ $subCategory->id }}"
+                                                        data-category-name="{{ $subCategory->name }}">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            @endif
+                                        </div>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                @endif
             </div>
 
             <!-- Pagination -->
@@ -219,108 +284,78 @@
 
 @push('styles')
 <style>
-.datatable th, .datatable td {
+/* Category Cards Styling */
+.category-card {
+    transition: all 0.3s ease-in-out;
+    border: 1px solid #e9ecef;
+}
+
+.category-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    border-color: #007bff;
+}
+
+.category-card .card-body {
+    padding: 1.25rem;
+}
+
+.category-card h6 {
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.category-card .badge {
+    font-size: 0.75rem;
+    padding: 0.35em 0.65em;
+}
+
+/* Statistics Cards */
+.statistics-cards .card {
+    transition: all 0.3s ease-in-out;
+}
+
+.statistics-cards .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* Table Styling */
+.table th {
+    background-color: #f8f9fa;
+    border-top: none;
+    font-weight: 600;
+    color: #495057;
+}
+
+.table td {
     vertical-align: middle;
 }
 
-/* Action Buttons Styling */
-.action-buttons .btn {
-    transition: all 0.2s ease-in-out;
-    border-width: 1.5px;
-    font-size: 0.875rem;
-    min-width: 32px;
-    height: 32px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+/* Badge Styling */
+.badge.bg-light {
+    background-color: #e9ecef !important;
+    color: #495057 !important;
+    border: 1px solid #dee2e6;
 }
 
-.action-buttons .btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+.badge.bg-info {
+    background-color: #17a2b8 !important;
 }
 
-.action-buttons .btn:active {
-    transform: translateY(0);
-}
-
-/* Primary Actions Row */
-.action-buttons .btn-outline-info:hover {
-    background-color: #0dcaf0;
-    border-color: #0dcaf0;
-    color: white;
-}
-
-.action-buttons .btn-outline-warning:hover {
-    background-color: #ffc107;
-    border-color: #ffc107;
-    color: black;
-}
-
-.action-buttons .btn-outline-danger:hover {
-    background-color: #dc3545;
-    border-color: #dc3545;
-    color: white;
-}
-
-/* Status Toggle Row */
-.action-buttons .btn-outline-success:hover {
-    background-color: #198754;
-    border-color: #198754;
-    color: white;
-}
-
-.action-buttons .btn-outline-secondary:hover {
-    background-color: #6c757d;
-    border-color: #6c757d;
-    color: white;
-}
-
-/* Featured Star Button */
-.action-buttons .btn .fa-star.text-warning {
-    color: #ffc107 !important;
+/* Translation badge styling */
+.badge.bg-info[title] {
+    cursor: help;
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-    .action-buttons .d-flex {
-        flex-direction: column !important;
-    }
-
-    .action-buttons .btn {
-        min-width: 28px;
-        height: 28px;
-        font-size: 0.8rem;
-    }
-}
-
-/* Table cell padding for actions */
-.datatable td:last-child {
-    padding: 0.5rem;
-    min-width: 120px;
-}
-
-/* Mobile-friendly table */
-@media (max-width: 768px) {
-    .datatable thead th,
-    .datatable tbody td {
-        padding: 0.5rem 0.25rem;
+    .category-card .card-body {
+        padding: 1rem;
     }
     
-    .datatable .btn {
-        padding: 0.25rem 0.5rem;
-        font-size: 0.75rem;
-    }
-}
-
-/* Filter improvements for mobile */
-@media (max-width: 576px) {
-    .row.g-4 > [class*="col-"] {
-        margin-bottom: 1rem;
-    }
-    
-    .statistics-cards .card {
-        margin-bottom: 1rem;
+    .category-card h6 {
+        font-size: 1rem;
     }
     
     .card-header {
@@ -331,6 +366,16 @@
     
     .card-header .btn {
         width: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .row.g-4 > [class*="col-"] {
+        margin-bottom: 1rem;
+    }
+    
+    .statistics-cards .card {
+        margin-bottom: 1rem;
     }
 }
 </style>

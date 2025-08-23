@@ -5,20 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CategoryTranslation extends Model
+class CityTranslation extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'category_id',
+        'city_id',
         'locale',
         'name',
         'description',
     ];
 
-    // العلاقات
-    public function category()
+    /**
+     * Relationship with City model
+     */
+    public function city()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(City::class);
     }
 }
