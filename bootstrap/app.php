@@ -27,7 +27,6 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withProviders([
-        \App\Providers\AdminRouteServiceProvider::class,
     ])
     ->withExceptions(function (Exceptions $exceptions): void {
         //

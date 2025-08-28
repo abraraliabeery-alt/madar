@@ -13,7 +13,6 @@ class ProfileController extends Controller
     public function edit()
     {
         $user = Auth::user();
-
         // Get user's primary role and additional roles
         $primaryRole = $user->primary_role;
         $userRoles = $user->roles()->with('translations')->get();

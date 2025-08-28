@@ -32,16 +32,16 @@ Route::get('/language-info', [App\Http\Controllers\LanguageController::class, 'i
 // Laravel UI Auth Routes
 Auth::routes();
 
-// Public profile route - accessible by anyone
-Route::get('/profile/{id}', [App\Http\Controllers\ProfileController::class, 'publicProfile'])->name('profile.public');
-
-// Profile routes for authenticated users
+// Profile routes for authenticated users (must come before public profile route)
 Route::middleware(['auth'])->group(function () {
     Route::get('/profile/edit', [App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/profile/update', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
     Route::get('/profile/change-password', [App\Http\Controllers\ProfileController::class, 'changePassword'])->name('profile.change-password');
     Route::post('/profile/change-password', [App\Http\Controllers\ProfileController::class, 'updatePassword'])->name('profile.change-password.update');
 });
+
+// Public profile route - accessible by anyone (must come after specific routes)
+Route::get('/profile/{id}', [App\Http\Controllers\ProfileController::class, 'publicProfile'])->name('profile.public');
 
 // Default Laravel home route
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -50,6 +50,11 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::get('/welcome', function () {
     return view('welcome');
 })->name('welcome');
+
+require_once 'admin.php';
+require_once 'facility.php';
+require_once 'client.php';
+require_once 'public.php';
 
 // Fallback route for 404 errors
 Route::fallback(function () {
