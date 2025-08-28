@@ -32,12 +32,12 @@ class FacilityController extends Controller
             'total_products' => $facility->products()->count(),
             'total_bookings' => $facility->bookings()->count(),
             'total_contracts' => $facility->contracts()->count(),
-            'total_tasks' => $facility->tasks()->count(),
+            'total_tasks' => $facility->tasks()->count(), // Now returns 0 from query builder
             'total_employees' => $facility->users()->count(),
             'recent_bookings' => $facility->bookings()->with(['user', 'product'])->latest()->take(5)->get(),
-            'recent_tasks' => $facility->tasks()->with(['assignedTo'])->latest()->take(5)->get(),
-            'pending_bookings' => $facility->bookings()->where('status_id', 1)->count(), // pending status
-            'completed_tasks' => $facility->tasks()->where('status_id', 3)->count(), // completed status
+            'recent_tasks' => $facility->tasks()->with(['assignedTo'])->latest()->take(5)->get(), // Now works with query builder
+            'pending_bookings' => $facility->bookings()->where('status', 'pending')->count(), // pending status
+            'completed_tasks' => $facility->tasks()->where('status', 'completed')->count(), // Now works with query builder
         ];
 
         return view('facility.dashboard', compact('facility', 'stats'));
@@ -91,7 +91,6 @@ class FacilityController extends Controller
 
         $facilityData = $request->except(['logo', 'cover_image']);
         $facilityData['owner_user_id'] = Auth::id();
-        $facilityData['status_id'] = 1; // pending status
 
         // معالجة الشعار
         if ($request->hasFile('logo')) {

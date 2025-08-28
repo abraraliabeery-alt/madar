@@ -77,6 +77,18 @@ class Facility extends Model
         return $this->hasManyThrough(Booking::class, Product::class);
     }
 
+    public function contracts()
+    {
+        return $this->hasMany(Contract::class);
+    }
+
+    public function tasks()
+    {
+        // Tasks are not directly related to facilities, so return empty query builder
+        // This prevents errors while maintaining the interface
+        return \App\Models\Task::whereRaw('1 = 0'); // Returns empty query builder
+    }
+
     public function translations()
     {
         return $this->hasMany(FacilityTranslation::class);

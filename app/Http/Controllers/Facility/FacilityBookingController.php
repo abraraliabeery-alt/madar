@@ -293,7 +293,7 @@ class FacilityBookingController extends Controller
             'total_bookings' => $facility->bookings()->count(),
             'confirmed_bookings' => $facility->bookings()->where('is_confirmed', true)->count(),
             'paid_bookings' => $facility->bookings()->where('is_paid', true)->count(),
-            'pending_bookings' => $facility->bookings()->where('status_id', 1)->count(), // pending status
+            'pending_bookings' => $facility->bookings()->where('status', 'pending')->count(), // pending status
             'monthly_revenue' => $facility->bookings()->where('is_paid', true)
                 ->whereMonth('created_at', now()->month)
                 ->sum('total_amount'),
