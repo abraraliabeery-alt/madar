@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Facility\FacilityController;
 use App\Http\Controllers\Facility\FacilityProductController;
 use App\Http\Controllers\Facility\FacilityBookingController;
+use App\Http\Controllers\FacilityCustomizationController;
 
 Route::middleware(['auth', 'role:facility'])->prefix('facility')->name('facility.')->group(function () {
 
@@ -53,4 +54,11 @@ Route::middleware(['auth', 'role:facility'])->prefix('facility')->name('facility
     Route::get('reports/bookings', [FacilityController::class, 'bookingReports'])->name('reports.bookings');
     Route::get('reports/products', [FacilityController::class, 'productReports'])->name('reports.products');
     Route::get('reports/revenue', [FacilityController::class, 'revenueReports'])->name('reports.revenue');
+    
+    // Facility Customization Routes
+    Route::get('customization/{facility}/edit', [FacilityCustomizationController::class, 'edit'])->name('customization.edit');
+    Route::put('customization/{facility}', [FacilityCustomizationController::class, 'update'])->name('customization.update');
+    Route::get('customization/{facility}/preview', [FacilityCustomizationController::class, 'preview'])->name('customization.preview');
+    Route::delete('customization/{facility}/reset', [FacilityCustomizationController::class, 'reset'])->name('customization.reset');
+    Route::post('customization/{facility}/preset', [FacilityCustomizationController::class, 'applyPreset'])->name('customization.preset');
 });

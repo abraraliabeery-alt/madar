@@ -8,9 +8,9 @@
     <div class="bg-gradient-to-r from-primary-600 to-primary-800 text-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
             <div class="text-center">
-                                    <h1 class="text-4xl md:text-5xl font-bold mb-6">{{ __('products.by_category.title', ['category' => @categoryName($category)]) }}</h1>
+                                    <h1 class="text-4xl md:text-5xl font-bold mb-6">{{ __('products.by_category.title', ['category' => categoryName($category)]) }}</h1>
                     <p class="text-xl text-primary-100 max-w-3xl mx-auto">
-                        {{ __('products.by_category.subtitle', ['category' => @categoryName($category)]) }}
+                        {{ __('products.by_category.subtitle', ['category' => categoryName($category)]) }}
                     </p>
             </div>
         </div>

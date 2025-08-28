@@ -69,23 +69,55 @@ return [
 
     'show' => [
         'about_facility' => 'About the Facility',
+        'about' => 'About',
         'no_description' => 'No description available for this facility.',
         'available_properties' => 'Available Properties',
+        'properties' => 'Properties',
         'view_all_properties' => 'View All Properties',
         'no_properties' => 'No properties available',
         'contact_facility' => 'Contact Facility',
+        'contact' => 'Contact',
         'book_appointment' => 'Book Appointment',
+        'book_now' => 'Book Now',
         'request_quote' => 'Request Quote',
+        'get_quote' => 'Get Quote',
         'facility_stats' => 'Facility Statistics',
         'properties_count' => 'Properties Count',
         'rating' => 'Rating',
         'creation_date' => 'Creation Date',
+        'established' => 'Est.',
         'not_specified' => 'Not specified',
         'similar_facilities' => 'Similar Facilities',
         'address' => 'Address',
         'phone' => 'Phone',
         'email' => 'Email',
         'website' => 'Website',
+        
+        // Landing Page Specific
+        'why_choose_us' => 'Why Choose Us?',
+        'prime_location' => 'Prime Location',
+        '24_7_support' => '24/7 Support',
+        'direct_contact' => 'Direct Contact',
+        'online_presence' => 'Online Presence',
+        'visit_website' => 'Visit Website',
+        'featured_properties' => 'Featured Properties',
+        'discover_properties' => 'Discover our premium property collection',
+        'currency' => 'SAR',
+        'ready_to_start' => 'Ready to Get Started?',
+        'contact_us_today' => 'Contact us today and let our experts help you find your dream property',
+        'schedule_consultation' => 'Schedule Consultation',
+        'call_now' => 'Call Now',
+        'get_in_touch' => 'Get In Touch',
+        'contact_description' => 'We\'re here to help you with all your real estate needs',
+        'call_us' => 'Call Us',
+        'email_us' => 'Email Us',
+        'visit_us' => 'Visit Us',
+        'our_numbers' => 'Our Numbers',
+        'quick_actions' => 'Quick Actions',
+        'appointments' => 'Appointments',
+        'quick_links' => 'Quick Links',
+        'contact_info' => 'Contact Info',
+        'all_rights_reserved' => 'All rights reserved.',
     ],
 
     'by_category' => [
@@ -251,5 +283,91 @@ return [
         'verified_facilities' => 'Documented Facilities',
         'total_products' => 'Available Properties',
         'satisfied_clients' => 'Satisfied Clients',
+    ],
+
+    // Dashboard
+    'dashboard' => [
+        'customize_landing' => 'Customize Landing Page',
+        'landing_customization' => 'Landing Page Customization',
+        'current_settings' => 'Current Settings',
+        'customize_now' => 'Customize Now',
+        'view_landing' => 'View Landing Page',
+        'customized' => 'Customized',
+        'using_defaults' => 'Using default settings',
+    ],
+
+    // Customization
+    'customization' => [
+        'page_title' => 'Facility Customization',
+        'page_subtitle' => 'Customize the look and feel of your facility page',
+        'preview' => 'Preview',
+        'reset_to_default' => 'Reset to Default',
+        'confirm_reset' => 'Are you sure you want to reset all settings to default values?',
+        'updated_successfully' => 'Customization settings updated successfully',
+        'reset_successfully' => 'Settings reset to default values successfully',
+        'preset_applied_successfully' => 'Color preset applied successfully',
+        
+        // Color Scheme
+        'color_scheme' => 'Color Scheme',
+        'color_presets' => 'Color Presets',
+        'choose_preset' => 'Choose a color preset',
+        'primary_color' => 'Primary Color',
+        'secondary_color' => 'Secondary Color',
+        'accent_color' => 'Accent Color',
+        'background_color' => 'Background Color',
+        'text_color' => 'Text Color',
+        'current_colors' => 'Current Colors',
+        'primary' => 'Primary',
+        'secondary' => 'Secondary',
+        'accent' => 'Accent',
+        
+        // Typography
+        'typography' => 'Typography',
+        'font_family' => 'Font Family',
+        
+        // Hero Section
+        'hero_section' => 'Hero Section',
+        'hero_background_type' => 'Hero Background Type',
+        'gradient' => 'Gradient',
+        'solid_color' => 'Solid Color',
+        'background_image' => 'Background Image',
+        'hero_background_color' => 'Hero Background Color',
+        'hero_background_image' => 'Hero Background Image',
+        'overlay_opacity' => 'Overlay Opacity',
+        
+        // Layout
+        'layout_design' => 'Layout & Design',
+        'layout_style' => 'Layout Style',
+        'button_style' => 'Button Style',
+        'logo_position' => 'Logo Position',
+        'animation_effects' => 'Animation Effects',
+        'enable_animations' => 'Enable Animations',
+        'enable_parallax' => 'Enable Parallax',
+        
+        // Custom CSS
+        'custom_css' => 'Custom CSS',
+        'additional_css' => 'Additional CSS Code',
+        'optional' => 'Optional',
+        'css_warning' => 'Ensure CSS code is valid before saving to avoid breaking the design',
+        
+        // Actions
+        'actions' => 'Actions',
+        'save_changes' => 'Save Changes',
+        'preview_changes' => 'Preview Changes',
+        
+        // Social Media
+        'social_media' => 'Social Media',
+        'facebook' => 'Facebook',
+        'twitter' => 'Twitter',
+        'instagram' => 'Instagram',
+        'linkedin' => 'LinkedIn',
+        
+        // SEO
+        'seo_settings' => 'SEO Settings',
+        'meta_description' => 'Meta Description',
+        'meta_description_placeholder' => 'Brief description of your facility for search results',
+        'max_160_chars' => 'Maximum 160 characters',
+        'meta_keywords' => 'Meta Keywords',
+        'keywords_placeholder' => 'real estate, Riyadh, villas, apartments',
     ],
 ];

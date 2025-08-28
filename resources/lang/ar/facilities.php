@@ -69,23 +69,55 @@ return [
 
     'show' => [
         'about_facility' => 'عن المنشأة',
+        'about' => 'حول',
         'no_description' => 'لا يوجد وصف متاح لهذه المنشأة.',
         'available_properties' => 'العقارات المتاحة',
+        'properties' => 'العقارات',
         'view_all_properties' => 'عرض جميع العقارات',
         'no_properties' => 'لا توجد عقارات متاحة',
         'contact_facility' => 'تواصل مع المنشأة',
+        'contact' => 'اتصل',
         'book_appointment' => 'حجز موعد',
+        'book_now' => 'احجز الآن',
         'request_quote' => 'طلب عرض سعر',
+        'get_quote' => 'احصل على عرض سعر',
         'facility_stats' => 'إحصائيات المنشأة',
         'properties_count' => 'عدد العقارات',
         'rating' => 'التقييم',
         'creation_date' => 'تاريخ الإنشاء',
+        'established' => 'تأسس',
         'not_specified' => 'غير محدد',
         'similar_facilities' => 'منشآت مشابهة',
         'address' => 'العنوان',
         'phone' => 'الهاتف',
         'email' => 'البريد الإلكتروني',
         'website' => 'الموقع الإلكتروني',
+        
+        // Landing Page Specific
+        'why_choose_us' => 'لماذا تختارنا؟',
+        'prime_location' => 'موقع متميز',
+        '24_7_support' => 'دعم 24/7',
+        'direct_contact' => 'تواصل مباشر',
+        'online_presence' => 'تواجد رقمي',
+        'visit_website' => 'زيارة الموقع',
+        'featured_properties' => 'العقارات المميزة',
+        'discover_properties' => 'اكتشف مجموعة عقاراتنا المتميزة',
+        'currency' => 'ريال',
+        'ready_to_start' => 'مستعد للبدء؟',
+        'contact_us_today' => 'تواصل معنا اليوم ودع خبرائنا يساعدوك في العثور على العقار المثالي',
+        'schedule_consultation' => 'جدولة استشارة',
+        'call_now' => 'اتصل الآن',
+        'get_in_touch' => 'تواصل معنا',
+        'contact_description' => 'نحن هنا لمساعدتك في جميع احتياجاتك العقارية',
+        'call_us' => 'اتصل بنا',
+        'email_us' => 'راسلنا',
+        'visit_us' => 'زرنا',
+        'our_numbers' => 'أرقامنا',
+        'quick_actions' => 'إجراءات سريعة',
+        'appointments' => 'المواعيد',
+        'quick_links' => 'روابط سريعة',
+        'contact_info' => 'معلومات الاتصال',
+        'all_rights_reserved' => 'جميع الحقوق محفوظة.',
     ],
 
     'by_category' => [
@@ -251,5 +283,91 @@ return [
         'verified_facilities' => 'منشأة موثقة',
         'total_products' => 'عقار متاح',
         'satisfied_clients' => 'عميل راضٍ',
+    ],
+
+    // Dashboard
+    'dashboard' => [
+        'customize_landing' => 'تخصيص الصفحة',
+        'landing_customization' => 'تخصيص صفحة الهبوط',
+        'current_settings' => 'الإعدادات الحالية',
+        'customize_now' => 'تخصيص الآن',
+        'view_landing' => 'عرض الصفحة',
+        'customized' => 'مخصصة',
+        'using_defaults' => 'تستخدم الإعدادات الافتراضية',
+    ],
+
+    // Customization
+    'customization' => [
+        'page_title' => 'تخصيص المنشأة',
+        'page_subtitle' => 'قم بتخصيص شكل ومظهر صفحة منشأتك',
+        'preview' => 'معاينة',
+        'reset_to_default' => 'إعادة للافتراضي',
+        'confirm_reset' => 'هل أنت متأكد من إعادة جميع الإعدادات للقيم الافتراضية؟',
+        'updated_successfully' => 'تم تحديث إعدادات التخصيص بنجاح',
+        'reset_successfully' => 'تم إعادة الإعدادات للقيم الافتراضية بنجاح',
+        'preset_applied_successfully' => 'تم تطبيق الموضوع بنجاح',
+        
+        // Color Scheme
+        'color_scheme' => 'نظام الألوان',
+        'color_presets' => 'الموضوعات الجاهزة',
+        'choose_preset' => 'اختر موضوع لوني',
+        'primary_color' => 'اللون الأساسي',
+        'secondary_color' => 'اللون الثانوي',
+        'accent_color' => 'اللون المميز',
+        'background_color' => 'لون الخلفية',
+        'text_color' => 'لون النص',
+        'current_colors' => 'الألوان الحالية',
+        'primary' => 'أساسي',
+        'secondary' => 'ثانوي',
+        'accent' => 'مميز',
+        
+        // Typography
+        'typography' => 'الخطوط',
+        'font_family' => 'عائلة الخط',
+        
+        // Hero Section
+        'hero_section' => 'قسم البطل',
+        'hero_background_type' => 'نوع خلفية البطل',
+        'gradient' => 'تدرج لوني',
+        'solid_color' => 'لون واحد',
+        'background_image' => 'صورة خلفية',
+        'hero_background_color' => 'لون خلفية البطل',
+        'hero_background_image' => 'صورة خلفية البطل',
+        'overlay_opacity' => 'شفافية الطبقة',
+        
+        // Layout
+        'layout_design' => 'التصميم والتخطيط',
+        'layout_style' => 'نمط التخطيط',
+        'button_style' => 'نمط الأزرار',
+        'logo_position' => 'موضع الشعار',
+        'animation_effects' => 'التأثيرات المتحركة',
+        'enable_animations' => 'تفعيل الحركات',
+        'enable_parallax' => 'تفعيل التأثير المتوازي',
+        
+        // Custom CSS
+        'custom_css' => 'CSS مخصص',
+        'additional_css' => 'كود CSS إضافي',
+        'optional' => 'اختياري',
+        'css_warning' => 'تأكد من صحة كود CSS قبل الحفظ لتجنب كسر التصميم',
+        
+        // Actions
+        'actions' => 'الإجراءات',
+        'save_changes' => 'حفظ التغييرات',
+        'preview_changes' => 'معاينة التغييرات',
+        
+        // Social Media
+        'social_media' => 'وسائل التواصل الاجتماعي',
+        'facebook' => 'فيسبوك',
+        'twitter' => 'تويتر',
+        'instagram' => 'إنستغرام',
+        'linkedin' => 'لينكدإن',
+        
+        // SEO
+        'seo_settings' => 'إعدادات SEO',
+        'meta_description' => 'وصف الموقع',
+        'meta_description_placeholder' => 'وصف مختصر عن منشأتك للظهور في نتائج البحث',
+        'max_160_chars' => 'الحد الأقصى 160 حرف',
+        'meta_keywords' => 'الكلمات المفتاحية',
+        'keywords_placeholder' => 'عقارات، الرياض، فلل، شقق',
     ],
 ];

@@ -33,6 +33,29 @@ class Facility extends Model
         'category_id',
         'city_id',
         'owner_user_id',
+        // Customization fields
+        'primary_color',
+        'secondary_color',
+        'accent_color',
+        'background_color',
+        'text_color',
+        'font_family',
+        'hero_background_type',
+        'hero_background_value',
+        'hero_overlay_opacity',
+        'layout_style',
+        'button_style',
+        'logo_position',
+        'enable_animations',
+        'enable_parallax',
+        'custom_css',
+        'facebook_url',
+        'twitter_url',
+        'instagram_url',
+        'linkedin_url',
+        'meta_keywords',
+        'meta_description',
+        'customization_settings',
     ];
 
     protected $casts = [
@@ -44,6 +67,10 @@ class Facility extends Model
         'longitude' => 'float',
         'rating' => 'float',
         'license_expiry' => 'date',
+        // Customization casts
+        'enable_animations' => 'boolean',
+        'enable_parallax' => 'boolean',
+        'customization_settings' => 'array',
     ];
 
     // العلاقات
@@ -158,5 +185,116 @@ class Facility extends Model
     public function getHeaderUrlAttribute()
     {
         return $this->header ? asset('storage/' . $this->header) : asset('images/default-header.jpg');
+    }
+
+    // Customization Helper Methods
+    public function getCustomizationAttribute()
+    {
+        return [
+            'colors' => [
+                'primary' => $this->primary_color ?? '#2563eb',
+                'secondary' => $this->secondary_color ?? '#1e40af',
+                'accent' => $this->accent_color ?? '#f59e0b',
+                'background' => $this->background_color ?? '#ffffff',
+                'text' => $this->text_color ?? '#374151',
+            ],
+            'typography' => [
+                'font_family' => $this->font_family ?? 'figtree',
+            ],
+            'hero' => [
+                'background_type' => $this->hero_background_type ?? 'gradient',
+                'background_value' => $this->hero_background_value,
+                'overlay_opacity' => $this->hero_overlay_opacity ?? '20',
+            ],
+            'layout' => [
+                'style' => $this->layout_style ?? 'modern',
+                'button_style' => $this->button_style ?? 'rounded',
+                'logo_position' => $this->logo_position ?? 'left',
+            ],
+            'effects' => [
+                'animations' => $this->enable_animations ?? true,
+                'parallax' => $this->enable_parallax ?? true,
+            ],
+            'social' => [
+                'facebook' => $this->facebook_url,
+                'twitter' => $this->twitter_url,
+                'instagram' => $this->instagram_url,
+                'linkedin' => $this->linkedin_url,
+            ],
+        ];
+    }
+
+    public function getCssVariablesAttribute()
+    {
+        $customization = $this->customization;
+        
+        return [
+            '--primary-color' => $customization['colors']['primary'],
+            '--secondary-color' => $customization['colors']['secondary'],
+            '--accent-color' => $customization['colors']['accent'],
+            '--background-color' => $customization['colors']['background'],
+            '--text-color' => $customization['colors']['text'],
+            '--font-family' => $this->getFontFamilyValue($customization['typography']['font_family']),
+        ];
+    }
+
+    public function getHeroBackgroundStyleAttribute()
+    {
+        $hero = $this->customization['hero'];
+        
+        switch ($hero['background_type']) {
+            case 'color':
+                return "background-color: {$hero['background_value']};";
+            case 'image':
+                return "background-image: url('{$hero['background_value']}'); background-size: cover; background-position: center;";
+            case 'gradient':
+            default:
+                $primary = $this->primary_color ?? '#2563eb';
+                $secondary = $this->secondary_color ?? '#1e40af';
+                return "background: linear-gradient(135deg, {$secondary}, {$primary});";
+        }
+    }
+
+    public function getFontFamilyValue($fontFamily)
+    {
+        $fontMap = [
+            'figtree' => "'Figtree', sans-serif",
+            'inter' => "'Inter', sans-serif",
+            'poppins' => "'Poppins', sans-serif", 
+            'roboto' => "'Roboto', sans-serif",
+            'open-sans' => "'Open Sans', sans-serif",
+            'lato' => "'Lato', sans-serif",
+        ];
+        
+        return $fontMap[$fontFamily] ?? $fontMap['figtree'];
+    }
+
+    public function hasCustomization()
+    {
+        return !empty($this->primary_color) || 
+               !empty($this->secondary_color) ||
+               !empty($this->custom_css) ||
+               !empty($this->hero_background_value);
+    }
+
+    public function resetCustomization()
+    {
+        $this->update([
+            'primary_color' => '#2563eb',
+            'secondary_color' => '#1e40af',
+            'accent_color' => '#f59e0b',
+            'background_color' => '#ffffff',
+            'text_color' => '#374151',
+            'font_family' => 'figtree',
+            'hero_background_type' => 'gradient',
+            'hero_background_value' => null,
+            'hero_overlay_opacity' => '20',
+            'layout_style' => 'modern',
+            'button_style' => 'rounded',
+            'logo_position' => 'left',
+            'enable_animations' => true,
+            'enable_parallax' => true,
+            'custom_css' => null,
+        ]);
     }
 }

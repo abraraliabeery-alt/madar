@@ -122,6 +122,92 @@
         </div>
     </div>
 
+    <!-- Landing Page Customization Preview -->
+    <div class="w-full mb-6">
+        <div class="bg-white rounded-lg shadow-lg">
+            <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 rounded-t-lg">
+                <h6 class="text-lg font-semibold text-purple-600 m-0 flex items-center">
+                    <i class="fas fa-palette mr-2"></i>
+                    {{ __('facilities.dashboard.landing_customization') }}
+                </h6>
+            </div>
+            <div class="p-6">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
+                    <!-- Current Colors Preview -->
+                    <div>
+                        <h6 class="font-semibold text-gray-800 mb-3">{{ __('facilities.customization.current_colors') }}</h6>
+                        <div class="flex items-center space-x-3">
+                            <div class="flex flex-col items-center">
+                                <div class="w-10 h-10 rounded-lg border border-gray-200 shadow-sm" 
+                                     style="background-color: {{ $facility->primary_color ?? '#2563eb' }}"></div>
+                                <span class="text-xs text-gray-500 mt-1">{{ __('facilities.customization.primary') }}</span>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <div class="w-10 h-10 rounded-lg border border-gray-200 shadow-sm" 
+                                     style="background-color: {{ $facility->secondary_color ?? '#1e40af' }}"></div>
+                                <span class="text-xs text-gray-500 mt-1">{{ __('facilities.customization.secondary') }}</span>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <div class="w-10 h-10 rounded-lg border border-gray-200 shadow-sm" 
+                                     style="background-color: {{ $facility->accent_color ?? '#f59e0b' }}"></div>
+                                <span class="text-xs text-gray-500 mt-1">{{ __('facilities.customization.accent') }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Current Settings -->
+                    <div>
+                        <h6 class="font-semibold text-gray-800 mb-3">{{ __('facilities.dashboard.current_settings') }}</h6>
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-600">{{ __('facilities.customization.font_family') }}:</span>
+                                <span class="font-medium text-gray-800">{{ ucfirst($facility->font_family ?? 'figtree') }}</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-600">{{ __('facilities.customization.layout_style') }}:</span>
+                                <span class="font-medium text-gray-800">{{ ucfirst($facility->layout_style ?? 'modern') }}</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-600">{{ __('facilities.customization.enable_animations') }}:</span>
+                                <span class="font-medium {{ ($facility->enable_animations ?? true) ? 'text-green-600' : 'text-red-600' }}">
+                                    {{ ($facility->enable_animations ?? true) ? __('general.yes') : __('general.no') }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="text-left lg:text-right space-y-3">
+                        <div class="space-y-2">
+                            <a href="{{ route('facility.customization.edit', $facility) }}" 
+                               class="w-full lg:w-auto bg-purple-600 hover:bg-purple-700 text-white font-medium py-3 px-6 rounded-lg transition duration-200 inline-flex items-center justify-center">
+                                <i class="fas fa-palette mr-2"></i> 
+                                {{ __('facilities.dashboard.customize_now') }}
+                            </a>
+                            <a href="{{ route('public.facilities.show', $facility) }}" 
+                               target="_blank"
+                               class="w-full lg:w-auto bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200 inline-flex items-center justify-center">
+                                <i class="fas fa-external-link-alt mr-2"></i> 
+                                {{ __('facilities.dashboard.view_landing') }}
+                            </a>
+                        </div>
+                        @if($facility->hasCustomization())
+                            <p class="text-xs text-green-600">
+                                <i class="fas fa-check-circle mr-1"></i>
+                                {{ __('facilities.dashboard.customized') }}
+                            </p>
+                        @else
+                            <p class="text-xs text-gray-500">
+                                <i class="fas fa-info-circle mr-1"></i>
+                                {{ __('facilities.dashboard.using_defaults') }}
+                            </p>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- {{ __('facility.dashboard.facility_info') }} -->
     <div class="w-full">
         <div class="bg-white rounded-lg shadow-lg mb-6">
@@ -149,6 +235,10 @@
                             <a href="{{ route('facility.edit') }}" 
                                class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition duration-200 inline-flex items-center justify-center">
                                 <i class="fas fa-edit ml-2"></i> {{ __('facility.dashboard.edit_facility') }}
+                            </a>
+                            <a href="{{ route('facility.customization.edit', $facility) }}" 
+                               class="bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-md transition duration-200 inline-flex items-center justify-center">
+                                <i class="fas fa-palette ml-2"></i> {{ __('facilities.dashboard.customize_landing') }}
                             </a>
                             <a href="{{ route('facility.products.index') }}" 
                                class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-md transition duration-200 inline-flex items-center justify-center">
