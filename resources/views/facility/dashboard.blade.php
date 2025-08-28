@@ -78,8 +78,8 @@
                     @foreach($stats['recent_bookings'] as $booking)
                     <div class="flex items-center mb-4 last:mb-0">
                         <div class="flex-shrink-0">
-                            <img class="w-10 h-10 rounded-full object-cover" 
-                                 src="{{ $booking->user->avatar ?? asset('images/default-avatar.png') }}" 
+                            <img class="w-10 h-10 rounded-full object-cover"
+                                 src="{{ $booking->user->avatar ?? asset('images/default-avatar.png') }}"
                                  alt="{{ __('facility.dashboard.user_avatar') }}">
                         </div>
                         <div class="flex-1 mr-3">
@@ -138,17 +138,17 @@
                         <h6 class="font-semibold text-gray-800 mb-3">{{ __('facilities.customization.current_colors') }}</h6>
                         <div class="flex items-center space-x-3">
                             <div class="flex flex-col items-center">
-                                <div class="w-10 h-10 rounded-lg border border-gray-200 shadow-sm" 
+                                <div class="w-10 h-10 rounded-lg border border-gray-200 shadow-sm"
                                      style="background-color: {{ $facility->primary_color ?? '#2563eb' }}"></div>
                                 <span class="text-xs text-gray-500 mt-1">{{ __('facilities.customization.primary') }}</span>
                             </div>
                             <div class="flex flex-col items-center">
-                                <div class="w-10 h-10 rounded-lg border border-gray-200 shadow-sm" 
+                                <div class="w-10 h-10 rounded-lg border border-gray-200 shadow-sm"
                                      style="background-color: {{ $facility->secondary_color ?? '#1e40af' }}"></div>
                                 <span class="text-xs text-gray-500 mt-1">{{ __('facilities.customization.secondary') }}</span>
                             </div>
                             <div class="flex flex-col items-center">
-                                <div class="w-10 h-10 rounded-lg border border-gray-200 shadow-sm" 
+                                <div class="w-10 h-10 rounded-lg border border-gray-200 shadow-sm"
                                      style="background-color: {{ $facility->accent_color ?? '#f59e0b' }}"></div>
                                 <span class="text-xs text-gray-500 mt-1">{{ __('facilities.customization.accent') }}</span>
                             </div>
@@ -179,15 +179,15 @@
                     <!-- Actions -->
                     <div class="text-left lg:text-right space-y-3">
                         <div class="space-y-2">
-                            <a href="{{ route('facility.customization.edit', $facility) }}" 
+                            <a href="{{ route('facility.customization.edit', $facility) }}"
                                class="w-full lg:w-auto bg-purple-600 hover:bg-purple-700 text-white font-medium py-3 px-6 rounded-lg transition duration-200 inline-flex items-center justify-center">
-                                <i class="fas fa-palette mr-2"></i> 
+                                <i class="fas fa-palette mr-2"></i>
                                 {{ __('facilities.dashboard.customize_now') }}
                             </a>
-                            <a href="{{ route('public.facilities.show', $facility) }}" 
+                            <a href="{{ route('public.facilities.show', $facility) }}"
                                target="_blank"
                                class="w-full lg:w-auto bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200 inline-flex items-center justify-center">
-                                <i class="fas fa-external-link-alt mr-2"></i> 
+                                <i class="fas fa-external-link-alt mr-2"></i>
                                 {{ __('facilities.dashboard.view_landing') }}
                             </a>
                         </div>
@@ -227,20 +227,16 @@
                     </div>
                     <div class="text-left md:text-right">
                         @if($facility->logo)
-                            <img src="{{ asset('storage/' . $facility->logo) }}" 
-                                 alt="{{ __('facility.form.logo') }}" 
+                            <img src="{{ asset('storage/' . $facility->logo) }}"
+                                 alt="{{ __('facility.form.logo') }}"
                                  class="max-h-24 w-auto mb-4 mx-auto md:mx-0 md:mr-0">
                         @endif
                         <div class="space-y-3 md:space-y-0 md:space-x-3 md:space-x-reverse flex flex-col md:flex-row md:justify-end">
-                            <a href="{{ route('facility.edit') }}" 
+                            <a href="{{ route('facility.edit') }}"
                                class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition duration-200 inline-flex items-center justify-center">
                                 <i class="fas fa-edit ml-2"></i> {{ __('facility.dashboard.edit_facility') }}
                             </a>
-                            <a href="{{ route('facility.customization.edit', $facility) }}" 
-                               class="bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-md transition duration-200 inline-flex items-center justify-center">
-                                <i class="fas fa-palette ml-2"></i> {{ __('facilities.dashboard.customize_landing') }}
-                            </a>
-                            <a href="{{ route('facility.products.index') }}" 
+                            <a href="{{ route('facility.products.index') }}"
                                class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-md transition duration-200 inline-flex items-center justify-center">
                                 <i class="fas fa-box ml-2"></i> {{ __('facility.dashboard.manage_products') }}
                             </a>

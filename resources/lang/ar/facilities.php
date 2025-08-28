@@ -102,6 +102,7 @@ return [
         'visit_website' => 'زيارة الموقع',
         'featured_properties' => 'العقارات المميزة',
         'discover_properties' => 'اكتشف مجموعة عقاراتنا المتميزة',
+        'properties_coming_soon' => 'العقارات قادمة قريباً',
         'currency' => 'ريال',
         'ready_to_start' => 'مستعد للبدء؟',
         'contact_us_today' => 'تواصل معنا اليوم ودع خبرائنا يساعدوك في العثور على العقار المثالي',
@@ -117,6 +118,7 @@ return [
         'appointments' => 'المواعيد',
         'quick_links' => 'روابط سريعة',
         'contact_info' => 'معلومات الاتصال',
+        'footer_description' => 'خدمات عقارية احترافية مع التزام بالتميز ورضا العملاء.',
         'all_rights_reserved' => 'جميع الحقوق محفوظة.',
     ],
 

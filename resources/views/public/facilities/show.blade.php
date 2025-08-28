@@ -69,6 +69,19 @@
             --primary-700: {{ \App\Helpers\FacilityHelper::darkenColor($primaryColor, 20) }};
             --primary-800: {{ \App\Helpers\FacilityHelper::darkenColor($primaryColor, 40) }};
             --primary-900: {{ \App\Helpers\FacilityHelper::darkenColor($primaryColor, 60) }};
+            
+            /* Contextual colors that adapt to the facility's color scheme */
+            --surface-color: {{ $backgroundColor }};
+            --surface-alt-color: {{ \App\Helpers\FacilityHelper::lightenColor($primaryColor, 95) }};
+            --border-color: {{ \App\Helpers\FacilityHelper::lightenColor($primaryColor, 85) }};
+            --muted-text-color: {{ $textColor }};
+            --heading-text-color: {{ $textColor }};}
+        }
+        
+        html, body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
         }
         
         body {
@@ -82,14 +95,28 @@
         }
         
         .btn-primary {
-            background: var(--primary-color);
+            background: var(--primary-color) !important;
             transition: all 0.3s ease;
             @if($facility->button_style === 'square')
-                border-radius: 0.375rem;
+                border-radius: 0.375rem !important;
             @elseif($facility->button_style === 'pill')
-                border-radius: 9999px;
+                border-radius: 9999px !important;
             @else
-                border-radius: 0.5rem;
+                border-radius: 0.5rem !important;
+            @endif
+        }
+        
+        /* Additional button style overrides to ensure our custom styles take precedence */
+        .btn-primary.rounded-full,
+        .btn-primary.rounded-lg,
+        .btn-primary.rounded-xl,
+        .btn-primary.rounded-md {
+            @if($facility->button_style === 'square')
+                border-radius: 0.375rem !important;
+            @elseif($facility->button_style === 'pill')
+                border-radius: 9999px !important;
+            @else
+                border-radius: 0.5rem !important;
             @endif
         }
         
@@ -130,8 +157,136 @@
         .bg-primary-50 { background-color: var(--primary-50); }
         .bg-primary-100 { background-color: var(--primary-100); }
         
+        /* Accent Color Classes */
+        .text-accent { color: var(--accent-color); }
+        .bg-accent { background-color: var(--accent-color); }
+        .border-accent { border-color: var(--accent-color); }
+        
+        /* Dynamic colors that adapt to facility's color scheme */
+        .btn-light {
+            background-color: rgba(255, 255, 255, 0.95) !important;
+            color: var(--primary-color) !important;
+            border: 2px solid transparent !important;
+        }
+        
+        .btn-light:hover {
+            background-color: rgba(255, 255, 255, 1) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .border-light {
+            border-color: rgba(255, 255, 255, 0.3) !important;
+        }
+        
+        .text-light {
+            color: rgba(255, 255, 255, 0.9) !important;
+        }
+        
+        .bg-light {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+        }
+        
+        /* Navigation dynamic colors */
+        .nav-text {
+            color: var(--text-color) !important;
+        }
+        
+        .nav-text:hover {
+            color: var(--primary-color) !important;
+        }
+        
+        .nav-bg {
+            background-color: var(--surface-color) !important;
+            opacity: 0.95;
+        }
+        
+        /* Section background colors that adapt to facility's color scheme */
+        .section-bg-alt {
+            background-color: var(--surface-alt-color) !important;
+        }
+        
+        .section-bg-white {
+            background-color: var(--surface-color) !important;
+        }
+        
+        .text-muted {
+            color: var(--muted-text-color) !important;
+            opacity: 0.7;
+        }
+        
+        .text-heading {
+            color: var(--heading-text-color) !important;
+            font-weight: bold;
+        }
+        
+        .border-dynamic {
+            border-color: var(--border-color) !important;
+        }
+        
+        /* Apply layout styles to containers */
+        .facility-card, .stats-card, .contact-card, .action-card {
+            @if($facility->layout_style === 'minimal')
+                box-shadow: none !important;
+                border: 1px solid #e5e7eb;
+            @elseif($facility->layout_style === 'corporate')
+                border-radius: 0.25rem !important;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            @elseif($facility->layout_style === 'classic')
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            @elseif($facility->layout_style === 'elegant')
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+                border-radius: 1rem !important;
+                border: 1px solid #f3f4f6;
+            @elseif($facility->layout_style === 'bold')
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+                border-radius: 0.75rem !important;
+                border: 2px solid var(--primary-100);
+            @endif
+        }
+        
+        /* Card Style Variations */
+        @if($facility->card_style === 'flat')
+            .facility-card, .stats-card, .contact-card, .action-card {
+                box-shadow: none !important;
+                border: 1px solid #e5e7eb;
+                background: #fafafa;
+            }
+        @elseif($facility->card_style === 'outlined')
+            .facility-card, .stats-card, .contact-card, .action-card {
+                box-shadow: none !important;
+                border: 2px solid var(--primary-200);
+                background: white;
+            }
+        @elseif($facility->card_style === 'elevated')
+            .facility-card, .stats-card, .contact-card, .action-card {
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1) !important;
+                border: none;
+            }
+        @endif
+        
         .hero-bg {
-            {!! $facility->hero_background_style !!}
+            @php
+                $heroConfig = $facility->customization['hero'];
+                $hasHeroImage = $heroConfig['background_type'] === 'image' && !empty($heroConfig['background_value']);
+                $fallbackImage = $facility->logo_url ?? 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80';
+            @endphp
+            
+            @if($hasHeroImage)
+                {!! $facility->hero_background_style !!}
+            @elseif($heroConfig['background_type'] === 'color')
+                {!! $facility->hero_background_style !!}
+            @elseif(!empty($fallbackImage) && $heroConfig['background_type'] === 'gradient')
+                background-image: url('{{ $fallbackImage }}');
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+            @else
+                {!! $facility->hero_background_style !!}
+            @endif
+            
+            width: 100vw;
+            margin-left: calc(50% - 50vw);
         }
         
         .hero-overlay {
@@ -162,6 +317,76 @@
                 justify-content: flex-end;
             @else
                 justify-content: flex-start;
+            @endif
+        }
+        
+        /* Navigation Styles */
+        .nav-bg {
+            @if($facility->navigation_style === 'transparent')
+                background: rgba(255, 255, 255, 0.8) !important;
+            @else
+                background: rgba(255, 255, 255, 0.95) !important;
+            @endif
+        }
+        
+        .main-navigation {
+            @if($facility->navigation_style === 'transparent')
+                background: transparent !important;
+                backdrop-filter: blur(15px);
+                -webkit-backdrop-filter: blur(15px);
+            @elseif($facility->navigation_style === 'boxed')
+                background: white !important;
+                margin: 1rem;
+                border-radius: 1rem;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+            @elseif($facility->navigation_style === 'centered')
+                background: white !important;
+                text-align: center;
+            @endif
+        }
+        
+        /* Content Layout Variations */
+        .content-container {
+            @if($facility->content_layout === 'full-width')
+                max-width: 100% !important;
+                padding-left: 1rem;
+                padding-right: 1rem;
+            @elseif($facility->content_layout === 'wide')
+                max-width: 90rem !important;
+            @else
+                max-width: 80rem !important;
+            @endif
+        }
+        
+        /* Section Spacing */
+        .section-spacing {
+            @if($facility->section_spacing === 'compact')
+                padding-top: 2.5rem !important;
+                padding-bottom: 2.5rem !important;
+            @elseif($facility->section_spacing === 'relaxed')
+                padding-top: 6rem !important;
+                padding-bottom: 6rem !important;
+            @elseif($facility->section_spacing === 'spacious')
+                padding-top: 8rem !important;
+                padding-bottom: 8rem !important;
+            @else
+                padding-top: 5rem !important;
+                padding-bottom: 5rem !important;
+            @endif
+        }
+        
+        /* Footer Styles */
+        .footer-container {
+            @if($facility->footer_style === 'minimal')
+                padding: 2rem 0;
+            @elseif($facility->footer_style === 'simple')
+                padding: 3rem 0;
+            @else
+                padding: 4rem 0;
             @endif
         }
         
@@ -201,39 +426,39 @@
     </script>
 </head>
 
-<body class="font-sans antialiased bg-white">
+<body class="font-sans antialiased" style="background-color: var(--background-color);">
     <!-- Navigation -->
-    <nav class="fixed top-0 w-full bg-white/95 backdrop-blur-sm z-50 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav class="main-navigation fixed top-0 w-full nav-bg backdrop-blur-sm z-50 shadow-sm">
+        <div class="content-container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center logo-{{ $facility->logo_position ?? 'left' }}">
                     <img src="{{ $facility->logo ?? asset('images/logo.png') }}" alt="{{ $facility->name }}" class="h-8 w-auto">
-                    <span class="ml-3 text-xl font-bold" style="color: var(--text-color);">{{ $facility->name }}</span>
+                    <span class="ml-3 text-xl font-bold nav-text">{{ $facility->name }}</span>
                 </div>
                 <div class="hidden md:flex items-center space-x-6">
-                    <a href="#about" class="text-gray-700 hover:text-primary-600 transition-colors">{{ __('facilities.show.about') }}</a>
-                    <a href="#properties" class="text-gray-700 hover:text-primary-600 transition-colors">{{ __('facilities.show.properties') }}</a>
-                    <a href="#contact" class="text-gray-700 hover:text-primary-600 transition-colors">{{ __('facilities.show.contact') }}</a>
+                    <a href="#about" class="nav-text transition-colors">{{ __('facilities.show.about') }}</a>
+                    <a href="#properties" class="nav-text transition-colors">{{ __('facilities.show.properties') }}</a>
+                    <a href="#contact" class="nav-text transition-colors">{{ __('facilities.show.contact') }}</a>
                     <a href="{{ route('public.facilities.appointment.form', $facility) }}" 
-                       class="btn-primary text-white px-6 py-2 rounded-full font-semibold">
+                       class="btn-primary text-white px-6 py-2 font-semibold">
                         {{ __('facilities.show.book_now') }}
                     </a>
                 </div>
                 <div class="md:hidden">
-                    <button type="button" class="text-gray-700 hover:text-gray-900" onclick="toggleMobileMenu()">
+                    <button type="button" class="nav-text" onclick="toggleMobileMenu()">
                         <i class="fas fa-bars"></i>
                     </button>
                 </div>
             </div>
         </div>
         <!-- Mobile menu -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+        <div id="mobile-menu" class="hidden md:hidden nav-bg border-t">
             <div class="px-2 pt-2 pb-3 space-y-1">
-                <a href="#about" class="block px-3 py-2 text-gray-700 hover:text-primary-600">{{ __('facilities.show.about') }}</a>
-                <a href="#properties" class="block px-3 py-2 text-gray-700 hover:text-primary-600">{{ __('facilities.show.properties') }}</a>
-                <a href="#contact" class="block px-3 py-2 text-gray-700 hover:text-primary-600">{{ __('facilities.show.contact') }}</a>
+                <a href="#about" class="block px-3 py-2 nav-text">{{ __('facilities.show.about') }}</a>
+                <a href="#properties" class="block px-3 py-2 nav-text">{{ __('facilities.show.properties') }}</a>
+                <a href="#contact" class="block px-3 py-2 nav-text">{{ __('facilities.show.contact') }}</a>
                 <a href="{{ route('public.facilities.appointment.form', $facility) }}" 
-                   class="block px-3 py-2 btn-primary text-white rounded-lg text-center font-semibold">
+                   class="block px-3 py-2 btn-primary text-white text-center font-semibold">
                     {{ __('facilities.show.book_now') }}
                 </a>
             </div>
@@ -247,99 +472,87 @@
         
         <!-- Hero Content -->
         <div class="relative z-10 w-full">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                    <div class="text-white fade-in">
-                        <!-- Badge -->
-                        <div class="inline-flex items-center space-x-2 space-x-reverse bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
-                            @if($facility->is_verified)
-                                <div class="flex items-center">
-                                    <i class="fas fa-shield-check text-green-400 ml-2"></i>
-                                    <span class="text-sm">{{ __('facilities.facility_card.verified') }}</span>
-                                </div>
-                            @endif
-                            @if($facility->is_featured)
-                                <div class="flex items-center">
-                                    <i class="fas fa-crown text-yellow-400 ml-2"></i>
-                                    <span class="text-sm">{{ __('facilities.facility_card.featured') }}</span>
-                                </div>
-                            @endif
-                        </div>
-
-                        <h1 class="text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 leading-tight">
-                            {{ $facility->name }}
-                        </h1>
-                    
-                    @if(\App\Helpers\FacilityHelper::isSingleMode())
-                            <p class="text-xl lg:text-2xl text-gray-100 mb-8 leading-relaxed max-w-2xl">
-                            {{ config('app.name') }} - {{ $facility->description ?? __('facilities.show.no_description') }}
-                        </p>
-                    @else
-                            <p class="text-xl lg:text-2xl text-gray-100 mb-8 leading-relaxed max-w-2xl">
-                            {{ $facility->description ?? __('facilities.show.no_description') }}
-                        </p>
-                    @endif
-
-                        <!-- Rating and Stats -->
-                        <div class="flex items-center space-x-8 space-x-reverse mb-10">
+            <div class="content-container mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
+                <div class="text-center text-white fade-in">
+                    <!-- Badge -->
+                    <div class="inline-flex items-center space-x-2 space-x-reverse bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
+                        @if($facility->is_verified)
                             <div class="flex items-center">
-                                <div class="flex text-yellow-400 mr-3">
-                            @for($i = 1; $i <= 5; $i++)
-                                        <i class="fas fa-star text-lg {{ $i <= ($facility->rating ?? 0) ? 'text-yellow-400' : 'text-gray-400' }}"></i>
-                            @endfor
-                                </div>
-                                <span class="text-white text-lg font-semibold">{{ $facility->rating ?? 0 }}</span>
-                                <span class="text-gray-300 mr-2">/5</span>
-                        </div>
-                            <div class="flex items-center text-gray-100">
-                                <i class="fas fa-home ml-2"></i>
-                                <span>{{ $facility->products_count ?? 0 }} {{ __('facilities.show.properties') }}</span>
+                                <i class="fas fa-shield-check text-green-400 ml-2"></i>
+                                <span class="text-sm">{{ __('facilities.facility_card.verified') }}</span>
                             </div>
-                        </div>
+                        @endif
+                        @if($facility->is_featured)
+                            <div class="flex items-center">
+                                <i class="fas fa-crown text-yellow-400 ml-2"></i>
+                                <span class="text-sm">{{ __('facilities.facility_card.featured') }}</span>
+                            </div>
+                        @endif
+                    </div>
 
-                        <!-- CTA Buttons -->
-                        <div class="flex flex-col sm:flex-row gap-4">
-                            <a href="{{ route('public.facilities.appointment.form', $facility) }}"
-                               class="inline-flex items-center justify-center px-8 py-4 bg-white text-primary-600 font-bold text-lg rounded-full hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-                                <i class="fas fa-calendar-plus ml-2"></i>
-                                {{ __('facilities.show.book_appointment') }}
-                            </a>
-                            <a href="{{ route('public.facilities.quote.form', $facility) }}"
-                               class="inline-flex items-center justify-center px-8 py-4 border-2 border-white text-white font-bold text-lg rounded-full hover:bg-white hover:text-primary-600 transition-all duration-300">
-                                <i class="fas fa-file-invoice ml-2"></i>
-                                {{ __('facilities.show.request_quote') }}
-                            </a>
+                    <h1 class="text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 leading-tight">
+                        {{ $facility->name }}
+                    </h1>
+                
+                @if(\App\Helpers\FacilityHelper::isSingleMode())
+                        <p class="text-xl lg:text-2xl text-gray-100 mb-8 leading-relaxed max-w-4xl mx-auto">
+                        {{ config('app.name') }} - {{ $facility->description ?? __('facilities.show.no_description') }}
+                    </p>
+                @else
+                        <p class="text-xl lg:text-2xl text-gray-100 mb-8 leading-relaxed max-w-4xl mx-auto">
+                        {{ $facility->description ?? __('facilities.show.no_description') }}
+                    </p>
+                @endif
+
+                    <!-- Rating and Stats -->
+                    <div class="flex items-center justify-center space-x-8 space-x-reverse mb-10">
+                        <div class="flex items-center">
+                            <div class="flex text-yellow-400 mr-3">
+                        @for($i = 1; $i <= 5; $i++)
+                                    <i class="fas fa-star text-lg {{ $i <= ($facility->rating ?? 0) ? 'text-yellow-400' : 'text-gray-400' }}"></i>
+                        @endfor
+                            </div>
+                            <span class="text-white text-lg font-semibold">{{ $facility->rating ?? 0 }}</span>
+                            <span class="text-gray-300 mr-2">/5</span>
+                    </div>
+                        <div class="flex items-center text-gray-100">
+                            <i class="fas fa-home ml-2"></i>
+                            <span>{{ $facility->products_count ?? 0 }} {{ __('facilities.show.properties') }}</span>
                         </div>
                     </div>
 
-                    <div class="relative lg:pl-8">
-                        <!-- Main Image with decoration -->
-                        <div class="relative {{ ($facility->enable_animations ?? true) ? 'floating-animation' : '' }}">
-                            <div class="absolute -inset-4 bg-gradient-to-r from-yellow-400 to-pink-400 rounded-3xl blur opacity-30"></div>
-                            <img src="{{ $facility->logo ?? 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' }}"
-                                 alt="{{ $facility->name }}" 
-                                 class="relative rounded-2xl shadow-2xl w-full h-96 object-cover">
-                        </div>
-                        
-                        <!-- Floating Stats Card -->
-                        <div class="absolute -bottom-6 -left-6 bg-white rounded-2xl p-6 shadow-2xl {{ ($facility->enable_animations ?? true) ? 'fade-in' : '' }}">
-                            <div class="flex items-center space-x-4 space-x-reverse">
-                                <div class="text-center">
-                                    <div class="text-2xl font-bold text-gray-900">{{ $facility->products_count ?? 0 }}</div>
-                                    <div class="text-sm text-gray-600">{{ __('facilities.show.properties') }}</div>
+                    <!-- Stats Card -->
+                    <div class="stats-card bg-white/10 backdrop-blur-sm rounded-2xl p-6 mb-10 max-w-md mx-auto {{ ($facility->enable_animations ?? true) ? 'fade-in' : '' }}">
+                        <div class="flex items-center justify-center space-x-6 space-x-reverse">
+                            <div class="text-center">
+                                <div class="text-2xl font-bold text-white">{{ $facility->products_count ?? 0 }}</div>
+                                <div class="text-sm text-gray-300">{{ __('facilities.show.properties') }}</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-2xl font-bold text-white">{{ $facility->rating ?? 0 }}</div>
+                                <div class="text-sm text-gray-300">{{ __('facilities.show.rating') }}</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-2xl font-bold text-white">
+                                    {{ $facility->created_at ? $facility->created_at->format('Y') : '2024' }}
                                 </div>
-                                <div class="text-center">
-                                    <div class="text-2xl font-bold text-gray-900">{{ $facility->rating ?? 0 }}</div>
-                                    <div class="text-sm text-gray-600">{{ __('facilities.show.rating') }}</div>
-                                </div>
-                                <div class="text-center">
-                                    <div class="text-2xl font-bold text-gray-900">
-                                        {{ $facility->created_at ? $facility->created_at->format('Y') : '2024' }}
-                                    </div>
-                                    <div class="text-sm text-gray-600">{{ __('facilities.show.established') }}</div>
-                                </div>
+                                <div class="text-sm text-gray-300">{{ __('facilities.show.established') }}</div>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- CTA Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <a href="{{ route('public.facilities.appointment.form', $facility) }}"
+                           class="btn-light inline-flex items-center justify-center px-8 py-4 font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl">
+                            <i class="fas fa-calendar-plus ml-2"></i>
+                            {{ __('facilities.show.book_appointment') }}
+                        </a>
+                        <a href="{{ route('public.facilities.quote.form', $facility) }}"
+                           class="btn-primary inline-flex items-center justify-center px-8 py-4 border-2 border-light text-light font-bold text-lg hover:bg-light hover:text-primary-600 transition-all duration-300">
+                            <i class="fas fa-file-invoice ml-2"></i>
+                            {{ __('facilities.show.request_quote') }}
+                        </a>
                     </div>
                 </div>
             </div>
@@ -353,46 +566,46 @@
     </div>
 
     <!-- Why Choose Us Section -->
-    <div id="about" class="bg-gray-50 py-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div id="about" class="section-bg-alt section-spacing">
+        <div class="content-container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16 fade-in">
-                <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">{{ __('facilities.show.why_choose_us') }}</h2>
-                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                <h2 class="text-4xl md:text-5xl font-bold text-heading mb-6">{{ __('facilities.show.why_choose_us') }}</h2>
+                <p class="text-xl text-muted max-w-3xl mx-auto">
                         {{ $facility->description ?? __('facilities.show.no_description') }}
                     </p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 <div class="text-center fade-in">
-                    <div class="bg-gradient-to-br from-blue-500 to-blue-600 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg transform hover:scale-110 transition-all duration-300">
+                    <div class="bg-accent w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg transform hover:scale-110 transition-all duration-300">
                         <i class="fas fa-map-marker-alt text-2xl text-white"></i>
                             </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-3">{{ __('facilities.show.prime_location') }}</h3>
-                                <p class="text-gray-600">{{ $facility->address ?? __('facilities.show.not_specified') }}</p>
+                    <h3 class="text-xl font-bold text-heading mb-3">{{ __('facilities.show.prime_location') }}</h3>
+                                <p class="text-muted">{{ $facility->address ?? __('facilities.show.not_specified') }}</p>
                             </div>
 
                 <div class="text-center fade-in" style="animation-delay: 0.1s;">
-                    <div class="bg-gradient-to-br from-green-500 to-green-600 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg transform hover:scale-110 transition-all duration-300">
+                    <div class="bg-primary-600 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg transform hover:scale-110 transition-all duration-300">
                         <i class="fas fa-phone text-2xl text-white"></i>
                         </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-3">{{ __('facilities.show.24_7_support') }}</h3>
-                                <p class="text-gray-600">{{ $facility->phone ?? __('facilities.show.not_specified') }}</p>
+                    <h3 class="text-xl font-bold text-heading mb-3">{{ __('facilities.show.24_7_support') }}</h3>
+                                <p class="text-muted">{{ $facility->phone ?? __('facilities.show.not_specified') }}</p>
                             </div>
 
                 <div class="text-center fade-in" style="animation-delay: 0.2s;">
-                    <div class="bg-gradient-to-br from-purple-500 to-purple-600 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg transform hover:scale-110 transition-all duration-300">
+                    <div class="bg-primary-700 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg transform hover:scale-110 transition-all duration-300">
                         <i class="fas fa-envelope text-2xl text-white"></i>
                         </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-3">{{ __('facilities.show.direct_contact') }}</h3>
-                                <p class="text-gray-600">{{ $facility->email ?? __('facilities.show.not_specified') }}</p>
+                    <h3 class="text-xl font-bold text-heading mb-3">{{ __('facilities.show.direct_contact') }}</h3>
+                                <p class="text-muted">{{ $facility->email ?? __('facilities.show.not_specified') }}</p>
                             </div>
 
                 <div class="text-center fade-in" style="animation-delay: 0.3s;">
-                    <div class="bg-gradient-to-br from-orange-500 to-orange-600 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg transform hover:scale-110 transition-all duration-300">
+                    <div class="bg-accent w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg transform hover:scale-110 transition-all duration-300">
                         <i class="fas fa-globe text-2xl text-white"></i>
                         </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-3">{{ __('facilities.show.online_presence') }}</h3>
-                                <p class="text-gray-600">
+                    <h3 class="text-xl font-bold text-heading mb-3">{{ __('facilities.show.online_presence') }}</h3>
+                                <p class="text-muted">
                                     @if($facility->website)
                             <a href="{{ $facility->website }}" target="_blank" class="text-primary-600 hover:text-primary-700 transition-colors">
                                 {{ __('facilities.show.visit_website') }}
@@ -407,17 +620,17 @@
                 </div>
 
     <!-- Properties Section -->
-    <div id="properties" class="bg-white py-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div id="properties" class="section-bg-white section-spacing">
+        <div class="content-container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
-                <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">{{ __('facilities.show.featured_properties') }}</h2>
-                <p class="text-xl text-gray-600">{{ __('facilities.show.discover_properties') }}</p>
+                <h2 class="text-4xl md:text-5xl font-bold text-heading mb-6">{{ __('facilities.show.featured_properties') }}</h2>
+                <p class="text-xl text-muted">{{ __('facilities.show.discover_properties') }}</p>
                     </div>
 
                     @if($products->count() > 0)
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
                     @foreach($products->take(6) as $product)
-                        <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+                        <div class="facility-card bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
                             <div class="relative">
                                     <img src="{{ $product->image ?? 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80' }}"
                                      alt="{{ $product->title }}" class="w-full h-64 object-cover">
@@ -426,17 +639,17 @@
                                 </div>
                             </div>
                             <div class="p-6">
-                                <h3 class="text-xl font-bold text-gray-900 mb-2">
+                                <h3 class="text-xl font-bold text-heading mb-2">
                                             <a href="{{ route('public.products.show', $product) }}" class="hover:text-primary-600 transition-colors">
                                                 {{ $product->title }}
                                             </a>
                                         </h3>
-                                <p class="text-gray-600 text-sm mb-4 flex items-center">
+                                <p class="text-muted text-sm mb-4 flex items-center">
                                     <i class="fas fa-map-marker-alt ml-2"></i>
                                     {{ $product->address ?? __('facilities.facility_card.location_unknown') }}
                                 </p>
 
-                                <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
+                                <div class="flex items-center justify-between text-sm text-muted mb-4">
                                     @foreach($product->card_attributes->take(3) as $attribute)
                                         <span class="flex items-center">
                                                     @if($attribute->icon)
@@ -453,7 +666,7 @@
                                         </div>
 
                                             <a href="{{ route('public.products.show', $product) }}"
-                                   class="w-full btn-primary text-white py-3 rounded-lg font-semibold text-center block hover:bg-primary-700 transition-colors">
+                                   class="w-full btn-primary text-white py-3 font-semibold text-center block">
                                                 {{ __('facilities.product.view_details') }}
                                             </a>
                                     </div>
@@ -463,16 +676,16 @@
 
                 <div class="text-center">
                     <a href="{{ route('public.products.by-facility', $facility) }}" 
-                       class="inline-flex items-center px-8 py-4 border-2 border-primary-600 text-primary-600 font-bold text-lg rounded-full hover:bg-primary-600 hover:text-white transition-all duration-300">
+                       class="btn-primary inline-flex items-center px-8 py-4 border-2 border-primary-600 text-primary-600 font-bold text-lg hover:bg-primary-600 hover:text-white transition-all duration-300">
                         {{ __('facilities.show.view_all_properties') }}
                         <i class="fas fa-arrow-right mr-2"></i>
                     </a>
                         </div>
                     @else
                 <div class="text-center py-16">
-                    <i class="fas fa-home text-6xl text-gray-400 mb-6"></i>
-                    <h3 class="text-2xl font-bold text-gray-900 mb-4">{{ __('facilities.show.no_properties') }}</h3>
-                    <p class="text-gray-600">{{ __('facilities.show.properties_coming_soon') }}</p>
+                    <i class="fas fa-home text-6xl text-muted mb-6"></i>
+                    <h3 class="text-2xl font-bold text-heading mb-4">{{ __('facilities.show.no_properties') }}</h3>
+                    <p class="text-muted">{{ __('facilities.show.properties_coming_soon') }}</p>
                         </div>
                     @endif
                 </div>
@@ -489,12 +702,12 @@
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
                 <a href="{{ route('public.facilities.appointment.form', $facility) }}"
-                   class="inline-flex items-center justify-center px-8 py-4 bg-white text-primary-600 font-bold text-lg rounded-full hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                   class="btn-light inline-flex items-center justify-center px-8 py-4 font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl">
                     <i class="fas fa-calendar-check ml-2"></i>
                     {{ __('facilities.show.schedule_consultation') }}
                 </a>
                 <a href="#contact"
-                   class="inline-flex items-center justify-center px-8 py-4 border-2 border-white text-white font-bold text-lg rounded-full hover:bg-white hover:text-primary-600 transition-all duration-300">
+                   class="btn-primary inline-flex items-center justify-center px-8 py-4 border-2 border-light text-light font-bold text-lg hover:bg-light hover:text-primary-600 transition-all duration-300">
                     <i class="fas fa-phone ml-2"></i>
                     {{ __('facilities.show.call_now') }}
                 </a>
@@ -503,24 +716,24 @@
     </div>
 
     <!-- Contact Section -->
-    <div id="contact" class="bg-gray-50 py-20">
+    <div id="contact" class="section-bg-alt py-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
-                <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">{{ __('facilities.show.get_in_touch') }}</h2>
-                <p class="text-xl text-gray-600">{{ __('facilities.show.contact_description') }}</p>
+                <h2 class="text-4xl md:text-5xl font-bold text-heading mb-6">{{ __('facilities.show.get_in_touch') }}</h2>
+                <p class="text-xl text-muted">{{ __('facilities.show.contact_description') }}</p>
                     </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
                 <!-- Contact Info -->
                 <div class="space-y-8">
                     @if($facility->phone)
-                        <div class="flex items-center p-6 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
-                            <div class="bg-green-100 p-4 rounded-2xl mr-6">
-                                <i class="fas fa-phone text-2xl text-green-600"></i>
+                        <div class="contact-card flex items-center p-6 section-bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
+                            <div class="bg-primary-100 p-4 rounded-2xl mr-6">
+                                <i class="fas fa-phone text-2xl text-primary-600"></i>
                             </div>
                             <div>
-                                <h3 class="text-xl font-bold text-gray-900 mb-2">{{ __('facilities.show.call_us') }}</h3>
-                                <a href="tel:{{ $facility->phone }}" class="text-gray-600 hover:text-primary-600 transition-colors text-lg">
+                                <h3 class="text-xl font-bold text-heading mb-2">{{ __('facilities.show.call_us') }}</h3>
+                                <a href="tel:{{ $facility->phone }}" class="text-muted hover:text-primary-600 transition-colors text-lg">
                                     {{ $facility->phone }}
                         </a>
                     </div>
@@ -528,13 +741,13 @@
                     @endif
 
                     @if($facility->email)
-                        <div class="flex items-center p-6 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
-                            <div class="bg-blue-100 p-4 rounded-2xl mr-6">
-                                <i class="fas fa-envelope text-2xl text-blue-600"></i>
+                        <div class="contact-card flex items-center p-6 section-bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
+                            <div class="bg-primary-100 p-4 rounded-2xl mr-6">
+                                <i class="fas fa-envelope text-2xl text-primary-600"></i>
                             </div>
                             <div>
-                                <h3 class="text-xl font-bold text-gray-900 mb-2">{{ __('facilities.show.email_us') }}</h3>
-                                <a href="mailto:{{ $facility->email }}" class="text-gray-600 hover:text-primary-600 transition-colors text-lg">
+                                <h3 class="text-xl font-bold text-heading mb-2">{{ __('facilities.show.email_us') }}</h3>
+                                <a href="mailto:{{ $facility->email }}" class="text-muted hover:text-primary-600 transition-colors text-lg">
                                     {{ $facility->email }}
                                 </a>
                             </div>
@@ -542,28 +755,28 @@
                     @endif
 
                     @if($facility->address)
-                        <div class="flex items-center p-6 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
-                            <div class="bg-purple-100 p-4 rounded-2xl mr-6">
-                                <i class="fas fa-map-marker-alt text-2xl text-purple-600"></i>
+                        <div class="contact-card flex items-center p-6 section-bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
+                            <div class="bg-accent p-4 rounded-2xl mr-6">
+                                <i class="fas fa-map-marker-alt text-2xl text-white"></i>
                             </div>
                             <div>
-                                <h3 class="text-xl font-bold text-gray-900 mb-2">{{ __('facilities.show.visit_us') }}</h3>
-                                <p class="text-gray-600 text-lg">{{ $facility->address }}</p>
+                                <h3 class="text-xl font-bold text-heading mb-2">{{ __('facilities.show.visit_us') }}</h3>
+                                <p class="text-muted text-lg">{{ $facility->address }}</p>
                             </div>
                         </div>
                     @endif
 
                     <!-- Stats -->
-                    <div class="bg-white rounded-2xl p-8 shadow-lg">
-                        <h3 class="text-2xl font-bold text-gray-900 mb-6">{{ __('facilities.show.our_numbers') }}</h3>
+                    <div class="stats-card section-bg-white rounded-2xl p-8 shadow-lg">
+                        <h3 class="text-2xl font-bold text-heading mb-6">{{ __('facilities.show.our_numbers') }}</h3>
                         <div class="grid grid-cols-2 gap-6">
                             <div class="text-center">
                                 <div class="text-3xl font-bold text-primary-600 mb-2">{{ $facility->products_count ?? 0 }}</div>
-                                <div class="text-gray-600">{{ __('facilities.show.properties') }}</div>
+                                <div class="text-muted">{{ __('facilities.show.properties') }}</div>
                             </div>
                             <div class="text-center">
                                 <div class="text-3xl font-bold text-primary-600 mb-2">{{ $facility->rating ?? 0 }}/5</div>
-                                <div class="text-gray-600">{{ __('facilities.show.rating') }}</div>
+                                <div class="text-muted">{{ __('facilities.show.rating') }}</div>
                             </div>
                         </div>
                     </div>
@@ -571,22 +784,22 @@
 
                 <!-- Quick Actions -->
                 <div class="space-y-6">
-                    <div class="bg-white rounded-2xl p-8 shadow-lg">
-                        <h3 class="text-2xl font-bold text-gray-900 mb-6">{{ __('facilities.show.quick_actions') }}</h3>
+                    <div class="action-card section-bg-white rounded-2xl p-8 shadow-lg">
+                        <h3 class="text-2xl font-bold text-heading mb-6">{{ __('facilities.show.quick_actions') }}</h3>
                         <div class="space-y-4">
                             <a href="{{ route('public.facilities.appointment.form', $facility) }}"
-                               class="w-full btn-primary text-white py-4 rounded-xl font-bold text-lg text-center block hover:bg-primary-700 transition-colors">
+                               class="w-full btn-primary text-white py-4 font-bold text-lg text-center block">
                                 <i class="fas fa-calendar-plus ml-2"></i>
                                 {{ __('facilities.show.book_appointment') }}
                             </a>
                             <a href="{{ route('public.facilities.quote.form', $facility) }}"
-                               class="w-full border-2 border-primary-600 text-primary-600 py-4 rounded-xl font-bold text-lg text-center block hover:bg-primary-600 hover:text-white transition-colors">
+                               class="btn-primary w-full border-2 border-primary-600 text-primary-600 py-4 font-bold text-lg text-center block hover:bg-primary-600 hover:text-white transition-colors">
                                 <i class="fas fa-calculator ml-2"></i>
                                 {{ __('facilities.show.get_quote') }}
                             </a>
                             @if($facility->website)
                                 <a href="{{ $facility->website }}" target="_blank"
-                                   class="w-full border-2 border-gray-300 text-gray-700 py-4 rounded-xl font-bold text-lg text-center block hover:bg-gray-50 transition-colors">
+                                   class="btn-primary w-full border-2 border-primary-300 text-muted py-4 font-bold text-lg text-center block hover:bg-primary-50 transition-colors">
                                     <i class="fas fa-globe ml-2"></i>
                                     {{ __('facilities.show.visit_website') }}
                                 </a>
@@ -596,17 +809,17 @@
 
                     <!-- Similar Facilities -->
                     @if(\App\Helpers\FacilityHelper::isMultiMode() && $similarFacilities->count() > 0)
-                        <div class="bg-white rounded-2xl p-8 shadow-lg">
-                            <h3 class="text-xl font-bold text-gray-900 mb-6">{{ __('facilities.show.similar_facilities') }}</h3>
+                        <div class="facility-card section-bg-white rounded-2xl p-8 shadow-lg">
+                            <h3 class="text-xl font-bold text-heading mb-6">{{ __('facilities.show.similar_facilities') }}</h3>
                             <div class="space-y-4">
                                 @foreach($similarFacilities->take(3) as $similar)
                                 <a href="{{ route('public.facilities.show', $similar) }}"
-                                       class="flex items-center p-4 hover:bg-gray-50 rounded-xl transition-colors">
+                                       class="flex items-center p-4 hover:bg-primary-50 rounded-xl transition-colors">
                                     <img src="{{ $similar->logo ?? 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80' }}"
                                              alt="{{ $similar->name }}" class="w-12 h-12 rounded-xl object-cover mr-4">
                                     <div>
-                                            <h4 class="font-semibold text-gray-900">{{ $similar->name }}</h4>
-                                        <p class="text-sm text-gray-600">{{ $similar->category->name ?? '' }}</p>
+                                            <h4 class="font-semibold text-heading">{{ $similar->name }}</h4>
+                                        <p class="text-sm text-muted">{{ $similar->category->name ?? '' }}</p>
                                     </div>
                                 </a>
                             @endforeach
@@ -627,32 +840,32 @@
                         <img src="{{ $facility->logo ?? asset('images/logo.png') }}" alt="{{ $facility->name }}" class="h-8 w-auto">
                         <span class="ml-3 text-xl font-bold">{{ $facility->name }}</span>
                     </div>
-                    <p class="text-gray-400 mb-6">
+                    <p class="text-gray-300 mb-6">
                         {{ $facility->description ?? __('facilities.show.footer_description') }}
                     </p>
                     <div class="flex space-x-4">
                         @if($facility->website)
-                            <a href="{{ $facility->website }}" target="_blank" class="text-gray-400 hover:text-white transition-colors">
+                            <a href="{{ $facility->website }}" target="_blank" class="text-gray-300 hover:text-white transition-colors">
                                 <i class="fas fa-globe text-xl"></i>
                             </a>
                         @endif
                         @if($facility->facebook_url)
-                            <a href="{{ $facility->facebook_url }}" target="_blank" class="text-gray-400 hover:text-white transition-colors">
+                            <a href="{{ $facility->facebook_url }}" target="_blank" class="text-gray-300 hover:text-white transition-colors">
                                 <i class="fab fa-facebook-f text-xl"></i>
                             </a>
                         @endif
                         @if($facility->twitter_url)
-                            <a href="{{ $facility->twitter_url }}" target="_blank" class="text-gray-400 hover:text-white transition-colors">
+                            <a href="{{ $facility->twitter_url }}" target="_blank" class="text-gray-300 hover:text-white transition-colors">
                                 <i class="fab fa-twitter text-xl"></i>
                             </a>
                         @endif
                         @if($facility->instagram_url)
-                            <a href="{{ $facility->instagram_url }}" target="_blank" class="text-gray-400 hover:text-white transition-colors">
+                            <a href="{{ $facility->instagram_url }}" target="_blank" class="text-gray-300 hover:text-white transition-colors">
                                 <i class="fab fa-instagram text-xl"></i>
                             </a>
                         @endif
                         @if($facility->linkedin_url)
-                            <a href="{{ $facility->linkedin_url }}" target="_blank" class="text-gray-400 hover:text-white transition-colors">
+                            <a href="{{ $facility->linkedin_url }}" target="_blank" class="text-gray-300 hover:text-white transition-colors">
                                 <i class="fab fa-linkedin-in text-xl"></i>
                             </a>
                         @endif
@@ -660,18 +873,18 @@
                 </div>
                 
                 <div>
-                    <h3 class="text-lg font-semibold mb-4">{{ __('facilities.show.quick_links') }}</h3>
+                    <h3 class="text-lg font-semibold mb-4 text-white">{{ __('facilities.show.quick_links') }}</h3>
                     <ul class="space-y-2">
-                        <li><a href="#about" class="text-gray-400 hover:text-white transition-colors">{{ __('facilities.show.about') }}</a></li>
-                        <li><a href="#properties" class="text-gray-400 hover:text-white transition-colors">{{ __('facilities.show.properties') }}</a></li>
-                        <li><a href="#contact" class="text-gray-400 hover:text-white transition-colors">{{ __('facilities.show.contact') }}</a></li>
-                        <li><a href="{{ route('public.facilities.appointment.form', $facility) }}" class="text-gray-400 hover:text-white transition-colors">{{ __('facilities.show.appointments') }}</a></li>
+                        <li><a href="#about" class="text-gray-300 hover:text-white transition-colors">{{ __('facilities.show.about') }}</a></li>
+                        <li><a href="#properties" class="text-gray-300 hover:text-white transition-colors">{{ __('facilities.show.properties') }}</a></li>
+                        <li><a href="#contact" class="text-gray-300 hover:text-white transition-colors">{{ __('facilities.show.contact') }}</a></li>
+                        <li><a href="{{ route('public.facilities.appointment.form', $facility) }}" class="text-gray-300 hover:text-white transition-colors">{{ __('facilities.show.appointments') }}</a></li>
                     </ul>
                 </div>
                 
                 <div>
-                    <h3 class="text-lg font-semibold mb-4">{{ __('facilities.show.contact_info') }}</h3>
-                    <ul class="space-y-2 text-gray-400">
+                    <h3 class="text-lg font-semibold mb-4 text-white">{{ __('facilities.show.contact_info') }}</h3>
+                    <ul class="space-y-2 text-gray-300">
                         @if($facility->phone)
                             <li class="flex items-center">
                                 <i class="fas fa-phone ml-2"></i>
@@ -695,7 +908,7 @@
             </div>
             
             <div class="border-t border-gray-800 mt-8 pt-8 text-center">
-                <p class="text-gray-400">
+                <p class="text-gray-300">
                     &copy; {{ date('Y') }} {{ $facility->name }}. {{ __('facilities.show.all_rights_reserved') }}
                 </p>
             </div>

@@ -102,6 +102,7 @@ return [
         'visit_website' => 'Visit Website',
         'featured_properties' => 'Featured Properties',
         'discover_properties' => 'Discover our premium property collection',
+        'properties_coming_soon' => 'Properties coming soon',
         'currency' => 'SAR',
         'ready_to_start' => 'Ready to Get Started?',
         'contact_us_today' => 'Contact us today and let our experts help you find your dream property',
@@ -117,6 +118,7 @@ return [
         'appointments' => 'Appointments',
         'quick_links' => 'Quick Links',
         'contact_info' => 'Contact Info',
+        'footer_description' => 'Professional real estate services with a commitment to excellence and customer satisfaction.',
         'all_rights_reserved' => 'All rights reserved.',
     ],
 

@@ -54,9 +54,14 @@ class FacilityCustomizationController extends Controller
             'hero_background_image' => ['nullable', 'image', 'max:5120'], // 5MB max
             
             // Layout & Design
-            'layout_style' => ['nullable', Rule::in(['modern', 'classic', 'minimal', 'corporate'])],
+            'layout_style' => ['nullable', Rule::in(['modern', 'classic', 'minimal', 'corporate', 'elegant', 'bold'])],
             'button_style' => ['nullable', Rule::in(['rounded', 'square', 'pill'])],
             'logo_position' => ['nullable', Rule::in(['left', 'center', 'right'])],
+            'navigation_style' => ['nullable', Rule::in(['standard', 'transparent', 'boxed', 'centered'])],
+            'content_layout' => ['nullable', Rule::in(['full-width', 'boxed', 'wide'])],
+            'section_spacing' => ['nullable', Rule::in(['compact', 'normal', 'relaxed', 'spacious'])],
+            'card_style' => ['nullable', Rule::in(['modern', 'flat', 'outlined', 'elevated'])],
+            'footer_style' => ['nullable', Rule::in(['simple', 'detailed', 'minimal'])],
             
             // Effects
             'enable_animations' => ['boolean'],
@@ -88,7 +93,7 @@ class FacilityCustomizationController extends Controller
             
             $heroImagePath = $request->file('hero_background_image')->store('facility-customization/hero', 'public');
             $validated['hero_background_type'] = 'image';
-            $validated['hero_background_value'] = asset('storage/' . $heroImagePath);
+            $validated['hero_background_value'] = asset($heroImagePath);
         }
 
         // Update facility with validated data
@@ -148,6 +153,11 @@ class FacilityCustomizationController extends Controller
                 'font_family',
                 'layout_style',
                 'button_style',
+                'navigation_style',
+                'content_layout',
+                'section_spacing',
+                'card_style',
+                'footer_style',
                 'hero_background_type',
                 'hero_overlay_opacity',
                 'enable_animations',
@@ -294,9 +304,11 @@ class FacilityCustomizationController extends Controller
         return [
             'layout_styles' => [
                 'modern' => 'Modern',
-                'classic' => 'Classic',
+                'classic' => 'Classic', 
                 'minimal' => 'Minimal',
                 'corporate' => 'Corporate',
+                'elegant' => 'Elegant',
+                'bold' => 'Bold',
             ],
             'button_styles' => [
                 'rounded' => 'Rounded',
@@ -307,6 +319,34 @@ class FacilityCustomizationController extends Controller
                 'left' => 'Left',
                 'center' => 'Center',
                 'right' => 'Right',
+            ],
+            'navigation_styles' => [
+                'standard' => 'Standard',
+                'transparent' => 'Transparent',
+                'boxed' => 'Boxed',
+                'centered' => 'Centered',
+            ],
+            'content_layouts' => [
+                'full-width' => 'Full Width',
+                'boxed' => 'Boxed Container',
+                'wide' => 'Wide Container',
+            ],
+            'section_spacings' => [
+                'compact' => 'Compact',
+                'normal' => 'Normal',
+                'relaxed' => 'Relaxed',
+                'spacious' => 'Spacious',
+            ],
+            'card_styles' => [
+                'modern' => 'Modern Shadow',
+                'flat' => 'Flat Design',
+                'outlined' => 'Outlined',
+                'elevated' => 'Elevated',
+            ],
+            'footer_styles' => [
+                'simple' => 'Simple',
+                'detailed' => 'Detailed',
+                'minimal' => 'Minimal',
             ],
         ];
     }

@@ -276,17 +276,17 @@
                     </div>
                 </div>
 
-                <!-- Layout & Design -->
+                <!-- General Layout Settings -->
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                     <h2 class="text-xl font-semibold text-gray-900 mb-6">
                         <i class="fas fa-layout mr-2 text-orange-600"></i>
-                        {{ __('facilities.customization.layout_design') }}
+                        {{ __('facilities.customization.general_layout') }}
                     </h2>
 
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label for="layout_style" class="block text-sm font-medium text-gray-700 mb-2">
-                                {{ __('facilities.customization.layout_style') }}
+                                {{ __('facilities.customization.overall_theme') }}
                             </label>
                             <select id="layout_style" name="layout_style" 
                                     class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
@@ -297,21 +297,81 @@
                                     </option>
                                 @endforeach
                             </select>
+                            <p class="mt-1 text-xs text-gray-500">Choose the overall visual theme for your facility page</p>
                         </div>
 
                         <div>
-                            <label for="button_style" class="block text-sm font-medium text-gray-700 mb-2">
-                                {{ __('facilities.customization.button_style') }}
+                            <label for="content_layout" class="block text-sm font-medium text-gray-700 mb-2">
+                                {{ __('facilities.customization.content_width') }}
                             </label>
-                            <select id="button_style" name="button_style" 
+                            <select id="content_layout" name="content_layout" 
                                     class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                @foreach($layoutOptions['button_styles'] as $value => $label)
+                                @foreach($layoutOptions['content_layouts'] as $value => $label)
                                     <option value="{{ $value }}" 
-                                            {{ old('button_style', $facility->button_style ?? 'rounded') === $value ? 'selected' : '' }}>
+                                            {{ old('content_layout', $facility->content_layout ?? 'boxed') === $value ? 'selected' : '' }}>
                                         {{ $label }}
                                     </option>
                                 @endforeach
                             </select>
+                            <p class="mt-1 text-xs text-gray-500">Control how wide your content spans</p>
+                        </div>
+
+                        <div>
+                            <label for="section_spacing" class="block text-sm font-medium text-gray-700 mb-2">
+                                {{ __('facilities.customization.section_spacing') }}
+                            </label>
+                            <select id="section_spacing" name="section_spacing" 
+                                    class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                @foreach($layoutOptions['section_spacings'] as $value => $label)
+                                    <option value="{{ $value }}" 
+                                            {{ old('section_spacing', $facility->section_spacing ?? 'normal') === $value ? 'selected' : '' }}>
+                                        {{ $label }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <p class="mt-1 text-xs text-gray-500">Adjust spacing between sections</p>
+                        </div>
+
+                        <div>
+                            <label for="card_style" class="block text-sm font-medium text-gray-700 mb-2">
+                                {{ __('facilities.customization.card_design') }}
+                            </label>
+                            <select id="card_style" name="card_style" 
+                                    class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                @foreach($layoutOptions['card_styles'] as $value => $label)
+                                    <option value="{{ $value }}" 
+                                            {{ old('card_style', $facility->card_style ?? 'modern') === $value ? 'selected' : '' }}>
+                                        {{ $label }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <p class="mt-1 text-xs text-gray-500">Style for property cards and info boxes</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation & Header -->
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-6">
+                        <i class="fas fa-bars mr-2 text-indigo-600"></i>
+                        {{ __('facilities.customization.navigation_header') }}
+                    </h2>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="navigation_style" class="block text-sm font-medium text-gray-700 mb-2">
+                                {{ __('facilities.customization.navigation_style') }}
+                            </label>
+                            <select id="navigation_style" name="navigation_style" 
+                                    class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                @foreach($layoutOptions['navigation_styles'] as $value => $label)
+                                    <option value="{{ $value }}" 
+                                            {{ old('navigation_style', $facility->navigation_style ?? 'standard') === $value ? 'selected' : '' }}>
+                                        {{ $label }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <p class="mt-1 text-xs text-gray-500">Choose navigation bar appearance</p>
                         </div>
 
                         <div>
@@ -327,33 +387,99 @@
                                     </option>
                                 @endforeach
                             </select>
+                            <p class="mt-1 text-xs text-gray-500">Position of your logo in the header</p>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Animation Settings -->
-                    <div class="mt-6 pt-6 border-t border-gray-200">
-                        <h3 class="text-lg font-medium text-gray-900 mb-4">{{ __('facilities.customization.animation_effects') }}</h3>
-                        <div class="space-y-4">
-                            <label class="flex items-center">
-                                <input type="checkbox" 
-                                       id="enable_animations" 
-                                       name="enable_animations" 
-                                       value="1"
-                                       {{ old('enable_animations', $facility->enable_animations ?? true) ? 'checked' : '' }}
-                                       class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                                <span class="ml-2 text-sm text-gray-700">{{ __('facilities.customization.enable_animations') }}</span>
+                <!-- Interactive Elements -->
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-6">
+                        <i class="fas fa-mouse-pointer mr-2 text-pink-600"></i>
+                        {{ __('facilities.customization.interactive_elements') }}
+                    </h2>
+
+                    <div class="space-y-6">
+                        <div>
+                            <label for="button_style" class="block text-sm font-medium text-gray-700 mb-2">
+                                {{ __('facilities.customization.button_style') }}
                             </label>
+                            <select id="button_style" name="button_style" 
+                                    class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                @foreach($layoutOptions['button_styles'] as $value => $label)
+                                    <option value="{{ $value }}" 
+                                            {{ old('button_style', $facility->button_style ?? 'rounded') === $value ? 'selected' : '' }}>
+                                        {{ $label }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <p class="mt-1 text-xs text-gray-500">Shape and style of buttons throughout the site</p>
                             
-                            <label class="flex items-center">
-                                <input type="checkbox" 
-                                       id="enable_parallax" 
-                                       name="enable_parallax" 
-                                       value="1"
-                                       {{ old('enable_parallax', $facility->enable_parallax ?? true) ? 'checked' : '' }}
-                                       class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                                <span class="ml-2 text-sm text-gray-700">{{ __('facilities.customization.enable_parallax') }}</span>
-                            </label>
+                            <!-- Button Preview -->
+                            <div class="mt-3 p-3 bg-gray-50 rounded-lg">
+                                <span class="text-xs text-gray-600 mb-2 block">Preview:</span>
+                                <div class="flex space-x-2">
+                                    <button type="button" id="button-preview-1" class="px-4 py-2 bg-blue-600 text-white text-sm font-medium transition-colors">
+                                        Sample Button
+                                    </button>
+                                    <button type="button" id="button-preview-2" class="px-4 py-2 border-2 border-blue-600 text-blue-600 text-sm font-medium transition-colors">
+                                        Outlined Button
+                                    </button>
+                                </div>
+                            </div>
                         </div>
+
+                        <!-- Animation Settings -->
+                        <div class="pt-6 border-t border-gray-200">
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">{{ __('facilities.customization.animation_effects') }}</h3>
+                            <div class="space-y-4">
+                                <label class="flex items-center">
+                                    <input type="checkbox" 
+                                           id="enable_animations" 
+                                           name="enable_animations" 
+                                           value="1"
+                                           {{ old('enable_animations', $facility->enable_animations ?? true) ? 'checked' : '' }}
+                                           class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                                    <span class="ml-2 text-sm text-gray-700">{{ __('facilities.customization.enable_animations') }}</span>
+                                    <span class="ml-2 text-xs text-gray-500">- Hover effects and transitions</span>
+                                </label>
+                                
+                                <label class="flex items-center">
+                                    <input type="checkbox" 
+                                           id="enable_parallax" 
+                                           name="enable_parallax" 
+                                           value="1"
+                                           {{ old('enable_parallax', $facility->enable_parallax ?? true) ? 'checked' : '' }}
+                                           class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                                    <span class="ml-2 text-sm text-gray-700">{{ __('facilities.customization.enable_parallax') }}</span>
+                                    <span class="ml-2 text-xs text-gray-500">- Smooth scrolling effects</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer Settings -->
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-6">
+                        <i class="fas fa-grip-lines mr-2 text-gray-600"></i>
+                        {{ __('facilities.customization.footer_settings') }}
+                    </h2>
+
+                    <div>
+                        <label for="footer_style" class="block text-sm font-medium text-gray-700 mb-2">
+                            {{ __('facilities.customization.footer_style') }}
+                        </label>
+                        <select id="footer_style" name="footer_style" 
+                                class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            @foreach($layoutOptions['footer_styles'] as $value => $label)
+                                <option value="{{ $value }}" 
+                                        {{ old('footer_style', $facility->footer_style ?? 'detailed') === $value ? 'selected' : '' }}>
+                                    {{ $label }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <p class="mt-1 text-xs text-gray-500">Choose footer layout and information density</p>
                     </div>
                 </div>
 
@@ -540,11 +666,13 @@ function setupColorPickers() {
             colorPicker.addEventListener('input', function() {
                 textInput.value = this.value;
                 textInput.name = colorId;
+                updateButtonPreview();
             });
             
             textInput.addEventListener('input', function() {
                 if (/^#[A-Fa-f0-9]{6}$/.test(this.value)) {
                     colorPicker.value = this.value;
+                    updateButtonPreview();
                 }
                 this.name = colorId;
             });
@@ -587,5 +715,42 @@ function previewChanges() {
         '_blank'
     );
 }
+
+// Update button preview based on current settings
+function updateButtonPreview() {
+    const buttonStyle = document.getElementById('button_style').value;
+    const primaryColor = document.getElementById('primary_color').value;
+    const preview1 = document.getElementById('button-preview-1');
+    const preview2 = document.getElementById('button-preview-2');
+    
+    if (preview1 && preview2) {
+        // Apply button style
+        let borderRadius = '0.5rem'; // default rounded
+        if (buttonStyle === 'square') {
+            borderRadius = '0.375rem';
+        } else if (buttonStyle === 'pill') {
+            borderRadius = '9999px';
+        }
+        
+        preview1.style.borderRadius = borderRadius;
+        preview2.style.borderRadius = borderRadius;
+        
+        // Apply primary color
+        if (primaryColor) {
+            preview1.style.backgroundColor = primaryColor;
+            preview2.style.borderColor = primaryColor;
+            preview2.style.color = primaryColor;
+        }
+    }
+}
+
+// Setup button style change listener
+document.addEventListener('DOMContentLoaded', function() {
+    const buttonStyleSelect = document.getElementById('button_style');
+    if (buttonStyleSelect) {
+        buttonStyleSelect.addEventListener('change', updateButtonPreview);
+        updateButtonPreview(); // Initial update
+    }
+});
 </script>
 @endsection
