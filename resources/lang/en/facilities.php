@@ -360,6 +360,10 @@ return [
         'hero_background_image' => 'Hero Background Image',
         'overlay_opacity' => 'Overlay Opacity',
         
+        // Hero Section Additional
+        'no_file_chosen' => 'No file chosen',
+        'current_hero_background' => 'Current hero background',
+        
         // Layout
         'layout_design' => 'Layout & Design',
         'layout_style' => 'Layout Style',
