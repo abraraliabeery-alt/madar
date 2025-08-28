@@ -379,7 +379,7 @@
                                     <a href="{{ route('facility.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                         <i class="fas fa-building {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>{{ __('layout.user_menu.facility_management') }}
                                     </a>
-                                @endif
+                                @endif 
 
                                 @if(auth()->user()->hasRole('client'))
                                     <a href="{{ route('client.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">

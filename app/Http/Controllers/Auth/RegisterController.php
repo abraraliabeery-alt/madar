@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class RegisterController extends Controller
 {
@@ -31,6 +33,25 @@ class RegisterController extends Controller
     protected $redirectTo = '/home';
 
     /**
+     * Get the redirect path based on user role
+     *
+     * @return string
+     */
+    protected function redirectTo()
+    {
+        if (auth()->check()) {
+            $user = auth()->user();
+            if ($user->primary_role === 'client') {
+                return '/client';
+            } elseif ($user->primary_role === 'facility') {
+                return '/facility';
+            }
+        }
+        
+        return $this->redirectTo;
+    }
+
+    /**
      * Create a new controller instance.
      *
      * @return void
@@ -51,6 +72,8 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'phone' => ['required', 'string', 'max:20'],
+            'primary_role' => ['required', 'string', 'in:client,facility'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
@@ -63,10 +86,29 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
+        return DB::transaction(function () use ($data) {
+            // Create the user
+            $user = User::create([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'phone_number' => $data['phone'],
+                'primary_role' => $data['primary_role'],
+                'password' => Hash::make($data['password']),
+            ]);
+
+            // Get the role based on primary_role
+            $role = Role::where('name', $data['primary_role'])->first();
+            
+            if ($role) {
+                // Create the role relationship
+                $user->roles()->attach($role->id, [
+                    'facility_id' => null, // For now, set to null as this is a new user
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+
+            return $user;
+        });
     }
 }
