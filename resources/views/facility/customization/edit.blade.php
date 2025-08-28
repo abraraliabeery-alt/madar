@@ -182,6 +182,44 @@
                                        placeholder="#ffffff">
                             </div>
                         </div>
+
+                        <div>
+                            <label for="text_color" class="block text-sm font-medium text-gray-700 mb-2">
+                                {{ __('facilities.customization.text_color') }}
+                            </label>
+                            <div class="flex space-x-2">
+                                <input type="color" 
+                                       id="text_color" 
+                                       name="text_color" 
+                                       value="{{ old('text_color', $facility->text_color ?? '#374151') }}"
+                                       class="w-12 h-10 border border-gray-300 rounded cursor-pointer">
+                                <input type="text" 
+                                       id="text_color_text"
+                                       value="{{ old('text_color', $facility->text_color ?? '#374151') }}"
+                                       class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                       pattern="^#[A-Fa-f0-9]{6}$"
+                                       placeholder="#374151">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="secondary_text_color" class="block text-sm font-medium text-gray-700 mb-2">
+                                {{ __('facilities.customization.secondary_text_color') }}
+                            </label>
+                            <div class="flex space-x-2">
+                                <input type="color" 
+                                       id="secondary_text_color" 
+                                       name="secondary_text_color" 
+                                       value="{{ old('secondary_text_color', $facility->secondary_text_color ?? '#6b7280') }}"
+                                       class="w-12 h-10 border border-gray-300 rounded cursor-pointer">
+                                <input type="text" 
+                                       id="secondary_text_color_text"
+                                       value="{{ old('secondary_text_color', $facility->secondary_text_color ?? '#6b7280') }}"
+                                       class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                       pattern="^#[A-Fa-f0-9]{6}$"
+                                       placeholder="#6b7280">
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -254,6 +292,10 @@
                                    name="hero_background_image"
                                    accept="image/*"
                                    class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <p class="mt-1 text-xs text-gray-500">Maximum file size: 2MB. Supported formats: JPG, PNG, GIF</p>
+                            @error('hero_background_image')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
                             @if($facility->hero_background_type === 'image' && $facility->hero_background_value)
                                 <div class="mt-2">
                                     <img src="{{ $facility->hero_background_value }}" alt="Current hero background" class="w-32 h-20 object-cover rounded">
@@ -297,7 +339,7 @@
                                     </option>
                                 @endforeach
                             </select>
-                            <p class="mt-1 text-xs text-gray-500">Choose the overall visual theme for your facility page</p>
+                            <p class="mt-1 text-xs text-gray-500">{{ __('facilities.customization.theme_description') }}</p>
                         </div>
 
                         <div>
@@ -313,7 +355,7 @@
                                     </option>
                                 @endforeach
                             </select>
-                            <p class="mt-1 text-xs text-gray-500">Control how wide your content spans</p>
+                            <p class="mt-1 text-xs text-gray-500">{{ __('facilities.customization.content_width_description') }}</p>
                         </div>
 
                         <div>
@@ -329,7 +371,7 @@
                                     </option>
                                 @endforeach
                             </select>
-                            <p class="mt-1 text-xs text-gray-500">Adjust spacing between sections</p>
+                            <p class="mt-1 text-xs text-gray-500">{{ __('facilities.customization.section_spacing_description') }}</p>
                         </div>
 
                         <div>
@@ -345,7 +387,7 @@
                                     </option>
                                 @endforeach
                             </select>
-                            <p class="mt-1 text-xs text-gray-500">Style for property cards and info boxes</p>
+                            <p class="mt-1 text-xs text-gray-500">{{ __('facilities.customization.card_design_description') }}</p>
                         </div>
                     </div>
                 </div>
@@ -371,7 +413,7 @@
                                     </option>
                                 @endforeach
                             </select>
-                            <p class="mt-1 text-xs text-gray-500">Choose navigation bar appearance</p>
+                            <p class="mt-1 text-xs text-gray-500">{{ __('facilities.customization.navigation_style_description') }}</p>
                         </div>
 
                         <div>
@@ -387,7 +429,7 @@
                                     </option>
                                 @endforeach
                             </select>
-                            <p class="mt-1 text-xs text-gray-500">Position of your logo in the header</p>
+                            <p class="mt-1 text-xs text-gray-500">{{ __('facilities.customization.logo_position_description') }}</p>
                         </div>
                     </div>
                 </div>
@@ -413,17 +455,17 @@
                                     </option>
                                 @endforeach
                             </select>
-                            <p class="mt-1 text-xs text-gray-500">Shape and style of buttons throughout the site</p>
+                            <p class="mt-1 text-xs text-gray-500">{{ __('facilities.customization.button_style_description') }}</p>
                             
                             <!-- Button Preview -->
                             <div class="mt-3 p-3 bg-gray-50 rounded-lg">
-                                <span class="text-xs text-gray-600 mb-2 block">Preview:</span>
+                                <span class="text-xs text-gray-600 mb-2 block">{{ __('facilities.customization.button_preview') }}</span>
                                 <div class="flex space-x-2">
                                     <button type="button" id="button-preview-1" class="px-4 py-2 bg-blue-600 text-white text-sm font-medium transition-colors">
-                                        Sample Button
+                                        {{ __('facilities.customization.sample_button') }}
                                     </button>
                                     <button type="button" id="button-preview-2" class="px-4 py-2 border-2 border-blue-600 text-blue-600 text-sm font-medium transition-colors">
-                                        Outlined Button
+                                        {{ __('facilities.customization.outlined_button') }}
                                     </button>
                                 </div>
                             </div>
@@ -441,7 +483,7 @@
                                            {{ old('enable_animations', $facility->enable_animations ?? true) ? 'checked' : '' }}
                                            class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                                     <span class="ml-2 text-sm text-gray-700">{{ __('facilities.customization.enable_animations') }}</span>
-                                    <span class="ml-2 text-xs text-gray-500">- Hover effects and transitions</span>
+                                    <span class="ml-2 text-xs text-gray-500">- {{ __('facilities.customization.animations_description') }}</span>
                                 </label>
                                 
                                 <label class="flex items-center">
@@ -452,7 +494,7 @@
                                            {{ old('enable_parallax', $facility->enable_parallax ?? true) ? 'checked' : '' }}
                                            class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                                     <span class="ml-2 text-sm text-gray-700">{{ __('facilities.customization.enable_parallax') }}</span>
-                                    <span class="ml-2 text-xs text-gray-500">- Smooth scrolling effects</span>
+                                    <span class="ml-2 text-xs text-gray-500">- {{ __('facilities.customization.parallax_description') }}</span>
                                 </label>
                             </div>
                         </div>
@@ -479,7 +521,7 @@
                                 </option>
                             @endforeach
                         </select>
-                        <p class="mt-1 text-xs text-gray-500">Choose footer layout and information density</p>
+                        <p class="mt-1 text-xs text-gray-500">{{ __('facilities.customization.footer_style_description') }}</p>
                     </div>
                 </div>
 
@@ -639,6 +681,18 @@
                             <span class="text-sm text-gray-600">{{ __('facilities.customization.accent') }}</span>
                             <div class="w-8 h-8 rounded border border-gray-200" style="background-color: {{ $facility->accent_color ?? '#f59e0b' }}"></div>
                         </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-600">{{ __('facilities.customization.text_color') }}</span>
+                            <div class="w-8 h-8 rounded border border-gray-200" style="background-color: {{ $facility->text_color ?? '#374151' }}"></div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-600">{{ __('facilities.customization.secondary_text_color') }}</span>
+                            <div class="w-8 h-8 rounded border border-gray-200" style="background-color: {{ $facility->secondary_text_color ?? '#6b7280' }}"></div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-600">{{ __('facilities.customization.background_color') }}</span>
+                            <div class="w-8 h-8 rounded border border-gray-200" style="background-color: {{ $facility->background_color ?? '#ffffff' }}"></div>
+                        </div>
                     </div>
                 </div>
 
@@ -656,7 +710,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function setupColorPickers() {
-    const colorInputs = ['primary_color', 'secondary_color', 'accent_color', 'background_color'];
+    const colorInputs = ['primary_color', 'secondary_color', 'accent_color', 'background_color', 'text_color', 'secondary_text_color'];
     
     colorInputs.forEach(function(colorId) {
         const colorPicker = document.getElementById(colorId);

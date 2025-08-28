@@ -318,14 +318,37 @@ return [
         'accent_color' => 'Accent Color',
         'background_color' => 'Background Color',
         'text_color' => 'Text Color',
+        'secondary_text_color' => 'Secondary Text Color',
         'current_colors' => 'Current Colors',
         'primary' => 'Primary',
         'secondary' => 'Secondary',
         'accent' => 'Accent',
         
+        // Color Preset Names
+        'color_preset_names' => [
+            'blue' => 'Ocean Blue',
+            'green' => 'Forest Green',
+            'purple' => 'Royal Purple',
+            'orange' => 'Sunset Orange',
+            'red' => 'Crimson Red',
+            'teal' => 'Teal Elegance',
+            'indigo' => 'Deep Indigo',
+            'pink' => 'Rose Gold',
+        ],
+        
         // Typography
         'typography' => 'Typography',
         'font_family' => 'Font Family',
+        
+        // Font Options
+        'fonts' => [
+            'figtree' => 'Figtree (Default)',
+            'inter' => 'Inter',
+            'poppins' => 'Poppins',
+            'roboto' => 'Roboto',
+            'open_sans' => 'Open Sans',
+            'lato' => 'Lato',
+        ],
         
         // Hero Section
         'hero_section' => 'Hero Section',
@@ -345,6 +368,85 @@ return [
         'animation_effects' => 'Animation Effects',
         'enable_animations' => 'Enable Animations',
         'enable_parallax' => 'Enable Parallax',
+        
+        // Layout Options
+        'general_layout' => 'General Layout',
+        'overall_theme' => 'Overall Theme',
+        'content_width' => 'Content Width',
+        'section_spacing' => 'Section Spacing',
+        'card_design' => 'Card Design',
+        'navigation_header' => 'Navigation & Header',
+        'navigation_style' => 'Navigation Style',
+        'interactive_elements' => 'Interactive Elements',
+        'footer_settings' => 'Footer Settings',
+        'footer_style' => 'Footer Style',
+        
+        // Layout Descriptions
+        'theme_description' => 'Choose the overall visual theme for your facility page',
+        'content_width_description' => 'Control how wide your content spans',
+        'section_spacing_description' => 'Adjust spacing between sections',
+        'card_design_description' => 'Style for property cards and info boxes',
+        'navigation_style_description' => 'Choose navigation bar appearance',
+        'logo_position_description' => 'Position of your logo in the header',
+        'button_style_description' => 'Shape and style of buttons throughout the site',
+        'footer_style_description' => 'Choose footer layout and information density',
+        
+        // Button Preview
+        'button_preview' => 'Preview:',
+        'sample_button' => 'Sample Button',
+        'outlined_button' => 'Outlined Button',
+        
+        // Animation Descriptions
+        'animations_description' => 'Hover effects and transitions',
+        'parallax_description' => 'Smooth scrolling effects',
+        
+        // Layout Option Values
+        'layout_styles' => [
+            'modern' => 'Modern',
+            'classic' => 'Classic', 
+            'minimal' => 'Minimal',
+            'corporate' => 'Corporate',
+            'elegant' => 'Elegant',
+            'bold' => 'Bold',
+        ],
+        'button_styles' => [
+            'rounded' => 'Rounded',
+            'square' => 'Square',
+            'pill' => 'Pill (Fully Rounded)',
+        ],
+        'logo_positions' => [
+            'left' => 'Left',
+            'center' => 'Center',
+            'right' => 'Right',
+        ],
+        'navigation_styles' => [
+            'standard' => 'Standard',
+            'transparent' => 'Transparent',
+            'boxed' => 'Boxed',
+            'centered' => 'Centered',
+        ],
+        'content_layouts' => [
+            'full-width' => 'Full Width',
+            'boxed' => 'Boxed Container',
+            'wide' => 'Wide Container',
+        ],
+        'section_spacings' => [
+            'compact' => 'Compact',
+            'normal' => 'Normal',
+            'relaxed' => 'Relaxed',
+            'spacious' => 'Spacious',
+        ],
+        'card_styles' => [
+            'modern' => 'Modern Shadow',
+            'flat' => 'Flat Design',
+            'outlined' => 'Outlined',
+            'elevated' => 'Elevated',
+        ],
+        'footer_styles' => [
+            'simple' => 'Simple',
+            'detailed' => 'Detailed',
+            'minimal' => 'Minimal',
+        ],
         
         // Custom CSS
         'custom_css' => 'Custom CSS',

@@ -318,14 +318,37 @@ return [
         'accent_color' => 'اللون المميز',
         'background_color' => 'لون الخلفية',
         'text_color' => 'لون النص',
+        'secondary_text_color' => 'لون النص الثانوي',
         'current_colors' => 'الألوان الحالية',
         'primary' => 'أساسي',
         'secondary' => 'ثانوي',
         'accent' => 'مميز',
         
+        // Color Preset Names
+        'color_preset_names' => [
+            'blue' => 'أزرق المحيط',
+            'green' => 'أخضر الغابة',
+            'purple' => 'أرجواني ملكي',
+            'orange' => 'برتقالي الغروب',
+            'red' => 'أحمر قرمزي',
+            'teal' => 'أزرق مخضر أنيق',
+            'indigo' => 'نيلي عميق',
+            'pink' => 'ذهبي وردي',
+        ],
+        
         // Typography
         'typography' => 'الخطوط',
         'font_family' => 'عائلة الخط',
+        
+        // Font Options
+        'fonts' => [
+            'figtree' => 'فيجتري (افتراضي)',
+            'inter' => 'إنتر',
+            'poppins' => 'بوبينز',
+            'roboto' => 'روبوتو',
+            'open_sans' => 'أوبن سانس',
+            'lato' => 'لاتو',
+        ],
         
         // Hero Section
         'hero_section' => 'قسم البطل',
@@ -345,6 +368,85 @@ return [
         'animation_effects' => 'التأثيرات المتحركة',
         'enable_animations' => 'تفعيل الحركات',
         'enable_parallax' => 'تفعيل التأثير المتوازي',
+        
+        // Layout Options
+        'general_layout' => 'التخطيط العام',
+        'overall_theme' => 'المظهر العام',
+        'content_width' => 'عرض المحتوى',
+        'section_spacing' => 'المسافة بين الأقسام',
+        'card_design' => 'تصميم البطاقات',
+        'navigation_header' => 'التنقل والرأس',
+        'navigation_style' => 'نمط التنقل',
+        'interactive_elements' => 'العناصر التفاعلية',
+        'footer_settings' => 'إعدادات التذييل',
+        'footer_style' => 'نمط التذييل',
+        
+        // Layout Descriptions
+        'theme_description' => 'اختر المظهر العام لصفحة منشأتك',
+        'content_width_description' => 'تحكم في عرض المحتوى',
+        'section_spacing_description' => 'اضبط المسافة بين الأقسام',
+        'card_design_description' => 'نمط بطاقات العقارات وصناديق المعلومات',
+        'navigation_style_description' => 'اختر مظهر شريط التنقل',
+        'logo_position_description' => 'موضع شعارك في الرأس',
+        'button_style_description' => 'شكل ونمط الأزرار في جميع أنحاء الموقع',
+        'footer_style_description' => 'اختر تخطيط التذييل وكثافة المعلومات',
+        
+        // Button Preview
+        'button_preview' => 'معاينة:',
+        'sample_button' => 'زر تجريبي',
+        'outlined_button' => 'زر محدد',
+        
+        // Animation Descriptions
+        'animations_description' => 'تأثيرات التمرير والانتقالات',
+        'parallax_description' => 'تأثيرات التمرير السلس',
+        
+        // Layout Option Values
+        'layout_styles' => [
+            'modern' => 'حديث',
+            'classic' => 'كلاسيكي', 
+            'minimal' => 'مبسط',
+            'corporate' => 'شركات',
+            'elegant' => 'أنيق',
+            'bold' => 'جريء',
+        ],
+        'button_styles' => [
+            'rounded' => 'مستدير',
+            'square' => 'مربع',
+            'pill' => 'حبة (مستدير بالكامل)',
+        ],
+        'logo_positions' => [
+            'left' => 'يسار',
+            'center' => 'وسط',
+            'right' => 'يمين',
+        ],
+        'navigation_styles' => [
+            'standard' => 'قياسي',
+            'transparent' => 'شفاف',
+            'boxed' => 'مؤطر',
+            'centered' => 'متمركز',
+        ],
+        'content_layouts' => [
+            'full-width' => 'عرض كامل',
+            'boxed' => 'حاوية مؤطرة',
+            'wide' => 'حاوية عريضة',
+        ],
+        'section_spacings' => [
+            'compact' => 'مضغوط',
+            'normal' => 'عادي',
+            'relaxed' => 'مريح',
+            'spacious' => 'واسع',
+        ],
+        'card_styles' => [
+            'modern' => 'ظل حديث',
+            'flat' => 'تصميم مسطح',
+            'outlined' => 'محدد',
+            'elevated' => 'مرتفع',
+        ],
+        'footer_styles' => [
+            'simple' => 'بسيط',
+            'detailed' => 'مفصل',
+            'minimal' => 'مبسط',
+        ],
         
         // Custom CSS
         'custom_css' => 'CSS مخصص',

@@ -43,6 +43,7 @@ class FacilityCustomizationController extends Controller
             'accent_color' => ['nullable', 'regex:/^#[A-Fa-f0-9]{6}$/'],
             'background_color' => ['nullable', 'regex:/^#[A-Fa-f0-9]{6}$/'],
             'text_color' => ['nullable', 'regex:/^#[A-Fa-f0-9]{6}$/'],
+            'secondary_text_color' => ['nullable', 'regex:/^#[A-Fa-f0-9]{6}$/'],
             
             // Typography
             'font_family' => ['nullable', Rule::in(['figtree', 'inter', 'poppins', 'roboto', 'open-sans', 'lato'])],
@@ -51,7 +52,7 @@ class FacilityCustomizationController extends Controller
             'hero_background_type' => ['nullable', Rule::in(['gradient', 'color', 'image'])],
             'hero_background_value' => ['nullable', 'string', 'max:500'],
             'hero_overlay_opacity' => ['nullable', 'integer', 'min:0', 'max:100'],
-            'hero_background_image' => ['nullable', 'image', 'max:5120'], // 5MB max
+            'hero_background_image' => ['nullable', 'image', 'max:2048'], // 2MB max to match PHP upload_max_filesize
             
             // Layout & Design
             'layout_style' => ['nullable', Rule::in(['modern', 'classic', 'minimal', 'corporate', 'elegant', 'bold'])],
@@ -83,17 +84,77 @@ class FacilityCustomizationController extends Controller
 
         // Handle hero background image upload
         if ($request->hasFile('hero_background_image')) {
-            // Delete old hero background if it exists and is an image
-            if ($facility->hero_background_type === 'image' && $facility->hero_background_value) {
-                $oldImagePath = str_replace(asset('storage/'), '', $facility->hero_background_value);
-                if (Storage::disk('public')->exists($oldImagePath)) {
-                    Storage::disk('public')->delete($oldImagePath);
+            try {
+                // Check if file upload was successful
+                if (!$request->file('hero_background_image')->isValid()) {
+                    throw new \Exception('File upload failed: ' . $request->file('hero_background_image')->getErrorMessage());
                 }
+                
+                // Check file size (in bytes)
+                $fileSize = $request->file('hero_background_image')->getSize();
+                if ($fileSize > 2 * 1024 * 1024) { // 2MB in bytes
+                    throw new \Exception('File size exceeds 2MB limit. Current size: ' . round($fileSize / 1024 / 1024, 2) . 'MB');
+                }
+                
+                // Check file type
+                $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+                $mimeType = $request->file('hero_background_image')->getMimeType();
+                if (!in_array($mimeType, $allowedTypes)) {
+                    throw new \Exception('Invalid file type. Allowed types: JPG, PNG, GIF. Current type: ' . $mimeType);
+                }
+                
+                // Debug information
+                \Log::info('Hero background image upload started', [
+                    'file_name' => $request->file('hero_background_image')->getClientOriginalName(),
+                    'file_size' => $fileSize,
+                    'file_mime' => $mimeType,
+                    'file_extension' => $request->file('hero_background_image')->getClientOriginalExtension(),
+                    'is_valid' => $request->file('hero_background_image')->isValid(),
+                    'error' => $request->file('hero_background_image')->getErrorMessage(),
+                ]);
+                
+                // Delete old hero background if it exists and is an image
+                if ($facility->hero_background_type === 'image' && $facility->hero_background_value) {
+                    $oldImagePath = str_replace(asset('storage/'), '', $facility->hero_background_value);
+                    if (Storage::disk('public')->exists($oldImagePath)) {
+                        Storage::disk('public')->delete($oldImagePath);
+                    }
+                }
+                
+                // Ensure the directory exists
+                $directory = 'facility-customization/hero';
+                if (!Storage::disk('public')->exists($directory)) {
+                    Storage::disk('public')->makeDirectory($directory);
+                }
+                
+                $heroImagePath = $request->file('hero_background_image')->store($directory, 'public');
+                
+                // Verify the file was actually stored
+                if (!$heroImagePath || !Storage::disk('public')->exists($heroImagePath)) {
+                    throw new \Exception('File was not stored successfully');
+                }
+                
+                // Debug the stored path
+                \Log::info('Hero background image stored successfully', [
+                    'stored_path' => $heroImagePath,
+                    'full_url' => asset('storage/' . $heroImagePath),
+                    'directory_exists' => Storage::disk('public')->exists($directory),
+                    'file_exists' => Storage::disk('public')->exists($heroImagePath),
+                ]);
+                
+                $validated['hero_background_type'] = 'image';
+                $validated['hero_background_value'] = asset('storage/' . $heroImagePath);
+            } catch (\Exception $e) {
+                \Log::error('Hero background image upload failed', [
+                    'error' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString(),
+                    'facility_id' => $facility->id,
+                ]);
+                
+                return back()
+                    ->withInput()
+                    ->withErrors(['hero_background_image' => 'Failed to upload image: ' . $e->getMessage()]);
             }
-            
-            $heroImagePath = $request->file('hero_background_image')->store('facility-customization/hero', 'public');
-            $validated['hero_background_type'] = 'image';
-            $validated['hero_background_value'] = asset($heroImagePath);
         }
 
         // Update facility with validated data
@@ -130,6 +191,9 @@ class FacilityCustomizationController extends Controller
         if ($request->filled('text_color')) {
             $customization['colors']['text'] = $request->text_color;
         }
+        if ($request->filled('secondary_text_color')) {
+            $customization['colors']['secondary_text'] = $request->secondary_text_color;
+        }
         if ($request->filled('font_family')) {
             $customization['typography']['font_family'] = $request->font_family;
         }
@@ -150,6 +214,7 @@ class FacilityCustomizationController extends Controller
                 'accent_color',
                 'background_color',
                 'text_color',
+                'secondary_text_color',
                 'font_family',
                 'layout_style',
                 'button_style',
@@ -225,55 +290,92 @@ class FacilityCustomizationController extends Controller
     }
 
     /**
+     * Test file upload functionality
+     */
+    public function testUpload(Request $request)
+    {
+        try {
+            if (!$request->hasFile('test_file')) {
+                return response()->json(['error' => 'No file provided'], 400);
+            }
+            
+            $file = $request->file('test_file');
+            
+            $result = [
+                'file_name' => $file->getClientOriginalName(),
+                'file_size' => $file->getSize(),
+                'file_mime' => $file->getMimeType(),
+                'file_extension' => $file->getClientOriginalExtension(),
+                'is_valid' => $file->isValid(),
+                'error' => $file->getErrorMessage(),
+                'php_limits' => [
+                    'upload_max_filesize' => ini_get('upload_max_filesize'),
+                    'post_max_size' => ini_get('post_max_size'),
+                    'max_file_uploads' => ini_get('max_file_uploads'),
+                    'memory_limit' => ini_get('memory_limit'),
+                ],
+                'storage_info' => [
+                    'public_disk_exists' => Storage::disk('public')->exists('facility-customization/hero'),
+                    'public_disk_writable' => is_writable(storage_path('app/public/facility-customization/hero')),
+                ]
+            ];
+            
+            return response()->json($result);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
      * Get available color presets
      */
     private function getColorPresets()
     {
         return [
             'blue' => [
-                'name' => 'Ocean Blue',
+                'name' => __('facilities.customization.color_preset_names.blue'),
                 'primary' => '#2563eb',
                 'secondary' => '#1e40af',
                 'accent' => '#0ea5e9',
             ],
             'green' => [
-                'name' => 'Forest Green',
+                'name' => __('facilities.customization.color_preset_names.green'),
                 'primary' => '#059669',
                 'secondary' => '#047857',
                 'accent' => '#10b981',
             ],
             'purple' => [
-                'name' => 'Royal Purple',
+                'name' => __('facilities.customization.color_preset_names.purple'),
                 'primary' => '#7c3aed',
                 'secondary' => '#6d28d9',
                 'accent' => '#8b5cf6',
             ],
             'orange' => [
-                'name' => 'Sunset Orange',
+                'name' => __('facilities.customization.color_preset_names.orange'),
                 'primary' => '#ea580c',
                 'secondary' => '#c2410c',
                 'accent' => '#f97316',
             ],
             'red' => [
-                'name' => 'Crimson Red',
+                'name' => __('facilities.customization.color_preset_names.red'),
                 'primary' => '#dc2626',
                 'secondary' => '#b91c1c',
                 'accent' => '#ef4444',
             ],
             'teal' => [
-                'name' => 'Teal Elegance',
+                'name' => __('facilities.customization.color_preset_names.teal'),
                 'primary' => '#0d9488',
                 'secondary' => '#0f766e',
                 'accent' => '#14b8a6',
             ],
             'indigo' => [
-                'name' => 'Deep Indigo',
+                'name' => __('facilities.customization.color_preset_names.indigo'),
                 'primary' => '#4f46e5',
                 'secondary' => '#4338ca',
                 'accent' => '#6366f1',
             ],
             'pink' => [
-                'name' => 'Rose Gold',
+                'name' => __('facilities.customization.color_preset_names.pink'),
                 'primary' => '#e11d48',
                 'secondary' => '#be185d',
                 'accent' => '#f43f5e',
@@ -287,12 +389,12 @@ class FacilityCustomizationController extends Controller
     private function getFontOptions()
     {
         return [
-            'figtree' => 'Figtree (Default)',
-            'inter' => 'Inter',
-            'poppins' => 'Poppins',
-            'roboto' => 'Roboto',
-            'open-sans' => 'Open Sans',
-            'lato' => 'Lato',
+            'figtree' => __('facilities.customization.fonts.figtree'),
+            'inter' => __('facilities.customization.fonts.inter'),
+            'poppins' => __('facilities.customization.fonts.poppins'),
+            'roboto' => __('facilities.customization.fonts.roboto'),
+            'open-sans' => __('facilities.customization.fonts.open_sans'),
+            'lato' => __('facilities.customization.fonts.lato'),
         ];
     }
 
@@ -303,50 +405,50 @@ class FacilityCustomizationController extends Controller
     {
         return [
             'layout_styles' => [
-                'modern' => 'Modern',
-                'classic' => 'Classic', 
-                'minimal' => 'Minimal',
-                'corporate' => 'Corporate',
-                'elegant' => 'Elegant',
-                'bold' => 'Bold',
+                'modern' => __('facilities.customization.layout_styles.modern'),
+                'classic' => __('facilities.customization.layout_styles.classic'), 
+                'minimal' => __('facilities.customization.layout_styles.minimal'),
+                'corporate' => __('facilities.customization.layout_styles.corporate'),
+                'elegant' => __('facilities.customization.layout_styles.elegant'),
+                'bold' => __('facilities.customization.layout_styles.bold'),
             ],
             'button_styles' => [
-                'rounded' => 'Rounded',
-                'square' => 'Square',
-                'pill' => 'Pill (Fully Rounded)',
+                'rounded' => __('facilities.customization.button_styles.rounded'),
+                'square' => __('facilities.customization.button_styles.square'),
+                'pill' => __('facilities.customization.button_styles.pill'),
             ],
             'logo_positions' => [
-                'left' => 'Left',
-                'center' => 'Center',
-                'right' => 'Right',
+                'left' => __('facilities.customization.logo_positions.left'),
+                'center' => __('facilities.customization.logo_positions.center'),
+                'right' => __('facilities.customization.logo_positions.right'),
             ],
             'navigation_styles' => [
-                'standard' => 'Standard',
-                'transparent' => 'Transparent',
-                'boxed' => 'Boxed',
-                'centered' => 'Centered',
+                'standard' => __('facilities.customization.navigation_styles.standard'),
+                'transparent' => __('facilities.customization.navigation_styles.transparent'),
+                'boxed' => __('facilities.customization.navigation_styles.boxed'),
+                'centered' => __('facilities.customization.navigation_styles.centered'),
             ],
             'content_layouts' => [
-                'full-width' => 'Full Width',
-                'boxed' => 'Boxed Container',
-                'wide' => 'Wide Container',
+                'full-width' => __('facilities.customization.content_layouts.full-width'),
+                'boxed' => __('facilities.customization.content_layouts.boxed'),
+                'wide' => __('facilities.customization.content_layouts.wide'),
             ],
             'section_spacings' => [
-                'compact' => 'Compact',
-                'normal' => 'Normal',
-                'relaxed' => 'Relaxed',
-                'spacious' => 'Spacious',
+                'compact' => __('facilities.customization.section_spacings.compact'),
+                'normal' => __('facilities.customization.section_spacings.normal'),
+                'relaxed' => __('facilities.customization.section_spacings.relaxed'),
+                'spacious' => __('facilities.customization.section_spacings.spacious'),
             ],
             'card_styles' => [
-                'modern' => 'Modern Shadow',
-                'flat' => 'Flat Design',
-                'outlined' => 'Outlined',
-                'elevated' => 'Elevated',
+                'modern' => __('facilities.customization.card_styles.modern'),
+                'flat' => __('facilities.customization.card_styles.flat'),
+                'outlined' => __('facilities.customization.card_styles.outlined'),
+                'elevated' => __('facilities.customization.card_styles.elevated'),
             ],
             'footer_styles' => [
-                'simple' => 'Simple',
-                'detailed' => 'Detailed',
-                'minimal' => 'Minimal',
+                'simple' => __('facilities.customization.footer_styles.simple'),
+                'detailed' => __('facilities.customization.footer_styles.detailed'),
+                'minimal' => __('facilities.customization.footer_styles.minimal'),
             ],
         ];
     }

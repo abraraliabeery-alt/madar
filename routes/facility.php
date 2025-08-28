@@ -61,4 +61,5 @@ Route::middleware(['auth', 'role:facility'])->prefix('facility')->name('facility
     Route::get('customization/{facility}/preview', [FacilityCustomizationController::class, 'preview'])->name('customization.preview');
     Route::delete('customization/{facility}/reset', [FacilityCustomizationController::class, 'reset'])->name('customization.reset');
     Route::post('customization/{facility}/preset', [FacilityCustomizationController::class, 'applyPreset'])->name('customization.preset');
+    Route::post('customization/test-upload', [FacilityCustomizationController::class, 'testUpload'])->name('customization.test-upload');
 });

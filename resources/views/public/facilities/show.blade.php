@@ -49,6 +49,7 @@
                 $accentColor = $customization['colors']['accent'];
                 $backgroundColor = $customization['colors']['background'];
                 $textColor = $customization['colors']['text'];
+                $secondaryTextColor = $customization['colors']['secondary_text'] ?? '#6b7280';
             @endphp
             
             --primary-color: {{ $primaryColor }};
@@ -56,6 +57,7 @@
             --accent-color: {{ $accentColor }};
             --background-color: {{ $backgroundColor }};
             --text-color: {{ $textColor }};
+            --secondary-text-color: {{ $secondaryTextColor }};
             --font-family: {{ $facility->getFontFamilyValue($customization['typography']['font_family']) }};
             
             /* Generate color variations */
@@ -74,8 +76,94 @@
             --surface-color: {{ $backgroundColor }};
             --surface-alt-color: {{ \App\Helpers\FacilityHelper::lightenColor($primaryColor, 95) }};
             --border-color: {{ \App\Helpers\FacilityHelper::lightenColor($primaryColor, 85) }};
-            --muted-text-color: {{ $textColor }};
-            --heading-text-color: {{ $textColor }};}
+            --muted-text-color: {{ $secondaryTextColor }};
+            --heading-text-color: {{ $textColor }};
+        }
+        
+        /* Dynamic color classes that replace hardcoded Tailwind classes */
+        .text-primary { color: var(--primary-color); }
+        .text-primary-600 { color: var(--primary-color); }
+        .text-primary-700 { color: var(--primary-700); }
+        .bg-primary-600 { background-color: var(--primary-color); }
+        .bg-primary-700 { background-color: var(--primary-color); }
+        .bg-primary-800 { background-color: var(--primary-800); }
+        .bg-primary-900 { background-color: var(--primary-900); }
+        .border-primary-600 { border-color: var(--primary-color); }
+        .border-primary-300 { border-color: var(--primary-300); }
+        .bg-primary-50 { background-color: var(--primary-50); }
+        .bg-primary-100 { background-color: var(--primary-100); }
+        
+        /* Hover states for primary colors */
+        .hover\:text-primary:hover { color: var(--primary-color); }
+        .hover\:text-primary-700:hover { color: var(--primary-700); }
+        .hover\:bg-primary-600:hover { background-color: var(--primary-color); }
+        .hover\:bg-primary-50:hover { background-color: var(--primary-50); }
+        
+        /* Accent Color Classes */
+        .text-accent { color: var(--accent-color); }
+        .bg-accent { background-color: var(--accent-color); }
+        .border-accent { border-color: var(--accent-color); }
+        
+        /* Dynamic colors that adapt to facility's color scheme */
+        .btn-light {
+            background-color: rgba(255, 255, 255, 0.95) !important;
+            color: var(--primary-color) !important;
+            border: 2px solid transparent !important;
+        }
+        
+        .btn-light:hover {
+            background-color: rgba(255, 255, 255, 1) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .border-light {
+            border-color: rgba(255, 255, 255, 0.3) !important;
+        }
+        
+        .text-light {
+            color: rgba(255, 255, 255, 0.9) !important;
+        }
+        
+        .bg-light {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+        }
+        
+        /* Navigation dynamic colors */
+        .nav-text {
+            color: var(--text-color) !important;
+        }
+        
+        .nav-text:hover {
+            color: var(--primary-color) !important;
+        }
+        
+        .nav-bg {
+            background-color: var(--surface-color) !important;
+            opacity: 0.95;
+        }
+        
+        /* Section background colors that adapt to facility's color scheme */
+        .section-bg-alt {
+            background-color: var(--surface-alt-color) !important;
+        }
+        
+        .section-bg-white {
+            background-color: var(--surface-color) !important;
+        }
+        
+        .text-muted {
+            color: var(--muted-text-color) !important;
+            opacity: 0.7;
+        }
+        
+        .text-heading {
+            color: var(--heading-text-color) !important;
+            font-weight: bold;
+        }
+        
+        .border-dynamic {
+            border-color: var(--border-color) !important;
         }
         
         html, body {
@@ -146,83 +234,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
         @endif
-        
-        .text-primary-600 { color: var(--primary-color); }
-        .text-primary-700 { color: var(--primary-700); }
-        .bg-primary-600 { background-color: var(--primary-color); }
-        .bg-primary-700 { background-color: var(--primary-700); }
-        .bg-primary-800 { background-color: var(--primary-800); }
-        .bg-primary-900 { background-color: var(--primary-900); }
-        .border-primary-600 { border-color: var(--primary-color); }
-        .bg-primary-50 { background-color: var(--primary-50); }
-        .bg-primary-100 { background-color: var(--primary-100); }
-        
-        /* Accent Color Classes */
-        .text-accent { color: var(--accent-color); }
-        .bg-accent { background-color: var(--accent-color); }
-        .border-accent { border-color: var(--accent-color); }
-        
-        /* Dynamic colors that adapt to facility's color scheme */
-        .btn-light {
-            background-color: rgba(255, 255, 255, 0.95) !important;
-            color: var(--primary-color) !important;
-            border: 2px solid transparent !important;
-        }
-        
-        .btn-light:hover {
-            background-color: rgba(255, 255, 255, 1) !important;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        }
-        
-        .border-light {
-            border-color: rgba(255, 255, 255, 0.3) !important;
-        }
-        
-        .text-light {
-            color: rgba(255, 255, 255, 0.9) !important;
-        }
-        
-        .bg-light {
-            background-color: rgba(255, 255, 255, 0.1) !important;
-        }
-        
-        /* Navigation dynamic colors */
-        .nav-text {
-            color: var(--text-color) !important;
-        }
-        
-        .nav-text:hover {
-            color: var(--primary-color) !important;
-        }
-        
-        .nav-bg {
-            background-color: var(--surface-color) !important;
-            opacity: 0.95;
-        }
-        
-        /* Section background colors that adapt to facility's color scheme */
-        .section-bg-alt {
-            background-color: var(--surface-alt-color) !important;
-        }
-        
-        .section-bg-white {
-            background-color: var(--surface-color) !important;
-        }
-        
-        .text-muted {
-            color: var(--muted-text-color) !important;
-            opacity: 0.7;
-        }
-        
-        .text-heading {
-            color: var(--heading-text-color) !important;
-            font-weight: bold;
-        }
-        
-        .border-dynamic {
-            border-color: var(--border-color) !important;
-        }
         
         /* Apply layout styles to containers */
         .facility-card, .stats-card, .contact-card, .action-card {
@@ -405,20 +416,6 @@
                 extend: {
                     fontFamily: {
                         sans: ['Figtree', 'sans-serif'],
-                    },
-                    colors: {
-                        primary: {
-                            50: '#eff6ff',
-                            100: '#dbeafe',
-                            200: '#bfdbfe',
-                            300: '#93c5fd',
-                            400: '#60a5fa',
-                            500: '#3b82f6',
-                            600: '#2563eb',
-                            700: '#1d4ed8',
-                            800: '#1e40af',
-                            900: '#1e3a8a',
-                        }
                     }
                 }
             }
@@ -549,7 +546,7 @@
                             {{ __('facilities.show.book_appointment') }}
                         </a>
                         <a href="{{ route('public.facilities.quote.form', $facility) }}"
-                           class="btn-primary inline-flex items-center justify-center px-8 py-4 border-2 border-light text-light font-bold text-lg hover:bg-light hover:text-primary-600 transition-all duration-300">
+                           class="btn-primary inline-flex items-center justify-center px-8 py-4 border-2 border-light text-light font-bold text-lg hover:bg-light hover:text-primary transition-all duration-300">
                             <i class="fas fa-file-invoice ml-2"></i>
                             {{ __('facilities.show.request_quote') }}
                         </a>
@@ -593,7 +590,7 @@
                             </div>
 
                 <div class="text-center fade-in" style="animation-delay: 0.2s;">
-                    <div class="bg-primary-700 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg transform hover:scale-110 transition-all duration-300">
+                    <div class="bg-primary-600 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg transform hover:scale-110 transition-all duration-300">
                         <i class="fas fa-envelope text-2xl text-white"></i>
                         </div>
                     <h3 class="text-xl font-bold text-heading mb-3">{{ __('facilities.show.direct_contact') }}</h3>
@@ -607,7 +604,7 @@
                     <h3 class="text-xl font-bold text-heading mb-3">{{ __('facilities.show.online_presence') }}</h3>
                                 <p class="text-muted">
                                     @if($facility->website)
-                            <a href="{{ $facility->website }}" target="_blank" class="text-primary-600 hover:text-primary-700 transition-colors">
+                            <a href="{{ $facility->website }}" target="_blank" class="text-primary hover:text-primary-700 transition-colors">
                                 {{ __('facilities.show.visit_website') }}
                                         </a>
                                     @else
@@ -640,7 +637,7 @@
                             </div>
                             <div class="p-6">
                                 <h3 class="text-xl font-bold text-heading mb-2">
-                                            <a href="{{ route('public.products.show', $product) }}" class="hover:text-primary-600 transition-colors">
+                                            <a href="{{ route('public.products.show', $product) }}" class="hover:text-primary transition-colors">
                                                 {{ $product->title }}
                                             </a>
                                         </h3>
@@ -676,7 +673,7 @@
 
                 <div class="text-center">
                     <a href="{{ route('public.products.by-facility', $facility) }}" 
-                       class="btn-primary inline-flex items-center px-8 py-4 border-2 border-primary-600 text-primary-600 font-bold text-lg hover:bg-primary-600 hover:text-white transition-all duration-300">
+                       class="btn-primary inline-flex items-center px-8 py-4 border-2 border-primary-600 text-primary font-bold text-lg hover:bg-primary-600 hover:text-white transition-all duration-300">
                         {{ __('facilities.show.view_all_properties') }}
                         <i class="fas fa-arrow-right mr-2"></i>
                     </a>
@@ -707,7 +704,7 @@
                     {{ __('facilities.show.schedule_consultation') }}
                 </a>
                 <a href="#contact"
-                   class="btn-primary inline-flex items-center justify-center px-8 py-4 border-2 border-light text-light font-bold text-lg hover:bg-light hover:text-primary-600 transition-all duration-300">
+                   class="btn-primary inline-flex items-center justify-center px-8 py-4 border-2 border-light text-light font-bold text-lg hover:bg-light hover:text-primary transition-all duration-300">
                     <i class="fas fa-phone ml-2"></i>
                     {{ __('facilities.show.call_now') }}
                 </a>
@@ -729,11 +726,11 @@
                     @if($facility->phone)
                         <div class="contact-card flex items-center p-6 section-bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
                             <div class="bg-primary-100 p-4 rounded-2xl mr-6">
-                                <i class="fas fa-phone text-2xl text-primary-600"></i>
+                                <i class="fas fa-phone text-2xl text-primary"></i>
                             </div>
                             <div>
                                 <h3 class="text-xl font-bold text-heading mb-2">{{ __('facilities.show.call_us') }}</h3>
-                                <a href="tel:{{ $facility->phone }}" class="text-muted hover:text-primary-600 transition-colors text-lg">
+                                <a href="tel:{{ $facility->phone }}" class="text-muted hover:text-primary transition-colors text-lg">
                                     {{ $facility->phone }}
                         </a>
                     </div>
@@ -743,11 +740,11 @@
                     @if($facility->email)
                         <div class="contact-card flex items-center p-6 section-bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
                             <div class="bg-primary-100 p-4 rounded-2xl mr-6">
-                                <i class="fas fa-envelope text-2xl text-primary-600"></i>
+                                <i class="fas fa-envelope text-2xl text-primary"></i>
                             </div>
                             <div>
                                 <h3 class="text-xl font-bold text-heading mb-2">{{ __('facilities.show.email_us') }}</h3>
-                                <a href="mailto:{{ $facility->email }}" class="text-muted hover:text-primary-600 transition-colors text-lg">
+                                <a href="mailto:{{ $facility->email }}" class="text-muted hover:text-primary transition-colors text-lg">
                                     {{ $facility->email }}
                                 </a>
                             </div>
@@ -771,11 +768,11 @@
                         <h3 class="text-2xl font-bold text-heading mb-6">{{ __('facilities.show.our_numbers') }}</h3>
                         <div class="grid grid-cols-2 gap-6">
                             <div class="text-center">
-                                <div class="text-3xl font-bold text-primary-600 mb-2">{{ $facility->products_count ?? 0 }}</div>
+                                <div class="text-3xl font-bold text-primary mb-2">{{ $facility->products_count ?? 0 }}</div>
                                 <div class="text-muted">{{ __('facilities.show.properties') }}</div>
                             </div>
                             <div class="text-center">
-                                <div class="text-3xl font-bold text-primary-600 mb-2">{{ $facility->rating ?? 0 }}/5</div>
+                                <div class="text-3xl font-bold text-primary mb-2">{{ $facility->rating ?? 0 }}/5</div>
                                 <div class="text-muted">{{ __('facilities.show.rating') }}</div>
                             </div>
                         </div>
@@ -793,7 +790,7 @@
                                 {{ __('facilities.show.book_appointment') }}
                             </a>
                             <a href="{{ route('public.facilities.quote.form', $facility) }}"
-                               class="btn-primary w-full border-2 border-primary-600 text-primary-600 py-4 font-bold text-lg text-center block hover:bg-primary-600 hover:text-white transition-colors">
+                               class="btn-primary w-full border-2 border-primary-600 text-primary py-4 font-bold text-lg text-center block hover:bg-primary-600 hover:text-white transition-colors">
                                 <i class="fas fa-calculator ml-2"></i>
                                 {{ __('facilities.show.get_quote') }}
                             </a>

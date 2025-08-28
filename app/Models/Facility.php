@@ -39,6 +39,7 @@ class Facility extends Model
         'accent_color',
         'background_color',
         'text_color',
+        'secondary_text_color',
         'font_family',
         'hero_background_type',
         'hero_background_value',
@@ -197,6 +198,7 @@ class Facility extends Model
                 'accent' => $this->accent_color ?? '#f59e0b',
                 'background' => $this->background_color ?? '#ffffff',
                 'text' => $this->text_color ?? '#374151',
+                'secondary_text' => $this->secondary_text_color ?? '#6b7280',
             ],
             'typography' => [
                 'font_family' => $this->font_family ?? 'figtree',
@@ -234,6 +236,7 @@ class Facility extends Model
             '--accent-color' => $customization['colors']['accent'],
             '--background-color' => $customization['colors']['background'],
             '--text-color' => $customization['colors']['text'],
+            '--secondary-text-color' => $customization['colors']['secondary_text'],
             '--font-family' => $this->getFontFamilyValue($customization['typography']['font_family']),
         ];
     }
@@ -285,6 +288,7 @@ class Facility extends Model
             'accent_color' => '#f59e0b',
             'background_color' => '#ffffff',
             'text_color' => '#374151',
+            'secondary_text_color' => '#6b7280',
             'font_family' => 'figtree',
             'hero_background_type' => 'gradient',
             'hero_background_value' => null,
