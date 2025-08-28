@@ -119,8 +119,9 @@ class FacilityController extends Controller
             ->where('is_verified', true)
             ->take(4)
             ->get();
+        $facility_raw = $facility;
 
-        return view('public.facilities.show', compact('facility', 'products', 'similarFacilities'));
+        return view('public.facilities.show', compact('facility', 'facility_raw', 'products', 'similarFacilities'));
     }
 
     /**

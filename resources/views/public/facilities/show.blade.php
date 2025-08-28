@@ -4,21 +4,21 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    
+
     <title>{{ $facility->name }} - {{ config('app.name', 'Laravel') }}</title>
-    
+
     <!-- SEO Meta Tags -->
     <meta name="description" content="{{ $facility->description ?? 'Premium real estate facility offering quality properties and professional services.' }}">
     <meta name="keywords" content="real estate, properties, {{ $facility->name }}, {{ $facility->category->name ?? 'facility' }}">
     <meta name="author" content="{{ $facility->name }}">
-    
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:title" content="{{ $facility->name }}">
     <meta property="og:description" content="{{ $facility->description ?? 'Premium real estate facility' }}">
     <meta property="og:image" content="{{ $facility->logo ?? asset('images/default-facility.jpg') }}">
-    
+
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="{{ url()->current() }}">
@@ -28,17 +28,17 @@
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
-    
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800,900&display=swap" rel="stylesheet" />
-    
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <!-- Custom Styles -->
     <style>
         :root {
@@ -51,7 +51,7 @@
                 $textColor = $customization['colors']['text'] ?? '#1f2937';
                 $secondaryTextColor = $customization['colors']['secondary_text'] ?? '#6b7280';
             @endphp
-            
+
             --primary-color: {{ $primaryColor }};
             --secondary-color: {{ $secondaryColor }};
             --accent-color: {{ $accentColor }};
@@ -59,7 +59,7 @@
             --text-color: {{ $textColor }};
             --secondary-text-color: {{ $secondaryTextColor }};
             --font-family: {{ $facility->getFontFamilyValue($customization['typography']['font_family'] ?? 'default') }};
-            
+
             /* Generate color variations */
             --primary-50: {{ \App\Helpers\FacilityHelper::lightenColor($primaryColor, 90) }};
             --primary-100: {{ \App\Helpers\FacilityHelper::lightenColor($primaryColor, 80) }};
@@ -71,7 +71,7 @@
             --primary-700: {{ \App\Helpers\FacilityHelper::darkenColor($primaryColor, 20) }};
             --primary-800: {{ \App\Helpers\FacilityHelper::darkenColor($primaryColor, 40) }};
             --primary-900: {{ \App\Helpers\FacilityHelper::darkenColor($primaryColor, 60) }};
-            
+
             /* Contextual colors that adapt to the facility's color scheme */
             --surface-color: {{ $backgroundColor }};
             --surface-alt-color: {{ \App\Helpers\FacilityHelper::lightenColor($primaryColor, 95) }};
@@ -79,7 +79,7 @@
             --muted-text-color: {{ $secondaryTextColor }};
             --heading-text-color: {{ $textColor }};
         }
-        
+
         /* Dynamic color classes that replace hardcoded Tailwind classes */
         .text-primary { color: var(--primary-color); }
         .text-primary-600 { color: var(--primary-color); }
@@ -92,80 +92,80 @@
         .border-primary-300 { border-color: var(--primary-300); }
         .bg-primary-50 { background-color: var(--primary-50); }
         .bg-primary-100 { background-color: var(--primary-100); }
-        
+
         /* Hover states for primary colors */
         .hover\:text-primary:hover { color: var(--primary-color); }
         .hover\:text-primary-700:hover { color: var(--primary-700); }
         .hover\:bg-primary-600:hover { background-color: var(--primary-color); }
         .hover\:bg-primary-50:hover { background-color: var(--primary-50); }
-        
+
         /* Accent Color Classes */
         .text-accent { color: var(--accent-color); }
         .bg-accent { background-color: var(--accent-color); }
         .border-accent { border-color: var(--accent-color); }
-        
+
         /* Dynamic colors that adapt to facility's color scheme */
         .btn-light {
             background-color: rgba(255, 255, 255, 0.95) !important;
             color: var(--primary-color) !important;
             border: 2px solid transparent !important;
         }
-        
+
         .btn-light:hover {
             background-color: rgba(255, 255, 255, 1) !important;
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
-        
+
         .border-light {
             border-color: rgba(255, 255, 255, 0.3) !important;
         }
-        
+
         .text-light {
             color: rgba(255, 255, 255, 0.9) !important;
         }
-        
+
         .bg-light {
             background-color: rgba(255, 255, 255, 0.1) !important;
         }
-        
+
         /* Navigation dynamic colors */
         .nav-text {
             color: var(--text-color) !important;
         }
-        
+
         .nav-text:hover {
             color: var(--primary-color) !important;
         }
-        
+
         .nav-bg {
             background-color: var(--surface-color) !important;
             opacity: 0.95;
         }
-        
+
         /* Section background colors that adapt to facility's color scheme */
         .section-bg-alt {
             background-color: var(--surface-alt-color) !important;
         }
-        
+
         .section-bg-white {
             background-color: var(--surface-color) !important;
         }
-        
+
         .text-muted {
             color: var(--muted-text-color) !important;
             opacity: 0.7;
         }
-        
+
         .text-heading {
             color: var(--heading-text-color) !important;
             font-weight: bold;
         }
-        
+
         .border-dynamic {
             border-color: var(--border-color) !important;
         }
-        
+
         /* Content Width Classes */
         .content-container {
             @if(($facility->content_layout ?? 'default') === 'full-width')
@@ -180,7 +180,7 @@
             margin-left: auto;
             margin-right: auto;
         }
-        
+
         /* Section Spacing Classes */
         .section-spacing {
             @if($facility->section_spacing === 'compact')
@@ -197,7 +197,7 @@
                 padding-bottom: 5rem !important;
             @endif
         }
-        
+
         /* Card Design Classes */
         .facility-card, .stats-card, .contact-card, .action-card {
             @if(($facility->layout_style ?? 'default') === 'minimal')
@@ -225,7 +225,7 @@
                 background: var(--surface-color);
             @endif
         }
-        
+
         /* Card Style Variations */
         @if(($facility->card_style ?? 'default') === 'flat')
             .facility-card, .stats-card, .contact-card, .action-card {
@@ -246,23 +246,23 @@
                 background: var(--surface-color);
             }
         @endif
-        
+
         html, body {
             margin: 0;
             padding: 0;
             overflow-x: hidden;
         }
-        
+
         body {
             font-family: var(--font-family);
             color: var(--text-color);
             background-color: var(--background-color);
         }
-        
+
         .primary-gradient {
             background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
         }
-        
+
         .btn-primary {
             background: var(--primary-color) !important;
             transition: all 0.3s ease;
@@ -274,7 +274,7 @@
                 border-radius: 0.5rem !important;
             @endif
         }
-        
+
         /* Additional button style overrides to ensure our custom styles take precedence */
         .btn-primary.rounded-full,
         .btn-primary.rounded-lg,
@@ -288,41 +288,41 @@
                 border-radius: 0.5rem !important;
             @endif
         }
-        
+
         .btn-primary:hover {
             background: var(--primary-700);
             @if(($facility->enable_animations ?? true))
                 transform: translateY(-2px);
             @endif
         }
-        
+
         @if(($facility->enable_animations ?? true))
         .floating-animation {
             animation: float 6s ease-in-out infinite;
         }
-        
+
         @keyframes float {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-20px); }
         }
-        
+
         .fade-in {
             animation: fadeIn 1s ease-in;
         }
-        
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
         @endif
-        
+
         .hero-bg {
             @php
                 $heroConfig = $facility->customization['hero'] ?? [];
                 $hasHeroImage = ($heroConfig['background_type'] ?? '') === 'image' && !empty($heroConfig['background_value'] ?? '');
                 $fallbackImage = $facility->logo_url ?? 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80';
             @endphp
-            
+
             @if($hasHeroImage)
                 {!! $facility->hero_background_style ?? '' !!}
             @elseif(($heroConfig['background_type'] ?? '') === 'color')
@@ -335,15 +335,15 @@
             @else
                 {!! $facility->hero_background_style ?? '' !!}
             @endif
-            
+
             width: 100vw;
             margin-left: calc(50% - 50vw);
         }
-        
+
         .hero-overlay {
             background-color: rgba(0, 0, 0, {{ ($facility->hero_overlay_opacity ?? 20) / 100 }});
         }
-        
+
         /* Layout Style Variations */
         @if(($facility->layout_style ?? 'default') === 'minimal')
         .minimal-style {
@@ -359,7 +359,7 @@
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
         @endif
-        
+
         /* Logo Position */
         .logo-{{ $facility->logo_position ?? 'left' }} {
             @if(($facility->logo_position ?? 'left') === 'center')
@@ -370,7 +370,7 @@
                 justify-content: flex-start;
             @endif
         }
-        
+
         /* Navigation Styles */
         .nav-bg {
             @if(($facility->navigation_style ?? 'default') === 'transparent')
@@ -379,7 +379,7 @@
                 background: rgba(255, 255, 255, 0.95) !important;
             @endif
         }
-        
+
         .main-navigation {
             @if(($facility->navigation_style ?? 'default') === 'transparent')
                 background: transparent !important;
@@ -399,9 +399,9 @@
                 text-align: center;
             @endif
         }
-        
 
-        
+
+
         /* Section Spacing */
         .section-spacing {
             @if(($facility->section_spacing ?? 'default') === 'compact')
@@ -418,7 +418,7 @@
                 padding-bottom: 5rem !important;
             @endif
         }
-        
+
         /* Footer Styles */
         .footer-container {
             @if(($facility->footer_style ?? 'default') === 'minimal')
@@ -429,15 +429,15 @@
                 padding: 4rem 0;
             @endif
         }
-        
+
         /* Custom CSS */
         @if($facility->custom_css)
             {!! $facility->custom_css !!}
         @endif
     </style>
-    
 
-    
+
+
     <!-- Tailwind Config -->
     <script>
         tailwind.config = {
@@ -458,14 +458,14 @@
         <div class="content-container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center logo-{{ $facility->logo_position ?? 'left' }}">
-                    <img src="{{ $facility->logo ?? asset('images/logo.png') }}" alt="{{ $facility->name }}" class="h-8 w-auto">
+                    <img src="{{ $facility_raw->logo_path ?? asset('images/logo.png') }}" alt="{{ $facility->name }}" class="h-8 w-auto">
                     <span class="ml-3 text-xl font-bold nav-text">{{ $facility->name }}</span>
                 </div>
                 <div class="hidden md:flex items-center space-x-6">
                     <a href="#about" class="nav-text transition-colors">{{ __('facilities.show.about') }}</a>
                     <a href="#properties" class="nav-text transition-colors">{{ __('facilities.show.properties') }}</a>
                     <a href="#contact" class="nav-text transition-colors">{{ __('facilities.show.contact') }}</a>
-                    <a href="{{ route('public.facilities.appointment.form', $facility) }}" 
+                    <a href="{{ route('public.facilities.appointment.form', $facility) }}"
                        class="btn-primary text-white px-6 py-2 font-semibold">
                         {{ __('facilities.show.book_now') }}
                     </a>
@@ -483,7 +483,7 @@
                 <a href="#about" class="block px-3 py-2 nav-text">{{ __('facilities.show.about') }}</a>
                 <a href="#properties" class="block px-3 py-2 nav-text">{{ __('facilities.show.properties') }}</a>
                 <a href="#contact" class="block px-3 py-2 nav-text">{{ __('facilities.show.contact') }}</a>
-                <a href="{{ route('public.facilities.appointment.form', $facility) }}" 
+                <a href="{{ route('public.facilities.appointment.form', $facility) }}"
                    class="block px-3 py-2 btn-primary text-white text-center font-semibold">
                     {{ __('facilities.show.book_now') }}
                 </a>
@@ -495,7 +495,7 @@
     <div class="relative overflow-hidden hero-bg min-h-screen flex items-center">
         <!-- Background with overlay -->
         <div class="absolute inset-0 hero-overlay"></div>
-        
+
         <!-- Hero Content -->
         <div class="relative z-10 w-full">
             <div class="content-container mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
@@ -519,7 +519,7 @@
                     <h1 class="text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 leading-tight">
                         {{ $facility->name }}
                     </h1>
-                
+
                 @if(\App\Helpers\FacilityHelper::isSingleMode())
                         <p class="text-xl lg:text-2xl text-gray-100 mb-8 leading-relaxed max-w-4xl mx-auto">
                         {{ config('app.name') }} - {{ $facility->description ?? __('facilities.show.no_description') }}
@@ -583,7 +583,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Decorative Elements -->
         @if($facility->enable_animations ?? true)
             <div class="absolute top-20 left-10 w-32 h-32 bg-yellow-400 rounded-full opacity-10 floating-animation"></div>
@@ -701,7 +701,7 @@
                         </div>
 
                 <div class="text-center">
-                    <a href="{{ route('public.products.by-facility', $facility) }}" 
+                    <a href="{{ route('public.products.by-facility', $facility) }}"
                        class="btn-primary inline-flex items-center px-8 py-4 border-2 border-primary-600 text-primary font-bold text-lg hover:bg-primary-600 hover:text-white transition-all duration-300">
                         {{ __('facilities.show.view_all_properties') }}
                         <i class="fas fa-arrow-right mr-2"></i>
@@ -897,7 +897,7 @@
                         @endif
                     </div>
                 </div>
-                
+
                 <div>
                     <h3 class="text-lg font-semibold mb-4 text-white">{{ __('facilities.show.quick_links') }}</h3>
                     <ul class="space-y-2">
@@ -907,7 +907,7 @@
                         <li><a href="{{ route('public.facilities.appointment.form', $facility) }}" class="text-gray-300 hover:text-white transition-colors">{{ __('facilities.show.appointments') }}</a></li>
                     </ul>
                 </div>
-                
+
                 <div>
                     <h3 class="text-lg font-semibold mb-4 text-white">{{ __('facilities.show.contact_info') }}</h3>
                     <ul class="space-y-2 text-gray-300">
@@ -932,7 +932,7 @@
                     </ul>
                 </div>
             </div>
-            
+
             <div class="border-t border-gray-800 mt-8 pt-8 text-center">
                 <p class="text-gray-300">
                     &copy; {{ date('Y') }} {{ $facility->name }}. {{ __('facilities.show.all_rights_reserved') }}
@@ -969,7 +969,7 @@
             elements.forEach(element => {
                 const elementTop = element.getBoundingClientRect().top;
                 const elementVisible = 150;
-                
+
                 if (elementTop < window.innerHeight - elementVisible) {
                     element.style.opacity = '1';
                     element.style.transform = 'translateY(0)';
@@ -984,7 +984,7 @@
         document.addEventListener('click', function(event) {
             const menu = document.getElementById('mobile-menu');
             const button = event.target.closest('button');
-            
+
             if (!menu.contains(event.target) && !button) {
                 menu.classList.add('hidden');
             }

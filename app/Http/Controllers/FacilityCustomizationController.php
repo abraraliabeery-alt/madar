@@ -171,7 +171,7 @@ class FacilityCustomizationController extends Controller
                         ]);
                     }
                 }
-            } elseif (!$request->filled('hero_background_type')) {
+            } elseif ($facility->hero_background_type === 'image' && $request->hero_background_type == 'image') {
                 // If no hero background type is specified, preserve existing settings
                 unset($validated['hero_background_type']);
                 unset($validated['hero_background_value']);
@@ -220,7 +220,7 @@ class FacilityCustomizationController extends Controller
                     throw new \Exception('Logo was not stored successfully');
                 }
 
-                $validated['logo_path'] = $logoPath;
+                $validated['logo_path'] =  asset($logoPath);
 
             } catch (\Exception $e) {
                 \Log::error('Logo upload failed', [
@@ -252,10 +252,8 @@ class FacilityCustomizationController extends Controller
             }
         }
 
-
-
         $facility->update($validated);
-      
+
 
         return redirect()
             ->route('facility.customization.edit', $facility)
@@ -327,8 +325,10 @@ class FacilityCustomizationController extends Controller
             ])
         ));
 
+
         return view('public.facilities.show', [
             'facility' => $previewFacility,
+            'facility_raw' => $facility,
             'products' => $facility->products()->take(6)->get(),
             'similarFacilities' => collect(),
             'isPreview' => true
