@@ -43,12 +43,12 @@
     <style>
         :root {
             @php
-                $customization = $facility->customization;
-                $primaryColor = $customization['colors']['primary'];
-                $secondaryColor = $customization['colors']['secondary'];
-                $accentColor = $customization['colors']['accent'];
-                $backgroundColor = $customization['colors']['background'];
-                $textColor = $customization['colors']['text'];
+                $customization = $facility->customization ?? [];
+                $primaryColor = $customization['colors']['primary'] ?? '#3b82f6';
+                $secondaryColor = $customization['colors']['secondary'] ?? '#64748b';
+                $accentColor = $customization['colors']['accent'] ?? '#f59e0b';
+                $backgroundColor = $customization['colors']['background'] ?? '#ffffff';
+                $textColor = $customization['colors']['text'] ?? '#1f2937';
                 $secondaryTextColor = $customization['colors']['secondary_text'] ?? '#6b7280';
             @endphp
             
@@ -58,7 +58,7 @@
             --background-color: {{ $backgroundColor }};
             --text-color: {{ $textColor }};
             --secondary-text-color: {{ $secondaryTextColor }};
-            --font-family: {{ $facility->getFontFamilyValue($customization['typography']['font_family']) }};
+            --font-family: {{ $facility->getFontFamilyValue($customization['typography']['font_family'] ?? 'default') }};
             
             /* Generate color variations */
             --primary-50: {{ \App\Helpers\FacilityHelper::lightenColor($primaryColor, 90) }};
@@ -166,6 +166,87 @@
             border-color: var(--border-color) !important;
         }
         
+        /* Content Width Classes */
+        .content-container {
+            @if(($facility->content_layout ?? 'default') === 'full-width')
+                max-width: 100% !important;
+                padding-left: 1rem;
+                padding-right: 1rem;
+            @elseif(($facility->content_layout ?? 'default') === 'wide')
+                max-width: 90rem !important;
+            @else
+                max-width: 80rem !important;
+            @endif
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* Section Spacing Classes */
+        .section-spacing {
+            @if($facility->section_spacing === 'compact')
+                padding-top: 2.5rem !important;
+                padding-bottom: 2.5rem !important;
+            @elseif($facility->section_spacing === 'relaxed')
+                padding-top: 6rem !important;
+                padding-bottom: 6rem !important;
+            @elseif($facility->section_spacing === 'spacious')
+                padding-top: 8rem !important;
+                padding-bottom: 8rem !important;
+            @else
+                padding-top: 5rem !important;
+                padding-bottom: 5rem !important;
+            @endif
+        }
+        
+        /* Card Design Classes */
+        .facility-card, .stats-card, .contact-card, .action-card {
+            @if(($facility->layout_style ?? 'default') === 'minimal')
+                box-shadow: none !important;
+                border: 1px solid var(--border-color);
+                background: var(--surface-color);
+            @elseif(($facility->layout_style ?? 'default') === 'corporate')
+                border-radius: 0.25rem !important;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+                border: 1px solid var(--border-color);
+                background: var(--surface-color);
+            @elseif(($facility->layout_style ?? 'default') === 'classic')
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+                border: 1px solid var(--border-color);
+                background: var(--surface-color);
+            @elseif(($facility->layout_style ?? 'default') === 'elegant')
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+                border-radius: 1rem !important;
+                border: 1px solid var(--border-color);
+                background: var(--surface-color);
+            @elseif(($facility->layout_style ?? 'default') === 'bold')
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+                border-radius: 0.75rem !important;
+                border: 2px solid var(--primary-100);
+                background: var(--surface-color);
+            @endif
+        }
+        
+        /* Card Style Variations */
+        @if(($facility->card_style ?? 'default') === 'flat')
+            .facility-card, .stats-card, .contact-card, .action-card {
+                box-shadow: none !important;
+                border: 1px solid var(--border-color);
+                background: var(--surface-alt-color);
+            }
+        @elseif(($facility->card_style ?? 'default') === 'outlined')
+            .facility-card, .stats-card, .contact-card, .action-card {
+                box-shadow: none !important;
+                border: 2px solid var(--primary-200);
+                background: var(--surface-color);
+            }
+        @elseif(($facility->card_style ?? 'default') === 'elevated')
+            .facility-card, .stats-card, .contact-card, .action-card {
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1) !important;
+                border: none;
+                background: var(--surface-color);
+            }
+        @endif
+        
         html, body {
             margin: 0;
             padding: 0;
@@ -185,9 +266,9 @@
         .btn-primary {
             background: var(--primary-color) !important;
             transition: all 0.3s ease;
-            @if($facility->button_style === 'square')
+            @if(($facility->button_style ?? 'default') === 'square')
                 border-radius: 0.375rem !important;
-            @elseif($facility->button_style === 'pill')
+            @elseif(($facility->button_style ?? 'default') === 'pill')
                 border-radius: 9999px !important;
             @else
                 border-radius: 0.5rem !important;
@@ -199,9 +280,9 @@
         .btn-primary.rounded-lg,
         .btn-primary.rounded-xl,
         .btn-primary.rounded-md {
-            @if($facility->button_style === 'square')
+            @if(($facility->button_style ?? 'default') === 'square')
                 border-radius: 0.375rem !important;
-            @elseif($facility->button_style === 'pill')
+            @elseif(($facility->button_style ?? 'default') === 'pill')
                 border-radius: 9999px !important;
             @else
                 border-radius: 0.5rem !important;
@@ -210,12 +291,12 @@
         
         .btn-primary:hover {
             background: var(--primary-700);
-            @if($facility->enable_animations ?? true)
+            @if(($facility->enable_animations ?? true))
                 transform: translateY(-2px);
             @endif
         }
         
-        @if($facility->enable_animations ?? true)
+        @if(($facility->enable_animations ?? true))
         .floating-animation {
             animation: float 6s ease-in-out infinite;
         }
@@ -235,65 +316,24 @@
         }
         @endif
         
-        /* Apply layout styles to containers */
-        .facility-card, .stats-card, .contact-card, .action-card {
-            @if($facility->layout_style === 'minimal')
-                box-shadow: none !important;
-                border: 1px solid #e5e7eb;
-            @elseif($facility->layout_style === 'corporate')
-                border-radius: 0.25rem !important;
-                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            @elseif($facility->layout_style === 'classic')
-                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            @elseif($facility->layout_style === 'elegant')
-                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-                border-radius: 1rem !important;
-                border: 1px solid #f3f4f6;
-            @elseif($facility->layout_style === 'bold')
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-                border-radius: 0.75rem !important;
-                border: 2px solid var(--primary-100);
-            @endif
-        }
-        
-        /* Card Style Variations */
-        @if($facility->card_style === 'flat')
-            .facility-card, .stats-card, .contact-card, .action-card {
-                box-shadow: none !important;
-                border: 1px solid #e5e7eb;
-                background: #fafafa;
-            }
-        @elseif($facility->card_style === 'outlined')
-            .facility-card, .stats-card, .contact-card, .action-card {
-                box-shadow: none !important;
-                border: 2px solid var(--primary-200);
-                background: white;
-            }
-        @elseif($facility->card_style === 'elevated')
-            .facility-card, .stats-card, .contact-card, .action-card {
-                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1) !important;
-                border: none;
-            }
-        @endif
-        
         .hero-bg {
             @php
-                $heroConfig = $facility->customization['hero'];
-                $hasHeroImage = $heroConfig['background_type'] === 'image' && !empty($heroConfig['background_value']);
+                $heroConfig = $facility->customization['hero'] ?? [];
+                $hasHeroImage = ($heroConfig['background_type'] ?? '') === 'image' && !empty($heroConfig['background_value'] ?? '');
                 $fallbackImage = $facility->logo_url ?? 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80';
             @endphp
             
             @if($hasHeroImage)
-                {!! $facility->hero_background_style !!}
-            @elseif($heroConfig['background_type'] === 'color')
-                {!! $facility->hero_background_style !!}
-            @elseif(!empty($fallbackImage) && $heroConfig['background_type'] === 'gradient')
+                {!! $facility->hero_background_style ?? '' !!}
+            @elseif(($heroConfig['background_type'] ?? '') === 'color')
+                {!! $facility->hero_background_style ?? '' !!}
+            @elseif(!empty($fallbackImage) && ($heroConfig['background_type'] ?? '') === 'gradient')
                 background-image: url('{{ $fallbackImage }}');
                 background-size: cover;
                 background-position: center;
                 background-repeat: no-repeat;
             @else
-                {!! $facility->hero_background_style !!}
+                {!! $facility->hero_background_style ?? '' !!}
             @endif
             
             width: 100vw;
@@ -305,16 +345,16 @@
         }
         
         /* Layout Style Variations */
-        @if($facility->layout_style === 'minimal')
+        @if(($facility->layout_style ?? 'default') === 'minimal')
         .minimal-style {
             box-shadow: none !important;
-            border: 1px solid #e5e7eb;
+            border: 1px solid var(--border-color);
         }
-        @elseif($facility->layout_style === 'corporate')
+        @elseif(($facility->layout_style ?? 'default') === 'corporate')
         .corporate-style {
             border-radius: 0.25rem !important;
         }
-        @elseif($facility->layout_style === 'classic')
+        @elseif(($facility->layout_style ?? 'default') === 'classic')
         .classic-style {
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
@@ -333,7 +373,7 @@
         
         /* Navigation Styles */
         .nav-bg {
-            @if($facility->navigation_style === 'transparent')
+            @if(($facility->navigation_style ?? 'default') === 'transparent')
                 background: rgba(255, 255, 255, 0.8) !important;
             @else
                 background: rgba(255, 255, 255, 0.95) !important;
@@ -341,11 +381,11 @@
         }
         
         .main-navigation {
-            @if($facility->navigation_style === 'transparent')
+            @if(($facility->navigation_style ?? 'default') === 'transparent')
                 background: transparent !important;
                 backdrop-filter: blur(15px);
                 -webkit-backdrop-filter: blur(15px);
-            @elseif($facility->navigation_style === 'boxed')
+            @elseif(($facility->navigation_style ?? 'default') === 'boxed')
                 background: white !important;
                 margin: 1rem;
                 border-radius: 1rem;
@@ -354,34 +394,23 @@
                 top: 0;
                 left: 0;
                 right: 0;
-            @elseif($facility->navigation_style === 'centered')
+            @elseif(($facility->navigation_style ?? 'default') === 'centered')
                 background: white !important;
                 text-align: center;
             @endif
         }
         
-        /* Content Layout Variations */
-        .content-container {
-            @if($facility->content_layout === 'full-width')
-                max-width: 100% !important;
-                padding-left: 1rem;
-                padding-right: 1rem;
-            @elseif($facility->content_layout === 'wide')
-                max-width: 90rem !important;
-            @else
-                max-width: 80rem !important;
-            @endif
-        }
+
         
         /* Section Spacing */
         .section-spacing {
-            @if($facility->section_spacing === 'compact')
+            @if(($facility->section_spacing ?? 'default') === 'compact')
                 padding-top: 2.5rem !important;
                 padding-bottom: 2.5rem !important;
-            @elseif($facility->section_spacing === 'relaxed')
+            @elseif(($facility->section_spacing ?? 'default') === 'relaxed')
                 padding-top: 6rem !important;
                 padding-bottom: 6rem !important;
-            @elseif($facility->section_spacing === 'spacious')
+            @elseif(($facility->section_spacing ?? 'default') === 'spacious')
                 padding-top: 8rem !important;
                 padding-bottom: 8rem !important;
             @else
@@ -392,9 +421,9 @@
         
         /* Footer Styles */
         .footer-container {
-            @if($facility->footer_style === 'minimal')
+            @if(($facility->footer_style ?? 'default') === 'minimal')
                 padding: 2rem 0;
-            @elseif($facility->footer_style === 'simple')
+            @elseif(($facility->footer_style ?? 'default') === 'simple')
                 padding: 3rem 0;
             @else
                 padding: 4rem 0;

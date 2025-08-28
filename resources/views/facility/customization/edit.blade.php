@@ -434,6 +434,71 @@
                     </div>
                 </div>
 
+                <!-- Logo Settings -->
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-6">
+                        <i class="fas fa-image mr-2 text-blue-600"></i>
+                        {{ __('facilities.customization.logo_settings') }}
+                    </h2>
+
+                    <div class="space-y-6">
+                        <!-- Current Logo Display -->
+                        @if($facility->logo_path)
+                            <div class="logo-display">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    {{ __('facilities.customization.current_logo') }}
+                                </label>
+                                <div class="flex items-center space-x-4">
+                                    <img src="{{ asset('storage/' . $facility->logo_path) }}" 
+                                         alt="Current Logo" 
+                                         class="w-32 h-16 object-contain border border-gray-200 rounded">
+                                    <button type="button" 
+                                            onclick="removeLogo()"
+                                            class="px-3 py-2 text-sm text-red-600 border border-red-300 rounded-lg hover:bg-red-50 focus:ring-2 focus:ring-red-500">
+                                        <i class="fas fa-trash mr-1"></i>
+                                        {{ __('facilities.customization.remove_logo') }}
+                                    </button>
+                                </div>
+                            </div>
+                        @endif
+                        
+                        <!-- No Logo Message (shown when no logo or after removal) -->
+                        <div class="no-logo-message" @if($facility->logo_path) style="display: none;" @endif>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                {{ __('facilities.customization.current_logo') }}
+                            </label>
+                            <p class="text-sm text-gray-500 italic">{{ __('facilities.customization.no_logo_uploaded') }}</p>
+                        </div>
+
+                        <!-- Logo Upload -->
+                        <div>
+                            <label for="logo" class="block text-sm font-medium text-gray-700 mb-2">
+                                {{ __('facilities.customization.upload_logo') }}
+                            </label>
+                            <input type="file" 
+                                   id="logo" 
+                                   name="logo"
+                                   accept="image/png,image/jpeg,image/jpg,image/svg+xml"
+                                   class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <p class="mt-1 text-xs text-gray-500">{{ __('facilities.customization.logo_help') }}</p>
+                            @error('logo')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Logo Requirements -->
+                        <div class="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                            <h4 class="text-sm font-medium text-blue-800 mb-2">
+                                {{ __('facilities.customization.logo_requirements') }}
+                            </h4>
+                            <ul class="text-xs text-blue-700 space-y-1">
+                                <li>• {{ __('facilities.customization.logo_help') }}</li>
+                                <li>• {{ __('facilities.customization.logo_help') }}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Interactive Elements -->
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                     <h2 class="text-xl font-semibold text-gray-900 mb-6">

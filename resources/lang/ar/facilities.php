@@ -475,5 +475,17 @@ return [
         'max_160_chars' => 'الحد الأقصى 160 حرف',
         'meta_keywords' => 'الكلمات المفتاحية',
         'keywords_placeholder' => 'عقارات، الرياض، فلل، شقق',
+        
+        // Logo Position
+        'logo_position' => 'موضع الشعار',
+        
+        // Logo Settings
+        'logo_settings' => 'إعدادات الشعار',
+        'current_logo' => 'الشعار الحالي',
+        'upload_logo' => 'رفع شعار',
+        'logo_requirements' => 'متطلبات الشعار',
+        'logo_help' => 'الحجم الموصى به: 200×80 بكسل. الصيغ المدعومة: PNG، JPG، SVG. الحد الأقصى لحجم الملف: 2 ميجابايت.',
+        'remove_logo' => 'إزالة الشعار',
+        'no_logo_uploaded' => 'لم يتم رفع شعار',
     ],
 ];

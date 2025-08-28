@@ -227,7 +227,7 @@
                     </div>
                     <div class="text-left md:text-right">
                         @if($facility->logo)
-                            <img src="{{ asset('storage/' . $facility->logo) }}"
+                            <img src="{{ asset($facility->logo) }}"
                                  alt="{{ __('facility.form.logo') }}"
                                  class="max-h-24 w-auto mb-4 mx-auto md:mx-0 md:mr-0">
                         @endif

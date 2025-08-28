@@ -22,7 +22,7 @@ class Facility extends Model
         'is_primary',
         'is_verified',
         'is_featured',
-        'logo',
+        'logo_path',
         'header',
         'latitude',
         'longitude',
@@ -180,7 +180,13 @@ class Facility extends Model
 
     public function getLogoUrlAttribute()
     {
-        return $this->logo ? asset('storage/' . $this->logo) : asset('images/default-facility.jpg');
+        $logoPath = $this->getRawOriginal('logo_path');
+        return $logoPath ? asset('storage/' . $logoPath) : asset('images/default-facility.jpg');
+    }
+
+    public function getLogoPathAttribute()
+    {
+        return $this->getRawOriginal('logo_path');
     }
 
     public function getHeaderUrlAttribute()

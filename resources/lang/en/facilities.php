@@ -485,5 +485,17 @@ return [
         'max_160_chars' => 'Maximum 160 characters',
         'meta_keywords' => 'Meta Keywords',
         'keywords_placeholder' => 'real estate, Riyadh, villas, apartments',
+
+        // Logo Position
+        'logo_position' => 'Logo Position',
+        
+        // Logo Settings
+        'logo_settings' => 'Logo Settings',
+        'current_logo' => 'Current Logo',
+        'upload_logo' => 'Upload Logo',
+        'logo_requirements' => 'Logo Requirements',
+        'logo_help' => 'Recommended size: 200x80px. Supported formats: PNG, JPG, SVG. Max file size: 2MB.',
+        'remove_logo' => 'Remove Logo',
+        'no_logo_uploaded' => 'No logo uploaded',
     ],
 ];

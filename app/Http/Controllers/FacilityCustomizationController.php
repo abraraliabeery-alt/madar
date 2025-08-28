@@ -16,15 +16,15 @@ class FacilityCustomizationController extends Controller
     {
         // Check if user can customize this facility
         $this->authorize('update', $facility);
-        
+
         $presets = $this->getColorPresets();
         $fontOptions = $this->getFontOptions();
         $layoutOptions = $this->getLayoutOptions();
-        
+
         return view('facility.customization.edit', compact(
-            'facility', 
-            'presets', 
-            'fontOptions', 
+            'facility',
+            'presets',
+            'fontOptions',
             'layoutOptions'
         ));
     }
@@ -44,16 +44,20 @@ class FacilityCustomizationController extends Controller
             'background_color' => ['nullable', 'regex:/^#[A-Fa-f0-9]{6}$/'],
             'text_color' => ['nullable', 'regex:/^#[A-Fa-f0-9]{6}$/'],
             'secondary_text_color' => ['nullable', 'regex:/^#[A-Fa-f0-9]{6}$/'],
-            
+
             // Typography
             'font_family' => ['nullable', Rule::in(['figtree', 'inter', 'poppins', 'roboto', 'open-sans', 'lato'])],
-            
+
+            // Logo
+            'logo' => ['nullable', 'image', 'max:2048', 'mimes:png,jpg,jpeg,svg'], // 2MB max
+            'remove_logo' => ['nullable', 'boolean'],
+
             // Hero Section
             'hero_background_type' => ['nullable', Rule::in(['gradient', 'color', 'image'])],
             'hero_background_value' => ['nullable', 'string', 'max:500'],
             'hero_overlay_opacity' => ['nullable', 'integer', 'min:0', 'max:100'],
             'hero_background_image' => ['nullable', 'image', 'max:2048'], // 2MB max to match PHP upload_max_filesize
-            
+
             // Layout & Design
             'layout_style' => ['nullable', Rule::in(['modern', 'classic', 'minimal', 'corporate', 'elegant', 'bold'])],
             'button_style' => ['nullable', Rule::in(['rounded', 'square', 'pill'])],
@@ -63,20 +67,20 @@ class FacilityCustomizationController extends Controller
             'section_spacing' => ['nullable', Rule::in(['compact', 'normal', 'relaxed', 'spacious'])],
             'card_style' => ['nullable', Rule::in(['modern', 'flat', 'outlined', 'elevated'])],
             'footer_style' => ['nullable', Rule::in(['simple', 'detailed', 'minimal'])],
-            
+
             // Effects
             'enable_animations' => ['boolean'],
             'enable_parallax' => ['boolean'],
-            
+
             // Custom CSS
             'custom_css' => ['nullable', 'string', 'max:10000'],
-            
+
             // Social Media
             'facebook_url' => ['nullable', 'url', 'max:255'],
             'twitter_url' => ['nullable', 'url', 'max:255'],
             'instagram_url' => ['nullable', 'url', 'max:255'],
             'linkedin_url' => ['nullable', 'url', 'max:255'],
-            
+
             // SEO
             'meta_keywords' => ['nullable', 'string', 'max:500'],
             'meta_description' => ['nullable', 'string', 'max:160'],
@@ -89,20 +93,20 @@ class FacilityCustomizationController extends Controller
                 if (!$request->file('hero_background_image')->isValid()) {
                     throw new \Exception('File upload failed: ' . $request->file('hero_background_image')->getErrorMessage());
                 }
-                
+
                 // Check file size (in bytes)
                 $fileSize = $request->file('hero_background_image')->getSize();
                 if ($fileSize > 2 * 1024 * 1024) { // 2MB in bytes
                     throw new \Exception('File size exceeds 2MB limit. Current size: ' . round($fileSize / 1024 / 1024, 2) . 'MB');
                 }
-                
+
                 // Check file type
                 $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
                 $mimeType = $request->file('hero_background_image')->getMimeType();
                 if (!in_array($mimeType, $allowedTypes)) {
                     throw new \Exception('Invalid file type. Allowed types: JPG, PNG, GIF. Current type: ' . $mimeType);
                 }
-                
+
                 // Debug information
                 \Log::info('Hero background image upload started', [
                     'file_name' => $request->file('hero_background_image')->getClientOriginalName(),
@@ -112,7 +116,7 @@ class FacilityCustomizationController extends Controller
                     'is_valid' => $request->file('hero_background_image')->isValid(),
                     'error' => $request->file('hero_background_image')->getErrorMessage(),
                 ]);
-                
+
                 // Delete old hero background if it exists and is an image
                 if ($facility->hero_background_type === 'image' && $facility->hero_background_value) {
                     $oldImagePath = str_replace(asset('storage/'), '', $facility->hero_background_value);
@@ -120,45 +124,138 @@ class FacilityCustomizationController extends Controller
                         Storage::disk('public')->delete($oldImagePath);
                     }
                 }
-                
+
                 // Ensure the directory exists
                 $directory = 'facility-customization/hero';
                 if (!Storage::disk('public')->exists($directory)) {
                     Storage::disk('public')->makeDirectory($directory);
                 }
-                
+
                 $heroImagePath = $request->file('hero_background_image')->store($directory, 'public');
-                
+
                 // Verify the file was actually stored
                 if (!$heroImagePath || !Storage::disk('public')->exists($heroImagePath)) {
                     throw new \Exception('File was not stored successfully');
                 }
-                
-                // Debug the stored path
-                \Log::info('Hero background image stored successfully', [
-                    'stored_path' => $heroImagePath,
-                    'full_url' => asset('storage/' . $heroImagePath),
-                    'directory_exists' => Storage::disk('public')->exists($directory),
-                    'file_exists' => Storage::disk('public')->exists($heroImagePath),
-                ]);
-                
+
                 $validated['hero_background_type'] = 'image';
-                $validated['hero_background_value'] = asset('storage/' . $heroImagePath);
+                $validated['hero_background_value'] = asset($heroImagePath);
             } catch (\Exception $e) {
                 \Log::error('Hero background image upload failed', [
                     'error' => $e->getMessage(),
                     'trace' => $e->getTraceAsString(),
                     'facility_id' => $facility->id,
                 ]);
-                
+
                 return back()
                     ->withInput()
                     ->withErrors(['hero_background_image' => 'Failed to upload image: ' . $e->getMessage()]);
             }
+        } else {
+            // Handle case when no hero image is uploaded
+            // Preserve existing hero image settings if no new image is provided
+            if ($request->filled('hero_background_type') && $request->hero_background_type !== 'image') {
+                // If changing to non-image type, remove the old image
+                if ($facility->hero_background_type === 'image' && $facility->hero_background_value) {
+                    try {
+                        $oldImagePath = str_replace(asset('storage/'), '', $facility->hero_background_value);
+                        if (Storage::disk('public')->exists($oldImagePath)) {
+                            Storage::disk('public')->delete($oldImagePath);
+                        }
+                        // Clear the image value when changing to non-image type
+                        $validated['hero_background_value'] = null;
+                    } catch (\Exception $e) {
+                        \Log::error('Failed to remove old hero background image', [
+                            'error' => $e->getMessage(),
+                            'facility_id' => $facility->id,
+                        ]);
+                    }
+                }
+            } elseif (!$request->filled('hero_background_type')) {
+                // If no hero background type is specified, preserve existing settings
+                unset($validated['hero_background_type']);
+                unset($validated['hero_background_value']);
+            }
         }
 
-        // Update facility with validated data
+        // Handle logo upload
+        if ($request->hasFile('logo')) {
+            try {
+                // Check if file upload was successful
+                if (!$request->file('logo')->isValid()) {
+                    throw new \Exception('Logo upload failed: ' . $request->file('logo')->getErrorMessage());
+                }
+
+                // Check file size (in bytes)
+                $fileSize = $request->file('logo')->getSize();
+                if ($fileSize > 2 * 1024 * 1024) { // 2MB in bytes
+                    throw new \Exception('Logo file size exceeds 2MB limit. Current size: ' . round($fileSize / 1024 / 1024, 2) . 'MB');
+                }
+
+                // Check file type
+                $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/svg+xml'];
+                $mimeType = $request->file('logo')->getMimeType();
+                if (!in_array($mimeType, $allowedTypes)) {
+                    throw new \Exception('Invalid logo file type. Allowed types: PNG, JPG, SVG. Current type: ' . $mimeType);
+                }
+
+                // Delete old logo if it exists
+                if ($facility->logo_path) {
+                    $oldLogoPath = $facility->logo_path;
+                    if (Storage::disk('public')->exists($oldLogoPath)) {
+                        Storage::disk('public')->delete($oldLogoPath);
+                    }
+                }
+
+                // Ensure the directory exists
+                $directory = 'facility-customization/logos';
+                if (!Storage::disk('public')->exists($directory)) {
+                    Storage::disk('public')->makeDirectory($directory);
+                }
+
+                $logoPath = $request->file('logo')->store($directory, 'public');
+
+                // Verify the file was actually stored
+                if (!$logoPath || !Storage::disk('public')->exists($logoPath)) {
+                    throw new \Exception('Logo was not stored successfully');
+                }
+
+                $validated['logo_path'] = $logoPath;
+
+            } catch (\Exception $e) {
+                \Log::error('Logo upload failed', [
+                    'error' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString(),
+                    'facility_id' => $facility->id,
+                ]);
+
+                return back()
+                    ->withInput()
+                    ->withErrors(['logo' => 'Failed to upload logo: ' . $e->getMessage()]);
+            }
+        }
+
+        // Handle logo removal
+        if ($request->boolean('remove_logo') && $facility->logo_path) {
+            try {
+                $oldLogoPath = $facility->logo_path;
+                if (Storage::disk('public')->exists($oldLogoPath)) {
+                    Storage::disk('public')->delete($oldLogoPath);
+                }
+                $validated['logo_path'] = null;
+            } catch (\Exception $e) {
+                \Log::error('Logo removal failed', [
+                    'error' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString(),
+                    'facility_id' => $facility->id,
+                ]);
+            }
+        }
+
+
+
         $facility->update($validated);
+      
 
         return redirect()
             ->route('facility.customization.edit', $facility)
@@ -171,10 +268,10 @@ class FacilityCustomizationController extends Controller
     public function preview(Request $request, Facility $facility)
     {
         $this->authorize('view', $facility);
-        
+
         // Get current customization data
         $customization = $facility->customization;
-        
+
         // Override with preview data from request
         if ($request->filled('primary_color')) {
             $customization['colors']['primary'] = $request->primary_color;
@@ -203,14 +300,14 @@ class FacilityCustomizationController extends Controller
         if ($request->filled('button_style')) {
             $customization['layout']['button_style'] = $request->button_style;
         }
-        
+
         // Create temporary facility object with preview data
         $previewFacility = $facility->replicate();
         $previewFacility->setRawAttributes(array_merge(
             $facility->getRawOriginal(),
             $request->only([
                 'primary_color',
-                'secondary_color', 
+                'secondary_color',
                 'accent_color',
                 'background_color',
                 'text_color',
@@ -229,7 +326,7 @@ class FacilityCustomizationController extends Controller
                 'enable_parallax'
             ])
         ));
-        
+
         return view('public.facilities.show', [
             'facility' => $previewFacility,
             'products' => $facility->products()->take(6)->get(),
@@ -244,7 +341,7 @@ class FacilityCustomizationController extends Controller
     public function reset(Facility $facility)
     {
         $this->authorize('update', $facility);
-        
+
         // Delete hero background image if exists
         if ($facility->hero_background_type === 'image' && $facility->hero_background_value) {
             $oldImagePath = str_replace(asset('storage/'), '', $facility->hero_background_value);
@@ -252,9 +349,9 @@ class FacilityCustomizationController extends Controller
                 Storage::disk('public')->delete($oldImagePath);
             }
         }
-        
+
         $facility->resetCustomization();
-        
+
         return redirect()
             ->route('facility.customization.edit', $facility)
             ->with('success', __('facilities.customization.reset_successfully'));
@@ -266,24 +363,24 @@ class FacilityCustomizationController extends Controller
     public function applyPreset(Request $request, Facility $facility)
     {
         $this->authorize('update', $facility);
-        
+
         $request->validate([
             'preset' => ['required', 'string'],
         ]);
-        
+
         $presets = $this->getColorPresets();
         $presetData = $presets[$request->preset] ?? null;
-        
+
         if (!$presetData) {
             return back()->withErrors(['preset' => __('facilities.customization.invalid_preset')]);
         }
-        
+
         $facility->update([
             'primary_color' => $presetData['primary'],
             'secondary_color' => $presetData['secondary'],
             'accent_color' => $presetData['accent'] ?? $presetData['primary'],
         ]);
-        
+
         return redirect()
             ->route('facility.customization.edit', $facility)
             ->with('success', __('facilities.customization.preset_applied_successfully'));
@@ -298,9 +395,9 @@ class FacilityCustomizationController extends Controller
             if (!$request->hasFile('test_file')) {
                 return response()->json(['error' => 'No file provided'], 400);
             }
-            
+
             $file = $request->file('test_file');
-            
+
             $result = [
                 'file_name' => $file->getClientOriginalName(),
                 'file_size' => $file->getSize(),
@@ -319,7 +416,7 @@ class FacilityCustomizationController extends Controller
                     'public_disk_writable' => is_writable(storage_path('app/public/facility-customization/hero')),
                 ]
             ];
-            
+
             return response()->json($result);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
@@ -406,7 +503,7 @@ class FacilityCustomizationController extends Controller
         return [
             'layout_styles' => [
                 'modern' => __('facilities.customization.layout_styles.modern'),
-                'classic' => __('facilities.customization.layout_styles.classic'), 
+                'classic' => __('facilities.customization.layout_styles.classic'),
                 'minimal' => __('facilities.customization.layout_styles.minimal'),
                 'corporate' => __('facilities.customization.layout_styles.corporate'),
                 'elegant' => __('facilities.customization.layout_styles.elegant'),
