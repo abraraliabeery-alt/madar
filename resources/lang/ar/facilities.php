@@ -308,6 +308,7 @@ return [
         'updated_successfully' => 'تم تحديث إعدادات التخصيص بنجاح',
         'reset_successfully' => 'تم إعادة الإعدادات للقيم الافتراضية بنجاح',
         'preset_applied_successfully' => 'تم تطبيق الموضوع بنجاح',
+        'invalid_preset' => 'تم اختيار موضوع لوني غير صحيح.',
         
         // Color Scheme
         'color_scheme' => 'نظام الألوان',
@@ -453,6 +454,7 @@ return [
         'additional_css' => 'كود CSS إضافي',
         'optional' => 'اختياري',
         'css_warning' => 'تأكد من صحة كود CSS قبل الحفظ لتجنب كسر التصميم',
+        'css_placeholder' => '.custom-class { color: #333; }',
         
         // Actions
         'actions' => 'الإجراءات',

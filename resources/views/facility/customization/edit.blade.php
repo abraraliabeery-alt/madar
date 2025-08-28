@@ -298,7 +298,7 @@
                             @enderror
                             @if($facility->hero_background_type === 'image' && $facility->hero_background_value)
                                 <div class="mt-2">
-                                    <img src="{{ $facility->hero_background_value }}" alt="Current hero background" class="w-32 h-20 object-cover rounded">
+                                    <img src="{{ $facility->hero_background_value }}" alt="{{ __('facilities.customization.current_hero_background') }}" class="w-32 h-20 object-cover rounded">
                                 </div>
                             @endif
                         </div>
@@ -541,7 +541,7 @@
                                   name="custom_css" 
                                   rows="8"
                                   class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
-                                  placeholder=".custom-class { color: #333; }">{{ old('custom_css', $facility->custom_css) }}</textarea>
+                                  placeholder="{{ __('facilities.customization.css_placeholder') }}">{{ old('custom_css', $facility->custom_css) }}</textarea>
                         <p class="mt-1 text-xs text-gray-500">{{ __('facilities.customization.css_warning') }}</p>
                     </div>
                 </div>
@@ -587,7 +587,7 @@
                                    name="facebook_url" 
                                    value="{{ old('facebook_url', $facility->facebook_url) }}"
                                    class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                                   placeholder="https://facebook.com/...">
+                                   placeholder="{{ __('facilities.customization.facebook_placeholder') }}">
                         </div>
 
                         <div>
@@ -600,7 +600,7 @@
                                    name="instagram_url" 
                                    value="{{ old('instagram_url', $facility->instagram_url) }}"
                                    class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                                   placeholder="https://instagram.com/...">
+                                   placeholder="{{ __('facilities.customization.instagram_placeholder') }}">
                         </div>
 
                         <div>
@@ -613,7 +613,7 @@
                                    name="twitter_url" 
                                    value="{{ old('twitter_url', $facility->twitter_url) }}"
                                    class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                                   placeholder="https://twitter.com/...">
+                                   placeholder="{{ __('facilities.customization.twitter_placeholder') }}">
                         </div>
 
                         <div>
@@ -626,7 +626,7 @@
                                    name="linkedin_url" 
                                    value="{{ old('linkedin_url', $facility->linkedin_url) }}"
                                    class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                                   placeholder="https://linkedin.com/...">
+                                   placeholder="{{ __('facilities.customization.linkedin_placeholder') }}">
                         </div>
                     </div>
                 </div>

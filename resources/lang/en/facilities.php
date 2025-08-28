@@ -308,6 +308,7 @@ return [
         'updated_successfully' => 'Customization settings updated successfully',
         'reset_successfully' => 'Settings reset to default values successfully',
         'preset_applied_successfully' => 'Color preset applied successfully',
+        'invalid_preset' => 'Invalid color preset selected.',
         
         // Color Scheme
         'color_scheme' => 'Color Scheme',
@@ -457,6 +458,7 @@ return [
         'additional_css' => 'Additional CSS Code',
         'optional' => 'Optional',
         'css_warning' => 'Ensure CSS code is valid before saving to avoid breaking the design',
+        'css_placeholder' => '.custom-class { color: #333; }',
         
         // Actions
         'actions' => 'Actions',
@@ -469,6 +471,12 @@ return [
         'twitter' => 'Twitter',
         'instagram' => 'Instagram',
         'linkedin' => 'LinkedIn',
+        
+        // Social Media Placeholders
+        'facebook_placeholder' => 'https://facebook.com/...',
+        'instagram_placeholder' => 'https://instagram.com/...',
+        'twitter_placeholder' => 'https://twitter.com/...',
+        'linkedin_placeholder' => 'https://linkedin.com/...',
         
         // SEO
         'seo_settings' => 'SEO Settings',

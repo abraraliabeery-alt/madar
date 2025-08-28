@@ -275,7 +275,7 @@ class FacilityCustomizationController extends Controller
         $presetData = $presets[$request->preset] ?? null;
         
         if (!$presetData) {
-            return back()->withErrors(['preset' => 'Invalid color preset selected.']);
+            return back()->withErrors(['preset' => __('facilities.customization.invalid_preset')]);
         }
         
         $facility->update([
