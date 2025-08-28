@@ -1,176 +1,159 @@
 @extends('layouts.app')
 
-@section('title', 'لوحة تحكم المنشأة')
+@section('title', __('facility.dashboard.title'))
 
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <h1 class="h3 mb-4">لوحة تحكم المنشأة</h1>
-        </div>
+<div class="w-full px-4 my-10">
+    <div class="mb-6">
+        <h1 class="text-2xl font-semibold text-gray-800">{{ __('facility.dashboard.title') }}</h1>
     </div>
 
-    <!-- إحصائيات سريعة -->
-    <div class="row mb-4">
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-right-primary shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                إجمالي المنتجات</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $stats['total_products'] }}</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-box fa-2x text-gray-300"></i>
-                        </div>
+    <!-- {{ __('facility.dashboard.stats_title') }} -->
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-6">
+        <div class="bg-white rounded-lg shadow-lg border-r-4 border-blue-500 p-4 h-full">
+            <div class="flex items-center justify-between">
+                <div class="flex-1">
+                    <div class="text-xs font-bold text-blue-600 uppercase mb-1">
+                        {{ __('facility.dashboard.total_products') }}
                     </div>
+                    <div class="text-xl font-bold text-gray-800">{{ $stats['total_products'] }}</div>
+                </div>
+                <div class="flex-shrink-0">
+                    <i class="fas fa-box text-3xl text-gray-300"></i>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-right-success shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                إجمالي الحجوزات</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $stats['total_bookings'] }}</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-calendar-check fa-2x text-gray-300"></i>
-                        </div>
+        <div class="bg-white rounded-lg shadow-lg border-r-4 border-green-500 p-4 h-full">
+            <div class="flex items-center justify-between">
+                <div class="flex-1">
+                    <div class="text-xs font-bold text-green-600 uppercase mb-1">
+                        {{ __('facility.dashboard.total_bookings') }}
                     </div>
+                    <div class="text-xl font-bold text-gray-800">{{ $stats['total_bookings'] }}</div>
+                </div>
+                <div class="flex-shrink-0">
+                    <i class="fas fa-calendar-check text-3xl text-gray-300"></i>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-right-info shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                الحجوزات المعلقة</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $stats['pending_bookings'] }}</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-clock fa-2x text-gray-300"></i>
-                        </div>
+        <div class="bg-white rounded-lg shadow-lg border-r-4 border-cyan-500 p-4 h-full">
+            <div class="flex items-center justify-between">
+                <div class="flex-1">
+                    <div class="text-xs font-bold text-cyan-600 uppercase mb-1">
+                        {{ __('facility.dashboard.pending_bookings') }}
                     </div>
+                    <div class="text-xl font-bold text-gray-800">{{ $stats['pending_bookings'] }}</div>
+                </div>
+                <div class="flex-shrink-0">
+                    <i class="fas fa-clock text-3xl text-gray-300"></i>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-right-warning shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                إجمالي المهام</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $stats['total_tasks'] }}</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-tasks fa-2x text-gray-300"></i>
-                        </div>
+        <div class="bg-white rounded-lg shadow-lg border-r-4 border-yellow-500 p-4 h-full">
+            <div class="flex items-center justify-between">
+                <div class="flex-1">
+                    <div class="text-xs font-bold text-yellow-600 uppercase mb-1">
+                        {{ __('facility.dashboard.total_tasks') }}
                     </div>
+                    <div class="text-xl font-bold text-gray-800">{{ $stats['total_tasks'] }}</div>
+                </div>
+                <div class="flex-shrink-0">
+                    <i class="fas fa-tasks text-3xl text-gray-300"></i>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- الحجوزات الحديثة -->
-    <div class="row mb-4">
-        <div class="col-lg-6">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">أحدث الحجوزات</h6>
-                </div>
-                <div class="card-body">
-                    @if($stats['recent_bookings']->count() > 0)
-                        @foreach($stats['recent_bookings'] as $booking)
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="flex-shrink-0">
-                                <img class="rounded-circle" src="{{ $booking->user->avatar ?? asset('images/default-avatar.png') }}" 
-                                     alt="صورة المستخدم" width="40" height="40">
-                            </div>
-                            <div class="flex-grow-1 ms-3">
-                                <h6 class="mb-0">{{ $booking->user->name }}</h6>
-                                <small class="text-muted">{{ $booking->product->name ?? 'منتج محذوف' }}</small>
-                                <br>
-                                <small class="text-muted">{{ $booking->created_at->diffForHumans() }}</small>
-                            </div>
+    <!-- {{ __('facility.dashboard.recent_activity') }} -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <div class="bg-white rounded-lg shadow-lg">
+            <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 rounded-t-lg">
+                <h6 class="text-lg font-semibold text-blue-600 m-0">{{ __('facility.dashboard.recent_bookings') }}</h6>
+            </div>
+            <div class="p-6">
+                @if($stats['recent_bookings']->count() > 0)
+                    @foreach($stats['recent_bookings'] as $booking)
+                    <div class="flex items-center mb-4 last:mb-0">
+                        <div class="flex-shrink-0">
+                            <img class="w-10 h-10 rounded-full object-cover" 
+                                 src="{{ $booking->user->avatar ?? asset('images/default-avatar.png') }}" 
+                                 alt="{{ __('facility.dashboard.user_avatar') }}">
                         </div>
-                        @endforeach
-                    @else
-                        <p class="text-muted">لا توجد حجوزات حديثة</p>
-                    @endif
-                </div>
+                        <div class="flex-1 mr-3">
+                            <h6 class="font-semibold text-gray-800 mb-1">{{ $booking->user->name }}</h6>
+                            <p class="text-sm text-gray-500 mb-1">{{ $booking->product->name ?? __('facility.dashboard.deleted_product') }}</p>
+                            <p class="text-xs text-gray-400">{{ $booking->created_at->diffForHumans() }}</p>
+                        </div>
+                    </div>
+                    @endforeach
+                @else
+                    <p class="text-gray-500">{{ __('facility.dashboard.no_recent_bookings') }}</p>
+                @endif
             </div>
         </div>
 
-        <div class="col-lg-6">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">أحدث المهام</h6>
-                </div>
-                <div class="card-body">
-                    @if($stats['recent_tasks']->count() > 0)
-                        @foreach($stats['recent_tasks'] as $task)
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="flex-shrink-0">
-                                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center" 
-                                     style="width: 40px; height: 40px;">
-                                    <i class="fas fa-tasks text-white"></i>
-                                </div>
-                            </div>
-                            <div class="flex-grow-1 ms-3">
-                                <h6 class="mb-0">{{ $task->title }}</h6>
-                                <small class="text-muted">مُسند إلى: {{ $task->assignedTo->name ?? 'غير محدد' }}</small>
-                                <br>
-                                <small class="text-muted">{{ $task->created_at->diffForHumans() }}</small>
+        <div class="bg-white rounded-lg shadow-lg">
+            <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 rounded-t-lg">
+                <h6 class="text-lg font-semibold text-blue-600 m-0">{{ __('facility.dashboard.recent_tasks') }}</h6>
+            </div>
+            <div class="p-6">
+                @if($stats['recent_tasks']->count() > 0)
+                    @foreach($stats['recent_tasks'] as $task)
+                    <div class="flex items-center mb-4 last:mb-0">
+                        <div class="flex-shrink-0">
+                            <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+                                <i class="fas fa-tasks text-white text-sm"></i>
                             </div>
                         </div>
-                        @endforeach
-                    @else
-                        <p class="text-muted">لا توجد مهام حديثة</p>
-                    @endif
-                </div>
+                        <div class="flex-1 mr-3">
+                            <h6 class="font-semibold text-gray-800 mb-1">{{ $task->title }}</h6>
+                            <p class="text-sm text-gray-500 mb-1">{{ __('facility.dashboard.assigned_to') }}: {{ $task->assignedTo->name ?? __('facility.dashboard.unassigned') }}</p>
+                            <p class="text-xs text-gray-400">{{ $task->created_at->diffForHumans() }}</p>
+                        </div>
+                    </div>
+                    @endforeach
+                @else
+                    <p class="text-gray-500">{{ __('facility.dashboard.no_recent_tasks') }}</p>
+                @endif
             </div>
         </div>
     </div>
 
-    <!-- معلومات المنشأة -->
-    <div class="row">
-        <div class="col-12">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">معلومات المنشأة</h6>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5>{{ $facility->name }}</h5>
-                            <p class="text-muted">{{ $facility->description }}</p>
-                            <p><strong>العنوان:</strong> {{ $facility->address }}</p>
-                            <p><strong>الهاتف:</strong> {{ $facility->phone_number }}</p>
-                            <p><strong>البريد الإلكتروني:</strong> {{ $facility->email }}</p>
+    <!-- {{ __('facility.dashboard.facility_info') }} -->
+    <div class="w-full">
+        <div class="bg-white rounded-lg shadow-lg mb-6">
+            <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 rounded-t-lg">
+                <h6 class="text-lg font-semibold text-blue-600 m-0">{{ __('facility.dashboard.facility_info') }}</h6>
+            </div>
+            <div class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h5 class="text-xl font-semibold text-gray-800 mb-2">{{ $facility->name }}</h5>
+                        <p class="text-gray-600 mb-3">{{ $facility->description }}</p>
+                        <div class="space-y-2">
+                            <p class="text-gray-700"><span class="font-semibold">{{ __('facility.form.address') }}:</span> {{ $facility->address }}</p>
+                            <p class="text-gray-700"><span class="font-semibold">{{ __('facility.form.phone') }}:</span> {{ $facility->phone_number }}</p>
+                            <p class="text-gray-700"><span class="font-semibold">{{ __('facility.form.email') }}:</span> {{ $facility->email }}</p>
                         </div>
-                        <div class="col-md-6 text-md-end">
-                            @if($facility->logo)
-                                <img src="{{ asset('storage/' . $facility->logo) }}" 
-                                     alt="شعار المنشأة" class="img-fluid mb-3" style="max-height: 100px;">
-                            @endif
-                            <div class="mt-3">
-                                <a href="{{ route('facility.edit') }}" class="btn btn-primary">
-                                    <i class="fas fa-edit"></i> تعديل المنشأة
-                                </a>
-                                <a href="{{ route('facility.products.index') }}" class="btn btn-success">
-                                    <i class="fas fa-box"></i> إدارة المنتجات
-                                </a>
-                            </div>
+                    </div>
+                    <div class="text-left md:text-right">
+                        @if($facility->logo)
+                            <img src="{{ asset('storage/' . $facility->logo) }}" 
+                                 alt="{{ __('facility.form.logo') }}" 
+                                 class="max-h-24 w-auto mb-4 mx-auto md:mx-0 md:mr-0">
+                        @endif
+                        <div class="space-y-3 md:space-y-0 md:space-x-3 md:space-x-reverse flex flex-col md:flex-row md:justify-end">
+                            <a href="{{ route('facility.edit') }}" 
+                               class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition duration-200 inline-flex items-center justify-center">
+                                <i class="fas fa-edit ml-2"></i> {{ __('facility.dashboard.edit_facility') }}
+                            </a>
+                            <a href="{{ route('facility.products.index') }}" 
+                               class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-md transition duration-200 inline-flex items-center justify-center">
+                                <i class="fas fa-box ml-2"></i> {{ __('facility.dashboard.manage_products') }}
+                            </a>
                         </div>
                     </div>
                 </div>
