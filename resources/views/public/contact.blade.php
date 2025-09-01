@@ -133,22 +133,68 @@
                 <div class="bg-white rounded-lg shadow-md p-8">
                     <h3 class="text-xl font-bold text-gray-900 mb-6">{{ __('general.contact.follow_us') }}</h3>
                     <div class="flex space-x-4 space-x-reverse">
-                        <a href="{{ \App\Models\Setting::getValue('facebook_url', '#') }}" class="bg-blue-600 text-white p-3 rounded-full hover:bg-blue-700 transition-colors">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-                        <a href="{{ \App\Models\Setting::getValue('twitter_url', '#') }}" class="bg-blue-400 text-white p-3 rounded-full hover:bg-blue-500 transition-colors">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a href="{{ \App\Models\Setting::getValue('instagram_url', '#') }}" class="bg-pink-600 text-white p-3 rounded-full hover:bg-pink-700 transition-colors">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a href="{{ \App\Models\Setting::getValue('linkedin_url', '#') }}" class="bg-blue-700 text-white p-3 rounded-full hover:bg-blue-800 transition-colors">
-                            <i class="fab fa-linkedin-in"></i>
-                        </a>
-                        <a href="#" class="bg-green-500 text-white p-3 rounded-full hover:bg-green-600 transition-colors">
-                            <i class="fab fa-whatsapp"></i>
-                        </a>
+                        @php
+                            $facebookUrl = \App\Models\Setting::getValue('facebook_url');
+                            $twitterUrl = \App\Models\Setting::getValue('twitter_url');
+                            $instagramUrl = \App\Models\Setting::getValue('instagram_url');
+                            $linkedinUrl = \App\Models\Setting::getValue('linkedin_url');
+                            $whatsappNumber = \App\Models\Setting::getValue('whatsapp_number', '+966501234567');
+                        @endphp
+
+                        @if($facebookUrl && $facebookUrl !== '#')
+                            <a href="{{ $facebookUrl }}" 
+                               target="_blank" 
+                               rel="noopener noreferrer"
+                               aria-label="{{ __('general.contact.follow_us_on') }} Facebook"
+                               class="bg-blue-600 text-white w-12 h-12 rounded-full hover:bg-blue-700 transition-colors duration-200 transform hover:scale-105 flex items-center justify-center">
+                                <i class="fab fa-facebook-f text-lg"></i>
+                            </a>
+                        @endif
+
+                        @if($twitterUrl && $twitterUrl !== '#')
+                            <a href="{{ $twitterUrl }}" 
+                               target="_blank" 
+                               rel="noopener noreferrer"
+                               aria-label="{{ __('general.contact.follow_us_on') }} Twitter"
+                               class="bg-blue-400 text-white w-12 h-12 rounded-full hover:bg-blue-500 transition-colors duration-200 transform hover:scale-105 flex items-center justify-center">
+                                <i class="fab fa-twitter text-lg"></i>
+                            </a>
+                        @endif
+
+                        @if($instagramUrl && $instagramUrl !== '#')
+                            <a href="{{ $instagramUrl }}" 
+                               target="_blank" 
+                               rel="noopener noreferrer"
+                               aria-label="{{ __('general.contact.follow_us_on') }} Instagram"
+                               class="bg-pink-600 text-white w-12 h-12 rounded-full hover:bg-pink-700 transition-colors duration-200 transform hover:scale-105 flex items-center justify-center">
+                                <i class="fab fa-instagram text-lg"></i>
+                            </a>
+                        @endif
+
+                        @if($linkedinUrl && $linkedinUrl !== '#')
+                            <a href="{{ $linkedinUrl }}" 
+                               target="_blank" 
+                               rel="noopener noreferrer"
+                               aria-label="{{ __('general.contact.follow_us_on') }} LinkedIn"
+                               class="bg-blue-700 text-white w-12 h-12 rounded-full hover:bg-blue-800 transition-colors duration-200 transform hover:scale-105 flex items-center justify-center">
+                                <i class="fab fa-linkedin-in text-lg"></i>
+                            </a>
+                        @endif
+
+                        @if($whatsappNumber)
+                            <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $whatsappNumber) }}" 
+                               target="_blank" 
+                               rel="noopener noreferrer"
+                               aria-label="{{ __('general.contact.contact_us_on') }} WhatsApp"
+                               class="bg-green-500 text-white w-12 h-12 rounded-full hover:bg-green-600 transition-colors duration-200 transform hover:scale-105 flex items-center justify-center">
+                                <i class="fab fa-whatsapp text-lg"></i>
+                            </a>
+                        @endif
                     </div>
+
+                    @if(!$facebookUrl && !$twitterUrl && !$instagramUrl && !$linkedinUrl && !$whatsappNumber)
+                        <p class="text-gray-500 text-sm mt-4 text-center">{{ __('general.contact.no_social_media') }}</p>
+                    @endif
                 </div>
             </div>
         </div>

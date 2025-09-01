@@ -83,7 +83,15 @@ class FacilityController extends Controller
         $facilities = $query->paginate(12);
         $categories = FacilityCategory::where('is_active', true)->get();
 
-        return view('public.facilities.index', compact('facilities', 'categories'));
+        // Calculate stats for the stats section
+        $stats = [
+            'total_facilities' => Facility::where('is_active', true)->where('is_verified', true)->count(),
+            'verified_facilities' => Facility::where('is_active', true)->where('is_verified', true)->count(),
+            'total_products' => Product::where('is_active', true)->where('is_verified', true)->count(),
+            'satisfied_clients' => 150, // This could be calculated from actual data later
+        ];
+
+        return view('public.facilities.index', compact('facilities', 'categories', 'stats'));
     }
 
     /**

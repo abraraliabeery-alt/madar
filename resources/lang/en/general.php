@@ -130,6 +130,9 @@ return [
         'faq_2_a' => 'You can send a direct message from the property page or call the attached number.',
         'faq_3_q' => 'Is the service free?',
         'faq_3_a' => 'Yes, search and browse services are free. Some advanced services may require a subscription.',
+        'follow_us_on' => 'Follow us on',
+        'contact_us_on' => 'Contact us on',
+        'no_social_media' => 'Social media links will be available soon.',
     ],
 
     'services' => [

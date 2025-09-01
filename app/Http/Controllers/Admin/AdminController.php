@@ -139,13 +139,14 @@ class AdminController extends Controller
             'twitter_url' => 'nullable|url',
             'instagram_url' => 'nullable|url',
             'linkedin_url' => 'nullable|url',
+            'whatsapp_number' => 'nullable|string|regex:/^\+[1-9]\d{1,14}$/',
         ]);
 
         // حفظ الإعدادات في جدول settings
         $keys = [
             'site_name', 'site_url', 'site_description',
             'contact_email', 'contact_phone', 'contact_address', 'working_hours',
-            'facebook_url', 'twitter_url', 'instagram_url', 'linkedin_url',
+            'facebook_url', 'twitter_url', 'instagram_url', 'linkedin_url', 'whatsapp_number',
             'maintenance_mode', 'allow_registration', 'email_verification', 'auto_approve_facilities'
         ];
 

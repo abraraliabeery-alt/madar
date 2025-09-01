@@ -122,61 +122,13 @@
         </div>
 
         @if(isset($products) && $products->count() > 0)
-            <!-- Small Grid View -->
-            <div id="products-small-grid" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                @foreach($products as $product)
-                    <div class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
-                        <div class="relative h-32 bg-gray-100">
-                            @if($product->image)
-                                <img src="{{ asset('storage/' . $product->image) }}" 
-                                     alt="{{ $product->title }}" 
-                                     class="w-full h-full object-cover">
-                            @else
-                                <div class="w-full h-full flex items-center justify-center">
-                                    <i class="fas fa-home text-2xl text-gray-400"></i>
-                                </div>
-                            @endif
-                            @if($product->is_featured)
-                                <div class="absolute top-2 right-2 bg-primary-600 text-white px-2 py-1 rounded text-xs">
-                                    {{ __('general.status.featured') }}
-                                </div>
-                            @endif
-                        </div>
-                        <div class="p-3">
-                            <h3 class="font-medium text-gray-900 text-sm mb-1 line-clamp-1">{{ $product->title }}</h3>
-                            <p class="text-xs text-gray-600 mb-2 line-clamp-2">{{ $product->description }}</p>
-                            <div class="text-sm font-semibold text-primary-600 mb-2">
-                                {{ number_format($product->price) }} {{ __('general.currency.sar') }}
-                            </div>
-                            <a href="{{ route('public.products.show', $product) }}" 
-                               class="text-primary-600 hover:text-primary-700 text-xs font-medium">
-                                {{ __('general.actions.view_details') }}
-                            </a>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-
-            <!-- Large Grid View (Hidden by default) -->
-            <div id="products-large-grid" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                @foreach($products as $product)
-                    <x-product-card-grid :product="$product" />
-                @endforeach
-            </div>
-
-            <!-- List View (Hidden by default) -->
-            <div id="products-list" class="hidden space-y-4">
-                @foreach($products as $product)
-                    <x-product-card-row :product="$product" />
-                @endforeach
-            </div>
-
-            <!-- Pagination -->
-            @if($products->hasPages())
-                <div class="mt-12">
-                    {{ $products->links() }}
-                </div>
-            @endif
+            <x-multi-view-grid 
+                :items="$products" 
+                type="products" 
+                :showPagination="true"
+                :showViewToggle="false"
+                idPrefix="products"
+            />
         @else
             <!-- No Results -->
             <div class="text-center py-12">
