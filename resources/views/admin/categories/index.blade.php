@@ -274,7 +274,7 @@
             </div>
 
             <!-- Pagination -->
-            <div class="mt-4">
+            <div class="pagination-container">
                 {{ $categories->links() }}
             </div>
         </div>

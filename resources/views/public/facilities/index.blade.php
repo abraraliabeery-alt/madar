@@ -99,19 +99,19 @@
         <div class="flex justify-end items-center mb-8">
             <div class="flex items-center space-x-2 rtl:space-x-reverse">
                 <span class="text-sm text-gray-600 mr-3 rtl:ml-3 rtl:mr-0">{{ __('general.view_toggle.display') }}</span>
-                <button id="small-grid-view" 
+                <button id="small-grid-view"
                         class="view-toggle-btn bg-primary-600 text-white p-2 rounded-lg transition-colors"
                         onclick="switchView('small-grid')"
                         title="{{ __('general.view_toggle.small_grid') }}">
                     <i class="fas fa-th"></i>
                 </button>
-                <button id="large-grid-view" 
+                <button id="large-grid-view"
                         class="view-toggle-btn bg-gray-200 text-gray-600 p-2 rounded-lg hover:bg-gray-300 transition-colors"
                         onclick="switchView('large-grid')"
                         title="{{ __('general.view_toggle.large_grid') }}">
                     <i class="fas fa-th-large"></i>
                 </button>
-                <button id="list-view" 
+                <button id="list-view"
                         class="view-toggle-btn bg-gray-200 text-gray-600 p-2 rounded-lg hover:bg-gray-300 transition-colors"
                         onclick="switchView('list')"
                         title="{{ __('general.view_toggle.list') }}">
@@ -121,11 +121,11 @@
         </div>
 
         @if(isset($facilities) && $facilities->count() > 0)
-            <x-multi-view-grid 
-                :items="$facilities" 
-                type="facilities" 
+            <x-multi-view-grid
+                :items="$facilities"
+                type="facilities"
                 :showPagination="true"
-                :showViewToggle="true"
+                :showViewToggle="false"
                 idPrefix="facilities"
             />
         @else
@@ -203,12 +203,12 @@ function switchView(viewType) {
     const smallGridBtn = document.getElementById('small-grid-view');
     const largeGridBtn = document.getElementById('large-grid-view');
     const listBtn = document.getElementById('list-view');
-    
+
     // Hide all views first
     facilitiesSmallGridView.classList.add('hidden');
     facilitiesLargeGridView.classList.add('hidden');
     facilitiesListView.classList.add('hidden');
-    
+
     // Reset all button styles
     smallGridBtn.classList.remove('bg-primary-600', 'text-white');
     smallGridBtn.classList.add('bg-gray-200', 'text-gray-600');
@@ -216,7 +216,7 @@ function switchView(viewType) {
     largeGridBtn.classList.add('bg-gray-200', 'text-gray-600');
     listBtn.classList.remove('bg-primary-600', 'text-white');
     listBtn.classList.add('bg-gray-200', 'text-gray-600');
-    
+
     if (viewType === 'small-grid') {
         facilitiesSmallGridView.classList.remove('hidden');
         smallGridBtn.classList.remove('bg-gray-200', 'text-gray-600');
@@ -230,14 +230,14 @@ function switchView(viewType) {
         listBtn.classList.remove('bg-gray-200', 'text-gray-600');
         listBtn.classList.add('bg-primary-600', 'text-white');
     }
-    
+
     // Store user preference in localStorage
-    localStorage.setItem('facilitiesPreferredView', viewType);
+    localStorage.setItem('preferredView', viewType);
 }
 
 // Set initial view based on user preference
 document.addEventListener('DOMContentLoaded', function() {
-    const preferredView = localStorage.getItem('facilitiesPreferredView') || 'small-grid';
+    const preferredView = localStorage.getItem('preferredView') || 'small-grid';
     switchView(preferredView);
 });
 

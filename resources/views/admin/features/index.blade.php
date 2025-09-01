@@ -15,24 +15,24 @@
                 <table class="table table-hover datatable">
                     <thead>
                         <tr>
-                            <th width="50">#</th>
-                            <th width="50">الأيقونة</th>
+                            <th class="d-none d-md-table-cell" width="50">#</th>
+                            <th class="d-none d-md-table-cell" width="50">الأيقونة</th>
                             <th>الاسم</th>
-                            <th>الوصف</th>
-                            <th>اللون</th>
-                            <th>عدد المنتجات</th>
-                            <th>الترتيب</th>
-                            <th>الحالة</th>
+                            <th class="d-none d-lg-table-cell">الوصف</th>
+                            <th class="d-none d-md-table-cell">اللون</th>
+                            <th class="d-none d-lg-table-cell">عدد المنتجات</th>
+                            <th class="d-none d-md-table-cell">الترتيب</th>
+                            <th class="d-none d-md-table-cell">الحالة</th>
                             <th>الإجراءات</th>
                         </tr>
                     </thead>
                     <tbody id="features-list">
                         @foreach($features as $feature)
                         <tr data-id="{{ $feature->id }}">
-                            <td>
+                            <td class="d-none d-md-table-cell">
                                 <i class="fas fa-grip-vertical handle text-muted cursor-move"></i>
                             </td>
-                            <td>
+                            <td class="d-none d-md-table-cell">
                                 @if($feature->icon)
                                     <img src="{{ asset($feature->icon) }}" alt="icon" width="30" class="rounded">
                                 @else
@@ -41,22 +41,48 @@
                                     </div>
                                 @endif
                             </td>
-                            <td>{{ $feature->getTranslatedName('ar') }}</td>
-                            <td>{{ Str::limit($feature->getTranslatedDescription('ar'), 50) }}</td>
                             <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar me-2 d-md-none">
+                                        @if($feature->icon)
+                                            <img src="{{ asset($feature->icon) }}" alt="icon" width="32" class="rounded">
+                                        @else
+                                            <div class="avatar-placeholder rounded" style="width: 32px; height: 32px;">
+                                                <i class="fas fa-star"></i>
+                                            </div>
+                                        @endif
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold">{{ $feature->getTranslatedName('ar') }}</div>
+                                        <div class="small text-muted d-md-none">
+                                            {{ Str::limit($feature->getTranslatedDescription('ar'), 30) }}
+                                        </div>
+                                        <div class="small text-muted d-md-none">
+                                            <span class="badge bg-info me-1">{{ $feature->products_count }} منتج</span>
+                                            @if($feature->is_active)
+                                                <span class="badge bg-success">نشط</span>
+                                            @else
+                                                <span class="badge bg-danger">غير نشط</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="d-none d-lg-table-cell">{{ Str::limit($feature->getTranslatedDescription('ar'), 50) }}</td>
+                            <td class="d-none d-md-table-cell">
                                 @if($feature->color)
                                     <span class="badge" style="background-color: {{ $feature->color }}">{{ $feature->color }}</span>
                                 @else
                                     -
                                 @endif
                             </td>
-                            <td>
+                            <td class="d-none d-lg-table-cell">
                                 <span class="badge bg-info">{{ $feature->products_count }}</span>
                             </td>
-                            <td>
+                            <td class="d-none d-md-table-cell">
                                 <span class="badge bg-secondary">{{ $feature->order ?? 0 }}</span>
                             </td>
-                            <td>
+                            <td class="d-none d-md-table-cell">
                                 @if($feature->is_active)
                                     <span class="badge bg-success">نشط</span>
                                 @else
@@ -64,80 +90,42 @@
                                 @endif
                             </td>
                             <td>
-                                <div class="action-buttons">
-                                    <!-- Mobile View: Compact Horizontal Layout -->
-                                    <div class="d-flex d-md-none gap-1 flex-wrap">
+                                <div class="d-flex flex-column gap-1 action-buttons">
+                                    <!-- Primary Actions Row -->
+                                    <div class="d-flex gap-1 mb-1">
                                         <a href="{{ route('admin.features.show', $feature) }}"
-                                           class="btn btn-sm btn-outline-info action-btn-mobile"
+                                           class="btn btn-sm btn-outline-info"
                                            data-bs-toggle="tooltip"
-                                           title="عرض">
+                                           title="عرض التفاصيل">
                                             <i class="fas fa-eye"></i>
                                         </a>
                                         <a href="{{ route('admin.features.edit', $feature) }}"
-                                           class="btn btn-sm btn-outline-warning action-btn-mobile"
+                                           class="btn btn-sm btn-outline-warning"
                                            data-bs-toggle="tooltip"
-                                           title="تعديل">
+                                           title="تعديل المميزة">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <button type="button"
-                                                class="btn btn-sm btn-outline-danger action-btn-mobile delete-confirm"
+                                                class="btn btn-sm btn-outline-danger delete-confirm"
                                                 data-bs-toggle="tooltip"
-                                                title="حذف"
+                                                title="حذف المميزة"
                                                 data-feature-id="{{ $feature->id }}"
                                                 data-feature-name="{{ $feature->getTranslatedName('ar') }}">
                                             <i class="fas fa-trash"></i>
                                         </button>
-                                        
-                                        <!-- Status Toggle -->
+                                    </div>
+
+                                    <!-- Status Toggle Row -->
+                                    <div class="d-flex gap-1 mb-1">
                                         <form action="{{ route('admin.features.toggle-status', $feature) }}" method="POST" class="d-inline">
                                             @csrf
                                             <button type="submit"
-                                                    class="btn btn-sm {{ $feature->is_active ? 'btn-outline-danger' : 'btn-outline-success' }} action-btn-mobile"
+                                                    class="btn btn-sm {{ $feature->is_active ? 'btn-outline-danger' : 'btn-outline-success' }}"
                                                     data-bs-toggle="tooltip"
-                                                    title="{{ $feature->is_active ? 'إلغاء التفعيل' : 'تفعيل' }}">
+                                                    title="{{ $feature->is_active ? 'إلغاء التفعيل' : 'تفعيل المميزة' }}">
                                                 <i class="fas {{ $feature->is_active ? 'fa-ban' : 'fa-check' }}"></i>
                                             </button>
                                         </form>
-                                    </div>
-                                    
-                                    <!-- Desktop View: Vertical Layout -->
-                                    <div class="d-none d-md-flex flex-column gap-1">
-                                        <!-- Primary Actions Row -->
-                                        <div class="d-flex gap-1 mb-1">
-                                            <a href="{{ route('admin.features.show', $feature) }}"
-                                               class="btn btn-sm btn-outline-info"
-                                               data-bs-toggle="tooltip"
-                                               title="عرض التفاصيل">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                            <a href="{{ route('admin.features.edit', $feature) }}"
-                                               class="btn btn-sm btn-outline-warning"
-                                               data-bs-toggle="tooltip"
-                                               title="تعديل المميزة">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            <button type="button"
-                                                    class="btn btn-sm btn-outline-danger delete-confirm"
-                                                    data-bs-toggle="tooltip"
-                                                    title="حذف المميزة"
-                                                    data-feature-id="{{ $feature->id }}"
-                                                    data-feature-name="{{ $feature->getTranslatedName('ar') }}">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </div>
-
-                                        <!-- Status Toggle Row -->
-                                        <div class="d-flex gap-1 mb-1">
-                                            <form action="{{ route('admin.features.toggle-status', $feature) }}" method="POST" class="d-inline">
-                                                @csrf
-                                                <button type="submit"
-                                                        class="btn btn-sm {{ $feature->is_active ? 'btn-outline-danger' : 'btn-outline-success' }}"
-                                                        data-bs-toggle="tooltip"
-                                                        title="{{ $feature->is_active ? 'إلغاء التفعيل' : 'تفعيل المميزة' }}">
-                                                    <i class="fas {{ $feature->is_active ? 'fa-ban' : 'fa-check' }}"></i>
-                                                </button>
-                                            </form>
-                                        </div>
                                     </div>
                                 </div>
                             </td>
@@ -148,7 +136,7 @@
             </div>
 
             <!-- Pagination -->
-            <div class="mt-4">
+            <div class="pagination-container">
                 {{ $features->links() }}
             </div>
         </div>
@@ -213,40 +201,6 @@
     color: white;
 }
 
-/* Mobile Action Buttons */
-.action-btn-mobile {
-    min-width: 36px !important;
-    height: 36px !important;
-    padding: 0.375rem !important;
-    font-size: 0.875rem !important;
-    border-radius: 8px !important;
-    margin: 1px !important;
-}
-
-.action-btn-mobile:hover {
-    transform: scale(1.05) !important;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
-}
-
-/* Mobile action buttons container */
-@media (max-width: 767px) {
-    .action-buttons {
-        min-width: auto;
-        padding: 0.25rem;
-    }
-    
-    .action-buttons .d-flex {
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 0.25rem !important;
-    }
-    
-    /* Ensure buttons don't wrap awkwardly */
-    .action-btn-mobile {
-        flex-shrink: 0;
-    }
-}
-
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .action-buttons .d-flex {
@@ -266,14 +220,6 @@
     min-width: 120px;
 }
 
-@media (max-width: 767px) {
-    .datatable td:last-child {
-        min-width: auto;
-        padding: 0.25rem;
-        text-align: center;
-    }
-}
-
 /* Avatar placeholder styling */
 .avatar-placeholder {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -281,12 +227,47 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 14px;
+    font-size: 16px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .avatar-placeholder i {
-    font-size: 14px;
+    font-size: 16px;
+}
+
+/* Mobile-friendly table */
+@media (max-width: 768px) {
+    .datatable thead th,
+    .datatable tbody td {
+        padding: 0.5rem 0.25rem;
+    }
+    
+    .datatable .btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+}
+
+/* Filter improvements for mobile */
+@media (max-width: 576px) {
+    .form-select,
+    .form-control {
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
+    
+    .row.g-3 > [class*="col-"] {
+        margin-bottom: 1rem;
+    }
+    
+    .card-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch !important;
+    }
+    
+    .card-header .btn {
+        width: 100%;
+    }
 }
 </style>
 @endpush
@@ -307,7 +288,11 @@ $(document).ready(function() {
         dom: 'Bfrtip',
         buttons: [
             'copy', 'csv', 'excel', 'pdf', 'print'
-        ]
+        ],
+        responsive: true,
+        pageLength: window.innerWidth < 768 ? 10 : 15,
+        scrollX: true,
+        autoWidth: false
     });
 
     // Initialize tooltips

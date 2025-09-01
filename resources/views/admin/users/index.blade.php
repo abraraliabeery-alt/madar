@@ -159,7 +159,7 @@
             </div>
 
             <!-- Pagination -->
-            <div class="mt-4">
+            <div class="pagination-container">
                 {{ $users->withQueryString()->links() }}
             </div>
         </div>

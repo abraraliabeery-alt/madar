@@ -202,7 +202,7 @@
                     </div>
 
                     <!-- Pagination -->
-                    <div class="d-flex justify-content-center">
+                    <div class="pagination-container">
                         {{ $attributes->links() }}
                     </div>
                 </div>

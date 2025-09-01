@@ -116,7 +116,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="d-flex justify-content-center">
+                        <div class="pagination-container">
                             {{ $results['users']->appends(['q' => $query])->links() }}
                         </div>
                     @else
@@ -158,7 +158,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="d-flex justify-content-center">
+                        <div class="pagination-container">
                             {{ $results['facilities']->appends(['q' => $query])->links() }}
                         </div>
                     @else
@@ -202,7 +202,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="d-flex justify-content-center">
+                        <div class="pagination-container">
                             {{ $results['products']->appends(['q' => $query])->links() }}
                         </div>
                     @else
@@ -249,7 +249,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="d-flex justify-content-center">
+                        <div class="pagination-container">
                             {{ $results['bookings']->appends(['q' => $query])->links() }}
                         </div>
                     @else
@@ -291,7 +291,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="d-flex justify-content-center">
+                        <div class="pagination-container">
                             {{ $results['categories']->appends(['q' => $query])->links() }}
                         </div>
                     @else
@@ -333,7 +333,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="d-flex justify-content-center">
+                        <div class="pagination-container">
                             {{ $results['features']->appends(['q' => $query])->links() }}
                         </div>
                     @else
@@ -375,7 +375,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="d-flex justify-content-center">
+                        <div class="pagination-container">
                             {{ $results['attributes']->appends(['q' => $query])->links() }}
                         </div>
                     @else

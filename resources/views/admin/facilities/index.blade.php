@@ -234,7 +234,7 @@
             </div>
 
             <!-- Pagination -->
-            <div class="mt-4">
+            <div class="pagination-container">
                 {{ $facilities->withQueryString()->links() }}
             </div>
         </div>

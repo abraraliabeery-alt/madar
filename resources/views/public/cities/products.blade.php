@@ -25,7 +25,7 @@
                 </div>
                 <div class="relative">
                     @if($city->image)
-                        <img src="{{ asset('storage/' . $city->image) }}" 
+                        <img src="{{ asset('storage/' . $city->image) }}"
                              alt="{{ $city->name }}" class="rounded-lg shadow-xl w-full">
                     @else
                         <div class="bg-gradient-to-br from-blue-400 to-purple-600 rounded-lg shadow-xl w-full h-64 flex items-center justify-center">
@@ -69,12 +69,12 @@
             <div class="lg:col-span-1">
                 <div class="bg-white rounded-lg shadow-md p-6 sticky top-4">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ __('cities.products.filters') }}</h3>
-                    
+
                     <form method="GET" action="{{ route('public.cities.products', $city) }}" class="space-y-4">
                         <!-- Search -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('cities.products.search') }}</label>
-                            <input type="text" name="q" value="{{ request('q') }}" 
+                            <input type="text" name="q" value="{{ request('q') }}"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                                    placeholder="{{ __('cities.products.search_placeholder') }}">
                         </div>
@@ -109,10 +109,10 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('cities.products.price_range') }}</label>
                             <div class="grid grid-cols-2 gap-2">
-                                <input type="number" name="min_price" value="{{ request('min_price') }}" 
+                                <input type="number" name="min_price" value="{{ request('min_price') }}"
                                        class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                                        placeholder="{{ __('cities.products.min_price') }}">
-                                <input type="number" name="max_price" value="{{ request('max_price') }}" 
+                                <input type="number" name="max_price" value="{{ request('max_price') }}"
                                        class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                                        placeholder="{{ __('cities.products.max_price') }}">
                             </div>
@@ -170,12 +170,12 @@
                     </div>
                     <div class="flex items-center space-x-2 rtl:space-x-reverse">
                         <span class="text-sm text-gray-600 mr-3 rtl:ml-3 rtl:mr-0">{{ __('general.view_toggle.display') }}</span>
-                        <button id="grid-view" 
+                        <button id="grid-view"
                                 class="view-toggle-btn bg-primary-600 text-white p-2 rounded-lg transition-colors"
                                 onclick="switchView('grid')">
                             <i class="fas fa-th-large"></i>
                         </button>
-                        <button id="row-view" 
+                        <button id="row-view"
                                 class="view-toggle-btn bg-gray-200 text-gray-600 p-2 rounded-lg hover:bg-gray-300 transition-colors"
                                 onclick="switchView('row')">
                             <i class="fas fa-list"></i>
@@ -250,7 +250,7 @@ function switchView(viewType) {
     const productsRowView = document.getElementById('products-row');
     const gridBtn = document.getElementById('grid-view');
     const rowBtn = document.getElementById('row-view');
-    
+
     if (viewType === 'grid') {
         productsGridView.classList.remove('hidden');
         productsRowView.classList.add('hidden');
@@ -266,14 +266,14 @@ function switchView(viewType) {
         gridBtn.classList.remove('bg-primary-600', 'text-white');
         gridBtn.classList.add('bg-gray-200', 'text-gray-600');
     }
-    
+
     // Store user preference in localStorage
-    localStorage.setItem('cityProductsPreferredView', viewType);
+    localStorage.setItem('preferredView', viewType);
 }
 
 // Set initial view based on user preference
 document.addEventListener('DOMContentLoaded', function() {
-    const preferredView = localStorage.getItem('cityProductsPreferredView') || 'grid';
+    const preferredView = localStorage.getItem('preferredView') || 'grid';
     switchView(preferredView);
 });
 </script>

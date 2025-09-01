@@ -309,7 +309,7 @@
             </div>
 
             <!-- Pagination -->
-            <div class="mt-4">
+            <div class="pagination-container">
                 {{ $contracts->withQueryString()->links() }}
             </div>
         </div>

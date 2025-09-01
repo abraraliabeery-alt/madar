@@ -96,7 +96,7 @@
             </div>
 
             <!-- Pagination -->
-            <div class="mt-4">
+            <div class="pagination-container">
                 {{ $roles->links() }}
             </div>
         </div>
