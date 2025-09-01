@@ -618,6 +618,29 @@
 
     <!-- Main Content -->
     <main>
+        <!-- Global Validation Errors Display -->
+        <div id="global-validation-errors" class="hidden fixed top-20 left-1/2 transform -translate-x-1/2 z-50 max-w-md w-full">
+            <div class="bg-red-50 border border-red-200 rounded-md p-4 shadow-lg">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-exclamation-triangle text-red-400"></i>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-red-800" id="validation-error-title">
+                            {{ __('validation.errors.title') }}
+                        </h3>
+                        <div class="mt-2 text-sm text-red-700" id="validation-error-message">
+                        </div>
+                        <div class="mt-4">
+                            <button type="button" onclick="hideGlobalValidationErrors()" class="bg-red-50 text-red-700 hover:bg-red-100 px-3 py-2 rounded-md text-sm font-medium">
+                                {{ __('validation.errors.close') }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         @yield('content')
     </main>
 
@@ -729,6 +752,155 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Global Validation Error Handler -->
+    <script>
+        // Global validation error handling
+        window.showGlobalValidationErrors = function(errors) {
+            const container = document.getElementById('global-validation-errors');
+            const title = document.getElementById('validation-error-title');
+            const message = document.getElementById('validation-error-message');
+            
+            if (!container) return;
+            
+            // Clear previous errors
+            message.innerHTML = '';
+            
+            // Create error list
+            let errorHtml = '<ul class="list-disc list-inside space-y-1">';
+            if (typeof errors === 'string') {
+                errorHtml += `<li>${errors}</li>`;
+            } else if (Array.isArray(errors)) {
+                errors.forEach(error => {
+                    errorHtml += `<li>${error}</li>`;
+                });
+            } else if (typeof errors === 'object') {
+                Object.keys(errors).forEach(key => {
+                    if (Array.isArray(errors[key])) {
+                        errors[key].forEach(error => {
+                            errorHtml += `<li>${error}</li>`;
+                        });
+                    } else {
+                        errorHtml += `<li>${errors[key]}</li>`;
+                    }
+                });
+            }
+            errorHtml += '</ul>';
+            
+            message.innerHTML = errorHtml;
+            container.classList.remove('hidden');
+            
+            // Auto-hide after 10 seconds
+            setTimeout(() => {
+                hideGlobalValidationErrors();
+            }, 10000);
+        };
+
+        window.hideGlobalValidationErrors = function() {
+            const container = document.getElementById('global-validation-errors');
+            if (container) {
+                container.classList.add('hidden');
+            }
+        };
+
+        // Intercept form submissions to handle validation errors
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle Laravel validation errors from session
+            @if($errors->any())
+                showGlobalValidationErrors(@json($errors->all()));
+            @endif
+
+            // Intercept form submissions
+            document.addEventListener('submit', function(e) {
+                const form = e.target;
+                if (form.tagName === 'FORM') {
+                    // Store form data for potential resubmission
+                    form.dataset.submitting = 'true';
+                }
+            });
+
+            // Handle AJAX form submissions
+            document.addEventListener('ajax:error', function(e) {
+                const response = e.detail[0];
+                if (response && response.responseJSON && response.responseJSON.errors) {
+                    showGlobalValidationErrors(response.responseJSON.errors);
+                } else if (response && response.responseJSON && response.responseJSON.message) {
+                    showGlobalValidationErrors(response.responseJSON.message);
+                }
+            });
+
+            // Handle fetch API errors
+            window.addEventListener('unhandledrejection', function(e) {
+                if (e.reason && e.reason.errors) {
+                    showGlobalValidationErrors(e.reason.errors);
+                }
+            });
+        });
+
+        // Utility function to show success messages
+        window.showGlobalSuccessMessage = function(message) {
+            const container = document.getElementById('global-validation-errors');
+            const title = document.getElementById('validation-error-title');
+            const messageDiv = document.getElementById('validation-error-message');
+            
+            if (!container) return;
+            
+            // Change styling to success
+            container.querySelector('.bg-red-50').classList.remove('bg-red-50', 'border-red-200');
+            container.querySelector('.bg-red-50').classList.add('bg-green-50', 'border-green-200');
+            container.querySelector('.text-red-400').classList.remove('text-red-400');
+            container.querySelector('.text-red-400').classList.add('text-green-400');
+            container.querySelector('.fas.fa-exclamation-triangle').classList.remove('fa-exclamation-triangle');
+            container.querySelector('.fas').classList.add('fa-check-circle');
+            
+            title.classList.remove('text-red-800');
+            title.classList.add('text-green-800');
+            title.textContent = '{{ __("validation.success.title") }}';
+            
+            messageDiv.classList.remove('text-red-700');
+            messageDiv.classList.add('text-green-700');
+            messageDiv.innerHTML = `<p>${message}</p>`;
+            
+            container.classList.remove('hidden');
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                hideGlobalValidationErrors();
+            }, 5000);
+        };
+
+        // Utility function to show info messages
+        window.showGlobalInfoMessage = function(message) {
+            const container = document.getElementById('global-validation-errors');
+            const title = document.getElementById('validation-error-title');
+            const messageDiv = document.getElementById('validation-error-message');
+            
+            if (!container) return;
+            
+            // Change styling to info
+            container.querySelector('.bg-red-50').classList.remove('bg-red-50', 'border-red-200');
+            container.querySelector('.bg-red-50').classList.add('bg-blue-50', 'border-blue-200');
+            container.querySelector('.text-red-400').classList.remove('text-red-400');
+            container.querySelector('.text-red-400').classList.add('text-blue-400');
+            container.querySelector('.fas.fa-exclamation-triangle').classList.remove('fa-exclamation-triangle');
+            container.querySelector('.fas').classList.add('fa-info-circle');
+            
+            title.classList.remove('text-red-800');
+            title.classList.add('text-blue-800');
+            title.textContent = '{{ __("validation.info.title") }}';
+            
+            messageDiv.classList.remove('text-red-700');
+            messageDiv.classList.add('text-blue-700');
+            messageDiv.innerHTML = `<p>${message}</p>`;
+            
+            container.classList.remove('hidden');
+            
+            // Auto-hide after 7 seconds
+            setTimeout(() => {
+                hideGlobalValidationErrors();
+            }, 7000);
+        };
+    </script>
 
     @stack('scripts')
 </body>

@@ -116,11 +116,11 @@ body {
     flex-direction: column;
     box-shadow: var(--shadow-lg);
     border-left: 1px solid var(--border-color);
-    transform: translateX(100%);
+    transform: translateX(0);
 }
 
-.sidebar.show {
-    transform: translateX(0);
+.sidebar.hide {
+    transform: translateX(100%);
 }
 
 .sidebar-header {
@@ -194,22 +194,22 @@ body {
 
 /* المحتوى الرئيسي */
 .main-content {
-    margin-right: 0;
+    margin-right: var(--sidebar-width);
     padding: calc(var(--header-height) + 1.5rem) 1.5rem 1.5rem;
     min-height: 100vh;
     transition: var(--transition);
     background: var(--body-bg);
 }
 
-.main-content.sidebar-open {
-    margin-right: var(--sidebar-width);
+.main-content.sidebar-closed {
+    margin-right: 0;
 }
 
 /* تحسين الهيدر */
 .main-header {
     position: fixed;
     top: 1rem;
-    right: 1rem;
+    right: calc(var(--sidebar-width) + 1rem);
     left: 1rem;
     height: var(--header-height);
     background: var(--card-bg);
@@ -225,8 +225,8 @@ body {
     backdrop-filter: blur(8px);
 }
 
-.main-header.sidebar-open {
-    right: calc(var(--sidebar-width) + 1rem);
+.main-header.sidebar-closed {
+    right: 1rem;
 }
 
 .navbar-tools {
@@ -651,7 +651,7 @@ table.dataTable tbody tr:hover td {
         margin-right: 0;
     }
 
-    .main-content.sidebar-open {
+    .main-content.sidebar-closed {
         margin-right: 0;
     }
 
@@ -659,7 +659,7 @@ table.dataTable tbody tr:hover td {
         right: 1rem;
     }
 
-    .main-header.sidebar-open {
+    .main-header.sidebar-closed {
         right: 1rem;
     }
 

@@ -19,6 +19,7 @@ class ProductSeeder extends Seeder
     {
         $facilities = Facility::all();
         $categories = Category::all();
+        $cities = \App\Models\City::all();
         $facilityUsers = User::where('primary_role', 'facility')->get();
         
         // Get or create attributes that should be shown in product cards
@@ -180,6 +181,7 @@ class ProductSeeder extends Seeder
         foreach ($products as $index => $productData) {
             $facility = $facilities->get($index % $facilities->count());
             $facilityUser = $facilityUsers->get($index % $facilityUsers->count());
+            $city = $cities->get($index % $cities->count());
 
             // Extract translations and attributes from product data
             $translations = $productData['translations'] ?? [];
@@ -192,6 +194,7 @@ class ProductSeeder extends Seeder
                 'owner_user_id' => $facilityUser->id,
                 'seller_user_id' => $facilityUser->id,
                 'category_id' => $categories->random()->id,
+                'city_id' => $city->id,
                 'booking_number' => 'BK' . strtoupper(Str::random(8)),
                 'latitude' => 24.7136 + (rand(-10, 10) / 100),
                 'longitude' => 46.6753 + (rand(-10, 10) / 100),
@@ -218,27 +221,80 @@ class ProductSeeder extends Seeder
     private function getOrCreateAttributes()
     {
         $attributeTypes = [
-            'rooms' => 'fas fa-bed',
-            'bathrooms' => 'fas fa-bath',
-            'area' => 'fas fa-ruler-combined',
-            'floor' => 'fas fa-building',
-            'floors_count' => 'fas fa-layer-group',
-            'parking_spaces' => 'fas fa-car',
+            'rooms' => [
+                'icon' => 'fas fa-bed',
+                'translations' => [
+                    'ar' => ['name' => 'عدد الغرف', 'symbol' => 'غ'],
+                    'en' => ['name' => 'Number of Rooms', 'symbol' => 'rooms'],
+                ]
+            ],
+            'bathrooms' => [
+                'icon' => 'fas fa-bath',
+                'translations' => [
+                    'ar' => ['name' => 'عدد الحمامات', 'symbol' => 'ح'],
+                    'en' => ['name' => 'Number of Bathrooms', 'symbol' => 'bath'],
+                ]
+            ],
+            'area' => [
+                'icon' => 'fas fa-ruler-combined',
+                'translations' => [
+                    'ar' => ['name' => 'المساحة', 'symbol' => 'م²'],
+                    'en' => ['name' => 'Area', 'symbol' => 'm²'],
+                ]
+            ],
+            'floor' => [
+                'icon' => 'fas fa-building',
+                'translations' => [
+                    'ar' => ['name' => 'رقم الطابق', 'symbol' => 'ط'],
+                    'en' => ['name' => 'Floor Number', 'symbol' => 'floor'],
+                ]
+            ],
+            'floors_count' => [
+                'icon' => 'fas fa-layer-group',
+                'translations' => [
+                    'ar' => ['name' => 'عدد الطوابق', 'symbol' => 'طوابق'],
+                    'en' => ['name' => 'Number of Floors', 'symbol' => 'floors'],
+                ]
+            ],
+            'parking_spaces' => [
+                'icon' => 'fas fa-car',
+                'translations' => [
+                    'ar' => ['name' => 'مواقف السيارات', 'symbol' => 'موقف'],
+                    'en' => ['name' => 'Parking Spaces', 'symbol' => 'parking'],
+                ]
+            ],
         ];
 
         $attributes = [];
-        foreach ($attributeTypes as $type => $icon) {
+        foreach ($attributeTypes as $type => $config) {
             $attribute = \App\Models\Attribute::firstOrCreate(
                 ['type' => $type],
                 [
                     'type' => $type,
                     'required' => false,
                     'category_id' => null, // Global attribute
-                    'icon' => $icon,
+                    'icon' => $config['icon'],
                     'Symbol' => null,
                     'show_in_card' => true,
                 ]
             );
+
+            // Create translations for the attribute
+            foreach ($config['translations'] as $locale => $translationData) {
+                \App\Models\AttributeTranslation::firstOrCreate(
+                    [
+                        'attribute_id' => $attribute->id,
+                        'locale' => $locale,
+                    ],
+                    [
+                        'attribute_id' => $attribute->id,
+                        'locale' => $locale,
+                        'name' => $translationData['name'],
+                        'symbol' => $translationData['symbol'],
+                    ]
+                );
+            }
+
             $attributes[$type] = $attribute;
         }
 

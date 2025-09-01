@@ -28,7 +28,7 @@
                     </a>
                 </h3>
                 <div class="text-lg font-bold text-primary-600">
-                    {{ number_format($product->price) }} {{ __('general.currency.sar') }}
+                                            {{ number_format($product->price) }} {!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}
                 </div>
             </div>
             <p class="text-gray-600 text-sm mb-3">{{ $product->address ?? __('products.property_card.location_unknown') }}</p>
@@ -45,7 +45,7 @@
                         @if($attribute->Symbol)
                             {{ $attribute->Symbol }}
                         @else
-                            {{ $attribute->translations->first()->name ?? $attribute->type }}
+                            {{ $attribute->getTranslatedName() ?? $attribute->type }}
                         @endif
                     </span>
                 @endforeach

@@ -271,7 +271,7 @@
                                                     {{ $product->facility->name }}
                                                 </a>
                                             </td>
-                                            <td>{{ number_format($product->price, 2) }} ريال</td>
+                                            <td>{{ number_format($product->price, 2) }} {!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}</td>
                                             <td>
                                                 @if($product->is_active)
                                                     <span class="badge bg-success">نشط</span>
@@ -329,7 +329,7 @@
                                                 </a>
                                             </td>
                                             <td>{{ $booking->booking_date }}</td>
-                                            <td>{{ number_format($booking->total_amount, 2) }} ريال</td>
+                                            <td>{{ number_format($booking->total_amount, 2) }} {!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}</td>
                                             <td>
                                                 @if($booking->status)
                                                     <span class="badge bg-{{ $booking->status->color }}">

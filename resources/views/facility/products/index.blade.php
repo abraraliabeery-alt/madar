@@ -42,7 +42,7 @@
                         @foreach($categories as $category)
                             <option value="{{ $category->id }}" 
                                     {{ request('category_id') == $category->id ? 'selected' : '' }}>
-                                {{ $category->name }}
+                                {{ $category->getTranslatedName('ar') }}
                             </option>
                         @endforeach
                     </select>
@@ -131,7 +131,7 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                        {{ $product->category->name ?? __('facility.products.unspecified') }}
+                                        {{ $product->category->getTranslatedName('ar') ?? __('facility.products.unspecified') }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
@@ -207,7 +207,7 @@
                                     <div class="flex items-center justify-between mt-3">
                                         <div class="flex flex-wrap items-center gap-2">
                                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                                {{ $product->category->name ?? __('facility.products.unspecified') }}
+                                                {{ $product->category->getTranslatedName('ar') ?? __('facility.products.unspecified') }}
                                             </span>
                                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
                                                 {{ $product->status ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">

@@ -210,4 +210,26 @@ return [
         'permission' => 'الصلاحية',
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Global Validation Error Messages
+    |--------------------------------------------------------------------------
+    |
+    | These messages are used for the global validation error display system.
+    |
+    */
+
+    'errors' => [
+        'title' => 'خطأ في التحقق من صحة البيانات',
+        'close' => 'إغلاق',
+    ],
+
+    'success' => [
+        'title' => 'تم بنجاح',
+    ],
+
+    'info' => [
+        'title' => 'معلومات',
+    ],
+
 ];

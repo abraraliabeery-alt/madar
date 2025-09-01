@@ -56,8 +56,10 @@ return [
         'properties' => 'عقار',
         'view_facility' => 'عرض المنشأة',
         'view_properties' => 'عرض العقارات',
+        'view_details' => 'عرض التفاصيل',
         'location_unknown' => 'الموقع غير محدد',
         'no_description' => 'لا يوجد وصف متاح',
+        'no_category' => 'لا توجد فئة',
         'unverified' => 'غير موثق',
     ],
 
@@ -103,7 +105,7 @@ return [
         'featured_properties' => 'العقارات المميزة',
         'discover_properties' => 'اكتشف مجموعة عقاراتنا المتميزة',
         'properties_coming_soon' => 'العقارات قادمة قريباً',
-        'currency' => 'ريال',
+        'currency' => \App\Helpers\LanguageHelper::getSaudiRiyalSymbol(),
         'ready_to_start' => 'مستعد للبدء؟',
         'contact_us_today' => 'تواصل معنا اليوم ودع خبرائنا يساعدوك في العثور على العقار المثالي',
         'schedule_consultation' => 'جدولة استشارة',
@@ -231,7 +233,7 @@ return [
         'rooms' => 'غرف',
         'bathrooms' => 'حمامات',
         'area' => 'م²',
-        'currency' => 'ريال',
+        'currency' => \App\Helpers\LanguageHelper::getSaudiRiyalSymbol(),
         'view_details' => 'عرض التفاصيل',
     ],
 

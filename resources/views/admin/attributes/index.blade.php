@@ -82,13 +82,13 @@
                                     <td>
                                         <div class="d-flex align-items-center">
                                                                                     @if($attribute->icon)
-                                            <img src="{{ asset($attribute->icon) }}" alt="{{ $attribute->translations->first()->name ?? 'N/A' }}" class="me-2" style="width: 20px; height: 20px;">
+                                            <img src="{{ asset($attribute->icon) }}" alt="{{ $attribute->getTranslatedName() ?? 'N/A' }}" class="me-2" style="width: 20px; height: 20px;">
                                         @else
                                             <div class="avatar-placeholder me-2" style="width: 20px; height: 20px;">
                                                 <i class="fas fa-tag"></i>
                                             </div>
                                         @endif
-                                            <span>{{ $attribute->translations->first()->name ?? 'N/A' }}</span>
+                                            <span>{{ $attribute->getTranslatedName() ?? 'N/A' }}</span>
                                         </div>
                                     </td>
                                     <td>
@@ -134,7 +134,7 @@
                                                 data-bs-toggle="tooltip"
                                                 title="حذف"
                                                 data-attribute-id="{{ $attribute->id }}"
-                                                data-attribute-name="{{ $attribute->translations->first()->name ?? 'N/A' }}">
+                                                data-attribute-name="{{ $attribute->getTranslatedName() ?? 'N/A' }}">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                         
@@ -171,7 +171,7 @@
                                                     data-bs-toggle="tooltip"
                                                     title="حذف الخاصية"
                                                     data-attribute-id="{{ $attribute->id }}"
-                                                    data-attribute-name="{{ $attribute->translations->first()->name ?? 'N/A' }}">
+                                                    data-attribute-name="{{ $attribute->getTranslatedName() ?? 'N/A' }}">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </div>

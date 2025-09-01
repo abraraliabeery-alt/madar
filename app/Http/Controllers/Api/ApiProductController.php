@@ -10,6 +10,7 @@ use App\Models\Status;
 use App\Models\Feature;
 use App\Models\Attribute;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Session;
 
 class ApiProductController extends Controller
 {
@@ -57,7 +58,7 @@ class ApiProductController extends Controller
 
         // Search by keyword
         if ($request->has('q') && $request->q) {
-            $locale = app()->getLocale();
+            $locale = Session::get('locale', config('app.locale'));
             $query->where(function($q) use ($request, $locale) {
                 $q->whereHas('translations', function($translationQuery) use ($request, $locale) {
                     $translationQuery->where('locale', $locale)
@@ -97,7 +98,7 @@ class ApiProductController extends Controller
             ], 404);
         }
 
-        $product->load(['facility', 'category', 'statuses', 'features', 'attributes']);
+        $product->load(['facility', 'category', 'statuses', 'features', 'attributes.translations']);
 
         return response()->json([
             'success' => true,

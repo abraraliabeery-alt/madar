@@ -20,7 +20,7 @@ class UserSeeder extends Seeder
             [
                 'name' => 'مدير النظام',
                 'email' => 'admin@aqar.com',
-                'password' => Hash::make('password'),
+                'password' => Hash::make('admin@aqar.com'),
                 'primary_role' => 'admin',
                 'is_active' => true,
                 'email_verified_at' => now(),
@@ -39,7 +39,7 @@ class UserSeeder extends Seeder
             [
                 'name' => 'منشأة تجريبية',
                 'email' => 'facility@aqar.com',
-                'password' => Hash::make('password'),
+                'password' => Hash::make('facility@aqar.com'),
                 'primary_role' => 'facility',
                 'is_active' => true,
                 'email_verified_at' => now(),
@@ -58,7 +58,7 @@ class UserSeeder extends Seeder
             [
                 'name' => 'عميل تجريبي',
                 'email' => 'client@aqar.com',
-                'password' => Hash::make('password'),
+                'password' => Hash::make('client@aqar.com'),
                 'primary_role' => 'client',
                 'is_active' => true,
                 'email_verified_at' => now(),

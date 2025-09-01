@@ -126,7 +126,7 @@
                 :items="$products" 
                 type="products" 
                 :showPagination="true"
-                :showViewToggle="false"
+                :showViewToggle="true"
                 idPrefix="products"
             />
         @else

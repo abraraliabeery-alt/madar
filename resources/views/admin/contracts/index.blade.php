@@ -130,7 +130,7 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
                                     <h6 class="mb-0">إجمالي القيمة</h6>
-                                    <h3 class="mb-0">{{ number_format($contracts->sum('total_amount'), 2) }} ريال</h3>
+                                    <h3 class="mb-0">{{ number_format($contracts->sum('total_amount'), 2) }} {!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}</h3>
                                 </div>
                                 <div class="fs-1 d-none d-sm-block">
                                     <i class="fas fa-money-bill-wave"></i>
@@ -210,7 +210,7 @@
                             </td>
                             <td class="d-none d-md-table-cell">{{ $contract->start_date }}</td>
                             <td class="d-none d-lg-table-cell">{{ $contract->end_date }}</td>
-                            <td class="d-none d-md-table-cell">{{ number_format($contract->total_amount, 2) }} ريال</td>
+                                                            <td class="d-none d-md-table-cell">{{ number_format($contract->total_amount, 2) }} {!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}</td>
                             <td class="d-none d-md-table-cell">
                                 @if($contract->status)
                                     <span class="badge bg-{{ $contract->status->color }}">

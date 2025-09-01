@@ -37,7 +37,7 @@
                                             <label for="price" class="form-label">السعر <span class="text-danger">*</span></label>
                                             <div class="input-group">
                                                 <input type="number" step="0.01" class="form-control @error('price') is-invalid @enderror" id="price" name="price" value="{{ old('price', $product->price) }}" required>
-                                                <span class="input-group-text">ريال</span>
+                                                <span class="input-group-text">{!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}</span>
                                             </div>
                                             @error('price')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -67,7 +67,7 @@
                                                 <option value="">اختر الفئة</option>
                                                 @foreach($categories as $category)
                                                     <option value="{{ $category->id }}" {{ old('category_id', $product->category_id) == $category->id ? 'selected' : '' }}>
-                                                        {{ $category->name }}
+                                                        {{ $category->getTranslatedName('ar') }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -187,25 +187,7 @@
                             </div>
                         </div>
 
-                        <!-- Property Details -->
-                        <div class="card mt-4">
-                            <div class="card-header">
-                                <h6 class="mb-0">تفاصيل العقار</h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="parking_spaces" class="form-label">مواقف السيارات</label>
-                                            <input type="number" class="form-control @error('parking_spaces') is-invalid @enderror" id="parking_spaces" name="parking_spaces" value="{{ old('parking_spaces', $product->parking_spaces) }}">
-                                            @error('parking_spaces')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+
 
                         <!-- Attributes -->
                         <div class="card mt-4">
@@ -213,17 +195,8 @@
                                 <h6 class="mb-0">الخصائص</h6>
                             </div>
                             <div class="card-body">
-                                <div class="row">
-                                    @foreach($attributes as $attribute)
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="attribute_{{ $attribute->id }}" class="form-label">{{ $attribute->name }}</label>
-                                            <input type="text" class="form-control" id="attribute_{{ $attribute->id }}" name="attributes[{{ $attribute->id }}][value]" 
-                                                   value="{{ old('attributes.'.$attribute->id.'.value', $product->attributes->where('id', $attribute->id)->first() ? $product->attributes->where('id', $attribute->id)->first()->pivot->value : '') }}">
-                                            <input type="hidden" name="attributes[{{ $attribute->id }}][attribute_id]" value="{{ $attribute->id }}">
-                                        </div>
-                                    </div>
-                                    @endforeach
+                                <div id="attributes-container">
+                                    <p class="text-muted">اختر فئة أولاً لعرض الخصائص المتاحة</p>
                                 </div>
                             </div>
                         </div>
@@ -346,6 +319,74 @@
 <script>
 $(document).ready(function() {
     // Initialize any JavaScript functionality here
+    
+    // Load attributes based on selected category
+    $('#category_id').change(function() {
+        let categoryId = $(this).val();
+        if (categoryId) {
+            loadAttributesByCategory(categoryId);
+        } else {
+            $('#attributes-container').html('<p class="text-muted">اختر فئة أولاً لعرض الخصائص المتاحة</p>');
+        }
+    });
+
+    // Load attributes on page load if category is selected
+    let initialCategoryId = $('#category_id').val();
+    if (initialCategoryId) {
+        loadAttributesByCategory(initialCategoryId);
+    }
+
+    function loadAttributesByCategory(categoryId) {
+        $.ajax({
+            url: '/api/v1/attributes/by-category',
+            method: 'GET',
+            data: { category_id: categoryId },
+            success: function(response) {
+                if (response.success && response.data.length > 0) {
+                    let attributesHtml = '<div class="row">';
+                    response.data.forEach(function(attribute) {
+                        let requiredMark = attribute.required ? ' <span class="text-danger">*</span>' : '';
+                        let iconHtml = attribute.icon ? `<img src="${attribute.icon}" alt="icon" width="20" class="me-1">` : '';
+                        let currentValue = getCurrentAttributeValue(attribute.id);
+                        
+                        attributesHtml += `
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="attribute_${attribute.id}" class="form-label">
+                                        ${iconHtml}${attribute.name}${requiredMark}
+                                    </label>
+                                    <input type="text" class="form-control" 
+                                           id="attribute_${attribute.id}" 
+                                           name="attributes[${attribute.id}][value]" 
+                                           value="${currentValue}"
+                                           ${attribute.required ? 'required' : ''}>
+                                    <input type="hidden" name="attributes[${attribute.id}][attribute_id]" value="${attribute.id}">
+                                </div>
+                            </div>
+                        `;
+                    });
+                    attributesHtml += '</div>';
+                    $('#attributes-container').html(attributesHtml);
+                } else {
+                    $('#attributes-container').html('<p class="text-muted">لا توجد خصائص متاحة لهذه الفئة</p>');
+                }
+            },
+            error: function() {
+                $('#attributes-container').html('<p class="text-danger">حدث خطأ في تحميل الخصائص</p>');
+            }
+        });
+    }
+
+    function getCurrentAttributeValue(attributeId) {
+        // Get current value from product attributes or old input
+        let currentValue = $('input[name="attributes[' + attributeId + '][value]"]').val();
+        if (!currentValue) {
+            // Try to get from product's existing attributes
+            let productAttribute = @json($product->attributes->keyBy('id')->map(function($attr) { return $attr->pivot->value; }));
+            currentValue = productAttribute[attributeId] || '';
+        }
+        return currentValue;
+    }
     (function initMapPicker() {
         const mapEl = document.getElementById('mapPicker');
         if (!mapEl || typeof L === 'undefined') return;

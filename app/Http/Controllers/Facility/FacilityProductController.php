@@ -68,10 +68,9 @@ class FacilityProductController extends Controller
         $categories = Category::all();
         $statuses = Status::all();
         $features = Feature::all();
-        $attributes = Attribute::all();
         $cities = City::where('is_active', true)->orderBy('name')->get();
 
-        return view('facility.products.create', compact('categories', 'statuses', 'features', 'attributes', 'cities'));
+        return view('facility.products.create', compact('categories', 'statuses', 'features', 'cities'));
     }
 
     /**
@@ -161,7 +160,7 @@ class FacilityProductController extends Controller
                 ->with('error', 'غير مصرح لك بتعديل هذا المنتج');
         }
 
-        $product->load(['category', 'city', 'statuses', 'features', 'attributes']);
+                    $product->load(['category', 'city', 'statuses', 'features', 'attributes.translations']);
         $categories = Category::all();
         $statuses = Status::all();
         $features = Feature::all();
@@ -324,7 +323,7 @@ class FacilityProductController extends Controller
                 ->with('error', 'غير مصرح لك بعرض هذا المنتج');
         }
 
-        $product->load(['category', 'statuses', 'features', 'attributes']);
+        $product->load(['category', 'statuses', 'features', 'attributes.translations']);
 
         return view('facility.products.show', compact('product'));
     }

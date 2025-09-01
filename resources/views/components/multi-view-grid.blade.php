@@ -7,7 +7,7 @@
     'maxItems' => 6,
     'idPrefix' => 'items',
     'showPagination' => false,
-    'showViewToggle' => true
+    'showViewToggle' => false
 ])
 
 @php
@@ -78,7 +78,7 @@
                         <h3 class="font-medium text-gray-900 text-sm mb-1 line-clamp-1">{{ $item->title }}</h3>
                         <p class="text-xs text-gray-600 mb-2 line-clamp-2">{{ $item->description }}</p>
                         <div class="text-sm font-semibold text-primary-600 mb-2">
-                            {{ number_format($item->price) }} {{ __('general.currency.sar') }}
+                                                                {{ number_format($item->price) }} {!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}
                         </div>
                         <a href="{{ route('public.products.show', $item) }}" 
                            class="text-primary-600 hover:text-primary-700 text-xs font-medium">
@@ -318,7 +318,7 @@
                             <h3 class="font-medium text-gray-900 text-lg mb-2">{{ $item->title }}</h3>
                             <p class="text-sm text-gray-600 mb-3">{{ $item->description }}</p>
                             <div class="text-lg font-semibold text-primary-600 mb-3">
-                                {{ number_format($item->price) }} {{ __('general.currency.sar') }}
+                                {{ number_format($item->price) }} {!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}
                             </div>
                             <a href="{{ route('public.products.show', $item) }}" 
                                class="text-primary-600 hover:text-primary-700 font-medium">

@@ -42,7 +42,7 @@ class NewProductAdded extends Notification
             ->greeting('مرحباً ' . $notifiable->name)
             ->line('تم إضافة عقار جديد: ' . $this->product->name)
             ->line('الموقع: ' . $this->product->location)
-            ->line('السعر: ' . $this->product->price . ' ريال')
+                            ->line('السعر: ' . $this->product->price . ' ' . \App\Helpers\LanguageHelper::getSaudiRiyalSymbol())
             ->action('عرض العقار', url('/products/' . $this->product->id))
             ->line('اكتشف العقارات الجديدة على منصة عقار!');
     }

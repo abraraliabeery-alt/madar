@@ -29,6 +29,8 @@ return [
     
     'view_toggle' => [
         'display' => 'Display:',
+        'grid' => 'Grid View',
+        'row' => 'Row View',
         'small_grid' => 'Small Grid',
         'large_grid' => 'Large Grid',
         'list' => 'List View',
@@ -49,7 +51,7 @@ return [
     ],
     
     'currency' => [
-        'sar' => 'SAR',
+        'sar' => \App\Helpers\LanguageHelper::getSaudiRiyalSymbol(),
         'usd' => 'USD',
         'eur' => 'EUR',
     ],

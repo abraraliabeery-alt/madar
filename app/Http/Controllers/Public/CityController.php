@@ -14,10 +14,58 @@ class CityController extends Controller
     /**
      * Display cities index page
      */
-    public function index()
+    public function index(Request $request)
     {
-        $cities = City::active()->featured()->ordered()->get();
-        return view('public.cities.index', compact('cities'));
+        $query = City::active()->featured();
+
+        // Filter by category
+        if ($request->filled('category')) {
+            $categoryId = $request->category;
+            $query->whereHas('products', function($q) use ($categoryId) {
+                $q->where('category_id', $categoryId)
+                  ->where('is_active', true)
+                  ->where('is_verified', true);
+            });
+        }
+
+        // Filter by facility
+        if ($request->filled('facility')) {
+            $facilityId = $request->facility;
+            $query->whereHas('products', function($q) use ($facilityId) {
+                $q->where('facility_id', $facilityId)
+                  ->where('is_active', true)
+                  ->where('is_verified', true);
+            });
+        }
+
+        // Search by keyword
+        if ($request->filled('q')) {
+            $query->where(function($q) use ($request) {
+                $q->where('name', 'like', "%{$request->q}%")
+                  ->orWhere('description', 'like', "%{$request->q}%");
+            });
+        }
+
+        // Sort results
+        $sortBy = $request->get('sort_by', 'name');
+        $sortOrder = $request->get('sort_order', 'asc');
+        
+        switch ($sortBy) {
+            case 'created_at':
+                $query->orderBy('created_at', $sortOrder);
+                break;
+            default:
+                $query->orderBy('name', $sortOrder);
+                break;
+        }
+
+        $cities = $query->ordered()->get();
+        $categories = Category::where('is_active', true)->get();
+        $facilities = Facility::where('is_active', true)
+            ->where('is_verified', true)
+            ->get();
+        
+        return view('public.cities.index', compact('cities', 'categories', 'facilities'));
     }
 
     /**

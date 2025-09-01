@@ -211,7 +211,7 @@ class Product extends Model
     // Accessors
     public function getFormattedPriceAttribute()
     {
-        return number_format($this->price, 2) . ' ريال';
+        return number_format($this->price, 2) . ' ' . \App\Helpers\LanguageHelper::getSaudiRiyalSymbol();
     }
 
 
@@ -237,6 +237,7 @@ class Product extends Model
     public function getCardAttributesAttribute()
     {
         return $this->attributes()
+            ->with('translations')
             ->where('show_in_card', true)
             ->where(function($query) {
                 $query->where('category_id', $this->category_id)

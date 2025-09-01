@@ -84,7 +84,7 @@ class ProductController extends Controller
             abort(404);
         }
 
-        $product->load(['facility', 'category', 'statuses', 'features', 'attributes']);
+        $product->load(['facility', 'category', 'statuses', 'features', 'attributes.translations']);
 
         // هل المنتج في المفضلة للمستخدم الحالي؟
         $isFavorited = false;

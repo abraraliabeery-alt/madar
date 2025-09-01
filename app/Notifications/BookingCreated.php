@@ -44,7 +44,7 @@ class BookingCreated extends Notification
             ->greeting('مرحباً ' . $notifiable->name)
             ->line('تم إنشاء حجز جديد للعقار: ' . $this->booking->product->name)
             ->line('تاريخ الحجز: ' . $bookingDate)
-            ->line('المبلغ: ' . $this->booking->total_amount . ' ريال')
+                            ->line('المبلغ: ' . $this->booking->total_amount . ' ' . \App\Helpers\LanguageHelper::getSaudiRiyalSymbol())
             ->action('عرض التفاصيل', url('/bookings/' . $this->booking->id))
             ->line('شكراً لاستخدام منصة عقار!');
     }

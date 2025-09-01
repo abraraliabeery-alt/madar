@@ -30,6 +30,7 @@ use App\Http\Controllers\Api\ApiFacilityProductController;
 use App\Http\Controllers\Api\ApiFacilityBookingController;
 use App\Http\Controllers\Api\ApiFacilityProfileController;
 use App\Http\Controllers\Api\ApiTicketController;
+use App\Http\Controllers\Api\ApiAttributeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -80,6 +81,10 @@ Route::prefix('v1')->group(function () {
     // Public Feature Routes
     Route::get('/features', [ApiFeatureController::class, 'index']);
     Route::get('/features/{feature}', [ApiFeatureController::class, 'show']);
+
+    // Public Attribute Routes
+    Route::get('/attributes', [ApiAttributeController::class, 'index']);
+    Route::get('/attributes/by-category', [ApiAttributeController::class, 'getByCategory']);
 
     // Public Search Routes
     Route::get('/search', [ApiSearchController::class, 'globalSearch']);

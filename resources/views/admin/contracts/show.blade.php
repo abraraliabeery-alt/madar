@@ -107,15 +107,15 @@
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label class="form-label text-muted">المبلغ الإجمالي</label>
-                                    <p class="fs-5">{{ number_format($contract->total_amount, 2) }} ريال</p>
+                                    <p class="fs-5">{{ number_format($contract->total_amount, 2) }} {!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}</p>
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label class="form-label text-muted">الدفعة المقدمة</label>
-                                    <p class="fs-5">{{ number_format($contract->down_payment, 2) }} ريال</p>
+                                    <p class="fs-5">{{ number_format($contract->down_payment, 2) }} {!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}</p>
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label class="form-label text-muted">القسط الشهري</label>
-                                    <p class="fs-5">{{ number_format($contract->monthly_payment, 2) }} ريال</p>
+                                    <p class="fs-5">{{ number_format($contract->monthly_payment, 2) }} {!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}</p>
                                 </div>
                             </div>
                         </div>
@@ -174,7 +174,7 @@
                                 @endif
                                 <div>
                                     <h5 class="mb-1">{{ $contract->product->name }}</h5>
-                                    <p class="text-muted mb-0">{{ number_format($contract->product->price, 2) }} ريال</p>
+                                    <p class="text-muted mb-0">{{ number_format($contract->product->price, 2) }} {!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}</p>
                                 </div>
                             </div>
                             <div class="row">
@@ -212,7 +212,7 @@
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label text-muted">مبلغ القرض</label>
-                                    <p>{{ $contract->loan_amount ? number_format($contract->loan_amount, 2) . ' ريال' : '-' }}</p>
+                                    <p>{{ $contract->loan_amount ? number_format($contract->loan_amount, 2) . ' ' . \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() : '-' }}</p>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label text-muted">نسبة الفائدة</label>

@@ -190,7 +190,7 @@
                                             <h6 class="mb-0">{{ $product->title }}</h6>
                                         </td>
                                         <td>{{ $product->address ?? '-' }}</td>
-                                        <td>{{ $product->price ? number_format($product->price) . ' ريال' : '-' }}</td>
+                                        <td>{{ $product->price ? number_format($product->price) . ' ' . \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() : '-' }}</td>
                                         <td>{{ $product->created_at->format('Y-m-d') }}</td>
                                         <td>
                                             <a href="/admin/products/{{ $product->id }}/edit" class="btn btn-sm btn-primary">

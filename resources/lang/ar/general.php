@@ -30,6 +30,8 @@ return [
     
     'view_toggle' => [
         'display' => 'عرض:',
+        'grid' => 'عرض شبكة',
+        'row' => 'عرض صف',
         'small_grid' => 'شبكة صغيرة',
         'large_grid' => 'شبكة كبيرة',
         'list' => 'عرض قائمة',
@@ -50,7 +52,7 @@ return [
     ],
     
     'currency' => [
-        'sar' => 'ريال',
+        'sar' => \App\Helpers\LanguageHelper::getSaudiRiyalSymbol(),
         'usd' => 'دولار أمريكي',
         'eur' => 'يورو',
     ],

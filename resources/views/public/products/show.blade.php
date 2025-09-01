@@ -15,7 +15,7 @@
                     </p>
                     <div class="flex items-center space-x-6 space-x-reverse">
                         <div class="text-2xl font-bold">
-                            {{ number_format($product->price) }} ريال
+                            {{ number_format($product->price) }} {!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}
                         </div>
                         @if($product->is_featured)
                             <div class="bg-yellow-600 text-white px-3 py-1 rounded-full text-sm">
@@ -75,7 +75,7 @@
                                     @if($attribute->Symbol)
                                         {{ $attribute->Symbol }}
                                     @else
-                                        {{ $attribute->translations->first()->name ?? ucfirst($attribute->type) }}
+                                        {{ $attribute->getTranslatedName() ?? ucfirst($attribute->type) }}
                                     @endif
                                 </p>
                             </div>
@@ -109,8 +109,8 @@
                             @foreach($product->attributes as $attribute)
                                 <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                                     <span class="text-gray-600 font-medium">
-                                        @if($attribute->translations->first())
-                                            {{ $attribute->translations->first()->name }}
+                                        @if($attribute->getTranslatedName())
+                                            {{ $attribute->getTranslatedName() }}
                                         @else
                                             {{ ucfirst($attribute->type) }}
                                         @endif
@@ -216,7 +216,7 @@
                 <div class="bg-white rounded-lg shadow-md p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ __('products.show.price') }}</h3>
                     <div class="text-3xl font-bold text-primary-600 mb-4">
-                        {{ number_format($product->price) }} ريال
+                        {{ number_format($product->price) }} {!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}
                     </div>
                     <div class="space-y-3">
                         @if($product->facility)
@@ -265,8 +265,8 @@
                         @foreach($product->attributes as $attribute)
                             <div class="flex justify-between items-center">
                                 <span class="text-gray-600">
-                                    @if($attribute->translations->first())
-                                        {{ $attribute->translations->first()->name }}
+                                    @if($attribute->getTranslatedName())
+                                        {{ $attribute->getTranslatedName() }}
                                     @else
                                         {{ ucfirst($attribute->type) }}
                                     @endif

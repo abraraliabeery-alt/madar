@@ -198,6 +198,65 @@
             @endif
         }
 
+        /* Product Grid Component Styling for Facility Context */
+        .facility-product-grid .bg-white {
+            @if(($facility->layout_style ?? 'default') === 'minimal')
+                box-shadow: none !important;
+                border: 1px solid var(--border-color);
+                background: var(--surface-color);
+            @elseif(($facility->layout_style ?? 'default') === 'corporate')
+                border-radius: 0.25rem !important;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+                border: 1px solid var(--border-color);
+                background: var(--surface-color);
+            @elseif(($facility->layout_style ?? 'default') === 'classic')
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+                border: 1px solid var(--border-color);
+                background: var(--surface-color);
+            @elseif(($facility->layout_style ?? 'default') === 'elegant')
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+                border-radius: 1rem !important;
+                border: 1px solid var(--border-color);
+                background: var(--surface-color);
+            @elseif(($facility->layout_style ?? 'default') === 'bold')
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+                border-radius: 0.75rem !important;
+                border: 2px solid var(--primary-100);
+                background: var(--surface-color);
+            @endif
+        }
+
+        .facility-product-grid .bg-white:hover {
+            @if(($facility->enable_animations ?? true))
+                transform: translateY(-2px);
+            @endif
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+        }
+
+        .facility-product-grid .text-primary-600 {
+            color: var(--primary-color) !important;
+        }
+
+        .facility-product-grid .hover\:text-primary-600:hover {
+            color: var(--primary-color) !important;
+        }
+
+        .facility-product-grid .bg-primary-600 {
+            background-color: var(--primary-color) !important;
+        }
+
+        .facility-product-grid .text-gray-900 {
+            color: var(--heading-text-color) !important;
+        }
+
+        .facility-product-grid .text-gray-600 {
+            color: var(--muted-text-color) !important;
+        }
+
+        .facility-product-grid .text-gray-500 {
+            color: var(--secondary-text-color) !important;
+        }
+
         /* Card Design Classes */
         .facility-card, .stats-card, .contact-card, .action-card {
             @if(($facility->layout_style ?? 'default') === 'minimal')
@@ -654,50 +713,8 @@
                     </div>
 
                     @if($products->count() > 0)
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-                    @foreach($products->take(6) as $product)
-                        <div class="facility-card bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
-                            <div class="relative">
-                                    <img src="{{ $product->image ?? 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80' }}"
-                                     alt="{{ $product->title }}" class="w-full h-64 object-cover">
-                                <div class="absolute top-4 right-4 bg-primary-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                                    {{ number_format($product->price) }} {{ __('facilities.show.currency') }}
-                                </div>
-                            </div>
-                            <div class="p-6">
-                                <h3 class="text-xl font-bold text-heading mb-2">
-                                            <a href="{{ route('public.products.show', $product) }}" class="hover:text-primary transition-colors">
-                                                {{ $product->title }}
-                                            </a>
-                                        </h3>
-                                <p class="text-muted text-sm mb-4 flex items-center">
-                                    <i class="fas fa-map-marker-alt ml-2"></i>
-                                    {{ $product->address ?? __('facilities.facility_card.location_unknown') }}
-                                </p>
-
-                                <div class="flex items-center justify-between text-sm text-muted mb-4">
-                                    @foreach($product->card_attributes->take(3) as $attribute)
-                                        <span class="flex items-center">
-                                                    @if($attribute->icon)
-                                                        <i class="{{ $attribute->icon }} ml-1"></i>
-                                                    @else
-                                                        <i class="fas fa-info-circle ml-1"></i>
-                                                    @endif
-                                                    {{ $attribute->pivot->value }}
-                                                    @if($attribute->Symbol)
-                                                        {{ $attribute->Symbol }}
-                                                    @endif
-                                                </span>
-                                            @endforeach
-                                        </div>
-
-                                            <a href="{{ route('public.products.show', $product) }}"
-                                   class="w-full btn-primary text-white py-3 font-semibold text-center block">
-                                                {{ __('facilities.product.view_details') }}
-                                            </a>
-                                    </div>
-                                </div>
-                            @endforeach
+                        <div class="facility-product-grid">
+                            <x-product-grid :products="$products->take(6)" :columns="3" class="mb-12" />
                         </div>
 
                 <div class="text-center">
