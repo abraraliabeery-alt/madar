@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('roles', function (Blueprint $table) {
             $table->id();
-            $table->text('description')->nullable();
+            $table->string('name')->nullable();
             $table->boolean('is_active')->default(true);
             $table->boolean('is_primary')->default(false);
             $table->boolean('is_paid')->default(false);

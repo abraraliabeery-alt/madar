@@ -30,7 +30,7 @@
                             <td>
                                 <div class="d-flex align-items-center">
                                     <div>
-                                        <div class="fw-bold">{{ $role->name }}</div>
+                                        <div class="fw-bold">{{ $role->getTranslatedDisplayName() }}</div>
                                         <div class="small text-muted d-md-none">
                                             @if($role->description)
                                                 {{ Str::limit($role->description, 30) }}

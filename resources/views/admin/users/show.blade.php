@@ -33,7 +33,7 @@
 
                             <div class="mb-3">
                                 @foreach($user->roles as $role)
-                                    <span class="badge bg-primary fs-6">{{ $role->name }}</span>
+                                    <span class="badge bg-primary fs-6">{{ $role->getTranslatedDisplayName() }}</span>
                                 @endforeach
                             </div>
 

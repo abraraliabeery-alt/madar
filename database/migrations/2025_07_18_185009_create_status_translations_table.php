@@ -13,7 +13,13 @@ return new class extends Migration
     {
         Schema::create('status_translations', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('status_id');
+            $table->string('locale');
+            $table->string('name');
             $table->timestamps();
+            
+            $table->foreign('status_id')->references('id')->on('statuses')->onDelete('cascade');
+            $table->unique(['status_id', 'locale']);
         });
     }
 

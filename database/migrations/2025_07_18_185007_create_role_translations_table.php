@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('role_id');
             $table->string('locale');
-            $table->string('name');
             $table->string('display_name')->nullable();
             $table->text('description')->nullable();
             $table->timestamps();

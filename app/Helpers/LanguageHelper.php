@@ -330,6 +330,51 @@ class LanguageHelper
     }
 
     /**
+     * Get localized permission name
+     */
+    public static function getPermissionName($permission, $locale = null)
+    {
+        if (!$permission) {
+            return '';
+        }
+        
+        $locale = $locale ?: app()->getLocale();
+        
+        // Use the Permission model's translation method
+        return $permission->getTranslatedName($locale);
+    }
+
+    /**
+     * Get localized permission display name
+     */
+    public static function getPermissionDisplayName($permission, $locale = null)
+    {
+        if (!$permission) {
+            return '';
+        }
+        
+        $locale = $locale ?: app()->getLocale();
+        
+        // Use the Permission model's translation method
+        return $permission->getTranslatedDisplayName($locale);
+    }
+
+    /**
+     * Get localized permission description
+     */
+    public static function getPermissionDescription($permission, $locale = null)
+    {
+        if (!$permission) {
+            return '';
+        }
+        
+        $locale = $locale ?: app()->getLocale();
+        
+        // Use the Permission model's translation method
+        return $permission->getTranslatedDescription($locale);
+    }
+
+    /**
      * Get language switcher HTML
      */
     public static function getLanguageSwitcherHTML($class = '', $showFlags = true, $showNames = true, $dropdown = true)

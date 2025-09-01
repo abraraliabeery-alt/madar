@@ -76,7 +76,7 @@
                                         <option value="">اختر الدور</option>
                                         @foreach($roles as $role)
                                             <option value="{{ $role->id }}" {{ old('role_id', $user->roles->first()->id ?? '') == $role->id ? 'selected' : '' }}>
-                                                {{ $role->name }}
+                                                {{ $role->getTranslatedDisplayName() }}
                                             </option>
                                         @endforeach
                                     </select>

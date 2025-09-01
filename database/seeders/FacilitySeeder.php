@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Facility;
 use App\Models\User;
-use App\Models\Category;
+use App\Models\FacilityCategory;
 
 class FacilitySeeder extends Seeder
 {
@@ -14,7 +14,7 @@ class FacilitySeeder extends Seeder
      */
     public function run(): void
     {
-        $categories = Category::all();
+        $facilityCategories = FacilityCategory::all();
         $facilityUsers = User::where('primary_role', 'facility')->get();
 
         $facilities = [
@@ -72,7 +72,7 @@ class FacilitySeeder extends Seeder
             $facility = Facility::updateOrCreate(
                 ['name' => $facilityData['name']],
                 array_merge($facilityData, [
-                    'category_id' => $categories->random()->id,
+                    'facility_category_id' => $facilityCategories->random()->id,
                     'owner_user_id' => $facilityUsers->get($index % $facilityUsers->count())->id,
                 ])
             );

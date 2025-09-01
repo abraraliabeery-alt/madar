@@ -288,20 +288,30 @@ class PermissionSeeder extends Seeder
         ];
 
         foreach ($permissions as $permissionData) {
-            // Create permission
-            $permission = Permission::create([
-                'is_active' => true,
-                'guard_name' => 'web',
-            ]);
+            // Create permission if it doesn't exist
+            $permission = Permission::firstOrCreate(
+                ['name' => $permissionData['name']],
+                [
+                    'name' => $permissionData['name'],
+                    'is_active' => true,
+                    'guard_name' => 'web',
+                ]
+            );
 
-            // Create translations
+            // Create translations if they don't exist
             foreach ($permissionData['translations'] as $locale => $translationData) {
-                PermissionTranslation::create([
-                    'permission_id' => $permission->id,
-                    'locale' => $locale,
-                    'name' => $translationData['name'],
-                    'display_name' => $translationData['display_name'],
-                ]);
+                PermissionTranslation::firstOrCreate(
+                    [
+                        'permission_id' => $permission->id,
+                        'locale' => $locale,
+                    ],
+                    [
+                        'permission_id' => $permission->id,
+                        'locale' => $locale,
+                        'name' => $translationData['name'],
+                        'display_name' => $translationData['display_name'],
+                    ]
+                );
             }
         }
     }

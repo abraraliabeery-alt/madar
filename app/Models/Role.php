@@ -10,6 +10,7 @@ class Role extends Model
     use HasFactory;
 
     protected $fillable = [
+        'name',
         'is_primary',
         'is_paid',
         'price',
@@ -57,6 +58,12 @@ class Role extends Model
      */
     public function getTranslatedName($locale = null)
     {
+        // First try to get from direct name field
+        if ($this->name) {
+            return $this->name;
+        }
+        
+        // Fallback to translation
         $translation = $this->getTranslation($locale);
         return $translation ? $translation->name : '';
     }
@@ -77,6 +84,14 @@ class Role extends Model
     {
         $translation = $this->getTranslation($locale);
         return $translation ? $translation->description : '';
+    }
+
+    /**
+     * Scope to find role by name
+     */
+    public function scopeByName($query, $name)
+    {
+        return $query->where('name', $name);
     }
 
     // علاقات إضافية حسب الحاجة...

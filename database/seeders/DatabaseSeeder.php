@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             FeatureSeeder::class,
             StatusSeeder::class,
             UserSeeder::class,
+            FacilityCategorySeeder::class,
             FacilitySeeder::class,
             AttributeSeeder::class,
             AttributeCardSeeder::class,
@@ -28,7 +29,6 @@ class DatabaseSeeder extends Seeder
             NotificationSeeder::class,
             FavoriteSeeder::class,
             FaqSeeder::class,
-            FacilityCategorySeeder::class,
         ]);
     }
 }

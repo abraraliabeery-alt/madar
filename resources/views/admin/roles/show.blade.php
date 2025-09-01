@@ -4,7 +4,7 @@
 <div class="container-fluid">
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">تفاصيل الدور - {{ $role->name }}</h5>
+            <h5 class="mb-0">تفاصيل الدور - {{ $role->getTranslatedDisplayName() }}</h5>
             <div>
                 <a href="{{ route('admin.roles.edit', $role) }}" class="btn btn-warning">
                     <i class="fas fa-edit me-2"></i>تعديل
@@ -26,7 +26,7 @@
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label text-muted">الاسم</label>
-                                    <p class="fs-5">{{ $role->name }}</p>
+                                    <p class="fs-5">{{ $role->getTranslatedDisplayName() }}</p>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label text-muted">عدد المستخدمين</label>

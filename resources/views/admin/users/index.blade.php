@@ -17,7 +17,7 @@
                         <option value="">كل الأدوار</option>
                         @foreach($roles as $role)
                             <option value="{{ $role->id }}" {{ request('role_id') == $role->id ? 'selected' : '' }}>
-                                {{ $role->name }}
+                                {{ $role->getTranslatedDisplayName() }}
                             </option>
                         @endforeach
                     </select>
@@ -95,7 +95,7 @@
                             <td class="d-none d-md-table-cell">{{ $user->phone_number }}</td>
                             <td class="d-none d-lg-table-cell">
                                 @foreach($user->roles as $role)
-                                    <span class="badge bg-primary">{{ $role->name }}</span>
+                                    <span class="badge bg-primary">{{ $role->getTranslatedDisplayName() }}</span>
                                 @endforeach
                             </td>
                             <td class="d-none d-lg-table-cell">

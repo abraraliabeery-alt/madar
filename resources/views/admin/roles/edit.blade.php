@@ -4,7 +4,7 @@
 <div class="container-fluid">
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">تعديل الدور - {{ $role->name }}</h5>
+            <h5 class="mb-0">تعديل الدور - {{ $role->getTranslatedDisplayName() }}</h5>
             <a href="{{ route('admin.roles.index') }}" class="btn btn-secondary">
                 <i class="fas fa-arrow-right me-2"></i>رجوع
             </a>
