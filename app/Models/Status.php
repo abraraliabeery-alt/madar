@@ -38,6 +38,12 @@ class Status extends Model
         return $this->morphedByMany(Booking::class, 'statusable', 'statusables');
     }
 
+    // Translations relationship
+    public function translations()
+    {
+        return $this->hasMany(StatusTranslation::class);
+    }
+
     // Scopes
     public function scopeActive($query)
     {
@@ -58,5 +64,23 @@ class Status extends Model
     public function getIconClassAttribute()
     {
         return $this->icon ?: 'fas fa-circle';
+    }
+
+    /**
+     * Get translation for specific locale
+     */
+    public function getTranslation($locale = null)
+    {
+        $locale = $locale ?: app()->getLocale();
+        return $this->translations()->where('locale', $locale)->first();
+    }
+
+    /**
+     * Get translated name for specific locale
+     */
+    public function getTranslatedName($locale = null)
+    {
+        $translation = $this->getTranslation($locale);
+        return $translation ? $translation->name : ($this->display_name ?: $this->name);
     }
 }

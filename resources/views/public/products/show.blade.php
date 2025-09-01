@@ -53,7 +53,7 @@
                         <div class="flex flex-wrap gap-2 mb-6">
                             @foreach($product->statuses as $status)
                                 <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-{{ $status->color_class }}-100 text-{{ $status->color_class }}-800">
-                                    <i class="{{ $status->icon_class }} ml-1"></i>{{ $status->display_name ?? $status->name }}
+                                    <i class="{{ $status->icon_class }} ml-1"></i>{{ $status->getTranslatedName() }}
                                 </span>
                             @endforeach
                         </div>
