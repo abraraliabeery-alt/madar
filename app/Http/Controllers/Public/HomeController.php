@@ -25,7 +25,7 @@ class HomeController extends Controller
             ->take(8)
             ->get();
 
-        $featuredFacilities = Facility::with(['category'])
+        $featuredFacilities = Facility::with(['facilityCategory'])
             ->where('is_featured', true)
             ->where('is_active', true)
             ->latest()

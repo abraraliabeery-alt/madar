@@ -223,6 +223,7 @@
                             <p class="text-gray-700"><span class="font-semibold">{{ __('facility.form.address') }}:</span> {{ $facility->address }}</p>
                             <p class="text-gray-700"><span class="font-semibold">{{ __('facility.form.phone') }}:</span> {{ $facility->phone_number }}</p>
                             <p class="text-gray-700"><span class="font-semibold">{{ __('facility.form.email') }}:</span> {{ $facility->email }}</p>
+                            <p class="text-gray-700"><span class="font-semibold">{{ __('facility.form.facility_category') }}:</span> {{ $facility->facilityCategory ? $facility->facilityCategory->name : __('facility.dashboard.no_category') }}</p>
                         </div>
                     </div>
                     <div class="text-left md:text-right">

@@ -25,13 +25,13 @@ class FacilityController extends Controller
         }
 
         // في حالة المنشآت المتعددة، عرض قائمة المنشآت
-        $query = Facility::with(['category', 'owner'])
+        $query = Facility::with(['facilityCategory', 'owner'])
             ->where('is_active', true)
             ->where('is_verified', true);
 
         // فلترة حسب الفئة
         if ($request->has('category_id') && $request->category_id) {
-            $query->where('category_id', $request->category_id);
+            $query->where('facility_category_id', $request->category_id);
         }
 
         // فلترة حسب التقييم
@@ -101,7 +101,7 @@ class FacilityController extends Controller
             abort(404);
         }
 
-        $facility->load(['category', 'owner']);
+        $facility->load(['facilityCategory', 'owner']);
 
         // منتجات المنشأة
         $products = $facility->products()
@@ -112,9 +112,9 @@ class FacilityController extends Controller
             ->get();
 
         // المنشآت المشابهة
-        $similarFacilities = Facility::with(['category'])
+        $similarFacilities = Facility::with(['facilityCategory'])
             ->where('id', '!=', $facility->id)
-            ->where('category_id', $facility->category_id)
+            ->where('facility_category_id', $facility->facility_category_id)
             ->where('is_active', true)
             ->where('is_verified', true)
             ->take(4)
@@ -202,7 +202,7 @@ class FacilityController extends Controller
             }
         }
 
-        $facilities = Facility::with(['category', 'owner'])
+        $facilities = Facility::with(['facilityCategory', 'owner'])
             ->where('is_active', true)
             ->where('is_verified', true)
             ->where('is_featured', true)
@@ -221,7 +221,7 @@ class FacilityController extends Controller
             'q' => 'required|string|min:2',
         ]);
 
-        $query = Facility::with(['category', 'owner'])
+        $query = Facility::with(['facilityCategory', 'owner'])
             ->where('is_active', true)
             ->where('is_verified', true)
             ->where(function ($q) use ($request) {
@@ -241,7 +241,7 @@ class FacilityController extends Controller
      */
     public function map()
     {
-        $facilities = Facility::with(['category'])
+        $facilities = Facility::with(['facilityCategory'])
             ->where('is_active', true)
             ->where('is_verified', true)
             ->whereNotNull('latitude')

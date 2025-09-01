@@ -9,7 +9,7 @@
 
     <!-- SEO Meta Tags -->
     <meta name="description" content="{{ $facility->description ?? 'Premium real estate facility offering quality properties and professional services.' }}">
-    <meta name="keywords" content="real estate, properties, {{ $facility->name }}, {{ $facility->category->name ?? 'facility' }}">
+    <meta name="keywords" content="real estate, properties, {{ $facility->name }}, {{ $facility->facilityCategory->name ?? 'facility' }}">
     <meta name="author" content="{{ $facility->name }}">
 
     <!-- Open Graph / Facebook -->
@@ -819,7 +819,7 @@
                                 {{ __('facilities.show.book_appointment') }}
                             </a>
                             <a href="{{ route('public.facilities.quote.form', $facility) }}"
-                               class="btn-primary w-full border-2 border-primary-600 text-primary py-4 font-bold text-lg text-center block hover:bg-primary-600 hover:text-white transition-colors">
+                               class="btn-primary w-full border-2 border-primary-600 text-white py-4 font-bold text-lg text-center block hover:bg-primary-600 hover:text-white transition-colors">
                                 <i class="fas fa-calculator ml-2"></i>
                                 {{ __('facilities.show.get_quote') }}
                             </a>
@@ -845,7 +845,7 @@
                                              alt="{{ $similar->name }}" class="w-12 h-12 rounded-xl object-cover mr-4">
                                     <div>
                                             <h4 class="font-semibold text-heading">{{ $similar->name }}</h4>
-                                        <p class="text-sm text-muted">{{ $similar->category->name ?? '' }}</p>
+                                        <p class="text-sm text-muted">{{ $similar->facilityCategory->name ?? '' }}</p>
                                     </div>
                                 </a>
                             @endforeach

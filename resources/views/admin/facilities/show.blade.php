@@ -98,7 +98,7 @@
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label text-muted">الفئة</label>
                                     <p class="fs-5">
-                                        <span class="badge bg-info">{{ $facility->category->name }}</span>
+                                        <span class="badge bg-info">{{ $facility->facilityCategory->name }}</span>
                                     </p>
                                 </div>
                                 <div class="col-md-6 mb-3">

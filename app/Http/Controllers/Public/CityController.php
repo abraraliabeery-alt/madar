@@ -119,7 +119,7 @@ class CityController extends Controller
             abort(404);
         }
 
-        $query = Facility::with(['owner', 'category'])
+        $query = Facility::with(['owner', 'facilityCategory'])
             ->where('city_id', $city->id)
             ->where('is_active', true)
             ->where('is_verified', true);

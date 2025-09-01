@@ -18,11 +18,11 @@ class AdminFacilityController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Facility::with(['owner', 'category']);
+                    $query = Facility::with(['owner', 'facilityCategory']);
 
         // فلترة حسب الفئة
         if ($request->has('category_id') && $request->category_id) {
-            $query->where('category_id', $request->category_id);
+            $query->where('facility_category_id', $request->category_id);
         }
 
         // البحث
@@ -49,10 +49,10 @@ class AdminFacilityController extends Controller
         $owners = User::whereHas('roles', function ($q) {
             $q->where('name', 'facility_owner');
         })->get();
-        $categories = Category::all();
+        $facilityCategories = \App\Models\FacilityCategory::all();
         $statuses = Status::all();
 
-        return view('admin.facilities.create', compact('owners', 'categories', 'statuses'));
+        return view('admin.facilities.create', compact('owners', 'facilityCategories', 'statuses'));
     }
 
     /**
@@ -68,7 +68,7 @@ class AdminFacilityController extends Controller
             'email' => 'required|email',
             'website' => 'nullable|url',
             'owner_user_id' => 'required|exists:users,id',
-            'category_id' => 'required|exists:categories,id',
+            'facility_category_id' => 'required|exists:facility_categories,id',
             'status_id' => 'required|exists:statuses,id',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -115,14 +115,14 @@ class AdminFacilityController extends Controller
      */
     public function edit(Facility $facility)
     {
-        $facility->load(['owner', 'category', 'statuses']);
+        $facility->load(['owner', 'facilityCategory', 'statuses']);
         $owners = User::whereHas('roles', function ($q) {
             $q->where('name', 'facility_owner');
         })->get();
-        $categories = Category::all();
+        $facilityCategories = \App\Models\FacilityCategory::all();
         $statuses = Status::all();
 
-        return view('admin.facilities.edit', compact('facility', 'owners', 'categories', 'statuses'));
+        return view('admin.facilities.edit', compact('facility', 'owners', 'facilityCategories', 'statuses'));
     }
 
     /**
@@ -138,7 +138,7 @@ class AdminFacilityController extends Controller
             'email' => 'required|email',
             'website' => 'nullable|url',
             'owner_user_id' => 'required|exists:users,id',
-            'category_id' => 'required|exists:categories,id',
+            'facility_category_id' => 'required|exists:facility_categories,id',
             'status_id' => 'required|exists:statuses,id',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',

@@ -130,7 +130,7 @@ class SearchController extends Controller
      */
     public function facilities(Request $request)
     {
-        $query = Facility::with(['category', 'owner'])
+        $query = Facility::with(['facilityCategory', 'owner'])
             ->where('is_active', true)
             ->where('is_verified', true);
 

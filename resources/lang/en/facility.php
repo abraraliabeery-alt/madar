@@ -15,7 +15,9 @@ return [
     'form' => [
         'name' => 'Facility Name',
         'category' => 'Category',
+        'facility_category' => 'Facility Category',
         'select_category' => 'Select Category',
+        'select_facility_category' => 'Select Facility Category',
         'description' => 'Facility Description',
         'address' => 'Address',
         'phone' => 'Phone Number',
@@ -67,6 +69,7 @@ return [
         'deleted_product' => 'Deleted Product',
         'edit_facility' => 'Edit Facility',
         'manage_products' => 'Manage Products',
+        'no_category' => 'No Category',
     ],
 
     // Products Management

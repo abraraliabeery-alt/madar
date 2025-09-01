@@ -70,7 +70,7 @@ class FacilityController extends Controller
             'phone_number' => 'required|string',
             'email' => 'required|email',
             'website' => 'nullable|url',
-            'category_id' => 'required|exists:categories,id',
+            'facility_category_id' => 'required|exists:facility_categories,id',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'latitude' => 'nullable|numeric',

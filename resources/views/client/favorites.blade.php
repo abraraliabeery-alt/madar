@@ -163,10 +163,10 @@
                                     </form>
                                 </div>
 
-                                @if($facility->category)
+                                @if($facility->facilityCategory)
                                     <p class="text-sm text-gray-600 mb-2">
                                         <i class="fas fa-tag text-gray-400 ml-1"></i>
-                                        {{ $facility->category->name }}
+                                        {{ $facility->facilityCategory->name }}
                                     </p>
                                 @endif
 

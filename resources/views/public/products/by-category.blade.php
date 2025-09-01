@@ -8,9 +8,9 @@
     <div class="bg-gradient-to-r from-primary-600 to-primary-800 text-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
             <div class="text-center">
-                                    <h1 class="text-4xl md:text-5xl font-bold mb-6">{{ __('products.by_category.title', ['category' => categoryName($category)]) }}</h1>
+                                    <h1 class="text-4xl md:text-5xl font-bold mb-6">{{ __('products.by_category.title', ['category' => App\Helpers\LanguageHelper::getCategoryName($category)]) }}</h1>
                     <p class="text-xl text-primary-100 max-w-3xl mx-auto">
-                        {{ __('products.by_category.subtitle', ['category' => categoryName($category)]) }}
+                        {{ __('products.by_category.subtitle', ['category' => App\Helpers\LanguageHelper::getCategoryName($category)]) }}
                     </p>
             </div>
         </div>
@@ -42,12 +42,12 @@
         <div class="flex justify-end items-center mb-8">
             <div class="flex items-center space-x-2 rtl:space-x-reverse">
                 <span class="text-sm text-gray-600 mr-3 rtl:ml-3 rtl:mr-0">{{ __('general.view_toggle.display') }}</span>
-                <button id="grid-view" 
+                <button id="grid-view"
                         class="view-toggle-btn bg-primary-600 text-white p-2 rounded-lg transition-colors"
                         onclick="switchView('grid')">
                     <i class="fas fa-th-large"></i>
                 </button>
-                <button id="row-view" 
+                <button id="row-view"
                         class="view-toggle-btn bg-gray-200 text-gray-600 p-2 rounded-lg hover:bg-gray-300 transition-colors"
                         onclick="switchView('row')">
                     <i class="fas fa-list"></i>
@@ -188,7 +188,7 @@
                 <div class="bg-white rounded-lg shadow-md p-8">
                     <i class="fas fa-home text-4xl text-gray-400 mb-4"></i>
                     <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ __('products.by_category.no_properties') }}</h3>
-                                                <p class="text-gray-600 mb-6">{{ __('products.by_category.no_properties_message', ['category' => @categoryName($category)]) }}</p>
+                                                <p class="text-gray-600 mb-6">{{ __('products.by_category.no_properties_message', ['category' => App\Helpers\LanguageHelper::getCategoryName($category)]) }}</p>
                     <a href="{{ route('public.products.index') }}" class="btn-primary text-white px-6 py-2 rounded-lg font-medium">
                         {{ __('products.by_category.view_all_properties') }}
                     </a>
@@ -202,7 +202,7 @@
         <div class="bg-white py-16">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-12">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-4">{{ __('products.by_category.category_description', ['category' => @categoryName($category)]) }}</h2>
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">{{ __('products.by_category.category_description', ['category' => App\Helpers\LanguageHelper::getCategoryName($category)]) }}</h2>
                     <p class="text-lg text-gray-600 max-w-3xl mx-auto">
                         @categoryDescription($category)
                     </p>
@@ -255,7 +255,7 @@ function switchView(viewType) {
     const productsRowView = document.getElementById('products-row');
     const gridBtn = document.getElementById('grid-view');
     const rowBtn = document.getElementById('row-view');
-    
+
     if (viewType === 'grid') {
         productsGridView.classList.remove('hidden');
         productsRowView.classList.add('hidden');
@@ -271,7 +271,7 @@ function switchView(viewType) {
         gridBtn.classList.remove('bg-primary-600', 'text-white');
         gridBtn.classList.add('bg-gray-200', 'text-gray-600');
     }
-    
+
     // Store user preference in localStorage
     localStorage.setItem('productsByCategoryPreferredView', viewType);
 }

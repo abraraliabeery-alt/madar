@@ -30,7 +30,7 @@ class Facility extends Model
         'rating',
         'rating_count',
         'products_count',
-        'category_id',
+        'facility_category_id',
         'city_id',
         'owner_user_id',
         // Customization fields
@@ -75,9 +75,9 @@ class Facility extends Model
     ];
 
     // العلاقات
-    public function category()
+    public function facilityCategory()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(FacilityCategory::class);
     }
 
     public function city()

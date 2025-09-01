@@ -16,13 +16,13 @@ class ApiFacilityController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Facility::with(['category', 'owner'])
+        $query = Facility::with(['facilityCategory', 'owner'])
             ->where('is_active', true)
             ->where('is_verified', true);
 
         // فلترة حسب الفئة
         if ($request->has('category_id') && $request->category_id) {
-            $query->where('category_id', $request->category_id);
+            $query->where('facility_category_id', $request->category_id);
         }
 
         // فلترة حسب التقييم
@@ -92,7 +92,7 @@ class ApiFacilityController extends Controller
             ], 404);
         }
 
-        $facility->load(['category', 'owner', 'products']);
+        $facility->load(['facilityCategory', 'owner', 'products']);
 
         return response()->json([
             'success' => true,
@@ -106,7 +106,7 @@ class ApiFacilityController extends Controller
      */
     public function featured()
     {
-        $facilities = Facility::with(['category', 'owner'])
+        $facilities = Facility::with(['facilityCategory', 'owner'])
             ->where('is_active', true)
             ->where('is_verified', true)
             ->where('is_featured', true)
@@ -232,7 +232,7 @@ class ApiFacilityController extends Controller
             ], 422);
         }
 
-        $query = Facility::with(['category', 'owner'])
+        $query = Facility::with(['facilityCategory', 'owner'])
             ->where('is_active', true)
             ->where('is_verified', true)
             ->where(function ($q) use ($request) {
@@ -243,7 +243,7 @@ class ApiFacilityController extends Controller
 
         // تطبيق الفلاتر الإضافية
         if ($request->category_id) {
-            $query->where('category_id', $request->category_id);
+            $query->where('facility_category_id', $request->category_id);
         }
         if ($request->min_rating) {
             $query->where('rating', '>=', $request->min_rating);

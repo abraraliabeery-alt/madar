@@ -76,7 +76,7 @@
                                 </a>
                             </td>
                             <td>
-                                <span class="badge bg-info">{{ $facility->category->name }}</span>
+                                <span class="badge bg-info">{{ $facility->facilityCategory->name }}</span>
                             </td>
                             <td>{{ Str::limit($facility->address, 30) }}</td>
                             <td>

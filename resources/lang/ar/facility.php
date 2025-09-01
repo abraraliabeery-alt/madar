@@ -15,7 +15,9 @@ return [
     'form' => [
         'name' => 'اسم المنشأة',
         'category' => 'الفئة',
+        'facility_category' => 'فئة المنشأة',
         'select_category' => 'اختر الفئة',
+        'select_facility_category' => 'اختر فئة المنشأة',
         'description' => 'وصف المنشأة',
         'address' => 'العنوان',
         'phone' => 'رقم الهاتف',
@@ -67,6 +69,7 @@ return [
         'deleted_product' => 'منتج محذوف',
         'edit_facility' => 'تعديل المنشأة',
         'manage_products' => 'إدارة المنتجات',
+        'no_category' => 'لا توجد فئة',
     ],
 
     // Products Management
