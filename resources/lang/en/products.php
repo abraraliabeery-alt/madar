@@ -133,6 +133,9 @@ return [
         'view_facility' => 'View Facility',
         'map_location' => 'Map Location',
         'open_in_google_maps' => 'Open in Google Maps',
+        'contact_info' => 'Contact Information',
+        'not_specified' => 'Not Specified',
+        'all_attributes' => 'All Attributes',
     ],
     
     'search' => [

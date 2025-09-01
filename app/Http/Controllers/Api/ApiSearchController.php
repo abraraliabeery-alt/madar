@@ -153,10 +153,6 @@ class ApiSearchController extends Controller
             $query->where('area', '<=', $request->max_area);
         }
 
-        if ($request->has('property_type')) {
-            $query->where('property_type', $request->property_type);
-        }
-
         // Location search
         if ($request->has('latitude') && $request->has('longitude') && $request->has('radius')) {
             $lat = $request->latitude;

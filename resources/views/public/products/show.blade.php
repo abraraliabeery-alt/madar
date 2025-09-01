@@ -258,7 +258,7 @@
                     <div class="space-y-4">
                         <div class="flex justify-between items-center">
                             <span class="text-gray-600">{{ __('products.show.type') }}</span>
-                            <span class="font-semibold text-gray-900">{{ $product->property_type ?? __('products.show.not_specified') }}</span>
+                            <span class="font-semibold text-gray-900">{{ $product->category ? $product->category->getTranslatedName() : __('products.show.not_specified') }}</span>
                         </div>
                         
                         <!-- Dynamic Attributes -->

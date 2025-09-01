@@ -65,11 +65,6 @@ class CityController extends Controller
             $query->where('price', '<=', $request->max_price);
         }
 
-        // Filter by property type
-        if ($request->filled('property_type')) {
-            $query->where('property_type', $request->property_type);
-        }
-
         // Filter by rooms
         if ($request->filled('rooms')) {
             $query->where('rooms', $request->rooms);

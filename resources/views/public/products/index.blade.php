@@ -40,15 +40,15 @@
                         </select>
                     </div>
                     <div>
-                        <label for="property_type" class="block text-sm font-medium text-gray-700 mb-2">{{ __('products.search.property_type') }}</label>
-                        <select name="property_type" id="property_type"
+                        <label for="category_id" class="block text-sm font-medium text-gray-700 mb-2">{{ __('products.search.category') }}</label>
+                        <select name="category_id" id="category_id"
                                 class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
-                            <option value="">{{ __('products.search.all_types') }}</option>
-                            <option value="شقة" {{ request('property_type') == 'شقة' ? 'selected' : '' }}>{{ __('products.search.apartment') }}</option>
-                            <option value="فيلا" {{ request('property_type') == 'فيلا' ? 'selected' : '' }}>{{ __('products.search.villa') }}</option>
-                            <option value="مكتب" {{ request('property_type') == 'مكتب' ? 'selected' : '' }}>{{ __('products.search.office') }}</option>
-                            <option value="محل تجاري" {{ request('property_type') == 'محل تجاري' ? 'selected' : '' }}>{{ __('products.search.commercial_shop') }}</option>
-                            <option value="استوديو" {{ request('property_type') == 'استوديو' ? 'selected' : '' }}>{{ __('products.search.studio') }}</option>
+                            <option value="">{{ __('products.search.all_categories') }}</option>
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
+                                    {{ $category->getTranslatedName() }}
+                                </option>
+                            @endforeach
                         </select>
                     </div>
                     <div>
@@ -117,120 +117,14 @@
             <!-- Grid View -->
             <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 @foreach($products as $product)
-                    <div class="bg-white rounded-lg shadow-md overflow-hidden card-hover">
-                        <div class="relative">
-                            <img src="{{ $product->image_url }}"
-                                 alt="{{ $product->title }}" class="w-full h-48 object-cover">
-                            @if($product->is_featured)
-                                <div class="absolute top-2 right-2 bg-primary-600 text-white px-2 py-1 rounded text-xs font-medium">
-                                    {{ __('products.property_card.featured') }}
-                                </div>
-                            @endif
-                            @if($product->property_type)
-                                <div class="absolute top-2 left-2 bg-white text-gray-800 px-2 py-1 rounded text-xs font-medium">
-                                    {{ $product->property_type }}
-                                </div>
-                            @endif
-                        </div>
-                        <div class="p-4">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-2">
-                                <a href="{{ route('public.products.show', $product) }}" class="hover:text-primary-600 transition-colors">
-                                    {{ $product->title }}
-                                </a>
-                            </h3>
-                            <p class="text-gray-600 text-sm mb-3">{{ $product->address ?? __('products.property_card.location_unknown') }}</p>
-
-                            <div class="flex items-center justify-between text-sm text-gray-500 mb-3">
-                                @foreach($product->card_attributes as $attribute)
-                                    <span>
-                                        @if($attribute->icon)
-                                            <i class="{{ $attribute->icon }} ml-1"></i>
-                                        @else
-                                            <i class="fas fa-info-circle ml-1"></i>
-                                        @endif
-                                        {{ $attribute->pivot->value }}
-                                        @if($attribute->Symbol)
-                                            {{ $attribute->Symbol }}
-                                        @else
-                                            {{ $attribute->translations->first()->name ?? $attribute->type }}
-                                        @endif
-                                    </span>
-                                @endforeach
-                            </div>
-
-                            <div class="flex items-center justify-between">
-                                <div class="text-lg font-bold text-primary-600">
-                                    {{ number_format($product->price) }} ريال
-                                </div>
-                                <a href="{{ route('public.products.show', $product) }}"
-                                   class="text-primary-600 hover:text-primary-700 text-sm font-medium">
-                                    {{ __('products.property_card.view_details') }}
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+                    <x-product-card-grid :product="$product" />
                 @endforeach
             </div>
 
             <!-- Row View (Hidden by default) -->
             <div id="products-row" class="hidden space-y-4">
                 @foreach($products as $product)
-                    <div class="bg-white rounded-lg shadow-md overflow-hidden card-hover">
-                        <div class="flex">
-                            <div class="relative w-48 h-32 bg-gray-100 flex-shrink-0">
-                                <img src="{{ $product->image_url }}"
-                                     alt="{{ $product->title }}" class="w-full h-full object-cover">
-                                @if($product->is_featured)
-                                    <div class="absolute top-2 right-2 bg-primary-600 text-white px-2 py-1 rounded text-xs font-medium">
-                                        {{ __('products.property_card.featured') }}
-                                    </div>
-                                @endif
-                                @if($product->property_type)
-                                    <div class="absolute top-2 left-2 bg-white text-gray-800 px-2 py-1 rounded text-xs font-medium">
-                                        {{ $product->property_type }}
-                                    </div>
-                                @endif
-                            </div>
-                            <div class="flex-1 p-4">
-                                <div class="flex justify-between items-start mb-3">
-                                    <h3 class="text-lg font-semibold text-gray-900">
-                                        <a href="{{ route('public.products.show', $product) }}" class="hover:text-primary-600 transition-colors">
-                                            {{ $product->title }}
-                                        </a>
-                                    </h3>
-                                    <div class="text-lg font-bold text-primary-600">
-                                        {{ number_format($product->price) }} ريال
-                                    </div>
-                                </div>
-                                <p class="text-gray-600 text-sm mb-3">{{ $product->address ?? __('products.property_card.location_unknown') }}</p>
-
-                                <div class="flex items-center justify-between text-sm text-gray-500 mb-3">
-                                    @foreach($product->card_attributes as $attribute)
-                                        <span>
-                                            @if($attribute->icon)
-                                                <i class="{{ $attribute->icon }} ml-1"></i>
-                                            @else
-                                                <i class="fas fa-info-circle ml-1"></i>
-                                            @endif
-                                            {{ $attribute->pivot->value }}
-                                            @if($attribute->Symbol)
-                                                {{ $attribute->Symbol }}
-                                            @else
-                                                {{ $attribute->translations->first()->name ?? $attribute->type }}
-                                            @endif
-                                        </span>
-                                    @endforeach
-                                </div>
-
-                                <div class="flex justify-end">
-                                    <a href="{{ route('public.products.show', $product) }}"
-                                       class="text-primary-600 hover:text-primary-700 text-sm font-medium">
-                                        {{ __('products.property_card.view_details') }}
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <x-product-card-row :product="$product" />
                 @endforeach
             </div>
 

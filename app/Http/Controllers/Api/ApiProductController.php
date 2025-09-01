@@ -41,11 +41,6 @@ class ApiProductController extends Controller
             $query->where('price', '<=', $request->max_price);
         }
 
-        // Filter by property type
-        if ($request->has('property_type')) {
-            $query->where('property_type', $request->property_type);
-        }
-
         // Filter by rooms
         if ($request->has('rooms')) {
             $query->where('rooms', $request->rooms);

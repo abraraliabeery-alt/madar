@@ -818,19 +818,28 @@
         // تبديل القائمة الجانبية
         $('#sidebarToggle').on('click', function() {
             $('.sidebar').addClass('show');
+            $('.main-content').addClass('sidebar-open');
+            $('.main-header').addClass('sidebar-open');
             $('body').addClass('sidebar-open');
+            localStorage.setItem('adminSidebarOpen', 'true');
         });
 
         $('#sidebarClose').on('click', function() {
             $('.sidebar').removeClass('show');
+            $('.main-content').removeClass('sidebar-open');
+            $('.main-header').removeClass('sidebar-open');
             $('body').removeClass('sidebar-open');
+            localStorage.setItem('adminSidebarOpen', 'false');
         });
 
         // إغلاق القائمة عند النقر خارجها على الموبايل
         $(document).on('click', function(e) {
             if ($('body').hasClass('sidebar-open') && !$(e.target).closest('.sidebar').length && !$(e.target).closest('#sidebarToggle').length) {
                 $('.sidebar').removeClass('show');
+                $('.main-content').removeClass('sidebar-open');
+                $('.main-header').removeClass('sidebar-open');
                 $('body').removeClass('sidebar-open');
+                localStorage.setItem('adminSidebarOpen', 'false');
             }
         });
 
@@ -859,8 +868,20 @@
             }
         }
 
+        // استعادة حالة القائمة الجانبية عند تحميل الصفحة
+        function restoreSidebarState() {
+            const savedSidebarState = localStorage.getItem('adminSidebarOpen');
+            if (savedSidebarState === 'true') {
+                $('.sidebar').addClass('show');
+                $('.main-content').addClass('sidebar-open');
+                $('.main-header').addClass('sidebar-open');
+                $('body').addClass('sidebar-open');
+            }
+        }
+
         // استدعاء الدالة عند تحميل الصفحة
         restoreDarkMode();
+        restoreSidebarState();
 
         // تحميل الإشعارات
         function loadNotifications() {

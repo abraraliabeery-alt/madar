@@ -55,155 +55,13 @@
         </div>
 
         <!-- Grid View -->
-        <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            @foreach($featuredProducts->take(6) as $product)
-            <div class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
-                <!-- Product Image -->
-                <div class="relative h-48 bg-gray-100">
-                    @if($product->image)
-                        <img src="{{ asset('storage/' . $product->image) }}" 
-                             alt="{{ $product->title }}" 
-                             class="w-full h-full object-cover">
-                    @else
-                        <div class="w-full h-full flex items-center justify-center">
-                            <i class="fas fa-home text-4xl text-gray-400"></i>
-                        </div>
-                    @endif
-                    
-                    <!-- Status Badges -->
-                    @if($product->is_featured)
-                        <span class="absolute top-2 right-2 bg-yellow-500 text-white text-xs px-2 py-1 rounded">{{ __('general.status.featured') }}</span>
-                    @endif
-                    @if($product->is_verified)
-                        <span class="absolute top-2 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded">{{ __('general.status.verified') }}</span>
-                    @endif
-                </div>
-                
-                <!-- Product Info -->
-                <div class="p-4">
-                    <h3 class="font-medium text-gray-900 mb-3 line-clamp-2">{{ $product->title }}</h3>
-                    
-                    <!-- Key Details -->
-                    @if($product->card_attributes && $product->card_attributes->count() > 0)
-                        <div class="flex flex-wrap items-center gap-2 text-sm text-gray-600 mb-4">
-                            @foreach($product->card_attributes as $attribute)
-                                <span class="inline-flex items-center bg-gray-50 border border-gray-200 px-3 py-1.5 rounded-lg">
-                                    @if($attribute->icon)
-                                        <i class="{{ $attribute->icon }} ml-1 text-primary-600 text-xs"></i>
-                                    @else
-                                        <i class="fas fa-info-circle ml-1 text-primary-600 text-xs"></i>
-                                    @endif
-                                    <span class="font-medium text-gray-700">{{ $attribute->pivot->value }}</span>
-                                    @if($attribute->Symbol)
-                                        <span class="text-primary-600 font-semibold">{{ $attribute->Symbol }}</span>
-                                    @else
-                                        <span class="text-gray-500 text-xs">{{ $attribute->translations->first()->name ?? $attribute->type }}</span>
-                                    @endif
-                                </span>
-                            @endforeach
-                        </div>
-                    @endif
-                    
-                    <!-- Location -->
-                    @if($product->city)
-                        <div class="text-sm text-gray-500 mb-4">
-                            <i class="fas fa-map-marker-alt ml-1 text-primary-500"></i>
-                            <span class="font-medium">@cityName($product->city)</span>
-                        </div>
-                    @endif
-                    
-                    <!-- Price and Action -->
-                    <div class="flex justify-between items-center">
-                        @if($product->price)
-                            <span class="text-xl font-bold text-primary-600">{{ number_format($product->price) }} {{ __('general.currency.sar') }}</span>
-                        @else
-                            <span class="text-gray-500">{{ __('general.status.price_on_request') }}</span>
-                        @endif
-                        <a href="{{ route('public.products.show', $product->id) }}" 
-                           class="text-primary-600 hover:text-primary-700 font-medium">
-                            {{ __('general.actions.view_details') }}
-                        </a>
-                    </div>
-                </div>
-            </div>
-            @endforeach
+        <div id="products-grid">
+            <x-product-grid :products="$featuredProducts->take(6)" :columns="3" />
         </div>
 
         <!-- Row View (Hidden by default) -->
-        <div id="products-row" class="hidden space-y-4">
-            @foreach($featuredProducts->take(6) as $product)
-            <div class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
-                <div class="flex">
-                    <!-- Product Image -->
-                    <div class="relative w-48 h-32 bg-gray-100 flex-shrink-0">
-                        @if($product->image)
-                            <img src="{{ asset('storage/' . $product->image) }}" 
-                                 alt="{{ $product->title }}" 
-                                 class="w-full h-full object-cover">
-                        @else
-                            <div class="w-full h-full flex items-center justify-center">
-                                <i class="fas fa-home text-2xl text-gray-400"></i>
-                            </div>
-                        @endif
-                        
-                        <!-- Status Badges -->
-                        @if($product->is_featured)
-                            <span class="absolute top-2 right-2 bg-yellow-500 text-white text-xs px-2 py-1 rounded">{{ __('general.status.featured') }}</span>
-                        @endif
-                        @if($product->is_verified)
-                            <span class="absolute top-2 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded">{{ __('general.status.verified') }}</span>
-                        @endif
-                    </div>
-                    
-                    <!-- Product Info -->
-                    <div class="flex-1 p-4">
-                        <div class="flex justify-between items-start mb-3">
-                            <h3 class="font-medium text-gray-900 text-lg">{{ $product->title }}</h3>
-                            @if($product->price)
-                                <span class="text-xl font-bold text-primary-600">{{ number_format($product->price) }} {{ __('general.currency.sar') }}</span>
-                            @else
-                                <span class="text-gray-500">{{ __('general.status.price_on_request') }}</span>
-                            @endif
-                        </div>
-                        
-                        <!-- Key Details -->
-                        @if($product->card_attributes && $product->card_attributes->count() > 0)
-                            <div class="flex flex-wrap items-center gap-3 text-sm text-gray-600 mb-4">
-                                @foreach($product->card_attributes as $attribute)
-                                    <span class="inline-flex items-center bg-gray-50 border border-gray-200 px-3 py-1.5 rounded-lg">
-                                        @if($attribute->icon)
-                                            <i class="{{ $attribute->icon }} ml-1 text-primary-600 text-xs"></i>
-                                        @else
-                                            <i class="fas fa-info-circle ml-1 text-primary-600 text-xs"></i>
-                                        @endif
-                                        <span class="font-medium text-gray-700">{{ $attribute->pivot->value }}</span>
-                                        @if($attribute->Symbol)
-                                            <span class="text-primary-600 font-semibold">{{ $attribute->Symbol }}</span>
-                                        @else
-                                            <span class="text-gray-500 text-xs">{{ $attribute->translations->first()->name ?? $attribute->type }}</span>
-                                        @endif
-                                    </span>
-                                @endforeach
-                            </div>
-                        @endif
-                        
-                        <!-- Location and Action -->
-                        <div class="flex justify-between items-center">
-                            @if($product->city)
-                                <div class="text-sm text-gray-500">
-                                    <i class="fas fa-map-marker-alt ml-1 text-primary-500"></i>
-                                    <span class="font-medium">@cityName($product->city)</span>
-                                </div>
-                            @endif
-                            <a href="{{ route('public.products.show', $product->id) }}" 
-                               class="text-primary-600 hover:text-primary-700 font-medium">
-                                {{ __('general.actions.view_details') }}
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            @endforeach
+        <div id="products-row" class="hidden">
+            <x-product-grid :products="$featuredProducts->take(6)" :columns="1" />
         </div>
         
         <div class="text-center mt-8">
@@ -241,10 +99,10 @@
                 <div class="p-4">
                     <h3 class="font-medium text-gray-900 mb-2">@cityName($city)</h3>
                     <p class="text-sm text-gray-600 mb-3 line-clamp-2">@cityDescription($city)</p>
-                                            <a href="{{ route('public.products.index', ['city' => $city->id]) }}" 
-                           class="text-primary-600 hover:text-primary-700 font-medium">
-                            {{ __('general.actions.browse_properties') }}
-                        </a>
+                    <a href="{{ route('public.products.index', ['city' => $city->id]) }}" 
+                       class="text-primary-600 hover:text-primary-700 font-medium">
+                        {{ __('general.actions.browse_properties') }}
+                    </a>
                 </div>
             </div>
             @endforeach
@@ -305,7 +163,7 @@
                 @else
                     <i class="fas fa-building text-4xl text-primary-600 mb-4"></i>
                 @endif
-                <h3 class="font-medium text-gray-900 mb-2">{{ $category->display_name ?? categoryName($category) }}</h3>
+                <h3 class="font-medium text-gray-900 mb-2">{{ $category->display_name ?? App\Helpers\LanguageHelper::getCategoryName($category) }}</h3>
                 <p class="text-sm text-gray-600 mb-3 line-clamp-2">@categoryDescription($category)</p>
                 <div class="text-sm text-gray-500 mb-4">{{ $category->products_count }} {{ __('general.status.property') }}</div>
                 <a href="{{ route('public.products.by-category', $category->id) }}" 
@@ -329,7 +187,7 @@
                         @endif
                     </div>
                     <div class="flex-1 p-4">
-                        <h3 class="font-medium text-gray-900 text-lg mb-2">{{ $category->display_name ?? categoryName($category) }}</h3>
+                        <h3 class="font-medium text-gray-900 text-lg mb-2">{{ $category->display_name ?? App\Helpers\LanguageHelper::getCategoryName($category) }}</h3>
                         <p class="text-sm text-gray-600 mb-3">@categoryDescription($category)</p>
                         <div class="text-sm text-gray-500 mb-4">{{ $category->products_count }} {{ __('general.status.property') }}</div>
                         <a href="{{ route('public.products.by-category', $category->id) }}" 

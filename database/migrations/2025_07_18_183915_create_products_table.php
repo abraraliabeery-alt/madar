@@ -34,7 +34,6 @@ return new class extends Migration
             $table->decimal('longitude', 10, 7)->nullable();
             $table->string('google_maps_url')->nullable();
             $table->unsignedBigInteger('facility_id')->nullable();
-            $table->string('property_type')->nullable();
             $table->unsignedBigInteger('owner_user_id')->nullable();
             $table->unsignedBigInteger('seller_user_id')->nullable();
             $table->unsignedBigInteger('category_id')->nullable();

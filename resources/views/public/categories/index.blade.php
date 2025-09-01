@@ -26,7 +26,7 @@
                 <i class="fas fa-building text-4xl text-primary-600 mb-4"></i>
             @endif
             
-            <h3 class="font-medium text-gray-900 mb-2">{{ $category->display_name ?? categoryName($category) }}</h3>
+            <h3 class="font-medium text-gray-900 mb-2">{{ $category->display_name ?? App\Helpers\LanguageHelper::getCategoryName($category) }}</h3>
             <p class="text-sm text-gray-600 mb-3 line-clamp-2">@categoryDescription($category)</p>
             
             <div class="text-sm text-gray-500 mb-4">

@@ -218,7 +218,7 @@
                             @foreach($categories as $category)
                                 <a href="{{ route('public.products.by-category', $category->id) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary-600">
                                     <div class="flex justify-between items-center">
-                                        <span>@if($category->display_name){{ $category->display_name }}@else@categoryName($category)@endif</span>
+                                        <span>@if($category->display_name){{ $category->display_name }}@else{{ App\Helpers\LanguageHelper::getCategoryName($category) }}@endif</span>
                                         <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">{{ $category->products_count }}</span>
                                     </div>
                                 </a>

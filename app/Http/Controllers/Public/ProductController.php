@@ -44,13 +44,6 @@ class ProductController extends Controller
             $query->where('price', '<=', $request->max_price);
         }
 
-        // Filter by property type
-        if ($request->filled('property_type')) {
-            $query->where('property_type', $request->property_type);
-        }
-
-
-
         // Search by keyword
         if ($request->filled('q')) {
             $locale = app()->getLocale();

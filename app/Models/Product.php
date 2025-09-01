@@ -25,7 +25,6 @@ class Product extends Model
         'longitude',
         'google_maps_url',
         'facility_id',
-        'property_type',
         'owner_user_id',
         'seller_user_id',
         'category_id',

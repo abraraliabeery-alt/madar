@@ -134,6 +134,7 @@ return [
         'open_in_google_maps' => 'افتح في خرائط جوجل',
         'contact_info' => 'معلومات الاتصال',
         'not_specified' => 'غير محدد',
+        'all_attributes' => 'جميع الخصائص',
     ],
     
     'search' => [

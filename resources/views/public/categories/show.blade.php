@@ -4,7 +4,7 @@
 <meta name="language" content="{{ app()->getLocale() }}">
 <meta name="language-alternate" content="{{ app()->getLocale() === 'ar' ? 'en' : 'ar' }}">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{{ $category->display_name ?? categoryName($category) }} - {{ config('app.name') }}</title>
+<title>{{ $category->display_name ?? App\Helpers\LanguageHelper::getCategoryName($category) }} - {{ config('app.name') }}</title>
 <meta name="description" content="@categoryDescription($category)">
 @endsection
 
@@ -18,7 +18,7 @@
             <i class="fas fa-building text-6xl text-primary-600 mb-6"></i>
         @endif
         
-        <h1 class="text-3xl font-bold text-gray-900 mb-4">{{ $category->display_name ?? categoryName($category) }}</h1>
+        <h1 class="text-3xl font-bold text-gray-900 mb-4">{{ $category->display_name ?? App\Helpers\LanguageHelper::getCategoryName($category) }}</h1>
         <p class="text-lg text-gray-600 mb-6">@categoryDescription($category)</p>
         
         <div class="text-sm text-gray-500">
@@ -39,7 +39,7 @@
                     <i class="fas fa-building text-3xl text-primary-600 mb-3"></i>
                 @endif
                 
-                <h3 class="font-medium text-gray-900 mb-2">{{ $subcategory->display_name ?? categoryName($subcategory) }}</h3>
+                <h3 class="font-medium text-gray-900 mb-2">{{ $subcategory->display_name ?? App\Helpers\LanguageHelper::getCategoryName($subcategory) }}</h3>
                 <p class="text-sm text-gray-600 mb-3">@categoryDescription($subcategory)</p>
                 
                 <div class="text-sm text-gray-500 mb-3">
@@ -138,7 +138,7 @@
         <span class="mx-2">/</span>
         <a href="{{ route('public.categories.index') }}" class="hover:text-primary-600">{{ __('general.categories.title') }}</a>
         <span class="mx-2">/</span>
-        <span class="text-gray-900">{{ $category->display_name ?? categoryName($category) }}</span>
+        <span class="text-gray-900">{{ $category->display_name ?? App\Helpers\LanguageHelper::getCategoryName($category) }}</span>
     </div>
 </div>
 @endsection
