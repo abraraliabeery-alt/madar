@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Feature;
+use App\Models\FeatureTranslation;
 
 class FeatureSeeder extends Seeder
 {
@@ -14,92 +15,186 @@ class FeatureSeeder extends Seeder
     {
         $features = [
             [
-                'name' => 'مكيف',
-                'display_name' => 'مكيف هواء',
-                'description' => 'مكيف هواء مركزي أو منفصل',
                 'icon' => 'fas fa-snowflake',
+                'description' => 'مكيف هواء مركزي أو منفصل',
                 'is_active' => true,
                 'order' => 1,
+                'translations' => [
+                    'ar' => [
+                        'name' => 'مكيف هواء',
+                        'description' => 'مكيف هواء مركزي أو منفصل',
+                    ],
+                    'en' => [
+                        'name' => 'Air Conditioning',
+                        'description' => 'Central or split air conditioning',
+                    ],
+                ],
             ],
             [
-                'name' => 'مطبخ',
-                'display_name' => 'مطبخ مجهز',
-                'description' => 'مطبخ كامل التجهيز',
                 'icon' => 'fas fa-utensils',
+                'description' => 'مطبخ كامل التجهيز',
                 'is_active' => true,
                 'order' => 2,
+                'translations' => [
+                    'ar' => [
+                        'name' => 'مطبخ مجهز',
+                        'description' => 'مطبخ كامل التجهيز',
+                    ],
+                    'en' => [
+                        'name' => 'Equipped Kitchen',
+                        'description' => 'Fully equipped kitchen',
+                    ],
+                ],
             ],
             [
-                'name' => 'مصعد',
-                'display_name' => 'مصعد',
-                'description' => 'مصعد للعمارة',
                 'icon' => 'fas fa-elevator',
+                'description' => 'مصعد للعمارة',
                 'is_active' => true,
                 'order' => 3,
+                'translations' => [
+                    'ar' => [
+                        'name' => 'مصعد',
+                        'description' => 'مصعد للعمارة',
+                    ],
+                    'en' => [
+                        'name' => 'Elevator',
+                        'description' => 'Building elevator',
+                    ],
+                ],
             ],
             [
-                'name' => 'موقف سيارات',
-                'display_name' => 'موقف سيارات',
-                'description' => 'موقف سيارات خاص',
                 'icon' => 'fas fa-car',
+                'description' => 'موقف سيارات خاص',
                 'is_active' => true,
                 'order' => 4,
+                'translations' => [
+                    'ar' => [
+                        'name' => 'موقف سيارات',
+                        'description' => 'موقف سيارات خاص',
+                    ],
+                    'en' => [
+                        'name' => 'Parking',
+                        'description' => 'Private parking space',
+                    ],
+                ],
             ],
             [
-                'name' => 'حديقة',
-                'display_name' => 'حديقة',
-                'description' => 'حديقة خاصة',
                 'icon' => 'fas fa-tree',
+                'description' => 'حديقة خاصة',
                 'is_active' => true,
                 'order' => 5,
+                'translations' => [
+                    'ar' => [
+                        'name' => 'حديقة',
+                        'description' => 'حديقة خاصة',
+                    ],
+                    'en' => [
+                        'name' => 'Garden',
+                        'description' => 'Private garden',
+                    ],
+                ],
             ],
             [
-                'name' => 'مسبح',
-                'display_name' => 'مسبح',
-                'description' => 'مسبح خاص',
                 'icon' => 'fas fa-swimming-pool',
+                'description' => 'مسبح خاص',
                 'is_active' => true,
                 'order' => 6,
+                'translations' => [
+                    'ar' => [
+                        'name' => 'مسبح',
+                        'description' => 'مسبح خاص',
+                    ],
+                    'en' => [
+                        'name' => 'Swimming Pool',
+                        'description' => 'Private swimming pool',
+                    ],
+                ],
             ],
             [
-                'name' => 'صالة رياضية',
-                'display_name' => 'صالة رياضية',
-                'description' => 'صالة رياضية مجهزة',
                 'icon' => 'fas fa-dumbbell',
+                'description' => 'صالة رياضية مجهزة',
                 'is_active' => true,
                 'order' => 7,
+                'translations' => [
+                    'ar' => [
+                        'name' => 'صالة رياضية',
+                        'description' => 'صالة رياضية مجهزة',
+                    ],
+                    'en' => [
+                        'name' => 'Gym',
+                        'description' => 'Equipped gym',
+                    ],
+                ],
             ],
             [
-                'name' => 'أمن',
-                'display_name' => 'خدمات أمنية',
-                'description' => 'حراسة أمنية 24/7',
                 'icon' => 'fas fa-shield-alt',
+                'description' => 'حراسة أمنية 24/7',
                 'is_active' => true,
                 'order' => 8,
+                'translations' => [
+                    'ar' => [
+                        'name' => 'خدمات أمنية',
+                        'description' => 'حراسة أمنية 24/7',
+                    ],
+                    'en' => [
+                        'name' => 'Security',
+                        'description' => '24/7 security service',
+                    ],
+                ],
             ],
             [
-                'name' => 'إنترنت',
-                'display_name' => 'إنترنت مجاني',
-                'description' => 'اتصال إنترنت مجاني',
                 'icon' => 'fas fa-wifi',
+                'description' => 'اتصال إنترنت مجاني',
                 'is_active' => true,
                 'order' => 9,
+                'translations' => [
+                    'ar' => [
+                        'name' => 'إنترنت مجاني',
+                        'description' => 'اتصال إنترنت مجاني',
+                    ],
+                    'en' => [
+                        'name' => 'Free Internet',
+                        'description' => 'Free internet connection',
+                    ],
+                ],
             ],
             [
-                'name' => 'غسالة',
-                'display_name' => 'غسالة ملابس',
-                'description' => 'غسالة ملابس في الوحدة',
                 'icon' => 'fas fa-tshirt',
+                'description' => 'غسالة ملابس في الوحدة',
                 'is_active' => true,
                 'order' => 10,
+                'translations' => [
+                    'ar' => [
+                        'name' => 'غسالة ملابس',
+                        'description' => 'غسالة ملابس في الوحدة',
+                    ],
+                    'en' => [
+                        'name' => 'Washing Machine',
+                        'description' => 'Washing machine in unit',
+                    ],
+                ],
             ],
         ];
 
-        foreach ($features as $feature) {
-            Feature::updateOrCreate(
-                ['name' => $feature['name']],
-                $feature
+        foreach ($features as $featureData) {
+            $translations = $featureData['translations'];
+            unset($featureData['translations']);
+            
+            $feature = Feature::updateOrCreate(
+                ['icon' => $featureData['icon']],
+                $featureData
             );
+
+            // Create translations
+            foreach ($translations as $locale => $translationData) {
+                FeatureTranslation::updateOrCreate(
+                    [
+                        'feature_id' => $feature->id,
+                        'locale' => $locale,
+                    ],
+                    $translationData
+                );
+            }
         }
     }
 }

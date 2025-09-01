@@ -137,7 +137,7 @@
                             @foreach($product->features as $feature)
                                 <div class="flex items-center">
                                     <i class="fas fa-check text-green-500 ml-3"></i>
-                                    <span class="text-gray-700">{{ $feature->name }}</span>
+                                    <span class="text-gray-700">{{ $feature->getTranslatedName() }}</span>
                                 </div>
                             @endforeach
                         </div>

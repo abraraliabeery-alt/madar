@@ -13,7 +13,19 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
+            $table->string('address')->nullable();
             $table->boolean('is_active')->default(true);
+            $table->boolean('is_featured')->default(false);
+            $table->boolean('is_verified')->default(false);
+            $table->integer('views_count')->default(0);
+            $table->decimal('rating', 3, 2)->default(0);
+            $table->integer('rating_count')->default(0);
+            $table->string('booking_number')->unique()->nullable();
+            $table->date('available_from')->nullable();
+            $table->date('available_to')->nullable();
+            $table->string('contact_phone')->nullable();
+            $table->string('contact_email')->nullable();
+            $table->text('additional_info')->nullable();
             $table->decimal('price', 12, 2)->nullable();
             $table->string('image')->nullable();
             $table->string('video')->nullable();
@@ -28,6 +40,11 @@ return new class extends Migration
             $table->unsignedBigInteger('category_id')->nullable();
             $table->softDeletes();
             $table->timestamps();
+
+            $table->foreign('facility_id')->references('id')->on('facilities')->onDelete('set null');
+            $table->foreign('owner_user_id')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('seller_user_id')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('set null');
         });
     }
 

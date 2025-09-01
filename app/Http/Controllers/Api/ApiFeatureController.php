@@ -13,9 +13,9 @@ class ApiFeatureController extends Controller
      */
     public function index()
     {
-        $features = Feature::where('is_active', true)
-            ->with(['products'])
-            ->orderBy('order')
+        $features = Feature::active()
+            ->with(['products', 'translations'])
+            ->ordered()
             ->get();
 
         return response()->json([
@@ -29,7 +29,7 @@ class ApiFeatureController extends Controller
      */
     public function show(Feature $feature)
     {
-        $feature->load(['products']);
+        $feature->load(['products', 'translations']);
 
         return response()->json([
             'success' => true,

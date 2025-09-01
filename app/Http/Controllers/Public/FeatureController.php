@@ -13,9 +13,9 @@ class FeatureController extends Controller
      */
     public function index()
     {
-        $features = Feature::where('is_active', true)
-            ->with(['products'])
-            ->orderBy('order')
+        $features = Feature::active()
+            ->with(['products', 'translations'])
+            ->ordered()
             ->paginate(20);
 
         return view('public.features.index', compact('features'));
@@ -26,7 +26,7 @@ class FeatureController extends Controller
      */
     public function show(Feature $feature)
     {
-        $feature->load(['products']);
+        $feature->load(['products', 'translations']);
 
         return view('public.features.show', compact('feature'));
     }

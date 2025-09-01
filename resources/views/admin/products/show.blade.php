@@ -253,7 +253,7 @@
                                                     <img src="{{ Storage::url($feature->icon) }}" alt="icon" width="20" class="me-2">
                                                 @endif
                                             @endif
-                                            {{ $feature->name }}
+                                            {{ $feature->getTranslatedName('ar') }}
                                         </div>
                                     </div>
                                 @empty

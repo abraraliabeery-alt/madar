@@ -13,7 +13,15 @@ return new class extends Migration
     {
         Schema::create('role_translations', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('role_id');
+            $table->string('locale');
+            $table->string('name');
+            $table->string('display_name')->nullable();
+            $table->text('description')->nullable();
             $table->timestamps();
+
+            $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
+            $table->unique(['role_id', 'locale']);
         });
     }
 

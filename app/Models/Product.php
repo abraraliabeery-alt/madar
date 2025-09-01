@@ -14,7 +14,6 @@ class Product extends Model
         'title',
         'description',
         'address',
-        'parking_spaces',
         'is_active',
         'is_featured',
         'is_verified',
@@ -93,19 +92,6 @@ class Product extends Model
             ->withTimestamps();
     }
 
-    /**
-     * Get attributes that should be displayed in product cards
-     */
-    public function getCardAttributesAttribute()
-    {
-        return $this->attributes()
-            ->where('show_in_card', true)
-            ->where(function($query) {
-                $query->where('category_id', $this->category_id)
-                      ->orWhereNull('category_id');
-            })
-            ->get();
-    }
 
     public function features()
     {
@@ -145,6 +131,49 @@ class Product extends Model
     public function getStatusAttribute()
     {
         return $this->statuses()->latest()->first();
+    }
+
+    /**
+     * Get translation for specific locale
+     */
+    public function getTranslation($locale = null)
+    {
+        $locale = $locale ?: app()->getLocale();
+        return $this->translations()->where('locale', $locale)->first();
+    }
+
+    /**
+     * Get title for specific locale
+     */
+    public function getTranslatedTitle($locale = null)
+    {
+        $translation = $this->getTranslation($locale);
+        return $translation ? $translation->title : '';
+    }
+
+    /**
+     * Get description for specific locale
+     */
+    public function getTranslatedDescription($locale = null)
+    {
+        $translation = $this->getTranslation($locale);
+        return $translation ? $translation->description : '';
+    }
+
+    /**
+     * Get title attribute (for backward compatibility)
+     */
+    public function getTitleAttribute()
+    {
+        return $this->getTranslatedTitle();
+    }
+
+    /**
+     * Get description attribute (for backward compatibility)
+     */
+    public function getDescriptionAttribute()
+    {
+        return $this->getTranslatedDescription();
     }
 
     // Scopes
@@ -201,5 +230,19 @@ class Product extends Model
         } else {
             $this->attributes['booking_number'] = $value;
         }
+    }
+
+    /**
+     * Get attributes that should be displayed in product cards
+     */
+    public function getCardAttributesAttribute()
+    {
+        return $this->attributes()
+            ->where('show_in_card', true)
+            ->where(function($query) {
+                $query->where('category_id', $this->category_id)
+                      ->orWhereNull('category_id');
+            })
+            ->get();
     }
 }

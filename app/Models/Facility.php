@@ -169,7 +169,7 @@ class Facility extends Model
 
     public function scopeByCategory($query, $categoryId)
     {
-        return $query->where('category_id', $categoryId);
+        return $query->where('facility_category_id', $categoryId);
     }
 
     // Accessors

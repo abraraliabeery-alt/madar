@@ -225,7 +225,7 @@
                                                 <input class="form-check-input" type="checkbox" name="features[]" value="{{ $feature->id }}" id="feature_{{ $feature->id }}"
                                                     {{ in_array($feature->id, $product->features->pluck('id')->toArray()) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="feature_{{ $feature->id }}">
-                                                    {{ $feature->name }}
+                                                    {{ $feature->getTranslatedName('ar') }}
                                                 </label>
                                             </div>
                                         </div>

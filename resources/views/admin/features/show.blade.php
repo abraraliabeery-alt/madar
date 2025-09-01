@@ -4,7 +4,7 @@
 <div class="container-fluid">
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">تفاصيل المميزة - {{ $feature->name }}</h5>
+            <h5 class="mb-0">تفاصيل المميزة - {{ $feature->getTranslatedName('ar') }}</h5>
             <div>
                 <a href="{{ route('admin.features.edit', $feature) }}" class="btn btn-warning">
                     <i class="fas fa-edit me-2"></i>تعديل
@@ -69,12 +69,12 @@
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label text-muted">الاسم</label>
-                                    <p class="fs-5">{{ $feature->name }}</p>
+                                    <p class="fs-5">{{ $feature->getTranslatedName('ar') }}</p>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label text-muted">الترتيب</label>
                                     <p class="fs-5">
-                                        <span class="badge bg-secondary">{{ $feature->sort_order ?? 0 }}</span>
+                                        <span class="badge bg-secondary">{{ $feature->order ?? 0 }}</span>
                                     </p>
                                 </div>
                                 <div class="col-md-6 mb-3">

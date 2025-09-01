@@ -51,19 +51,19 @@
                         </div>
                         <div class="card-body">
                             <div class="row g-3">
-                                @foreach($role->permissions->groupBy('pages') as $page => $pagePermissions)
+                                @foreach($role->permissions->grouped() as $group => $groupPermissions)
                                     <div class="col-md-6">
                                         <div class="card">
                                             <div class="card-header">
-                                                <h6 class="mb-0">{{ $page }}</h6>
+                                                <h6 class="mb-0">{{ $group }}</h6>
                                             </div>
                                             <div class="card-body">
                                                 <div class="list-group">
-                                                    @foreach($pagePermissions as $permission)
+                                                    @foreach($groupPermissions as $permission)
                                                         <div class="list-group-item">
-                                                            <h6 class="mb-1">{{ $permission->name }}</h6>
-                                                            @if($permission->description)
-                                                                <small class="text-muted">{{ $permission->description }}</small>
+                                                            <h6 class="mb-1">{{ $permission->getTranslatedDisplayName() }}</h6>
+                                                            @if($permission->getTranslatedDescription())
+                                                                <small class="text-muted">{{ $permission->getTranslatedDescription() }}</small>
                                                             @endif
                                                         </div>
                                                     @endforeach

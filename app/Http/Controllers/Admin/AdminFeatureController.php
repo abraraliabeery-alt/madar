@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Feature;
+use App\Models\FeatureTranslation;
 use Illuminate\Support\Facades\Storage;
 
 class AdminFeatureController extends Controller
@@ -14,7 +15,7 @@ class AdminFeatureController extends Controller
      */
     public function index()
     {
-        $features = Feature::withCount('products')->paginate(15);
+        $features = Feature::withCount('products')->with('translations')->paginate(15);
         return view('admin.features.index', compact('features'));
     }
 
@@ -32,15 +33,21 @@ class AdminFeatureController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'name_ar' => 'required|string|max:255',
+            'name_en' => 'required|string|max:255',
+            'description_ar' => 'nullable|string',
+            'description_en' => 'nullable|string',
             'icon' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'color' => 'nullable|string|max:7',
             'is_active' => 'boolean',
-            'sort_order' => 'nullable|integer|min:0',
+            'order' => 'nullable|integer|min:0',
         ]);
 
-        $featureData = $request->except(['icon']);
+        $featureData = [
+            'icon' => $request->icon,
+            'description' => $request->description_ar, // Default description
+            'is_active' => $request->boolean('is_active', true),
+            'order' => $request->order ?? 0,
+        ];
 
         // معالجة الأيقونة
         if ($request->hasFile('icon')) {
@@ -49,6 +56,27 @@ class AdminFeatureController extends Controller
         }
 
         $feature = Feature::create($featureData);
+
+        // Create translations
+        $translations = [
+            'ar' => [
+                'name' => $request->name_ar,
+                'description' => $request->description_ar,
+            ],
+            'en' => [
+                'name' => $request->name_en,
+                'description' => $request->description_en,
+            ],
+        ];
+
+        foreach ($translations as $locale => $translationData) {
+            FeatureTranslation::create([
+                'feature_id' => $feature->id,
+                'locale' => $locale,
+                'name' => $translationData['name'],
+                'description' => $translationData['description'],
+            ]);
+        }
 
         return redirect()->route('admin.features.index')
             ->with('success', 'تم إنشاء المميزة بنجاح');
@@ -59,6 +87,7 @@ class AdminFeatureController extends Controller
      */
     public function edit(Feature $feature)
     {
+        $feature->load('translations');
         return view('admin.features.edit', compact('feature'));
     }
 
@@ -68,15 +97,20 @@ class AdminFeatureController extends Controller
     public function update(Request $request, Feature $feature)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'name_ar' => 'required|string|max:255',
+            'name_en' => 'required|string|max:255',
+            'description_ar' => 'nullable|string',
+            'description_en' => 'nullable|string',
             'icon' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'color' => 'nullable|string|max:7',
             'is_active' => 'boolean',
-            'sort_order' => 'nullable|integer|min:0',
+            'order' => 'nullable|integer|min:0',
         ]);
 
-        $featureData = $request->except(['icon']);
+        $featureData = [
+            'description' => $request->description_ar, // Default description
+            'is_active' => $request->boolean('is_active', true),
+            'order' => $request->order ?? 0,
+        ];
 
         // معالجة الأيقونة
         if ($request->hasFile('icon')) {
@@ -89,6 +123,31 @@ class AdminFeatureController extends Controller
         }
 
         $feature->update($featureData);
+
+        // Update translations
+        $translations = [
+            'ar' => [
+                'name' => $request->name_ar,
+                'description' => $request->description_ar,
+            ],
+            'en' => [
+                'name' => $request->name_en,
+                'description' => $request->description_en,
+            ],
+        ];
+
+        foreach ($translations as $locale => $translationData) {
+            FeatureTranslation::updateOrCreate(
+                [
+                    'feature_id' => $feature->id,
+                    'locale' => $locale,
+                ],
+                [
+                    'name' => $translationData['name'],
+                    'description' => $translationData['description'],
+                ]
+            );
+        }
 
         return redirect()->route('admin.features.index')
             ->with('success', 'تم تحديث المميزة بنجاح');
@@ -110,6 +169,9 @@ class AdminFeatureController extends Controller
             Storage::disk('public')->delete($feature->icon);
         }
 
+        // Delete translations
+        $feature->translations()->delete();
+        
         $feature->delete();
 
         return redirect()->route('admin.features.index')
@@ -132,7 +194,7 @@ class AdminFeatureController extends Controller
      */
     public function show(Feature $feature)
     {
-        $feature->load(['products']);
+        $feature->load(['products', 'translations']);
         return view('admin.features.show', compact('feature'));
     }
 
@@ -144,12 +206,12 @@ class AdminFeatureController extends Controller
         $request->validate([
             'features' => 'required|array',
             'features.*.id' => 'required|exists:features,id',
-            'features.*.sort_order' => 'required|integer|min:0',
+            'features.*.order' => 'required|integer|min:0',
         ]);
 
         foreach ($request->features as $featureData) {
             Feature::where('id', $featureData['id'])
-                ->update(['sort_order' => $featureData['sort_order']]);
+                ->update(['order' => $featureData['order']]);
         }
 
         return response()->json([

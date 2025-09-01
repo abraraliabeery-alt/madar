@@ -157,7 +157,7 @@
                                                 @if($feature->icon)
                                                     <img src="{{ asset($feature->icon) }}" alt="icon" width="20" class="me-1">
                                                 @endif
-                                                {{ $feature->name }}
+                                                {{ $feature->getTranslatedName('ar') }}
                                             </label>
                                         </div>
                                     </div>

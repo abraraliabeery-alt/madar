@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Product;
+use App\Models\ProductTranslation;
 use App\Models\Facility;
 use App\Models\Category;
 use App\Models\User;
@@ -25,8 +26,16 @@ class ProductSeeder extends Seeder
 
         $products = [
             [
-                'title' => 'شقة فاخرة في الرياض',
-                'description' => 'شقة حديثة ومفروشة بالكامل في حي النرجس، الرياض',
+                'translations' => [
+                    'ar' => [
+                        'title' => 'شقة فاخرة في الرياض',
+                        'description' => 'شقة حديثة ومفروشة بالكامل في حي النرجس، الرياض',
+                    ],
+                    'en' => [
+                        'title' => 'Luxury Apartment in Riyadh',
+                        'description' => 'Modern and fully furnished apartment in Al Narjis district, Riyadh',
+                    ]
+                ],
                 'address' => 'حي النرجس، الرياض',
                 'attributes' => [
                     'rooms' => 3,
@@ -48,8 +57,16 @@ class ProductSeeder extends Seeder
                 'contact_email' => 'info@excellent-realestate.com',
             ],
             [
-                'title' => 'فيلا فاخرة في جدة',
-                'description' => 'فيلا مستقلة مع حديقة ومسبح في حي الكورنيش، جدة',
+                'translations' => [
+                    'ar' => [
+                        'title' => 'فيلا فاخرة في جدة',
+                        'description' => 'فيلا مستقلة مع حديقة ومسبح في حي الكورنيش، جدة',
+                    ],
+                    'en' => [
+                        'title' => 'Luxury Villa in Jeddah',
+                        'description' => 'Independent villa with garden and pool in Al Corniche district, Jeddah',
+                    ]
+                ],
                 'address' => 'حي الكورنيش، جدة',
                 'attributes' => [
                     'rooms' => 5,
@@ -71,8 +88,16 @@ class ProductSeeder extends Seeder
                 'contact_email' => 'contact@modern-housing.com',
             ],
             [
-                'title' => 'مكتب تجاري في الدمام',
-                'description' => 'مكتب حديث في مركز تجاري مميز في الدمام',
+                'translations' => [
+                    'ar' => [
+                        'title' => 'مكتب تجاري في الدمام',
+                        'description' => 'مكتب حديث في مركز تجاري مميز في الدمام',
+                    ],
+                    'en' => [
+                        'title' => 'Commercial Office in Dammam',
+                        'description' => 'Modern office in a distinguished commercial center in Dammam',
+                    ]
+                ],
                 'address' => 'شارع الملك خالد، الدمام',
                 'attributes' => [
                     'rooms' => 2,
@@ -94,8 +119,16 @@ class ProductSeeder extends Seeder
                 'contact_email' => 'info@luxury-villas.com',
             ],
             [
-                'title' => 'محل تجاري في الخبر',
-                'description' => 'محل في موقع مميز في الخبر، مناسب للمشاريع التجارية',
+                'translations' => [
+                    'ar' => [
+                        'title' => 'محل تجاري في الخبر',
+                        'description' => 'محل في موقع مميز في الخبر، مناسب للمشاريع التجارية',
+                    ],
+                    'en' => [
+                        'title' => 'Commercial Shop in Khobar',
+                        'description' => 'Shop in a distinguished location in Khobar, suitable for commercial projects',
+                    ]
+                ],
                 'address' => 'شارع الأمير محمد، الخبر',
                 'attributes' => [
                     'rooms' => 1,
@@ -117,8 +150,16 @@ class ProductSeeder extends Seeder
                 'contact_email' => 'info@excellent-realestate.com',
             ],
             [
-                'title' => 'شقة استوديو في الرياض',
-                'description' => 'شقة استوديو حديثة ومناسبة للشباب في الرياض',
+                'translations' => [
+                    'ar' => [
+                        'title' => 'شقة استوديو في الرياض',
+                        'description' => 'شقة استوديو حديثة ومناسبة للشباب في الرياض',
+                    ],
+                    'en' => [
+                        'title' => 'Studio Apartment in Riyadh',
+                        'description' => 'Modern studio apartment suitable for young people in Riyadh',
+                    ]
+                ],
                 'address' => 'حي السليمانية، الرياض',
                 'attributes' => [
                     'rooms' => 1,
@@ -145,22 +186,31 @@ class ProductSeeder extends Seeder
             $facility = $facilities->get($index % $facilities->count());
             $facilityUser = $facilityUsers->get($index % $facilityUsers->count());
 
-            // Extract attributes from product data
+            // Extract translations and attributes from product data
+            $translations = $productData['translations'] ?? [];
             $productAttributes = $productData['attributes'] ?? [];
-            unset($productData['attributes']); // Remove attributes from main data
+            unset($productData['translations'], $productData['attributes']); // Remove from main data
 
-            $product = Product::updateOrCreate(
-                ['title' => $productData['title']],
-                array_merge($productData, [
-                    'facility_id' => $facility->id,
-                    'owner_user_id' => $facilityUser->id,
-                    'seller_user_id' => $facilityUser->id,
-                    'category_id' => $categories->random()->id,
-                    'booking_number' => 'BK' . strtoupper(Str::random(8)),
-                    'latitude' => 24.7136 + (rand(-10, 10) / 100),
-                    'longitude' => 46.6753 + (rand(-10, 10) / 100),
-                ])
-            );
+            // Create product without title/description
+            $product = Product::create(array_merge($productData, [
+                'facility_id' => $facility->id,
+                'owner_user_id' => $facilityUser->id,
+                'seller_user_id' => $facilityUser->id,
+                'category_id' => $categories->random()->id,
+                'booking_number' => 'BK' . strtoupper(Str::random(8)),
+                'latitude' => 24.7136 + (rand(-10, 10) / 100),
+                'longitude' => 46.6753 + (rand(-10, 10) / 100),
+            ]));
+
+            // Create translations
+            foreach ($translations as $locale => $translationData) {
+                ProductTranslation::create([
+                    'product_id' => $product->id,
+                    'locale' => $locale,
+                    'title' => $translationData['title'],
+                    'description' => $translationData['description'],
+                ]);
+            }
 
             // Attach attributes to the product
             $this->attachAttributesToProduct($product, $productAttributes, $attributes);

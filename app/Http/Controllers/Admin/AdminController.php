@@ -534,7 +534,7 @@ class AdminController extends Controller
                               return [
                                   'id' => $feature->id,
                                   'type' => 'feature',
-                                  'title' => $feature->name,
+                                  'title' => $feature->getTranslatedName('ar'),
                                   'subtitle' => 'ميزة',
                                   'url' => '/admin/features/' . $feature->id . '/edit'
                               ];

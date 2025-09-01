@@ -12,6 +12,8 @@ class RoleTranslation extends Model
     protected $fillable = [
         'role_id',
         'name',
+        'display_name',
+        'description',
         'locale',
     ];
 

@@ -13,8 +13,22 @@ return new class extends Migration
     {
         Schema::create('facilities', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->text('description')->nullable();
+            $table->string('address')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('email')->nullable();
+            $table->string('website')->nullable();
+            $table->string('license_number')->nullable();
+            $table->date('license_expiry')->nullable();
             $table->boolean('is_active')->default(true);
             $table->boolean('is_primary')->default(false);
+            $table->boolean('is_verified')->default(false);
+            $table->boolean('is_featured')->default(false);
+            $table->decimal('rating', 3, 2)->default(0);
+            $table->integer('rating_count')->default(0);
+            $table->integer('products_count')->default(0);
+            $table->unsignedBigInteger('owner_user_id')->nullable();
             $table->string('logo')->nullable();
             $table->string('header')->nullable();
             $table->string('License')->nullable();
@@ -22,6 +36,8 @@ return new class extends Migration
             $table->decimal('longitude', 10, 7)->nullable();
             $table->string('google_maps_url')->nullable();
             $table->timestamps();
+
+            $table->foreign('owner_user_id')->references('id')->on('users')->onDelete('set null');
         });
     }
 

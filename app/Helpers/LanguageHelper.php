@@ -300,6 +300,36 @@ class LanguageHelper
     }
 
     /**
+     * Get localized feature name
+     */
+    public static function getFeatureName($feature, $locale = null)
+    {
+        if (!$feature) {
+            return '';
+        }
+        
+        $locale = $locale ?: app()->getLocale();
+        
+        // Use the Feature model's translation method
+        return $feature->getTranslatedName($locale);
+    }
+
+    /**
+     * Get localized feature description
+     */
+    public static function getFeatureDescription($feature, $locale = null)
+    {
+        if (!$feature) {
+            return '';
+        }
+        
+        $locale = $locale ?: app()->getLocale();
+        
+        // Use the Feature model's translation method
+        return $feature->getTranslatedDescription($locale);
+    }
+
+    /**
      * Get language switcher HTML
      */
     public static function getLanguageSwitcherHTML($class = '', $showFlags = true, $showNames = true, $dropdown = true)

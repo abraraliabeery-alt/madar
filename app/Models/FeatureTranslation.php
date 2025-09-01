@@ -12,6 +12,7 @@ class FeatureTranslation extends Model
     protected $fillable = [
         'feature_id',
         'name',
+        'description',
         'locale',
     ];
 

@@ -145,7 +145,7 @@
                                 <div class="flex flex-wrap gap-1">
                                     @foreach($product->features->take(3) as $feature)
                                         <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                                            {{ $feature->name ?? 'Feature ' . $feature->id }}
+                                            {{ $feature->getTranslatedName() ?? 'Feature ' . $feature->id }}
                                         </span>
                                     @endforeach
                                     @if($product->features->count() > 3)

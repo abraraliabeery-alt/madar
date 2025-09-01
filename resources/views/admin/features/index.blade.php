@@ -41,8 +41,8 @@
                                     </div>
                                 @endif
                             </td>
-                            <td>{{ $feature->name }}</td>
-                            <td>{{ Str::limit($feature->description, 50) }}</td>
+                            <td>{{ $feature->getTranslatedName('ar') }}</td>
+                            <td>{{ Str::limit($feature->getTranslatedDescription('ar'), 50) }}</td>
                             <td>
                                 @if($feature->color)
                                     <span class="badge" style="background-color: {{ $feature->color }}">{{ $feature->color }}</span>
@@ -54,7 +54,7 @@
                                 <span class="badge bg-info">{{ $feature->products_count }}</span>
                             </td>
                             <td>
-                                <span class="badge bg-secondary">{{ $feature->sort_order ?? 0 }}</span>
+                                <span class="badge bg-secondary">{{ $feature->order ?? 0 }}</span>
                             </td>
                             <td>
                                 @if($feature->is_active)
@@ -84,7 +84,7 @@
                                                 data-bs-toggle="tooltip"
                                                 title="حذف"
                                                 data-feature-id="{{ $feature->id }}"
-                                                data-feature-name="{{ $feature->name }}">
+                                                data-feature-name="{{ $feature->getTranslatedName('ar') }}">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                         
@@ -121,7 +121,7 @@
                                                     data-bs-toggle="tooltip"
                                                     title="حذف المميزة"
                                                     data-feature-id="{{ $feature->id }}"
-                                                    data-feature-name="{{ $feature->name }}">
+                                                    data-feature-name="{{ $feature->getTranslatedName('ar') }}">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </div>
@@ -326,7 +326,7 @@ $(document).ready(function() {
             $('.datatable tbody tr').each(function(index) {
                 features.push({
                     id: $(this).data('id'),
-                    sort_order: index
+                    order: index
                 });
             });
 
@@ -342,7 +342,7 @@ $(document).ready(function() {
                     if (response.success) {
                         // Update displayed sort order
                         features.forEach(function(feature) {
-                            $(`tr[data-id="${feature.id}"] td:nth-child(7) .badge`).text(feature.sort_order);
+                            $(`tr[data-id="${feature.id}"] td:nth-child(7) .badge`).text(feature.order);
                         });
 
                         // Show success message

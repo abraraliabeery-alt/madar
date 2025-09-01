@@ -201,7 +201,9 @@ class User extends Authenticatable
     {
         // Check through roles
         foreach ($this->roles as $role) {
-            if ($role->permissions()->where('name', $permission)->exists()) {
+            if ($role->permissions()->whereHas('translations', function($query) use ($permission) {
+                $query->where('name', $permission);
+            })->exists()) {
                 return true;
             }
         }

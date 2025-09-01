@@ -12,6 +12,8 @@ class PermissionTranslation extends Model
     protected $fillable = [
         'permission_id',
         'name',
+        'display_name',
+        'description',
         'locale',
     ];
 

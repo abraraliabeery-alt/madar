@@ -13,7 +13,15 @@ return new class extends Migration
     {
         Schema::create('permission_translations', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('permission_id');
+            $table->string('locale');
+            $table->string('name');
+            $table->string('display_name')->nullable();
+            $table->text('description')->nullable();
             $table->timestamps();
+
+            $table->foreign('permission_id')->references('id')->on('permissions')->onDelete('cascade');
+            $table->unique(['permission_id', 'locale']);
         });
     }
 

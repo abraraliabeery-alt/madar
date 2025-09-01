@@ -15,7 +15,14 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('parent_id')->nullable();
             $table->string('image')->nullable();
+            $table->string('icon')->nullable();
+            $table->boolean('is_active')->default(true);
+            $table->boolean('is_featured')->default(false);
+            $table->integer('order')->default(0);
+            $table->integer('sort_order')->default(0);
             $table->timestamps();
+
+            $table->foreign('parent_id')->references('id')->on('categories')->onDelete('set null');
         });
     }
 

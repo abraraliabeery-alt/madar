@@ -24,7 +24,7 @@ class AdminRoleController extends Controller
      */
     public function create()
     {
-        $permissions = Permission::all();
+        $permissions = Permission::with('translations')->active()->get();
         return view('admin.roles.create', compact('permissions'));
     }
 
@@ -58,8 +58,8 @@ class AdminRoleController extends Controller
      */
     public function edit(Role $role)
     {
-        $role->load('permissions');
-        $permissions = Permission::all();
+        $role->load('permissions.translations');
+        $permissions = Permission::with('translations')->active()->get();
         return view('admin.roles.edit', compact('role', 'permissions'));
     }
 
@@ -107,7 +107,7 @@ class AdminRoleController extends Controller
      */
     public function show(Role $role)
     {
-        $role->load(['permissions', 'users']);
+        $role->load(['permissions.translations', 'users']);
         return view('admin.roles.show', compact('role'));
     }
 }

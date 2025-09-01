@@ -16,7 +16,13 @@ return new class extends Migration
             $table->unsignedBigInteger('status_id');
             $table->string('statusable_type');
             $table->unsignedBigInteger('statusable_id');
+            $table->text('notes')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->timestamps();
+
+            $table->foreign('status_id')->references('id')->on('statuses')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
+            $table->index(['statusable_type', 'statusable_id']);
         });
     }
 

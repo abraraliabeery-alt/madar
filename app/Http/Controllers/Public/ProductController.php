@@ -53,10 +53,16 @@ class ProductController extends Controller
 
         // Search by keyword
         if ($request->filled('q')) {
-            $query->where(function($q) use ($request) {
-                $q->where('title', 'like', "%{$request->q}%")
-                  ->orWhere('description', 'like', "%{$request->q}%")
-                  ->orWhere('address', 'like', "%{$request->q}%");
+            $locale = app()->getLocale();
+            $query->where(function($q) use ($request, $locale) {
+                $q->whereHas('translations', function($translationQuery) use ($request, $locale) {
+                    $translationQuery->where('locale', $locale)
+                        ->where(function($tq) use ($request) {
+                            $tq->where('title', 'like', "%{$request->q}%")
+                               ->orWhere('description', 'like', "%{$request->q}%");
+                        });
+                })
+                ->orWhere('address', 'like', "%{$request->q}%");
             });
         }
 

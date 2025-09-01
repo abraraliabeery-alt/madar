@@ -11,9 +11,6 @@ class Category extends Model
 
     protected $fillable = [
         'parent_id',
-        'name',
-        'display_name',
-        'description',
         'icon',
         'image',
         'is_active',
@@ -70,7 +67,7 @@ class Category extends Model
     public function getTranslatedName($locale = null)
     {
         $translation = $this->getTranslation($locale);
-        return $translation ? $translation->name : $this->name;
+        return $translation ? $translation->name : '';
     }
 
     /**
@@ -79,7 +76,7 @@ class Category extends Model
     public function getTranslatedDescription($locale = null)
     {
         $translation = $this->getTranslation($locale);
-        return $translation ? $translation->description : $this->description;
+        return $translation ? $translation->description : '';
     }
 
     /**

@@ -319,7 +319,7 @@
                                     @foreach($results['features'] as $feature)
                                     <tr>
                                         <td>
-                                            <h6 class="mb-0">{{ $feature->name }}</h6>
+                                            <h6 class="mb-0">{{ $feature->getTranslatedName('ar') }}</h6>
                                         </td>
                                         <td>{{ Str::limit($feature->description, 100) ?? '-' }}</td>
                                         <td>{{ $feature->created_at->format('Y-m-d') }}</td>
