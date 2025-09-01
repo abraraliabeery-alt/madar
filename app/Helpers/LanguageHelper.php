@@ -280,13 +280,8 @@ class LanguageHelper
         
         $locale = $locale ?: app()->getLocale();
         
-        // Check if category has English name and current locale is English
-        if ($locale === 'en' && !empty($category->name_en)) {
-            return $category->name_en;
-        }
-        
-        // Fallback to Arabic name
-        return $category->name;
+        // Use the Category model's translation method
+        return $category->getTranslatedName($locale);
     }
 
     /**
@@ -300,13 +295,8 @@ class LanguageHelper
         
         $locale = $locale ?: app()->getLocale();
         
-        // Check if category has English description and current locale is English
-        if ($locale === 'en' && !empty($category->description_en)) {
-            return $category->description_en;
-        }
-        
-        // Fallback to Arabic description
-        return $category->description;
+        // Use the Category model's translation method
+        return $category->getTranslatedDescription($locale);
     }
 
     /**

@@ -15,7 +15,7 @@ class CategoryController extends Controller
     {
         $categories = Category::where('is_active', true)
             ->whereNull('parent_id')
-            ->with(['children', 'products', 'facilities'])
+            ->with(['children', 'products'])
             ->orderBy('order')
             ->paginate(12);
 
@@ -27,7 +27,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        $category->load(['children', 'products', 'facilities']);
+        $category->load(['children', 'products']);
 
         return view('public.categories.show', compact('category'));
     }

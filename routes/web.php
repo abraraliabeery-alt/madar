@@ -25,6 +25,25 @@ Route::get('/migration', function () {
         );
     }
 });
+
+
+Route::get('/migration-seeder', function () {
+    try {
+        Artisan::call('migrate:fresh', ['--force' => true]);
+        $output = Artisan::output();
+
+        // تشغيل الـ seeder
+        Artisan::call('db:seed', ['--force' => true]);
+        $output .= Artisan::output();
+        return nl2br(Artisan::output()); // يعرض الإخراج بالتنسيق المناسب
+    } catch (\Exception $e) {
+        return response()->make(
+            "<h3>Error:</h3><pre>" . $e->getMessage() . "</pre>",
+            500
+        );
+    }
+});
+
 // Language switching routes
 Route::get('/language/{language}', [App\Http\Controllers\LanguageController::class, 'switch'])->name('language.switch');
 Route::get('/language-info', [App\Http\Controllers\LanguageController::class, 'info'])->name('language.info');

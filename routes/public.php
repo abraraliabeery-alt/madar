@@ -7,6 +7,7 @@ use App\Http\Controllers\Public\ContactController;
 use App\Http\Controllers\Public\ProductController;
 use App\Http\Controllers\Public\FacilityController;
 use App\Http\Controllers\Public\CategoryController;
+use App\Http\Controllers\Public\FacilityCategoryController;
 use App\Http\Controllers\Public\FeatureController;
 use App\Http\Controllers\Public\LanguageController;
 use App\Http\Controllers\Public\SitemapController;
@@ -65,12 +66,16 @@ Route::name('public.')->group(function () {
         // Public forms for appointment and quote
         Route::get('/facilities/{facility}/appointment', [FacilityController::class, 'appointmentForm'])->name('facilities.appointment.form');
         Route::get('/facilities/{facility}/quote', [FacilityController::class, 'quoteForm'])->name('facilities.quote.form');
-        Route::get('/categories/{category}/facilities', [FacilityController::class, 'byCategory'])->name('facilities.by-category');
+        Route::get('/facility-categories/{category}/facilities', [FacilityController::class, 'byCategory'])->name('facilities.by-category');
     });
 
     // Category Routes
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
     Route::get('/categories/{category}', [CategoryController::class, 'show'])->name('categories.show');
+
+    // Facility Category Routes
+    Route::get('/facility-categories', [FacilityCategoryController::class, 'index'])->name('facility-categories.index');
+    Route::get('/facility-categories/{category}', [FacilityCategoryController::class, 'show'])->name('facility-categories.show');
 
     // Feature Routes
     Route::get('/features', [FeatureController::class, 'index'])->name('features.index');

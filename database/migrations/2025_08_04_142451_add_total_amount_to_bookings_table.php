@@ -12,7 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('bookings', function (Blueprint $table) {
-            $table->decimal('total_amount', 10, 2)->default(0)->after('user_id');
+            if (!Schema::hasColumn('bookings', 'total_amount')) {
+                $table->decimal('total_amount', 10, 2)->default(0)->after('user_id');
+            }
         });
     }
 
@@ -22,7 +24,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('bookings', function (Blueprint $table) {
-            $table->dropColumn('total_amount');
+            if (Schema::hasColumn('bookings', 'total_amount')) {
+                $table->dropColumn('total_amount');
+            }
         });
     }
 };

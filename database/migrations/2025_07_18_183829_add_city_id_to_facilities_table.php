@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('facilities', function (Blueprint $table) {
-            $table->unsignedBigInteger('city_id')->nullable()->after('category_id');
+            $table->unsignedBigInteger('city_id')->nullable();
             $table->foreign('city_id')->references('id')->on('cities')->onDelete('set null');
         });
     }

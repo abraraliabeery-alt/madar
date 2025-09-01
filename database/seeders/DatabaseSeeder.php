@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             PermissionSeeder::class,
             CategorySeeder::class,
+            CategoryTranslationSeeder::class,
             FeatureSeeder::class,
             StatusSeeder::class,
             UserSeeder::class,
@@ -28,6 +29,7 @@ class DatabaseSeeder extends Seeder
             NotificationSeeder::class,
             FavoriteSeeder::class,
             FaqSeeder::class,
+            FacilityCategorySeeder::class,
         ]);
     }
 }

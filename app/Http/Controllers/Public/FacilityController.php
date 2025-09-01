@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Public;
 use App\Http\Controllers\Controller;
 use App\Models\Facility;
 use App\Models\Category;
+use App\Models\FacilityCategory;
 use App\Models\Product;
 use App\Helpers\FacilityHelper;
 use Illuminate\Http\Request;
@@ -80,7 +81,7 @@ class FacilityController extends Controller
         }
 
         $facilities = $query->paginate(12);
-        $categories = Category::where('is_active', true)->get();
+        $categories = FacilityCategory::where('is_active', true)->get();
 
         return view('public.facilities.index', compact('facilities', 'categories'));
     }
@@ -166,12 +167,12 @@ class FacilityController extends Controller
     /**
      * المنشآت حسب الفئة
      */
-    public function byCategory(Category $category)
+    public function byCategory(FacilityCategory $category)
     {
         if (FacilityHelper::isSingleMode()) {
             // في حالة المنشأة الواحدة، التأكد من أن الفئة صحيحة
             $facility = FacilityHelper::getSingleFacility();
-            if ($facility && $facility->category_id != $category->id) {
+            if ($facility && $facility->facility_category_id != $category->id) {
                 abort(404);
             }
         }
@@ -180,8 +181,8 @@ class FacilityController extends Controller
             abort(404);
         }
 
-        $facilities = Facility::with(['owner'])
-            ->where('category_id', $category->id)
+        $facilities = Facility::with(['facilityCategory', 'owner'])
+            ->where('facility_category_id', $category->id)
             ->where('is_active', true)
             ->where('is_verified', true)
             ->paginate(12);
