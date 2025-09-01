@@ -179,6 +179,29 @@
             transform: translateY(-2px);
             box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
         }
+
+        /* Hide Alpine.js elements by default */
+        [x-cloak] {
+            display: none !important;
+        }
+
+        /* Mobile menu default hidden state */
+        .mobile-menu {
+            display: none;
+        }
+
+        .mobile-menu.show {
+            display: block;
+        }
+
+        /* Desktop dropdown menus default hidden state */
+        .dropdown-menu {
+            display: none;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+        }
     </style>
 
     @stack('styles')
@@ -209,7 +232,7 @@
                             {{ __('layout.navigation.categories') }}
                             <i class="fas fa-chevron-down {{ app()->getLocale() == 'ar' ? 'mr-1' : 'ml-1' }} text-xs"></i>
                         </button>
-                        <div x-show="open" x-transition class="absolute {{ app()->getLocale() == 'ar' ? 'left-0' : 'right-0' }} mt-2 w-64 bg-white rounded-md shadow-lg py-1 z-50">
+                        <div :class="{ 'show': open }" x-transition class="absolute {{ app()->getLocale() == 'ar' ? 'left-0' : 'right-0' }} mt-2 w-64 bg-white rounded-md shadow-lg py-1 z-50 dropdown-menu">
                             @php
                                 $categories = \App\Models\Category::withCount(['products' => function ($query) {
                                     $query->where('is_active', true);
@@ -237,7 +260,7 @@
                             {{ __('layout.navigation.cities') }}
                             <i class="fas fa-chevron-down {{ app()->getLocale() == 'ar' ? 'mr-1' : 'ml-1' }} text-xs"></i>
                         </button>
-                        <div x-show="open" x-transition class="absolute {{ app()->getLocale() == 'ar' ? 'left-0' : 'right-0' }} mt-2 w-64 bg-white rounded-md shadow-lg py-1 z-50">
+                        <div :class="{ 'show': open }" x-transition class="absolute {{ app()->getLocale() == 'ar' ? 'left-0' : 'right-0' }} mt-2 w-64 bg-white rounded-md shadow-lg py-1 z-50 dropdown-menu">
                             @php
                                 $cities = \App\Models\City::withCount(['products' => function ($query) {
                                     $query->where('is_active', true);
@@ -295,14 +318,14 @@
                                 @endif
                             </button>
 
-                            <div x-show="open" @click.away="open = false"
+                            <div :class="{ 'show': open }" @click.away="open = false"
                                  x-transition:enter="transition ease-out duration-100"
                                  x-transition:enter-start="transform opacity-0 scale-95"
                                  x-transition:enter-end="transform opacity-100 scale-100"
                                  x-transition:leave="transition ease-in duration-75"
                                  x-transition:leave-start="transform opacity-100 scale-100"
                                  x-transition:leave-end="transform opacity-0 scale-95"
-                                 class="absolute {{ app()->getLocale() == 'ar' ? 'left-0' : 'right-0' }} mt-2 w-80 bg-white rounded-md shadow-lg py-1 z-50 max-h-96 overflow-y-auto">
+                                 class="absolute {{ app()->getLocale() == 'ar' ? 'left-0' : 'right-0' }} mt-2 w-80 bg-white rounded-md shadow-lg py-1 z-50 max-h-96 overflow-y-auto dropdown-menu">
 
                                 <div class="px-4 py-2 border-b border-gray-200">
                                     <h3 class="text-sm font-semibold text-gray-900">{{ __('layout.notifications.title') }}</h3>
@@ -360,14 +383,14 @@
                                 <i class="fas fa-chevron-down text-xs"></i>
                             </button>
 
-                            <div x-show="open" @click.away="open = false"
+                            <div :class="{ 'show': open }" @click.away="open = false"
                                  x-transition:enter="transition ease-out duration-100"
                                  x-transition:enter-start="transform opacity-0 scale-95"
                                  x-transition:enter-end="transform opacity-100 scale-100"
                                  x-transition:leave="transition ease-in duration-75"
                                  x-transition:leave-start="transform opacity-100 scale-100"
                                  x-transition:leave-end="transform opacity-0 scale-95"
-                                 class="absolute {{ app()->getLocale() == 'ar' ? 'left-0' : 'right-0' }} mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                                 class="absolute {{ app()->getLocale() == 'ar' ? 'left-0' : 'right-0' }} mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 dropdown-menu">
 
                                 @if(auth()->user()->hasRole('admin'))
                                     <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
@@ -446,14 +469,14 @@
             </div>
 
             <!-- Mobile Navigation Menu -->
-            <div x-show="mobileMenuOpen"
+            <div :class="{ 'show': mobileMenuOpen }"
                  x-transition:enter="transition ease-out duration-100"
                  x-transition:enter-start="transform opacity-0 scale-95"
                  x-transition:enter-end="transform opacity-100 scale-100"
                  x-transition:leave="transition ease-in duration-75"
                  x-transition:leave-start="transform opacity-100 scale-100"
                  x-transition:leave-end="transform opacity-0 scale-95"
-                 class="md:hidden">
+                 class="md:hidden mobile-menu"
                 <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t">
                     <a href="{{ route('public.home') }}" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
                         {{ __('layout.navigation.home') }}

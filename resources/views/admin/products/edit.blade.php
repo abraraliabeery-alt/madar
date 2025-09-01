@@ -78,6 +78,22 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
+                                            <label for="city_id" class="form-label">المدينة <span class="text-danger">*</span></label>
+                                            <select class="form-select @error('city_id') is-invalid @enderror" id="city_id" name="city_id" required>
+                                                <option value="">اختر المدينة</option>
+                                                @foreach($cities as $city)
+                                                    <option value="{{ $city->id }}" {{ old('city_id', $product->city_id) == $city->id ? 'selected' : '' }}>
+                                                        {{ $city->localized_name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            @error('city_id')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
                                             <label for="status_id" class="form-label">الحالة <span class="text-danger">*</span></label>
                                             <select class="form-select @error('status_id') is-invalid @enderror" id="status_id" name="status_id" required>
                                                 <option value="">اختر الحالة</option>

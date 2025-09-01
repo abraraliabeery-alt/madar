@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             FeatureSeeder::class,
             StatusSeeder::class,
             UserSeeder::class,
+            CitySeeder::class,
             FacilityCategorySeeder::class,
             FacilitySeeder::class,
             AttributeSeeder::class,

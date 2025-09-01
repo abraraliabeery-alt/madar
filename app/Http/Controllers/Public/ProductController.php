@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\Category;
 use App\Models\Facility;
 use App\Models\Feature;
+use App\Models\City;
 
 class ProductController extends Controller
 {
@@ -68,9 +69,10 @@ class ProductController extends Controller
         $products = $query->paginate(12);
 
         $categories = Category::where('is_active', true)->get();
+        $cities = City::where('is_active', true)->orderBy('name')->get();
         $facilities = Facility::where('is_active', true)->where('is_verified', true)->get();
 
-        return view('public.products.index', compact('products', 'categories', 'facilities'));
+        return view('public.products.index', compact('products', 'categories', 'cities', 'facilities'));
     }
 
     /**

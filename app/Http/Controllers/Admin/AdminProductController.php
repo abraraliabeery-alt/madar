@@ -10,6 +10,7 @@ use App\Models\Category;
 use App\Models\Status;
 use App\Models\Feature;
 use App\Models\Attribute;
+use App\Models\City;
 use Illuminate\Support\Facades\Storage;
 
 class AdminProductController extends Controller
@@ -81,8 +82,9 @@ class AdminProductController extends Controller
         $statuses = Status::all();
         $features = Feature::all();
         $attributes = Attribute::all();
+        $cities = City::where('is_active', true)->orderBy('name')->get();
 
-        return view('admin.products.create', compact('facilities', 'categories', 'statuses', 'features', 'attributes'));
+        return view('admin.products.create', compact('facilities', 'categories', 'statuses', 'features', 'attributes', 'cities'));
     }
 
     /**
@@ -97,6 +99,7 @@ class AdminProductController extends Controller
             'price' => 'required|numeric|min:0',
             'facility_id' => 'required|exists:facilities,id',
             'category_id' => 'required|exists:categories,id',
+            'city_id' => 'required|exists:cities,id',
             'status_id' => 'required|exists:statuses,id',
             'owner_user_id' => 'required|exists:users,id',
             'parking_spaces' => 'nullable|integer|min:0',
@@ -164,14 +167,15 @@ class AdminProductController extends Controller
      */
     public function edit(Product $product)
     {
-        $product->load(['facility', 'category', 'statuses', 'features', 'attributes']);
+        $product->load(['facility', 'category', 'city', 'statuses', 'features', 'attributes']);
         $facilities = Facility::all();
         $categories = Category::all();
         $statuses = Status::all();
         $features = Feature::all();
         $attributes = Attribute::all();
+        $cities = City::where('is_active', true)->orderBy('name')->get();
 
-        return view('admin.products.edit', compact('product', 'facilities', 'categories', 'statuses', 'features', 'attributes'));
+        return view('admin.products.edit', compact('product', 'facilities', 'categories', 'statuses', 'features', 'attributes', 'cities'));
     }
 
     /**
@@ -186,6 +190,7 @@ class AdminProductController extends Controller
             'price' => 'required|numeric|min:0',
             'facility_id' => 'required|exists:facilities,id',
             'category_id' => 'required|exists:categories,id',
+            'city_id' => 'required|exists:cities,id',
             'status_id' => 'required|exists:statuses,id',
             'owner_user_id' => 'required|exists:users,id',
             'parking_spaces' => 'nullable|integer|min:0',

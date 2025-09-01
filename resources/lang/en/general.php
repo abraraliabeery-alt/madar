@@ -29,7 +29,8 @@ return [
     
     'view_toggle' => [
         'display' => 'Display:',
-        'grid' => 'Grid View',
+        'small_grid' => 'Small Grid',
+        'large_grid' => 'Large Grid',
         'list' => 'List View',
     ],
     

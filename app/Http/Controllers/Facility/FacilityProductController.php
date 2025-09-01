@@ -9,6 +9,7 @@ use App\Models\Category;
 use App\Models\Status;
 use App\Models\Feature;
 use App\Models\Attribute;
+use App\Models\City;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -68,8 +69,9 @@ class FacilityProductController extends Controller
         $statuses = Status::all();
         $features = Feature::all();
         $attributes = Attribute::all();
+        $cities = City::where('is_active', true)->orderBy('name')->get();
 
-        return view('facility.products.create', compact('categories', 'statuses', 'features', 'attributes'));
+        return view('facility.products.create', compact('categories', 'statuses', 'features', 'attributes', 'cities'));
     }
 
     /**
@@ -89,6 +91,7 @@ class FacilityProductController extends Controller
             'address' => 'required|string',
             'price' => 'required|numeric|min:0',
             'category_id' => 'required|exists:categories,id',
+            'city_id' => 'required|exists:cities,id',
             'status_id' => 'required|exists:statuses,id',
             'owner_user_id' => 'required|exists:users,id',
             'building_id' => 'nullable|exists:buildings,id',
@@ -158,13 +161,14 @@ class FacilityProductController extends Controller
                 ->with('error', 'غير مصرح لك بتعديل هذا المنتج');
         }
 
-        $product->load(['category', 'statuses', 'features', 'attributes']);
+        $product->load(['category', 'city', 'statuses', 'features', 'attributes']);
         $categories = Category::all();
         $statuses = Status::all();
         $features = Feature::all();
         $attributes = Attribute::all();
+        $cities = City::where('is_active', true)->orderBy('name')->get();
 
-        return view('facility.products.edit', compact('product', 'categories', 'statuses', 'features', 'attributes'));
+        return view('facility.products.edit', compact('product', 'categories', 'statuses', 'features', 'attributes', 'cities'));
     }
 
     /**
@@ -185,6 +189,7 @@ class FacilityProductController extends Controller
             'address' => 'required|string',
             'price' => 'required|numeric|min:0',
             'category_id' => 'required|exists:categories,id',
+            'city_id' => 'required|exists:cities,id',
             'status_id' => 'required|exists:statuses,id',
             'owner_user_id' => 'required|exists:users,id',
             'building_id' => 'nullable|exists:buildings,id',

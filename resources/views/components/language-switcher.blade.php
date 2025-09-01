@@ -12,14 +12,14 @@
         <i class="fas fa-chevron-down text-xs"></i>
     </button>
     
-    <div x-show="open" @click.away="open = false"
+    <div :class="{ 'show': open }" @click.away="open = false"
          x-transition:enter="transition ease-out duration-100"
          x-transition:enter-start="transform opacity-0 scale-95"
          x-transition:enter-end="transform opacity-100 scale-100"
          x-transition:leave="transition ease-in duration-75"
          x-transition:leave-start="transform opacity-100 scale-100"
          x-transition:leave-end="transform opacity-0 scale-95"
-         class="absolute {{ app()->getLocale() == 'ar' ? 'left-0' : 'right-0' }} mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+         class="absolute {{ app()->getLocale() == 'ar' ? 'left-0' : 'right-0' }} mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 dropdown-menu">
         
         <a href="{{ route('public.language.change', 'ar') }}" 
            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ $currentLocale === 'ar' ? 'bg-primary-50 text-primary-700' : '' }}">

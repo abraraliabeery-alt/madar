@@ -143,6 +143,8 @@ return [
         'placeholder' => 'Search for properties...',
         'category' => 'Category',
         'all_categories' => 'All Categories',
+        'city' => 'City',
+        'all_cities' => 'All Cities',
         'property_type' => 'Property Type',
         'all_types' => 'All Types',
         'apartment' => 'Apartment',

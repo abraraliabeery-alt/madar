@@ -142,6 +142,8 @@ return [
         'placeholder' => 'ابحث عن عقارات...',
         'category' => 'الفئة',
         'all_categories' => 'جميع الفئات',
+        'city' => 'المدينة',
+        'all_cities' => 'جميع المدن',
         'property_type' => 'نوع العقار',
         'all_types' => 'جميع الأنواع',
         'apartment' => 'شقة',

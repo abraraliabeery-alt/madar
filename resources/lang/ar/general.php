@@ -30,7 +30,8 @@ return [
     
     'view_toggle' => [
         'display' => 'عرض:',
-        'grid' => 'عرض شبكي',
+        'small_grid' => 'شبكة صغيرة',
+        'large_grid' => 'شبكة كبيرة',
         'list' => 'عرض قائمة',
     ],
     

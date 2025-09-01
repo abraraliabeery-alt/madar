@@ -32,15 +32,21 @@
     <div class="flex justify-end items-center mb-8">
         <div class="flex items-center space-x-2 rtl:space-x-reverse">
             <span class="text-sm text-gray-600 mr-3 rtl:ml-3 rtl:mr-0">{{ __('general.view_toggle.display') }}</span>
-            <button id="grid-view" 
+            <button id="small-grid-view" 
                     class="view-toggle-btn bg-primary-600 text-white p-2 rounded-lg transition-colors"
-                    onclick="switchView('grid')"
-                    title="{{ __('general.view_toggle.grid') }}">
+                    onclick="switchView('small-grid')"
+                    title="{{ __('general.view_toggle.small_grid') }}">
+                <i class="fas fa-th"></i>
+            </button>
+            <button id="large-grid-view" 
+                    class="view-toggle-btn bg-gray-200 text-gray-600 p-2 rounded-lg hover:bg-gray-300 transition-colors"
+                    onclick="switchView('large-grid')"
+                    title="{{ __('general.view_toggle.large_grid') }}">
                 <i class="fas fa-th-large"></i>
             </button>
-            <button id="row-view" 
+            <button id="list-view" 
                     class="view-toggle-btn bg-gray-200 text-gray-600 p-2 rounded-lg hover:bg-gray-300 transition-colors"
-                    onclick="switchView('row')"
+                    onclick="switchView('list')"
                     title="{{ __('general.view_toggle.list') }}">
                 <i class="fas fa-list"></i>
             </button>
@@ -54,14 +60,83 @@
             <h2 class="text-2xl font-semibold text-gray-900">{{ __('general.home.latest_properties') }}</h2>
         </div>
 
-        <!-- Grid View -->
-        <div id="products-grid">
+        <!-- Small Grid View -->
+        <div id="products-small-grid">
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+                @foreach($featuredProducts->take(6) as $product)
+                    <div class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                        <div class="relative h-32 bg-gray-100">
+                            @if($product->image)
+                                <img src="{{ asset('storage/' . $product->image) }}" 
+                                     alt="{{ $product->title }}" 
+                                     class="w-full h-full object-cover">
+                            @else
+                                <div class="w-full h-full flex items-center justify-center">
+                                    <i class="fas fa-home text-2xl text-gray-400"></i>
+                                </div>
+                            @endif
+                            @if($product->is_featured)
+                                <div class="absolute top-2 right-2 bg-primary-600 text-white px-2 py-1 rounded text-xs">
+                                    {{ __('general.status.featured') }}
+                                </div>
+                            @endif
+                        </div>
+                        <div class="p-3">
+                            <h3 class="font-medium text-gray-900 text-sm mb-1 line-clamp-1">{{ $product->title }}</h3>
+                            <p class="text-xs text-gray-600 mb-2 line-clamp-2">{{ $product->description }}</p>
+                            <div class="text-sm font-semibold text-primary-600 mb-2">
+                                {{ number_format($product->price) }} {{ __('general.currency.sar') }}
+                            </div>
+                            <a href="{{ route('public.products.show', $product) }}" 
+                               class="text-primary-600 hover:text-primary-700 text-xs font-medium">
+                                {{ __('general.actions.view_details') }}
+                            </a>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+
+        <!-- Large Grid View (Hidden by default) -->
+        <div id="products-large-grid" class="hidden">
             <x-product-grid :products="$featuredProducts->take(6)" :columns="3" />
         </div>
 
-        <!-- Row View (Hidden by default) -->
-        <div id="products-row" class="hidden">
-            <x-product-grid :products="$featuredProducts->take(6)" :columns="1" />
+        <!-- List View (Hidden by default) -->
+        <div id="products-list" class="hidden space-y-4">
+            @foreach($featuredProducts->take(6) as $product)
+            <div class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                <div class="flex">
+                    <div class="relative w-48 h-32 bg-gray-100 flex-shrink-0">
+                        @if($product->image)
+                            <img src="{{ asset('storage/' . $product->image) }}" 
+                                 alt="{{ $product->title }}" 
+                                 class="w-full h-full object-cover">
+                        @else
+                            <div class="w-full h-full flex items-center justify-center">
+                                <i class="fas fa-home text-2xl text-gray-400"></i>
+                            </div>
+                        @endif
+                        @if($product->is_featured)
+                            <div class="absolute top-2 right-2 bg-primary-600 text-white px-2 py-1 rounded text-xs">
+                                {{ __('general.status.featured') }}
+                            </div>
+                        @endif
+                    </div>
+                    <div class="flex-1 p-4">
+                        <h3 class="font-medium text-gray-900 text-lg mb-2">{{ $product->title }}</h3>
+                        <p class="text-sm text-gray-600 mb-3">{{ $product->description }}</p>
+                        <div class="text-lg font-semibold text-primary-600 mb-3">
+                            {{ number_format($product->price) }} {{ __('general.currency.sar') }}
+                        </div>
+                        <a href="{{ route('public.products.show', $product) }}" 
+                           class="text-primary-600 hover:text-primary-700 font-medium">
+                            {{ __('general.actions.view_details') }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+            @endforeach
         </div>
         
         <div class="text-center mt-8">
@@ -78,8 +153,38 @@
     <section class="mb-16">
         <h2 class="text-2xl font-semibold text-gray-900 mb-8">{{ __('general.home.featured_cities') }}</h2>
         
-        <!-- Grid View -->
-        <div id="cities-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Small Grid View -->
+        <div id="cities-small-grid" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+            @foreach($featuredCities as $city)
+            <div class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                <div class="relative h-32 bg-gray-100">
+                    @if($city->image)
+                        <img src="{{ asset('storage/' . $city->image) }}" 
+                             alt="{{ $city->name }}" 
+                             class="w-full h-full object-cover">
+                    @else
+                        <div class="w-full h-full flex items-center justify-center">
+                            <i class="fas fa-city text-2xl text-gray-400"></i>
+                        </div>
+                    @endif
+                    <div class="absolute top-2 right-2 bg-white text-primary-600 px-2 py-1 rounded text-xs">
+                        {{ $city->products_count }} {{ __('general.status.property') }}
+                    </div>
+                </div>
+                <div class="p-3">
+                    <h3 class="font-medium text-gray-900 text-sm mb-1 line-clamp-1">@cityName($city)</h3>
+                    <p class="text-xs text-gray-600 mb-2 line-clamp-2">@cityDescription($city)</p>
+                    <a href="{{ route('public.products.index', ['city' => $city->id]) }}" 
+                       class="text-primary-600 hover:text-primary-700 text-xs font-medium">
+                        {{ __('general.actions.browse_properties') }}
+                    </a>
+                </div>
+            </div>
+            @endforeach
+        </div>
+
+        <!-- Large Grid View (Hidden by default) -->
+        <div id="cities-large-grid" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach($featuredCities as $city)
             <div class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
                 <div class="relative h-40 bg-gray-100">
@@ -108,8 +213,8 @@
             @endforeach
         </div>
 
-        <!-- Row View (Hidden by default) -->
-        <div id="cities-row" class="hidden space-y-4">
+        <!-- List View (Hidden by default) -->
+        <div id="cities-list" class="hidden space-y-4">
             @foreach($featuredCities as $city)
             <div class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
                 <div class="flex">
@@ -154,8 +259,28 @@
     <section class="mb-16">
         <h2 class="text-2xl font-semibold text-gray-900 mb-8">{{ __('general.home.featured_categories') }}</h2>
         
-        <!-- Grid View -->
-        <div id="categories-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Small Grid View -->
+        <div id="categories-small-grid" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+            @foreach($categories->take(6) as $category)
+            <div class="bg-white border border-gray-200 rounded-lg p-4 text-center hover:shadow-md transition-shadow">
+                @if($category->icon)
+                    <i class="{{ $category->icon }} text-2xl text-primary-600 mb-3"></i>
+                @else
+                    <i class="fas fa-building text-2xl text-primary-600 mb-3"></i>
+                @endif
+                <h3 class="font-medium text-gray-900 text-sm mb-1 line-clamp-1">{{ $category->display_name ?? App\Helpers\LanguageHelper::getCategoryName($category) }}</h3>
+                <p class="text-xs text-gray-600 mb-2 line-clamp-2">@categoryDescription($category)</p>
+                <div class="text-xs text-gray-500 mb-3">{{ $category->products_count }} {{ __('general.status.property') }}</div>
+                <a href="{{ route('public.products.by-category', $category->id) }}" 
+                   class="text-primary-600 hover:text-primary-700 text-xs font-medium">
+                    {{ __('general.actions.browse_category') }}
+                </a>
+            </div>
+            @endforeach
+        </div>
+
+        <!-- Large Grid View (Hidden by default) -->
+        <div id="categories-large-grid" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             @foreach($categories->take(4) as $category)
             <div class="bg-white border border-gray-200 rounded-lg p-6 text-center hover:shadow-md transition-shadow">
                 @if($category->icon)
@@ -174,8 +299,8 @@
             @endforeach
         </div>
 
-        <!-- Row View (Hidden by default) -->
-        <div id="categories-row" class="hidden space-y-4">
+        <!-- List View (Hidden by default) -->
+        <div id="categories-list" class="hidden space-y-4">
             @foreach($categories->take(4) as $category)
             <div class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
                 <div class="flex">
@@ -222,6 +347,13 @@
 
 @push('styles')
 <style>
+.line-clamp-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
 .line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -333,49 +465,71 @@ function formatNumber(number, locale = '{{ app()->getLocale() }}') {
 
 function switchView(viewType) {
     // Featured Products
-    const productsGridView = document.getElementById('products-grid');
-    const productsRowView = document.getElementById('products-row');
+    const productsSmallGridView = document.getElementById('products-small-grid');
+    const productsLargeGridView = document.getElementById('products-large-grid');
+    const productsListView = document.getElementById('products-list');
     
     // Featured Cities
-    const citiesGridView = document.getElementById('cities-grid');
-    const citiesRowView = document.getElementById('cities-row');
+    const citiesSmallGridView = document.getElementById('cities-small-grid');
+    const citiesLargeGridView = document.getElementById('cities-large-grid');
+    const citiesListView = document.getElementById('cities-list');
     
     // Featured Categories
-    const categoriesGridView = document.getElementById('categories-grid');
-    const categoriesRowView = document.getElementById('categories-row');
+    const categoriesSmallGridView = document.getElementById('categories-small-grid');
+    const categoriesLargeGridView = document.getElementById('categories-large-grid');
+    const categoriesListView = document.getElementById('categories-list');
     
     // Toggle buttons
-    const gridBtn = document.getElementById('grid-view');
-    const rowBtn = document.getElementById('row-view');
+    const smallGridBtn = document.getElementById('small-grid-view');
+    const largeGridBtn = document.getElementById('large-grid-view');
+    const listBtn = document.getElementById('list-view');
     
-    if (viewType === 'grid') {
-        // Show grid views, hide row views
-        if (productsGridView) productsGridView.classList.remove('hidden');
-        if (productsRowView) productsRowView.classList.add('hidden');
-        if (citiesGridView) citiesGridView.classList.remove('hidden');
-        if (citiesRowView) citiesRowView.classList.add('hidden');
-        if (categoriesGridView) categoriesGridView.classList.remove('hidden');
-        if (categoriesRowView) categoriesRowView.classList.add('hidden');
+    // Hide all views first
+    if (productsSmallGridView) productsSmallGridView.classList.add('hidden');
+    if (productsLargeGridView) productsLargeGridView.classList.add('hidden');
+    if (productsListView) productsListView.classList.add('hidden');
+    if (citiesSmallGridView) citiesSmallGridView.classList.add('hidden');
+    if (citiesLargeGridView) citiesLargeGridView.classList.add('hidden');
+    if (citiesListView) citiesListView.classList.add('hidden');
+    if (categoriesSmallGridView) categoriesSmallGridView.classList.add('hidden');
+    if (categoriesLargeGridView) categoriesLargeGridView.classList.add('hidden');
+    if (categoriesListView) categoriesListView.classList.add('hidden');
+    
+    // Reset all button styles
+    smallGridBtn.classList.remove('bg-primary-600', 'text-white');
+    smallGridBtn.classList.add('bg-gray-200', 'text-gray-600');
+    largeGridBtn.classList.remove('bg-primary-600', 'text-white');
+    largeGridBtn.classList.add('bg-gray-200', 'text-gray-600');
+    listBtn.classList.remove('bg-primary-600', 'text-white');
+    listBtn.classList.add('bg-gray-200', 'text-gray-600');
+    
+    if (viewType === 'small-grid') {
+        // Show small grid views
+        if (productsSmallGridView) productsSmallGridView.classList.remove('hidden');
+        if (citiesSmallGridView) citiesSmallGridView.classList.remove('hidden');
+        if (categoriesSmallGridView) categoriesSmallGridView.classList.remove('hidden');
         
         // Update button styles
-        gridBtn.classList.remove('bg-gray-200', 'text-gray-600');
-        gridBtn.classList.add('bg-primary-600', 'text-white');
-        rowBtn.classList.remove('bg-primary-600', 'text-white');
-        rowBtn.classList.add('bg-gray-200', 'text-gray-600');
-    } else {
-        // Show row views, hide grid views
-        if (productsRowView) productsRowView.classList.remove('hidden');
-        if (productsGridView) productsGridView.classList.add('hidden');
-        if (citiesRowView) citiesRowView.classList.remove('hidden');
-        if (citiesGridView) citiesGridView.classList.add('hidden');
-        if (categoriesRowView) categoriesRowView.classList.remove('hidden');
-        if (categoriesGridView) categoriesGridView.classList.add('hidden');
+        smallGridBtn.classList.remove('bg-gray-200', 'text-gray-600');
+        smallGridBtn.classList.add('bg-primary-600', 'text-white');
+    } else if (viewType === 'large-grid') {
+        // Show large grid views
+        if (productsLargeGridView) productsLargeGridView.classList.remove('hidden');
+        if (citiesLargeGridView) citiesLargeGridView.classList.remove('hidden');
+        if (categoriesLargeGridView) categoriesLargeGridView.classList.remove('hidden');
         
         // Update button styles
-        rowBtn.classList.remove('bg-gray-200', 'text-gray-600');
-        rowBtn.classList.add('bg-primary-600', 'text-white');
-        gridBtn.classList.remove('bg-primary-600', 'text-white');
-        gridBtn.classList.add('bg-gray-200', 'text-gray-600');
+        largeGridBtn.classList.remove('bg-gray-200', 'text-gray-600');
+        largeGridBtn.classList.add('bg-primary-600', 'text-white');
+    } else if (viewType === 'list') {
+        // Show list views
+        if (productsListView) productsListView.classList.remove('hidden');
+        if (citiesListView) citiesListView.classList.remove('hidden');
+        if (categoriesListView) categoriesListView.classList.remove('hidden');
+        
+        // Update button styles
+        listBtn.classList.remove('bg-gray-200', 'text-gray-600');
+        listBtn.classList.add('bg-primary-600', 'text-white');
     }
     
     // Store user preference in localStorage
@@ -384,7 +538,7 @@ function switchView(viewType) {
 
 // Set initial view based on user preference
 document.addEventListener('DOMContentLoaded', function() {
-    const preferredView = localStorage.getItem('preferredView') || 'grid';
+    const preferredView = localStorage.getItem('preferredView') || 'small-grid';
     switchView(preferredView);
     
     // Add language-specific functionality

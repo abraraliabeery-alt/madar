@@ -40,13 +40,13 @@
                         </select>
                     </div>
                     <div>
-                        <label for="category_id" class="block text-sm font-medium text-gray-700 mb-2">{{ __('products.search.category') }}</label>
-                        <select name="category_id" id="category_id"
+                        <label for="city" class="block text-sm font-medium text-gray-700 mb-2">{{ __('products.search.city') }}</label>
+                        <select name="city" id="city"
                                 class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
-                            <option value="">{{ __('products.search.all_categories') }}</option>
-                            @foreach($categories as $category)
-                                <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
-                                    {{ $category->getTranslatedName() }}
+                            <option value="">{{ __('products.search.all_cities') }}</option>
+                            @foreach($cities ?? [] as $city)
+                                <option value="{{ $city->id }}" {{ request('city') == $city->id ? 'selected' : '' }}>
+                                    {{ $city->localized_name }}
                                 </option>
                             @endforeach
                         </select>
@@ -99,30 +99,73 @@
         <!-- Global View Toggle -->
         <div class="flex justify-end items-center mb-8">
             <div class="flex items-center space-x-2 rtl:space-x-reverse">
-                <span class="text-sm text-gray-600 mr-3 rtl:ml-3 rtl:mr-0">عرض:</span>
-                <button id="grid-view" 
+                <span class="text-sm text-gray-600 mr-3 rtl:ml-3 rtl:mr-0">{{ __('general.view_toggle.display') }}</span>
+                <button id="small-grid-view" 
                         class="view-toggle-btn bg-primary-600 text-white p-2 rounded-lg transition-colors"
-                        onclick="switchView('grid')">
+                        onclick="switchView('small-grid')"
+                        title="{{ __('general.view_toggle.small_grid') }}">
+                    <i class="fas fa-th"></i>
+                </button>
+                <button id="large-grid-view" 
+                        class="view-toggle-btn bg-gray-200 text-gray-600 p-2 rounded-lg hover:bg-gray-300 transition-colors"
+                        onclick="switchView('large-grid')"
+                        title="{{ __('general.view_toggle.large_grid') }}">
                     <i class="fas fa-th-large"></i>
                 </button>
-                <button id="row-view" 
+                <button id="list-view" 
                         class="view-toggle-btn bg-gray-200 text-gray-600 p-2 rounded-lg hover:bg-gray-300 transition-colors"
-                        onclick="switchView('row')">
+                        onclick="switchView('list')"
+                        title="{{ __('general.view_toggle.list') }}">
                     <i class="fas fa-list"></i>
                 </button>
             </div>
         </div>
 
         @if(isset($products) && $products->count() > 0)
-            <!-- Grid View -->
-            <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <!-- Small Grid View -->
+            <div id="products-small-grid" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                @foreach($products as $product)
+                    <div class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                        <div class="relative h-32 bg-gray-100">
+                            @if($product->image)
+                                <img src="{{ asset('storage/' . $product->image) }}" 
+                                     alt="{{ $product->title }}" 
+                                     class="w-full h-full object-cover">
+                            @else
+                                <div class="w-full h-full flex items-center justify-center">
+                                    <i class="fas fa-home text-2xl text-gray-400"></i>
+                                </div>
+                            @endif
+                            @if($product->is_featured)
+                                <div class="absolute top-2 right-2 bg-primary-600 text-white px-2 py-1 rounded text-xs">
+                                    {{ __('general.status.featured') }}
+                                </div>
+                            @endif
+                        </div>
+                        <div class="p-3">
+                            <h3 class="font-medium text-gray-900 text-sm mb-1 line-clamp-1">{{ $product->title }}</h3>
+                            <p class="text-xs text-gray-600 mb-2 line-clamp-2">{{ $product->description }}</p>
+                            <div class="text-sm font-semibold text-primary-600 mb-2">
+                                {{ number_format($product->price) }} {{ __('general.currency.sar') }}
+                            </div>
+                            <a href="{{ route('public.products.show', $product) }}" 
+                               class="text-primary-600 hover:text-primary-700 text-xs font-medium">
+                                {{ __('general.actions.view_details') }}
+                            </a>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+
+            <!-- Large Grid View (Hidden by default) -->
+            <div id="products-large-grid" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 @foreach($products as $product)
                     <x-product-card-grid :product="$product" />
                 @endforeach
             </div>
 
-            <!-- Row View (Hidden by default) -->
-            <div id="products-row" class="hidden space-y-4">
+            <!-- List View (Hidden by default) -->
+            <div id="products-list" class="hidden space-y-4">
                 @foreach($products as $product)
                     <x-product-card-row :product="$product" />
                 @endforeach
@@ -183,31 +226,58 @@
 .view-toggle-btn:hover {
     transform: scale(1.05);
 }
+
+.line-clamp-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
 </style>
 @endpush
 
 @push('scripts')
 <script>
 function switchView(viewType) {
-    const productsGridView = document.getElementById('products-grid');
-    const productsRowView = document.getElementById('products-row');
-    const gridBtn = document.getElementById('grid-view');
-    const rowBtn = document.getElementById('row-view');
+    const productsSmallGridView = document.getElementById('products-small-grid');
+    const productsLargeGridView = document.getElementById('products-large-grid');
+    const productsListView = document.getElementById('products-list');
+    const smallGridBtn = document.getElementById('small-grid-view');
+    const largeGridBtn = document.getElementById('large-grid-view');
+    const listBtn = document.getElementById('list-view');
     
-    if (viewType === 'grid') {
-        productsGridView.classList.remove('hidden');
-        productsRowView.classList.add('hidden');
-        gridBtn.classList.remove('bg-gray-200', 'text-gray-600');
-        gridBtn.classList.add('bg-primary-600', 'text-white');
-        rowBtn.classList.remove('bg-primary-600', 'text-white');
-        rowBtn.classList.add('bg-gray-200', 'text-gray-600');
-    } else {
-        productsRowView.classList.remove('hidden');
-        productsGridView.classList.add('hidden');
-        rowBtn.classList.remove('bg-gray-200', 'text-gray-600');
-        rowBtn.classList.add('bg-primary-600', 'text-white');
-        gridBtn.classList.remove('bg-primary-600', 'text-white');
-        gridBtn.classList.add('bg-gray-200', 'text-gray-600');
+    // Hide all views first
+    productsSmallGridView.classList.add('hidden');
+    productsLargeGridView.classList.add('hidden');
+    productsListView.classList.add('hidden');
+    
+    // Reset all button styles
+    smallGridBtn.classList.remove('bg-primary-600', 'text-white');
+    smallGridBtn.classList.add('bg-gray-200', 'text-gray-600');
+    largeGridBtn.classList.remove('bg-primary-600', 'text-white');
+    largeGridBtn.classList.add('bg-gray-200', 'text-gray-600');
+    listBtn.classList.remove('bg-primary-600', 'text-white');
+    listBtn.classList.add('bg-gray-200', 'text-gray-600');
+    
+    if (viewType === 'small-grid') {
+        productsSmallGridView.classList.remove('hidden');
+        smallGridBtn.classList.remove('bg-gray-200', 'text-gray-600');
+        smallGridBtn.classList.add('bg-primary-600', 'text-white');
+    } else if (viewType === 'large-grid') {
+        productsLargeGridView.classList.remove('hidden');
+        largeGridBtn.classList.remove('bg-gray-200', 'text-gray-600');
+        largeGridBtn.classList.add('bg-primary-600', 'text-white');
+    } else if (viewType === 'list') {
+        productsListView.classList.remove('hidden');
+        listBtn.classList.remove('bg-gray-200', 'text-gray-600');
+        listBtn.classList.add('bg-primary-600', 'text-white');
     }
     
     // Store user preference in localStorage
@@ -216,7 +286,7 @@ function switchView(viewType) {
 
 // Set initial view based on user preference
 document.addEventListener('DOMContentLoaded', function() {
-    const preferredView = localStorage.getItem('productsPreferredView') || 'grid';
+    const preferredView = localStorage.getItem('productsPreferredView') || 'small-grid';
     switchView(preferredView);
 });
 
