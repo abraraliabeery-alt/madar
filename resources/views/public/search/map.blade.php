@@ -175,7 +175,7 @@ function addMarkersToMap() {
                 <p class="text-sm text-gray-500 mb-3">
                     <i class="fas fa-building mr-1"></i> ${property.facility}
                 </p>
-                <a href="${property.url}" class="inline-block bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition-colors">
+                <a href="${property.url}" class="inline-block bg-blue-600 !text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition-colors">
                     {{ __('public.search.view_details') }}
                 </a>
             </div>
