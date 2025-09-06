@@ -185,6 +185,8 @@ return [
         'products' => 'المنتجات',
         'facilities' => 'المنشآت',
         'filter' => 'تصفية',
+        'a_to_z' => 'أ إلى ي',
+        'z_to_a' => 'ي إلى أ',
     ],
 
     'advanced_search' => [
@@ -197,6 +199,7 @@ return [
         'min_area' => 'الحد الأدنى للمساحة (م²)',
         'max_area' => 'الحد الأقصى للمساحة (م²)',
         'min_area_placeholder' => 'الحد الأدنى للمساحة',
+        'max_area_placeholder' => 'الحد الأقصى للمساحة',
         'property_type' => 'نوع العقار',
         'for_sale' => 'للبيع',
         'for_rent' => 'للإيجار',
@@ -305,6 +308,8 @@ return [
         'friday' => 'الجمعة',
         'saturday' => 'السبت',
         'sunday' => 'الأحد',
+        'name' => 'الاسم',
+        'category' => 'الفئة',
     ],
 
     'errors' => [

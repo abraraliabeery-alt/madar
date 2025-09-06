@@ -185,6 +185,8 @@ return [
         'products' => 'Products',
         'facilities' => 'Facilities',
         'filter' => 'Filter',
+        'a_to_z' => 'A to Z',
+        'z_to_a' => 'Z to A',
     ],
 
     'advanced_search' => [
@@ -197,6 +199,7 @@ return [
         'min_area' => 'Min Area (m²)',
         'max_area' => 'Max Area (m²)',
         'min_area_placeholder' => 'Min area',
+        'max_area_placeholder' => 'Max area',
         'property_type' => 'Property Type',
         'for_sale' => 'For Sale',
         'for_rent' => 'For Rent',
@@ -305,6 +308,8 @@ return [
         'friday' => 'Friday',
         'saturday' => 'Saturday',
         'sunday' => 'Sunday',
+        'name' => 'Name',
+        'category' => 'Category',
     ],
 
     'errors' => [

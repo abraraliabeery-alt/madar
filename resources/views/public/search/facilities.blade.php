@@ -60,8 +60,8 @@
                         <select class="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
                                 id="sort" name="sort" onchange="this.form.submit()">
                             <option value="latest" {{ request('sort') == 'latest' ? 'selected' : '' }}>{{ __('public.advanced_search.latest') }}</option>
-                            <option value="name_asc" {{ request('sort') == 'name_asc' ? 'selected' : '' }}>{{ __('public.common.name') }}: A to Z</option>
-                            <option value="name_desc" {{ request('sort') == 'name_desc' ? 'selected' : '' }}>{{ __('public.common.name') }}: Z to A</option>
+                            <option value="name_asc" {{ request('sort') == 'name_asc' ? 'selected' : '' }}>{{ __('public.common.name') }}: {{ __('public.search.a_to_z') }}</option>
+                            <option value="name_desc" {{ request('sort') == 'name_desc' ? 'selected' : '' }}>{{ __('public.common.name') }}: {{ __('public.search.z_to_a') }}</option>
                             <option value="rating" {{ request('sort') == 'rating' ? 'selected' : '' }}>{{ __('public.common.rating') }}</option>
                         </select>
                     </div>

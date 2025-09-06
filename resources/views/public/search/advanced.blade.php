@@ -103,7 +103,7 @@
                         <div>
                             <label for="max_area" class="block text-sm font-medium text-gray-700 mb-2">{{ __('public.advanced_search.max_area') }}</label>
                             <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
-                                   id="max_area" name="max_area" value="{{ request('max_area') }}" placeholder="{{ __('public.advanced_search.min_area_placeholder') }}">
+                                   id="max_area" name="max_area" value="{{ request('max_area') }}" placeholder="{{ __('public.advanced_search.max_area_placeholder') }}">
                         </div>
                     </div>
                 </div>
