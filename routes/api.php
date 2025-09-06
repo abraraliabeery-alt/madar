@@ -14,6 +14,8 @@ use App\Http\Controllers\Api\ApiReportController;
 use App\Http\Controllers\Api\ApiUserController;
 use App\Http\Controllers\Api\ApiBookingController;
 use App\Http\Controllers\Api\ApiContractController;
+use App\Http\Controllers\Api\ApiOfferController;
+use App\Http\Controllers\Api\ApiFinancialReportController;
 use App\Http\Controllers\Api\ApiAppointmentController;
 use App\Http\Controllers\Api\ApiCommentController;
 use App\Http\Controllers\Api\ApiNotificationController;
@@ -63,6 +65,13 @@ Route::prefix('v1')->group(function () {
     Route::get('/products/{product}', [ApiProductController::class, 'show']);
     Route::get('/categories/{category}/products', [ApiProductController::class, 'byCategory']);
     Route::get('/facilities/{facility}/products', [ApiProductController::class, 'byFacility']);
+
+    // Public Offer Routes
+    Route::get('/offers', [ApiOfferController::class, 'index']);
+    Route::get('/offers/statistics', [ApiOfferController::class, 'statistics']);
+    Route::get('/offers/export', [ApiOfferController::class, 'export']);
+    Route::get('/products/{product}/offers', [ApiOfferController::class, 'getProductOffers']);
+    Route::get('/offers/{offer}', [ApiOfferController::class, 'show']);
 
     // Public Facility Routes
     Route::get('/facilities', [ApiFacilityController::class, 'index']);
@@ -140,6 +149,32 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     Route::get('/contracts', [ApiContractController::class, 'index']);
     Route::get('/contracts/{contract}', [ApiContractController::class, 'show']);
     Route::get('/contracts/{contract}/download', [ApiContractController::class, 'download']);
+    Route::get('/contracts/{contract}/invoices', [ApiContractController::class, 'getInvoices']);
+    Route::get('/contracts/{contract}/payments', [ApiContractController::class, 'getPayments']);
+    Route::get('/contracts/{contract}/financial-report', [ApiContractController::class, 'getFinancialReport']);
+
+    // User Offers Routes
+    Route::get('/offers', [ApiOfferController::class, 'index']);
+    Route::post('/offers', [ApiOfferController::class, 'store']);
+    Route::get('/offers/{offer}', [ApiOfferController::class, 'show']);
+    Route::put('/offers/{offer}', [ApiOfferController::class, 'update']);
+    Route::delete('/offers/{offer}', [ApiOfferController::class, 'destroy']);
+    Route::post('/offers/{offer}/toggle-status', [ApiOfferController::class, 'toggleStatus']);
+    Route::post('/offers/{offer}/copy', [ApiOfferController::class, 'copy']);
+    Route::get('/offers/statistics', [ApiOfferController::class, 'statistics']);
+    Route::get('/offers/export', [ApiOfferController::class, 'export']);
+
+    // Financial Reports Routes
+    Route::get('/financial/revenue', [ApiFinancialReportController::class, 'revenue']);
+    Route::get('/financial/receivables', [ApiFinancialReportController::class, 'receivables']);
+    Route::get('/financial/commissions', [ApiFinancialReportController::class, 'commissions']);
+    Route::get('/financial/payments', [ApiFinancialReportController::class, 'payments']);
+    Route::get('/financial/invoices', [ApiFinancialReportController::class, 'invoices']);
+    Route::get('/financial/contracts', [ApiFinancialReportController::class, 'contracts']);
+    Route::get('/financial/customer', [ApiFinancialReportController::class, 'customer']);
+    Route::get('/financial/owner', [ApiFinancialReportController::class, 'owner']);
+    Route::get('/financial/monthly', [ApiFinancialReportController::class, 'monthly']);
+    Route::get('/financial/yearly', [ApiFinancialReportController::class, 'yearly']);
 
     // User Appointments Routes
     Route::get('/appointments', [ApiAppointmentController::class, 'index']);
@@ -233,6 +268,25 @@ Route::middleware(['auth:sanctum', 'role:admin'])->prefix('v1/admin')->name('api
     Route::apiResource('contracts', ApiAdminContractController::class);
     Route::post('contracts/{contract}/toggle-status', [ApiAdminContractController::class, 'toggleStatus']);
     Route::post('contracts/{contract}/toggle-verification', [ApiAdminContractController::class, 'toggleVerification']);
+    Route::post('contracts/{contract}/record-payment', [ApiContractController::class, 'recordPayment']);
+
+    // Admin Offers Routes
+    Route::apiResource('offers', ApiOfferController::class);
+    Route::post('offers/{offer}/toggle-status', [ApiOfferController::class, 'toggleStatus']);
+    Route::post('offers/{offer}/copy', [ApiOfferController::class, 'copy']);
+
+    // Admin Financial Reports Routes
+    Route::get('financial/facility-summary', [ApiFinancialReportController::class, 'facilitySummary']);
+    Route::get('financial/revenue', [ApiFinancialReportController::class, 'revenue']);
+    Route::get('financial/receivables', [ApiFinancialReportController::class, 'receivables']);
+    Route::get('financial/commissions', [ApiFinancialReportController::class, 'commissions']);
+    Route::get('financial/payments', [ApiFinancialReportController::class, 'payments']);
+    Route::get('financial/invoices', [ApiFinancialReportController::class, 'invoices']);
+    Route::get('financial/contracts', [ApiFinancialReportController::class, 'contracts']);
+    Route::get('financial/customer', [ApiFinancialReportController::class, 'customer']);
+    Route::get('financial/owner', [ApiFinancialReportController::class, 'owner']);
+    Route::get('financial/monthly', [ApiFinancialReportController::class, 'monthly']);
+    Route::get('financial/yearly', [ApiFinancialReportController::class, 'yearly']);
 
     // Admin Categories Routes
     Route::apiResource('categories', ApiAdminCategoryController::class);
@@ -267,4 +321,33 @@ Route::middleware(['auth:sanctum', 'role:facility'])->prefix('v1/facility')->nam
     Route::get('/profile', [ApiFacilityProfileController::class, 'show']);
     Route::post('/profile', [ApiFacilityProfileController::class, 'update']);
     Route::post('/profile/logo', [ApiFacilityProfileController::class, 'updateLogo']);
+
+    // Facility Offers Routes
+    Route::apiResource('offers', ApiOfferController::class);
+    Route::post('offers/{offer}/toggle-status', [ApiOfferController::class, 'toggleStatus']);
+    Route::post('offers/{offer}/copy', [ApiOfferController::class, 'copy']);
+    Route::get('offers/statistics', [ApiOfferController::class, 'statistics']);
+    Route::get('offers/export', [ApiOfferController::class, 'export']);
+
+    // Facility Contracts Routes
+    Route::apiResource('contracts', ApiContractController::class);
+    Route::post('contracts/{contract}/update-status', [ApiContractController::class, 'updateStatus']);
+    Route::post('contracts/{contract}/cancel', [ApiContractController::class, 'cancel']);
+    Route::post('contracts/{contract}/record-payment', [ApiContractController::class, 'recordPayment']);
+    Route::get('contracts/{contract}/invoices', [ApiContractController::class, 'getInvoices']);
+    Route::get('contracts/{contract}/payments', [ApiContractController::class, 'getPayments']);
+    Route::get('contracts/{contract}/financial-report', [ApiContractController::class, 'getFinancialReport']);
+
+    // Facility Financial Reports Routes
+    Route::get('financial/facility-summary', [ApiFinancialReportController::class, 'facilitySummary']);
+    Route::get('financial/revenue', [ApiFinancialReportController::class, 'revenue']);
+    Route::get('financial/receivables', [ApiFinancialReportController::class, 'receivables']);
+    Route::get('financial/commissions', [ApiFinancialReportController::class, 'commissions']);
+    Route::get('financial/payments', [ApiFinancialReportController::class, 'payments']);
+    Route::get('financial/invoices', [ApiFinancialReportController::class, 'invoices']);
+    Route::get('financial/contracts', [ApiFinancialReportController::class, 'contracts']);
+    Route::get('financial/customer', [ApiFinancialReportController::class, 'customer']);
+    Route::get('financial/owner', [ApiFinancialReportController::class, 'owner']);
+    Route::get('financial/monthly', [ApiFinancialReportController::class, 'monthly']);
+    Route::get('financial/yearly', [ApiFinancialReportController::class, 'yearly']);
 });

@@ -1,18 +1,17 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Facility;
 
 use App\Http\Controllers\Controller;
 use App\Models\Contract;
 use App\Models\Offer;
 use App\Models\Product;
-use App\Models\Facility;
 use App\Models\User;
 use App\Services\ContractService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class AdminContractController extends Controller
+class FacilityContractController extends Controller
 {
     protected $contractService;
 
@@ -26,12 +25,13 @@ class AdminContractController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Contract::with(['product', 'offer', 'user', 'owner', 'facility']);
-
-        // فلترة حسب المنشأة
-        if ($request->filled('facility_id')) {
-            $query->where('facility_id', $request->facility_id);
+        $facility = Auth::user()->facilities()->first();
+        
+        if (!$facility) {
+            return redirect()->route('facility.create');
         }
+
+        $query = $facility->contracts()->with(['product', 'offer', 'user', 'owner']);
 
         // فلترة حسب النوع
         if ($request->filled('type')) {
@@ -53,17 +53,82 @@ class AdminContractController extends Controller
                   })
                   ->orWhereHas('owner', function($q2) use ($search) {
                       $q2->where('name', 'like', "%{$search}%");
-                  })
-                  ->orWhereHas('facility', function($q2) use ($search) {
-                      $q2->where('name', 'like', "%{$search}%");
                   });
             });
         }
 
-        $contracts = $query->paginate(20);
-        $facilities = Facility::all();
+        $contracts = $query->paginate(15);
 
-        return view('admin.contracts.index', compact('contracts', 'facilities'));
+        return view('facility.contracts.index', compact('contracts'));
+    }
+
+    /**
+     * عرض نموذج إنشاء عقد
+     */
+    public function create()
+    {
+        $facility = Auth::user()->facilities()->first();
+        
+        if (!$facility) {
+            return redirect()->route('facility.create');
+        }
+
+        $products = $facility->products()->with('translations')->get();
+        $offers = $facility->offers()->active()->valid()->with('product')->get();
+        $users = User::where('primary_role', 'user')->get();
+        $owners = User::where('primary_role', 'owner')->get();
+        
+        $contractTypes = [
+            'sale' => 'بيع',
+            'rent' => 'إيجار',
+        ];
+
+        return view('facility.contracts.create', compact('products', 'offers', 'users', 'owners', 'contractTypes'));
+    }
+
+    /**
+     * حفظ عقد جديد
+     */
+    public function store(Request $request)
+    {
+        $facility = Auth::user()->facilities()->first();
+        
+        if (!$facility) {
+            return redirect()->route('facility.create');
+        }
+
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'offer_id' => 'required|exists:offers,id',
+            'user_id' => 'required|exists:users,id',
+            'owner_id' => 'required|exists:users,id',
+            'contract_type' => 'required|in:sale,rent',
+            'start_date' => 'required|date',
+            'end_date' => 'nullable|date|after:start_date',
+            'total_amount' => 'required|numeric|min:0',
+            'currency' => 'required|string|max:3',
+            'deposit_amount' => 'nullable|numeric|min:0',
+            'commission_rate' => 'nullable|numeric|min:0|max:1',
+            'terms_conditions' => 'nullable|string',
+            'terms_conditions_ar' => 'nullable|string',
+        ]);
+
+        $data = $request->all();
+        $data['facility_id'] = $facility->id;
+        $data['created_by'] = Auth::id();
+
+        $contract = $this->contractService->createContract($data);
+
+        // حفظ الترجمات
+        if ($request->filled('terms_conditions_ar')) {
+            $contract->translations()->create([
+                'locale' => 'ar',
+                'terms_conditions' => $request->terms_conditions_ar,
+            ]);
+        }
+
+        return redirect()->route('facility.contracts.index')
+            ->with('success', 'تم إنشاء العقد بنجاح');
     }
 
     /**
@@ -71,19 +136,20 @@ class AdminContractController extends Controller
      */
     public function show(Contract $contract)
     {
+        $this->authorize('view', $contract);
+        
         $contract->load([
             'product', 
             'offer', 
             'user', 
             'owner', 
-            'facility',
             'invoices', 
             'payments',
             'accountingEntries',
             'translations'
         ]);
         
-        return view('admin.contracts.show', compact('contract'));
+        return view('facility.contracts.show', compact('contract'));
     }
 
     /**
@@ -91,9 +157,11 @@ class AdminContractController extends Controller
      */
     public function edit(Contract $contract)
     {
-        $facilities = Facility::all();
-        $products = Product::with('translations')->get();
-        $offers = Offer::active()->valid()->with('product')->get();
+        $this->authorize('update', $contract);
+        
+        $facility = Auth::user()->facilities()->first();
+        $products = $facility->products()->with('translations')->get();
+        $offers = $facility->offers()->active()->valid()->with('product')->get();
         $users = User::where('primary_role', 'user')->get();
         $owners = User::where('primary_role', 'owner')->get();
         
@@ -104,7 +172,7 @@ class AdminContractController extends Controller
 
         $contract->load('translations');
         
-        return view('admin.contracts.edit', compact('contract', 'facilities', 'products', 'offers', 'users', 'owners', 'contractTypes'));
+        return view('facility.contracts.edit', compact('contract', 'products', 'offers', 'users', 'owners', 'contractTypes'));
     }
 
     /**
@@ -112,12 +180,13 @@ class AdminContractController extends Controller
      */
     public function update(Request $request, Contract $contract)
     {
+        $this->authorize('update', $contract);
+
         $request->validate([
             'product_id' => 'required|exists:products,id',
             'offer_id' => 'required|exists:offers,id',
             'user_id' => 'required|exists:users,id',
             'owner_id' => 'required|exists:users,id',
-            'facility_id' => 'required|exists:facilities,id',
             'contract_type' => 'required|in:sale,rent',
             'start_date' => 'required|date',
             'end_date' => 'nullable|date|after:start_date',
@@ -149,7 +218,7 @@ class AdminContractController extends Controller
             ]);
         }
 
-        return redirect()->route('admin.contracts.index')
+        return redirect()->route('facility.contracts.index')
             ->with('success', 'تم تحديث العقد بنجاح');
     }
 
@@ -158,9 +227,11 @@ class AdminContractController extends Controller
      */
     public function destroy(Contract $contract)
     {
+        $this->authorize('delete', $contract);
+        
         $contract->delete();
 
-        return redirect()->route('admin.contracts.index')
+        return redirect()->route('facility.contracts.index')
             ->with('success', 'تم حذف العقد بنجاح');
     }
 
@@ -169,6 +240,8 @@ class AdminContractController extends Controller
      */
     public function updateStatus(Request $request, Contract $contract)
     {
+        $this->authorize('update', $contract);
+        
         $request->validate([
             'status' => 'required|in:draft,active,completed,cancelled'
         ]);
@@ -183,6 +256,8 @@ class AdminContractController extends Controller
      */
     public function cancel(Request $request, Contract $contract)
     {
+        $this->authorize('update', $contract);
+        
         $request->validate([
             'reason' => 'nullable|string'
         ]);
@@ -197,6 +272,8 @@ class AdminContractController extends Controller
      */
     public function recordPayment(Request $request, Contract $contract)
     {
+        $this->authorize('update', $contract);
+        
         $request->validate([
             'invoice_id' => 'nullable|exists:invoices,id',
             'payment_method' => 'required|in:cash,bank_transfer,credit_card,check,online',
@@ -224,9 +301,11 @@ class AdminContractController extends Controller
      */
     public function invoices(Contract $contract)
     {
+        $this->authorize('view', $contract);
+        
         $invoices = $contract->invoices()->with(['payments'])->get();
 
-        return view('admin.contracts.invoices', compact('contract', 'invoices'));
+        return view('facility.contracts.invoices', compact('contract', 'invoices'));
     }
 
     /**
@@ -234,9 +313,11 @@ class AdminContractController extends Controller
      */
     public function payments(Contract $contract)
     {
+        $this->authorize('view', $contract);
+        
         $payments = $contract->payments()->with(['invoice'])->get();
 
-        return view('admin.contracts.payments', compact('contract', 'payments'));
+        return view('facility.contracts.payments', compact('contract', 'payments'));
     }
 
     /**
@@ -244,11 +325,13 @@ class AdminContractController extends Controller
      */
     public function financialReport(Contract $contract)
     {
+        $this->authorize('view', $contract);
+        
         $totalPaid = $contract->getTotalPaidAmount();
         $remaining = $contract->getRemainingAmount();
         $isFullyPaid = $contract->isFullyPaid();
 
-        return view('admin.contracts.financial-report', compact(
+        return view('facility.contracts.financial-report', compact(
             'contract', 
             'totalPaid', 
             'remaining', 
@@ -261,6 +344,8 @@ class AdminContractController extends Controller
      */
     public function download(Contract $contract)
     {
+        $this->authorize('view', $contract);
+        
         // هنا يمكن إضافة منطق إنشاء PDF للعقد
         return response()->json([
             'message' => 'سيتم إضافة ميزة تحميل العقد قريباً'

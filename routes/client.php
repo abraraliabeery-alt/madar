@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Client\ClientController;
 use App\Http\Controllers\Client\ClientBookingController;
+use App\Http\Controllers\Client\ClientOfferController;
+use App\Http\Controllers\Client\ClientContractController;
 
 // Client Routes - جميع routes تحتاج middleware client
 Route::middleware(['auth', 'role:client'])->prefix('client')->name('client.')->group(function () {
@@ -43,10 +45,31 @@ Route::middleware(['auth', 'role:client'])->prefix('client')->name('client.')->g
     Route::post('bookings/{booking}/review', [ClientBookingController::class, 'review'])->name('bookings.review');
     Route::get('bookings/statistics', [ClientBookingController::class, 'statistics'])->name('bookings.statistics');
 
+    // Offers
+    Route::get('/offers', [ClientOfferController::class, 'index'])->name('offers.index');
+    Route::get('/offers/{offer}', [ClientOfferController::class, 'show'])->name('offers.show');
+    Route::get('/offers/type/{type}', [ClientOfferController::class, 'byType'])->name('offers.by-type');
+    Route::get('/offers/product/{product}', [ClientOfferController::class, 'byProduct'])->name('offers.by-product');
+    Route::get('/offers/search', [ClientOfferController::class, 'search'])->name('offers.search');
+    Route::post('/offers/{offer}/add-to-favorites', [ClientOfferController::class, 'addToFavorites'])->name('offers.add-to-favorites');
+    Route::delete('/offers/{offer}/remove-from-favorites', [ClientOfferController::class, 'removeFromFavorites'])->name('offers.remove-from-favorites');
+    Route::post('/offers/{offer}/request-info', [ClientOfferController::class, 'requestInfo'])->name('offers.request-info');
+    Route::post('/offers/{offer}/book-visit', [ClientOfferController::class, 'bookVisit'])->name('offers.book-visit');
+    Route::get('/offers/compare', [ClientOfferController::class, 'compare'])->name('offers.compare');
+    Route::get('/offers/statistics', [ClientOfferController::class, 'statistics'])->name('offers.statistics');
+
     // Contracts
-    Route::get('/contracts', [ClientController::class, 'contracts'])->name('contracts');
-    Route::get('/contracts/{contract}', [ClientController::class, 'showContract'])->name('contracts.show');
-    Route::get('/contracts/{contract}/download', [ClientController::class, 'downloadContract'])->name('contracts.download');
+    Route::resource('contracts', ClientContractController::class);
+    Route::get('contracts/{contract}/invoices', [ClientContractController::class, 'invoices'])->name('contracts.invoices');
+    Route::get('contracts/{contract}/payments', [ClientContractController::class, 'payments'])->name('contracts.payments');
+    Route::get('contracts/{contract}/financial-report', [ClientContractController::class, 'financialReport'])->name('contracts.financial-report');
+    Route::post('contracts/request/{offer}', [ClientContractController::class, 'requestContract'])->name('contracts.request');
+    Route::post('contracts/{contract}/confirm', [ClientContractController::class, 'confirmContract'])->name('contracts.confirm');
+    Route::post('contracts/{contract}/cancel', [ClientContractController::class, 'cancelContract'])->name('contracts.cancel');
+    Route::get('contracts/{contract}/download', [ClientContractController::class, 'download'])->name('contracts.download');
+    Route::get('contracts/{contract}/payment', [ClientContractController::class, 'paymentPage'])->name('contracts.payment-page');
+    Route::post('contracts/{contract}/pay-invoice', [ClientContractController::class, 'payInvoice'])->name('contracts.pay-invoice');
+    Route::get('contracts/statistics', [ClientContractController::class, 'statistics'])->name('contracts.statistics');
 
     // Appointments
     Route::get('/appointments', [ClientController::class, 'appointments'])->name('appointments');

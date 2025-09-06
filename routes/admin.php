@@ -8,6 +8,8 @@ use App\Http\Controllers\Admin\AdminProductController;
 use App\Http\Controllers\Admin\AdminBookingController;
 use App\Http\Controllers\Admin\AdminRoleController;
 use App\Http\Controllers\Admin\AdminContractController;
+use App\Http\Controllers\Admin\AdminOfferController;
+use App\Http\Controllers\Admin\AdminFinancialReportController;
 use App\Http\Controllers\Admin\AdminCategoryController;
 use App\Http\Controllers\Admin\AdminFeatureController;
 use App\Http\Controllers\Admin\AdminAttributeController;
@@ -66,8 +68,38 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('contracts', AdminContractController::class);
     Route::post('contracts/{contract}/toggle-status', [AdminContractController::class, 'toggleStatus'])->name('contracts.toggle-status');
     Route::post('contracts/{contract}/toggle-verification', [AdminContractController::class, 'toggleVerification'])->name('contracts.toggle-verification');
+    Route::post('contracts/{contract}/update-status', [AdminContractController::class, 'updateStatus'])->name('contracts.update-status');
+    Route::post('contracts/{contract}/cancel', [AdminContractController::class, 'cancel'])->name('contracts.cancel');
+    Route::post('contracts/{contract}/record-payment', [AdminContractController::class, 'recordPayment'])->name('contracts.record-payment');
+    Route::get('contracts/{contract}/invoices', [AdminContractController::class, 'invoices'])->name('contracts.invoices');
+    Route::get('contracts/{contract}/payments', [AdminContractController::class, 'payments'])->name('contracts.payments');
+    Route::get('contracts/{contract}/financial-report', [AdminContractController::class, 'financialReport'])->name('contracts.financial-report');
     Route::get('contracts/statistics', [AdminContractController::class, 'statistics'])->name('contracts.statistics');
     Route::get('contracts/export', [AdminContractController::class, 'export'])->name('contracts.export');
+
+    // Offers Management
+    Route::resource('offers', AdminOfferController::class);
+    Route::post('offers/{offer}/toggle-status', [AdminOfferController::class, 'toggleStatus'])->name('offers.toggle-status');
+    Route::post('offers/{offer}/copy', [AdminOfferController::class, 'copy'])->name('offers.copy');
+    Route::get('offers/statistics', [AdminOfferController::class, 'statistics'])->name('offers.statistics');
+    Route::get('offers/export', [AdminOfferController::class, 'export'])->name('offers.export');
+
+    // Financial Reports
+    Route::prefix('financial')->name('financial.')->group(function () {
+        Route::get('/', [AdminFinancialReportController::class, 'index'])->name('index');
+        Route::get('/facility-summary', [AdminFinancialReportController::class, 'facilitySummary'])->name('facility-summary');
+        Route::get('/revenue', [AdminFinancialReportController::class, 'revenue'])->name('revenue');
+        Route::get('/receivables', [AdminFinancialReportController::class, 'receivables'])->name('receivables');
+        Route::get('/commissions', [AdminFinancialReportController::class, 'commissions'])->name('commissions');
+        Route::get('/payments', [AdminFinancialReportController::class, 'payments'])->name('payments');
+        Route::get('/invoices', [AdminFinancialReportController::class, 'invoices'])->name('invoices');
+        Route::get('/contracts', [AdminFinancialReportController::class, 'contracts'])->name('contracts');
+        Route::get('/customer', [AdminFinancialReportController::class, 'customer'])->name('customer');
+        Route::get('/owner', [AdminFinancialReportController::class, 'owner'])->name('owner');
+        Route::get('/monthly', [AdminFinancialReportController::class, 'monthly'])->name('monthly');
+        Route::get('/yearly', [AdminFinancialReportController::class, 'yearly'])->name('yearly');
+        Route::get('/export', [AdminFinancialReportController::class, 'export'])->name('export');
+    });
 
     // Categories Management
     Route::resource('categories', AdminCategoryController::class);

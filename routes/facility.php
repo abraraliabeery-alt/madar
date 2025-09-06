@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Facility\FacilityController;
 use App\Http\Controllers\Facility\FacilityProductController;
 use App\Http\Controllers\Facility\FacilityBookingController;
+use App\Http\Controllers\Facility\FacilityOfferController;
+use App\Http\Controllers\Facility\FacilityContractController;
+use App\Http\Controllers\Facility\FacilityFinancialReportController;
 use App\Http\Controllers\FacilityCustomizationController;
 
 Route::middleware(['auth', 'role:facility'])->prefix('facility')->name('facility.')->group(function () {
@@ -42,6 +45,38 @@ Route::middleware(['auth', 'role:facility'])->prefix('facility')->name('facility
     Route::post('bookings/{booking}/update-payment', [FacilityBookingController::class, 'updatePaymentStatus'])->name('bookings.update-payment');
     Route::get('bookings/statistics', [FacilityBookingController::class, 'statistics'])->name('bookings.statistics');
     Route::get('bookings/calendar', [FacilityBookingController::class, 'calendar'])->name('bookings.calendar');
+
+    // Offers Management
+    Route::resource('offers', FacilityOfferController::class);
+    Route::post('offers/{offer}/toggle-status', [FacilityOfferController::class, 'toggleStatus'])->name('offers.toggle-status');
+    Route::post('offers/{offer}/copy', [FacilityOfferController::class, 'copy'])->name('offers.copy');
+    Route::get('offers/statistics', [FacilityOfferController::class, 'statistics'])->name('offers.statistics');
+    Route::get('offers/export', [FacilityOfferController::class, 'export'])->name('offers.export');
+
+    // Contracts Management
+    Route::resource('contracts', FacilityContractController::class);
+    Route::post('contracts/{contract}/update-status', [FacilityContractController::class, 'updateStatus'])->name('contracts.update-status');
+    Route::post('contracts/{contract}/cancel', [FacilityContractController::class, 'cancel'])->name('contracts.cancel');
+    Route::post('contracts/{contract}/record-payment', [FacilityContractController::class, 'recordPayment'])->name('contracts.record-payment');
+    Route::get('contracts/{contract}/invoices', [FacilityContractController::class, 'invoices'])->name('contracts.invoices');
+    Route::get('contracts/{contract}/payments', [FacilityContractController::class, 'payments'])->name('contracts.payments');
+    Route::get('contracts/{contract}/financial-report', [FacilityContractController::class, 'financialReport'])->name('contracts.financial-report');
+
+    // Financial Reports
+    Route::prefix('financial')->name('financial.')->group(function () {
+        Route::get('/', [FacilityFinancialReportController::class, 'index'])->name('index');
+        Route::get('/revenue', [FacilityFinancialReportController::class, 'revenue'])->name('revenue');
+        Route::get('/receivables', [FacilityFinancialReportController::class, 'receivables'])->name('receivables');
+        Route::get('/commissions', [FacilityFinancialReportController::class, 'commissions'])->name('commissions');
+        Route::get('/payments', [FacilityFinancialReportController::class, 'payments'])->name('payments');
+        Route::get('/invoices', [FacilityFinancialReportController::class, 'invoices'])->name('invoices');
+        Route::get('/contracts', [FacilityFinancialReportController::class, 'contracts'])->name('contracts');
+        Route::get('/customer', [FacilityFinancialReportController::class, 'customer'])->name('customer');
+        Route::get('/owner', [FacilityFinancialReportController::class, 'owner'])->name('owner');
+        Route::get('/monthly', [FacilityFinancialReportController::class, 'monthly'])->name('monthly');
+        Route::get('/yearly', [FacilityFinancialReportController::class, 'yearly'])->name('yearly');
+        Route::get('/export', [FacilityFinancialReportController::class, 'export'])->name('export');
+    });
 
     // Additional Facility Routes
     Route::get('notifications', [FacilityController::class, 'notifications'])->name('notifications');

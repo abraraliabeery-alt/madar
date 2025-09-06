@@ -112,6 +112,21 @@ class Product extends Model
         return $this->morphToMany(User::class, 'favoritable', 'favorites', 'favoritable_id', 'user_id');
     }
 
+    public function offers()
+    {
+        return $this->hasMany(Offer::class);
+    }
+
+    public function contracts()
+    {
+        return $this->hasMany(Contract::class);
+    }
+
+    public function activeOffers()
+    {
+        return $this->offers()->active()->valid();
+    }
+
 
 
     // Gallery accessor - since image_gallery is a JSON field, not a relationship
