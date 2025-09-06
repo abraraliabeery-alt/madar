@@ -14,6 +14,18 @@ use App\Models\Attribute;
 class SearchController extends Controller
 {
     /**
+     * صفحة البحث الرئيسية
+     */
+    public function index(Request $request)
+    {
+        $categories = Category::where('is_active', true)->get();
+        $features = Feature::where('is_active', true)->get();
+        $statuses = Status::where('is_active', true)->get();
+        
+        return view('public.search.index', compact('categories', 'features', 'statuses'));
+    }
+ 
+    /**
      * البحث في المنتجات
      */
     public function products(Request $request)
@@ -24,13 +36,19 @@ class SearchController extends Controller
         // البحث النصي
         if ($request->has('q') && $request->q) {
             $searchTerm = $request->q;
-            $query->where(function ($q) use ($searchTerm) {
-                $q->where('name', 'like', '%' . $searchTerm . '%')
-                  ->orWhere('description', 'like', '%' . $searchTerm . '%')
-                  ->orWhere('address', 'like', '%' . $searchTerm . '%')
-                  ->orWhereHas('facility', function ($facilityQuery) use ($searchTerm) {
-                      $facilityQuery->where('name', 'like', '%' . $searchTerm . '%');
-                  });
+            $locale = app()->getLocale();
+            $query->where(function ($q) use ($searchTerm, $locale) {
+                $q->whereHas('translations', function($translationQuery) use ($searchTerm, $locale) {
+                    $translationQuery->where('locale', $locale)
+                        ->where(function($tq) use ($searchTerm) {
+                            $tq->where('title', 'like', '%' . $searchTerm . '%')
+                               ->orWhere('description', 'like', '%' . $searchTerm . '%');
+                        });
+                })
+                ->orWhere('address', 'like', '%' . $searchTerm . '%')
+                ->orWhereHas('facility', function ($facilityQuery) use ($searchTerm) {
+                    $facilityQuery->where('name', 'like', '%' . $searchTerm . '%');
+                });
             });
         }
 
@@ -220,40 +238,74 @@ class SearchController extends Controller
      */
     public function map(Request $request)
     {
-        $query = Product::with(['facility', 'category'])
-            ->where('is_active', true)
-            ->whereNotNull('latitude')
-            ->whereNotNull('longitude');
+        $searchType = $request->get('search_type', 'products');
+        
+        if ($searchType === 'facilities') {
+            $query = Facility::with(['facilityCategory'])
+                ->where('is_active', true)
+                ->where('is_verified', true)
+                ->whereNotNull('latitude')
+                ->whereNotNull('longitude');
 
-        // فلترة حسب الفئة
-        if ($request->has('category_id') && $request->category_id) {
-            $query->where('category_id', $request->category_id);
+            // فلترة حسب الفئة
+            if ($request->has('category_id') && $request->category_id) {
+                $query->where('facility_category_id', $request->category_id);
+            }
+
+            $facilities = $query->get();
+
+            $mapData = $facilities->map(function ($facility) {
+                return [
+                    'id' => $facility->id,
+                    'name' => $facility->name,
+                    'price' => null,
+                    'address' => $facility->address,
+                    'latitude' => $facility->latitude,
+                    'longitude' => $facility->longitude,
+                    'category' => $facility->facilityCategory->name ?? 'No Category',
+                    'facility' => $facility->name,
+                    'image' => $facility->logo,
+                    'url' => route('public.facilities.show', $facility->id),
+                    'type' => 'facility'
+                ];
+            });
+        } else {
+            $query = Product::with(['facility', 'category', 'translations'])
+                ->where('is_active', true)
+                ->whereNotNull('latitude')
+                ->whereNotNull('longitude');
+
+            // فلترة حسب الفئة
+            if ($request->has('category_id') && $request->category_id) {
+                $query->where('category_id', $request->category_id);
+            }
+
+            // فلترة حسب السعر
+            if ($request->has('min_price') && $request->min_price) {
+                $query->where('price', '>=', $request->min_price);
+            }
+            if ($request->has('max_price') && $request->max_price) {
+                $query->where('price', '<=', $request->max_price);
+            }
+
+            $products = $query->get();
+
+            $mapData = $products->map(function ($product) {
+                return [
+                    'id' => $product->id,
+                    'name' => $product->translations->where('locale', app()->getLocale())->first()->title ?? $product->translations->first()->title ?? 'No Title',
+                    'price' => $product->price,
+                    'address' => $product->address,
+                    'latitude' => $product->latitude,
+                    'longitude' => $product->longitude,
+                    'category' => $product->category->name ?? 'No Category',
+                    'facility' => $product->facility->name ?? 'No Facility',
+                    'image' => $product->image,
+                    'url' => route('public.products.show', $product->id),
+                    'type' => 'product'
+                ];
+            });
         }
-
-        // فلترة حسب السعر
-        if ($request->has('min_price') && $request->min_price) {
-            $query->where('price', '>=', $request->min_price);
-        }
-        if ($request->has('max_price') && $request->max_price) {
-            $query->where('price', '<=', $request->max_price);
-        }
-
-        $products = $query->get();
-
-        $mapData = $products->map(function ($product) {
-            return [
-                'id' => $product->id,
-                'name' => $product->name,
-                'price' => $product->price,
-                'address' => $product->address,
-                'latitude' => $product->latitude,
-                'longitude' => $product->longitude,
-                'category' => $product->category->name,
-                'facility' => $product->facility->name,
-                'image' => $product->main_image,
-                'url' => route('products.show', $product->id)
-            ];
-        });
 
         $categories = Category::all();
 
@@ -291,20 +343,26 @@ class SearchController extends Controller
                     ];
                 });
         } else {
-            $results = Product::where('is_active', true)
-                ->where(function ($q) use ($query) {
-                    $q->where('name', 'like', '%' . $query . '%')
-                      ->orWhere('address', 'like', '%' . $query . '%');
+            $locale = app()->getLocale();
+            $results = Product::with(['translations'])
+                ->where('is_active', true)
+                ->where(function ($q) use ($query, $locale) {
+                    $q->whereHas('translations', function($translationQuery) use ($query, $locale) {
+                        $translationQuery->where('locale', $locale)
+                            ->where('title', 'like', '%' . $query . '%');
+                    })
+                    ->orWhere('address', 'like', '%' . $query . '%');
                 })
                 ->take(5)
-                ->get(['id', 'name', 'address', 'price', 'main_image'])
-                ->map(function ($product) {
+                ->get(['id', 'address', 'price', 'image'])
+                ->map(function ($product) use ($locale) {
+                    $title = $product->translations->where('locale', $locale)->first()->title ?? $product->translations->first()->title ?? 'No Title';
                     return [
                         'id' => $product->id,
-                        'name' => $product->name,
+                        'name' => $title,
                         'address' => $product->address,
                         'price' => $product->price,
-                        'image' => $product->main_image,
+                        'image' => $product->image,
                         'url' => route('products.show', $product->id),
                         'type' => 'product'
                     ];
@@ -398,10 +456,16 @@ class SearchController extends Controller
 
         // Search by keyword
         if ($request->has('q') && $request->q) {
-            $query->where(function($q) use ($request) {
-                $q->where('title', 'like', "%{$request->q}%")
-                  ->orWhere('description', 'like', "%{$request->q}%")
-                  ->orWhere('address', 'like', "%{$request->q}%");
+            $locale = app()->getLocale();
+            $query->where(function($q) use ($request, $locale) {
+                $q->whereHas('translations', function($translationQuery) use ($request, $locale) {
+                    $translationQuery->where('locale', $locale)
+                        ->where(function($tq) use ($request) {
+                            $tq->where('title', 'like', '%' . $request->q . '%')
+                               ->orWhere('description', 'like', '%' . $request->q . '%');
+                        });
+                })
+                ->orWhere('address', 'like', '%' . $request->q . '%');
             });
         }
 

@@ -30,10 +30,10 @@ Route::name('public.')->group(function () {
 
     // Search Routes
     Route::get('/search', [SearchController::class, 'index'])->name('search');
-    Route::get('/search/products', [SearchController::class, 'searchProducts'])->name('search.products');
-    Route::get('/search/facilities', [SearchController::class, 'searchFacilities'])->name('search.facilities');
-    Route::get('/search/advanced', [SearchController::class, 'advancedSearch'])->name('search.advanced');
-    Route::get('/search/map', [SearchController::class, 'mapSearch'])->name('search.map');
+    Route::get('/search/products', [SearchController::class, 'products'])->name('search.products');
+    Route::get('/search/facilities', [SearchController::class, 'facilities'])->name('search.facilities');
+    Route::get('/search/advanced', [SearchController::class, 'advanced'])->name('search.advanced');
+    Route::get('/search/map', [SearchController::class, 'map'])->name('search.map');
     Route::get('/search/quick', [SearchController::class, 'quickSearch'])->name('search.quick');
 
     // Contact Routes
