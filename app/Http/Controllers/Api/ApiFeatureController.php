@@ -36,4 +36,41 @@ class ApiFeatureController extends Controller
             'data' => $feature
         ]);
     }
+
+    /**
+     * Get features by category
+     */
+    public function getByCategory(Request $request)
+    {
+        $request->validate([
+            'category_id' => 'required|exists:categories,id',
+            'locale' => 'nullable|string|in:ar,en'
+        ]);
+
+        // Get locale from request parameter, session, or fallback to default
+        $locale = $request->get('locale') ?? \Illuminate\Support\Facades\Session::get('locale', config('app.locale'));
+        
+        $features = Feature::where('category_id', $request->category_id)
+            ->where('is_active', true)
+            ->with(['translations' => function($query) use ($locale) {
+                $query->where('locale', $locale);
+            }])
+            ->orderBy('order')
+            ->get()
+            ->map(function($feature) use ($locale) {
+                return [
+                    'id' => $feature->id,
+                    'icon' => $feature->icon,
+                    'description' => $feature->description,
+                    'is_active' => $feature->is_active,
+                    'order' => $feature->order,
+                    'name' => $feature->getTranslatedName($locale),
+                ];
+            });
+
+        return response()->json([
+            'success' => true,
+            'data' => $features
+        ]);
+    }
 }

@@ -5,6 +5,7 @@ use App\Http\Controllers\Client\ClientController;
 use App\Http\Controllers\Client\ClientBookingController;
 use App\Http\Controllers\Client\ClientOfferController;
 use App\Http\Controllers\Client\ClientContractController;
+use App\Http\Controllers\Client\ClientFinancialController;
 
 // Client Routes - جميع routes تحتاج middleware client
 Route::middleware(['auth', 'role:client'])->prefix('client')->name('client.')->group(function () {
@@ -117,4 +118,34 @@ Route::middleware(['auth', 'role:client'])->prefix('client')->name('client.')->g
     Route::post('/help/tickets', [ClientController::class, 'storeTicket'])->name('help.tickets.store');
     Route::get('/help/tickets/{ticket}', [ClientController::class, 'showTicket'])->name('help.tickets.show');
     Route::post('/help/tickets/{ticket}/reply', [ClientController::class, 'replyTicket'])->name('help.tickets.reply');
+
+    // Enhanced Financial Management System for Clients
+    Route::prefix('financial')->name('financial.')->group(function () {
+        // Main Dashboard
+        Route::get('/dashboard', [ClientFinancialController::class, 'dashboard'])->name('dashboard');
+        
+        // Available Offers
+        Route::get('/offers', [ClientFinancialController::class, 'offers'])->name('offers');
+        Route::get('/offers/{id}', [ClientFinancialController::class, 'offerDetails'])->name('offer-details');
+        
+        // Contract Management
+        Route::post('/request-contract', [ClientFinancialController::class, 'requestContract'])->name('request-contract');
+        Route::get('/contracts', [ClientFinancialController::class, 'contracts'])->name('contracts');
+        Route::get('/contracts/{id}', [ClientFinancialController::class, 'contractDetails'])->name('contract-details');
+        Route::delete('/contracts/{id}/cancel', [ClientFinancialController::class, 'cancelContract'])->name('cancel-contract');
+        
+        // Contract Printing
+        Route::get('/contracts/{id}/print', [ClientFinancialController::class, 'printContract'])->name('print-contract');
+        
+        // Invoices Management
+        Route::get('/invoices', [ClientFinancialController::class, 'invoices'])->name('invoices');
+        Route::get('/invoices/{id}/download', [ClientFinancialController::class, 'downloadInvoice'])->name('download-invoice');
+        
+        // Payments Management
+        Route::post('/make-payment', [ClientFinancialController::class, 'makePayment'])->name('make-payment');
+        Route::get('/payments', [ClientFinancialController::class, 'payments'])->name('payments');
+        
+        // Financial Summary and Reports
+        Route::get('/summary', [ClientFinancialController::class, 'financialSummary'])->name('summary');
+    });
 });

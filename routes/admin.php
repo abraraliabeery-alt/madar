@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\AdminAttributeController;
 use App\Http\Controllers\Admin\AdminFaqController;
 use App\Http\Controllers\Admin\AdminProfileController;
 use App\Http\Controllers\Admin\AdminUploadController;
+use App\Http\Controllers\Admin\AdminFinancialController;
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
 
@@ -147,4 +148,40 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
     // Upload Routes
     Route::post('upload/image', [AdminUploadController::class, 'uploadImage'])->name('upload.image');
+
+    // Enhanced Financial Management System
+    Route::prefix('financial')->name('financial.')->group(function () {
+        // Main Dashboard
+        Route::get('/dashboard', [AdminFinancialController::class, 'dashboard'])->name('dashboard');
+        
+        // Offers Management
+        Route::get('/offers', [AdminFinancialController::class, 'offers'])->name('offers');
+        Route::get('/offers/export', [AdminFinancialController::class, 'exportOffers'])->name('offers.export');
+        
+        // Contracts Management
+        Route::get('/contracts', [AdminFinancialController::class, 'contracts'])->name('contracts');
+        Route::get('/contracts/{id}', [AdminFinancialController::class, 'contractDetails'])->name('contract-details');
+        Route::put('/contracts/{id}/status', [AdminFinancialController::class, 'updateContractStatus'])->name('contracts.update-status');
+        Route::post('/contracts/bulk-action', [AdminFinancialController::class, 'bulkContractAction'])->name('contracts.bulk-action');
+        Route::get('/contracts/export', [AdminFinancialController::class, 'exportContracts'])->name('contracts.export');
+        Route::get('/contracts/{id}/download', [AdminFinancialController::class, 'downloadContract'])->name('contracts.download');
+        
+        // Payments Management
+        Route::get('/payments', [AdminFinancialController::class, 'payments'])->name('payments');
+        Route::post('/payments/{id}/confirm', [AdminFinancialController::class, 'confirmPayment'])->name('payments.confirm');
+        Route::post('/payments/{id}/reject', [AdminFinancialController::class, 'rejectPayment'])->name('payments.reject');
+        Route::get('/payments/export', [AdminFinancialController::class, 'exportPayments'])->name('payments.export');
+        
+        // Comprehensive Reports
+        Route::get('/reports', [AdminFinancialController::class, 'reports'])->name('reports');
+        Route::get('/reports/customers', [AdminFinancialController::class, 'customersReport'])->name('customers-report');
+        Route::get('/reports/owners', [AdminFinancialController::class, 'ownersReport'])->name('owners-report');
+        Route::get('/reports/facilities', [AdminFinancialController::class, 'facilitiesReport'])->name('facilities-report');
+        Route::get('/reports/export', [AdminFinancialController::class, 'exportReports'])->name('reports.export');
+        
+        // Accounting Entries
+        Route::get('/accounting-entries', [AdminFinancialController::class, 'accountingEntries'])->name('accounting-entries');
+        Route::post('/accounting-entries', [AdminFinancialController::class, 'createAccountingEntry'])->name('accounting-entries.create');
+        Route::get('/accounting-entries/export', [AdminFinancialController::class, 'exportAccountingEntries'])->name('accounting-entries.export');
+    });
 });

@@ -39,8 +39,32 @@ class AdminContractController extends Controller
         }
 
         // فلترة حسب الحالة
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
+        if ($request->filled('status_id')) {
+            $query->where('status', $request->status_id);
+        }
+
+        // فلترة حسب المستخدم
+        if ($request->filled('user_id')) {
+            $query->where('user_id', $request->user_id);
+        }
+
+        // فلترة حسب المنتج
+        if ($request->filled('product_id')) {
+            $query->where('product_id', $request->product_id);
+        }
+
+        // فلترة حسب نوع العقد
+        if ($request->filled('contract_type')) {
+            $query->where('contract_type', $request->contract_type);
+        }
+
+        // فلترة حسب التاريخ
+        if ($request->filled('date_from')) {
+            $query->where('start_date', '>=', $request->date_from);
+        }
+
+        if ($request->filled('date_to')) {
+            $query->where('start_date', '<=', $request->date_to);
         }
 
         // البحث
@@ -61,9 +85,21 @@ class AdminContractController extends Controller
         }
 
         $contracts = $query->paginate(20);
+        
+        // Get data for filters
         $facilities = Facility::all();
+        $users = User::where('primary_role', 'user')->get();
+        $products = Product::with('translations')->get();
+        
+        // Create status objects for the dropdown
+        $statuses = collect([
+            (object)['id' => 'draft', 'name' => 'مسودة'],
+            (object)['id' => 'active', 'name' => 'نشط'],
+            (object)['id' => 'completed', 'name' => 'مكتمل'],
+            (object)['id' => 'cancelled', 'name' => 'ملغي'],
+        ]);
 
-        return view('admin.contracts.index', compact('contracts', 'facilities'));
+        return view('admin.contracts.index', compact('contracts', 'facilities', 'users', 'products', 'statuses'));
     }
 
     /**
@@ -265,5 +301,33 @@ class AdminContractController extends Controller
         return response()->json([
             'message' => 'سيتم إضافة ميزة تحميل العقد قريباً'
         ]);
+    }
+
+    /**
+     * تبديل حالة التفعيل للعقد
+     */
+    public function toggleStatus(Contract $contract)
+    {
+        $contract->update([
+            'is_active' => !$contract->is_active
+        ]);
+
+        $status = $contract->is_active ? 'تم تفعيل' : 'تم إلغاء تفعيل';
+        
+        return redirect()->back()->with('success', $status . ' العقد بنجاح');
+    }
+
+    /**
+     * تبديل حالة التحقق للعقد
+     */
+    public function toggleVerification(Contract $contract)
+    {
+        $contract->update([
+            'is_verified' => !$contract->is_verified
+        ]);
+
+        $status = $contract->is_verified ? 'تم التحقق من' : 'تم إلغاء التحقق من';
+        
+        return redirect()->back()->with('success', $status . ' العقد بنجاح');
     }
 }

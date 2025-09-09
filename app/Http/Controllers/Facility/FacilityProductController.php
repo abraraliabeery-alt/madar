@@ -48,7 +48,7 @@ class FacilityProductController extends Controller
         }
 
         $products = $query->paginate(15);
-        $categories = Category::all();
+        $categories = Category::with('translations')->get();
         $statuses = Status::all();
 
         return view('facility.products.index', compact('products', 'categories', 'statuses'));
@@ -65,12 +65,16 @@ class FacilityProductController extends Controller
             return redirect()->route('facility.create');
         }
 
-        $categories = Category::all();
+        $categories = Category::with('translations')->get();
         $statuses = Status::all();
-        $features = Feature::all();
         $cities = City::where('is_active', true)->orderBy('name')->get();
 
-        return view('facility.products.create', compact('categories', 'statuses', 'features', 'cities'));
+        // Prepare categories options for the select dropdown
+        $categoryOptions = $categories->mapWithKeys(function ($category) {
+            return [$category->id => $category->getTranslatedName()];
+        })->toArray();
+
+        return view('facility.products.create', compact('categories', 'statuses', 'cities', 'categoryOptions'));
     }
 
     /**
@@ -161,13 +165,17 @@ class FacilityProductController extends Controller
         }
 
                     $product->load(['category', 'city', 'statuses', 'features', 'attributes.translations']);
-        $categories = Category::all();
+        $categories = Category::with('translations')->get();
         $statuses = Status::all();
-        $features = Feature::all();
         $attributes = Attribute::all();
         $cities = City::where('is_active', true)->orderBy('name')->get();
 
-        return view('facility.products.edit', compact('product', 'categories', 'statuses', 'features', 'attributes', 'cities'));
+        // Prepare categories options for the select dropdown
+        $categoryOptions = $categories->mapWithKeys(function ($category) {
+            return [$category->id => $category->getTranslatedName()];
+        })->toArray();
+
+        return view('facility.products.edit', compact('product', 'categories', 'statuses', 'attributes', 'cities', 'categoryOptions'));
     }
 
     /**

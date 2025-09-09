@@ -33,7 +33,7 @@
                                     <x-form-select 
                                         name="category_id"
                                         :label="__('facility.products.create.category')"
-                                        :options="$categories->pluck('getTranslatedName', 'id')->toArray()"
+                                        :options="$categoryOptions"
                                         :placeholder="__('facility.products.create.select_category')"
                                         required="true"
                                     />
@@ -191,26 +191,12 @@
                             </div>
                             
                             <!-- Features Selection -->
-                            @if($features->count() > 0)
                             <div class="mb-6">
                                 <label class="block text-sm font-medium text-gray-700 mb-3">{{ __('facility.products.create.features') }}</label>
-                                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-                                    @foreach($features as $feature)
-                                    <div class="flex items-center">
-                                        <input type="checkbox" id="feature_{{ $feature->id }}" name="features[]" value="{{ $feature->id }}" 
-                                               class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-                                               {{ in_array($feature->id, old('features', [])) ? 'checked' : '' }}>
-                                        <label for="feature_{{ $feature->id }}" class="ml-2 text-sm text-gray-700">
-                                            {{ $feature->getTranslatedName('ar') }}
-                                        </label>
-                                    </div>
-                                    @endforeach
+                                <div id="features-container">
+                                    <p class="text-gray-500 text-sm">{{ __('facility.products.create.select_category_for_features') }}</p>
                                 </div>
-                                @error('features')
-                                    <div class="text-red-500 text-sm mt-1">{{ $message }}</div>
-                                @enderror
                             </div>
-                            @endif
                         </div>
 
                         <!-- Attributes -->
@@ -254,21 +240,25 @@ document.addEventListener('DOMContentLoaded', function() {
             const categoryId = this.value;
             if (categoryId) {
                 loadAttributesByCategory(categoryId);
+                loadFeaturesByCategory(categoryId);
             } else {
                 document.getElementById('attributes-container').innerHTML = 
                     '<p class="text-gray-500 text-sm">{{ __("facility.products.create.select_category_for_attributes") }}</p>';
+                document.getElementById('features-container').innerHTML = 
+                    '<p class="text-gray-500 text-sm">{{ __("facility.products.create.select_category_for_features") }}</p>';
             }
         });
         
-        // Load attributes on page load if category is selected and there are old inputs
+        // Load attributes and features on page load if category is selected and there are old inputs
         const initialCategoryId = categorySelect.value;
         if (initialCategoryId && Object.keys(oldInputs).length > 0) {
             loadAttributesByCategory(initialCategoryId);
+            loadFeaturesByCategory(initialCategoryId);
         }
     }
 
     function loadAttributesByCategory(categoryId) {
-        fetch(`/api/v1/attributes/by-category?category_id=${categoryId}`)
+        fetch(`/api/v1/attributes/by-category?category_id=${categoryId}&locale={{ app()->getLocale() }}`)
             .then(response => response.json())
             .then(data => {
                 if (data.success && data.data.length > 0) {
@@ -315,6 +305,45 @@ document.addEventListener('DOMContentLoaded', function() {
         // Fallback to existing input element (if any)
         const input = document.querySelector(`input[name="attributes[${attributeId}][value]"]`);
         return input ? input.value : '';
+    }
+
+    function loadFeaturesByCategory(categoryId) {
+        fetch(`/api/v1/features/by-category?category_id=${categoryId}&locale={{ app()->getLocale() }}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.data.length > 0) {
+                    let featuresHtml = '<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">';
+                    data.data.forEach(function(feature) {
+                        const iconHtml = feature.icon ? `<img src="${feature.icon}" alt="icon" width="20" class="inline mr-2">` : '';
+                        const isChecked = getOldFeatureValue(feature.id) ? 'checked' : '';
+                        
+                        featuresHtml += `
+                            <div class="flex items-center">
+                                <input type="checkbox" id="feature_${feature.id}" name="features[]" value="${feature.id}" 
+                                       class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 focus:ring-2" ${isChecked}>
+                                <label for="feature_${feature.id}" class="ml-2 text-sm text-gray-700">
+                                    ${iconHtml}${feature.name}
+                                </label>
+                            </div>
+                        `;
+                    });
+                    featuresHtml += '</div>';
+                    document.getElementById('features-container').innerHTML = featuresHtml;
+                } else {
+                    document.getElementById('features-container').innerHTML = 
+                        '<p class="text-gray-500 text-sm">{{ __("facility.products.create.no_features_available") }}</p>';
+                }
+            })
+            .catch(error => {
+                document.getElementById('features-container').innerHTML = 
+                    '<p class="text-red-500 text-sm">{{ __("facility.products.create.error_loading_features") }}</p>';
+            });
+    }
+
+    function getOldFeatureValue(featureId) {
+        // Check if feature was previously selected (for form validation errors)
+        const oldFeatures = @json(old('features', []));
+        return oldFeatures.includes(featureId.toString());
     }
 });
 </script>

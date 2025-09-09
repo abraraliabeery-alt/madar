@@ -17,6 +17,12 @@ class FacilitySeeder extends Seeder
         $facilityCategories = FacilityCategory::all();
         $facilityUsers = User::where('primary_role', 'facility')->get();
 
+        // Check if there are facility users available
+        if ($facilityUsers->isEmpty()) {
+            $this->command->warn('No facility users found. Please run UserSeeder first to create facility users.');
+            return;
+        }
+
         $facilities = [
             [
                 'name' => 'شركة العقارات المتميزة',
@@ -69,13 +75,21 @@ class FacilitySeeder extends Seeder
         ];
 
         foreach ($facilities as $index => $facilityData) {
+            // Safely get a facility user by cycling through available users
+            $selectedUser = $facilityUsers[$index % $facilityUsers->count()];
+            
             $facility = Facility::updateOrCreate(
                 ['name' => $facilityData['name']],
                 array_merge($facilityData, [
                     'facility_category_id' => $facilityCategories->random()->id,
-                    'owner_user_id' => $facilityUsers->get($index % $facilityUsers->count())->id,
+                    'owner_user_id' => $selectedUser->id,
                 ])
             );
+
+            // Also create a many-to-many relationship in facility_user table
+            $facility->users()->syncWithoutDetaching([$selectedUser->id]);
+
+            $this->command->info("Created facility '{$facilityData['name']}' and linked to user '{$selectedUser->name}' (ID: {$selectedUser->id})");
         }
     }
 }

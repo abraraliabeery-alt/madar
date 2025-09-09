@@ -213,9 +213,22 @@
                                                             <td class="d-none d-md-table-cell">{{ number_format($contract->total_amount, 2) }} {!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}</td>
                             <td class="d-none d-md-table-cell">
                                 @if($contract->status)
-                                    <span class="badge bg-{{ $contract->status->color }}">
-                                        {{ $contract->status->name }}
-                                    </span>
+                                    @switch($contract->status)
+                                        @case('draft')
+                                            <span class="badge bg-secondary">مسودة</span>
+                                            @break
+                                        @case('active')
+                                            <span class="badge bg-success">نشط</span>
+                                            @break
+                                        @case('completed')
+                                            <span class="badge bg-primary">مكتمل</span>
+                                            @break
+                                        @case('cancelled')
+                                            <span class="badge bg-danger">ملغي</span>
+                                            @break
+                                        @default
+                                            <span class="badge bg-secondary">{{ $contract->status }}</span>
+                                    @endswitch
                                 @else
                                     <span class="badge bg-secondary">لا توجد حالة</span>
                                 @endif

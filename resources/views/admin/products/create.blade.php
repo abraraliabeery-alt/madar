@@ -164,20 +164,8 @@
                                 <h6 class="mb-0">المميزات</h6>
                             </div>
                             <div class="card-body">
-                                <div class="row">
-                                    @foreach($features as $feature)
-                                    <div class="col-md-4">
-                                        <div class="form-check mb-2">
-                                            <input type="checkbox" class="form-check-input" id="feature_{{ $feature->id }}" name="features[]" value="{{ $feature->id }}" {{ in_array($feature->id, old('features', [])) ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="feature_{{ $feature->id }}">
-                                                @if($feature->icon)
-                                                    <img src="{{ asset($feature->icon) }}" alt="icon" width="20" class="me-1">
-                                                @endif
-                                                {{ $feature->getTranslatedName('ar') }}
-                                            </label>
-                                        </div>
-                                    </div>
-                                    @endforeach
+                                <div id="features-container">
+                                    <p class="text-muted">اختر فئة أولاً لعرض المميزات المتاحة</p>
                                 </div>
                             </div>
                         </div>
@@ -351,13 +339,15 @@ $(document).ready(function() {
         }
     });
 
-    // Load attributes based on selected category
+    // Load attributes and features based on selected category
     $('#category_id').change(function() {
         let categoryId = $(this).val();
         if (categoryId) {
             loadAttributesByCategory(categoryId);
+            loadFeaturesByCategory(categoryId);
         } else {
             $('#attributes-container').html('<p class="text-muted">اختر فئة أولاً لعرض الخصائص المتاحة</p>');
+            $('#features-container').html('<p class="text-muted">اختر فئة أولاً لعرض المميزات المتاحة</p>');
         }
     });
 
@@ -365,7 +355,10 @@ $(document).ready(function() {
         $.ajax({
             url: '/api/v1/attributes/by-category',
             method: 'GET',
-            data: { category_id: categoryId },
+            data: { 
+                category_id: categoryId,
+                locale: '{{ app()->getLocale() }}'
+            },
             success: function(response) {
                 if (response.success && response.data.length > 0) {
                     let attributesHtml = '<div class="row">';
@@ -405,6 +398,53 @@ $(document).ready(function() {
         // Get old input value if exists
         let oldValue = $('input[name="attributes[' + attributeId + '][value]"]').val();
         return oldValue || '';
+    }
+
+    function loadFeaturesByCategory(categoryId) {
+        $.ajax({
+            url: '/api/v1/features/by-category',
+            method: 'GET',
+            data: { 
+                category_id: categoryId,
+                locale: '{{ app()->getLocale() }}'
+            },
+            success: function(response) {
+                if (response.success && response.data.length > 0) {
+                    let featuresHtml = '<div class="row">';
+                    response.data.forEach(function(feature) {
+                        let iconHtml = feature.icon ? `<img src="${feature.icon}" alt="icon" width="20" class="me-1">` : '';
+                        let isChecked = getOldFeatureValue(feature.id) ? 'checked' : '';
+                        
+                        featuresHtml += `
+                            <div class="col-md-4">
+                                <div class="form-check mb-2">
+                                    <input type="checkbox" class="form-check-input" 
+                                           id="feature_${feature.id}" 
+                                           name="features[]" 
+                                           value="${feature.id}" ${isChecked}>
+                                    <label class="form-check-label" for="feature_${feature.id}">
+                                        ${iconHtml}${feature.name}
+                                    </label>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    featuresHtml += '</div>';
+                    $('#features-container').html(featuresHtml);
+                } else {
+                    $('#features-container').html('<p class="text-muted">لا توجد مميزات متاحة لهذه الفئة</p>');
+                }
+            },
+            error: function() {
+                $('#features-container').html('<p class="text-danger">حدث خطأ في تحميل المميزات</p>');
+            }
+        });
+    }
+
+    function getOldFeatureValue(featureId) {
+        // Check if feature was previously selected (for form validation errors)
+        let oldFeatures = @json(old('features', []));
+        return oldFeatures.includes(featureId.toString());
     }
 
     // Leaflet Map Picker

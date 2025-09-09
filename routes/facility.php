@@ -7,6 +7,7 @@ use App\Http\Controllers\Facility\FacilityBookingController;
 use App\Http\Controllers\Facility\FacilityOfferController;
 use App\Http\Controllers\Facility\FacilityContractController;
 use App\Http\Controllers\Facility\FacilityFinancialReportController;
+use App\Http\Controllers\Facility\FacilityFinancialController;
 use App\Http\Controllers\FacilityCustomizationController;
 
 Route::middleware(['auth', 'role:facility'])->prefix('facility')->name('facility.')->group(function () {
@@ -97,4 +98,34 @@ Route::middleware(['auth', 'role:facility'])->prefix('facility')->name('facility
     Route::delete('customization/{facility}/reset', [FacilityCustomizationController::class, 'reset'])->name('customization.reset');
     Route::post('customization/{facility}/preset', [FacilityCustomizationController::class, 'applyPreset'])->name('customization.preset');
     Route::post('customization/test-upload', [FacilityCustomizationController::class, 'testUpload'])->name('customization.test-upload');
+
+    // Enhanced Financial Management System for Facilities
+    Route::prefix('financial')->name('financial.')->group(function () {
+        Route::get('/dashboard', [FacilityFinancialController::class, 'dashboard'])->name('dashboard');
+        
+        // Offers Management
+        Route::get('/offers', [FacilityFinancialController::class, 'offers'])->name('offers');
+        Route::get('/offers/create', [FacilityFinancialController::class, 'createOffer'])->name('create-offer');
+        Route::post('/offers/create', [FacilityFinancialController::class, 'createOffer'])->name('store-offer');
+        Route::get('/offers/{id}/edit', [FacilityFinancialController::class, 'updateOffer'])->name('edit-offer');
+        Route::post('/offers/{id}/edit', [FacilityFinancialController::class, 'updateOffer'])->name('update-offer');
+        Route::post('/offers/{id}/toggle-status', [FacilityFinancialController::class, 'toggleOfferStatus'])->name('toggle-offer-status');
+        
+        // Contracts Management
+        Route::get('/contracts', [FacilityFinancialController::class, 'contracts'])->name('contracts');
+        Route::get('/contracts/{id}', [FacilityFinancialController::class, 'contractDetails'])->name('contract-details');
+        Route::put('/contracts/{id}/status', [FacilityFinancialController::class, 'updateContractStatus'])->name('update-contract-status');
+        
+        // Payments Management
+        Route::get('/payments', [FacilityFinancialController::class, 'payments'])->name('payments');
+        Route::post('/payments/{id}/confirm', [FacilityFinancialController::class, 'confirmPayment'])->name('confirm-payment');
+        Route::post('/payments/{id}/reject', [FacilityFinancialController::class, 'rejectPayment'])->name('reject-payment');
+        
+        // Reports and Analytics
+        Route::get('/reports', [FacilityFinancialController::class, 'reports'])->name('reports');
+        Route::get('/reports/export', [FacilityFinancialController::class, 'exportReports'])->name('export-reports');
+        
+        // Accounting Entries
+        Route::get('/accounting-entries', [FacilityFinancialController::class, 'accountingEntries'])->name('accounting-entries');
+    });
 });

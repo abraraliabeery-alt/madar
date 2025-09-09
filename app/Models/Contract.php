@@ -27,6 +27,8 @@ class Contract extends Model
         'terms_conditions',
         'facility_id',
         'created_by',
+        'is_active',
+        'is_verified',
     ];
 
     protected $casts = [
@@ -36,6 +38,8 @@ class Contract extends Model
         'deposit_amount' => 'decimal:2',
         'commission_rate' => 'decimal:5,4',
         'commission_amount' => 'decimal:2',
+        'is_active' => 'boolean',
+        'is_verified' => 'boolean',
     ];
 
     // العلاقات

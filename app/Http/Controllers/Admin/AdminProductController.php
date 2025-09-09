@@ -80,10 +80,9 @@ class AdminProductController extends Controller
         $facilities = Facility::all();
         $categories = Category::all();
         $statuses = Status::all();
-        $features = Feature::all();
         $cities = City::where('is_active', true)->orderBy('name')->get();
 
-        return view('admin.products.create', compact('facilities', 'categories', 'statuses', 'features', 'cities'));
+        return view('admin.products.create', compact('facilities', 'categories', 'statuses', 'cities'));
     }
 
     /**
@@ -170,10 +169,9 @@ class AdminProductController extends Controller
         $facilities = Facility::all();
         $categories = Category::all();
         $statuses = Status::all();
-        $features = Feature::all();
         $cities = City::where('is_active', true)->orderBy('name')->get();
 
-        return view('admin.products.edit', compact('product', 'facilities', 'categories', 'statuses', 'features', 'cities'));
+        return view('admin.products.edit', compact('product', 'facilities', 'categories', 'statuses', 'cities'));
     }
 
     /**

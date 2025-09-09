@@ -16,13 +16,14 @@ class ApiAttributeController extends Controller
     public function getByCategory(Request $request)
     {
         $request->validate([
-            'category_id' => 'required|exists:categories,id'
+            'category_id' => 'required|exists:categories,id',
+            'locale' => 'nullable|string|in:ar,en'
         ]);
 
         $category = Category::findOrFail($request->category_id);
         
-        // Get user's selected locale from session, fallback to default
-        $locale = Session::get('locale', config('app.locale'));
+        // Get locale from request parameter, session, or fallback to default
+        $locale = $request->get('locale') ?? Session::get('locale', config('app.locale'));
         
         $attributes = $category->attributes()
             ->with(['translations' => function($query) use ($locale) {
@@ -52,10 +53,14 @@ class ApiAttributeController extends Controller
     /**
      * Get all attributes
      */
-    public function index()
+    public function index(Request $request)
     {
-        // Get user's selected locale from session, fallback to default
-        $locale = Session::get('locale', config('app.locale'));
+        $request->validate([
+            'locale' => 'nullable|string|in:ar,en'
+        ]);
+        
+        // Get locale from request parameter, session, or fallback to default
+        $locale = $request->get('locale') ?? Session::get('locale', config('app.locale'));
         
         $attributes = Attribute::with(['translations' => function($query) use ($locale) {
             $query->where('locale', $locale);

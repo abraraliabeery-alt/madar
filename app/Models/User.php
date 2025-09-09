@@ -136,6 +136,11 @@ class User extends Authenticatable
         return $this->hasMany(Contract::class);
     }
 
+    public function ownedContracts()
+    {
+        return $this->hasMany(Contract::class, 'owner_id');
+    }
+
     /**
      * Check if user has a specific role
      *

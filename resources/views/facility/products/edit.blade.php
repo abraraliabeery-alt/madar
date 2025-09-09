@@ -35,7 +35,7 @@
                                     <x-form-select 
                                         name="category_id"
                                         :label="__('facility.products.edit.category')"
-                                        :options="$categories->pluck('getTranslatedName', 'id')->toArray()"
+                                        :options="$categoryOptions"
                                         :selected="$product->category_id"
                                         :placeholder="__('facility.products.edit.select_category')"
                                         required="true"
@@ -166,19 +166,8 @@
                                 {{ __('facility.products.edit.features') }}
                             </h5>
                             
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                @foreach($features as $feature)
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="feature_{{ $feature->id }}" name="features[]" value="{{ $feature->id }}" 
-                                           {{ in_array($feature->id, old('features', $product->features->pluck('id')->toArray())) ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="feature_{{ $feature->id }}">
-                                        @if($feature->icon)
-                                            <img src="{{ asset($feature->icon) }}" alt="icon" width="20" class="inline mr-2">
-                                        @endif
-                                        {{ $feature->name }}
-                                    </label>
-                                </div>
-                                @endforeach
+                            <div id="features-container">
+                                <p class="text-gray-500 text-sm">{{ __('facility.products.edit.select_category_for_features') }}</p>
                             </div>
                         </div>
 
@@ -224,21 +213,25 @@ document.addEventListener('DOMContentLoaded', function() {
             const categoryId = this.value;
             if (categoryId) {
                 loadAttributesByCategory(categoryId);
+                loadFeaturesByCategory(categoryId);
             } else {
                 document.getElementById('attributes-container').innerHTML = 
                     '<p class="text-gray-500 text-sm">{{ __("facility.products.edit.select_category_for_attributes") }}</p>';
+                document.getElementById('features-container').innerHTML = 
+                    '<p class="text-gray-500 text-sm">{{ __("facility.products.edit.select_category_for_features") }}</p>';
             }
         });
 
-        // Load attributes on page load if category is selected
+        // Load attributes and features on page load if category is selected
         const initialCategoryId = categorySelect.value;
         if (initialCategoryId) {
             loadAttributesByCategory(initialCategoryId);
+            loadFeaturesByCategory(initialCategoryId);
         }
     }
 
     function loadAttributesByCategory(categoryId) {
-        fetch(`/api/v1/attributes/by-category?category_id=${categoryId}`)
+        fetch(`/api/v1/attributes/by-category?category_id=${categoryId}&locale={{ app()->getLocale() }}`)
             .then(response => response.json())
             .then(data => {
                 if (data.success && data.data.length > 0) {
@@ -290,6 +283,51 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Finally, try to get from product's existing attributes
         return productAttributes[attributeId] || '';
+    }
+
+    function loadFeaturesByCategory(categoryId) {
+        fetch(`/api/v1/features/by-category?category_id=${categoryId}&locale={{ app()->getLocale() }}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.data.length > 0) {
+                    let featuresHtml = '<div class="grid grid-cols-1 md:grid-cols-3 gap-4">';
+                    data.data.forEach(function(feature) {
+                        const iconHtml = feature.icon ? `<img src="${feature.icon}" alt="icon" width="20" class="inline mr-2">` : '';
+                        const isChecked = getCurrentFeatureValue(feature.id) ? 'checked' : '';
+                        
+                        featuresHtml += `
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="feature_${feature.id}" name="features[]" value="${feature.id}" ${isChecked}>
+                                <label class="form-check-label" for="feature_${feature.id}">
+                                    ${iconHtml}${feature.name}
+                                </label>
+                            </div>
+                        `;
+                    });
+                    featuresHtml += '</div>';
+                    document.getElementById('features-container').innerHTML = featuresHtml;
+                } else {
+                    document.getElementById('features-container').innerHTML = 
+                        '<p class="text-gray-500 text-sm">{{ __("facility.products.edit.no_features_available") }}</p>';
+                }
+            })
+            .catch(error => {
+                document.getElementById('features-container').innerHTML = 
+                    '<p class="text-red-500 text-sm">{{ __("facility.products.edit.error_loading_features") }}</p>';
+            });
+    }
+
+    function getCurrentFeatureValue(featureId) {
+        // Check if feature is currently selected for this product
+        const productFeatures = @json($product->features->pluck('id')->toArray());
+        const oldFeatures = @json(old('features', []));
+        
+        // Priority: old input values (in case of validation errors) > existing product features
+        if (oldFeatures.length > 0) {
+            return oldFeatures.includes(featureId.toString());
+        }
+        
+        return productFeatures.includes(featureId);
     }
 });
 </script>
