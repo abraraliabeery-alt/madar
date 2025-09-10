@@ -26,7 +26,7 @@ class FacilityProductController extends Controller
             return redirect()->route('facility.create');
         }
 
-        $query = $facility->products()->with(['category', 'status', 'features', 'attributes']);
+        $query = $facility->products()->with(['category', 'statuses', 'features', 'attributes']);
 
         // فلترة حسب الفئة
         if ($request->has('category_id') && $request->category_id) {

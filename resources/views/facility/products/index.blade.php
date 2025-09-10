@@ -114,17 +114,17 @@
                             <tr class="hover:bg-gray-50">
                                 <td class="px-6 py-4">
                                     <div class="flex items-center">
-                                        @if($product->image)
+                                        @if($product->main_image)
                                             <img class="h-12 w-12 rounded-lg object-cover ml-4" 
-                                                 src="{{ asset('storage/' . $product->image) }}" 
-                                                 alt="{{ $product->name }}">
+                                                 src="{{ asset('storage/' . $product->main_image) }}" 
+                                                 alt="{{ $product->title }}">
                                         @else
                                             <div class="h-12 w-12 rounded-lg bg-gray-200 flex items-center justify-center ml-4">
                                                 <i class="fas fa-image text-gray-400"></i>
                                             </div>
                                         @endif
                                         <div>
-                                            <div class="text-sm font-medium text-gray-900">{{ $product->name }}</div>
+                                            <div class="text-sm font-medium text-gray-900">{{ $product->title }}</div>
                                             <div class="text-sm text-gray-500">{{ Str::limit($product->description, 50) }}</div>
                                         </div>
                                     </div>
@@ -135,9 +135,12 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
+                                    @php
+                                        $status = $product->statuses()->latest()->first();
+                                    @endphp
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
-                                        {{ $product->status ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
-                                        {{ $product->status->name ?? __('facility.products.unspecified') }}
+                                        {{ $status ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
+                                        {{ $status->name ?? __('facility.products.unspecified') }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -159,7 +162,7 @@
                                         </a>
                                         <a href="{{ route('facility.products.edit', $product) }}" 
                                            class="text-yellow-600 hover:text-yellow-900 transition duration-200"
-                                           title="{{ __('facility.products.edit') }}">
+                                           title="{{ __('facility.products.edit_button') }}">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <form action="{{ route('facility.products.destroy', $product) }}" 
@@ -188,10 +191,10 @@
                     @foreach($products as $product)
                         <div class="p-6">
                             <div class="flex items-start space-x-4 space-x-reverse">
-                                @if($product->image)
+                                @if($product->main_image)
                                     <img class="h-16 w-16 rounded-lg object-cover flex-shrink-0" 
-                                         src="{{ asset('storage/' . $product->image) }}" 
-                                         alt="{{ $product->name }}">
+                                         src="{{ asset('storage/' . $product->main_image) }}" 
+                                         alt="{{ $product->title }}">
                                 @else
                                     <div class="h-16 w-16 rounded-lg bg-gray-200 flex items-center justify-center flex-shrink-0">
                                         <i class="fas fa-image text-gray-400"></i>
@@ -200,7 +203,7 @@
                                 <div class="flex-1 min-w-0">
                                     <div class="flex items-start justify-between">
                                         <div>
-                                            <h3 class="text-lg font-medium text-gray-900">{{ $product->name }}</h3>
+                                            <h3 class="text-lg font-medium text-gray-900">{{ $product->title }}</h3>
                                             <p class="text-sm text-gray-500 mt-1">{{ Str::limit($product->description, 100) }}</p>
                                         </div>
                                     </div>
@@ -209,9 +212,12 @@
                                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                                 {{ $product->category->getTranslatedName('ar') ?? __('facility.products.unspecified') }}
                                             </span>
+                                            @php
+                                                $status = $product->statuses()->latest()->first();
+                                            @endphp
                                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
-                                                {{ $product->status ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
-                                                {{ $product->status->name ?? __('facility.products.unspecified') }}
+                                                {{ $status ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
+                                                {{ $status->name ?? __('facility.products.unspecified') }}
                                             </span>
                                         </div>
                                         <div class="flex items-center space-x-3 space-x-reverse">

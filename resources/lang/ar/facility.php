@@ -94,7 +94,7 @@ return [
         'unspecified' => 'غير محدد',
         'price_not_set' => 'السعر غير محدد',
         'view_details' => 'عرض التفاصيل',
-        'edit' => 'تعديل',
+        'edit_button' => 'تعديل',
         'delete' => 'حذف',
         'confirm_delete' => 'هل أنت متأكد من حذف هذا المنتج؟',
         'no_products' => 'لا توجد منتجات',

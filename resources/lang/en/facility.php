@@ -94,7 +94,7 @@ return [
         'unspecified' => 'Unspecified',
         'price_not_set' => 'Price not set',
         'view_details' => 'View Details',
-        'edit' => 'Edit',
+        'edit_button' => 'Edit',
         'delete' => 'Delete',
         'confirm_delete' => 'Are you sure you want to delete this product?',
         'no_products' => 'No Products',

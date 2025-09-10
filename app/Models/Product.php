@@ -11,14 +11,12 @@ class Product extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'title',
-        'description',
         'address',
         'is_active',
         'is_featured',
         'is_verified',
         'price',
-        'image',
+        'main_image',
         'video',
         'image_gallery',
         'latitude',
@@ -29,6 +27,19 @@ class Product extends Model
         'seller_user_id',
         'category_id',
         'city_id',
+        'status_id',
+        'building_id',
+        'project_id',
+        'package_id',
+        'bedrooms',
+        'bathrooms',
+        'area',
+        'floor_number',
+        'total_floors',
+        'parking_spaces',
+        'furnished',
+        'available_for_rent',
+        'available_for_sale',
         'views_count',
         'rating',
         'rating_count',
@@ -44,9 +55,13 @@ class Product extends Model
         'is_active' => 'boolean',
         'is_featured' => 'boolean',
         'is_verified' => 'boolean',
+        'furnished' => 'boolean',
+        'available_for_rent' => 'boolean',
+        'available_for_sale' => 'boolean',
         'price' => 'float',
         'latitude' => 'float',
         'longitude' => 'float',
+        'area' => 'float',
         'image_gallery' => 'array',
         'rating' => 'float',
         'available_from' => 'date',
@@ -77,6 +92,26 @@ class Product extends Model
     public function city()
     {
         return $this->belongsTo(City::class);
+    }
+
+    public function status()
+    {
+        return $this->belongsTo(Status::class);
+    }
+
+    public function building()
+    {
+        return $this->belongsTo(Building::class);
+    }
+
+    public function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
+
+    public function package()
+    {
+        return $this->belongsTo(Package::class);
     }
 
     public function translations()
