@@ -1,4 +1,4 @@
-@extends('layouts.facility')
+@extends('facility.layouts.app')
 
 @section('title', 'إدارة العروض')
 
@@ -16,13 +16,10 @@
                         <a href="{{ route('facility.offers.statistics') }}" class="btn btn-info">
                             <i class="fas fa-chart-bar"></i> الإحصائيات
                         </a>
-                        <a href="{{ route('facility.offers.export') }}" class="btn btn-success">
-                            <i class="fas fa-download"></i> تصدير
-                        </a>
                     </div>
                 </div>
 
-                <!-- فلاتر البحث -->
+                <!-- فلترة وبحث -->
                 <div class="card-body">
                     <form method="GET" class="row g-3 mb-4">
                         <div class="col-md-3">
@@ -55,36 +52,37 @@
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
+                                        <th>العرض</th>
                                         <th>المنتج</th>
-                                        <th>نوع العرض</th>
+                                        <th>النوع</th>
                                         <th>السعر</th>
-                                        <th>العربون</th>
                                         <th>العمولة</th>
                                         <th>الحالة</th>
-                                        <th>صالح حتى</th>
+                                        <th>الأولوية</th>
                                         <th>الإجراءات</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($offers as $offer)
                                         <tr>
-                                            <td>{{ $offer->id }}</td>
                                             <td>
-                                                <div class="d-flex align-items-center">
-                                                    @if($offer->product->image)
-                                                        <img src="{{ asset('storage/' . $offer->product->image) }}" 
-                                                             class="rounded me-2" width="40" height="40" alt="صورة المنتج">
+                                                <div>
+                                                    <strong>{{ $offer->offer_title ?: 'عرض ' . $offer->offer_type }}</strong>
+                                                    @if($offer->is_featured)
+                                                        <span class="badge bg-warning">مميز</span>
                                                     @endif
-                                                    <div>
-                                                        <strong>{{ $offer->product->getTranslatedTitle() }}</strong>
-                                                        <br>
-                                                        <small class="text-muted">{{ $offer->product->address }}</small>
-                                                    </div>
                                                 </div>
+                                                @if($offer->offer_description)
+                                                    <small class="text-muted">{{ Str::limit($offer->offer_description, 50) }}</small>
+                                                @endif
                                             </td>
                                             <td>
-                                                <span class="badge bg-{{ $offer->offer_type == 'sale' ? 'success' : 'info' }}">
+                                                <a href="{{ route('facility.products.show', $offer->product) }}" class="text-decoration-none">
+                                                    {{ $offer->product->getTranslatedTitle() }}
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-info">
                                                     @switch($offer->offer_type)
                                                         @case('sale') بيع @break
                                                         @case('rent_monthly') إيجار شهري @break
@@ -95,68 +93,53 @@
                                             </td>
                                             <td>
                                                 <strong>{{ number_format($offer->price, 2) }} {{ $offer->currency }}</strong>
-                                            </td>
-                                            <td>
                                                 @if($offer->deposit_amount)
-                                                    {{ number_format($offer->deposit_amount, 2) }} {{ $offer->currency }}
-                                                @else
-                                                    <span class="text-muted">-</span>
+                                                    <br><small class="text-muted">عربون: {{ number_format($offer->deposit_amount, 2) }}</small>
                                                 @endif
                                             </td>
                                             <td>
-                                                @if($offer->commission_amount)
+                                                @if($offer->commission_rate)
+                                                    {{ number_format($offer->commission_rate * 100, 2) }}%
+                                                @elseif($offer->commission_amount)
                                                     {{ number_format($offer->commission_amount, 2) }} {{ $offer->currency }}
-                                                    <br>
-                                                    <small class="text-muted">({{ ($offer->commission_rate * 100) }}%)</small>
                                                 @else
-                                                    <span class="text-muted">-</span>
+                                                    -
                                                 @endif
                                             </td>
                                             <td>
-                                                @if($offer->isExpired())
-                                                    <span class="badge bg-danger">منتهي الصلاحية</span>
-                                                @elseif($offer->is_active)
+                                                @if($offer->isActive())
                                                     <span class="badge bg-success">نشط</span>
+                                                @elseif($offer->isExpired())
+                                                    <span class="badge bg-danger">منتهي</span>
                                                 @else
                                                     <span class="badge bg-secondary">غير نشط</span>
                                                 @endif
-                                                
-                                                @if($offer->is_featured)
-                                                    <br><span class="badge bg-warning">مميز</span>
-                                                @endif
                                             </td>
                                             <td>
-                                                @if($offer->valid_to)
-                                                    {{ $offer->valid_to->format('Y-m-d') }}
-                                                @else
-                                                    <span class="text-muted">غير محدد</span>
-                                                @endif
+                                                <div class="progress" style="width: 60px; height: 20px;">
+                                                    <div class="progress-bar" role="progressbar" style="width: {{ $offer->priority * 10 }}%">
+                                                        {{ $offer->priority }}
+                                                    </div>
+                                                </div>
                                             </td>
                                             <td>
                                                 <div class="btn-group" role="group">
-                                                    <a href="{{ route('facility.offers.show', $offer) }}" 
-                                                       class="btn btn-sm btn-outline-primary" title="عرض">
+                                                    <a href="{{ route('facility.offers.show', $offer) }}" class="btn btn-sm btn-info">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
-                                                    <a href="{{ route('facility.offers.edit', $offer) }}" 
-                                                       class="btn btn-sm btn-outline-warning" title="تعديل">
+                                                    <a href="{{ route('facility.offers.edit', $offer) }}" class="btn btn-sm btn-warning">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
-                                                    <form action="{{ route('facility.offers.toggle-status', $offer) }}" 
-                                                          method="POST" class="d-inline">
+                                                    <form method="POST" action="{{ route('facility.offers.toggle-status', $offer) }}" class="d-inline">
                                                         @csrf
-                                                        <button type="submit" 
-                                                                class="btn btn-sm btn-outline-{{ $offer->is_active ? 'secondary' : 'success' }}"
-                                                                title="{{ $offer->is_active ? 'إلغاء التفعيل' : 'تفعيل' }}">
+                                                        <button type="submit" class="btn btn-sm {{ $offer->is_active ? 'btn-secondary' : 'btn-success' }}">
                                                             <i class="fas fa-{{ $offer->is_active ? 'pause' : 'play' }}"></i>
                                                         </button>
                                                     </form>
-                                                    <form action="{{ route('facility.offers.destroy', $offer) }}" 
-                                                          method="POST" class="d-inline"
-                                                          onsubmit="return confirm('هل أنت متأكد من حذف هذا العرض؟')">
+                                                    <form method="POST" action="{{ route('facility.offers.destroy', $offer) }}" class="d-inline" onsubmit="return confirm('هل أنت متأكد من حذف هذا العرض؟')">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="حذف">
+                                                        <button type="submit" class="btn btn-sm btn-danger">
                                                             <i class="fas fa-trash"></i>
                                                         </button>
                                                     </form>
@@ -174,7 +157,7 @@
                         </div>
                     @else
                         <div class="text-center py-5">
-                            <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
+                            <i class="fas fa-gift fa-3x text-muted mb-3"></i>
                             <h5 class="text-muted">لا توجد عروض</h5>
                             <p class="text-muted">ابدأ بإنشاء عرض جديد لعقارك</p>
                             <a href="{{ route('facility.offers.create') }}" class="btn btn-primary">

@@ -160,14 +160,57 @@
                             </div>
                         </div>
 
-                        <!-- Features -->
+                        <!-- Features & Options -->
                         <div class="mb-8">
                             <h5 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">
-                                {{ __('facility.products.edit.features') }}
+                                {{ __('facility.products.edit.features_options') }}
                             </h5>
                             
-                            <div id="features-container">
-                                <p class="text-gray-500 text-sm">{{ __('facility.products.edit.select_category_for_features') }}</p>
+                            <!-- Boolean Options -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="furnished" name="furnished" value="1" 
+                                           class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 focus:ring-2" 
+                                           {{ old('furnished', $product->furnished) ? 'checked' : '' }}>
+                                    <label for="furnished" class="ml-2 text-sm font-medium text-gray-700">
+                                        {{ __('facility.products.edit.furnished') }}
+                                    </label>
+                                </div>
+                                
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="available_for_rent" name="available_for_rent" value="1" 
+                                           class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 focus:ring-2" 
+                                           {{ old('available_for_rent', $product->available_for_rent) ? 'checked' : '' }}>
+                                    <label for="available_for_rent" class="ml-2 text-sm font-medium text-gray-700">
+                                        {{ __('facility.products.edit.available_for_rent') }}
+                                    </label>
+                                </div>
+                                
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="available_for_sale" name="available_for_sale" value="1" 
+                                           class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 focus:ring-2" 
+                                           {{ old('available_for_sale', $product->available_for_sale) ? 'checked' : '' }}>
+                                    <label for="available_for_sale" class="ml-2 text-sm font-medium text-gray-700">
+                                        {{ __('facility.products.edit.available_for_sale') }}
+                                    </label>
+                                </div>
+                                
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="is_featured" name="is_featured" value="1" 
+                                           class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 focus:ring-2" 
+                                           {{ old('is_featured', $product->is_featured) ? 'checked' : '' }}>
+                                    <label for="is_featured" class="ml-2 text-sm font-medium text-gray-700">
+                                        {{ __('facility.products.edit.is_featured') }}
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- Features Selection -->
+                            <div class="mb-6">
+                                <label class="block text-sm font-medium text-gray-700 mb-3">{{ __('facility.products.edit.features') }}</label>
+                                <div id="features-container">
+                                    <p class="text-gray-500 text-sm">{{ __('facility.products.edit.select_category_for_features') }}</p>
+                                </div>
                             </div>
                         </div>
 
@@ -204,7 +247,11 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Store old input values from Laravel session and product attributes
     const oldInputs = @json(old('attributes', []));
-    const productAttributes = @json($product->attributes->keyBy('id')->map(function($attr) { return $attr->pivot->value; }));
+    const productAttributes = @json($attributeValues ?? []);
+    
+    // Get attributes and features data from Laravel
+    const attributesByCategory = @json($attributesByCategory ?? []);
+    const featuresByCategory = @json($featuresByCategory ?? []);
     
     // Load attributes based on selected category
     const categorySelect = document.getElementById('category_id');
@@ -225,8 +272,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // Load attributes and features on page load if category is selected
         const initialCategoryId = categorySelect.value;
         if (initialCategoryId) {
-            loadAttributesByCategory(initialCategoryId);
-            loadFeaturesByCategory(initialCategoryId);
+            // Add a small delay to ensure the DOM is fully loaded
+            setTimeout(() => {
+                loadAttributesByCategory(initialCategoryId);
+                loadFeaturesByCategory(initialCategoryId);
+            }, 100);
         }
     }
 
@@ -239,8 +289,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     data.data.forEach(function(attribute) {
                         const requiredMark = attribute.required ? ' <span class="text-red-500">*</span>' : '';
                         const iconHtml = attribute.icon ? `<img src="${attribute.icon}" alt="icon" width="20" class="inline mr-1">` : '';
-                        const currentValue = getCurrentAttributeValue(attribute.id);
-                        
+                        // Use the productAttributes JSON data for existing values
+                        const currentValue = productAttributes[attribute.id] || '';
+                        console.log(productAttributes)
+                        console.log(attribute)
                         attributesHtml += `
                             <div>
                                 <label for="attribute_${attribute.id}" class="block text-sm font-medium text-gray-700 mb-2">
@@ -290,15 +342,17 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.success && data.data.length > 0) {
-                    let featuresHtml = '<div class="grid grid-cols-1 md:grid-cols-3 gap-4">';
+                    let featuresHtml = '<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">';
                     data.data.forEach(function(feature) {
                         const iconHtml = feature.icon ? `<img src="${feature.icon}" alt="icon" width="20" class="inline mr-2">` : '';
+                        // Use the product features JSON data for existing values
                         const isChecked = getCurrentFeatureValue(feature.id) ? 'checked' : '';
                         
                         featuresHtml += `
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="feature_${feature.id}" name="features[]" value="${feature.id}" ${isChecked}>
-                                <label class="form-check-label" for="feature_${feature.id}">
+                            <div class="flex items-center">
+                                <input type="checkbox" id="feature_${feature.id}" name="features[]" value="${feature.id}" 
+                                       class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 focus:ring-2" ${isChecked}>
+                                <label for="feature_${feature.id}" class="ml-2 text-sm text-gray-700">
                                     ${iconHtml}${feature.name}
                                 </label>
                             </div>

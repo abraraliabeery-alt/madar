@@ -6,8 +6,17 @@ use App\Http\Controllers\Facility\FacilityProductController;
 use App\Http\Controllers\Facility\FacilityBookingController;
 use App\Http\Controllers\Facility\FacilityOfferController;
 use App\Http\Controllers\Facility\FacilityContractController;
+use App\Http\Controllers\Facility\FacilityInvoiceController;
+use App\Http\Controllers\Facility\FacilityPaymentController;
 use App\Http\Controllers\Facility\FacilityFinancialReportController;
 use App\Http\Controllers\Facility\FacilityFinancialController;
+use App\Http\Controllers\Facility\AccountingController;
+use App\Http\Controllers\Facility\ChartOfAccountController;
+use App\Http\Controllers\Facility\AccountingPeriodController;
+use App\Http\Controllers\Facility\TaxRateController;
+use App\Http\Controllers\Facility\BudgetController;
+use App\Http\Controllers\Facility\FinancialReportController;
+use App\Http\Controllers\Facility\FacilityUserController;
 use App\Http\Controllers\FacilityCustomizationController;
 
 Route::middleware(['auth', 'role:facility'])->prefix('facility')->name('facility.')->group(function () {
@@ -59,9 +68,36 @@ Route::middleware(['auth', 'role:facility'])->prefix('facility')->name('facility
     Route::post('contracts/{contract}/update-status', [FacilityContractController::class, 'updateStatus'])->name('contracts.update-status');
     Route::post('contracts/{contract}/cancel', [FacilityContractController::class, 'cancel'])->name('contracts.cancel');
     Route::post('contracts/{contract}/record-payment', [FacilityContractController::class, 'recordPayment'])->name('contracts.record-payment');
+    Route::post('contracts/{contract}/renew', [FacilityContractController::class, 'renew'])->name('contracts.renew');
     Route::get('contracts/{contract}/invoices', [FacilityContractController::class, 'invoices'])->name('contracts.invoices');
     Route::get('contracts/{contract}/payments', [FacilityContractController::class, 'payments'])->name('contracts.payments');
     Route::get('contracts/{contract}/financial-report', [FacilityContractController::class, 'financialReport'])->name('contracts.financial-report');
+    Route::get('contracts/statistics', [FacilityContractController::class, 'statistics'])->name('contracts.statistics');
+    Route::get('contracts/export', [FacilityContractController::class, 'export'])->name('contracts.export');
+
+    // Invoices Management
+    Route::resource('invoices', FacilityInvoiceController::class);
+    Route::post('invoices/{invoice}/reminder', [FacilityInvoiceController::class, 'sendReminder'])->name('invoices.reminder');
+    Route::get('invoices/generate', [FacilityInvoiceController::class, 'generateInvoices'])->name('invoices.generate');
+    Route::get('invoices/statistics', [FacilityInvoiceController::class, 'statistics'])->name('invoices.statistics');
+    Route::get('invoices/export', [FacilityInvoiceController::class, 'export'])->name('invoices.export');
+
+    // Payments Management
+    Route::resource('payments', FacilityPaymentController::class);
+    Route::post('payments/{payment}/confirm', [FacilityPaymentController::class, 'confirm'])->name('payments.confirm');
+    Route::post('payments/{payment}/fail', [FacilityPaymentController::class, 'fail'])->name('payments.fail');
+    Route::post('payments/{payment}/refund', [FacilityPaymentController::class, 'refund'])->name('payments.refund');
+    Route::get('payments/statistics', [FacilityPaymentController::class, 'statistics'])->name('payments.statistics');
+    Route::get('payments/export', [FacilityPaymentController::class, 'export'])->name('payments.export');
+
+    // Users Management
+    Route::resource('users', FacilityUserController::class);
+    Route::post('users/add-existing', [FacilityUserController::class, 'addExistingUser'])->name('users.add-existing');
+    Route::delete('users/{user}/remove', [FacilityUserController::class, 'removeFromFacility'])->name('users.remove');
+    Route::post('users/{user}/assign-role', [FacilityUserController::class, 'assignRole'])->name('users.assign-role');
+    Route::delete('users/{user}/roles/{role}', [FacilityUserController::class, 'removeRole'])->name('users.remove-role');
+    Route::get('users/statistics', [FacilityUserController::class, 'statistics'])->name('users.statistics');
+    Route::get('users/export', [FacilityUserController::class, 'export'])->name('users.export');
 
     // Financial Reports
     Route::prefix('financial')->name('financial.')->group(function () {
@@ -120,9 +156,57 @@ Route::middleware(['auth', 'role:facility'])->prefix('facility')->name('facility
         Route::get('/payments', [FacilityFinancialController::class, 'payments'])->name('payments');
         Route::post('/payments/{id}/confirm', [FacilityFinancialController::class, 'confirmPayment'])->name('confirm-payment');
         Route::post('/payments/{id}/reject', [FacilityFinancialController::class, 'rejectPayment'])->name('reject-payment');
+    });
+
+    // Accounting System Routes
+    Route::prefix('accounting')->name('accounting.')->group(function () {
+        // Main Accounting Dashboard
+        Route::get('/', [AccountingController::class, 'dashboard'])->name('dashboard');
+        Route::get('/setup', [AccountingController::class, 'setup'])->name('setup');
+        Route::post('/setup', [AccountingController::class, 'createDefaultSetup'])->name('setup.create');
         
-        // Reports and Analytics
-        Route::get('/reports', [FacilityFinancialController::class, 'reports'])->name('reports');
+        // Accounting Entries
+        Route::get('/entries', [AccountingController::class, 'entriesIndex'])->name('entries.index');
+        Route::get('/entries/create', [AccountingController::class, 'createEntry'])->name('entries.create');
+        Route::post('/entries', [AccountingController::class, 'storeEntry'])->name('entries.store');
+        Route::get('/entries/{entry}', [AccountingController::class, 'showEntry'])->name('entries.show');
+        Route::post('/entries/{entry}/reverse', [AccountingController::class, 'reverseEntry'])->name('entries.reverse');
+        Route::get('/entries/export', [AccountingController::class, 'exportEntries'])->name('entries.export');
+        
+        // Chart of Accounts
+        Route::resource('chart-of-accounts', ChartOfAccountController::class);
+        Route::post('chart-of-accounts/{account}/opening-balance', [ChartOfAccountController::class, 'updateOpeningBalance'])->name('chart-of-accounts.opening-balance');
+        Route::get('chart-of-accounts/export', [ChartOfAccountController::class, 'export'])->name('chart-of-accounts.export');
+        Route::post('chart-of-accounts/create-default', [ChartOfAccountController::class, 'createDefault'])->name('chart-of-accounts.create-default');
+        
+        // Accounting Periods
+        Route::resource('periods', AccountingPeriodController::class);
+        Route::post('periods/{period}/close', [AccountingPeriodController::class, 'close'])->name('periods.close');
+        Route::post('periods/{period}/lock', [AccountingPeriodController::class, 'lock'])->name('periods.lock');
+        Route::post('periods/{period}/unlock', [AccountingPeriodController::class, 'unlock'])->name('periods.unlock');
+        
+        // Tax Rates
+        Route::resource('tax-rates', TaxRateController::class);
+        
+        // Budgets
+        Route::resource('budgets', BudgetController::class);
+        Route::post('budgets/{budget}/approve', [BudgetController::class, 'approve'])->name('budgets.approve');
+        Route::post('budgets/{budget}/activate', [BudgetController::class, 'activate'])->name('budgets.activate');
+        Route::post('budgets/{budget}/complete', [BudgetController::class, 'complete'])->name('budgets.complete');
+        Route::post('budgets/{budget}/cancel', [BudgetController::class, 'cancel'])->name('budgets.cancel');
+        
+        // Financial Reports
+        Route::prefix('reports')->name('reports.')->group(function () {
+            Route::get('/', [FinancialReportController::class, 'index'])->name('index');
+            Route::get('/income-statement', [FinancialReportController::class, 'incomeStatement'])->name('income-statement');
+            Route::get('/balance-sheet', [FinancialReportController::class, 'balanceSheet'])->name('balance-sheet');
+            Route::get('/cash-flow', [FinancialReportController::class, 'cashFlow'])->name('cash-flow');
+            Route::get('/budget', [FinancialReportController::class, 'budgetReport'])->name('budget');
+            Route::get('/trial-balance', [FinancialReportController::class, 'trialBalance'])->name('trial-balance');
+        });
+        
+        // Reports and Analytics (moved to nested reports group above)
+        // Route::get('/reports', [FacilityFinancialController::class, 'reports'])->name('reports');
         Route::get('/reports/export', [FacilityFinancialController::class, 'exportReports'])->name('export-reports');
         
         // Accounting Entries

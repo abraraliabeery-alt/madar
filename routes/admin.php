@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\AdminFaqController;
 use App\Http\Controllers\Admin\AdminProfileController;
 use App\Http\Controllers\Admin\AdminUploadController;
 use App\Http\Controllers\Admin\AdminFinancialController;
+use App\Http\Controllers\Admin\AdminPermissionController;
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
 
@@ -64,6 +65,12 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('roles', AdminRoleController::class);
     Route::get('roles/{role}/permissions', [AdminRoleController::class, 'permissions'])->name('roles.permissions');
     Route::post('roles/{role}/permissions', [AdminRoleController::class, 'updatePermissions'])->name('roles.update-permissions');
+
+    // Permissions Management
+    Route::resource('permissions', AdminPermissionController::class);
+    Route::post('permissions/{permission}/toggle-status', [AdminPermissionController::class, 'toggleStatus'])->name('permissions.toggle-status');
+    Route::get('permissions/statistics', [AdminPermissionController::class, 'statistics'])->name('permissions.statistics');
+    Route::get('permissions/export', [AdminPermissionController::class, 'export'])->name('permissions.export');
 
     // Contracts Management
     Route::resource('contracts', AdminContractController::class);

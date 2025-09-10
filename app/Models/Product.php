@@ -12,10 +12,8 @@ class Product extends Model
 
     protected $fillable = [
         'address',
-        'is_active',
         'is_featured',
         'is_verified',
-        'price',
         'main_image',
         'video',
         'image_gallery',
@@ -37,9 +35,6 @@ class Product extends Model
         'floor_number',
         'total_floors',
         'parking_spaces',
-        'furnished',
-        'available_for_rent',
-        'available_for_sale',
         'views_count',
         'rating',
         'rating_count',
@@ -52,13 +47,8 @@ class Product extends Model
     ];
 
     protected $casts = [
-        'is_active' => 'boolean',
         'is_featured' => 'boolean',
         'is_verified' => 'boolean',
-        'furnished' => 'boolean',
-        'available_for_rent' => 'boolean',
-        'available_for_sale' => 'boolean',
-        'price' => 'float',
         'latitude' => 'float',
         'longitude' => 'float',
         'area' => 'float',
@@ -162,6 +152,58 @@ class Product extends Model
         return $this->offers()->active()->valid();
     }
 
+    public function saleOffers()
+    {
+        return $this->offers()->where('offer_type', 'sale');
+    }
+
+    public function rentOffers()
+    {
+        return $this->offers()->where('offer_type', 'like', 'rent_%');
+    }
+
+    public function getActiveSaleOffers()
+    {
+        return $this->saleOffers()->active()->valid()->get();
+    }
+
+    public function getActiveRentOffers()
+    {
+        return $this->rentOffers()->active()->valid()->get();
+    }
+
+    public function hasActiveOffers()
+    {
+        return $this->activeOffers()->exists();
+    }
+
+    public function hasSaleOffers()
+    {
+        return $this->saleOffers()->active()->valid()->exists();
+    }
+
+    public function hasRentOffers()
+    {
+        return $this->rentOffers()->active()->valid()->exists();
+    }
+
+    public function getBestOffer($type = null)
+    {
+        $query = $this->offers()->active()->valid();
+        
+        if ($type) {
+            if ($type === 'sale') {
+                $query->where('offer_type', 'sale');
+            } elseif ($type === 'rent') {
+                $query->where('offer_type', 'like', 'rent_%');
+            }
+        }
+        
+        return $query->orderBy('priority', 'desc')
+                    ->orderBy('price', 'asc')
+                    ->first();
+    }
+
 
 
     // Gallery accessor - since image_gallery is a JSON field, not a relationship
@@ -226,11 +268,6 @@ class Product extends Model
     }
 
     // Scopes
-    public function scopeActive($query)
-    {
-        return $query->where('is_active', true);
-    }
-
     public function scopeFeatured($query)
     {
         return $query->where('is_featured', true);

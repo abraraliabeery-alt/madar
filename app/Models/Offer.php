@@ -25,6 +25,15 @@ class Offer extends Model
         'terms_conditions',
         'facility_id',
         'created_by',
+        'offer_title', // عنوان العرض
+        'offer_description', // وصف العرض
+        'payment_plan', // خطة الدفع (JSON)
+        'special_conditions', // شروط خاصة
+        'marketing_notes', // ملاحظات تسويقية
+        'priority', // أولوية العرض (1-10)
+        'auto_renew', // تجديد تلقائي
+        'min_contract_duration', // مدة العقد الأدنى
+        'max_contract_duration', // مدة العقد القصوى
     ];
 
     protected $casts = [
@@ -36,6 +45,11 @@ class Offer extends Model
         'is_featured' => 'boolean',
         'valid_from' => 'date',
         'valid_to' => 'date',
+        'payment_plan' => 'array',
+        'auto_renew' => 'boolean',
+        'min_contract_duration' => 'integer',
+        'max_contract_duration' => 'integer',
+        'priority' => 'integer',
     ];
 
     // العلاقات
@@ -158,5 +172,116 @@ class Offer extends Model
     {
         $translation = $this->getTranslation($locale);
         return $translation ? $translation->terms_conditions : $this->terms_conditions;
+    }
+
+    /**
+     * Get offer title for specific locale
+     */
+    public function getTranslatedTitle($locale = null)
+    {
+        $translation = $this->getTranslation($locale);
+        return $translation ? $translation->offer_title : $this->offer_title;
+    }
+
+    /**
+     * Get offer description for specific locale
+     */
+    public function getTranslatedDescription($locale = null)
+    {
+        $translation = $this->getTranslation($locale);
+        return $translation ? $translation->offer_description : $this->offer_description;
+    }
+
+    /**
+     * Get payment plan as formatted array
+     */
+    public function getPaymentPlanAttribute($value)
+    {
+        return $value ? json_decode($value, true) : [];
+    }
+
+    /**
+     * Set payment plan from array
+     */
+    public function setPaymentPlanAttribute($value)
+    {
+        $this->attributes['payment_plan'] = is_array($value) ? json_encode($value) : $value;
+    }
+
+    /**
+     * Check if offer is for sale
+     */
+    public function isForSale()
+    {
+        return $this->offer_type === 'sale';
+    }
+
+    /**
+     * Check if offer is for rent
+     */
+    public function isForRent()
+    {
+        return str_starts_with($this->offer_type, 'rent_');
+    }
+
+    /**
+     * Get rent period in days
+     */
+    public function getRentPeriodInDays()
+    {
+        switch ($this->offer_type) {
+            case 'rent_daily':
+                return 1;
+            case 'rent_monthly':
+                return 30;
+            case 'rent_yearly':
+                return 365;
+            default:
+                return null;
+        }
+    }
+
+    /**
+     * Calculate total commission amount
+     */
+    public function calculateTotalCommission()
+    {
+        if ($this->commission_rate) {
+            return $this->price * $this->commission_rate;
+        }
+        return $this->commission_amount ?? 0;
+    }
+
+    /**
+     * Get net amount after commission
+     */
+    public function getNetAmount()
+    {
+        return $this->price - $this->calculateTotalCommission();
+    }
+
+    /**
+     * Check if offer can be renewed
+     */
+    public function canBeRenewed()
+    {
+        return $this->auto_renew && $this->isForRent();
+    }
+
+    /**
+     * Get formatted payment plan
+     */
+    public function getFormattedPaymentPlan()
+    {
+        $plan = $this->payment_plan;
+        if (empty($plan)) {
+            return 'دفعة واحدة';
+        }
+
+        $formatted = [];
+        foreach ($plan as $installment) {
+            $formatted[] = "{$installment['amount']} ريال - {$installment['due_date']}";
+        }
+        return implode(' | ', $formatted);
     }
 }

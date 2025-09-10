@@ -1,4 +1,4 @@
-@extends('layouts.facility')
+@extends('facility.layouts.app')
 
 @section('title', 'إدارة العقود')
 
@@ -13,13 +13,13 @@
                         <a href="{{ route('facility.contracts.create') }}" class="btn btn-primary">
                             <i class="fas fa-plus"></i> إضافة عقد جديد
                         </a>
-                        <a href="{{ route('facility.financial.index') }}" class="btn btn-info">
-                            <i class="fas fa-chart-line"></i> التقارير المالية
+                        <a href="{{ route('facility.contracts.statistics') }}" class="btn btn-info">
+                            <i class="fas fa-chart-bar"></i> الإحصائيات
                         </a>
                     </div>
                 </div>
 
-                <!-- فلاتر البحث -->
+                <!-- فلترة وبحث -->
                 <div class="card-body">
                     <form method="GET" class="row g-3 mb-4">
                         <div class="col-md-3">
@@ -51,15 +51,13 @@
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
                                         <th>رقم العقد</th>
                                         <th>المنتج</th>
                                         <th>العميل</th>
-                                        <th>المالك</th>
                                         <th>النوع</th>
-                                        <th>المبلغ</th>
-                                        <th>المدفوع</th>
-                                        <th>المتبقي</th>
+                                        <th>المبلغ الإجمالي</th>
+                                        <th>المدة</th>
+                                        <th>التقدم</th>
                                         <th>الحالة</th>
                                         <th>الإجراءات</th>
                                     </tr>
@@ -67,35 +65,21 @@
                                 <tbody>
                                     @foreach($contracts as $contract)
                                         <tr>
-                                            <td>{{ $contract->id }}</td>
                                             <td>
-                                                <strong>{{ $contract->contract_number ?? 'غير محدد' }}</strong>
+                                                <strong>{{ $contract->contract_number ?: 'CON-' . $contract->id }}</strong>
+                                                @if($contract->is_verified)
+                                                    <span class="badge bg-success">موثق</span>
+                                                @endif
                                             </td>
                                             <td>
-                                                <div class="d-flex align-items-center">
-                                                    @if($contract->product->image)
-                                                        <img src="{{ asset('storage/' . $contract->product->image) }}" 
-                                                             class="rounded me-2" width="40" height="40" alt="صورة المنتج">
-                                                    @endif
-                                                    <div>
-                                                        <strong>{{ $contract->product->getTranslatedTitle() }}</strong>
-                                                        <br>
-                                                        <small class="text-muted">{{ $contract->product->address }}</small>
-                                                    </div>
-                                                </div>
+                                                <a href="{{ route('facility.products.show', $contract->product) }}" class="text-decoration-none">
+                                                    {{ $contract->product->getTranslatedTitle() }}
+                                                </a>
                                             </td>
                                             <td>
                                                 <div>
                                                     <strong>{{ $contract->user->name }}</strong>
-                                                    <br>
-                                                    <small class="text-muted">{{ $contract->user->email }}</small>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div>
-                                                    <strong>{{ $contract->owner->name }}</strong>
-                                                    <br>
-                                                    <small class="text-muted">{{ $contract->owner->email }}</small>
+                                                    <br><small class="text-muted">{{ $contract->user->email }}</small>
                                                 </div>
                                             </td>
                                             <td>
@@ -105,20 +89,28 @@
                                             </td>
                                             <td>
                                                 <strong>{{ number_format($contract->total_amount, 2) }} {{ $contract->currency }}</strong>
+                                                @if($contract->deposit_amount)
+                                                    <br><small class="text-muted">عربون: {{ number_format($contract->deposit_amount, 2) }}</small>
+                                                @endif
                                             </td>
                                             <td>
-                                                @php
-                                                    $totalPaid = $contract->getTotalPaidAmount();
-                                                @endphp
-                                                <span class="text-success">{{ number_format($totalPaid, 2) }} {{ $contract->currency }}</span>
+                                                @if($contract->contract_duration_months)
+                                                    {{ $contract->contract_duration_months }} شهر
+                                                @elseif($contract->end_date)
+                                                    {{ $contract->start_date->diffInMonths($contract->end_date) }} شهر
+                                                @else
+                                                    غير محدد
+                                                @endif
                                             </td>
                                             <td>
-                                                @php
-                                                    $remaining = $contract->getRemainingAmount();
-                                                @endphp
-                                                <span class="text-{{ $remaining > 0 ? 'warning' : 'success' }}">
-                                                    {{ number_format($remaining, 2) }} {{ $contract->currency }}
-                                                </span>
+                                                <div class="progress" style="width: 100px; height: 20px;">
+                                                    <div class="progress-bar" role="progressbar" style="width: {{ $contract->getProgressPercentage() }}%">
+                                                        {{ round($contract->getProgressPercentage()) }}%
+                                                    </div>
+                                                </div>
+                                                <small class="text-muted">
+                                                    {{ $contract->paid_installments }}/{{ $contract->total_installments }} قسط
+                                                </small>
                                             </td>
                                             <td>
                                                 @switch($contract->status)
@@ -138,48 +130,27 @@
                                             </td>
                                             <td>
                                                 <div class="btn-group" role="group">
-                                                    <a href="{{ route('facility.contracts.show', $contract) }}" 
-                                                       class="btn btn-sm btn-outline-primary" title="عرض">
+                                                    <a href="{{ route('facility.contracts.show', $contract) }}" class="btn btn-sm btn-info">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
-                                                    <a href="{{ route('facility.contracts.edit', $contract) }}" 
-                                                       class="btn btn-sm btn-outline-warning" title="تعديل">
+                                                    <a href="{{ route('facility.contracts.edit', $contract) }}" class="btn btn-sm btn-warning">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
-                                                    <a href="{{ route('facility.contracts.financial-report', $contract) }}" 
-                                                       class="btn btn-sm btn-outline-info" title="التقرير المالي">
-                                                        <i class="fas fa-chart-line"></i>
-                                                    </a>
-                                                    <div class="dropdown">
-                                                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" 
-                                                                type="button" data-bs-toggle="dropdown">
-                                                            <i class="fas fa-cog"></i>
+                                                    @if($contract->status == 'active' && $contract->canBeRenewed())
+                                                        <form method="POST" action="{{ route('facility.contracts.renew', $contract) }}" class="d-inline">
+                                                            @csrf
+                                                            <button type="submit" class="btn btn-sm btn-success" title="تجديد العقد">
+                                                                <i class="fas fa-redo"></i>
+                                                            </button>
+                                                        </form>
+                                                    @endif
+                                                    <form method="POST" action="{{ route('facility.contracts.destroy', $contract) }}" class="d-inline" onsubmit="return confirm('هل أنت متأكد من حذف هذا العقد؟')">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-sm btn-danger">
+                                                            <i class="fas fa-trash"></i>
                                                         </button>
-                                                        <ul class="dropdown-menu">
-                                                            <li>
-                                                                <a class="dropdown-item" href="{{ route('facility.contracts.invoices', $contract) }}">
-                                                                    <i class="fas fa-file-invoice me-2"></i>الفواتير
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a class="dropdown-item" href="{{ route('facility.contracts.payments', $contract) }}">
-                                                                    <i class="fas fa-credit-card me-2"></i>المدفوعات
-                                                                </a>
-                                                            </li>
-                                                            <li><hr class="dropdown-divider"></li>
-                                                            <li>
-                                                                <form action="{{ route('facility.contracts.destroy', $contract) }}" 
-                                                                      method="POST" class="d-inline"
-                                                                      onsubmit="return confirm('هل أنت متأكد من حذف هذا العقد؟')">
-                                                                    @csrf
-                                                                    @method('DELETE')
-                                                                    <button type="submit" class="dropdown-item text-danger">
-                                                                        <i class="fas fa-trash me-2"></i>حذف
-                                                                    </button>
-                                                                </form>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
+                                                    </form>
                                                 </div>
                                             </td>
                                         </tr>

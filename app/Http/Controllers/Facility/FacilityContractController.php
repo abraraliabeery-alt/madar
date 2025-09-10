@@ -110,6 +110,13 @@ class FacilityContractController extends Controller
             'deposit_amount' => 'nullable|numeric|min:0',
             'commission_rate' => 'nullable|numeric|min:0|max:1',
             'terms_conditions' => 'nullable|string',
+            'payment_frequency' => 'nullable|in:monthly,quarterly,yearly,custom',
+            'total_installments' => 'nullable|integer|min:1',
+            'late_fee_rate' => 'nullable|numeric|min:0|max:1',
+            'early_payment_discount' => 'nullable|numeric|min:0',
+            'contract_duration_months' => 'nullable|integer|min:1',
+            'renewal_terms' => 'nullable|string',
+            'termination_terms' => 'nullable|string',
             'terms_conditions_ar' => 'nullable|string',
         ]);
 

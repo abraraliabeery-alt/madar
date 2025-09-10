@@ -110,6 +110,21 @@ class Facility extends Model
         return $this->hasMany(Contract::class);
     }
 
+    public function offers()
+    {
+        return $this->hasMany(Offer::class);
+    }
+
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class);
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
     public function tasks()
     {
         // Tasks are not directly related to facilities, so return empty query builder
