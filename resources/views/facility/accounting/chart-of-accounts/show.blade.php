@@ -269,8 +269,8 @@
                                                 <tbody>
                                                     @foreach($account->entries()->latest()->limit(10)->get() as $entry)
                                                         <tr>
-                                                            <td>{{ $entry->entry_date->format('Y-m-d') }}</td>
-                                                            <td>{{ $entry->description }}</td>
+                                                            <td>{{ $entry->entry_date ? $entry->entry_date->format('Y-m-d') : 'غير محدد' }}</td>
+                                                            <td>{{ $entry->description ?? '' }}</td>
                                                             <td>
                                                                 <span class="badge bg-{{ $entry->entry_type === 'debit' ? 'primary' : 'success' }}">
                                                                     {{ $entry->entry_type === 'debit' ? 'مدين' : 'دائن' }}
@@ -278,12 +278,12 @@
                                                             </td>
                                                             <td>
                                                                 <span class="{{ $entry->entry_type === 'debit' ? 'text-primary' : 'text-success' }}">
-                                                                    {{ $entry->formatted_amount }}
+                                                                    {{ $entry->formatted_amount ?? '0.00 ر.س' }}
                                                                 </span>
                                                             </td>
                                                             <td>
-                                                                <span class="{{ $entry->running_balance >= 0 ? 'text-success' : 'text-danger' }}">
-                                                                    {{ $entry->formatted_running_balance }}
+                                                                <span class="{{ ($entry->running_balance ?? 0) >= 0 ? 'text-success' : 'text-danger' }}">
+                                                                    {{ $entry->formatted_running_balance ?? '0.00 ر.س' }}
                                                                 </span>
                                                             </td>
                                                         </tr>

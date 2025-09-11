@@ -3,359 +3,287 @@
 @section('title', 'إضافة مستخدم جديد')
 
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h3 class="card-title">إضافة مستخدم جديد</h3>
-                    <a href="{{ route('facility.users.index') }}" class="btn btn-outline-secondary">
-                        <i class="fas fa-arrow-right"></i> العودة للقائمة
-                    </a>
-                </div>
+<div class="w-full px-4 my-6">
+    <div class="bg-white rounded-lg shadow-lg">
+        <div class="bg-gradient-to-r from-primary-500 to-primary-600 text-white px-6 py-4 rounded-t-lg">
+            <div class="flex justify-between items-center">
+                <h3 class="text-xl font-semibold">إضافة مستخدم جديد</h3>
+                <a href="{{ route('facility.users.index') }}" class="bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-lg text-sm transition-colors">
+                    <i class="fas fa-arrow-right mr-2"></i>العودة للقائمة
+                </a>
+            </div>
+        </div>
 
-                <div class="card-body">
-                    <!-- تبويبات -->
-                    <ul class="nav nav-tabs" id="userTabs" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="new-user-tab" data-bs-toggle="tab" data-bs-target="#new-user" type="button" role="tab">
-                                <i class="fas fa-user-plus"></i> إنشاء مستخدم جديد
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="existing-user-tab" data-bs-toggle="tab" data-bs-target="#existing-user" type="button" role="tab">
-                                <i class="fas fa-user-check"></i> إضافة مستخدم موجود
-                            </button>
-                        </li>
-                    </ul>
+        <div class="p-6">
+            <form method="POST" action="{{ route('facility.users.store') }}" id="createUserForm">
+                @csrf
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- معلومات أساسية -->
+                    <div>
+                        <h5 class="text-lg font-semibold text-gray-800 mb-6 flex items-center">
+                            <i class="fas fa-user text-primary-600 mr-2"></i>
+                            المعلومات الأساسية
+                        </h5>
 
-                    <div class="tab-content" id="userTabsContent">
-                        <!-- إنشاء مستخدم جديد -->
-                        <div class="tab-pane fade show active" id="new-user" role="tabpanel">
-                            <form method="POST" action="{{ route('facility.users.store') }}" class="mt-4">
-                                @csrf
-                                
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="card">
-                                            <div class="card-header">
-                                                <h5 class="card-title mb-0">المعلومات الشخصية</h5>
-                                            </div>
-                                            <div class="card-body">
-                                                <div class="mb-3">
-                                                    <label for="name" class="form-label">الاسم الكامل <span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control @error('name') is-invalid @enderror" 
-                                                           id="name" name="name" value="{{ old('name') }}" required>
-                                                    @error('name')
-                                                        <div class="invalid-feedback">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
-
-                                                <div class="mb-3">
-                                                    <label for="email" class="form-label">البريد الإلكتروني <span class="text-danger">*</span></label>
-                                                    <input type="email" class="form-control @error('email') is-invalid @enderror" 
-                                                           id="email" name="email" value="{{ old('email') }}" required>
-                                                    @error('email')
-                                                        <div class="invalid-feedback">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
-
-                                                <div class="mb-3">
-                                                    <label for="phone_number" class="form-label">رقم الهاتف <span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control @error('phone_number') is-invalid @enderror" 
-                                                           id="phone_number" name="phone_number" value="{{ old('phone_number') }}" required>
-                                                    @error('phone_number')
-                                                        <div class="invalid-feedback">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
-
-                                                <div class="mb-3">
-                                                    <label for="password" class="form-label">كلمة المرور <span class="text-danger">*</span></label>
-                                                    <input type="password" class="form-control @error('password') is-invalid @enderror" 
-                                                           id="password" name="password" required>
-                                                    @error('password')
-                                                        <div class="invalid-feedback">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
-
-                                                <div class="mb-3">
-                                                    <label for="password_confirmation" class="form-label">تأكيد كلمة المرور <span class="text-danger">*</span></label>
-                                                    <input type="password" class="form-control" 
-                                                           id="password_confirmation" name="password_confirmation" required>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <div class="card">
-                                            <div class="card-header">
-                                                <h5 class="card-title mb-0">المعلومات الإضافية</h5>
-                                            </div>
-                                            <div class="card-body">
-                                                <div class="mb-3">
-                                                    <label for="role_id" class="form-label">الدور <span class="text-danger">*</span></label>
-                                                    <select class="form-select @error('role_id') is-invalid @enderror" 
-                                                            id="role_id" name="role_id" required>
-                                                        <option value="">اختر الدور</option>
-                                                        @foreach($roles as $role)
-                                                            <option value="{{ $role->id }}" {{ old('role_id') == $role->id ? 'selected' : '' }}>
-                                                                {{ $role->getTranslatedName() }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                    @error('role_id')
-                                                        <div class="invalid-feedback">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
-
-                                                <div class="mb-3">
-                                                    <label for="bank_account" class="form-label">رقم الحساب البنكي</label>
-                                                    <input type="text" class="form-control @error('bank_account') is-invalid @enderror" 
-                                                           id="bank_account" name="bank_account" value="{{ old('bank_account') }}">
-                                                    @error('bank_account')
-                                                        <div class="invalid-feedback">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
-
-                                                <div class="mb-3">
-                                                    <label for="bank_id" class="form-label">البنك</label>
-                                                    <select class="form-select @error('bank_id') is-invalid @enderror" 
-                                                            id="bank_id" name="bank_id">
-                                                        <option value="">اختر البنك</option>
-                                                        @foreach(\App\Models\Bank::all() as $bank)
-                                                            <option value="{{ $bank->id }}" {{ old('bank_id') == $bank->id ? 'selected' : '' }}>
-                                                                {{ $bank->name }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                    @error('bank_id')
-                                                        <div class="invalid-feedback">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row mt-4">
-                                    <div class="col-12">
-                                        <div class="d-flex justify-content-end gap-2">
-                                            <a href="{{ route('facility.users.index') }}" class="btn btn-outline-secondary">
-                                                <i class="fas fa-times"></i> إلغاء
-                                            </a>
-                                            <button type="submit" class="btn btn-primary">
-                                                <i class="fas fa-save"></i> إنشاء المستخدم
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
+                        <!-- الاسم -->
+                        <div class="mb-6">
+                            <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
+                                الاسم الكامل <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" 
+                                   name="name" 
+                                   id="name" 
+                                   class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 @error('name') border-red-500 @enderror" 
+                                   value="{{ old('name') }}" 
+                                   required>
+                            @error('name')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
 
-                        <!-- إضافة مستخدم موجود -->
-                        <div class="tab-pane fade" id="existing-user" role="tabpanel">
-                            <form method="POST" action="{{ route('facility.users.add-existing') }}" class="mt-4">
-                                @csrf
-                                
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="card">
-                                            <div class="card-header">
-                                                <h5 class="card-title mb-0">اختيار المستخدم</h5>
-                                            </div>
-                                            <div class="card-body">
-                                                <div class="mb-3">
-                                                    <label for="user_id" class="form-label">المستخدم <span class="text-danger">*</span></label>
-                                                    <select class="form-select @error('user_id') is-invalid @enderror" 
-                                                            id="user_id" name="user_id" required>
-                                                        <option value="">اختر المستخدم</option>
-                                                        @foreach($availableUsers as $user)
-                                                            <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>
-                                                                {{ $user->name }} ({{ $user->email }})
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                    @error('user_id')
-                                                        <div class="invalid-feedback">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
+                        <!-- البريد الإلكتروني -->
+                        <div class="mb-6">
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                                البريد الإلكتروني <span class="text-red-500">*</span>
+                            </label>
+                            <input type="email" 
+                                   name="email" 
+                                   id="email" 
+                                   class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 @error('email') border-red-500 @enderror" 
+                                   value="{{ old('email') }}" 
+                                   required>
+                            @error('email')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-                                                <div class="mb-3">
-                                                    <label for="role_id_existing" class="form-label">الدور <span class="text-danger">*</span></label>
-                                                    <select class="form-select @error('role_id') is-invalid @enderror" 
-                                                            id="role_id_existing" name="role_id" required>
-                                                        <option value="">اختر الدور</option>
-                                                        @foreach($roles as $role)
-                                                            <option value="{{ $role->id }}" {{ old('role_id') == $role->id ? 'selected' : '' }}>
-                                                                {{ $role->getTranslatedName() }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                    @error('role_id')
-                                                        <div class="invalid-feedback">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                        <!-- رقم الهاتف -->
+                        <div class="mb-6">
+                            <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">رقم الهاتف</label>
+                            <input type="tel" 
+                                   name="phone" 
+                                   id="phone" 
+                                   class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 @error('phone') border-red-500 @enderror" 
+                                   value="{{ old('phone') }}">
+                            @error('phone')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-                                    <div class="col-md-6">
-                                        <div class="card">
-                                            <div class="card-header">
-                                                <h5 class="card-title mb-0">معلومات إضافية</h5>
-                                            </div>
-                                            <div class="card-body">
-                                                <div class="alert alert-info">
-                                                    <i class="fas fa-info-circle"></i>
-                                                    <strong>ملاحظة:</strong> سيتم إضافة المستخدم المحدد إلى المنشأة مع الدور المختار.
-                                                </div>
-                                                
-                                                @if($availableUsers->count() == 0)
-                                                    <div class="alert alert-warning">
-                                                        <i class="fas fa-exclamation-triangle"></i>
-                                                        <strong>لا توجد مستخدمين متاحين</strong><br>
-                                                        جميع المستخدمين المسجلين في النظام ينتمون بالفعل لهذه المنشأة.
-                                                    </div>
-                                                @endif
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                        <!-- كلمة المرور -->
+                        <div class="mb-6">
+                            <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+                                كلمة المرور <span class="text-red-500">*</span>
+                            </label>
+                            <input type="password" 
+                                   name="password" 
+                                   id="password" 
+                                   class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 @error('password') border-red-500 @enderror" 
+                                   required>
+                            @error('password')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-                                <div class="row mt-4">
-                                    <div class="col-12">
-                                        <div class="d-flex justify-content-end gap-2">
-                                            <a href="{{ route('facility.users.index') }}" class="btn btn-outline-secondary">
-                                                <i class="fas fa-times"></i> إلغاء
-                                            </a>
-                                            <button type="submit" class="btn btn-primary" {{ $availableUsers->count() == 0 ? 'disabled' : '' }}>
-                                                <i class="fas fa-user-plus"></i> إضافة المستخدم
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
+                        <!-- تأكيد كلمة المرور -->
+                        <div class="mb-6">
+                            <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-2">
+                                تأكيد كلمة المرور <span class="text-red-500">*</span>
+                            </label>
+                            <input type="password" 
+                                   name="password_confirmation" 
+                                   id="password_confirmation" 
+                                   class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500" 
+                                   required>
+                        </div>
+                    </div>
+
+                    <!-- إعدادات إضافية -->
+                    <div>
+                        <h5 class="text-lg font-semibold text-gray-800 mb-6 flex items-center">
+                            <i class="fas fa-cog text-primary-600 mr-2"></i>
+                            الإعدادات الإضافية
+                        </h5>
+
+                        <!-- الأدوار -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">الأدوار</label>
+                            <div class="space-y-2">
+                                @foreach($roles as $role)
+                                    <label class="flex items-center">
+                                        <input type="checkbox" 
+                                               name="roles[]" 
+                                               value="{{ $role->id }}" 
+                                               class="rounded border-gray-300 text-primary-600 focus:ring-primary-500 @error('roles') border-red-500 @enderror"
+                                               {{ in_array($role->id, old('roles', [])) ? 'checked' : '' }}>
+                                        <span class="mr-2 text-sm text-gray-700">{{ $role->name }}</span>
+                                    </label>
+                                @endforeach
+                            </div>
+                            @error('roles')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- الحالة -->
+                        <div class="mb-6">
+                            <label for="is_active" class="block text-sm font-medium text-gray-700 mb-2">الحالة</label>
+                            <select name="is_active" id="is_active" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 @error('is_active') border-red-500 @enderror">
+                                <option value="1" {{ old('is_active', 1) == 1 ? 'selected' : '' }}>نشط</option>
+                                <option value="0" {{ old('is_active') == 0 ? 'selected' : '' }}>غير نشط</option>
+                            </select>
+                            @error('is_active')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- الموقع -->
+                        <div class="mb-6">
+                            <label for="location" class="block text-sm font-medium text-gray-700 mb-2">الموقع</label>
+                            <input type="text" 
+                                   name="location" 
+                                   id="location" 
+                                   class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 @error('location') border-red-500 @enderror" 
+                                   value="{{ old('location') }}">
+                            @error('location')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- تاريخ الميلاد -->
+                        <div class="mb-6">
+                            <label for="date_of_birth" class="block text-sm font-medium text-gray-700 mb-2">تاريخ الميلاد</label>
+                            <input type="date" 
+                                   name="date_of_birth" 
+                                   id="date_of_birth" 
+                                   class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 @error('date_of_birth') border-red-500 @enderror" 
+                                   value="{{ old('date_of_birth') }}">
+                            @error('date_of_birth')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- الجنس -->
+                        <div class="mb-6">
+                            <label for="gender" class="block text-sm font-medium text-gray-700 mb-2">الجنس</label>
+                            <select name="gender" id="gender" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 @error('gender') border-red-500 @enderror">
+                                <option value="">اختر الجنس</option>
+                                <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }}>ذكر</option>
+                                <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>أنثى</option>
+                            </select>
+                            @error('gender')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- الوصف -->
+                        <div class="mb-6">
+                            <label for="bio" class="block text-sm font-medium text-gray-700 mb-2">الوصف</label>
+                            <textarea name="bio" 
+                                      id="bio" 
+                                      rows="3" 
+                                      class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 @error('bio') border-red-500 @enderror">{{ old('bio') }}</textarea>
+                            @error('bio')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
                     </div>
                 </div>
-            </div>
+
+                <!-- أزرار الإجراءات -->
+                <div class="flex justify-end space-x-4 space-x-reverse mt-8 pt-6 border-t border-gray-200">
+                    <a href="{{ route('facility.users.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-lg transition-colors">
+                        <i class="fas fa-arrow-right mr-2"></i>إلغاء
+                    </a>
+                    <button type="submit" class="bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg transition-colors">
+                        <i class="fas fa-save mr-2"></i>حفظ المستخدم
+                    </button>
+                </div>
+            </form>
         </div>
+    </div>
+</div>
+
+<!-- إضافة مستخدم موجود -->
+<div class="mt-8 bg-white rounded-lg shadow-lg">
+    <div class="bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-4 rounded-t-lg">
+        <h3 class="text-xl font-semibold">إضافة مستخدم موجود</h3>
+    </div>
+    <div class="p-6">
+        <form method="POST" action="{{ route('facility.users.assign-existing') }}" id="assignUserForm">
+            @csrf
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div>
+                    <label for="existing_user_id" class="block text-sm font-medium text-gray-700 mb-2">اختر المستخدم</label>
+                    <select name="existing_user_id" id="existing_user_id" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 @error('existing_user_id') border-red-500 @enderror">
+                        <option value="">اختر مستخدم موجود</option>
+                        @foreach($availableUsers as $user)
+                            <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->email }})</option>
+                        @endforeach
+                    </select>
+                    @error('existing_user_id')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">الأدوار</label>
+                    <div class="space-y-2">
+                        @foreach($roles as $role)
+                            <label class="flex items-center">
+                                <input type="checkbox" 
+                                       name="existing_roles[]" 
+                                       value="{{ $role->id }}" 
+                                       class="rounded border-gray-300 text-primary-600 focus:ring-primary-500">
+                                <span class="mr-2 text-sm text-gray-700">{{ $role->name }}</span>
+                            </label>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+            <div class="flex justify-end space-x-4 space-x-reverse mt-6">
+                <a href="{{ route('facility.users.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-lg transition-colors">
+                    <i class="fas fa-arrow-right mr-2"></i>إلغاء
+                </a>
+                <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg transition-colors" {{ $availableUsers->count() == 0 ? 'disabled' : '' }}>
+                    <i class="fas fa-user-plus mr-2"></i>إضافة المستخدم
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 @endsection
 
 @push('scripts')
 <script>
-    // Form validation
-    document.querySelectorAll('form').forEach(form => {
-        form.addEventListener('submit', function(e) {
-            const requiredFields = form.querySelectorAll('[required]');
-            let isValid = true;
-            
-            requiredFields.forEach(field => {
-                if (!field.value.trim()) {
-                    isValid = false;
-                    field.classList.add('is-invalid');
-                } else {
-                    field.classList.remove('is-invalid');
-                }
-            });
-            
-            if (!isValid) {
-                e.preventDefault();
-                alert('يرجى ملء جميع الحقول المطلوبة');
-            }
-        });
-    });
-
-    // Password confirmation validation
+    // التحقق من تطابق كلمات المرور
     document.getElementById('password_confirmation').addEventListener('input', function() {
         const password = document.getElementById('password').value;
-        const confirmation = this.value;
+        const confirmPassword = this.value;
         
-        if (password !== confirmation) {
-            this.setCustomValidity('كلمة المرور غير متطابقة');
+        if (password !== confirmPassword) {
+            this.setCustomValidity('كلمات المرور غير متطابقة');
         } else {
             this.setCustomValidity('');
         }
     });
+
+    // التحقق من صحة النموذج
+    document.getElementById('createUserForm').addEventListener('submit', function(e) {
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('password_confirmation').value;
+        
+        if (password !== confirmPassword) {
+            e.preventDefault();
+            alert('كلمات المرور غير متطابقة');
+            return false;
+        }
+        
+        if (password.length < 8) {
+            e.preventDefault();
+            alert('كلمة المرور يجب أن تكون 8 أحرف على الأقل');
+            return false;
+        }
+    });
 </script>
-@endpush
-
-@push('styles')
-<style>
-.card {
-    border: none;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    border-radius: 10px;
-}
-
-.card-header {
-    background: #f8f9fa;
-    border-bottom: 1px solid #e9ecef;
-    border-radius: 10px 10px 0 0 !important;
-}
-
-.nav-tabs {
-    border-bottom: 2px solid #e9ecef;
-}
-
-.nav-tabs .nav-link {
-    border: none;
-    border-radius: 0.375rem 0.375rem 0 0;
-    color: #6c757d;
-    font-weight: 500;
-}
-
-.nav-tabs .nav-link.active {
-    color: #495057;
-    background-color: #fff;
-    border-bottom: 2px solid #0d6efd;
-}
-
-.nav-tabs .nav-link:hover {
-    border-color: transparent;
-    color: #495057;
-}
-
-.form-label {
-    font-weight: 600;
-    color: #495057;
-}
-
-.form-control, .form-select {
-    border-radius: 0.375rem;
-    border: 1px solid #ced4da;
-}
-
-.form-control:focus, .form-select:focus {
-    border-color: #86b7fe;
-    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-}
-
-.btn {
-    border-radius: 0.375rem;
-    font-weight: 500;
-}
-
-.alert {
-    border-radius: 0.5rem;
-    border: none;
-}
-
-@media (max-width: 768px) {
-    .card-body {
-        padding: 1rem;
-    }
-    
-    .d-flex.gap-2 {
-        flex-direction: column;
-    }
-    
-    .d-flex.gap-2 .btn {
-        margin-bottom: 0.5rem;
-    }
-}
-</style>
 @endpush

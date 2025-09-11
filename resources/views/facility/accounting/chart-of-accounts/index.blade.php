@@ -3,33 +3,38 @@
 @section('title', 'دليل الحسابات')
 
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h3 class="card-title">دليل الحسابات</h3>
-                    <div>
-                        <a href="{{ route('facility.accounting.chart-of-accounts.create') }}" class="btn btn-primary">
-                            <i class="fas fa-plus"></i> إضافة حساب جديد
-                        </a>
-                        <a href="{{ route('facility.accounting.chart-of-accounts.create-default') }}" class="btn btn-success">
-                            <i class="fas fa-magic"></i> إنشاء دليل افتراضي
-                        </a>
-                        <a href="{{ route('facility.accounting.chart-of-accounts.export') }}" class="btn btn-info">
-                            <i class="fas fa-download"></i> تصدير
-                        </a>
+<div class="container mx-auto px-4 my-10">
+    <div class="flex justify-center">
+        <div class="w-full max-w-7xl">
+            <div class="bg-white rounded-lg shadow-lg">
+                <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 rounded-t-lg">
+                    <div class="flex justify-between items-center">
+                        <h4 class="text-lg font-semibold text-gray-800 mb-0">دليل الحسابات</h4>
+                        <div class="flex space-x-2 rtl:space-x-reverse">
+                            <a href="{{ route('facility.accounting.chart-of-accounts.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 rtl:space-x-reverse transition-colors">
+                                <i class="fas fa-plus"></i>
+                                <span>إضافة حساب جديد</span>
+                            </a>
+                            <a href="{{ route('facility.accounting.chart-of-accounts.create-default') }}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 rtl:space-x-reverse transition-colors">
+                                <i class="fas fa-magic"></i>
+                                <span>إنشاء دليل افتراضي</span>
+                            </a>
+                            <a href="{{ route('facility.accounting.chart-of-accounts.export') }}" class="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 rtl:space-x-reverse transition-colors">
+                                <i class="fas fa-download"></i>
+                                <span>تصدير</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
 
                 <!-- فلترة وبحث -->
-                <div class="card-body">
-                    <form method="GET" class="row g-3 mb-4">
-                        <div class="col-md-3">
-                            <input type="text" name="search" class="form-control" placeholder="البحث في الحسابات..." value="{{ request('search') }}">
+                <div class="p-6">
+                    <form method="GET" class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
+                        <div>
+                            <input type="text" name="search" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="البحث في الحسابات..." value="{{ request('search') }}">
                         </div>
-                        <div class="col-md-2">
-                            <select name="account_type" class="form-select">
+                        <div>
+                            <select name="account_type" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                                 <option value="">جميع الأنواع</option>
                                 @foreach($accountTypes as $key => $value)
                                     <option value="{{ $key }}" {{ request('account_type') == $key ? 'selected' : '' }}>
@@ -38,8 +43,8 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-2">
-                            <select name="account_category" class="form-select">
+                        <div>
+                            <select name="account_category" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                                 <option value="">جميع الفئات</option>
                                 @foreach($accountCategories as $key => $value)
                                     <option value="{{ $key }}" {{ request('account_category') == $key ? 'selected' : '' }}>
@@ -48,19 +53,21 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-2">
-                            <select name="is_active" class="form-select">
+                        <div>
+                            <select name="is_active" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                                 <option value="">جميع الحالات</option>
                                 <option value="1" {{ request('is_active') === '1' ? 'selected' : '' }}>نشط</option>
                                 <option value="0" {{ request('is_active') === '0' ? 'selected' : '' }}>غير نشط</option>
                             </select>
                         </div>
-                        <div class="col-md-3">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-search"></i> بحث
+                        <div class="flex space-x-2 rtl:space-x-reverse">
+                            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 rtl:space-x-reverse transition-colors">
+                                <i class="fas fa-search"></i>
+                                <span>بحث</span>
                             </button>
-                            <a href="{{ route('facility.accounting.chart-of-accounts.index') }}" class="btn btn-outline-secondary">
-                                <i class="fas fa-times"></i> مسح
+                            <a href="{{ route('facility.accounting.chart-of-accounts.index') }}" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 rtl:space-x-reverse transition-colors">
+                                <i class="fas fa-times"></i>
+                                <span>مسح</span>
                             </a>
                         </div>
                     </form>

@@ -3,250 +3,222 @@
 @section('title', 'إحصائيات المستخدمين')
 
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h3 class="card-title">إحصائيات المستخدمين</h3>
-                    <a href="{{ route('facility.users.index') }}" class="btn btn-outline-secondary">
-                        <i class="fas fa-arrow-right"></i> العودة للقائمة
-                    </a>
+<div class="w-full px-4 my-6">
+    <div class="bg-white rounded-lg shadow-lg p-6">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-2xl font-bold text-gray-800">إحصائيات المستخدمين</h3>
+            <a href="{{ route('facility.users.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 space-x-reverse transition-colors">
+                <i class="fas fa-arrow-right"></i>
+                <span>العودة للقائمة</span>
+            </a>
+        </div>
+
+        <!-- إحصائيات عامة -->
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+            <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg p-6 shadow-lg">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-blue-100 text-sm font-medium">إجمالي المستخدمين</p>
+                        <p class="text-3xl font-bold">{{ $stats['total_users'] }}</p>
+                    </div>
+                    <div class="bg-blue-400 rounded-full p-3">
+                        <i class="fas fa-users text-2xl"></i>
+                    </div>
                 </div>
+            </div>
 
-                <div class="card-body">
-                    <!-- إحصائيات عامة -->
-                    <div class="row mb-4">
-                        <div class="col-md-3">
-                            <div class="card text-center">
-                                <div class="card-body">
-                                    <i class="fas fa-users fa-2x text-primary mb-2"></i>
-                                    <h4 class="text-primary">{{ $stats['total_users'] }}</h4>
-                                    <p class="text-muted">إجمالي المستخدمين</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="card text-center">
-                                <div class="card-body">
-                                    <i class="fas fa-user-check fa-2x text-success mb-2"></i>
-                                    <h4 class="text-success">{{ $stats['total_users'] - $stats['total_users'] + $stats['total_users'] }}</h4>
-                                    <p class="text-muted">المستخدمين النشطين</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="card text-center">
-                                <div class="card-body">
-                                    <i class="fas fa-user-clock fa-2x text-warning mb-2"></i>
-                                    <h4 class="text-warning">0</h4>
-                                    <p class="text-muted">المستخدمين غير النشطين</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="card text-center">
-                                <div class="card-body">
-                                    <i class="fas fa-crown fa-2x text-info mb-2"></i>
-                                    <h4 class="text-info">1</h4>
-                                    <p class="text-muted">مالك المنشأة</p>
-                                </div>
-                            </div>
-                        </div>
+            <div class="bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg p-6 shadow-lg">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-green-100 text-sm font-medium">المستخدمين النشطين</p>
+                        <p class="text-3xl font-bold">{{ $stats['active_users'] }}</p>
                     </div>
-
-                    <!-- توزيع المستخدمين حسب الأدوار -->
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h5 class="card-title mb-0">توزيع المستخدمين حسب الأدوار</h5>
-                                </div>
-                                <div class="card-body">
-                                    @if($stats['users_by_role']->count() > 0)
-                                        @foreach($stats['users_by_role'] as $roleData)
-                                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                                <div>
-                                                    <h6 class="mb-0">{{ $roleData->name }}</h6>
-                                                    <small class="text-muted">دور في المنشأة</small>
-                                                </div>
-                                                <div class="text-end">
-                                                    <h4 class="text-primary mb-0">{{ $roleData->count }}</h4>
-                                                    <small class="text-muted">مستخدم</small>
-                                                </div>
-                                            </div>
-                                            <div class="progress mb-3" style="height: 8px;">
-                                                <div class="progress-bar bg-primary" 
-                                                     style="width: {{ ($roleData->count / $stats['total_users']) * 100 }}%"></div>
-                                            </div>
-                                        @endforeach
-                                    @else
-                                        <p class="text-muted text-center">لا توجد بيانات</p>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h5 class="card-title mb-0">المستخدمين الجدد</h5>
-                                </div>
-                                <div class="card-body">
-                                    @if($stats['recent_users']->count() > 0)
-                                        @foreach($stats['recent_users'] as $user)
-                                            <div class="d-flex align-items-center mb-3">
-                                                <div class="avatar-sm me-3">
-                                                    @if($user->avatar)
-                                                        <img src="{{ asset($user->avatar) }}" alt="Avatar" class="rounded-circle" width="40" height="40">
-                                                    @else
-                                                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                                                            {{ substr($user->name, 0, 1) }}
-                                                        </div>
-                                                    @endif
-                                                </div>
-                                                <div class="flex-1">
-                                                    <h6 class="mb-0">{{ $user->name }}</h6>
-                                                    <small class="text-muted">{{ $user->created_at->diffForHumans() }}</small>
-                                                </div>
-                                                <div class="text-end">
-                                                    @foreach($user->roles as $role)
-                                                        @if($role->facility_id == $facility->id)
-                                                            <span class="badge bg-secondary">{{ $role->getTranslatedName() }}</span>
-                                                        @endif
-                                                    @endforeach
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    @else
-                                        <p class="text-muted text-center">لا توجد مستخدمين جدد</p>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
+                    <div class="bg-green-400 rounded-full p-3">
+                        <i class="fas fa-user-check text-2xl"></i>
                     </div>
+                </div>
+            </div>
 
-                    <!-- إحصائيات تفصيلية -->
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h5 class="card-title mb-0">إحصائيات تفصيلية</h5>
+            <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white rounded-lg p-6 shadow-lg">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-yellow-100 text-sm font-medium">المستخدمين الجدد هذا الشهر</p>
+                        <p class="text-3xl font-bold">{{ $stats['new_users_this_month'] }}</p>
+                    </div>
+                    <div class="bg-yellow-400 rounded-full p-3">
+                        <i class="fas fa-user-plus text-2xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg p-6 shadow-lg">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-purple-100 text-sm font-medium">المستخدمين المعلقين</p>
+                        <p class="text-3xl font-bold">{{ $stats['inactive_users'] }}</p>
+                    </div>
+                    <div class="bg-purple-400 rounded-full p-3">
+                        <i class="fas fa-user-slash text-2xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- توزيع الأدوار -->
+            <div class="bg-white rounded-lg shadow-lg border border-gray-200">
+                <div class="bg-gradient-to-r from-indigo-500 to-indigo-600 text-white px-6 py-4 rounded-t-lg">
+                    <h5 class="text-lg font-semibold flex items-center">
+                        <i class="fas fa-user-shield mr-2"></i>
+                        توزيع الأدوار
+                    </h5>
+                </div>
+                <div class="p-6">
+                    <div class="space-y-4">
+                        @foreach($roleStats as $role)
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <div class="w-4 h-4 bg-indigo-500 rounded-full mr-3"></div>
+                                    <span class="text-gray-700 font-medium">{{ $role->name }}</span>
                                 </div>
-                                <div class="card-body">
-                                    <div class="table-responsive">
-                                        <table class="table table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>المستخدم</th>
-                                                    <th>الدور</th>
-                                                    <th>الحجوزات</th>
-                                                    <th>العقود</th>
-                                                    <th>المنتجات</th>
-                                                    <th>التعليقات</th>
-                                                    <th>تاريخ الانضمام</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @if($stats['recent_users']->count() > 0)
-                                                    @foreach($stats['recent_users'] as $user)
-                                                        <tr>
-                                                            <td>
-                                                                <div class="d-flex align-items-center">
-                                                                    <div class="avatar-sm me-2">
-                                                                        @if($user->avatar)
-                                                                            <img src="{{ asset($user->avatar) }}" alt="Avatar" class="rounded-circle" width="30" height="30">
-                                                                        @else
-                                                                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 30px; height: 30px; font-size: 0.8rem;">
-                                                                                {{ substr($user->name, 0, 1) }}
-                                                                            </div>
-                                                                        @endif
-                                                                    </div>
-                                                                    <div>
-                                                                        <h6 class="mb-0">{{ $user->name }}</h6>
-                                                                        <small class="text-muted">{{ $user->email }}</small>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                @foreach($user->roles as $role)
-                                                                    @if($role->facility_id == $facility->id)
-                                                                        <span class="badge bg-secondary">{{ $role->getTranslatedName() }}</span>
-                                                                    @endif
-                                                                @endforeach
-                                                            </td>
-                                                            <td>{{ $user->bookings()->count() }}</td>
-                                                            <td>{{ $user->contracts()->count() }}</td>
-                                                            <td>{{ $user->products()->count() }}</td>
-                                                            <td>{{ $user->comments()->count() }}</td>
-                                                            <td>{{ $user->created_at->format('Y-m-d') }}</td>
-                                                        </tr>
-                                                    @endforeach
-                                                @else
-                                                    <tr>
-                                                        <td colspan="7" class="text-center text-muted">لا توجد بيانات</td>
-                                                    </tr>
-                                                @endif
-                                            </tbody>
-                                        </table>
+                                <div class="flex items-center space-x-3 space-x-reverse">
+                                    <span class="text-2xl font-bold text-indigo-600">{{ $role->users_count }}</span>
+                                    <div class="w-20 bg-gray-200 rounded-full h-2">
+                                        <div class="bg-indigo-500 h-2 rounded-full" style="width: {{ $role->percentage }}%"></div>
+                                    </div>
+                                    <span class="text-sm text-gray-500">{{ $role->percentage }}%</span>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+
+            <!-- المستخدمين الجدد -->
+            <div class="bg-white rounded-lg shadow-lg border border-gray-200">
+                <div class="bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-4 rounded-t-lg">
+                    <h5 class="text-lg font-semibold flex items-center">
+                        <i class="fas fa-chart-line mr-2"></i>
+                        المستخدمين الجدد
+                    </h5>
+                </div>
+                <div class="p-6">
+                    <div class="space-y-4">
+                        @foreach($recentUsers as $user)
+                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                <div class="flex items-center">
+                                    <img src="{{ $user->profile_picture ? Storage::url($user->profile_picture) : asset('assets/images/default-avatar.png') }}" 
+                                         alt="{{ $user->name }}" 
+                                         class="w-10 h-10 rounded-full mr-3">
+                                    <div>
+                                        <p class="font-medium text-gray-900">{{ $user->name }}</p>
+                                        <p class="text-sm text-gray-500">{{ $user->email }}</p>
                                     </div>
                                 </div>
+                                <div class="text-right">
+                                    <p class="text-sm text-gray-600">{{ $user->created_at->format('Y-m-d') }}</p>
+                                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full {{ $user->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                        {{ $user->is_active ? 'نشط' : 'غير نشط' }}
+                                    </span>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- إحصائيات تفصيلية -->
+        <div class="mt-8 bg-white rounded-lg shadow-lg border border-gray-200">
+            <div class="bg-gradient-to-r from-gray-500 to-gray-600 text-white px-6 py-4 rounded-t-lg">
+                <h5 class="text-lg font-semibold flex items-center">
+                    <i class="fas fa-chart-bar mr-2"></i>
+                    إحصائيات تفصيلية
+                </h5>
+            </div>
+            <div class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="text-center">
+                        <h6 class="text-sm font-medium text-gray-600 mb-2">المستخدمين المؤكدين</h6>
+                        <h4 class="text-3xl font-bold text-green-600">{{ $stats['verified_users'] }}</h4>
+                        <p class="text-sm text-gray-500">{{ $stats['verified_percentage'] }}% من إجمالي المستخدمين</p>
+                    </div>
+                    <div class="text-center">
+                        <h6 class="text-sm font-medium text-gray-600 mb-2">المستخدمين غير المؤكدين</h6>
+                        <h4 class="text-3xl font-bold text-yellow-600">{{ $stats['unverified_users'] }}</h4>
+                        <p class="text-sm text-gray-500">{{ $stats['unverified_percentage'] }}% من إجمالي المستخدمين</p>
+                    </div>
+                    <div class="text-center">
+                        <h6 class="text-sm font-medium text-gray-600 mb-2">المستخدمين مع الصور الشخصية</h6>
+                        <h4 class="text-3xl font-bold text-blue-600">{{ $stats['users_with_avatar'] }}</h4>
+                        <p class="text-sm text-gray-500">{{ $stats['avatar_percentage'] }}% من إجمالي المستخدمين</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- توزيع حسب الجنس -->
+        @if($genderStats)
+        <div class="mt-8 bg-white rounded-lg shadow-lg border border-gray-200">
+            <div class="bg-gradient-to-r from-pink-500 to-pink-600 text-white px-6 py-4 rounded-t-lg">
+                <h5 class="text-lg font-semibold flex items-center">
+                    <i class="fas fa-venus-mars mr-2"></i>
+                    توزيع حسب الجنس
+                </h5>
+            </div>
+            <div class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="text-center">
+                        <h6 class="text-sm font-medium text-gray-600 mb-2">الذكور</h6>
+                        <h4 class="text-3xl font-bold text-blue-600">{{ $genderStats['male'] ?? 0 }}</h4>
+                        <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                            <div class="bg-blue-500 h-2 rounded-full" style="width: {{ $genderStats['male_percentage'] ?? 0 }}%"></div>
+                        </div>
+                        <p class="text-sm text-gray-500 mt-1">{{ $genderStats['male_percentage'] ?? 0 }}%</p>
+                    </div>
+                    <div class="text-center">
+                        <h6 class="text-sm font-medium text-gray-600 mb-2">الإناث</h6>
+                        <h4 class="text-3xl font-bold text-pink-600">{{ $genderStats['female'] ?? 0 }}</h4>
+                        <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                            <div class="bg-pink-500 h-2 rounded-full" style="width: {{ $genderStats['female_percentage'] ?? 0 }}%"></div>
+                        </div>
+                        <p class="text-sm text-gray-500 mt-1">{{ $genderStats['female_percentage'] ?? 0 }}%</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+
+        <!-- النشاط الشهري -->
+        <div class="mt-8 bg-white rounded-lg shadow-lg border border-gray-200">
+            <div class="bg-gradient-to-r from-cyan-500 to-cyan-600 text-white px-6 py-4 rounded-t-lg">
+                <h5 class="text-lg font-semibold flex items-center">
+                    <i class="fas fa-calendar-alt mr-2"></i>
+                    النشاط الشهري
+                </h5>
+            </div>
+            <div class="p-6">
+                <div class="space-y-4">
+                    @foreach($monthlyStats as $month)
+                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                            <div>
+                                <h6 class="font-medium text-gray-900">{{ $month['month_name'] }}</h6>
+                                <p class="text-sm text-gray-500">{{ $month['year'] }}</p>
+                            </div>
+                            <div class="flex items-center space-x-4 space-x-reverse">
+                                <div class="text-center">
+                                    <p class="text-2xl font-bold text-cyan-600">{{ $month['new_users'] }}</p>
+                                    <p class="text-xs text-gray-500">مستخدم جديد</p>
+                                </div>
+                                <div class="w-32 bg-gray-200 rounded-full h-2">
+                                    <div class="bg-cyan-500 h-2 rounded-full" style="width: {{ $month['percentage'] }}%"></div>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    @endforeach
                 </div>
             </div>
         </div>
     </div>
 </div>
 @endsection
-
-@push('styles')
-<style>
-.card {
-    border: none;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    border-radius: 10px;
-}
-
-.card-header {
-    background: #f8f9fa;
-    border-bottom: 1px solid #e9ecef;
-    border-radius: 10px 10px 0 0 !important;
-}
-
-.table th {
-    border-top: none;
-    font-weight: 600;
-    color: #495057;
-    font-size: 0.875rem;
-}
-
-.table td {
-    vertical-align: middle;
-}
-
-.avatar-sm img {
-    object-fit: cover;
-}
-
-.progress {
-    background-color: #e9ecef;
-    border-radius: 0.375rem;
-}
-
-.progress-bar {
-    border-radius: 0.375rem;
-}
-
-@media (max-width: 768px) {
-    .table-responsive {
-        font-size: 0.875rem;
-    }
-    
-    .card-body {
-        padding: 1rem;
-    }
-}
-</style>
-@endpush

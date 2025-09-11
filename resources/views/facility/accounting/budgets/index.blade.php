@@ -3,30 +3,34 @@
 @section('title', 'الميزانيات')
 
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h3 class="card-title">الميزانيات</h3>
-                    <div>
-                        <a href="{{ route('facility.accounting.budgets.create') }}" class="btn btn-primary">
-                            <i class="fas fa-plus"></i> إضافة ميزانية جديدة
-                        </a>
-                        <a href="{{ route('facility.accounting.budgets.create-year') }}" class="btn btn-success">
-                            <i class="fas fa-calendar-plus"></i> إنشاء ميزانية سنوية
-                        </a>
+<div class="container mx-auto px-4 my-10">
+    <div class="flex justify-center">
+        <div class="w-full max-w-7xl">
+            <div class="bg-white rounded-lg shadow-lg">
+                <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 rounded-t-lg">
+                    <div class="flex justify-between items-center">
+                        <h4 class="text-lg font-semibold text-gray-800 mb-0">الميزانيات</h4>
+                        <div class="flex space-x-2 rtl:space-x-reverse">
+                            <a href="{{ route('facility.accounting.budgets.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 rtl:space-x-reverse transition-colors">
+                                <i class="fas fa-plus"></i>
+                                <span>إضافة ميزانية جديدة</span>
+                            </a>
+                            <a href="{{ route('facility.accounting.budgets.create-year') }}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 rtl:space-x-reverse transition-colors">
+                                <i class="fas fa-calendar-plus"></i>
+                                <span>إنشاء ميزانية سنوية</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
 
-                <div class="card-body">
+                <div class="p-6">
                     <!-- فلترة وبحث -->
-                    <form method="GET" class="row g-3 mb-4">
-                        <div class="col-md-3">
-                            <input type="text" name="search" class="form-control" placeholder="البحث في الميزانيات..." value="{{ request('search') }}">
+                    <form method="GET" class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
+                        <div>
+                            <input type="text" name="search" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="البحث في الميزانيات..." value="{{ request('search') }}">
                         </div>
-                        <div class="col-md-2">
-                            <select name="status" class="form-select">
+                        <div>
+                            <select name="status" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                                 <option value="">جميع الحالات</option>
                                 <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>معلقة</option>
                                 <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>نشطة</option>
@@ -34,108 +38,107 @@
                                 <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>مكتملة</option>
                             </select>
                         </div>
-                        <div class="col-md-2">
-                            <input type="date" name="start_date" class="form-control" placeholder="من تاريخ" value="{{ request('start_date') }}">
+                        <div>
+                            <input type="date" name="start_date" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="من تاريخ" value="{{ request('start_date') }}">
                         </div>
-                        <div class="col-md-2">
-                            <input type="date" name="end_date" class="form-control" placeholder="إلى تاريخ" value="{{ request('end_date') }}">
+                        <div>
+                            <input type="date" name="end_date" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="إلى تاريخ" value="{{ request('end_date') }}">
                         </div>
-                        <div class="col-md-3">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-search"></i> بحث
+                        <div class="flex space-x-2 rtl:space-x-reverse">
+                            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 rtl:space-x-reverse transition-colors">
+                                <i class="fas fa-search"></i>
+                                <span>بحث</span>
                             </button>
-                            <a href="{{ route('facility.accounting.budgets.index') }}" class="btn btn-outline-secondary">
-                                <i class="fas fa-times"></i> مسح
+                            <a href="{{ route('facility.accounting.budgets.index') }}" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 rtl:space-x-reverse transition-colors">
+                                <i class="fas fa-times"></i>
+                                <span>مسح</span>
                             </a>
                         </div>
                     </form>
 
                     @if($budgets->count() > 0)
-                        <div class="table-responsive">
-                            <table class="table table-striped">
-                                <thead>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
                                     <tr>
-                                        <th>اسم الميزانية</th>
-                                        <th>الفترة</th>
-                                        <th>المبلغ المخصص</th>
-                                        <th>المبلغ المنفق</th>
-                                        <th>المتبقي</th>
-                                        <th>نسبة الاستهلاك</th>
-                                        <th>الحالة</th>
-                                        <th>الإجراءات</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">اسم الميزانية</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الفترة</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">المبلغ المخصص</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">المبلغ المنفق</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">المتبقي</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">نسبة الاستهلاك</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الحالة</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الإجراءات</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody class="bg-white divide-y divide-gray-200">
                                     @foreach($budgets as $budget)
-                                        <tr>
-                                            <td>
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="px-6 py-4 whitespace-nowrap">
                                                 <div>
-                                                    <strong>{{ $budget->name }}</strong>
+                                                    <div class="text-sm font-medium text-gray-900">{{ $budget->name }}</div>
                                                     @if($budget->is_current)
-                                                        <br><small class="text-success">ميزانية حالية</small>
+                                                        <div class="text-sm text-green-600">ميزانية حالية</div>
                                                     @endif
                                                 </div>
                                             </td>
-                                            <td>
-                                                <div>
-                                                    <small class="text-muted">{{ $budget->start_date->format('Y-m-d') }}</small>
-                                                    <br>
-                                                    <small class="text-muted">{{ $budget->end_date->format('Y-m-d') }}</small>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-gray-900">{{ $budget->start_date->format('Y-m-d') }}</div>
+                                                <div class="text-sm text-gray-500">{{ $budget->end_date->format('Y-m-d') }}</div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm font-medium text-blue-600">{{ $budget->formatted_amount }}</div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm font-medium text-yellow-600">{{ $budget->formatted_spent_amount ?? '0.00 ر.س' }}</div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm font-medium {{ ($budget->remaining_amount ?? $budget->amount) >= 0 ? 'text-green-600' : 'text-red-600' }}">
+                                                    {{ $budget->formatted_remaining_amount ?? $budget->formatted_amount }}
                                                 </div>
                                             </td>
-                                            <td>
-                                                <strong class="text-primary">{{ $budget->formatted_amount }}</strong>
-                                            </td>
-                                            <td>
-                                                <strong class="text-warning">{{ $budget->formatted_spent_amount ?? '0.00 ر.س' }}</strong>
-                                            </td>
-                                            <td>
-                                                <strong class="{{ ($budget->remaining_amount ?? $budget->amount) >= 0 ? 'text-success' : 'text-danger' }}">
-                                                    {{ $budget->formatted_remaining_amount ?? $budget->formatted_amount }}
-                                                </strong>
-                                            </td>
-                                            <td>
-                                                <div class="progress" style="height: 20px;">
-                                                    @php
-                                                        $usagePercentage = $budget->amount > 0 ? (($budget->spent_amount ?? 0) / $budget->amount) * 100 : 0;
-                                                    @endphp
-                                                    <div class="progress-bar bg-{{ $usagePercentage > 90 ? 'danger' : ($usagePercentage > 75 ? 'warning' : 'success') }}" 
-                                                         role="progressbar" style="width: {{ min(100, $usagePercentage) }}%">
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                @php
+                                                    $usagePercentage = $budget->amount > 0 ? (($budget->spent_amount ?? 0) / $budget->amount) * 100 : 0;
+                                                @endphp
+                                                <div class="w-full bg-gray-200 rounded-full h-5">
+                                                    <div class="h-5 rounded-full flex items-center justify-center text-xs font-medium text-white {{ $usagePercentage > 90 ? 'bg-red-600' : ($usagePercentage > 75 ? 'bg-yellow-600' : 'bg-green-600') }}" 
+                                                         style="width: {{ min(100, $usagePercentage) }}%">
                                                         {{ number_format($usagePercentage, 1) }}%
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
                                                 @if($budget->status === 'pending')
-                                                    <span class="badge bg-warning">معلقة</span>
+                                                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">معلقة</span>
                                                 @elseif($budget->status === 'active')
-                                                    <span class="badge bg-success">نشطة</span>
+                                                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">نشطة</span>
                                                 @elseif($budget->status === 'approved')
-                                                    <span class="badge bg-info">معتمدة</span>
+                                                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">معتمدة</span>
                                                 @else
-                                                    <span class="badge bg-secondary">مكتملة</span>
+                                                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">مكتملة</span>
                                                 @endif
                                             </td>
-                                            <td>
-                                                <div class="btn-group" role="group">
-                                                    <a href="{{ route('facility.accounting.budgets.show', $budget) }}" class="btn btn-sm btn-info">
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                <div class="flex space-x-2 rtl:space-x-reverse">
+                                                    <a href="{{ route('facility.accounting.budgets.show', $budget) }}" class="text-blue-600 hover:text-blue-900 p-1 rounded">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
-                                                    <a href="{{ route('facility.accounting.budgets.edit', $budget) }}" class="btn btn-sm btn-warning">
+                                                    <a href="{{ route('facility.accounting.budgets.edit', $budget) }}" class="text-yellow-600 hover:text-yellow-900 p-1 rounded">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
                                                     @if($budget->status === 'pending')
                                                         <a href="{{ route('facility.accounting.budgets.approve', $budget) }}" 
-                                                           class="btn btn-sm btn-success" 
+                                                           class="text-green-600 hover:text-green-900 p-1 rounded" 
                                                            onclick="return confirm('هل أنت متأكد من اعتماد هذه الميزانية؟')">
                                                             <i class="fas fa-check"></i>
                                                         </a>
                                                     @endif
                                                     @if($budget->canBeDeleted())
-                                                        <form method="POST" action="{{ route('facility.accounting.budgets.destroy', $budget) }}" class="d-inline" onsubmit="return confirm('هل أنت متأكد من حذف هذه الميزانية؟')">
+                                                        <form method="POST" action="{{ route('facility.accounting.budgets.destroy', $budget) }}" class="inline" onsubmit="return confirm('هل أنت متأكد من حذف هذه الميزانية؟')">
                                                             @csrf
                                                             @method('DELETE')
-                                                            <button type="submit" class="btn btn-sm btn-danger">
+                                                            <button type="submit" class="text-red-600 hover:text-red-900 p-1 rounded">
                                                                 <i class="fas fa-trash"></i>
                                                             </button>
                                                         </form>
@@ -149,20 +152,22 @@
                         </div>
 
                         <!-- Pagination -->
-                        <div class="d-flex justify-content-center">
+                        <div class="flex justify-center mt-6">
                             {{ $budgets->appends(request()->query())->links() }}
                         </div>
                     @else
-                        <div class="text-center py-5">
-                            <i class="fas fa-chart-pie fa-3x text-muted mb-3"></i>
-                            <h5 class="text-muted">لا توجد ميزانيات</h5>
-                            <p class="text-muted">ابدأ بإنشاء ميزانية جديدة</p>
-                            <div class="d-flex justify-content-center gap-2">
-                                <a href="{{ route('facility.accounting.budgets.create') }}" class="btn btn-primary">
-                                    <i class="fas fa-plus"></i> إضافة ميزانية جديدة
+                        <div class="text-center py-12">
+                            <i class="fas fa-chart-pie text-6xl text-gray-400 mb-4"></i>
+                            <h5 class="text-lg font-medium text-gray-900 mb-2">لا توجد ميزانيات</h5>
+                            <p class="text-gray-500 mb-6">ابدأ بإنشاء ميزانية جديدة</p>
+                            <div class="flex justify-center space-x-4 rtl:space-x-reverse">
+                                <a href="{{ route('facility.accounting.budgets.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg inline-flex items-center space-x-2 rtl:space-x-reverse transition-colors">
+                                    <i class="fas fa-plus"></i>
+                                    <span>إضافة ميزانية جديدة</span>
                                 </a>
-                                <a href="{{ route('facility.accounting.budgets.create-year') }}" class="btn btn-success">
-                                    <i class="fas fa-calendar-plus"></i> إنشاء ميزانية سنوية
+                                <a href="{{ route('facility.accounting.budgets.create-year') }}" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg inline-flex items-center space-x-2 rtl:space-x-reverse transition-colors">
+                                    <i class="fas fa-calendar-plus"></i>
+                                    <span>إنشاء ميزانية سنوية</span>
                                 </a>
                             </div>
                         </div>
@@ -185,63 +190,3 @@
 </script>
 @endpush
 
-@push('styles')
-<style>
-.card {
-    border: none;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    border-radius: 10px;
-}
-
-.card-header {
-    background: #f8f9fa;
-    border-bottom: 1px solid #e9ecef;
-    border-radius: 10px 10px 0 0 !important;
-}
-
-.table th {
-    border-top: none;
-    font-weight: 600;
-    color: #495057;
-    font-size: 0.875rem;
-}
-
-.table td {
-    vertical-align: middle;
-}
-
-.btn-group .btn {
-    border-radius: 0.375rem;
-    margin-right: 0.25rem;
-}
-
-.progress {
-    background-color: #e9ecef;
-    border-radius: 0.375rem;
-}
-
-.progress-bar {
-    border-radius: 0.375rem;
-    font-size: 0.75rem;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-@media (max-width: 768px) {
-    .table-responsive {
-        font-size: 0.875rem;
-    }
-    
-    .btn-group {
-        flex-direction: column;
-        width: 100%;
-    }
-    
-    .btn-group .btn {
-        margin: 0.125rem 0;
-    }
-}
-</style>
-@endpush

@@ -201,8 +201,16 @@ Route::middleware(['auth', 'role:facility'])->prefix('facility')->name('facility
             Route::get('/income-statement', [FinancialReportController::class, 'incomeStatement'])->name('income-statement');
             Route::get('/balance-sheet', [FinancialReportController::class, 'balanceSheet'])->name('balance-sheet');
             Route::get('/cash-flow', [FinancialReportController::class, 'cashFlow'])->name('cash-flow');
-            Route::get('/budget', [FinancialReportController::class, 'budgetReport'])->name('budget');
+            Route::get('/budget-report', [FinancialReportController::class, 'budgetReport'])->name('budget-report');
             Route::get('/trial-balance', [FinancialReportController::class, 'trialBalance'])->name('trial-balance');
+            Route::get('/account-details', [FinancialReportController::class, 'accountDetails'])->name('account-details');
+            Route::get('/custom', [FinancialReportController::class, 'customReport'])->name('custom');
+            Route::get('/export-all', [FinancialReportController::class, 'exportAll'])->name('export-all');
+            Route::get('/export-income-statement', [FinancialReportController::class, 'exportIncomeStatement'])->name('export-income-statement');
+            Route::get('/export-balance-sheet', [FinancialReportController::class, 'exportBalanceSheet'])->name('export-balance-sheet');
+            Route::get('/export-cash-flow', [FinancialReportController::class, 'exportCashFlow'])->name('export-cash-flow');
+            Route::get('/export-budget-report', [FinancialReportController::class, 'exportBudgetReport'])->name('export-budget-report');
+            Route::get('/export-trial-balance', [FinancialReportController::class, 'exportTrialBalance'])->name('export-trial-balance');
         });
         
         // Reports and Analytics (moved to nested reports group above)

@@ -580,7 +580,6 @@ class AdminFinancialController extends Controller
                 'entry_type' => 'required|in:debit,credit',
                 'account_type' => 'required|in:revenue,receivable,commission,liability,expense',
                 'amount' => 'required|numeric|min:0',
-                'currency' => 'required|string|max:3',
                 'description' => 'required|string|max:255',
                 'contract_id' => 'nullable|exists:contracts,id',
                 'facility_id' => 'nullable|exists:facilities,id',

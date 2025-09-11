@@ -3,30 +3,31 @@
 @section('title', 'إضافة عرض جديد')
 
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">إضافة عرض جديد</h3>
-                    <div class="card-tools">
-                        <a href="{{ route('facility.offers.index') }}" class="btn btn-secondary">
-                            <i class="fas fa-arrow-left"></i> العودة للقائمة
+<div class="container mx-auto px-4 my-10">
+    <div class="flex justify-center">
+        <div class="w-full max-w-6xl">
+            <div class="bg-white rounded-lg shadow-lg">
+                <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 rounded-t-lg">
+                    <div class="flex justify-between items-center">
+                        <h4 class="text-lg font-semibold text-gray-800 mb-0">إضافة عرض جديد</h4>
+                        <a href="{{ route('facility.offers.index') }}" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 rtl:space-x-reverse transition-colors">
+                            <i class="fas fa-arrow-left"></i>
+                            <span>العودة للقائمة</span>
                         </a>
                     </div>
                 </div>
 
                 <form method="POST" action="{{ route('facility.offers.store') }}" enctype="multipart/form-data">
                     @csrf
-                    <div class="card-body">
-                        <div class="row">
+                    <div class="p-6">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                             <!-- معلومات أساسية -->
-                            <div class="col-md-6">
-                                <h5 class="mb-3">المعلومات الأساسية</h5>
+                            <div>
+                                <h5 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">المعلومات الأساسية</h5>
                                 
-                                <div class="mb-3">
-                                    <label for="product_id" class="form-label">المنتج <span class="text-danger">*</span></label>
-                                    <select name="product_id" id="product_id" class="form-select @error('product_id') is-invalid @enderror" required>
+                                <div class="mb-4">
+                                    <label for="product_id" class="block text-sm font-medium text-gray-700 mb-2">المنتج <span class="text-red-500">*</span></label>
+                                    <select name="product_id" id="product_id" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('product_id') border-red-500 @enderror" required>
                                         <option value="">اختر المنتج</option>
                                         @foreach($products as $product)
                                             <option value="{{ $product->id }}" {{ old('product_id') == $product->id ? 'selected' : '' }}>
@@ -35,13 +36,13 @@
                                         @endforeach
                                     </select>
                                     @error('product_id')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
 
-                                <div class="mb-3">
-                                    <label for="offer_type" class="form-label">نوع العرض <span class="text-danger">*</span></label>
-                                    <select name="offer_type" id="offer_type" class="form-select @error('offer_type') is-invalid @enderror" required>
+                                <div class="mb-4">
+                                    <label for="offer_type" class="block text-sm font-medium text-gray-700 mb-2">نوع العرض <span class="text-red-500">*</span></label>
+                                    <select name="offer_type" id="offer_type" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('offer_type') border-red-500 @enderror" required>
                                         <option value="">اختر نوع العرض</option>
                                         @foreach($offerTypes as $key => $value)
                                             <option value="{{ $key }}" {{ old('offer_type') == $key ? 'selected' : '' }}>
@@ -50,222 +51,204 @@
                                         @endforeach
                                     </select>
                                     @error('offer_type')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
 
-                                <div class="mb-3">
-                                    <label for="offer_title" class="form-label">عنوان العرض</label>
-                                    <input type="text" name="offer_title" id="offer_title" class="form-control @error('offer_title') is-invalid @enderror" 
+                                <div class="mb-4">
+                                    <label for="offer_title" class="block text-sm font-medium text-gray-700 mb-2">عنوان العرض</label>
+                                    <input type="text" name="offer_title" id="offer_title" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('offer_title') border-red-500 @enderror" 
                                            value="{{ old('offer_title') }}" placeholder="مثال: شقة فاخرة للإيجار">
                                     @error('offer_title')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
 
-                                <div class="mb-3">
-                                    <label for="offer_description" class="form-label">وصف العرض</label>
-                                    <textarea name="offer_description" id="offer_description" class="form-control @error('offer_description') is-invalid @enderror" 
+                                <div class="mb-4">
+                                    <label for="offer_description" class="block text-sm font-medium text-gray-700 mb-2">وصف العرض</label>
+                                    <textarea name="offer_description" id="offer_description" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('offer_description') border-red-500 @enderror" 
                                               rows="3" placeholder="وصف مفصل للعرض...">{{ old('offer_description') }}</textarea>
                                     @error('offer_description')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
                             </div>
 
                             <!-- التفاصيل المالية -->
-                            <div class="col-md-6">
-                                <h5 class="mb-3">التفاصيل المالية</h5>
+                            <div>
+                                <h5 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">التفاصيل المالية</h5>
                                 
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <div class="mb-3">
-                                            <label for="price" class="form-label">السعر <span class="text-danger">*</span></label>
-                                            <input type="number" name="price" id="price" class="form-control @error('price') is-invalid @enderror" 
-                                                   value="{{ old('price') }}" step="0.01" min="0" required>
-                                            @error('price')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                                    <div class="md:col-span-2">
+                                        <label for="price" class="block text-sm font-medium text-gray-700 mb-2">السعر <span class="text-red-500">*</span></label>
+                                        <input type="number" name="price" id="price" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('price') border-red-500 @enderror" 
+                                               value="{{ old('price') }}" step="0.01" min="0" required>
+                                        @error('price')
+                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        @enderror
                                     </div>
-                                    <div class="col-md-4">
-                                        <div class="mb-3">
-                                            <label for="currency" class="form-label">العملة <span class="text-danger">*</span></label>
-                                            <select name="currency" id="currency" class="form-select @error('currency') is-invalid @enderror" required>
-                                                <option value="SAR" {{ old('currency') == 'SAR' ? 'selected' : '' }}>ريال سعودي</option>
-                                                <option value="USD" {{ old('currency') == 'USD' ? 'selected' : '' }}>دولار أمريكي</option>
-                                                <option value="EUR" {{ old('currency') == 'EUR' ? 'selected' : '' }}>يورو</option>
-                                            </select>
-                                            @error('currency')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
+                                    <div>
+                                        <label for="currency" class="block text-sm font-medium text-gray-700 mb-2">العملة <span class="text-red-500">*</span></label>
+                                        <select name="currency" id="currency" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('currency') border-red-500 @enderror" required>
+                                            <option value="SAR" {{ old('currency') == 'SAR' ? 'selected' : '' }}>ريال سعودي</option>
+                                            <option value="USD" {{ old('currency') == 'USD' ? 'selected' : '' }}>دولار أمريكي</option>
+                                            <option value="EUR" {{ old('currency') == 'EUR' ? 'selected' : '' }}>يورو</option>
+                                        </select>
+                                        @error('currency')
+                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        @enderror
                                     </div>
                                 </div>
 
-                                <div class="mb-3">
-                                    <label for="deposit_amount" class="form-label">مبلغ العربون</label>
-                                    <input type="number" name="deposit_amount" id="deposit_amount" class="form-control @error('deposit_amount') is-invalid @enderror" 
+                                <div class="mb-4">
+                                    <label for="deposit_amount" class="block text-sm font-medium text-gray-700 mb-2">مبلغ العربون</label>
+                                    <input type="number" name="deposit_amount" id="deposit_amount" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('deposit_amount') border-red-500 @enderror" 
                                            value="{{ old('deposit_amount') }}" step="0.01" min="0">
                                     @error('deposit_amount')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
 
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="commission_rate" class="form-label">نسبة العمولة</label>
-                                            <div class="input-group">
-                                                <input type="number" name="commission_rate" id="commission_rate" class="form-control @error('commission_rate') is-invalid @enderror" 
-                                                       value="{{ old('commission_rate') }}" step="0.0001" min="0" max="1">
-                                                <span class="input-group-text">%</span>
-                                            </div>
-                                            @error('commission_rate')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label for="commission_rate" class="block text-sm font-medium text-gray-700 mb-2">نسبة العمولة</label>
+                                        <div class="relative">
+                                            <input type="number" name="commission_rate" id="commission_rate" class="w-full px-3 py-2 pr-8 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('commission_rate') border-red-500 @enderror" 
+                                                   value="{{ old('commission_rate') }}" step="0.0001" min="0" max="1">
+                                            <span class="absolute right-3 top-2 text-gray-500">%</span>
                                         </div>
+                                        @error('commission_rate')
+                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        @enderror
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="commission_amount" class="form-label">مبلغ العمولة</label>
-                                            <input type="number" name="commission_amount" id="commission_amount" class="form-control @error('commission_amount') is-invalid @enderror" 
-                                                   value="{{ old('commission_amount') }}" step="0.01" min="0">
-                                            @error('commission_amount')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
+                                    <div>
+                                        <label for="commission_amount" class="block text-sm font-medium text-gray-700 mb-2">مبلغ العمولة</label>
+                                        <input type="number" name="commission_amount" id="commission_amount" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('commission_amount') border-red-500 @enderror" 
+                                               value="{{ old('commission_amount') }}" step="0.01" min="0">
+                                        @error('commission_amount')
+                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        @enderror
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="row">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
                             <!-- إعدادات العرض -->
-                            <div class="col-md-6">
-                                <h5 class="mb-3">إعدادات العرض</h5>
+                            <div>
+                                <h5 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">إعدادات العرض</h5>
                                 
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="priority" class="form-label">الأولوية</label>
-                                            <select name="priority" id="priority" class="form-select @error('priority') is-invalid @enderror">
-                                                @for($i = 1; $i <= 10; $i++)
-                                                    <option value="{{ $i }}" {{ old('priority', 5) == $i ? 'selected' : '' }}>{{ $i }}</option>
-                                                @endfor
-                                            </select>
-                                            @error('priority')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                    <div>
+                                        <label for="priority" class="block text-sm font-medium text-gray-700 mb-2">الأولوية</label>
+                                        <select name="priority" id="priority" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('priority') border-red-500 @enderror">
+                                            @for($i = 1; $i <= 10; $i++)
+                                                <option value="{{ $i }}" {{ old('priority', 5) == $i ? 'selected' : '' }}>{{ $i }}</option>
+                                            @endfor
+                                        </select>
+                                        @error('priority')
+                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        @enderror
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="valid_from" class="form-label">تاريخ البداية</label>
-                                            <input type="date" name="valid_from" id="valid_from" class="form-control @error('valid_from') is-invalid @enderror" 
-                                                   value="{{ old('valid_from', now()->format('Y-m-d')) }}">
-                                            @error('valid_from')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
+                                    <div>
+                                        <label for="valid_from" class="block text-sm font-medium text-gray-700 mb-2">تاريخ البداية</label>
+                                        <input type="date" name="valid_from" id="valid_from" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('valid_from') border-red-500 @enderror" 
+                                               value="{{ old('valid_from', now()->format('Y-m-d')) }}">
+                                        @error('valid_from')
+                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        @enderror
                                     </div>
                                 </div>
 
-                                <div class="mb-3">
-                                    <label for="valid_to" class="form-label">تاريخ النهاية</label>
-                                    <input type="date" name="valid_to" id="valid_to" class="form-control @error('valid_to') is-invalid @enderror" 
+                                <div class="mb-4">
+                                    <label for="valid_to" class="block text-sm font-medium text-gray-700 mb-2">تاريخ النهاية</label>
+                                    <input type="date" name="valid_to" id="valid_to" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('valid_to') border-red-500 @enderror" 
                                            value="{{ old('valid_to') }}">
                                     @error('valid_to')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
 
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="min_contract_duration" class="form-label">مدة العقد الأدنى (أشهر)</label>
-                                            <input type="number" name="min_contract_duration" id="min_contract_duration" class="form-control @error('min_contract_duration') is-invalid @enderror" 
-                                                   value="{{ old('min_contract_duration') }}" min="1">
-                                            @error('min_contract_duration')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                                    <div>
+                                        <label for="min_contract_duration" class="block text-sm font-medium text-gray-700 mb-2">مدة العقد الأدنى (أشهر)</label>
+                                        <input type="number" name="min_contract_duration" id="min_contract_duration" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('min_contract_duration') border-red-500 @enderror" 
+                                               value="{{ old('min_contract_duration') }}" min="1">
+                                        @error('min_contract_duration')
+                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        @enderror
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="max_contract_duration" class="form-label">مدة العقد القصوى (أشهر)</label>
-                                            <input type="number" name="max_contract_duration" id="max_contract_duration" class="form-control @error('max_contract_duration') is-invalid @enderror" 
-                                                   value="{{ old('max_contract_duration') }}" min="1">
-                                            @error('max_contract_duration')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
+                                    <div>
+                                        <label for="max_contract_duration" class="block text-sm font-medium text-gray-700 mb-2">مدة العقد القصوى (أشهر)</label>
+                                        <input type="number" name="max_contract_duration" id="max_contract_duration" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('max_contract_duration') border-red-500 @enderror" 
+                                               value="{{ old('max_contract_duration') }}" min="1">
+                                        @error('max_contract_duration')
+                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        @enderror
                                     </div>
                                 </div>
 
-                                <div class="mb-3">
-                                    <div class="form-check">
-                                        <input type="checkbox" name="is_active" id="is_active" class="form-check-input" value="1" {{ old('is_active', true) ? 'checked' : '' }}>
-                                        <label for="is_active" class="form-check-label">عرض نشط</label>
+                                <div class="space-y-4">
+                                    <div class="flex items-center">
+                                        <input type="checkbox" name="is_active" id="is_active" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" value="1" {{ old('is_active', true) ? 'checked' : '' }}>
+                                        <label for="is_active" class="mr-2 block text-sm text-gray-900">عرض نشط</label>
                                     </div>
-                                </div>
 
-                                <div class="mb-3">
-                                    <div class="form-check">
-                                        <input type="checkbox" name="is_featured" id="is_featured" class="form-check-input" value="1" {{ old('is_featured') ? 'checked' : '' }}>
-                                        <label for="is_featured" class="form-check-label">عرض مميز</label>
+                                    <div class="flex items-center">
+                                        <input type="checkbox" name="is_featured" id="is_featured" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" value="1" {{ old('is_featured') ? 'checked' : '' }}>
+                                        <label for="is_featured" class="mr-2 block text-sm text-gray-900">عرض مميز</label>
                                     </div>
-                                </div>
 
-                                <div class="mb-3">
-                                    <div class="form-check">
-                                        <input type="checkbox" name="auto_renew" id="auto_renew" class="form-check-input" value="1" {{ old('auto_renew') ? 'checked' : '' }}>
-                                        <label for="auto_renew" class="form-check-label">تجديد تلقائي</label>
+                                    <div class="flex items-center">
+                                        <input type="checkbox" name="auto_renew" id="auto_renew" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" value="1" {{ old('auto_renew') ? 'checked' : '' }}>
+                                        <label for="auto_renew" class="mr-2 block text-sm text-gray-900">تجديد تلقائي</label>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- الشروط والملاحظات -->
-                            <div class="col-md-6">
-                                <h5 class="mb-3">الشروط والملاحظات</h5>
+                            <div>
+                                <h5 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">الشروط والملاحظات</h5>
                                 
-                                <div class="mb-3">
-                                    <label for="terms_conditions" class="form-label">الشروط والأحكام</label>
-                                    <textarea name="terms_conditions" id="terms_conditions" class="form-control @error('terms_conditions') is-invalid @enderror" 
+                                <div class="mb-4">
+                                    <label for="terms_conditions" class="block text-sm font-medium text-gray-700 mb-2">الشروط والأحكام</label>
+                                    <textarea name="terms_conditions" id="terms_conditions" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('terms_conditions') border-red-500 @enderror" 
                                               rows="4" placeholder="الشروط والأحكام العامة للعرض...">{{ old('terms_conditions') }}</textarea>
                                     @error('terms_conditions')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
 
-                                <div class="mb-3">
-                                    <label for="special_conditions" class="form-label">شروط خاصة</label>
-                                    <textarea name="special_conditions" id="special_conditions" class="form-control @error('special_conditions') is-invalid @enderror" 
+                                <div class="mb-4">
+                                    <label for="special_conditions" class="block text-sm font-medium text-gray-700 mb-2">شروط خاصة</label>
+                                    <textarea name="special_conditions" id="special_conditions" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('special_conditions') border-red-500 @enderror" 
                                               rows="3" placeholder="شروط خاصة بالعرض...">{{ old('special_conditions') }}</textarea>
                                     @error('special_conditions')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
 
-                                <div class="mb-3">
-                                    <label for="marketing_notes" class="form-label">ملاحظات تسويقية</label>
-                                    <textarea name="marketing_notes" id="marketing_notes" class="form-control @error('marketing_notes') is-invalid @enderror" 
+                                <div class="mb-4">
+                                    <label for="marketing_notes" class="block text-sm font-medium text-gray-700 mb-2">ملاحظات تسويقية</label>
+                                    <textarea name="marketing_notes" id="marketing_notes" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('marketing_notes') border-red-500 @enderror" 
                                               rows="3" placeholder="ملاحظات للفريق التسويقي...">{{ old('marketing_notes') }}</textarea>
                                     @error('marketing_notes')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="card-footer">
-                        <div class="d-flex justify-content-between">
-                            <a href="{{ route('facility.offers.index') }}" class="btn btn-secondary">
-                                <i class="fas fa-times"></i> إلغاء
+                    <div class="bg-gray-50 px-6 py-4 border-t border-gray-200 rounded-b-lg">
+                        <div class="flex justify-between">
+                            <a href="{{ route('facility.offers.index') }}" class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-lg flex items-center space-x-2 rtl:space-x-reverse transition-colors">
+                                <i class="fas fa-times"></i>
+                                <span>إلغاء</span>
                             </a>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save"></i> حفظ العرض
+                            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg flex items-center space-x-2 rtl:space-x-reverse transition-colors">
+                                <i class="fas fa-save"></i>
+                                <span>حفظ العرض</span>
                             </button>
                         </div>
                     </div>

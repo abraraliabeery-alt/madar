@@ -125,34 +125,30 @@
                                             </div>
                                         @endif
                                         <div>
-                                            <div class="text-sm font-medium text-gray-900">{{ $product->title }}</div>
-                                            <div class="text-sm text-gray-500">{{ Str::limit($product->description, 50) }}</div>
+                                            <div class="text-sm font-medium text-gray-900">{{ $product->getTranslatedTitle() ?: $product->address }}</div>
+                                            <div class="text-sm text-gray-500">{{ Str::limit($product->additional_info, 50) }}</div>
                                         </div>
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                        {{ $product->category->getTranslatedName('ar') ?? __('facility.products.unspecified') }}
+                                        {{ $product->category ? $product->category->getTranslatedName('ar') : __('facility.products.unspecified') }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     @php
-                                        $status = $product->statuses()->latest()->first();
+                                        $status = $product->statuses ? $product->statuses()->latest()->first() : null;
                                     @endphp
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
                                         {{ $status ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
-                                        {{ $status->name ?? __('facility.products.unspecified') }}
+                                        {{ $status ? $status->name : __('facility.products.unspecified') }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                    @if($product->price)
-                                        {{ number_format($product->price) }} ر.س
-                                    @else
-                                        <span class="text-gray-500">{{ __('facility.products.unspecified') }}</span>
-                                    @endif
+                                    <span class="text-gray-500">{{ __('facility.products.price_not_set') }}</span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {{ $product->created_at->format('Y/m/d') }}
+                                    {{ $product->created_at ? $product->created_at->format('Y/m/d') : 'غير محدد' }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <div class="flex items-center space-x-2 space-x-reverse">
@@ -209,21 +205,21 @@
                                 <div class="flex-1 min-w-0">
                                     <div class="flex items-start justify-between">
                                         <div>
-                                            <h3 class="text-lg font-medium text-gray-900">{{ $product->title }}</h3>
-                                            <p class="text-sm text-gray-500 mt-1">{{ Str::limit($product->description, 100) }}</p>
+                                            <h3 class="text-lg font-medium text-gray-900">{{ $product->getTranslatedTitle() ?: $product->address }}</h3>
+                                            <p class="text-sm text-gray-500 mt-1">{{ Str::limit($product->additional_info, 100) }}</p>
                                         </div>
                                     </div>
                                     <div class="flex items-center justify-between mt-3">
                                         <div class="flex flex-wrap items-center gap-2">
                                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                                {{ $product->category->getTranslatedName('ar') ?? __('facility.products.unspecified') }}
+                                                {{ $product->category ? $product->category->getTranslatedName('ar') : __('facility.products.unspecified') }}
                                             </span>
                                             @php
-                                                $status = $product->statuses()->latest()->first();
+                                                $status = $product->statuses ? $product->statuses()->latest()->first() : null;
                                             @endphp
                                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
                                                 {{ $status ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
-                                                {{ $status->name ?? __('facility.products.unspecified') }}
+                                                {{ $status ? $status->name : __('facility.products.unspecified') }}
                                             </span>
                                         </div>
                                         <div class="flex items-center space-x-2 space-x-reverse">
@@ -257,12 +253,8 @@
                                         </div>
                                     </div>
                                     <div class="flex justify-between items-center mt-3 pt-3 border-t border-gray-200">
-                                        <span class="text-sm text-gray-500">{{ $product->created_at->format('Y/m/d') }}</span>
-                                        @if($product->price)
-                                            <span class="text-lg font-semibold text-gray-900">{{ number_format($product->price) }} ر.س</span>
-                                        @else
-                                            <span class="text-sm text-gray-500">{{ __('facility.products.price_not_set') }}</span>
-                                        @endif
+                                        <span class="text-sm text-gray-500">{{ $product->created_at ? $product->created_at->format('Y/m/d') : 'غير محدد' }}</span>
+                                        <span class="text-sm text-gray-500">{{ __('facility.products.price_not_set') }}</span>
                                     </div>
                                 </div>
                             </div>

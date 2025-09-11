@@ -1,13 +1,13 @@
 @extends('facility.layouts.app')
 
-@section('title', $product->name ?? __('facility.products.product_details'))
+@section('title', $product->getTranslatedTitle() ?: $product->address ?? __('facility.products.product_details'))
 
 @section('content')
 <div class="w-full px-4">
     <!-- Page Header -->
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
         <div>
-            <h1 class="text-2xl font-semibold text-gray-800">{{ $product->name ?? __('facility.products.product_details') }}</h1>
+            <h1 class="text-2xl font-semibold text-gray-800">{{ $product->getTranslatedTitle() ?: $product->address ?? __('facility.products.product_details') }}</h1>
             <p class="text-gray-600 mt-1">{{ __('facility.products.product_details_subtitle') }}</p>
         </div>
         <div class="flex items-center space-x-3 space-x-reverse mt-4 sm:mt-0">
@@ -35,7 +35,7 @@
                 <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ __('facility.products.product_image') }}</h3>
                 @if($product->main_image)
                     <img src="{{ asset('storage/' . $product->main_image) }}" 
-                         alt="{{ $product->name }}" 
+                         alt="{{ $product->getTranslatedTitle() ?: $product->address }}" 
                          class="w-full h-64 object-cover rounded-lg">
                 @else
                     <div class="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center">
@@ -50,13 +50,13 @@
                 <div class="space-y-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('facility.products.name') }}</label>
-                        <p class="text-gray-900">{{ $product->name }}</p>
+                        <p class="text-gray-900">{{ $product->getTranslatedTitle() ?: $product->address }}</p>
                     </div>
                     
-                    @if($product->description)
+                    @if($product->additional_info)
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('facility.products.description') }}</label>
-                            <p class="text-gray-900 whitespace-pre-line">{{ $product->description }}</p>
+                            <p class="text-gray-900 whitespace-pre-line">{{ $product->additional_info }}</p>
                         </div>
                     @endif
 
@@ -64,11 +64,7 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('facility.products.price') }}</label>
                             <p class="text-gray-900 text-lg font-semibold">
-                                @if($product->price)
-                                    {{ number_format($product->price, 2) }} ر.س
-                                @else
-                                    <span class="text-gray-500">{{ __('facility.products.not_set') }}</span>
-                                @endif
+                                <span class="text-gray-500">{{ __('facility.products.price_not_set') }}</span>
                             </p>
                         </div>
                         

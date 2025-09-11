@@ -21,13 +21,6 @@
                             </h5>
                             
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <x-form-input 
-                                        name="name"
-                                        :label="__('facility.products.create.name')"
-                                        required="true"
-                                    />
-                                </div>
                                 
                                 <div>
                                     <x-form-select 
@@ -54,24 +47,13 @@
 
                             <div class="mb-4">
                                 <x-form-textarea 
-                                    name="description"
+                                    name="additional_info"
                                     :label="__('facility.products.create.description')"
                                     rows="4"
                                 />
                             </div>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <x-form-input 
-                                        type="number"
-                                        name="price"
-                                        :label="__('facility.products.create.price')"
-                                        step="0.01"
-                                        min="0"
-                                        required="true"
-                                    />
-                                </div>
-                                
                                 <div>
                                     <x-form-select 
                                         name="status_id"
@@ -162,23 +144,6 @@
                                     </label>
                                 </div>
                                 
-                                <div class="flex items-center">
-                                    <input type="checkbox" id="available_for_rent" name="available_for_rent" value="1" 
-                                           class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 focus:ring-2" 
-                                           {{ old('available_for_rent') ? 'checked' : '' }}>
-                                    <label for="available_for_rent" class="ml-2 text-sm font-medium text-gray-700">
-                                        {{ __('facility.products.create.for_rent') }}
-                                    </label>
-                                </div>
-                                
-                                <div class="flex items-center">
-                                    <input type="checkbox" id="available_for_sale" name="available_for_sale" value="1" 
-                                           class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 focus:ring-2" 
-                                           {{ old('available_for_sale') ? 'checked' : '' }}>
-                                    <label for="available_for_sale" class="ml-2 text-sm font-medium text-gray-700">
-                                        {{ __('facility.products.create.for_sale') }}
-                                    </label>
-                                </div>
                                 
                                 <div class="flex items-center">
                                     <input type="checkbox" id="is_featured" name="is_featured" value="1" 

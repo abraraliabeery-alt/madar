@@ -3,166 +3,189 @@
 @section('title', 'إدارة المستخدمين')
 
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h3 class="card-title">إدارة المستخدمين</h3>
-                    <div>
-                        <a href="{{ route('facility.users.create') }}" class="btn btn-primary">
-                            <i class="fas fa-plus"></i> إضافة مستخدم جديد
-                        </a>
-                        <a href="{{ route('facility.users.statistics') }}" class="btn btn-info">
-                            <i class="fas fa-chart-bar"></i> الإحصائيات
-                        </a>
-                        <a href="{{ route('facility.users.export', request()->query()) }}" class="btn btn-success">
-                            <i class="fas fa-download"></i> تصدير
-                        </a>
-                    </div>
-                </div>
-
-                <div class="card-body">
-                    <!-- فلترة وبحث -->
-                    <form method="GET" class="row g-3 mb-4">
-                        <div class="col-md-4">
-                            <input type="text" name="search" class="form-control" placeholder="البحث في المستخدمين..." value="{{ request('search') }}">
-                        </div>
-                        <div class="col-md-3">
-                            <select name="role_id" class="form-select">
-                                <option value="">جميع الأدوار</option>
-                                @foreach($availableRoles as $role)
-                                    <option value="{{ $role->id }}" {{ request('role_id') == $role->id ? 'selected' : '' }}>
-                                        {{ $role->getTranslatedName() }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-search"></i> بحث
-                            </button>
-                            <a href="{{ route('facility.users.index') }}" class="btn btn-outline-secondary">
-                                <i class="fas fa-times"></i> مسح
-                            </a>
-                        </div>
-                    </form>
-
-                    @if($users->count() > 0)
-                        <div class="table-responsive">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>المستخدم</th>
-                                        <th>البريد الإلكتروني</th>
-                                        <th>رقم الهاتف</th>
-                                        <th>الأدوار</th>
-                                        <th>تاريخ الانضمام</th>
-                                        <th>الحالة</th>
-                                        <th>الإجراءات</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($users as $user)
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="avatar-sm me-3">
-                                                        @if($user->avatar)
-                                                            <img src="{{ asset($user->avatar) }}" alt="Avatar" class="rounded-circle" width="40" height="40">
-                                                        @else
-                                                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                                                                {{ substr($user->name, 0, 1) }}
-                                                            </div>
-                                                        @endif
-                                                    </div>
-                                                    <div>
-                                                        <h6 class="mb-0">{{ $user->name }}</h6>
-                                                        @if($facility->owner_user_id == $user->id)
-                                                            <small class="text-success">مالك المنشأة</small>
-                                                        @endif
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>{{ $user->email }}</td>
-                                            <td>{{ $user->phone_number }}</td>
-                                            <td>
-                                                @foreach($user->roles as $role)
-                                                    @if($role->facility_id == $facility->id)
-                                                        <span class="badge bg-secondary me-1">{{ $role->getTranslatedName() }}</span>
-                                                    @endif
-                                                @endforeach
-                                            </td>
-                                            <td>{{ $user->created_at->format('Y-m-d') }}</td>
-                                            <td>
-                                                @if($user->email_verified_at)
-                                                    <span class="badge bg-success">مفعل</span>
-                                                @else
-                                                    <span class="badge bg-warning">غير مفعل</span>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                <div class="btn-group" role="group">
-                                                    <a href="{{ route('facility.users.show', $user) }}" class="btn btn-sm btn-info">
-                                                        <i class="fas fa-eye"></i>
-                                                    </a>
-                                                    <a href="{{ route('facility.users.edit', $user) }}" class="btn btn-sm btn-warning">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a>
-                                                    @if($facility->owner_user_id != $user->id)
-                                                        <button type="button" class="btn btn-sm btn-danger" 
-                                                                onclick="confirmRemove('{{ route('facility.users.remove', $user) }}', '{{ $user->name }}')">
-                                                            <i class="fas fa-user-minus"></i>
-                                                        </button>
-                                                    @endif
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <!-- Pagination -->
-                        <div class="d-flex justify-content-center">
-                            {{ $users->appends(request()->query())->links() }}
-                        </div>
-                    @else
-                        <div class="text-center py-5">
-                            <i class="fas fa-users fa-3x text-muted mb-3"></i>
-                            <h5 class="text-muted">لا توجد مستخدمين</h5>
-                            <p class="text-muted">ابدأ بإضافة مستخدمين للمنشأة</p>
-                            <a href="{{ route('facility.users.create') }}" class="btn btn-primary">
-                                <i class="fas fa-plus"></i> إضافة مستخدم جديد
-                            </a>
-                        </div>
-                    @endif
-                </div>
+<div class="w-full px-4 my-6">
+    <div class="bg-white rounded-lg shadow-lg p-6">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-2xl font-bold text-gray-800">إدارة المستخدمين</h3>
+            <div class="flex space-x-3 space-x-reverse">
+                <a href="{{ route('facility.users.create') }}" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 space-x-reverse transition-colors">
+                    <i class="fas fa-plus"></i>
+                    <span>إضافة مستخدم</span>
+                </a>
+                <a href="{{ route('facility.users.statistics') }}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 space-x-reverse transition-colors">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>الإحصائيات</span>
+                </a>
+                <a href="{{ route('facility.users.export', request()->query()) }}" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 space-x-reverse transition-colors">
+                    <i class="fas fa-download"></i>
+                    <span>تصدير</span>
+                </a>
             </div>
         </div>
+
+        <!-- فلترة وبحث -->
+        <div class="bg-gray-50 rounded-lg p-4 mb-6">
+            <form method="GET" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                <div>
+                    <input type="text" name="search" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500" placeholder="البحث في المستخدمين..." value="{{ request('search') }}">
+                </div>
+                <div>
+                    <select name="role" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
+                        <option value="">جميع الأدوار</option>
+                        @foreach($roles as $role)
+                            <option value="{{ $role->id }}" {{ request('role') == $role->id ? 'selected' : '' }}>
+                                {{ $role->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <select name="status" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
+                        <option value="">جميع الحالات</option>
+                        <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>نشط</option>
+                        <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>غير نشط</option>
+                        <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>معلق</option>
+                    </select>
+                </div>
+                <div>
+                    <input type="date" name="created_from" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500" placeholder="من تاريخ" value="{{ request('created_from') }}">
+                </div>
+                <div class="flex space-x-2 space-x-reverse">
+                    <button type="submit" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 space-x-reverse transition-colors">
+                        <i class="fas fa-search"></i>
+                        <span>بحث</span>
+                    </button>
+                    <a href="{{ route('facility.users.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 space-x-reverse transition-colors">
+                        <i class="fas fa-times"></i>
+                        <span>مسح</span>
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        @if($users->count() > 0)
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">المستخدم</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">البريد الإلكتروني</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الأدوار</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الحالة</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">تاريخ الانضمام</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        @foreach($users as $user)
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-10 w-10">
+                                            <img class="h-10 w-10 rounded-full" src="{{ $user->profile_picture ? Storage::url($user->profile_picture) : asset('assets/images/default-avatar.png') }}" alt="{{ $user->name }}">
+                                        </div>
+                                        <div class="mr-4">
+                                            <div class="text-sm font-medium text-gray-900">{{ $user->name }}</div>
+                                            <div class="text-sm text-gray-500">{{ $user->phone ?? 'لا يوجد رقم هاتف' }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">{{ $user->email }}</div>
+                                    @if($user->email_verified_at)
+                                        <div class="text-xs text-green-600">مؤكد</div>
+                                    @else
+                                        <div class="text-xs text-yellow-600">غير مؤكد</div>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex flex-wrap gap-1">
+                                        @foreach($user->roles as $role)
+                                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                                                {{ $role->name }}
+                                            </span>
+                                        @endforeach
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    @if($user->is_active)
+                                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">نشط</span>
+                                    @else
+                                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">غير نشط</span>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    {{ $user->created_at->format('Y-m-d') }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <div class="flex space-x-2 space-x-reverse">
+                                        <a href="{{ route('facility.users.show', $user) }}" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs transition-colors">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{{ route('facility.users.edit', $user) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-xs transition-colors">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <button type="button" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs transition-colors" onclick="openRemoveModal({{ $user->id }}, '{{ $user->name }}')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <div class="flex justify-center mt-6">
+                {{ $users->appends(request()->query())->links() }}
+            </div>
+        @else
+            <div class="text-center py-12">
+                <i class="fas fa-users text-gray-400 text-6xl mb-4"></i>
+                <h5 class="text-lg font-semibold text-gray-500 mb-2">لا توجد مستخدمين</h5>
+                <p class="text-gray-400 mb-6">ابدأ بإضافة مستخدم جديد</p>
+                <a href="{{ route('facility.users.create') }}" class="bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg transition-colors">
+                    <i class="fas fa-plus mr-2"></i>إضافة مستخدم جديد
+                </a>
+            </div>
+        @endif
     </div>
 </div>
 
-<!-- Modal لتأكيد الإزالة -->
-<div class="modal fade" id="confirmRemoveModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">تأكيد الإزالة</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+<!-- Modal for removing user -->
+<div id="removeModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-medium text-gray-900">إزالة المستخدم</h3>
+                <button onclick="closeRemoveModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
-            <div class="modal-body">
-                <p>هل أنت متأكد من إزالة المستخدم <strong id="userName"></strong> من المنشأة؟</p>
-                <p class="text-muted">سيتم إزالة جميع أدواره في هذه المنشأة.</p>
+            <div class="mb-4">
+                <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                    <div class="flex">
+                        <i class="fas fa-exclamation-triangle text-red-400 mr-3 mt-1"></i>
+                        <div>
+                            <h4 class="text-sm font-medium text-red-800">تحذير</h4>
+                            <p class="text-sm text-red-700 mt-1">هل أنت متأكد من إزالة المستخدم <span id="userName"></span>؟</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
-                <form id="removeForm" method="POST" style="display: inline;">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger">إزالة</button>
-                </form>
-            </div>
+            <form id="removeForm" method="POST">
+                @csrf
+                @method('DELETE')
+                <div class="flex justify-end space-x-3 space-x-reverse">
+                    <button type="button" onclick="closeRemoveModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors">
+                        إلغاء
+                    </button>
+                    <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors">
+                        إزالة
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -170,68 +193,21 @@
 
 @push('scripts')
 <script>
-    function confirmRemove(url, userName) {
+    function openRemoveModal(userId, userName) {
         document.getElementById('userName').textContent = userName;
-        document.getElementById('removeForm').action = url;
-        new bootstrap.Modal(document.getElementById('confirmRemoveModal')).show();
+        document.getElementById('removeForm').action = `/facility/users/${userId}`;
+        document.getElementById('removeModal').classList.remove('hidden');
+    }
+
+    function closeRemoveModal() {
+        document.getElementById('removeModal').classList.add('hidden');
     }
 
     // Auto-submit form on filter change
-    document.querySelectorAll('select[name="role_id"]').forEach(select => {
+    document.querySelectorAll('select[name="role"], select[name="status"]').forEach(select => {
         select.addEventListener('change', function() {
             this.form.submit();
         });
     });
 </script>
-@endpush
-
-@push('styles')
-<style>
-.card {
-    border: none;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    border-radius: 10px;
-}
-
-.card-header {
-    background: #f8f9fa;
-    border-bottom: 1px solid #e9ecef;
-    border-radius: 10px 10px 0 0 !important;
-}
-
-.table th {
-    border-top: none;
-    font-weight: 600;
-    color: #495057;
-    font-size: 0.875rem;
-}
-
-.table td {
-    vertical-align: middle;
-}
-
-.btn-group .btn {
-    border-radius: 0.375rem;
-    margin-right: 0.25rem;
-}
-
-.avatar-sm img {
-    object-fit: cover;
-}
-
-@media (max-width: 768px) {
-    .table-responsive {
-        font-size: 0.875rem;
-    }
-    
-    .btn-group {
-        flex-direction: column;
-        width: 100%;
-    }
-    
-    .btn-group .btn {
-        margin: 0.125rem 0;
-    }
-}
-</style>
 @endpush

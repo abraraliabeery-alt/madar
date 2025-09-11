@@ -74,7 +74,7 @@
                 <h6 class="text-lg font-semibold text-blue-600 m-0">{{ __('facility.dashboard.recent_bookings') }}</h6>
             </div>
             <div class="p-6">
-                @if($stats['recent_bookings']->count() > 0)
+                @if(isset($stats['recent_bookings']) && $stats['recent_bookings'] && $stats['recent_bookings']->count() > 0)
                     @foreach($stats['recent_bookings'] as $booking)
                     <div class="flex items-center mb-4 last:mb-0">
                         <div class="flex-shrink-0">
@@ -83,9 +83,9 @@
                                  alt="{{ __('facility.dashboard.user_avatar') }}">
                         </div>
                         <div class="flex-1 mr-3">
-                            <h6 class="font-semibold text-gray-800 mb-1">{{ $booking->user->name }}</h6>
+                            <h6 class="font-semibold text-gray-800 mb-1">{{ $booking->user->name ?? 'غير محدد' }}</h6>
                             <p class="text-sm text-gray-500 mb-1">{{ $booking->product->name ?? __('facility.dashboard.deleted_product') }}</p>
-                            <p class="text-xs text-gray-400">{{ $booking->created_at->diffForHumans() }}</p>
+                            <p class="text-xs text-gray-400">{{ $booking->created_at ? $booking->created_at->diffForHumans() : 'غير محدد' }}</p>
                         </div>
                     </div>
                     @endforeach
@@ -100,7 +100,7 @@
                 <h6 class="text-lg font-semibold text-blue-600 m-0">{{ __('facility.dashboard.recent_tasks') }}</h6>
             </div>
             <div class="p-6">
-                @if($stats['recent_tasks']->count() > 0)
+                @if(isset($stats['recent_tasks']) && $stats['recent_tasks'] && $stats['recent_tasks']->count() > 0)
                     @foreach($stats['recent_tasks'] as $task)
                     <div class="flex items-center mb-4 last:mb-0">
                         <div class="flex-shrink-0">

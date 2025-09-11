@@ -22,7 +22,6 @@ class ChartOfAccount extends Model
         'is_active',
         'is_system',
         'description',
-        'currency',
         'opening_balance',
         'current_balance',
         'facility_id',
@@ -101,7 +100,7 @@ class ChartOfAccount extends Model
 
     public function getFormattedBalanceAttribute()
     {
-        return number_format($this->current_balance, 2) . ' ' . $this->currency;
+        return number_format($this->current_balance, 2) . ' ريال';
     }
 
     public function getAccountPathAttribute()

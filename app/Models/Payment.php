@@ -15,7 +15,6 @@ class Payment extends Model
         'contract_id',
         'payment_method', // 'cash', 'bank_transfer', 'credit_card', 'check', 'online'
         'amount',
-        'currency',
         'payment_date',
         'reference_number',
         'bank_name',
@@ -28,7 +27,6 @@ class Payment extends Model
         'bank_reference', // مرجع البنك
         'transaction_id', // معرف المعاملة
         'processing_fee', // رسوم المعالجة
-        'currency_rate', // سعر الصرف
         'payment_gateway', // بوابة الدفع
         'gateway_response', // استجابة البوابة (JSON)
         'installment_number', // رقم القسط
@@ -40,7 +38,6 @@ class Payment extends Model
         'amount' => 'decimal:2',
         'payment_date' => 'date',
         'processing_fee' => 'decimal:2',
-        'currency_rate' => 'decimal:6,4',
         'gateway_response' => 'array',
         'late_fee_paid' => 'decimal:2',
         'discount_applied' => 'decimal:2',
@@ -104,7 +101,7 @@ class Payment extends Model
     // Accessors
     public function getFormattedAmountAttribute()
     {
-        return number_format($this->amount, 2) . ' ' . $this->currency;
+        return number_format($this->amount, 2) . ' ريال';
     }
 
     // Methods

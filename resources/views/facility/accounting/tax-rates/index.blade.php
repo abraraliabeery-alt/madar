@@ -3,115 +3,119 @@
 @section('title', 'معدلات الضرائب')
 
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h3 class="card-title">معدلات الضرائب</h3>
-                    <div>
-                        <a href="{{ route('facility.accounting.tax-rates.create') }}" class="btn btn-primary">
-                            <i class="fas fa-plus"></i> إضافة معدل جديد
-                        </a>
-                        <a href="{{ route('facility.accounting.tax-rates.create-default') }}" class="btn btn-success">
-                            <i class="fas fa-magic"></i> إنشاء معدلات افتراضية
-                        </a>
+<div class="container mx-auto px-4 my-10">
+    <div class="flex justify-center">
+        <div class="w-full max-w-7xl">
+            <div class="bg-white rounded-lg shadow-lg">
+                <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 rounded-t-lg">
+                    <div class="flex justify-between items-center">
+                        <h4 class="text-lg font-semibold text-gray-800 mb-0">معدلات الضرائب</h4>
+                        <div class="flex space-x-2 rtl:space-x-reverse">
+                            <a href="{{ route('facility.accounting.tax-rates.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 rtl:space-x-reverse transition-colors">
+                                <i class="fas fa-plus"></i>
+                                <span>إضافة معدل جديد</span>
+                            </a>
+                            <a href="{{ route('facility.accounting.tax-rates.create-default') }}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 rtl:space-x-reverse transition-colors">
+                                <i class="fas fa-magic"></i>
+                                <span>إنشاء معدلات افتراضية</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
 
-                <div class="card-body">
+                <div class="p-6">
                     <!-- فلترة وبحث -->
-                    <form method="GET" class="row g-3 mb-4">
-                        <div class="col-md-4">
-                            <input type="text" name="search" class="form-control" placeholder="البحث في معدلات الضرائب..." value="{{ request('search') }}">
+                    <form method="GET" class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
+                        <div>
+                            <input type="text" name="search" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="البحث في معدلات الضرائب..." value="{{ request('search') }}">
                         </div>
-                        <div class="col-md-2">
-                            <select name="is_active" class="form-select">
+                        <div>
+                            <select name="is_active" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                                 <option value="">جميع الحالات</option>
                                 <option value="1" {{ request('is_active') === '1' ? 'selected' : '' }}>نشط</option>
                                 <option value="0" {{ request('is_active') === '0' ? 'selected' : '' }}>غير نشط</option>
                             </select>
                         </div>
-                        <div class="col-md-2">
-                            <input type="number" step="0.01" name="min_rate" class="form-control" placeholder="أقل معدل" value="{{ request('min_rate') }}">
+                        <div>
+                            <input type="number" step="0.01" name="min_rate" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="أقل معدل" value="{{ request('min_rate') }}">
                         </div>
-                        <div class="col-md-2">
-                            <input type="number" step="0.01" name="max_rate" class="form-control" placeholder="أعلى معدل" value="{{ request('max_rate') }}">
+                        <div>
+                            <input type="number" step="0.01" name="max_rate" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="أعلى معدل" value="{{ request('max_rate') }}">
                         </div>
-                        <div class="col-md-2">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-search"></i> بحث
+                        <div class="flex space-x-2 rtl:space-x-reverse">
+                            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 rtl:space-x-reverse transition-colors">
+                                <i class="fas fa-search"></i>
+                                <span>بحث</span>
                             </button>
-                            <a href="{{ route('facility.accounting.tax-rates.index') }}" class="btn btn-outline-secondary">
-                                <i class="fas fa-times"></i> مسح
+                            <a href="{{ route('facility.accounting.tax-rates.index') }}" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 rtl:space-x-reverse transition-colors">
+                                <i class="fas fa-times"></i>
+                                <span>مسح</span>
                             </a>
                         </div>
                     </form>
 
                     @if($taxRates->count() > 0)
-                        <div class="table-responsive">
-                            <table class="table table-striped">
-                                <thead>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
                                     <tr>
-                                        <th>اسم المعدل</th>
-                                        <th>المعدل</th>
-                                        <th>النسبة المئوية</th>
-                                        <th>الوصف</th>
-                                        <th>الحالة</th>
-                                        <th>عدد الاستخدامات</th>
-                                        <th>تاريخ الإنشاء</th>
-                                        <th>الإجراءات</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">اسم المعدل</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">المعدل</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">النسبة المئوية</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الوصف</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الحالة</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">عدد الاستخدامات</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">تاريخ الإنشاء</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الإجراءات</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody class="bg-white divide-y divide-gray-200">
                                     @foreach($taxRates as $taxRate)
-                                        <tr>
-                                            <td>
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="px-6 py-4 whitespace-nowrap">
                                                 <div>
-                                                    <strong>{{ $taxRate->name }}</strong>
+                                                    <div class="text-sm font-medium text-gray-900">{{ $taxRate->name }}</div>
                                                     @if($taxRate->is_default)
-                                                        <br><small class="text-success">معدل افتراضي</small>
+                                                        <div class="text-sm text-green-600">معدل افتراضي</div>
                                                     @endif
                                                 </div>
                                             </td>
-                                            <td>
-                                                <span class="badge bg-primary">{{ $taxRate->rate }}</span>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">{{ $taxRate->rate }}</span>
                                             </td>
-                                            <td>
-                                                <div class="progress" style="height: 20px;">
-                                                    <div class="progress-bar bg-{{ $taxRate->rate > 15 ? 'danger' : ($taxRate->rate > 10 ? 'warning' : 'success') }}" 
-                                                         role="progressbar" style="width: {{ min(100, ($taxRate->rate / 20) * 100) }}%">
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="w-full bg-gray-200 rounded-full h-5">
+                                                    <div class="h-5 rounded-full flex items-center justify-center text-xs font-medium text-white {{ $taxRate->rate > 15 ? 'bg-red-600' : ($taxRate->rate > 10 ? 'bg-yellow-600' : 'bg-green-600') }}" 
+                                                         style="width: {{ min(100, ($taxRate->rate / 20) * 100) }}%">
                                                         {{ $taxRate->rate }}%
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td>
-                                                <small class="text-muted">{{ $taxRate->description ?: 'لا يوجد وصف' }}</small>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-gray-500">{{ $taxRate->description ?: 'لا يوجد وصف' }}</div>
                                             </td>
-                                            <td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
                                                 @if($taxRate->is_active)
-                                                    <span class="badge bg-success">نشط</span>
+                                                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">نشط</span>
                                                 @else
-                                                    <span class="badge bg-secondary">غير نشط</span>
+                                                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">غير نشط</span>
                                                 @endif
                                             </td>
-                                            <td>
-                                                <span class="text-info">{{ $taxRate->usage_count ?? 0 }}</span>
-                                            </td>
-                                            <td>{{ $taxRate->created_at->format('Y-m-d') }}</td>
-                                            <td>
-                                                <div class="btn-group" role="group">
-                                                    <a href="{{ route('facility.accounting.tax-rates.show', $taxRate) }}" class="btn btn-sm btn-info">
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600">{{ $taxRate->usage_count ?? 0 }}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $taxRate->created_at->format('Y-m-d') }}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                <div class="flex space-x-2 rtl:space-x-reverse">
+                                                    <a href="{{ route('facility.accounting.tax-rates.show', $taxRate) }}" class="text-blue-600 hover:text-blue-900 p-1 rounded">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
-                                                    <a href="{{ route('facility.accounting.tax-rates.edit', $taxRate) }}" class="btn btn-sm btn-warning">
+                                                    <a href="{{ route('facility.accounting.tax-rates.edit', $taxRate) }}" class="text-yellow-600 hover:text-yellow-900 p-1 rounded">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
                                                     @if($taxRate->canBeDeleted())
-                                                        <form method="POST" action="{{ route('facility.accounting.tax-rates.destroy', $taxRate) }}" class="d-inline" onsubmit="return confirm('هل أنت متأكد من حذف هذا المعدل؟')">
+                                                        <form method="POST" action="{{ route('facility.accounting.tax-rates.destroy', $taxRate) }}" class="inline" onsubmit="return confirm('هل أنت متأكد من حذف هذا المعدل؟')">
                                                             @csrf
                                                             @method('DELETE')
-                                                            <button type="submit" class="btn btn-sm btn-danger">
+                                                            <button type="submit" class="text-red-600 hover:text-red-900 p-1 rounded">
                                                                 <i class="fas fa-trash"></i>
                                                             </button>
                                                         </form>
@@ -125,20 +129,22 @@
                         </div>
 
                         <!-- Pagination -->
-                        <div class="d-flex justify-content-center">
+                        <div class="flex justify-center mt-6">
                             {{ $taxRates->appends(request()->query())->links() }}
                         </div>
                     @else
-                        <div class="text-center py-5">
-                            <i class="fas fa-percentage fa-3x text-muted mb-3"></i>
-                            <h5 class="text-muted">لا توجد معدلات ضرائب</h5>
-                            <p class="text-muted">ابدأ بإنشاء معدلات الضرائب</p>
-                            <div class="d-flex justify-content-center gap-2">
-                                <a href="{{ route('facility.accounting.tax-rates.create') }}" class="btn btn-primary">
-                                    <i class="fas fa-plus"></i> إضافة معدل جديد
+                        <div class="text-center py-12">
+                            <i class="fas fa-percentage text-6xl text-gray-400 mb-4"></i>
+                            <h5 class="text-lg font-medium text-gray-900 mb-2">لا توجد معدلات ضرائب</h5>
+                            <p class="text-gray-500 mb-6">ابدأ بإنشاء معدلات الضرائب</p>
+                            <div class="flex justify-center space-x-4 rtl:space-x-reverse">
+                                <a href="{{ route('facility.accounting.tax-rates.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg inline-flex items-center space-x-2 rtl:space-x-reverse transition-colors">
+                                    <i class="fas fa-plus"></i>
+                                    <span>إضافة معدل جديد</span>
                                 </a>
-                                <a href="{{ route('facility.accounting.tax-rates.create-default') }}" class="btn btn-success">
-                                    <i class="fas fa-magic"></i> إنشاء معدلات افتراضية
+                                <a href="{{ route('facility.accounting.tax-rates.create-default') }}" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg inline-flex items-center space-x-2 rtl:space-x-reverse transition-colors">
+                                    <i class="fas fa-magic"></i>
+                                    <span>إنشاء معدلات افتراضية</span>
                                 </a>
                             </div>
                         </div>
@@ -161,63 +167,3 @@
 </script>
 @endpush
 
-@push('styles')
-<style>
-.card {
-    border: none;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    border-radius: 10px;
-}
-
-.card-header {
-    background: #f8f9fa;
-    border-bottom: 1px solid #e9ecef;
-    border-radius: 10px 10px 0 0 !important;
-}
-
-.table th {
-    border-top: none;
-    font-weight: 600;
-    color: #495057;
-    font-size: 0.875rem;
-}
-
-.table td {
-    vertical-align: middle;
-}
-
-.btn-group .btn {
-    border-radius: 0.375rem;
-    margin-right: 0.25rem;
-}
-
-.progress {
-    background-color: #e9ecef;
-    border-radius: 0.375rem;
-}
-
-.progress-bar {
-    border-radius: 0.375rem;
-    font-size: 0.75rem;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-@media (max-width: 768px) {
-    .table-responsive {
-        font-size: 0.875rem;
-    }
-    
-    .btn-group {
-        flex-direction: column;
-        width: 100%;
-    }
-    
-    .btn-group .btn {
-        margin: 0.125rem 0;
-    }
-}
-</style>
-@endpush

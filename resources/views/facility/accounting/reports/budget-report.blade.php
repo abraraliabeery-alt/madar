@@ -84,17 +84,18 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @if(isset($budgets) && $budgets->count() > 0)
+                                                @if(isset($budgets) && $budgets && $budgets->count() > 0)
                                                     @foreach($budgets as $budget)
                                                         @php
                                                             $spentAmount = $budget->spent_amount ?? 0;
-                                                            $remainingAmount = $budget->amount - $spentAmount;
-                                                            $usagePercentage = $budget->amount > 0 ? ($spentAmount / $budget->amount) * 100 : 0;
+                                                            $budgetAmount = $budget->amount ?? 0;
+                                                            $remainingAmount = $budgetAmount - $spentAmount;
+                                                            $usagePercentage = $budgetAmount > 0 ? ($spentAmount / $budgetAmount) * 100 : 0;
                                                         @endphp
                                                         <tr>
                                                             <td>
                                                                 <div>
-                                                                    <strong>{{ $budget->name }}</strong>
+                                                                    <strong>{{ $budget->name ?? 'غير محدد' }}</strong>
                                                                     @if($budget->is_current)
                                                                         <br><small class="text-success">ميزانية حالية</small>
                                                                     @endif
@@ -102,13 +103,13 @@
                                                             </td>
                                                             <td>
                                                                 <div>
-                                                                    <small class="text-muted">{{ $budget->start_date->format('Y-m-d') }}</small>
+                                                                    <small class="text-muted">{{ $budget->start_date ? $budget->start_date->format('Y-m-d') : 'غير محدد' }}</small>
                                                                     <br>
-                                                                    <small class="text-muted">{{ $budget->end_date->format('Y-m-d') }}</small>
+                                                                    <small class="text-muted">{{ $budget->end_date ? $budget->end_date->format('Y-m-d') : 'غير محدد' }}</small>
                                                                 </div>
                                                             </td>
                                                             <td class="text-end">
-                                                                <strong class="text-primary">{{ number_format($budget->amount, 2) }} ر.س</strong>
+                                                                <strong class="text-primary">{{ number_format($budgetAmount, 2) }} ر.س</strong>
                                                             </td>
                                                             <td class="text-end">
                                                                 <strong class="text-warning">{{ number_format($spentAmount, 2) }} ر.س</strong>
@@ -127,11 +128,11 @@
                                                                 </div>
                                                             </td>
                                                             <td>
-                                                                @if($budget->status === 'pending')
+                                                                @if(($budget->status ?? '') === 'pending')
                                                                     <span class="badge bg-warning">معلقة</span>
-                                                                @elseif($budget->status === 'active')
+                                                                @elseif(($budget->status ?? '') === 'active')
                                                                     <span class="badge bg-success">نشطة</span>
-                                                                @elseif($budget->status === 'approved')
+                                                                @elseif(($budget->status ?? '') === 'approved')
                                                                     <span class="badge bg-info">معتمدة</span>
                                                                 @else
                                                                     <span class="badge bg-secondary">مكتملة</span>

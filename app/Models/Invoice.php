@@ -15,7 +15,6 @@ class Invoice extends Model
         'invoice_number',
         'invoice_type', // 'rent', 'sale', 'deposit', 'commission', 'refund'
         'amount',
-        'currency',
         'due_date',
         'paid_amount',
         'remaining_amount',
@@ -115,17 +114,17 @@ class Invoice extends Model
     // Accessors
     public function getFormattedAmountAttribute()
     {
-        return number_format($this->amount, 2) . ' ' . $this->currency;
+        return number_format($this->amount, 2) . ' ريال';
     }
 
     public function getFormattedPaidAmountAttribute()
     {
-        return number_format($this->paid_amount, 2) . ' ' . $this->currency;
+        return number_format($this->paid_amount, 2) . ' ريال';
     }
 
     public function getFormattedRemainingAmountAttribute()
     {
-        return number_format($this->remaining_amount, 2) . ' ' . $this->currency;
+        return number_format($this->remaining_amount, 2) . ' ريال';
     }
 
     // Methods

@@ -41,9 +41,8 @@ class FacilityProductController extends Controller
         // البحث
         if ($request->has('search') && $request->search) {
             $query->where(function ($q) use ($request) {
-                $q->where('name', 'like', '%' . $request->search . '%')
-                  ->orWhere('description', 'like', '%' . $request->search . '%')
-                  ->orWhere('address', 'like', '%' . $request->search . '%');
+                $q->where('address', 'like', '%' . $request->search . '%')
+                  ->orWhere('additional_info', 'like', '%' . $request->search . '%');
             });
         }
 
@@ -89,8 +88,6 @@ class FacilityProductController extends Controller
         }
 
         $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
             'address' => 'required|string',
             'category_id' => 'required|exists:categories,id',
             'city_id' => 'required|exists:cities,id',
@@ -109,8 +106,6 @@ class FacilityProductController extends Controller
             'total_floors' => 'nullable|integer|min:1',
             'parking_spaces' => 'nullable|integer|min:0',
             'furnished' => 'boolean',
-            'available_for_rent' => 'boolean',
-            'available_for_sale' => 'boolean',
             'is_featured' => 'boolean',
             'is_verified' => 'boolean',
             'features' => 'array',
@@ -257,8 +252,6 @@ class FacilityProductController extends Controller
         }
 
         $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
             'address' => 'required|string',
             'category_id' => 'required|exists:categories,id',
             'city_id' => 'required|exists:cities,id',
@@ -277,8 +270,6 @@ class FacilityProductController extends Controller
             'total_floors' => 'nullable|integer|min:1',
             'parking_spaces' => 'nullable|integer|min:0',
             'furnished' => 'boolean',
-            'available_for_rent' => 'boolean',
-            'available_for_sale' => 'boolean',
             'is_featured' => 'boolean',
             'is_verified' => 'boolean',
             'features' => 'array',

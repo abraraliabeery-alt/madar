@@ -99,7 +99,6 @@ class FacilityOfferController extends Controller
             'product_id' => 'required|exists:products,id',
             'offer_type' => 'required|in:sale,rent_monthly,rent_yearly,rent_daily',
             'price' => 'required|numeric|min:0',
-            'currency' => 'required|string|max:3',
             'deposit_amount' => 'nullable|numeric|min:0',
             'commission_rate' => 'nullable|numeric|min:0|max:1',
             'is_active' => 'boolean',
@@ -183,7 +182,6 @@ class FacilityOfferController extends Controller
             'product_id' => 'required|exists:products,id',
             'offer_type' => 'required|in:sale,rent_monthly,rent_yearly,rent_daily',
             'price' => 'required|numeric|min:0',
-            'currency' => 'required|string|max:3',
             'deposit_amount' => 'nullable|numeric|min:0',
             'commission_rate' => 'nullable|numeric|min:0|max:1',
             'is_active' => 'boolean',
@@ -304,7 +302,7 @@ class FacilityOfferController extends Controller
             
             // رؤوس الأعمدة
             fputcsv($file, [
-                'ID', 'Product Title', 'Offer Type', 'Price', 'Currency',
+                'ID', 'Product Title', 'Offer Type', 'Price',
                 'Deposit Amount', 'Commission Rate', 'Commission Amount',
                 'Is Active', 'Valid From', 'Valid To', 'Created At'
             ]);

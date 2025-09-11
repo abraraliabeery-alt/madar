@@ -103,7 +103,6 @@ class ApiFacilityOfferController extends Controller
                 'product_id' => 'required|exists:products,id',
                 'offer_type' => 'required|in:sale,rent_monthly,rent_yearly,rent_daily',
                 'price' => 'required|numeric|min:0',
-                'currency' => 'required|string|max:3',
                 'deposit_amount' => 'nullable|numeric|min:0',
                 'commission_rate' => 'nullable|numeric|between:0,1',
                 'commission_amount' => 'nullable|numeric|min:0',

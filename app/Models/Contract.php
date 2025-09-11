@@ -19,7 +19,6 @@ class Contract extends Model
         'start_date',
         'end_date',
         'total_amount',
-        'currency',
         'deposit_amount',
         'commission_rate',
         'commission_amount',
@@ -148,17 +147,17 @@ class Contract extends Model
     // Accessors
     public function getFormattedTotalAmountAttribute()
     {
-        return number_format($this->total_amount, 2) . ' ' . $this->currency;
+        return number_format($this->total_amount, 2) . ' ريال';
     }
 
     public function getFormattedDepositAmountAttribute()
     {
-        return number_format($this->deposit_amount, 2) . ' ' . $this->currency;
+        return number_format($this->deposit_amount, 2) . ' ريال';
     }
 
     public function getFormattedCommissionAmountAttribute()
     {
-        return number_format($this->commission_amount, 2) . ' ' . $this->currency;
+        return number_format($this->commission_amount, 2) . ' ريال';
     }
 
     // Methods

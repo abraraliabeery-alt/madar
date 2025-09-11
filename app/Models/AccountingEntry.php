@@ -15,7 +15,6 @@ class AccountingEntry extends Model
         'account_id', // ID from chart_of_accounts
         'account_type', // 'revenue', 'receivable', 'commission', 'liability', 'expense'
         'amount',
-        'currency',
         'description',
         'reference_type', // 'invoice', 'payment', 'contract', 'commission'
         'reference_id',
@@ -130,12 +129,12 @@ class AccountingEntry extends Model
     // Accessors
     public function getFormattedAmountAttribute()
     {
-        return number_format($this->amount, 2) . ' ' . $this->currency;
+        return number_format($this->amount, 2) . ' ريال';
     }
 
     public function getFormattedTaxAmountAttribute()
     {
-        return number_format($this->tax_amount, 2) . ' ' . $this->currency;
+        return number_format($this->tax_amount, 2) . ' ريال';
     }
 
     public function getTotalAmountAttribute()
@@ -145,7 +144,7 @@ class AccountingEntry extends Model
 
     public function getFormattedTotalAmountAttribute()
     {
-        return number_format($this->total_amount, 2) . ' ' . $this->currency;
+        return number_format($this->total_amount, 2) . ' ريال';
     }
 
     // Methods
@@ -167,7 +166,6 @@ class AccountingEntry extends Model
             'account_id' => $this->account_id,
             'account_type' => $this->account_type,
             'amount' => $this->amount,
-            'currency' => $this->currency,
             'description' => 'إلغاء: ' . $this->description,
             'reference_type' => 'reversal',
             'reference_id' => $this->id,
@@ -201,7 +199,6 @@ class AccountingEntry extends Model
             'account_id' => $debitAccountId,
             'account_type' => ChartOfAccount::find($debitAccountId)->account_type,
             'amount' => $amount,
-            'currency' => 'SAR',
             'description' => $description,
             'reference_type' => $referenceType,
             'reference_id' => $referenceId,
@@ -219,7 +216,6 @@ class AccountingEntry extends Model
             'account_id' => $creditAccountId,
             'account_type' => ChartOfAccount::find($creditAccountId)->account_type,
             'amount' => $amount,
-            'currency' => 'SAR',
             'description' => $description,
             'reference_type' => $referenceType,
             'reference_id' => $referenceId,
@@ -253,7 +249,6 @@ class AccountingEntry extends Model
             'account_id' => $revenueAccount->id,
             'account_type' => 'revenue',
             'amount' => $amount,
-            'currency' => 'SAR',
             'description' => $description,
             'reference_type' => $referenceType,
             'reference_id' => $referenceId,
@@ -284,7 +279,6 @@ class AccountingEntry extends Model
             'account_id' => $receivableAccount->id,
             'account_type' => 'asset',
             'amount' => $amount,
-            'currency' => 'SAR',
             'description' => $description,
             'reference_type' => $referenceType,
             'reference_id' => $referenceId,
@@ -302,7 +296,6 @@ class AccountingEntry extends Model
             'entry_type' => 'debit',
             'account_type' => 'expense',
             'amount' => $amount,
-            'currency' => 'SAR',
             'description' => $description,
             'reference_type' => $referenceType,
             'reference_id' => $referenceId,
@@ -333,7 +326,6 @@ class AccountingEntry extends Model
             'account_id' => $liabilityAccount->id,
             'account_type' => 'liability',
             'amount' => $amount,
-            'currency' => 'SAR',
             'description' => $description,
             'reference_type' => $referenceType,
             'reference_id' => $referenceId,
@@ -362,7 +354,6 @@ class AccountingEntry extends Model
             'account_id' => $cashAccount->id,
             'account_type' => 'asset',
             'amount' => $amount,
-            'currency' => 'SAR',
             'description' => $description,
             'reference_type' => $referenceType,
             'reference_id' => $referenceId,

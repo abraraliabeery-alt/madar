@@ -152,7 +152,6 @@ class UserSettingsController extends Controller
             'timezone' => 'string|max:255',
             'date_format' => 'in:Y-m-d,d-m-Y,m/d/Y',
             'time_format' => 'in:12,24',
-            'currency' => 'string|max:3',
             'theme' => 'in:light,dark,auto',
             'dashboard_layout' => 'in:grid,list',
             'items_per_page' => 'integer|min:10|max:100',

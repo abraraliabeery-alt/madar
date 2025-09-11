@@ -14,7 +14,6 @@ class Offer extends Model
         'product_id',
         'offer_type', // 'sale', 'rent_monthly', 'rent_yearly', 'rent_daily'
         'price',
-        'currency',
         'deposit_amount',
         'commission_rate',
         'commission_amount',
@@ -121,17 +120,17 @@ class Offer extends Model
     // Accessors
     public function getFormattedPriceAttribute()
     {
-        return number_format($this->price, 2) . ' ' . $this->currency;
+        return number_format($this->price, 2) . ' ريال';
     }
 
     public function getFormattedDepositAttribute()
     {
-        return number_format($this->deposit_amount, 2) . ' ' . $this->currency;
+        return number_format($this->deposit_amount, 2) . ' ريال';
     }
 
     public function getFormattedCommissionAttribute()
     {
-        return number_format($this->commission_amount, 2) . ' ' . $this->currency;
+        return number_format($this->commission_amount, 2) . ' ريال';
     }
 
     // Methods

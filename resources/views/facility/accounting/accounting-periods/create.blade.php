@@ -3,68 +3,66 @@
 @section('title', 'إضافة فترة محاسبية جديدة')
 
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h3 class="card-title">إضافة فترة محاسبية جديدة</h3>
-                    <a href="{{ route('facility.accounting.accounting-periods.index') }}" class="btn btn-outline-secondary">
-                        <i class="fas fa-arrow-right"></i> العودة للقائمة
-                    </a>
+<div class="container mx-auto px-4 my-10">
+    <div class="flex justify-center">
+        <div class="w-full max-w-6xl">
+            <div class="bg-white rounded-lg shadow-lg">
+                <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 rounded-t-lg">
+                    <div class="flex justify-between items-center">
+                        <h4 class="text-lg font-semibold text-gray-800 mb-0">إضافة فترة محاسبية جديدة</h4>
+                        <a href="{{ route('facility.accounting.accounting-periods.index') }}" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 rtl:space-x-reverse transition-colors">
+                            <i class="fas fa-arrow-left"></i>
+                            <span>العودة للقائمة</span>
+                        </a>
+                    </div>
                 </div>
 
-                <div class="card-body">
-                    <form method="POST" action="{{ route('facility.accounting.accounting-periods.store') }}">
-                        @csrf
-
-                        <div class="row">
+                <form method="POST" action="{{ route('facility.accounting.accounting-periods.store') }}">
+                    @csrf
+                    <div class="p-6">
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                             <!-- معلومات الفترة -->
-                            <div class="col-md-8">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h5 class="card-title mb-0">معلومات الفترة</h5>
+                            <div class="lg:col-span-2">
+                                <div class="bg-white border border-gray-200 rounded-lg">
+                                    <div class="bg-gray-50 px-4 py-3 border-b border-gray-200 rounded-t-lg">
+                                        <h5 class="text-lg font-semibold text-gray-800 mb-0">معلومات الفترة</h5>
                                     </div>
-                                    <div class="card-body">
-                                        <div class="mb-3">
-                                            <label for="name" class="form-label">اسم الفترة <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control @error('name') is-invalid @enderror" 
+                                    <div class="p-6">
+                                        <div class="mb-4">
+                                            <label for="name" class="block text-sm font-medium text-gray-700 mb-2">اسم الفترة <span class="text-red-500">*</span></label>
+                                            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('name') border-red-500 @enderror" 
                                                    id="name" name="name" value="{{ old('name') }}" required>
                                             @error('name')
-                                                <div class="invalid-feedback">{{ $message }}</div>
+                                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                             @enderror
-                                            <div class="form-text">مثال: السنة المالية 2024، الربع الأول 2024</div>
+                                            <p class="mt-1 text-sm text-gray-500">مثال: السنة المالية 2024، الربع الأول 2024</p>
                                         </div>
 
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label for="start_date" class="form-label">تاريخ البداية <span class="text-danger">*</span></label>
-                                                    <input type="date" class="form-control @error('start_date') is-invalid @enderror" 
-                                                           id="start_date" name="start_date" value="{{ old('start_date') }}" required>
-                                                    @error('start_date')
-                                                        <div class="invalid-feedback">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                            <div>
+                                                <label for="start_date" class="block text-sm font-medium text-gray-700 mb-2">تاريخ البداية <span class="text-red-500">*</span></label>
+                                                <input type="date" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('start_date') border-red-500 @enderror" 
+                                                       id="start_date" name="start_date" value="{{ old('start_date') }}" required>
+                                                @error('start_date')
+                                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                                @enderror
                                             </div>
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label for="end_date" class="form-label">تاريخ النهاية <span class="text-danger">*</span></label>
-                                                    <input type="date" class="form-control @error('end_date') is-invalid @enderror" 
-                                                           id="end_date" name="end_date" value="{{ old('end_date') }}" required>
-                                                    @error('end_date')
-                                                        <div class="invalid-feedback">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
+                                            <div>
+                                                <label for="end_date" class="block text-sm font-medium text-gray-700 mb-2">تاريخ النهاية <span class="text-red-500">*</span></label>
+                                                <input type="date" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('end_date') border-red-500 @enderror" 
+                                                       id="end_date" name="end_date" value="{{ old('end_date') }}" required>
+                                                @error('end_date')
+                                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                                @enderror
                                             </div>
                                         </div>
 
-                                        <div class="mb-3">
-                                            <label for="description" class="form-label">وصف الفترة</label>
-                                            <textarea class="form-control @error('description') is-invalid @enderror" 
+                                        <div class="mb-4">
+                                            <label for="description" class="block text-sm font-medium text-gray-700 mb-2">وصف الفترة</label>
+                                            <textarea class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('description') border-red-500 @enderror" 
                                                       id="description" name="description" rows="3">{{ old('description') }}</textarea>
                                             @error('description')
-                                                <div class="invalid-feedback">{{ $message }}</div>
+                                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                             @enderror
                                         </div>
                                     </div>
@@ -72,67 +70,67 @@
                             </div>
 
                             <!-- إعدادات إضافية -->
-                            <div class="col-md-4">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h5 class="card-title mb-0">الإعدادات</h5>
+                            <div>
+                                <div class="bg-white border border-gray-200 rounded-lg">
+                                    <div class="bg-gray-50 px-4 py-3 border-b border-gray-200 rounded-t-lg">
+                                        <h5 class="text-lg font-semibold text-gray-800 mb-0">الإعدادات</h5>
                                     </div>
-                                    <div class="card-body">
-                                        <div class="mb-3">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="is_current" name="is_current" value="1" 
+                                    <div class="p-6">
+                                        <div class="mb-4">
+                                            <div class="flex items-center">
+                                                <input class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" type="checkbox" id="is_current" name="is_current" value="1" 
                                                        {{ old('is_current') ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="is_current">
+                                                <label class="mr-2 block text-sm text-gray-900" for="is_current">
                                                     فترة حالية
                                                 </label>
                                             </div>
-                                            <div class="form-text">تحديد هذه الفترة كفترة محاسبية حالية</div>
+                                            <p class="mt-1 text-sm text-gray-500">تحديد هذه الفترة كفترة محاسبية حالية</p>
                                         </div>
 
-                                        <div class="mb-3">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="auto_close" name="auto_close" value="1" 
+                                        <div class="mb-4">
+                                            <div class="flex items-center">
+                                                <input class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" type="checkbox" id="auto_close" name="auto_close" value="1" 
                                                        {{ old('auto_close') ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="auto_close">
+                                                <label class="mr-2 block text-sm text-gray-900" for="auto_close">
                                                     إغلاق تلقائي
                                                 </label>
                                             </div>
-                                            <div class="form-text">إغلاق الفترة تلقائياً عند انتهاء تاريخ النهاية</div>
+                                            <p class="mt-1 text-sm text-gray-500">إغلاق الفترة تلقائياً عند انتهاء تاريخ النهاية</p>
                                         </div>
 
-                                        <div class="mb-3">
-                                            <label for="status" class="form-label">حالة الفترة</label>
-                                            <select class="form-select @error('status') is-invalid @enderror" 
+                                        <div class="mb-4">
+                                            <label for="status" class="block text-sm font-medium text-gray-700 mb-2">حالة الفترة</label>
+                                            <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('status') border-red-500 @enderror" 
                                                     id="status" name="status">
                                                 <option value="open" {{ old('status', 'open') == 'open' ? 'selected' : '' }}>مفتوحة</option>
                                                 <option value="closed" {{ old('status') == 'closed' ? 'selected' : '' }}>مغلقة</option>
                                                 <option value="locked" {{ old('status') == 'locked' ? 'selected' : '' }}>مقفلة</option>
                                             </select>
                                             @error('status')
-                                                <div class="invalid-feedback">{{ $message }}</div>
+                                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                             @enderror
                                         </div>
                                     </div>
                                 </div>
 
                                 <!-- ملخص الفترة -->
-                                <div class="card mt-3">
-                                    <div class="card-header">
-                                        <h5 class="card-title mb-0">ملخص الفترة</h5>
+                                <div class="bg-white border border-gray-200 rounded-lg mt-4">
+                                    <div class="bg-gray-50 px-4 py-3 border-b border-gray-200 rounded-t-lg">
+                                        <h5 class="text-lg font-semibold text-gray-800 mb-0">ملخص الفترة</h5>
                                     </div>
-                                    <div class="card-body">
-                                        <div class="mb-2">
-                                            <small class="text-muted">المدة:</small>
-                                            <div id="duration-display" class="fw-bold">-</div>
+                                    <div class="p-6">
+                                        <div class="mb-3">
+                                            <p class="text-sm text-gray-500">المدة:</p>
+                                            <div id="duration-display" class="font-semibold text-gray-900">-</div>
                                         </div>
-                                        <div class="mb-2">
-                                            <small class="text-muted">الأيام المتبقية:</small>
-                                            <div id="remaining-days" class="fw-bold">-</div>
+                                        <div class="mb-3">
+                                            <p class="text-sm text-gray-500">الأيام المتبقية:</p>
+                                            <div id="remaining-days" class="font-semibold text-gray-900">-</div>
                                         </div>
-                                        <div class="mb-2">
-                                            <small class="text-muted">نسبة الإنجاز:</small>
-                                            <div class="progress" style="height: 8px;">
-                                                <div id="progress-bar" class="progress-bar" role="progressbar" style="width: 0%"></div>
+                                        <div class="mb-3">
+                                            <p class="text-sm text-gray-500">نسبة الإنجاز:</p>
+                                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                                <div id="progress-bar" class="bg-blue-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -141,20 +139,20 @@
                         </div>
 
                         <!-- أزرار الإجراءات -->
-                        <div class="row mt-4">
-                            <div class="col-12">
-                                <div class="d-flex justify-content-end gap-2">
-                                    <a href="{{ route('facility.accounting.accounting-periods.index') }}" class="btn btn-outline-secondary">
-                                        <i class="fas fa-times"></i> إلغاء
-                                    </a>
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-save"></i> حفظ الفترة
-                                    </button>
-                                </div>
+                        <div class="bg-gray-50 px-6 py-4 border-t border-gray-200 rounded-b-lg mt-6">
+                            <div class="flex justify-end space-x-4 rtl:space-x-reverse">
+                                <a href="{{ route('facility.accounting.accounting-periods.index') }}" class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-lg flex items-center space-x-2 rtl:space-x-reverse transition-colors">
+                                    <i class="fas fa-times"></i>
+                                    <span>إلغاء</span>
+                                </a>
+                                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg flex items-center space-x-2 rtl:space-x-reverse transition-colors">
+                                    <i class="fas fa-save"></i>
+                                    <span>حفظ الفترة</span>
+                                </button>
                             </div>
                         </div>
-                    </form>
-                </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -196,11 +194,11 @@
             
             // Color coding
             if (progress < 25) {
-                progressBar.className = 'progress-bar bg-success';
+                progressBar.className = 'bg-green-600 h-2 rounded-full transition-all duration-300';
             } else if (progress < 75) {
-                progressBar.className = 'progress-bar bg-warning';
+                progressBar.className = 'bg-yellow-600 h-2 rounded-full transition-all duration-300';
             } else {
-                progressBar.className = 'progress-bar bg-danger';
+                progressBar.className = 'bg-red-600 h-2 rounded-full transition-all duration-300';
             }
         } else {
             document.getElementById('duration-display').textContent = '-';
@@ -248,61 +246,3 @@
 </script>
 @endpush
 
-@push('styles')
-<style>
-.card {
-    border: none;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    border-radius: 10px;
-}
-
-.card-header {
-    background: #f8f9fa;
-    border-bottom: 1px solid #e9ecef;
-    border-radius: 10px 10px 0 0 !important;
-}
-
-.form-label {
-    font-weight: 600;
-    color: #495057;
-}
-
-.form-control, .form-select {
-    border-radius: 0.375rem;
-    border: 1px solid #ced4da;
-}
-
-.form-control:focus, .form-select:focus {
-    border-color: #86b7fe;
-    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-}
-
-.btn {
-    border-radius: 0.375rem;
-    font-weight: 500;
-}
-
-.progress {
-    background-color: #e9ecef;
-    border-radius: 0.375rem;
-}
-
-.progress-bar {
-    transition: width 0.3s ease;
-}
-
-@media (max-width: 768px) {
-    .card-body {
-        padding: 1rem;
-    }
-    
-    .d-flex.gap-2 {
-        flex-direction: column;
-    }
-    
-    .d-flex.gap-2 .btn {
-        margin-bottom: 0.5rem;
-    }
-}
-</style>
-@endpush

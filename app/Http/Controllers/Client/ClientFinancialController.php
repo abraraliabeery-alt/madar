@@ -449,7 +449,6 @@ class ClientFinancialController extends Controller
                 'facility_id' => $contract->facility_id,
                 'payment_method' => $request->payment_method,
                 'amount' => $request->amount,
-                'currency' => 'SAR',
                 'payment_date' => now(),
                 'reference_number' => $request->reference_number ?? 'PAY-' . time(),
                 'notes' => $request->notes,

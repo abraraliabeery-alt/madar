@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::table('products', function (Blueprint $table) {
             // Real estate specific fields
-            $table->unsignedBigInteger('city_id')->nullable()->after('category_id');
+            if (!Schema::hasColumn('products', 'city_id')) {
+                $table->unsignedBigInteger('city_id')->nullable()->after('category_id');
+            }
             $table->unsignedBigInteger('status_id')->nullable()->after('city_id');
             $table->unsignedBigInteger('building_id')->nullable()->after('status_id');
             $table->unsignedBigInteger('project_id')->nullable()->after('building_id');
@@ -36,7 +38,6 @@ return new class extends Migration
             $table->renameColumn('image', 'main_image');
             
             // Add foreign key constraints
-            $table->foreign('city_id')->references('id')->on('cities')->onDelete('set null');
             $table->foreign('status_id')->references('id')->on('statuses')->onDelete('set null');
             $table->foreign('building_id')->references('id')->on('buildings')->onDelete('set null');
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('set null');

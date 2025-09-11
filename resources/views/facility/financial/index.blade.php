@@ -3,222 +3,276 @@
 @section('title', 'التقارير المالية')
 
 @section('content')
-<div class="container-fluid">
+<div class="w-full px-4 my-6">
     <!-- إحصائيات سريعة -->
-    <div class="row mb-4">
-        <div class="col-lg-3 col-md-6">
-            <div class="card bg-primary text-white">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h4 class="mb-0">{{ number_format($quickStats['total_revenue'], 2) }}</h4>
-                            <p class="mb-0">إجمالي الإيرادات</p>
-                        </div>
-                        <div class="align-self-center">
-                            <i class="fas fa-chart-line fa-2x"></i>
-                        </div>
-                    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+        <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg p-6 shadow-lg">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h4 class="text-3xl font-bold">{{ number_format($quickStats['total_revenue'], 2) }}</h4>
+                    <p class="text-blue-100">إجمالي الإيرادات</p>
+                </div>
+                <div class="bg-blue-400 rounded-full p-3">
+                    <i class="fas fa-chart-line text-2xl"></i>
                 </div>
             </div>
         </div>
-        <div class="col-lg-3 col-md-6">
-            <div class="card bg-success text-white">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h4 class="mb-0">{{ number_format($quickStats['total_payments'], 2) }}</h4>
-                            <p class="mb-0">إجمالي المدفوعات</p>
-                        </div>
-                        <div class="align-self-center">
-                            <i class="fas fa-credit-card fa-2x"></i>
-                        </div>
-                    </div>
+
+        <div class="bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg p-6 shadow-lg">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h4 class="text-3xl font-bold">{{ number_format($quickStats['total_payments'], 2) }}</h4>
+                    <p class="text-green-100">إجمالي المدفوعات</p>
+                </div>
+                <div class="bg-green-400 rounded-full p-3">
+                    <i class="fas fa-credit-card text-2xl"></i>
                 </div>
             </div>
         </div>
-        <div class="col-lg-3 col-md-6">
-            <div class="card bg-info text-white">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h4 class="mb-0">{{ $quickStats['total_contracts'] }}</h4>
-                            <p class="mb-0">إجمالي العقود</p>
-                        </div>
-                        <div class="align-self-center">
-                            <i class="fas fa-file-contract fa-2x"></i>
-                        </div>
-                    </div>
+
+        <div class="bg-gradient-to-r from-cyan-500 to-cyan-600 text-white rounded-lg p-6 shadow-lg">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h4 class="text-3xl font-bold">{{ $quickStats['total_contracts'] }}</h4>
+                    <p class="text-cyan-100">إجمالي العقود</p>
+                </div>
+                <div class="bg-cyan-400 rounded-full p-3">
+                    <i class="fas fa-file-contract text-2xl"></i>
                 </div>
             </div>
         </div>
-        <div class="col-lg-3 col-md-6">
-            <div class="card bg-warning text-white">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h4 class="mb-0">{{ number_format($quickStats['collection_rate'], 1) }}%</h4>
-                            <p class="mb-0">معدل التحصيل</p>
-                        </div>
-                        <div class="align-self-center">
-                            <i class="fas fa-percentage fa-2x"></i>
-                        </div>
-                    </div>
+
+        <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white rounded-lg p-6 shadow-lg">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h4 class="text-3xl font-bold">{{ $quickStats['pending_payments'] }}</h4>
+                    <p class="text-yellow-100">المدفوعات المعلقة</p>
+                </div>
+                <div class="bg-yellow-400 rounded-full p-3">
+                    <i class="fas fa-clock text-2xl"></i>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- تقرير الشهر الحالي -->
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h3 class="card-title">تقرير الشهر الحالي</h3>
-                    <div>
-                        <a href="{{ route('facility.financial.export') }}" class="btn btn-success">
-                            <i class="fas fa-download"></i> تصدير التقرير
-                        </a>
+    <!-- التقارير الرئيسية -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <!-- تقرير الإيرادات -->
+        <div class="bg-white rounded-lg shadow-lg border border-gray-200">
+            <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-4 rounded-t-lg">
+                <h5 class="text-lg font-semibold flex items-center">
+                    <i class="fas fa-chart-line mr-2"></i>
+                    تقرير الإيرادات
+                </h5>
+            </div>
+            <div class="p-6">
+                <div class="mb-4">
+                    <h6 class="text-sm font-medium text-gray-600 mb-2">الفترة المحددة</h6>
+                    <p class="text-gray-800">{{ $revenueReport['period'] ?? 'جميع الفترات' }}</p>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div class="text-center">
+                        <h4 class="text-2xl font-bold text-green-600">{{ number_format($revenueReport['total_revenue'], 2) }}</h4>
+                        <p class="text-sm text-gray-600">إجمالي الإيرادات</p>
+                    </div>
+                    <div class="text-center">
+                        <h4 class="text-2xl font-bold text-blue-600">{{ number_format($revenueReport['monthly_average'], 2) }}</h4>
+                        <p class="text-sm text-gray-600">متوسط شهري</p>
                     </div>
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5>ملخص الإيرادات</h5>
-                            <table class="table table-sm">
-                                <tr>
-                                    <td>إجمالي الإيرادات:</td>
-                                    <td class="text-end"><strong>{{ number_format($monthlyReport['summary']['total_revenue'], 2) }} ريال</strong></td>
-                                </tr>
-                                <tr>
-                                    <td>إجمالي المدفوعات:</td>
-                                    <td class="text-end"><strong>{{ number_format($monthlyReport['summary']['total_payments'], 2) }} ريال</strong></td>
-                                </tr>
-                                <tr>
-                                    <td>إجمالي العمولات:</td>
-                                    <td class="text-end"><strong>{{ number_format($monthlyReport['summary']['total_commissions'], 2) }} ريال</strong></td>
-                                </tr>
-                                <tr class="table-success">
-                                    <td>صافي الدخل:</td>
-                                    <td class="text-end"><strong>{{ number_format($monthlyReport['summary']['net_income'], 2) }} ريال</strong></td>
-                                </tr>
-                            </table>
-                        </div>
-                        <div class="col-md-6">
-                            <h5>معدلات الأداء</h5>
-                            <table class="table table-sm">
-                                <tr>
-                                    <td>معدل التحصيل:</td>
-                                    <td class="text-end">
-                                        <span class="badge bg-{{ $monthlyReport['summary']['collection_rate'] >= 80 ? 'success' : ($monthlyReport['summary']['collection_rate'] >= 60 ? 'warning' : 'danger') }}">
-                                            {{ number_format($monthlyReport['summary']['collection_rate'], 1) }}%
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>العقود النشطة:</td>
-                                    <td class="text-end"><strong>{{ $quickStats['active_contracts'] }}</strong></td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+                <a href="{{ route('facility.financial.revenue') }}" class="w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-center block transition-colors">
+                    عرض التقرير
+                </a>
             </div>
         </div>
-    </div>
 
-    <!-- روابط التقارير التفصيلية -->
-    <div class="row mt-4">
-        <div class="col-md-3">
-            <div class="card">
-                <div class="card-body text-center">
-                    <i class="fas fa-chart-line fa-3x text-primary mb-3"></i>
-                    <h5>تقرير الإيرادات</h5>
-                    <p class="text-muted">تفاصيل الإيرادات حسب النوع والشهر</p>
-                    <a href="{{ route('facility.financial.revenue') }}" class="btn btn-primary">عرض التقرير</a>
+        <!-- تقرير المدفوعات -->
+        <div class="bg-white rounded-lg shadow-lg border border-gray-200">
+            <div class="bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-4 rounded-t-lg">
+                <h5 class="text-lg font-semibold flex items-center">
+                    <i class="fas fa-credit-card mr-2"></i>
+                    تقرير المدفوعات
+                </h5>
+            </div>
+            <div class="p-6">
+                <div class="mb-4">
+                    <h6 class="text-sm font-medium text-gray-600 mb-2">آخر تحديث</h6>
+                    <p class="text-gray-800">{{ $paymentsReport['last_updated'] ?? 'اليوم' }}</p>
                 </div>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div class="text-center">
+                        <h4 class="text-2xl font-bold text-green-600">{{ number_format($paymentsReport['total_paid'], 2) }}</h4>
+                        <p class="text-sm text-gray-600">المدفوع</p>
+                    </div>
+                    <div class="text-center">
+                        <h4 class="text-2xl font-bold text-yellow-600">{{ number_format($paymentsReport['pending_amount'], 2) }}</h4>
+                        <p class="text-sm text-gray-600">المعلق</p>
+                    </div>
+                </div>
+                <a href="{{ route('facility.financial.payments') }}" class="w-full bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-center block transition-colors">
+                    عرض التقرير
+                </a>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card">
-                <div class="card-body text-center">
-                    <i class="fas fa-money-bill-wave fa-3x text-success mb-3"></i>
-                    <h5>تقرير المدفوعات</h5>
-                    <p class="text-muted">تفاصيل المدفوعات وطرق الدفع</p>
-                    <a href="{{ route('facility.financial.payments') }}" class="btn btn-success">عرض التقرير</a>
+
+        <!-- تقرير الفواتير -->
+        <div class="bg-white rounded-lg shadow-lg border border-gray-200">
+            <div class="bg-gradient-to-r from-cyan-500 to-cyan-600 text-white px-6 py-4 rounded-t-lg">
+                <h5 class="text-lg font-semibold flex items-center">
+                    <i class="fas fa-file-invoice mr-2"></i>
+                    تقرير الفواتير
+                </h5>
+            </div>
+            <div class="p-6">
+                <div class="mb-4">
+                    <h6 class="text-sm font-medium text-gray-600 mb-2">حالة الفواتير</h6>
+                    <div class="space-y-2">
+                        <div class="flex justify-between">
+                            <span class="text-sm text-gray-600">مرسلة</span>
+                            <span class="text-sm font-medium">{{ $invoicesReport['sent_count'] ?? 0 }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-sm text-gray-600">مدفوعة</span>
+                            <span class="text-sm font-medium text-green-600">{{ $invoicesReport['paid_count'] ?? 0 }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-sm text-gray-600">متأخرة</span>
+                            <span class="text-sm font-medium text-red-600">{{ $invoicesReport['overdue_count'] ?? 0 }}</span>
+                        </div>
+                    </div>
                 </div>
+                <a href="{{ route('facility.financial.invoices') }}" class="w-full bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2 rounded-lg text-center block transition-colors">
+                    عرض التقرير
+                </a>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card">
-                <div class="card-body text-center">
-                    <i class="fas fa-file-invoice fa-3x text-info mb-3"></i>
-                    <h5>تقرير الفواتير</h5>
-                    <p class="text-muted">حالة الفواتير والمبالغ المستحقة</p>
-                    <a href="{{ route('facility.financial.invoices') }}" class="btn btn-info">عرض التقرير</a>
-                </div>
+
+        <!-- تقرير العقود -->
+        <div class="bg-white rounded-lg shadow-lg border border-gray-200">
+            <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white px-6 py-4 rounded-t-lg">
+                <h5 class="text-lg font-semibold flex items-center">
+                    <i class="fas fa-file-contract mr-2"></i>
+                    تقرير العقود
+                </h5>
             </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card">
-                <div class="card-body text-center">
-                    <i class="fas fa-file-contract fa-3x text-warning mb-3"></i>
-                    <h5>تقرير العقود</h5>
-                    <p class="text-muted">تفاصيل العقود والأداء</p>
-                    <a href="{{ route('facility.financial.contracts') }}" class="btn btn-warning">عرض التقرير</a>
+            <div class="p-6">
+                <div class="mb-4">
+                    <h6 class="text-sm font-medium text-gray-600 mb-2">نشاط العقود</h6>
+                    <div class="space-y-2">
+                        <div class="flex justify-between">
+                            <span class="text-sm text-gray-600">نشطة</span>
+                            <span class="text-sm font-medium text-green-600">{{ $contractsReport['active_count'] ?? 0 }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-sm text-gray-600">منتهية</span>
+                            <span class="text-sm font-medium text-gray-600">{{ $contractsReport['expired_count'] ?? 0 }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-sm text-gray-600">قريب الانتهاء</span>
+                            <span class="text-sm font-medium text-yellow-600">{{ $contractsReport['expiring_soon'] ?? 0 }}</span>
+                        </div>
+                    </div>
                 </div>
+                <a href="{{ route('facility.financial.contracts') }}" class="w-full bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg text-center block transition-colors">
+                    عرض التقرير
+                </a>
             </div>
         </div>
     </div>
 
     <!-- تقارير إضافية -->
-    <div class="row mt-4">
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body text-center">
-                    <i class="fas fa-users fa-3x text-secondary mb-3"></i>
-                    <h5>تقرير العملاء</h5>
-                    <p class="text-muted">أداء العملاء والمستحقات</p>
-                    <form action="{{ route('facility.financial.customer') }}" method="GET" class="d-inline">
-                        <select name="customer_id" class="form-select mb-2" required>
-                            <option value="">اختر العميل</option>
-                            @foreach(\App\Models\User::where('primary_role', 'user')->get() as $user)
-                                <option value="{{ $user->id }}">{{ $user->name }}</option>
-                            @endforeach
-                        </select>
-                        <button type="submit" class="btn btn-secondary">عرض التقرير</button>
+    <div class="bg-white rounded-lg shadow-lg border border-gray-200 mb-8">
+        <div class="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-6 py-4 rounded-t-lg">
+            <h5 class="text-lg font-semibold flex items-center">
+                <i class="fas fa-chart-bar mr-2"></i>
+                تقارير إضافية
+            </h5>
+        </div>
+        <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- تقرير شهري -->
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                    <h6 class="font-semibold text-gray-800 mb-2">تقرير شهري</h6>
+                    <p class="text-sm text-gray-600 mb-4">عرض الإحصائيات المالية للشهر الحالي</p>
+                    <form method="GET" action="{{ route('facility.financial.monthly') }}" class="space-y-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">الشهر</label>
+                            <select name="month" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                @for($i = 1; $i <= 12; $i++)
+                                    <option value="{{ $i }}" {{ $i == date('n') ? 'selected' : '' }}>
+                                        {{ date('F', mktime(0, 0, 0, $i, 1)) }}
+                                    </option>
+                                @endfor
+                            </select>
+                        </div>
+                        <button type="submit" class="w-full bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg transition-colors">
+                            عرض التقرير
+                        </button>
                     </form>
                 </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body text-center">
-                    <i class="fas fa-user-tie fa-3x text-dark mb-3"></i>
-                    <h5>تقرير الملاك</h5>
-                    <p class="text-muted">أداء الملاك والأرباح</p>
-                    <form action="{{ route('facility.financial.owner') }}" method="GET" class="d-inline">
-                        <select name="owner_id" class="form-select mb-2" required>
-                            <option value="">اختر المالك</option>
-                            @foreach(\App\Models\User::where('primary_role', 'owner')->get() as $owner)
-                                <option value="{{ $owner->id }}">{{ $owner->name }}</option>
-                            @endforeach
-                        </select>
-                        <button type="submit" class="btn btn-dark">عرض التقرير</button>
+
+                <!-- تقرير سنوي -->
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                    <h6 class="font-semibold text-gray-800 mb-2">تقرير سنوي</h6>
+                    <p class="text-sm text-gray-600 mb-4">عرض الإحصائيات المالية للسنة الحالية</p>
+                    <form method="GET" action="{{ route('facility.financial.yearly') }}" class="space-y-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">السنة</label>
+                            <select name="year" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                @for($i = date('Y') - 5; $i <= date('Y') + 1; $i++)
+                                    <option value="{{ $i }}" {{ $i == date('Y') ? 'selected' : '' }}>{{ $i }}</option>
+                                @endfor
+                            </select>
+                        </div>
+                        <button type="submit" class="w-full bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg transition-colors">
+                            عرض التقرير
+                        </button>
                     </form>
                 </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body text-center">
-                    <i class="fas fa-calendar-alt fa-3x text-primary mb-3"></i>
-                    <h5>التقارير الزمنية</h5>
-                    <p class="text-muted">تقارير شهرية وسنوية</p>
-                    <div class="d-grid gap-2">
-                        <a href="{{ route('facility.financial.monthly') }}" class="btn btn-outline-primary">تقرير شهري</a>
-                        <a href="{{ route('facility.financial.yearly') }}" class="btn btn-outline-primary">تقرير سنوي</a>
+
+                <!-- تصدير البيانات -->
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                    <h6 class="font-semibold text-gray-800 mb-2">تصدير البيانات</h6>
+                    <p class="text-sm text-gray-600 mb-4">تصدير التقارير المالية بصيغ مختلفة</p>
+                    <div class="space-y-2">
+                        <a href="{{ route('facility.financial.export') }}" class="w-full bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-center block transition-colors">
+                            <i class="fas fa-download mr-2"></i>تصدير Excel
+                        </a>
+                        <a href="{{ route('facility.financial.export') }}?format=pdf" class="w-full bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-center block transition-colors">
+                            <i class="fas fa-file-pdf mr-2"></i>تصدير PDF
+                        </a>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- روابط سريعة -->
+    <div class="bg-white rounded-lg shadow-lg border border-gray-200">
+        <div class="bg-gradient-to-r from-gray-500 to-gray-600 text-white px-6 py-4 rounded-t-lg">
+            <h5 class="text-lg font-semibold flex items-center">
+                <i class="fas fa-link mr-2"></i>
+                روابط سريعة
+            </h5>
+        </div>
+        <div class="p-6">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <a href="{{ route('facility.financial.monthly') }}" class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-3 rounded-lg text-center transition-colors">
+                    <i class="fas fa-calendar-alt text-2xl mb-2 block"></i>
+                    <span class="text-sm font-medium">تقرير شهري</span>
+                </a>
+                <a href="{{ route('facility.financial.yearly') }}" class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-3 rounded-lg text-center transition-colors">
+                    <i class="fas fa-calendar text-2xl mb-2 block"></i>
+                    <span class="text-sm font-medium">تقرير سنوي</span>
+                </a>
+                <a href="{{ route('facility.payments.index') }}" class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-3 rounded-lg text-center transition-colors">
+                    <i class="fas fa-credit-card text-2xl mb-2 block"></i>
+                    <span class="text-sm font-medium">المدفوعات</span>
+                </a>
+                <a href="{{ route('facility.invoices.index') }}" class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-3 rounded-lg text-center transition-colors">
+                    <i class="fas fa-file-invoice text-2xl mb-2 block"></i>
+                    <span class="text-sm font-medium">الفواتير</span>
+                </a>
             </div>
         </div>
     </div>

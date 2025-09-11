@@ -3,171 +3,176 @@
 @section('title', 'إدارة العروض')
 
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h3 class="card-title">إدارة العروض</h3>
-                    <div>
-                        <a href="{{ route('facility.offers.create') }}" class="btn btn-primary">
-                            <i class="fas fa-plus"></i> إضافة عرض جديد
-                        </a>
-                        <a href="{{ route('facility.offers.statistics') }}" class="btn btn-info">
-                            <i class="fas fa-chart-bar"></i> الإحصائيات
-                        </a>
-                    </div>
-                </div>
-
-                <!-- فلترة وبحث -->
-                <div class="card-body">
-                    <form method="GET" class="row g-3 mb-4">
-                        <div class="col-md-3">
-                            <select name="type" class="form-select">
-                                <option value="">جميع الأنواع</option>
-                                <option value="sale" {{ request('type') == 'sale' ? 'selected' : '' }}>بيع</option>
-                                <option value="rent_monthly" {{ request('type') == 'rent_monthly' ? 'selected' : '' }}>إيجار شهري</option>
-                                <option value="rent_yearly" {{ request('type') == 'rent_yearly' ? 'selected' : '' }}>إيجار سنوي</option>
-                                <option value="rent_daily" {{ request('type') == 'rent_daily' ? 'selected' : '' }}>إيجار يومي</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <select name="status" class="form-select">
-                                <option value="">جميع الحالات</option>
-                                <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>نشط</option>
-                                <option value="expired" {{ request('status') == 'expired' ? 'selected' : '' }}>منتهي الصلاحية</option>
-                                <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>غير نشط</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <input type="text" name="search" class="form-control" placeholder="البحث في العروض..." value="{{ request('search') }}">
-                        </div>
-                        <div class="col-md-2">
-                            <button type="submit" class="btn btn-primary w-100">بحث</button>
-                        </div>
-                    </form>
-
-                    @if($offers->count() > 0)
-                        <div class="table-responsive">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>العرض</th>
-                                        <th>المنتج</th>
-                                        <th>النوع</th>
-                                        <th>السعر</th>
-                                        <th>العمولة</th>
-                                        <th>الحالة</th>
-                                        <th>الأولوية</th>
-                                        <th>الإجراءات</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($offers as $offer)
-                                        <tr>
-                                            <td>
-                                                <div>
-                                                    <strong>{{ $offer->offer_title ?: 'عرض ' . $offer->offer_type }}</strong>
-                                                    @if($offer->is_featured)
-                                                        <span class="badge bg-warning">مميز</span>
-                                                    @endif
-                                                </div>
-                                                @if($offer->offer_description)
-                                                    <small class="text-muted">{{ Str::limit($offer->offer_description, 50) }}</small>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                <a href="{{ route('facility.products.show', $offer->product) }}" class="text-decoration-none">
-                                                    {{ $offer->product->getTranslatedTitle() }}
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <span class="badge bg-info">
-                                                    @switch($offer->offer_type)
-                                                        @case('sale') بيع @break
-                                                        @case('rent_monthly') إيجار شهري @break
-                                                        @case('rent_yearly') إيجار سنوي @break
-                                                        @case('rent_daily') إيجار يومي @break
-                                                    @endswitch
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <strong>{{ number_format($offer->price, 2) }} {{ $offer->currency }}</strong>
-                                                @if($offer->deposit_amount)
-                                                    <br><small class="text-muted">عربون: {{ number_format($offer->deposit_amount, 2) }}</small>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                @if($offer->commission_rate)
-                                                    {{ number_format($offer->commission_rate * 100, 2) }}%
-                                                @elseif($offer->commission_amount)
-                                                    {{ number_format($offer->commission_amount, 2) }} {{ $offer->currency }}
-                                                @else
-                                                    -
-                                                @endif
-                                            </td>
-                                            <td>
-                                                @if($offer->isActive())
-                                                    <span class="badge bg-success">نشط</span>
-                                                @elseif($offer->isExpired())
-                                                    <span class="badge bg-danger">منتهي</span>
-                                                @else
-                                                    <span class="badge bg-secondary">غير نشط</span>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                <div class="progress" style="width: 60px; height: 20px;">
-                                                    <div class="progress-bar" role="progressbar" style="width: {{ $offer->priority * 10 }}%">
-                                                        {{ $offer->priority }}
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="btn-group" role="group">
-                                                    <a href="{{ route('facility.offers.show', $offer) }}" class="btn btn-sm btn-info">
-                                                        <i class="fas fa-eye"></i>
-                                                    </a>
-                                                    <a href="{{ route('facility.offers.edit', $offer) }}" class="btn btn-sm btn-warning">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a>
-                                                    <form method="POST" action="{{ route('facility.offers.toggle-status', $offer) }}" class="d-inline">
-                                                        @csrf
-                                                        <button type="submit" class="btn btn-sm {{ $offer->is_active ? 'btn-secondary' : 'btn-success' }}">
-                                                            <i class="fas fa-{{ $offer->is_active ? 'pause' : 'play' }}"></i>
-                                                        </button>
-                                                    </form>
-                                                    <form method="POST" action="{{ route('facility.offers.destroy', $offer) }}" class="d-inline" onsubmit="return confirm('هل أنت متأكد من حذف هذا العرض؟')">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn btn-sm btn-danger">
-                                                            <i class="fas fa-trash"></i>
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <!-- Pagination -->
-                        <div class="d-flex justify-content-center">
-                            {{ $offers->appends(request()->query())->links() }}
-                        </div>
-                    @else
-                        <div class="text-center py-5">
-                            <i class="fas fa-gift fa-3x text-muted mb-3"></i>
-                            <h5 class="text-muted">لا توجد عروض</h5>
-                            <p class="text-muted">ابدأ بإنشاء عرض جديد لعقارك</p>
-                            <a href="{{ route('facility.offers.create') }}" class="btn btn-primary">
-                                <i class="fas fa-plus"></i> إضافة عرض جديد
-                            </a>
-                        </div>
-                    @endif
-                </div>
+<div class="w-full px-4 my-6">
+    <div class="bg-white rounded-lg shadow-lg p-6">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-2xl font-bold text-gray-800">إدارة العروض</h3>
+            <div class="flex space-x-3 space-x-reverse">
+                <a href="{{ route('facility.offers.create') }}" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 space-x-reverse transition-colors">
+                    <i class="fas fa-plus"></i>
+                    <span>إضافة عرض جديد</span>
+                </a>
+                <a href="{{ route('facility.offers.statistics') }}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 space-x-reverse transition-colors">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>الإحصائيات</span>
+                </a>
             </div>
         </div>
+
+        <!-- فلترة وبحث -->
+        <div class="bg-gray-50 rounded-lg p-4 mb-6">
+            <form method="GET" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                <div>
+                    <select name="type" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
+                        <option value="">جميع الأنواع</option>
+                        <option value="sale" {{ request('type') == 'sale' ? 'selected' : '' }}>بيع</option>
+                        <option value="rent_monthly" {{ request('type') == 'rent_monthly' ? 'selected' : '' }}>إيجار شهري</option>
+                        <option value="rent_yearly" {{ request('type') == 'rent_yearly' ? 'selected' : '' }}>إيجار سنوي</option>
+                        <option value="rent_daily" {{ request('type') == 'rent_daily' ? 'selected' : '' }}>إيجار يومي</option>
+                    </select>
+                </div>
+                <div>
+                    <select name="status" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
+                        <option value="">جميع الحالات</option>
+                        <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>نشط</option>
+                        <option value="expired" {{ request('status') == 'expired' ? 'selected' : '' }}>منتهي الصلاحية</option>
+                        <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>غير نشط</option>
+                    </select>
+                </div>
+                <div class="lg:col-span-2">
+                    <input type="text" name="search" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500" placeholder="البحث في العروض..." value="{{ request('search') }}">
+                </div>
+                <div>
+                    <button type="submit" class="w-full bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg transition-colors">
+                        <i class="fas fa-search mr-2"></i>بحث
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        @if($offers->count() > 0)
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">العرض</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">المنتج</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">النوع</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">السعر</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">العمولة</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الحالة</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الأولوية</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        @foreach($offers as $offer)
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div>
+                                        <div class="flex items-center">
+                                            <strong class="text-gray-900">{{ $offer->offer_title ?: 'عرض ' . $offer->offer_type }}</strong>
+                                            @if($offer->is_featured)
+                                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800 mr-2">مميز</span>
+                                            @endif
+                                        </div>
+                                        @if($offer->offer_description)
+                                            <p class="text-sm text-gray-500 mt-1">{{ Str::limit($offer->offer_description, 50) }}</p>
+                                        @endif
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <a href="{{ route('facility.products.show', $offer->product) }}" class="text-blue-600 hover:text-blue-800 font-medium">
+                                        {{ $offer->product->getTranslatedTitle() }}
+                                    </a>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                                        @switch($offer->offer_type)
+                                            @case('sale') بيع @break
+                                            @case('rent_monthly') إيجار شهري @break
+                                            @case('rent_yearly') إيجار سنوي @break
+                                            @case('rent_daily') إيجار يومي @break
+                                        @endswitch
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div>
+                                        <strong class="text-gray-900">{{ number_format($offer->price, 2) }} {{ $offer->currency }}</strong>
+                                        @if($offer->deposit_amount)
+                                            <p class="text-sm text-gray-500 mt-1">عربون: {{ number_format($offer->deposit_amount, 2) }}</p>
+                                        @endif
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    @if($offer->commission_rate)
+                                        {{ number_format($offer->commission_rate * 100, 2) }}%
+                                    @elseif($offer->commission_amount)
+                                        {{ number_format($offer->commission_amount, 2) }} {{ $offer->currency }}
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    @if($offer->isActive())
+                                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">نشط</span>
+                                    @elseif($offer->isExpired())
+                                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">منتهي</span>
+                                    @else
+                                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">غير نشط</span>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="w-16 bg-gray-200 rounded-full h-2 mr-2">
+                                            <div class="bg-primary-600 h-2 rounded-full" style="width: {{ $offer->priority * 10 }}%"></div>
+                                        </div>
+                                        <span class="text-sm text-gray-600">{{ $offer->priority }}</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <div class="flex space-x-2 space-x-reverse">
+                                        <a href="{{ route('facility.offers.show', $offer) }}" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs transition-colors">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{{ route('facility.offers.edit', $offer) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-xs transition-colors">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <form method="POST" action="{{ route('facility.offers.toggle-status', $offer) }}" class="inline">
+                                            @csrf
+                                            <button type="submit" class="{{ $offer->is_active ? 'bg-gray-500 hover:bg-gray-600' : 'bg-green-500 hover:bg-green-600' }} text-white px-3 py-1 rounded text-xs transition-colors">
+                                                <i class="fas fa-{{ $offer->is_active ? 'pause' : 'play' }}"></i>
+                                            </button>
+                                        </form>
+                                        <form method="POST" action="{{ route('facility.offers.destroy', $offer) }}" class="inline" onsubmit="return confirm('هل أنت متأكد من حذف هذا العرض؟')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs transition-colors">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <div class="flex justify-center mt-6">
+                {{ $offers->appends(request()->query())->links() }}
+            </div>
+        @else
+            <div class="text-center py-12">
+                <i class="fas fa-gift text-gray-400 text-6xl mb-4"></i>
+                <h5 class="text-lg font-semibold text-gray-500 mb-2">لا توجد عروض</h5>
+                <p class="text-gray-400 mb-6">ابدأ بإنشاء عرض جديد لعقارك</p>
+                <a href="{{ route('facility.offers.create') }}" class="bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg transition-colors">
+                    <i class="fas fa-plus mr-2"></i>إضافة عرض جديد
+                </a>
+            </div>
+        @endif
     </div>
 </div>
 @endsection
