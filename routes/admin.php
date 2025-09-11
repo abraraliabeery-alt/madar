@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\AdminProfileController;
 use App\Http\Controllers\Admin\AdminUploadController;
 use App\Http\Controllers\Admin\AdminFinancialController;
 use App\Http\Controllers\Admin\AdminPermissionController;
+use App\Http\Controllers\Admin\AdminUserManagementController;
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
 
@@ -36,6 +37,14 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('users/{user}/assign-role', [AdminUserController::class, 'assignRole'])->name('users.assign-role');
     Route::post('users/{user}/assign-facility', [AdminUserController::class, 'assignFacility'])->name('users.assign-facility');
     Route::get('users/{user}/activity', [AdminUserController::class, 'activity'])->name('users.activity');
+
+    // Advanced User Management
+    Route::get('users/statistics', [AdminUserManagementController::class, 'statistics'])->name('users.statistics');
+    Route::get('users/export', [AdminUserManagementController::class, 'export'])->name('users.export');
+    Route::post('users/export-data', [AdminUserManagementController::class, 'exportData'])->name('users.export-data');
+    Route::get('users/activity-logs', [AdminUserManagementController::class, 'activityLogs'])->name('users.activity-logs');
+    Route::get('users/{user}/details', [AdminUserManagementController::class, 'userDetails'])->name('users.details');
+    Route::post('users/bulk-action', [AdminUserManagementController::class, 'bulkAction'])->name('users.bulk-action');
 
     // Facilities Management
     Route::resource('facilities', AdminFacilityController::class);

@@ -1,4 +1,4 @@
-@extends('layouts.facility')
+@extends('facility.layouts.app')
 
 @section('title', 'التقارير المالية')
 

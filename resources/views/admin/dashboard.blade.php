@@ -106,6 +106,69 @@
         </div>
     </div>
 
+    <!-- New User Management Features -->
+    <div class="row g-4 mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">إدارة المستخدمين المتقدمة</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <div class="card border-primary">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-user-cog fa-2x text-primary mb-3"></i>
+                                    <h6 class="card-title">إدارة الصلاحيات</h6>
+                                    <p class="card-text small text-muted">إدارة الأدوار والصلاحيات للمستخدمين</p>
+                                    <a href="{{ route('admin.permissions.index') }}" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-arrow-left me-1"></i>إدارة الصلاحيات
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card border-success">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-chart-line fa-2x text-success mb-3"></i>
+                                    <h6 class="card-title">إحصائيات المستخدمين</h6>
+                                    <p class="card-text small text-muted">عرض إحصائيات مفصلة عن المستخدمين</p>
+                                    <a href="{{ route('admin.users.statistics') }}" class="btn btn-success btn-sm">
+                                        <i class="fas fa-arrow-left me-1"></i>عرض الإحصائيات
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card border-info">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-download fa-2x text-info mb-3"></i>
+                                    <h6 class="card-title">تصدير البيانات</h6>
+                                    <p class="card-text small text-muted">تصدير بيانات المستخدمين بصيغ مختلفة</p>
+                                    <a href="{{ route('admin.users.export') }}" class="btn btn-info btn-sm">
+                                        <i class="fas fa-arrow-left me-1"></i>تصدير البيانات
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card border-warning">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-history fa-2x text-warning mb-3"></i>
+                                    <h6 class="card-title">سجل النشاط</h6>
+                                    <p class="card-text small text-muted">عرض سجل نشاط المستخدمين</p>
+                                    <a href="{{ route('admin.users.activity-logs') }}" class="btn btn-warning btn-sm">
+                                        <i class="fas fa-arrow-left me-1"></i>عرض السجل
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Recent Activities -->
     <div class="row g-4">
         <!-- Recent Users -->

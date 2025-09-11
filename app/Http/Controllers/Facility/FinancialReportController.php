@@ -24,7 +24,12 @@ class FinancialReportController extends Controller
      */
     public function index()
     {
-        $facility = Auth::user()->facility;
+        $facility = Auth::user()->facilities()->first();
+        
+        if (!$facility) {
+            return redirect()->route('facility.create')
+                ->with('error', 'يجب إنشاء منشأة أولاً');
+        }
         
         $periods = AccountingPeriod::where('facility_id', $facility->id)
             ->orderBy('start_date', 'desc')
@@ -38,7 +43,12 @@ class FinancialReportController extends Controller
      */
     public function incomeStatement(Request $request)
     {
-        $facility = Auth::user()->facility;
+        $facility = Auth::user()->facilities()->first();
+        
+        if (!$facility) {
+            return redirect()->route('facility.create')
+                ->with('error', 'يجب إنشاء منشأة أولاً');
+        }
         
         $periodId = $request->period_id;
         $startDate = $request->start_date;
@@ -102,7 +112,12 @@ class FinancialReportController extends Controller
      */
     public function balanceSheet(Request $request)
     {
-        $facility = Auth::user()->facility;
+        $facility = Auth::user()->facilities()->first();
+        
+        if (!$facility) {
+            return redirect()->route('facility.create')
+                ->with('error', 'يجب إنشاء منشأة أولاً');
+        }
         
         $periodId = $request->period_id;
         $asOfDate = $request->as_of_date;

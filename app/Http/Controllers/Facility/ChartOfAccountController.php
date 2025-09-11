@@ -20,7 +20,12 @@ class ChartOfAccountController extends Controller
      */
     public function index(Request $request)
     {
-        $facility = Auth::user()->facility;
+        $facility = Auth::user()->facilities()->first();
+        
+        if (!$facility) {
+            return redirect()->route('facility.create')
+                ->with('error', 'يجب إنشاء منشأة أولاً');
+        }
         
         $query = ChartOfAccount::where('facility_id', $facility->id)
             ->with(['parentAccount', 'childAccounts']);
@@ -66,7 +71,12 @@ class ChartOfAccountController extends Controller
      */
     public function create()
     {
-        $facility = Auth::user()->facility;
+        $facility = Auth::user()->facilities()->first();
+        
+        if (!$facility) {
+            return redirect()->route('facility.create')
+                ->with('error', 'يجب إنشاء منشأة أولاً');
+        }
         
         $parentAccounts = ChartOfAccount::where('facility_id', $facility->id)
             ->where('is_active', true)
@@ -101,7 +111,12 @@ class ChartOfAccountController extends Controller
             'opening_balance' => 'nullable|numeric|min:0',
         ]);
 
-        $facility = Auth::user()->facility;
+        $facility = Auth::user()->facilities()->first();
+        
+        if (!$facility) {
+            return redirect()->route('facility.create')
+                ->with('error', 'يجب إنشاء منشأة أولاً');
+        }
 
         // حساب المستوى
         $level = 1;
@@ -169,7 +184,12 @@ class ChartOfAccountController extends Controller
     {
         $this->authorize('update', $chartOfAccount);
         
-        $facility = Auth::user()->facility;
+        $facility = Auth::user()->facilities()->first();
+        
+        if (!$facility) {
+            return redirect()->route('facility.create')
+                ->with('error', 'يجب إنشاء منشأة أولاً');
+        }
         
         $parentAccounts = ChartOfAccount::where('facility_id', $facility->id)
             ->where('is_active', true)
@@ -273,7 +293,12 @@ class ChartOfAccountController extends Controller
      */
     public function export(Request $request)
     {
-        $facility = Auth::user()->facility;
+        $facility = Auth::user()->facilities()->first();
+        
+        if (!$facility) {
+            return redirect()->route('facility.create')
+                ->with('error', 'يجب إنشاء منشأة أولاً');
+        }
         
         $query = ChartOfAccount::where('facility_id', $facility->id)
             ->with(['parentAccount']);
@@ -346,7 +371,12 @@ class ChartOfAccountController extends Controller
      */
     public function createDefault()
     {
-        $facility = Auth::user()->facility;
+        $facility = Auth::user()->facilities()->first();
+        
+        if (!$facility) {
+            return redirect()->route('facility.create')
+                ->with('error', 'يجب إنشاء منشأة أولاً');
+        }
         
         if (ChartOfAccount::where('facility_id', $facility->id)->exists()) {
             return back()->with('error', 'يوجد بالفعل دليل حسابات لهذه المنشأة');

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('facility.layouts.app')
 
 @section('title', $product->name ?? __('facility.products.product_details'))
 

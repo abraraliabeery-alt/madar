@@ -603,10 +603,30 @@
                     <i class="fas fa-home"></i>
                     <span>لوحة التحكم</span>
                 </a>
-                <a href="{{ route('admin.users.index') }}" class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
-                    <i class="fas fa-users"></i>
-                    <span>المستخدمين</span>
-                </a>
+                <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle {{ request()->routeIs('admin.users.*') ? 'active' : '' }}" data-bs-toggle="dropdown">
+                        <i class="fas fa-users"></i>
+                        <span>المستخدمين</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{{ route('admin.users.index') }}">
+                            <i class="fas fa-list me-2"></i>قائمة المستخدمين
+                        </a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.users.statistics') }}">
+                            <i class="fas fa-chart-line me-2"></i>إحصائيات المستخدمين
+                        </a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.users.export') }}">
+                            <i class="fas fa-download me-2"></i>تصدير البيانات
+                        </a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.users.activity-logs') }}">
+                            <i class="fas fa-history me-2"></i>سجل النشاط
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.permissions.index') }}">
+                            <i class="fas fa-user-cog me-2"></i>إدارة الصلاحيات
+                        </a></li>
+                    </ul>
+                </div>
                 <a href="{{ route('admin.roles.index') }}" class="nav-link {{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">
                     <i class="fas fa-user-shield"></i>
                     <span>الأدوار</span>

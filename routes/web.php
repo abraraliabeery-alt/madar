@@ -96,6 +96,16 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/user/statistics/period', [App\Http\Controllers\UserStatisticsController::class, 'getPeriodStats'])->name('user.statistics.period');
 });
 
+// User Export Routes
+Route::middleware(['auth'])->group(function () {
+    Route::get('/user/export', [App\Http\Controllers\UserExportController::class, 'index'])->name('user.export.index');
+    Route::post('/user/export/json', [App\Http\Controllers\UserExportController::class, 'exportJson'])->name('user.export.json');
+    Route::post('/user/export/excel', [App\Http\Controllers\UserExportController::class, 'exportExcel'])->name('user.export.excel');
+    Route::post('/user/export/csv', [App\Http\Controllers\UserExportController::class, 'exportCsv'])->name('user.export.csv');
+    Route::post('/user/export/pdf', [App\Http\Controllers\UserExportController::class, 'exportPdf'])->name('user.export.pdf');
+    Route::get('/user/export/stats', [App\Http\Controllers\UserExportController::class, 'getExportStats'])->name('user.export.stats');
+});
+
 // Public profile route - accessible by anyone (must come after specific routes)
 Route::get('/profile/{id}', [App\Http\Controllers\ProfileController::class, 'publicProfile'])->name('profile.public');
 

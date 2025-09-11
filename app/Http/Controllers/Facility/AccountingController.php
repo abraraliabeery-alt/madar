@@ -28,7 +28,12 @@ class AccountingController extends Controller
      */
     public function dashboard()
     {
-        $facility = Auth::user()->facility;
+        $facility = Auth::user()->facilities()->first();
+        
+        if (!$facility) {
+            return redirect()->route('facility.create')
+                ->with('error', 'يجب إنشاء منشأة أولاً');
+        }
         
         // إحصائيات سريعة
         $stats = [
@@ -72,7 +77,12 @@ class AccountingController extends Controller
      */
     public function createEntry()
     {
-        $facility = Auth::user()->facility;
+        $facility = Auth::user()->facilities()->first();
+        
+        if (!$facility) {
+            return redirect()->route('facility.create')
+                ->with('error', 'يجب إنشاء منشأة أولاً');
+        }
         
         $accounts = ChartOfAccount::where('facility_id', $facility->id)
             ->where('is_active', true)
@@ -106,7 +116,12 @@ class AccountingController extends Controller
             'tax_rate_id' => 'nullable|exists:tax_rates,id',
         ]);
 
-        $facility = Auth::user()->facility;
+        $facility = Auth::user()->facilities()->first();
+        
+        if (!$facility) {
+            return redirect()->route('facility.create')
+                ->with('error', 'يجب إنشاء منشأة أولاً');
+        }
 
         try {
             // إنشاء القيد المزدوج
@@ -143,7 +158,12 @@ class AccountingController extends Controller
      */
     public function entriesIndex(Request $request)
     {
-        $facility = Auth::user()->facility;
+        $facility = Auth::user()->facilities()->first();
+        
+        if (!$facility) {
+            return redirect()->route('facility.create')
+                ->with('error', 'يجب إنشاء منشأة أولاً');
+        }
         
         $query = AccountingEntry::where('facility_id', $facility->id)
             ->with(['account', 'period', 'createdBy']);
@@ -286,7 +306,12 @@ class AccountingController extends Controller
      */
     public function exportEntries(Request $request)
     {
-        $facility = Auth::user()->facility;
+        $facility = Auth::user()->facilities()->first();
+        
+        if (!$facility) {
+            return redirect()->route('facility.create')
+                ->with('error', 'يجب إنشاء منشأة أولاً');
+        }
         
         $query = AccountingEntry::where('facility_id', $facility->id)
             ->with(['account', 'period', 'createdBy']);
@@ -359,7 +384,12 @@ class AccountingController extends Controller
      */
     public function setup()
     {
-        $facility = Auth::user()->facility;
+        $facility = Auth::user()->facilities()->first();
+        
+        if (!$facility) {
+            return redirect()->route('facility.create')
+                ->with('error', 'يجب إنشاء منشأة أولاً');
+        }
         
         // التحقق من وجود دليل الحسابات
         $hasAccounts = ChartOfAccount::where('facility_id', $facility->id)->exists();
@@ -382,7 +412,12 @@ class AccountingController extends Controller
      */
     public function createDefaultSetup()
     {
-        $facility = Auth::user()->facility;
+        $facility = Auth::user()->facilities()->first();
+        
+        if (!$facility) {
+            return redirect()->route('facility.create')
+                ->with('error', 'يجب إنشاء منشأة أولاً');
+        }
         
         try {
             // إنشاء دليل الحسابات الافتراضي
