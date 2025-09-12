@@ -355,4 +355,66 @@ class FacilityContractController extends Controller
             'message' => 'سيتم إضافة ميزة تحميل العقد قريباً'
         ]);
     }
+
+    /**
+     * عرض إحصائيات العقود
+     */
+    public function statistics()
+    {
+        $facility = Auth::user()->facilities()->first();
+        
+        if (!$facility) {
+            return redirect()->route('facility.create');
+        }
+
+        $contracts = $facility->contracts();
+        
+        $stats = [
+            'total_contracts' => $contracts->count(),
+            'active_contracts' => $contracts->where('status', 'active')->count(),
+            'draft_contracts' => $contracts->where('status', 'draft')->count(),
+            'completed_contracts' => $contracts->where('status', 'completed')->count(),
+            'cancelled_contracts' => $contracts->where('status', 'cancelled')->count(),
+            'verified_contracts' => $contracts->where('is_verified', true)->count(),
+            'sale_contracts' => $contracts->where('contract_type', 'sale')->count(),
+            'rent_contracts' => $contracts->where('contract_type', 'rent')->count(),
+            'total_value' => $contracts->sum('total_amount'),
+            'monthly_revenue' => $contracts->where('status', 'active')
+                ->whereMonth('created_at', now()->month)
+                ->whereYear('created_at', now()->year)
+                ->sum('total_amount'),
+            'recent_contracts' => $contracts->with(['user', 'product', 'owner'])
+                ->latest()
+                ->take(10)
+                ->get(),
+        ];
+
+        // إحصائيات شهرية للرسوم البيانية
+        $monthlyData = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $monthlyData[] = $contracts->whereMonth('created_at', $i)
+                ->whereYear('created_at', now()->year)
+                ->sum('total_amount');
+        }
+        $stats['monthly_data'] = $monthlyData;
+
+        return view('facility.contracts.statistics', compact('stats'));
+    }
+
+    /**
+     * تصدير العقود
+     */
+    public function export()
+    {
+        $facility = Auth::user()->facilities()->first();
+        
+        if (!$facility) {
+            return redirect()->route('facility.create');
+        }
+
+        // هنا يمكن إضافة منطق تصدير العقود
+        return response()->json([
+            'message' => 'سيتم إضافة ميزة تصدير العقود قريباً'
+        ]);
+    }
 }

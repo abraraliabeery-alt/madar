@@ -3,25 +3,25 @@
 @section('title', 'إنشاء قيد محاسبي جديد')
 
 @section('content')
-<div class="container-fluid">
-    <div class="row justify-content-center">
-        <div class="col-xl-8 col-lg-10">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">
-                        <i class="fas fa-plus text-primary"></i>
+<div class="container mx-auto px-4 my-10">
+    <div class="flex justify-center">
+        <div class="w-full max-w-4xl">
+            <div class="bg-white rounded-lg shadow-lg">
+                <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 rounded-t-lg">
+                    <h5 class="text-lg font-semibold text-gray-800 mb-0 flex items-center">
+                        <i class="fas fa-plus text-blue-500 mr-2"></i>
                         إنشاء قيد محاسبي جديد
                     </h5>
                 </div>
-                <div class="card-body">
+                <div class="p-6">
                     <form method="POST" action="{{ route('facility.accounting.entries.store') }}" id="createEntryForm">
                         @csrf
                         
-                        <div class="row">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <!-- الحساب المدين -->
-                            <div class="col-md-6 mb-3">
-                                <label for="debit_account_id" class="form-label required">الحساب المدين *</label>
-                                <select class="form-select @error('debit_account_id') is-invalid @enderror" 
+                            <div class="mb-4">
+                                <label for="debit_account_id" class="block text-sm font-medium text-gray-700 mb-2">الحساب المدين <span class="text-red-500">*</span></label>
+                                <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('debit_account_id') border-red-500 @enderror" 
                                         id="debit_account_id" name="debit_account_id" required>
                                     <option value="">اختر الحساب المدين</option>
                                     @foreach($accounts as $account)
@@ -31,14 +31,14 @@
                                     @endforeach
                                 </select>
                                 @error('debit_account_id')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
 
                             <!-- الحساب الدائن -->
-                            <div class="col-md-6 mb-3">
-                                <label for="credit_account_id" class="form-label required">الحساب الدائن *</label>
-                                <select class="form-select @error('credit_account_id') is-invalid @enderror" 
+                            <div class="mb-4">
+                                <label for="credit_account_id" class="block text-sm font-medium text-gray-700 mb-2">الحساب الدائن <span class="text-red-500">*</span></label>
+                                <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('credit_account_id') border-red-500 @enderror" 
                                         id="credit_account_id" name="credit_account_id" required>
                                     <option value="">اختر الحساب الدائن</option>
                                     @foreach($accounts as $account)
@@ -48,42 +48,44 @@
                                     @endforeach
                                 </select>
                                 @error('credit_account_id')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
                         </div>
 
-                        <div class="row">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <!-- المبلغ -->
-                            <div class="col-md-6 mb-3">
-                                <label for="amount" class="form-label required">المبلغ *</label>
-                                <div class="input-group">
-                                    <input type="number" class="form-control @error('amount') is-invalid @enderror" 
+                            <div class="mb-4">
+                                <label for="amount" class="block text-sm font-medium text-gray-700 mb-2">المبلغ <span class="text-red-500">*</span></label>
+                                <div class="relative">
+                                    <input type="number" class="w-full px-3 py-2 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('amount') border-red-500 @enderror" 
                                            id="amount" name="amount" value="{{ old('amount') }}" 
                                            min="0.01" step="0.01" required>
-                                    <span class="input-group-text">ريال</span>
+                                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                        <span class="text-gray-500 text-sm">ريال</span>
+                                    </div>
                                 </div>
                                 @error('amount')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
 
                             <!-- تاريخ القيد -->
-                            <div class="col-md-6 mb-3">
-                                <label for="entry_date" class="form-label required">تاريخ القيد *</label>
-                                <input type="date" class="form-control @error('entry_date') is-invalid @enderror" 
+                            <div class="mb-4">
+                                <label for="entry_date" class="block text-sm font-medium text-gray-700 mb-2">تاريخ القيد <span class="text-red-500">*</span></label>
+                                <input type="date" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('entry_date') border-red-500 @enderror" 
                                        id="entry_date" name="entry_date" value="{{ old('entry_date', date('Y-m-d')) }}" required>
                                 @error('entry_date')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
                         </div>
 
-                        <div class="row">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <!-- الفترة المحاسبية -->
-                            <div class="col-md-6 mb-3">
-                                <label for="period_id" class="form-label required">الفترة المحاسبية *</label>
-                                <select class="form-select @error('period_id') is-invalid @enderror" 
+                            <div class="mb-4">
+                                <label for="period_id" class="block text-sm font-medium text-gray-700 mb-2">الفترة المحاسبية <span class="text-red-500">*</span></label>
+                                <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('period_id') border-red-500 @enderror" 
                                         id="period_id" name="period_id" required>
                                     <option value="">اختر الفترة المحاسبية</option>
                                     @foreach($periods as $period)
@@ -93,14 +95,14 @@
                                     @endforeach
                                 </select>
                                 @error('period_id')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
 
                             <!-- معدل الضريبة -->
-                            <div class="col-md-6 mb-3">
-                                <label for="tax_rate_id" class="form-label">معدل الضريبة</label>
-                                <select class="form-select @error('tax_rate_id') is-invalid @enderror" 
+                            <div class="mb-4">
+                                <label for="tax_rate_id" class="block text-sm font-medium text-gray-700 mb-2">معدل الضريبة</label>
+                                <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('tax_rate_id') border-red-500 @enderror" 
                                         id="tax_rate_id" name="tax_rate_id">
                                     <option value="">بدون ضريبة</option>
                                     @foreach($taxRates as $taxRate)
@@ -110,75 +112,79 @@
                                     @endforeach
                                 </select>
                                 @error('tax_rate_id')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
                         </div>
 
                         <!-- الوصف -->
-                        <div class="mb-3">
-                            <label for="description" class="form-label required">وصف القيد *</label>
-                            <textarea class="form-control @error('description') is-invalid @enderror" 
+                        <div class="mb-4">
+                            <label for="description" class="block text-sm font-medium text-gray-700 mb-2">وصف القيد <span class="text-red-500">*</span></label>
+                            <textarea class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('description') border-red-500 @enderror" 
                                       id="description" name="description" rows="3" required 
                                       placeholder="أدخل وصفاً مفصلاً للقيد المحاسبي">{{ old('description') }}</textarea>
                             @error('description')
-                                <div class="invalid-feedback">{{ $message }}</div>
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
 
                         <!-- ملخص القيد -->
-                        <div class="card bg-light mb-4">
-                            <div class="card-header">
-                                <h6 class="card-title mb-0">
-                                    <i class="fas fa-calculator text-info"></i>
+                        <div class="bg-gray-50 border border-gray-200 rounded-lg mb-6">
+                            <div class="bg-gray-100 px-4 py-3 border-b border-gray-200 rounded-t-lg">
+                                <h6 class="text-lg font-semibold text-gray-800 mb-0 flex items-center">
+                                    <i class="fas fa-calculator text-blue-500 mr-2"></i>
                                     ملخص القيد المحاسبي
                                 </h6>
                             </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="d-flex justify-content-between">
-                                            <span>الحساب المدين:</span>
-                                            <span id="debitAccountName" class="fw-bold">-</span>
+                            <div class="p-6">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <div class="flex justify-between mb-2">
+                                            <span class="text-gray-600">الحساب المدين:</span>
+                                            <span id="debitAccountName" class="font-semibold text-gray-900">-</span>
                                         </div>
-                                        <div class="d-flex justify-content-between">
-                                            <span>المبلغ المدين:</span>
-                                            <span id="debitAmount" class="fw-bold text-primary">0.00 ريال</span>
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600">المبلغ المدين:</span>
+                                            <span id="debitAmount" class="font-semibold text-blue-600">0.00 ريال</span>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="d-flex justify-content-between">
-                                            <span>الحساب الدائن:</span>
-                                            <span id="creditAccountName" class="fw-bold">-</span>
+                                    <div>
+                                        <div class="flex justify-between mb-2">
+                                            <span class="text-gray-600">الحساب الدائن:</span>
+                                            <span id="creditAccountName" class="font-semibold text-gray-900">-</span>
                                         </div>
-                                        <div class="d-flex justify-content-between">
-                                            <span>المبلغ الدائن:</span>
-                                            <span id="creditAmount" class="fw-bold text-success">0.00 ريال</span>
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600">المبلغ الدائن:</span>
+                                            <span id="creditAmount" class="font-semibold text-green-600">0.00 ريال</span>
                                         </div>
                                     </div>
                                 </div>
-                                <hr>
+                                <hr class="my-4">
                                 <div class="text-center">
-                                    <div class="d-flex justify-content-between">
-                                        <span>إجمالي القيد:</span>
-                                        <span id="totalAmount" class="fw-bold text-info">0.00 ريال</span>
+                                    <div class="flex justify-between mb-2">
+                                        <span class="text-gray-600">إجمالي القيد:</span>
+                                        <span id="totalAmount" class="font-semibold text-blue-600">0.00 ريال</span>
                                     </div>
-                                    <div class="d-flex justify-content-between">
-                                        <span>الضريبة:</span>
-                                        <span id="taxAmount" class="fw-bold text-warning">0.00 ريال</span>
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-600">الضريبة:</span>
+                                        <span id="taxAmount" class="font-semibold text-yellow-600">0.00 ريال</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- أزرار الإجراءات -->
-                        <div class="d-flex justify-content-between">
-                            <a href="{{ route('facility.accounting.entries.index') }}" class="btn btn-outline-secondary">
-                                <i class="fas fa-arrow-right"></i> إلغاء
-                            </a>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save"></i> حفظ القيد
-                            </button>
+                        <div class="bg-gray-50 px-6 py-4 border-t border-gray-200 rounded-b-lg mt-6">
+                            <div class="flex justify-end space-x-4 rtl:space-x-reverse">
+                                <a href="{{ route('facility.accounting.entries.index') }}" class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-lg flex items-center space-x-2 rtl:space-x-reverse transition-colors">
+                                    <i class="fas fa-arrow-right"></i>
+                                    <span>إلغاء</span>
+                                </a>
+                                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg flex items-center space-x-2 rtl:space-x-reverse transition-colors">
+                                    <i class="fas fa-save"></i>
+                                    <span>حفظ القيد</span>
+                                </button>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -275,45 +281,3 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 @endpush
 
-@push('styles')
-<style>
-.required::after {
-    content: " *";
-    color: #dc3545;
-}
-
-.form-control:focus,
-.form-select:focus {
-    border-color: #0d6efd;
-    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
-}
-
-.card {
-    border: none;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    border-radius: 10px;
-}
-
-.card-header {
-    background: #f8f9fa;
-    border-bottom: 1px solid #e9ecef;
-    border-radius: 10px 10px 0 0 !important;
-}
-
-.input-group-text {
-    background: #f8f9fa;
-    border-color: #ced4da;
-}
-
-@media (max-width: 768px) {
-    .d-flex.justify-content-between {
-        flex-direction: column;
-    }
-    
-    .btn {
-        width: 100%;
-        margin-bottom: 0.5rem;
-    }
-}
-</style>
-@endpush

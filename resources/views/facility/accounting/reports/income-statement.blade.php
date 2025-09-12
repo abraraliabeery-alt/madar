@@ -3,21 +3,21 @@
 @section('title', 'قائمة الدخل')
 
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h3 class="card-title">قائمة الدخل</h3>
-                    <div>
-                        <a href="{{ route('facility.accounting.reports.export-income-statement', request()->query()) }}" class="btn btn-success">
-                            <i class="fas fa-download"></i> تصدير PDF
-                        </a>
-                        <a href="{{ route('facility.accounting.reports.index') }}" class="btn btn-outline-secondary">
-                            <i class="fas fa-arrow-right"></i> العودة للتقارير
-                        </a>
-                    </div>
-                </div>
+<div class="container mx-auto px-4 my-10">
+    <div class="bg-white rounded-lg shadow-lg">
+        <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 rounded-t-lg flex justify-between items-center">
+            <h3 class="text-xl font-semibold text-gray-800">قائمة الدخل</h3>
+            <div class="flex space-x-2 rtl:space-x-reverse">
+                <a href="{{ route('facility.accounting.reports.export-income-statement', request()->query()) }}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 rtl:space-x-reverse transition-colors">
+                    <i class="fas fa-download"></i>
+                    <span>تصدير PDF</span>
+                </a>
+                <a href="{{ route('facility.accounting.reports.index') }}" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 rtl:space-x-reverse transition-colors">
+                    <i class="fas fa-arrow-right"></i>
+                    <span>العودة للتقارير</span>
+                </a>
+            </div>
+        </div>
 
                 <div class="card-body">
                     <!-- معلومات التقرير -->

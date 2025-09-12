@@ -130,7 +130,7 @@ class ApiFacilityOfferController extends Controller
                 'created_by' => Auth::id(),
                 'is_active' => $request->is_active ?? true,
                 'is_featured' => $request->is_featured ?? false,
-                'currency' => $request->currency ?? 'SAR',
+                'currency' => 'SAR',
             ]);
 
             $offer = $this->offerService->createOffer($offerData);
@@ -190,7 +190,6 @@ class ApiFacilityOfferController extends Controller
             $validator = Validator::make($request->all(), [
                 'offer_type' => 'sometimes|in:sale,rent_monthly,rent_yearly,rent_daily',
                 'price' => 'sometimes|numeric|min:0',
-                'currency' => 'sometimes|string|max:3',
                 'deposit_amount' => 'nullable|numeric|min:0',
                 'commission_rate' => 'nullable|numeric|between:0,1',
                 'commission_amount' => 'nullable|numeric|min:0',

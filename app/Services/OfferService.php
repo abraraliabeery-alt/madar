@@ -203,7 +203,7 @@ class OfferService
                 'product_title' => $offer->product->getTranslatedTitle(),
                 'offer_type' => $offer->offer_type,
                 'price' => $offer->price,
-                'currency' => $offer->currency,
+                'currency' => 'SAR',
                 'deposit_amount' => $offer->deposit_amount,
                 'commission_rate' => $offer->commission_rate,
                 'commission_amount' => $offer->commission_amount,

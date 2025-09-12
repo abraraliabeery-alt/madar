@@ -3,66 +3,62 @@
 @section('title', 'الميزانية العمومية')
 
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h3 class="card-title">الميزانية العمومية</h3>
-                    <div>
-                        <a href="{{ route('facility.accounting.reports.export-balance-sheet', request()->query()) }}" class="btn btn-success">
-                            <i class="fas fa-download"></i> تصدير PDF
-                        </a>
-                        <a href="{{ route('facility.accounting.reports.index') }}" class="btn btn-outline-secondary">
-                            <i class="fas fa-arrow-right"></i> العودة للتقارير
-                        </a>
+<div class="container mx-auto px-4 my-10">
+    <div class="bg-white rounded-lg shadow-lg">
+        <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 rounded-t-lg flex justify-between items-center">
+            <h3 class="text-xl font-semibold text-gray-800">الميزانية العمومية</h3>
+            <div class="flex space-x-2 rtl:space-x-reverse">
+                <a href="{{ route('facility.accounting.reports.export-balance-sheet', request()->query()) }}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 rtl:space-x-reverse transition-colors">
+                    <i class="fas fa-download"></i>
+                    <span>تصدير PDF</span>
+                </a>
+                <a href="{{ route('facility.accounting.reports.index') }}" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 rtl:space-x-reverse transition-colors">
+                    <i class="fas fa-arrow-right"></i>
+                    <span>العودة للتقارير</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="p-6">
+            <!-- معلومات التقرير -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-white border border-gray-200 rounded-lg">
+                    <div class="bg-gray-50 px-4 py-3 border-b border-gray-200 rounded-t-lg">
+                        <h6 class="text-lg font-semibold text-gray-800 mb-0">معلومات التقرير</h6>
+                    </div>
+                    <div class="p-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <strong class="text-gray-700">الفترة:</strong><br>
+                                <span class="text-gray-600">{{ $period->name ?? 'جميع الفترات' }}</span>
+                            </div>
+                            <div>
+                                <strong class="text-gray-700">التاريخ:</strong><br>
+                                <span class="text-gray-600">{{ $endDate->format('Y-m-d') }}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
-                <div class="card-body">
-                    <!-- معلومات التقرير -->
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h6 class="card-title mb-0">معلومات التقرير</h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <strong>الفترة:</strong><br>
-                                            <span class="text-muted">{{ $period->name ?? 'جميع الفترات' }}</span>
-                                        </div>
-                                        <div class="col-6">
-                                            <strong>التاريخ:</strong><br>
-                                            <span class="text-muted">{{ $endDate->format('Y-m-d') }}</span>
-                                        </div>
-                                    </div>
-                                </div>
+                <div class="bg-white border border-gray-200 rounded-lg">
+                    <div class="bg-gray-50 px-4 py-3 border-b border-gray-200 rounded-t-lg">
+                        <h6 class="text-lg font-semibold text-gray-800 mb-0">ملخص سريع</h6>
+                    </div>
+                    <div class="p-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <strong class="text-gray-700">إجمالي الأصول:</strong><br>
+                                <span class="text-green-600 text-xl font-semibold">{{ $summary['total_assets'] ?? '0.00' }} ر.س</span>
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h6 class="card-title mb-0">ملخص سريع</h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <strong>إجمالي الأصول:</strong><br>
-                                            <span class="text-success h5">{{ $summary['total_assets'] ?? '0.00' }} ر.س</span>
-                                        </div>
-                                        <div class="col-6">
-                                            <strong>صافي القيمة:</strong><br>
-                                            <span class="text-{{ ($summary['net_worth'] ?? 0) >= 0 ? 'success' : 'danger' }} h5">
-                                                {{ $summary['net_worth'] ?? '0.00' }} ر.س
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div>
+                                <strong class="text-gray-700">صافي القيمة:</strong><br>
+                                <span class="text-{{ ($summary['net_worth'] ?? 0) >= 0 ? 'green' : 'red' }}-600 text-xl font-semibold">
+                                    {{ $summary['net_worth'] ?? '0.00' }} ر.س
+                                </span>
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
 
                     <!-- الميزانية العمومية -->
                     <div class="row">

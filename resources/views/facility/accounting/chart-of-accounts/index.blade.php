@@ -73,79 +73,79 @@
                     </form>
 
                     @if($accounts->count() > 0)
-                        <div class="table-responsive">
-                            <table class="table table-striped">
-                                <thead>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
                                     <tr>
-                                        <th>كود الحساب</th>
-                                        <th>اسم الحساب</th>
-                                        <th>النوع</th>
-                                        <th>الفئة</th>
-                                        <th>الرصيد الطبيعي</th>
-                                        <th>الرصيد الحالي</th>
-                                        <th>المستوى</th>
-                                        <th>الحالة</th>
-                                        <th>الإجراءات</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">كود الحساب</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">اسم الحساب</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">النوع</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الفئة</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الرصيد الطبيعي</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الرصيد الحالي</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">المستوى</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الحالة</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الإجراءات</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody class="bg-white divide-y divide-gray-200">
                                     @foreach($accounts as $account)
-                                        <tr class="{{ $account->level > 1 ? 'table-light' : '' }}" style="padding-left: {{ ($account->level - 1) * 20 }}px;">
-                                            <td>
-                                                <strong>{{ $account->account_code }}</strong>
+                                        <tr class="{{ $account->level > 1 ? 'bg-gray-50' : 'hover:bg-gray-50' }}" style="padding-left: {{ ($account->level - 1) * 20 }}px;">
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm font-medium text-gray-900">{{ $account->account_code }}</div>
                                                 @if($account->is_system)
-                                                    <br><small class="text-muted">حساب نظام</small>
+                                                    <div class="text-sm text-gray-500">حساب نظام</div>
                                                 @endif
                                             </td>
-                                            <td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
                                                 <div>
-                                                    <strong>{{ $account->account_name }}</strong>
+                                                    <div class="text-sm font-medium text-gray-900">{{ $account->account_name }}</div>
                                                     @if($account->parentAccount)
-                                                        <br><small class="text-muted">تحت: {{ $account->parentAccount->account_name }}</small>
+                                                        <div class="text-sm text-gray-500">تحت: {{ $account->parentAccount->account_name }}</div>
                                                     @endif
                                                 </div>
                                             </td>
-                                            <td>
-                                                <span class="badge bg-{{ $account->account_type === 'asset' ? 'primary' : ($account->account_type === 'liability' ? 'warning' : ($account->account_type === 'equity' ? 'info' : ($account->account_type === 'revenue' ? 'success' : 'danger'))) }}">
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-{{ $account->account_type === 'asset' ? 'blue' : ($account->account_type === 'liability' ? 'yellow' : ($account->account_type === 'equity' ? 'cyan' : ($account->account_type === 'revenue' ? 'green' : 'red'))) }}-100 text-{{ $account->account_type === 'asset' ? 'blue' : ($account->account_type === 'liability' ? 'yellow' : ($account->account_type === 'equity' ? 'cyan' : ($account->account_type === 'revenue' ? 'green' : 'red'))) }}-800">
                                                     {{ $accountTypes[$account->account_type] ?? $account->account_type }}
                                                 </span>
                                             </td>
-                                            <td>
-                                                <small class="text-muted">{{ $accountCategories[$account->account_category] ?? $account->account_category }}</small>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                {{ $accountCategories[$account->account_category] ?? $account->account_category }}
                                             </td>
-                                            <td>
-                                                <span class="badge bg-{{ $account->normal_balance === 'debit' ? 'primary' : 'success' }}">
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-{{ $account->normal_balance === 'debit' ? 'blue' : 'green' }}-100 text-{{ $account->normal_balance === 'debit' ? 'blue' : 'green' }}-800">
                                                     {{ $account->normal_balance === 'debit' ? 'مدين' : 'دائن' }}
                                                 </span>
                                             </td>
-                                            <td>
-                                                <strong class="{{ $account->current_balance >= 0 ? 'text-success' : 'text-danger' }}">
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm font-medium {{ $account->current_balance >= 0 ? 'text-green-600' : 'text-red-600' }}">
                                                     {{ $account->formatted_balance }}
-                                                </strong>
+                                                </div>
                                             </td>
-                                            <td>
-                                                <span class="badge bg-secondary">المستوى {{ $account->level }}</span>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">المستوى {{ $account->level }}</span>
                                             </td>
-                                            <td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
                                                 @if($account->is_active)
-                                                    <span class="badge bg-success">نشط</span>
+                                                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">نشط</span>
                                                 @else
-                                                    <span class="badge bg-secondary">غير نشط</span>
+                                                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">غير نشط</span>
                                                 @endif
                                             </td>
-                                            <td>
-                                                <div class="btn-group" role="group">
-                                                    <a href="{{ route('facility.accounting.chart-of-accounts.show', $account) }}" class="btn btn-sm btn-info">
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                <div class="flex space-x-2 rtl:space-x-reverse">
+                                                    <a href="{{ route('facility.accounting.chart-of-accounts.show', $account) }}" class="text-blue-600 hover:text-blue-900 p-1 rounded">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
-                                                    <a href="{{ route('facility.accounting.chart-of-accounts.edit', $account) }}" class="btn btn-sm btn-warning">
+                                                    <a href="{{ route('facility.accounting.chart-of-accounts.edit', $account) }}" class="text-yellow-600 hover:text-yellow-900 p-1 rounded">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
                                                     @if($account->canBeDeleted())
-                                                        <form method="POST" action="{{ route('facility.accounting.chart-of-accounts.destroy', $account) }}" class="d-inline" onsubmit="return confirm('هل أنت متأكد من حذف هذا الحساب؟')">
+                                                        <form method="POST" action="{{ route('facility.accounting.chart-of-accounts.destroy', $account) }}" class="inline" onsubmit="return confirm('هل أنت متأكد من حذف هذا الحساب؟')">
                                                             @csrf
                                                             @method('DELETE')
-                                                            <button type="submit" class="btn btn-sm btn-danger">
+                                                            <button type="submit" class="text-red-600 hover:text-red-900 p-1 rounded">
                                                                 <i class="fas fa-trash"></i>
                                                             </button>
                                                         </form>
@@ -159,20 +159,22 @@
                         </div>
 
                         <!-- Pagination -->
-                        <div class="d-flex justify-content-center">
+                        <div class="flex justify-center mt-6">
                             {{ $accounts->appends(request()->query())->links() }}
                         </div>
                     @else
-                        <div class="text-center py-5">
-                            <i class="fas fa-list-alt fa-3x text-muted mb-3"></i>
-                            <h5 class="text-muted">لا توجد حسابات</h5>
-                            <p class="text-muted">ابدأ بإنشاء دليل الحسابات</p>
-                            <div class="d-flex justify-content-center gap-2">
-                                <a href="{{ route('facility.accounting.chart-of-accounts.create') }}" class="btn btn-primary">
-                                    <i class="fas fa-plus"></i> إضافة حساب جديد
+                        <div class="text-center py-12">
+                            <i class="fas fa-list-alt text-6xl text-gray-400 mb-4"></i>
+                            <h5 class="text-lg font-medium text-gray-900 mb-2">لا توجد حسابات</h5>
+                            <p class="text-gray-500 mb-6">ابدأ بإنشاء دليل الحسابات</p>
+                            <div class="flex justify-center space-x-4 rtl:space-x-reverse">
+                                <a href="{{ route('facility.accounting.chart-of-accounts.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg inline-flex items-center space-x-2 rtl:space-x-reverse transition-colors">
+                                    <i class="fas fa-plus"></i>
+                                    <span>إضافة حساب جديد</span>
                                 </a>
-                                <a href="{{ route('facility.accounting.chart-of-accounts.create-default') }}" class="btn btn-success">
-                                    <i class="fas fa-magic"></i> إنشاء دليل افتراضي
+                                <a href="{{ route('facility.accounting.chart-of-accounts.create-default') }}" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg inline-flex items-center space-x-2 rtl:space-x-reverse transition-colors">
+                                    <i class="fas fa-magic"></i>
+                                    <span>إنشاء دليل افتراضي</span>
                                 </a>
                             </div>
                         </div>
@@ -195,53 +197,3 @@
 </script>
 @endpush
 
-@push('styles')
-<style>
-.card {
-    border: none;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    border-radius: 10px;
-}
-
-.card-header {
-    background: #f8f9fa;
-    border-bottom: 1px solid #e9ecef;
-    border-radius: 10px 10px 0 0 !important;
-}
-
-.table th {
-    border-top: none;
-    font-weight: 600;
-    color: #495057;
-    font-size: 0.875rem;
-}
-
-.table td {
-    vertical-align: middle;
-}
-
-.btn-group .btn {
-    border-radius: 0.375rem;
-    margin-right: 0.25rem;
-}
-
-.table-light {
-    background-color: #f8f9fa !important;
-}
-
-@media (max-width: 768px) {
-    .table-responsive {
-        font-size: 0.875rem;
-    }
-    
-    .btn-group {
-        flex-direction: column;
-        width: 100%;
-    }
-    
-    .btn-group .btn {
-        margin: 0.125rem 0;
-    }
-}
-</style>
-@endpush

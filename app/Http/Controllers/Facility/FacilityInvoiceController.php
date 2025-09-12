@@ -273,6 +273,7 @@ class FacilityInvoiceController extends Controller
                     'contract_id' => $contract->id,
                     'invoice_type' => $contract->contract_type,
                     'amount' => $nextInstallment['amount'],
+                    'currency' => 'SAR',
                     'due_date' => $nextInstallment['due_date'],
                     'installment_number' => $nextInstallment['installment_number'],
                     'installment_amount' => $nextInstallment['amount'],

@@ -3,19 +3,19 @@
 @section('title', __('facility_management.financial_dashboard'))
 
 @section('header')
-<div class="d-flex justify-content-between align-items-center">
+<div class="flex justify-between items-center">
     <div>
-        <h1 class="h3 mb-0">{{ __('facility_management.financial_dashboard') }}</h1>
-        <p class="text-muted mb-0">{{ __('facility_management.manage_facility_finances') }}</p>
+        <h1 class="text-2xl font-bold text-gray-900 mb-0">{{ __('facility_management.financial_dashboard') }}</h1>
+        <p class="text-gray-600 mb-0">{{ __('facility_management.manage_facility_finances') }}</p>
     </div>
-    <div class="d-flex gap-2">
-        <button class="btn btn-outline-primary" onclick="refreshData()">
-            <i class="bi bi-arrow-clockwise"></i>
-            {{ __('facility_management.refresh') }}
+    <div class="flex gap-2">
+        <button class="bg-white border border-blue-500 text-blue-500 hover:bg-blue-50 px-4 py-2 rounded-lg flex items-center space-x-2 rtl:space-x-reverse transition-colors" onclick="refreshData()">
+            <i class="fas fa-sync-alt"></i>
+            <span>{{ __('facility_management.refresh') }}</span>
         </button>
-        <a href="{{ route('facility.financial.create-offer') }}" class="btn btn-primary">
-            <i class="bi bi-plus-lg"></i>
-            {{ __('facility_management.create_offer') }}
+        <a href="{{ route('facility.financial.create-offer') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 rtl:space-x-reverse transition-colors">
+            <i class="fas fa-plus"></i>
+            <span>{{ __('facility_management.create_offer') }}</span>
         </a>
     </div>
 </div>
@@ -23,157 +23,138 @@
 
 @section('content')
 <!-- Statistics Cards -->
-<div class="row mb-4">
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card stats-card bg-primary text-white">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <div class="stats-value">{{ number_format($stats['total_offers']) }}</div>
-                        <div class="stats-label">{{ __('facility_management.total_offers') }}</div>
-                    </div>
-                    <div class="stats-icon">
-                        <i class="bi bi-tags"></i>
-                    </div>
-                </div>
-                <div class="stats-footer">
-                    <small>
-                        <i class="bi bi-check-circle"></i>
-                        {{ number_format($stats['active_offers']) }} {{ __('facility_management.active') }}
-                    </small>
-                </div>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-6">
+    <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow">
+        <div class="flex justify-between items-center">
+            <div>
+                <div class="text-3xl font-bold">{{ number_format($stats['total_offers']) }}</div>
+                <div class="text-blue-100 text-sm mt-1">{{ __('facility_management.total_offers') }}</div>
             </div>
+            <div class="text-4xl opacity-30">
+                <i class="fas fa-tags"></i>
+            </div>
+        </div>
+        <div class="mt-4 pt-3 border-t border-blue-400">
+            <small class="text-blue-100">
+                <i class="fas fa-check-circle mr-1"></i>
+                {{ number_format($stats['active_offers']) }} {{ __('facility_management.active') }}
+            </small>
         </div>
     </div>
 
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card stats-card bg-success text-white">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <div class="stats-value">{{ number_format($stats['total_contracts']) }}</div>
-                        <div class="stats-label">{{ __('facility_management.total_contracts') }}</div>
-                    </div>
-                    <div class="stats-icon">
-                        <i class="bi bi-file-earmark-text"></i>
-                    </div>
-                </div>
-                <div class="stats-footer">
-                    <small>
-                        <i class="bi bi-play-circle"></i>
-                        {{ number_format($stats['active_contracts']) }} {{ __('facility_management.active') }}
-                    </small>
-                </div>
+    <div class="bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow">
+        <div class="flex justify-between items-center">
+            <div>
+                <div class="text-3xl font-bold">{{ number_format($stats['total_contracts']) }}</div>
+                <div class="text-green-100 text-sm mt-1">{{ __('facility_management.total_contracts') }}</div>
             </div>
+            <div class="text-4xl opacity-30">
+                <i class="fas fa-file-contract"></i>
+            </div>
+        </div>
+        <div class="mt-4 pt-3 border-t border-green-400">
+            <small class="text-green-100">
+                <i class="fas fa-play-circle mr-1"></i>
+                {{ number_format($stats['active_contracts']) }} {{ __('facility_management.active') }}
+            </small>
         </div>
     </div>
 
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card stats-card bg-info text-white">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <div class="stats-value">{{ number_format($stats['total_revenue']) }}</div>
-                        <div class="stats-label">{{ __('facility_management.total_revenue') }}</div>
-                    </div>
-                    <div class="stats-icon">
-                        <i class="bi bi-currency-dollar"></i>
-                    </div>
-                </div>
-                <div class="stats-footer">
-                    <small>
-                        <i class="bi bi-graph-up"></i>
-                        {{ __('facility_management.total_expected') }}
-                    </small>
-                </div>
+    <div class="bg-gradient-to-r from-cyan-500 to-cyan-600 text-white rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow">
+        <div class="flex justify-between items-center">
+            <div>
+                <div class="text-3xl font-bold">{{ number_format($stats['total_revenue']) }}</div>
+                <div class="text-cyan-100 text-sm mt-1">{{ __('facility_management.total_revenue') }}</div>
             </div>
+            <div class="text-4xl opacity-30">
+                <i class="fas fa-dollar-sign"></i>
+            </div>
+        </div>
+        <div class="mt-4 pt-3 border-t border-cyan-400">
+            <small class="text-cyan-100">
+                <i class="fas fa-chart-line mr-1"></i>
+                {{ __('facility_management.total_expected') }}
+            </small>
         </div>
     </div>
 
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card stats-card bg-warning text-white">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <div class="stats-value">{{ number_format($stats['received_payments']) }}</div>
-                        <div class="stats-label">{{ __('facility_management.received_payments') }}</div>
-                    </div>
-                    <div class="stats-icon">
-                        <i class="bi bi-credit-card"></i>
-                    </div>
-                </div>
-                <div class="stats-footer">
-                    <small>
-                        <i class="bi bi-clock"></i>
-                        {{ number_format($stats['pending_payments']) }} {{ __('facility_management.pending') }}
-                    </small>
-                </div>
+    <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow">
+        <div class="flex justify-between items-center">
+            <div>
+                <div class="text-3xl font-bold">{{ number_format($stats['received_payments']) }}</div>
+                <div class="text-yellow-100 text-sm mt-1">{{ __('facility_management.received_payments') }}</div>
             </div>
+            <div class="text-4xl opacity-30">
+                <i class="fas fa-credit-card"></i>
+            </div>
+        </div>
+        <div class="mt-4 pt-3 border-t border-yellow-400">
+            <small class="text-yellow-100">
+                <i class="fas fa-clock mr-1"></i>
+                {{ number_format($stats['pending_payments']) }} {{ __('facility_management.pending') }}
+            </small>
         </div>
     </div>
 </div>
 
 <!-- Alerts Section -->
 @if(count($alerts) > 0)
-<div class="row mb-4">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="card-title mb-0">
-                    <i class="bi bi-exclamation-triangle text-warning"></i>
-                    {{ __('facility_management.important_alerts') }}
-                </h5>
+<div class="mb-6">
+    <div class="bg-white rounded-lg shadow-lg border border-gray-200">
+        <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 rounded-t-lg">
+            <h5 class="text-lg font-semibold text-gray-800 mb-0 flex items-center">
+                <i class="fas fa-exclamation-triangle text-yellow-500 mr-2"></i>
+                {{ __('facility_management.important_alerts') }}
+            </h5>
+        </div>
+        <div class="p-6">
+            @foreach($alerts as $alert)
+            <div class="bg-{{ $alert['type'] === 'danger' ? 'red' : ($alert['type'] === 'warning' ? 'yellow' : 'blue') }}-50 border border-{{ $alert['type'] === 'danger' ? 'red' : ($alert['type'] === 'warning' ? 'yellow' : 'blue') }}-200 text-{{ $alert['type'] === 'danger' ? 'red' : ($alert['type'] === 'warning' ? 'yellow' : 'blue') }}-800 px-4 py-3 rounded-lg mb-3 flex justify-between items-center">
+                <span>{{ $alert['message'] }}</span>
+                @if(isset($alert['action_url']))
+                    <a href="{{ $alert['action_url'] }}" class="bg-{{ $alert['type'] === 'danger' ? 'red' : ($alert['type'] === 'warning' ? 'yellow' : 'blue') }}-600 hover:bg-{{ $alert['type'] === 'danger' ? 'red' : ($alert['type'] === 'warning' ? 'yellow' : 'blue') }}-700 text-white px-3 py-1 rounded text-sm transition-colors">
+                        {{ $alert['action_text'] }}
+                    </a>
+                @endif
             </div>
-            <div class="card-body">
-                @foreach($alerts as $alert)
-                <div class="alert alert-{{ $alert['type'] }} alert-dismissible fade show" role="alert">
-                    {{ $alert['message'] }}
-                    @if(isset($alert['action_url']))
-                        <a href="{{ $alert['action_url'] }}" class="btn btn-sm btn-outline-{{ $alert['type'] }} ms-2">
-                            {{ $alert['action_text'] }}
-                        </a>
-                    @endif
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-                @endforeach
-            </div>
+            @endforeach
         </div>
     </div>
 </div>
 @endif
 
 <!-- Charts and Analytics -->
-<div class="row mb-4">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
     <!-- Revenue Chart -->
-    <div class="col-xl-8 col-lg-7 mb-4">
-        <div class="card h-100">
-            <div class="card-header">
-                <h5 class="card-title mb-0">
-                    <i class="bi bi-graph-up text-primary"></i>
+    <div class="lg:col-span-2">
+        <div class="bg-white rounded-lg shadow-lg border border-gray-200 h-full">
+            <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 rounded-t-lg">
+                <h5 class="text-lg font-semibold text-gray-800 mb-0 flex items-center">
+                    <i class="fas fa-chart-line text-blue-500 mr-2"></i>
                     {{ __('facility_management.monthly_revenue') }}
                 </h5>
             </div>
-            <div class="card-body">
+            <div class="p-6">
                 <canvas id="revenueChart" height="300"></canvas>
             </div>
         </div>
     </div>
 
     <!-- Success Rate -->
-    <div class="col-xl-4 col-lg-5 mb-4">
-        <div class="card h-100">
-            <div class="card-header">
-                <h5 class="card-title mb-0">
-                    <i class="bi bi-target text-success"></i>
+    <div class="lg:col-span-1">
+        <div class="bg-white rounded-lg shadow-lg border border-gray-200 h-full">
+            <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 rounded-t-lg">
+                <h5 class="text-lg font-semibold text-gray-800 mb-0 flex items-center">
+                    <i class="fas fa-target text-green-500 mr-2"></i>
                     {{ __('facility_management.success_rate') }}
                 </h5>
             </div>
-            <div class="card-body text-center">
+            <div class="p-6 text-center">
                 <div class="progress-circle mb-3" data-percentage="{{ $successRate }}">
                     <div class="progress-value">{{ $successRate }}%</div>
                 </div>
-                <p class="text-muted mb-0">{{ __('facility_management.offers_to_contracts') }}</p>
-                <small class="text-muted">
+                <p class="text-gray-600 mb-0">{{ __('facility_management.offers_to_contracts') }}</p>
+                <small class="text-gray-500">
                     {{ number_format($stats['active_contracts']) }} / {{ number_format($stats['total_offers']) }}
                     {{ __('facility_management.contracts_from_offers') }}
                 </small>
@@ -183,63 +164,62 @@
 </div>
 
 <!-- Data Tables -->
-<div class="row">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
     <!-- Pending Contracts -->
-    <div class="col-xl-6 col-lg-6 mb-4">
-        <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="card-title mb-0">
-                    <i class="bi bi-clock text-warning"></i>
-                    {{ __('facility_management.pending_contracts') }}
-                </h5>
-                <a href="{{ route('facility.financial.contracts', ['status' => 'draft']) }}" class="btn btn-sm btn-outline-primary">
-                    {{ __('facility_management.view_all') }}
-                </a>
-            </div>
-            <div class="card-body">
+    <div class="bg-white rounded-lg shadow-lg border border-gray-200">
+        <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 rounded-t-lg flex justify-between items-center">
+            <h5 class="text-lg font-semibold text-gray-800 mb-0 flex items-center">
+                <i class="fas fa-clock text-yellow-500 mr-2"></i>
+                {{ __('facility_management.pending_contracts') }}
+            </h5>
+            <a href="{{ route('facility.financial.contracts', ['status' => 'draft']) }}" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm transition-colors">
+                {{ __('facility_management.view_all') }}
+            </a>
+        </div>
+        <div class="p-6">
                 @if($pendingContracts->count() > 0)
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
                                 <tr>
-                                    <th>{{ __('facility_management.client') }}</th>
-                                    <th>{{ __('facility_management.product') }}</th>
-                                    <th>{{ __('facility_management.amount') }}</th>
-                                    <th>{{ __('facility_management.actions') }}</th>
+                                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('facility_management.client') }}</th>
+                                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('facility_management.product') }}</th>
+                                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('facility_management.amount') }}</th>
+                                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('facility_management.actions') }}</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="bg-white divide-y divide-gray-200">
                                 @foreach($pendingContracts as $contract)
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="avatar-sm bg-primary text-white rounded-circle me-2">
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">
                                                 {{ substr($contract->client->name, 0, 1) }}
                                             </div>
                                             <div>
-                                                <div class="fw-semibold">{{ $contract->client->name }}</div>
-                                                <small class="text-muted">{{ $contract->client->email }}</small>
+                                                <div class="text-sm font-medium text-gray-900">{{ $contract->client->name }}</div>
+                                                <div class="text-sm text-gray-500">{{ $contract->client->email }}</div>
                                             </div>
                                         </div>
                                     </td>
-                                    <td>
-                                        <div class="fw-semibold">{{ $contract->offer->product->name }}</div>
-                                        <small class="text-muted">{{ $contract->offer->offer_type }}</small>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-gray-900">{{ $contract->offer->product->name }}</div>
+                                        <div class="text-sm text-gray-500">{{ $contract->offer->offer_type }}</div>
                                     </td>
-                                    <td>
-                                        <span class="fw-semibold">{{ number_format($contract->total_amount) }}</span>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="text-sm font-medium text-gray-900">{{ number_format($contract->total_amount) }}</span>
                                     </td>
-                                    <td>
-                                        <div class="btn-group" role="group">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <div class="flex space-x-2 rtl:space-x-reverse">
                                             <a href="{{ route('facility.financial.contract-details', $contract->id) }}" 
-                                               class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" 
+                                               class="text-blue-600 hover:text-blue-900 p-1 rounded" 
                                                title="{{ __('facility_management.view_details') }}">
-                                                <i class="bi bi-eye"></i>
+                                                <i class="fas fa-eye"></i>
                                             </a>
-                                            <button type="button" class="btn btn-sm btn-success" 
+                                            <button type="button" class="text-green-600 hover:text-green-900 p-1 rounded" 
                                                     onclick="updateContractStatus({{ $contract->id }}, 'active')"
-                                                    data-bs-toggle="tooltip" title="{{ __('facility_management.approve') }}">
-                                                <i class="bi bi-check"></i>
+                                                    title="{{ __('facility_management.approve') }}">
+                                                <i class="fas fa-check"></i>
                                             </button>
                                         </div>
                                     </td>
@@ -249,10 +229,10 @@
                         </table>
                     </div>
                 @else
-                    <div class="text-center py-4">
-                        <i class="bi bi-check-circle text-success" style="font-size: 3rem;"></i>
-                        <h6 class="mt-3">{{ __('facility_management.no_pending_contracts') }}</h6>
-                        <p class="text-muted">{{ __('facility_management.all_contracts_processed') }}</p>
+                    <div class="text-center py-8">
+                        <i class="fas fa-check-circle text-green-500 text-5xl mb-4"></i>
+                        <h6 class="text-lg font-medium text-gray-900 mb-2">{{ __('facility_management.no_pending_contracts') }}</h6>
+                        <p class="text-gray-500">{{ __('facility_management.all_contracts_processed') }}</p>
                     </div>
                 @endif
             </div>
@@ -260,53 +240,52 @@
     </div>
 
     <!-- Recent Payments -->
-    <div class="col-xl-6 col-lg-6 mb-4">
-        <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="card-title mb-0">
-                    <i class="bi bi-credit-card text-success"></i>
-                    {{ __('facility_management.recent_payments') }}
-                </h5>
-                <a href="{{ route('facility.financial.payments') }}" class="btn btn-sm btn-outline-primary">
-                    {{ __('facility_management.view_all') }}
-                </a>
-            </div>
-            <div class="card-body">
+    <div class="bg-white rounded-lg shadow-lg border border-gray-200">
+        <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 rounded-t-lg flex justify-between items-center">
+            <h5 class="text-lg font-semibold text-gray-800 mb-0 flex items-center">
+                <i class="fas fa-credit-card text-green-500 mr-2"></i>
+                {{ __('facility_management.recent_payments') }}
+            </h5>
+            <a href="{{ route('facility.financial.payments') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm transition-colors">
+                {{ __('facility_management.view_all') }}
+            </a>
+        </div>
+        <div class="p-6">
                 @if($recentPayments->count() > 0)
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
                                 <tr>
-                                    <th>{{ __('facility_management.client') }}</th>
-                                    <th>{{ __('facility_management.amount') }}</th>
-                                    <th>{{ __('facility_management.status') }}</th>
-                                    <th>{{ __('facility_management.date') }}</th>
+                                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('facility_management.client') }}</th>
+                                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('facility_management.amount') }}</th>
+                                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('facility_management.status') }}</th>
+                                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('facility_management.date') }}</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="bg-white divide-y divide-gray-200">
                                 @foreach($recentPayments as $payment)
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="avatar-sm bg-secondary text-white rounded-circle me-2">
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="w-8 h-8 bg-gray-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">
                                                 {{ substr($payment->contract->client->name, 0, 1) }}
                                             </div>
                                             <div>
-                                                <div class="fw-semibold">{{ $payment->contract->client->name }}</div>
-                                                <small class="text-muted">{{ $payment->payment_method }}</small>
+                                                <div class="text-sm font-medium text-gray-900">{{ $payment->contract->client->name }}</div>
+                                                <div class="text-sm text-gray-500">{{ $payment->payment_method }}</div>
                                             </div>
                                         </div>
                                     </td>
-                                    <td>
-                                        <span class="fw-semibold">{{ number_format($payment->amount) }}</span>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="text-sm font-medium text-gray-900">{{ number_format($payment->amount) }}</span>
                                     </td>
-                                    <td>
-                                        <span class="badge bg-{{ $payment->status == 'confirmed' ? 'success' : ($payment->status == 'pending' ? 'warning' : 'danger') }}">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-{{ $payment->status == 'confirmed' ? 'green' : ($payment->status == 'pending' ? 'yellow' : 'red') }}-100 text-{{ $payment->status == 'confirmed' ? 'green' : ($payment->status == 'pending' ? 'yellow' : 'red') }}-800">
                                             {{ __('facility_management.payment_status_' . $payment->status) }}
                                         </span>
                                     </td>
-                                    <td>
-                                        <small>{{ $payment->payment_date->format('d/m/Y') }}</small>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-500">{{ $payment->payment_date->format('d/m/Y') }}</div>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -314,10 +293,10 @@
                         </table>
                     </div>
                 @else
-                    <div class="text-center py-4">
-                        <i class="bi bi-credit-card text-muted" style="font-size: 3rem;"></i>
-                        <h6 class="mt-3">{{ __('facility_management.no_recent_payments') }}</h6>
-                        <p class="text-muted">{{ __('facility_management.payments_will_appear_here') }}</p>
+                    <div class="text-center py-8">
+                        <i class="fas fa-credit-card text-gray-400 text-5xl mb-4"></i>
+                        <h6 class="text-lg font-medium text-gray-900 mb-2">{{ __('facility_management.no_recent_payments') }}</h6>
+                        <p class="text-gray-500">{{ __('facility_management.payments_will_appear_here') }}</p>
                     </div>
                 @endif
             </div>
@@ -326,76 +305,75 @@
 </div>
 
 <!-- Recent Contracts -->
-<div class="row">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="card-title mb-0">
-                    <i class="bi bi-file-earmark-text text-primary"></i>
-                    {{ __('facility_management.recent_contracts') }}
-                </h5>
-                <a href="{{ route('facility.financial.contracts') }}" class="btn btn-sm btn-outline-primary">
-                    {{ __('facility_management.view_all') }}
-                </a>
-            </div>
-            <div class="card-body">
+<div class="mt-6">
+    <div class="bg-white rounded-lg shadow-lg border border-gray-200">
+        <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 rounded-t-lg flex justify-between items-center">
+            <h5 class="text-lg font-semibold text-gray-800 mb-0 flex items-center">
+                <i class="fas fa-file-contract text-blue-500 mr-2"></i>
+                {{ __('facility_management.recent_contracts') }}
+            </h5>
+            <a href="{{ route('facility.financial.contracts') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm transition-colors">
+                {{ __('facility_management.view_all') }}
+            </a>
+        </div>
+        <div class="p-6">
                 @if($recentContracts->count() > 0)
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
                                 <tr>
-                                    <th>{{ __('facility_management.contract_number') }}</th>
-                                    <th>{{ __('facility_management.client') }}</th>
-                                    <th>{{ __('facility_management.product') }}</th>
-                                    <th>{{ __('facility_management.type') }}</th>
-                                    <th>{{ __('facility_management.amount') }}</th>
-                                    <th>{{ __('facility_management.status') }}</th>
-                                    <th>{{ __('facility_management.created_date') }}</th>
-                                    <th>{{ __('facility_management.actions') }}</th>
+                                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('facility_management.contract_number') }}</th>
+                                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('facility_management.client') }}</th>
+                                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('facility_management.product') }}</th>
+                                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('facility_management.type') }}</th>
+                                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('facility_management.amount') }}</th>
+                                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('facility_management.status') }}</th>
+                                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('facility_management.created_date') }}</th>
+                                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('facility_management.actions') }}</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="bg-white divide-y divide-gray-200">
                                 @foreach($recentContracts as $contract)
-                                <tr>
-                                    <td>
-                                        <span class="fw-semibold">{{ $contract->contract_number }}</span>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="text-sm font-medium text-gray-900">{{ $contract->contract_number }}</span>
                                     </td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="avatar-sm bg-primary text-white rounded-circle me-2">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">
                                                 {{ substr($contract->client->name, 0, 1) }}
                                             </div>
                                             <div>
-                                                <div class="fw-semibold">{{ $contract->client->name }}</div>
-                                                <small class="text-muted">{{ $contract->client->email }}</small>
+                                                <div class="text-sm font-medium text-gray-900">{{ $contract->client->name }}</div>
+                                                <div class="text-sm text-gray-500">{{ $contract->client->email }}</div>
                                             </div>
                                         </div>
                                     </td>
-                                    <td>
-                                        <div class="fw-semibold">{{ $contract->offer->product->name }}</div>
-                                        <small class="text-muted">{{ $contract->offer->product->location }}</small>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-gray-900">{{ $contract->offer->product->name }}</div>
+                                        <div class="text-sm text-gray-500">{{ $contract->offer->product->location }}</div>
                                     </td>
-                                    <td>
-                                        <span class="badge bg-info">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
                                             {{ __('facility_management.offer_type_' . $contract->offer->offer_type) }}
                                         </span>
                                     </td>
-                                    <td>
-                                        <span class="fw-semibold">{{ number_format($contract->total_amount) }}</span>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="text-sm font-medium text-gray-900">{{ number_format($contract->total_amount) }}</span>
                                     </td>
-                                    <td>
-                                        <span class="badge bg-{{ $contract->status == 'active' ? 'success' : ($contract->status == 'draft' ? 'warning' : 'secondary') }}">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-{{ $contract->status == 'active' ? 'green' : ($contract->status == 'draft' ? 'yellow' : 'gray') }}-100 text-{{ $contract->status == 'active' ? 'green' : ($contract->status == 'draft' ? 'yellow' : 'gray') }}-800">
                                             {{ __('facility_management.contract_status_' . $contract->status) }}
                                         </span>
                                     </td>
-                                    <td>
-                                        <small>{{ $contract->created_at->format('d/m/Y') }}</small>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-500">{{ $contract->created_at->format('d/m/Y') }}</div>
                                     </td>
-                                    <td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <a href="{{ route('facility.financial.contract-details', $contract->id) }}" 
-                                           class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" 
+                                           class="text-blue-600 hover:text-blue-900 p-1 rounded" 
                                            title="{{ __('facility_management.view_details') }}">
-                                            <i class="bi bi-eye"></i>
+                                            <i class="fas fa-eye"></i>
                                         </a>
                                     </td>
                                 </tr>
@@ -404,13 +382,13 @@
                         </table>
                     </div>
                 @else
-                    <div class="text-center py-4">
-                        <i class="bi bi-file-earmark-text text-muted" style="font-size: 3rem;"></i>
-                        <h6 class="mt-3">{{ __('facility_management.no_contracts') }}</h6>
-                        <p class="text-muted">{{ __('facility_management.contracts_will_appear_here') }}</p>
-                        <a href="{{ route('facility.financial.create-offer') }}" class="btn btn-primary">
-                            <i class="bi bi-plus-lg"></i>
-                            {{ __('facility_management.create_first_offer') }}
+                    <div class="text-center py-8">
+                        <i class="fas fa-file-contract text-gray-400 text-5xl mb-4"></i>
+                        <h6 class="text-lg font-medium text-gray-900 mb-2">{{ __('facility_management.no_contracts') }}</h6>
+                        <p class="text-gray-500 mb-4">{{ __('facility_management.contracts_will_appear_here') }}</p>
+                        <a href="{{ route('facility.financial.create-offer') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg inline-flex items-center space-x-2 rtl:space-x-reverse transition-colors">
+                            <i class="fas fa-plus"></i>
+                            <span>{{ __('facility_management.create_first_offer') }}</span>
                         </a>
                     </div>
                 @endif
@@ -542,51 +520,6 @@ function updateContractStatus(contractId, status) {
 
 @push('styles')
 <style>
-.stats-card {
-    border: none;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease;
-}
-
-.stats-card:hover {
-    transform: translateY(-5px);
-}
-
-.stats-value {
-    font-size: 2rem;
-    font-weight: 700;
-    line-height: 1;
-}
-
-.stats-label {
-    font-size: 0.875rem;
-    opacity: 0.9;
-    margin-top: 0.25rem;
-}
-
-.stats-icon {
-    font-size: 2.5rem;
-    opacity: 0.3;
-}
-
-.stats-footer {
-    margin-top: 1rem;
-    padding-top: 0.75rem;
-    border-top: 1px solid rgba(255,255,255,0.2);
-}
-
-.avatar-sm {
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.875rem;
-    font-weight: 600;
-}
-
 .progress-circle {
     position: relative;
     display: inline-flex;
@@ -598,30 +531,11 @@ function updateContractStatus(contractId, status) {
     position: absolute;
     font-size: 1.5rem;
     font-weight: 700;
-    color: #198754;
+    color: #10b981;
 }
 
 .progress-ring circle {
     transition: stroke-dashoffset 0.5s ease-in-out;
-}
-
-.table th {
-    border-top: none;
-    font-weight: 600;
-    color: #495057;
-    font-size: 0.875rem;
-}
-
-.card {
-    border: none;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    border-radius: 10px;
-}
-
-.card-header {
-    background: #f8f9fa;
-    border-bottom: 1px solid #e9ecef;
-    border-radius: 10px 10px 0 0 !important;
 }
 </style>
 @endpush

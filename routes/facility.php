@@ -49,21 +49,23 @@ Route::middleware(['auth', 'role:facility'])->prefix('facility')->name('facility
     Route::delete('products/{product}/comments/{comment}', [FacilityProductController::class, 'deleteComment'])->name('products.comments.delete');
 
     // Bookings Management
+    Route::get('bookings/statistics', [FacilityBookingController::class, 'statistics'])->name('bookings.statistics');
+    Route::get('bookings/calendar', [FacilityBookingController::class, 'calendar'])->name('bookings.calendar');
     Route::resource('bookings', FacilityBookingController::class);
     Route::post('bookings/{booking}/confirm', [FacilityBookingController::class, 'confirm'])->name('bookings.confirm');
     Route::post('bookings/{booking}/unconfirm', [FacilityBookingController::class, 'unconfirm'])->name('bookings.unconfirm');
     Route::post('bookings/{booking}/update-payment', [FacilityBookingController::class, 'updatePaymentStatus'])->name('bookings.update-payment');
-    Route::get('bookings/statistics', [FacilityBookingController::class, 'statistics'])->name('bookings.statistics');
-    Route::get('bookings/calendar', [FacilityBookingController::class, 'calendar'])->name('bookings.calendar');
 
     // Offers Management
+    Route::get('offers/statistics', [FacilityOfferController::class, 'statistics'])->name('offers.statistics');
+    Route::get('offers/export', [FacilityOfferController::class, 'export'])->name('offers.export');
     Route::resource('offers', FacilityOfferController::class);
     Route::post('offers/{offer}/toggle-status', [FacilityOfferController::class, 'toggleStatus'])->name('offers.toggle-status');
     Route::post('offers/{offer}/copy', [FacilityOfferController::class, 'copy'])->name('offers.copy');
-    Route::get('offers/statistics', [FacilityOfferController::class, 'statistics'])->name('offers.statistics');
-    Route::get('offers/export', [FacilityOfferController::class, 'export'])->name('offers.export');
 
     // Contracts Management
+    Route::get('contracts/statistics', [FacilityContractController::class, 'statistics'])->name('contracts.statistics');
+    Route::get('contracts/export', [FacilityContractController::class, 'export'])->name('contracts.export');
     Route::resource('contracts', FacilityContractController::class);
     Route::post('contracts/{contract}/update-status', [FacilityContractController::class, 'updateStatus'])->name('contracts.update-status');
     Route::post('contracts/{contract}/cancel', [FacilityContractController::class, 'cancel'])->name('contracts.cancel');
@@ -72,32 +74,30 @@ Route::middleware(['auth', 'role:facility'])->prefix('facility')->name('facility
     Route::get('contracts/{contract}/invoices', [FacilityContractController::class, 'invoices'])->name('contracts.invoices');
     Route::get('contracts/{contract}/payments', [FacilityContractController::class, 'payments'])->name('contracts.payments');
     Route::get('contracts/{contract}/financial-report', [FacilityContractController::class, 'financialReport'])->name('contracts.financial-report');
-    Route::get('contracts/statistics', [FacilityContractController::class, 'statistics'])->name('contracts.statistics');
-    Route::get('contracts/export', [FacilityContractController::class, 'export'])->name('contracts.export');
 
     // Invoices Management
-    Route::resource('invoices', FacilityInvoiceController::class);
-    Route::post('invoices/{invoice}/reminder', [FacilityInvoiceController::class, 'sendReminder'])->name('invoices.reminder');
-    Route::get('invoices/generate', [FacilityInvoiceController::class, 'generateInvoices'])->name('invoices.generate');
     Route::get('invoices/statistics', [FacilityInvoiceController::class, 'statistics'])->name('invoices.statistics');
     Route::get('invoices/export', [FacilityInvoiceController::class, 'export'])->name('invoices.export');
+    Route::get('invoices/generate', [FacilityInvoiceController::class, 'generateInvoices'])->name('invoices.generate');
+    Route::resource('invoices', FacilityInvoiceController::class);
+    Route::post('invoices/{invoice}/reminder', [FacilityInvoiceController::class, 'sendReminder'])->name('invoices.reminder');
 
     // Payments Management
+    Route::get('payments/statistics', [FacilityPaymentController::class, 'statistics'])->name('payments.statistics');
+    Route::get('payments/export', [FacilityPaymentController::class, 'export'])->name('payments.export');
     Route::resource('payments', FacilityPaymentController::class);
     Route::post('payments/{payment}/confirm', [FacilityPaymentController::class, 'confirm'])->name('payments.confirm');
     Route::post('payments/{payment}/fail', [FacilityPaymentController::class, 'fail'])->name('payments.fail');
     Route::post('payments/{payment}/refund', [FacilityPaymentController::class, 'refund'])->name('payments.refund');
-    Route::get('payments/statistics', [FacilityPaymentController::class, 'statistics'])->name('payments.statistics');
-    Route::get('payments/export', [FacilityPaymentController::class, 'export'])->name('payments.export');
 
     // Users Management
+    Route::get('users/statistics', [FacilityUserController::class, 'statistics'])->name('users.statistics');
+    Route::get('users/export', [FacilityUserController::class, 'export'])->name('users.export');
     Route::resource('users', FacilityUserController::class);
     Route::post('users/add-existing', [FacilityUserController::class, 'addExistingUser'])->name('users.add-existing');
     Route::delete('users/{user}/remove', [FacilityUserController::class, 'removeFromFacility'])->name('users.remove');
     Route::post('users/{user}/assign-role', [FacilityUserController::class, 'assignRole'])->name('users.assign-role');
     Route::delete('users/{user}/roles/{role}', [FacilityUserController::class, 'removeRole'])->name('users.remove-role');
-    Route::get('users/statistics', [FacilityUserController::class, 'statistics'])->name('users.statistics');
-    Route::get('users/export', [FacilityUserController::class, 'export'])->name('users.export');
 
     // Financial Reports
     Route::prefix('financial')->name('financial.')->group(function () {

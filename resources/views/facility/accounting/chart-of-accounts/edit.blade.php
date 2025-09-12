@@ -3,57 +3,60 @@
 @section('title', 'تعديل الحساب - ' . $account->account_name)
 
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h3 class="card-title">تعديل الحساب: {{ $account->account_name }}</h3>
-                    <div>
-                        <a href="{{ route('facility.accounting.chart-of-accounts.show', $account) }}" class="btn btn-info">
-                            <i class="fas fa-eye"></i> عرض
-                        </a>
-                        <a href="{{ route('facility.accounting.chart-of-accounts.index') }}" class="btn btn-outline-secondary">
-                            <i class="fas fa-arrow-right"></i> العودة للقائمة
-                        </a>
+<div class="container mx-auto px-4 my-10">
+    <div class="flex justify-center">
+        <div class="w-full max-w-6xl">
+            <div class="bg-white rounded-lg shadow-lg">
+                <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 rounded-t-lg">
+                    <div class="flex justify-between items-center">
+                        <h4 class="text-lg font-semibold text-gray-800 mb-0">تعديل الحساب: {{ $account->account_name }}</h4>
+                        <div class="flex space-x-2 rtl:space-x-reverse">
+                            <a href="{{ route('facility.accounting.chart-of-accounts.show', $account) }}" class="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 rtl:space-x-reverse transition-colors">
+                                <i class="fas fa-eye"></i>
+                                <span>عرض</span>
+                            </a>
+                            <a href="{{ route('facility.accounting.chart-of-accounts.index') }}" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 rtl:space-x-reverse transition-colors">
+                                <i class="fas fa-arrow-right"></i>
+                                <span>العودة للقائمة</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
 
-                <div class="card-body">
-                    <form method="POST" action="{{ route('facility.accounting.chart-of-accounts.update', $account) }}">
-                        @csrf
-                        @method('PUT')
-
-                        <div class="row">
+                <form method="POST" action="{{ route('facility.accounting.chart-of-accounts.update', $account) }}">
+                    @csrf
+                    @method('PUT')
+                    <div class="p-6">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                             <!-- معلومات أساسية -->
-                            <div class="col-md-6">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h5 class="card-title mb-0">المعلومات الأساسية</h5>
+                            <div>
+                                <div class="bg-white border border-gray-200 rounded-lg">
+                                    <div class="bg-gray-50 px-4 py-3 border-b border-gray-200 rounded-t-lg">
+                                        <h5 class="text-lg font-semibold text-gray-800 mb-0">المعلومات الأساسية</h5>
                                     </div>
-                                    <div class="card-body">
-                                        <div class="mb-3">
-                                            <label for="account_code" class="form-label">كود الحساب <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control @error('account_code') is-invalid @enderror" 
+                                    <div class="p-6">
+                                        <div class="mb-4">
+                                            <label for="account_code" class="block text-sm font-medium text-gray-700 mb-2">كود الحساب <span class="text-red-500">*</span></label>
+                                            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('account_code') border-red-500 @enderror" 
                                                    id="account_code" name="account_code" value="{{ old('account_code', $account->account_code) }}" required>
                                             @error('account_code')
-                                                <div class="invalid-feedback">{{ $message }}</div>
+                                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                             @enderror
-                                            <div class="form-text">يجب أن يكون فريداً وغير مكرر</div>
+                                            <p class="mt-1 text-sm text-gray-500">يجب أن يكون فريداً وغير مكرر</p>
                                         </div>
 
-                                        <div class="mb-3">
-                                            <label for="account_name" class="form-label">اسم الحساب <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control @error('account_name') is-invalid @enderror" 
+                                        <div class="mb-4">
+                                            <label for="account_name" class="block text-sm font-medium text-gray-700 mb-2">اسم الحساب <span class="text-red-500">*</span></label>
+                                            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('account_name') border-red-500 @enderror" 
                                                    id="account_name" name="account_name" value="{{ old('account_name', $account->account_name) }}" required>
                                             @error('account_name')
-                                                <div class="invalid-feedback">{{ $message }}</div>
+                                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                             @enderror
                                         </div>
 
-                                        <div class="mb-3">
-                                            <label for="account_type" class="form-label">نوع الحساب <span class="text-danger">*</span></label>
-                                            <select class="form-select @error('account_type') is-invalid @enderror" 
+                                        <div class="mb-4">
+                                            <label for="account_type" class="block text-sm font-medium text-gray-700 mb-2">نوع الحساب <span class="text-red-500">*</span></label>
+                                            <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('account_type') border-red-500 @enderror" 
                                                     id="account_type" name="account_type" required>
                                                 <option value="">اختر نوع الحساب</option>
                                                 @foreach($accountTypes as $key => $value)
@@ -63,13 +66,13 @@
                                                 @endforeach
                                             </select>
                                             @error('account_type')
-                                                <div class="invalid-feedback">{{ $message }}</div>
+                                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                             @enderror
                                         </div>
 
-                                        <div class="mb-3">
-                                            <label for="account_category" class="form-label">فئة الحساب</label>
-                                            <select class="form-select @error('account_category') is-invalid @enderror" 
+                                        <div class="mb-4">
+                                            <label for="account_category" class="block text-sm font-medium text-gray-700 mb-2">فئة الحساب</label>
+                                            <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('account_category') border-red-500 @enderror" 
                                                     id="account_category" name="account_category">
                                                 <option value="">اختر فئة الحساب</option>
                                                 @foreach($accountCategories as $key => $value)
@@ -79,13 +82,13 @@
                                                 @endforeach
                                             </select>
                                             @error('account_category')
-                                                <div class="invalid-feedback">{{ $message }}</div>
+                                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                             @enderror
                                         </div>
 
-                                        <div class="mb-3">
-                                            <label for="parent_id" class="form-label">الحساب الأب</label>
-                                            <select class="form-select @error('parent_id') is-invalid @enderror" 
+                                        <div class="mb-4">
+                                            <label for="parent_id" class="block text-sm font-medium text-gray-700 mb-2">الحساب الأب</label>
+                                            <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('parent_id') border-red-500 @enderror" 
                                                     id="parent_id" name="parent_id">
                                                 <option value="">بدون حساب أب</option>
                                                 @foreach($parentAccounts as $parentAccount)
@@ -97,7 +100,7 @@
                                                 @endforeach
                                             </select>
                                             @error('parent_id')
-                                                <div class="invalid-feedback">{{ $message }}</div>
+                                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                             @enderror
                                         </div>
                                     </div>
@@ -105,67 +108,69 @@
                             </div>
 
                             <!-- إعدادات إضافية -->
-                            <div class="col-md-6">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h5 class="card-title mb-0">الإعدادات الإضافية</h5>
+                            <div>
+                                <div class="bg-white border border-gray-200 rounded-lg">
+                                    <div class="bg-gray-50 px-4 py-3 border-b border-gray-200 rounded-t-lg">
+                                        <h5 class="text-lg font-semibold text-gray-800 mb-0">الإعدادات الإضافية</h5>
                                     </div>
-                                    <div class="card-body">
-                                        <div class="mb-3">
-                                            <label for="normal_balance" class="form-label">الرصيد الطبيعي <span class="text-danger">*</span></label>
-                                            <select class="form-select @error('normal_balance') is-invalid @enderror" 
+                                    <div class="p-6">
+                                        <div class="mb-4">
+                                            <label for="normal_balance" class="block text-sm font-medium text-gray-700 mb-2">الرصيد الطبيعي <span class="text-red-500">*</span></label>
+                                            <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('normal_balance') border-red-500 @enderror" 
                                                     id="normal_balance" name="normal_balance" required>
                                                 <option value="">اختر الرصيد الطبيعي</option>
                                                 <option value="debit" {{ old('normal_balance', $account->normal_balance) == 'debit' ? 'selected' : '' }}>مدين</option>
                                                 <option value="credit" {{ old('normal_balance', $account->normal_balance) == 'credit' ? 'selected' : '' }}>دائن</option>
                                             </select>
                                             @error('normal_balance')
-                                                <div class="invalid-feedback">{{ $message }}</div>
+                                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                             @enderror
                                         </div>
 
-                                        <div class="mb-3">
-                                            <label for="opening_balance" class="form-label">الرصيد الافتتاحي</label>
-                                            <div class="input-group">
-                                                <input type="number" step="0.01" class="form-control @error('opening_balance') is-invalid @enderror" 
+                                        <div class="mb-4">
+                                            <label for="opening_balance" class="block text-sm font-medium text-gray-700 mb-2">الرصيد الافتتاحي</label>
+                                            <div class="relative">
+                                                <input type="number" step="0.01" class="w-full px-3 py-2 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('opening_balance') border-red-500 @enderror" 
                                                        id="opening_balance" name="opening_balance" value="{{ old('opening_balance', $account->opening_balance) }}">
-                                                <span class="input-group-text">ر.س</span>
+                                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                                    <span class="text-gray-500 text-sm">ر.س</span>
+                                                </div>
                                             </div>
                                             @error('opening_balance')
-                                                <div class="invalid-feedback">{{ $message }}</div>
+                                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                             @enderror
-                                            <div class="form-text">تغيير الرصيد الافتتاحي سيؤثر على الرصيد الحالي</div>
+                                            <p class="mt-1 text-sm text-gray-500">تغيير الرصيد الافتتاحي سيؤثر على الرصيد الحالي</p>
                                         </div>
 
-                                        <div class="mb-3">
-                                            <label for="description" class="form-label">وصف الحساب</label>
-                                            <textarea class="form-control @error('description') is-invalid @enderror" 
+                                        <div class="mb-4">
+                                            <label for="description" class="block text-sm font-medium text-gray-700 mb-2">وصف الحساب</label>
+                                            <textarea class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('description') border-red-500 @enderror" 
                                                       id="description" name="description" rows="3">{{ old('description', $account->description) }}</textarea>
                                             @error('description')
-                                                <div class="invalid-feedback">{{ $message }}</div>
+                                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                             @enderror
                                         </div>
 
-                                        <div class="mb-3">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="is_active" name="is_active" value="1" 
+                                        <div class="mb-4">
+                                            <div class="flex items-center">
+                                                <input class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" type="checkbox" id="is_active" name="is_active" value="1" 
                                                        {{ old('is_active', $account->is_active) ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="is_active">
+                                                <label class="mr-2 block text-sm text-gray-900" for="is_active">
                                                     حساب نشط
                                                 </label>
                                             </div>
                                         </div>
 
-                                        <div class="mb-3">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="is_system" name="is_system" value="1" 
+                                        <div class="mb-4">
+                                            <div class="flex items-center">
+                                                <input class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" type="checkbox" id="is_system" name="is_system" value="1" 
                                                        {{ old('is_system', $account->is_system) ? 'checked' : '' }}
                                                        {{ $account->is_system ? 'disabled' : '' }}>
-                                                <label class="form-check-label" for="is_system">
+                                                <label class="mr-2 block text-sm text-gray-900" for="is_system">
                                                     حساب نظام (لا يمكن حذفه)
                                                 </label>
                                                 @if($account->is_system)
-                                                    <div class="form-text text-muted">هذا حساب نظام ولا يمكن تغيير نوعه</div>
+                                                    <p class="mt-1 text-sm text-gray-500">هذا حساب نظام ولا يمكن تغيير نوعه</p>
                                                 @endif
                                             </div>
                                         </div>
@@ -176,52 +181,54 @@
 
                         <!-- تحذيرات -->
                         @if($account->entries_count > 0)
-                            <div class="row mt-4">
-                                <div class="col-12">
-                                    <div class="alert alert-warning">
-                                        <h6 class="alert-heading">
-                                            <i class="fas fa-exclamation-triangle"></i> تحذير
-                                        </h6>
-                                        <p class="mb-0">
-                                            هذا الحساب يحتوي على {{ $account->entries_count }} حركة محاسبية. 
-                                            تغيير نوع الحساب أو الرصيد الطبيعي قد يؤثر على التقارير المالية.
-                                        </p>
+                            <div class="mt-4">
+                                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                                    <div class="flex">
+                                        <i class="fas fa-exclamation-triangle text-yellow-400 mr-3 mt-1"></i>
+                                        <div>
+                                            <h6 class="text-sm font-medium text-yellow-800">تحذير</h6>
+                                            <p class="text-sm text-yellow-700 mt-1">
+                                                هذا الحساب يحتوي على {{ $account->entries_count }} حركة محاسبية. 
+                                                تغيير نوع الحساب أو الرصيد الطبيعي قد يؤثر على التقارير المالية.
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         @endif
 
                         @if($account->children_count > 0)
-                            <div class="row mt-2">
-                                <div class="col-12">
-                                    <div class="alert alert-info">
-                                        <h6 class="alert-heading">
-                                            <i class="fas fa-info-circle"></i> ملاحظة
-                                        </h6>
-                                        <p class="mb-0">
-                                            هذا الحساب يحتوي على {{ $account->children_count }} حساب فرعي. 
-                                            تغيير نوع الحساب قد يؤثر على الحسابات الفرعية.
-                                        </p>
+                            <div class="mt-2">
+                                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                    <div class="flex">
+                                        <i class="fas fa-info-circle text-blue-400 mr-3 mt-1"></i>
+                                        <div>
+                                            <h6 class="text-sm font-medium text-blue-800">ملاحظة</h6>
+                                            <p class="text-sm text-blue-700 mt-1">
+                                                هذا الحساب يحتوي على {{ $account->children_count }} حساب فرعي. 
+                                                تغيير نوع الحساب قد يؤثر على الحسابات الفرعية.
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         @endif
 
                         <!-- أزرار الإجراءات -->
-                        <div class="row mt-4">
-                            <div class="col-12">
-                                <div class="d-flex justify-content-end gap-2">
-                                    <a href="{{ route('facility.accounting.chart-of-accounts.show', $account) }}" class="btn btn-outline-secondary">
-                                        <i class="fas fa-times"></i> إلغاء
-                                    </a>
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-save"></i> حفظ التعديلات
-                                    </button>
-                                </div>
+                        <div class="bg-gray-50 px-6 py-4 border-t border-gray-200 rounded-b-lg mt-6">
+                            <div class="flex justify-end space-x-4 rtl:space-x-reverse">
+                                <a href="{{ route('facility.accounting.chart-of-accounts.show', $account) }}" class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-lg flex items-center space-x-2 rtl:space-x-reverse transition-colors">
+                                    <i class="fas fa-times"></i>
+                                    <span>إلغاء</span>
+                                </a>
+                                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg flex items-center space-x-2 rtl:space-x-reverse transition-colors">
+                                    <i class="fas fa-save"></i>
+                                    <span>حفظ التعديلات</span>
+                                </button>
                             </div>
                         </div>
-                    </form>
-                </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -294,66 +301,3 @@
 </script>
 @endpush
 
-@push('styles')
-<style>
-.card {
-    border: none;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    border-radius: 10px;
-}
-
-.card-header {
-    background: #f8f9fa;
-    border-bottom: 1px solid #e9ecef;
-    border-radius: 10px 10px 0 0 !important;
-}
-
-.form-label {
-    font-weight: 600;
-    color: #495057;
-}
-
-.form-control, .form-select {
-    border-radius: 0.375rem;
-    border: 1px solid #ced4da;
-}
-
-.form-control:focus, .form-select:focus {
-    border-color: #86b7fe;
-    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-}
-
-.input-group-text {
-    background-color: #e9ecef;
-    border: 1px solid #ced4da;
-}
-
-.btn {
-    border-radius: 0.375rem;
-    font-weight: 500;
-}
-
-.alert {
-    border-radius: 0.5rem;
-}
-
-.alert-heading {
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-}
-
-@media (max-width: 768px) {
-    .card-body {
-        padding: 1rem;
-    }
-    
-    .d-flex.gap-2 {
-        flex-direction: column;
-    }
-    
-    .d-flex.gap-2 .btn {
-        margin-bottom: 0.5rem;
-    }
-}
-</style>
-@endpush
