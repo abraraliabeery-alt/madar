@@ -109,18 +109,13 @@ Route::middleware(['auth'])->group(function () {
 // Public profile route - accessible by anyone (must come after specific routes)
 Route::get('/profile/{id}', [App\Http\Controllers\ProfileController::class, 'publicProfile'])->name('profile.public');
 
-// Default Laravel home route
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
 // Default Laravel welcome route (can be removed)
 Route::get('/welcome', function () {
     return view('welcome');
 })->name('welcome');
 
-require_once 'admin.php';
-require_once 'facility.php';
-require_once 'client.php';
-require_once 'public.php';
+// Route files are now registered through RouteServiceProvider
+// This provides better organization, middleware handling, and performance
 
 // Fallback route for 404 errors
 Route::fallback(function () {

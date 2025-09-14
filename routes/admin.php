@@ -20,7 +20,7 @@ use App\Http\Controllers\Admin\AdminFinancialController;
 use App\Http\Controllers\Admin\AdminPermissionController;
 use App\Http\Controllers\Admin\AdminUserManagementController;
 
-Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+Route::group([], function () {
 
     // Dashboard
     Route::get('/index', [AdminController::class, 'dashboard'])->name('dashboard');

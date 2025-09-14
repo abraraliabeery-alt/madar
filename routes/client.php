@@ -8,7 +8,7 @@ use App\Http\Controllers\Client\ClientContractController;
 use App\Http\Controllers\Client\ClientFinancialController;
 
 // Client Routes - جميع routes تحتاج middleware client
-Route::middleware(['auth', 'role:client'])->prefix('client')->name('client.')->group(function () {
+Route::group([], function () {
 
     // Dashboard
     Route::get('/', [ClientController::class, 'dashboard'])->name('dashboard');

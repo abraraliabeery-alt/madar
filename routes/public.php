@@ -18,7 +18,7 @@ use App\Http\Controllers\Public\NewsletterController;
 use App\Http\Controllers\Public\ErrorController;
 
 // Public Routes - لا تحتاج تسجيل دخول
-Route::name('public.')->group(function () {
+Route::group([], function () {
 
     // Home Page
     Route::get('/', [HomeController::class, 'index'])->name('home');

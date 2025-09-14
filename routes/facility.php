@@ -19,7 +19,7 @@ use App\Http\Controllers\Facility\FinancialReportController;
 use App\Http\Controllers\Facility\FacilityUserController;
 use App\Http\Controllers\FacilityCustomizationController;
 
-Route::middleware(['auth', 'role:facility'])->prefix('facility')->name('facility.')->group(function () {
+Route::group([], function () {
 
     // Dashboard
     Route::get('/', [FacilityController::class, 'dashboard'])->name('dashboard');
