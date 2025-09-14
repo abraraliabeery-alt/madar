@@ -7,7 +7,8 @@
     'maxItems' => 6,
     'idPrefix' => 'items',
     'showPagination' => false,
-    'showViewToggle' => false
+    'showViewToggle' => false,
+    'showPrice' => true
 ])
 
 @php
@@ -77,9 +78,16 @@
                     <div class="p-3">
                         <h3 class="font-medium text-gray-900 text-sm mb-1 line-clamp-1">{{ $item->title }}</h3>
                         <p class="text-xs text-gray-600 mb-2 line-clamp-2">{{ $item->description }}</p>
-                        <div class="text-sm font-semibold text-primary-600 mb-2">
-                                                                {{ number_format($item->price) }} {!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}
-                        </div>
+                        @if($showPrice)
+                            <div class="text-sm font-semibold text-primary-600 mb-2">
+                                @if($item->hasActiveOffers())
+                                    <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-3 h-3 inline mr-1">
+                                    {{ $item->getFormattedPrice() }}
+                                @else
+                                    {{ __('products.actions.price_on_request') }}
+                                @endif
+                            </div>
+                        @endif
                         <a href="{{ route('public.products.show', $item) }}" 
                            class="text-primary-600 hover:text-primary-700 text-xs font-medium">
                             {{ __('general.actions.view_details') }}
@@ -187,7 +195,7 @@
     <!-- Large Grid View (Hidden by default) -->
     <div id="{{ $gridId }}-large-grid" class="hidden">
         @if($type === 'products')
-            <x-product-grid :products="$items" :columns="3" />
+            <x-product-grid :products="$items" :columns="3" :showPrice="$showPrice" />
         @else
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-{{ $type === 'categories' ? '4' : '3' }} gap-6">
                 @foreach($items as $item)
@@ -317,9 +325,16 @@
                         <div class="flex-1 p-4">
                             <h3 class="font-medium text-gray-900 text-lg mb-2">{{ $item->title }}</h3>
                             <p class="text-sm text-gray-600 mb-3">{{ $item->description }}</p>
-                            <div class="text-lg font-semibold text-primary-600 mb-3">
-                                {{ number_format($item->price) }} {!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}
-                            </div>
+                            @if($showPrice)
+                                <div class="text-lg font-semibold text-primary-600 mb-3">
+                                    @if($item->hasActiveOffers())
+                                        <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-4 h-4 inline mr-1">
+                                        {{ $item->getFormattedPrice() }}
+                                    @else
+                                        {{ __('products.actions.price_on_request') }}
+                                    @endif
+                                </div>
+                            @endif
                             <a href="{{ route('public.products.show', $item) }}" 
                                class="text-primary-600 hover:text-primary-700 font-medium">
                                 {{ __('general.actions.view_details') }}

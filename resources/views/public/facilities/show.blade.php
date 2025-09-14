@@ -30,8 +30,9 @@
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
 
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800,900&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -318,6 +319,35 @@
             background-color: var(--background-color);
         }
 
+        /* RTL Language Support */
+        [dir="rtl"] {
+            font-family: 'Cairo', 'Segoe UI', Tahoma, Arial, sans-serif;
+        }
+
+        [dir="rtl"] .font-sans {
+            font-family: 'Cairo', 'Segoe UI', Tahoma, Arial, sans-serif !important;
+        }
+
+        /* Font Loading Optimization */
+        .font-loading {
+            font-display: swap;
+        }
+
+        .font-loading * {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+        }
+
+        .font-loaded * {
+            font-family: var(--font-family) !important;
+        }
+
+        /* Ensure proper font rendering */
+        * {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
+
         .primary-gradient {
             background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
         }
@@ -503,7 +533,14 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Figtree', 'sans-serif'],
+                        sans: ['Figtree', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                        figtree: ['Figtree', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                        inter: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                        poppins: ['Poppins', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                        roboto: ['Roboto', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                        'open-sans': ['Open Sans', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                        lato: ['Lato', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                        cairo: ['Cairo', 'Segoe UI', 'Tahoma', 'Arial', 'sans-serif'],
                     }
                 }
             }
@@ -511,7 +548,7 @@
     </script>
 </head>
 
-<body class="font-sans antialiased" style="background-color: var(--background-color);">
+<body class="font-sans antialiased font-loading" style="background-color: var(--background-color); font-family: var(--font-family);">
     <!-- Navigation -->
     <nav class="main-navigation fixed top-0 w-full nav-bg backdrop-blur-sm z-50 shadow-sm">
         <div class="content-container mx-auto px-4 sm:px-6 lg:px-8">
@@ -960,6 +997,20 @@
 
     <!-- Scripts -->
     <script>
+        // Font loading optimization
+        if ('fonts' in document) {
+            document.fonts.ready.then(function() {
+                document.body.classList.remove('font-loading');
+                document.body.classList.add('font-loaded');
+            });
+        } else {
+            // Fallback for browsers that don't support Font Loading API
+            setTimeout(function() {
+                document.body.classList.remove('font-loading');
+                document.body.classList.add('font-loaded');
+            }, 3000);
+        }
+
         // Mobile menu toggle
         function toggleMobileMenu() {
             const menu = document.getElementById('mobile-menu');

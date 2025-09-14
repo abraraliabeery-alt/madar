@@ -9,9 +9,9 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
                 <div>
-                    <h1 class="text-4xl md:text-5xl font-bold mb-6">@cityName($city)</h1>
+                    <h1 class="text-4xl md:text-5xl font-bold mb-6">{{ cityName($city) }}</h1>
                     <p class="text-xl text-primary-100 mb-6">
-                        @cityDescription($city) ?? __('cities.show.default_description')
+                        {{ cityDescription($city) ?? __('cities.show.default_description') }}
                     </p>
                     <div class="flex items-center space-x-6 space-x-reverse">
                         <div class="flex items-center text-yellow-400">
@@ -70,7 +70,7 @@
     <!-- Action Buttons -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div class="text-center mb-12">
-                                    <h2 class="text-3xl font-bold text-gray-900 mb-6">{{ __('cities.show.explore_city', ['city' => @cityName($city)]) }}</h2>
+            <h2 class="text-3xl font-bold text-gray-900 mb-6">{{ __('cities.show.explore_city', ['city' => cityName($city)]) }}</h2>
             <p class="text-lg text-gray-600 mb-8">{{ __('cities.show.explore_description') }}</p>
             
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
@@ -91,10 +91,10 @@
         <div class="bg-white py-16">
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-12">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-4">{{ __('cities.show.about_city', ['city' => @cityName($city)]) }}</h2>
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">{{ __('cities.show.about_city', ['city' => cityName($city)]) }}</h2>
                 </div>
                 <div class="prose prose-lg mx-auto text-gray-600">
-                    <p class="text-lg leading-relaxed">@cityDescription($city)</p>
+                    <p class="text-lg leading-relaxed">{{ cityDescription($city) }}</p>
                 </div>
             </div>
         </div>

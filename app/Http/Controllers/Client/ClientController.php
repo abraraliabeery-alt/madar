@@ -376,12 +376,14 @@ class ClientController extends Controller
         $request->validate([
             'facility_id' => 'required|exists:facilities,id',
             'appointment_time' => 'required|date|after:now',
+            'subject' => 'required|string|max:255',
             'notes' => 'nullable|string|max:500',
         ]);
 
         $appointment = $user->appointments()->create([
             'facility_id' => $request->facility_id,
             'appointment_time' => $request->appointment_time,
+            'subject' => $request->subject,
             'status' => 'scheduled',
             'notes' => $request->notes,
         ]);

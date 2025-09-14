@@ -17,6 +17,8 @@ return new class extends Migration
             $table->dateTime('appointment_time');
             $table->string('status')->nullable();
             $table->unsignedBigInteger('facility_id')->nullable();
+            $table->string('subject')->nullable();
+            $table->text('notes')->nullable();
             $table->timestamps();
         });
     }
