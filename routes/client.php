@@ -12,7 +12,7 @@ Route::group([], function () {
 
     // Dashboard
     Route::get('/', [ClientController::class, 'dashboard'])->name('dashboard');
-    Route::get('/profile', [ClientController::class, 'profile'])->name('profile');
+    Route::get('/profile', [ClientController::class, 'profile'])->name('client.profile');
     Route::post('/profile', [ClientController::class, 'updateProfile'])->name('profile.update');
     Route::get('/change-password', [ClientController::class, 'changePassword'])->name('change-password');
     Route::post('/change-password', [ClientController::class, 'updatePassword'])->name('change-password.update');

@@ -118,7 +118,7 @@ Route::group([], function () {
     // Additional Facility Routes
     Route::get('notifications', [FacilityController::class, 'notifications'])->name('notifications');
     Route::post('notifications/mark-read', [FacilityController::class, 'markNotificationsRead'])->name('notifications.mark-read');
-    Route::get('profile', [FacilityController::class, 'profile'])->name('profile');
+    Route::get('profile', [FacilityController::class, 'profile'])->name('facility.profile');
     Route::post('profile', [FacilityController::class, 'updateProfile'])->name('profile.update');
     Route::get('change-password', [FacilityController::class, 'changePassword'])->name('change-password');
     Route::post('change-password', [FacilityController::class, 'updatePassword'])->name('change-password.update');

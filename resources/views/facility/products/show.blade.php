@@ -82,7 +82,9 @@
                 @php
                     $activeOffers = $product->activeOffers;
                     $saleOffers = $activeOffers->where('offer_type', 'sale');
-                    $rentOffers = $activeOffers->where('offer_type', '!=', 'sale');
+                    $rentOffers = $activeOffers->filter(function($offer) {
+                        return $offer->offer_type && str_starts_with($offer->offer_type, 'rent_');
+                    });
                 @endphp
 
                 @if($activeOffers->count() > 0)
@@ -588,7 +590,7 @@ function openOfferModal(offerId) {
     modal.classList.remove('hidden');
     
     // Fetch offer details
-    fetch(`/facility/offers/${offerId}/details`)
+    fetch(`/api/v1/offers/${offerId}/details`)
         .then(response => response.json())
         .then(data => {
             if (data.success) {
@@ -616,7 +618,7 @@ function openAllOffersModal() {
     
     // Fetch all offers for this product
     const productId = {{ $product->id }};
-    fetch(`/facility/products/${productId}/all-offers`)
+    fetch(`/api/v1/products/${productId}/all-offers`)
         .then(response => response.json())
         .then(data => {
             if (data.success) {
@@ -636,12 +638,25 @@ function closeOfferModal() {
 }
 
 function renderOfferDetails(offer, relatedOffers = []) {
+    // Determine offer type display
+    let offerTypeDisplay = 'عرض';
+    if (offer.offer_type === 'sale') {
+        offerTypeDisplay = 'عرض للبيع';
+    } else if (offer.offer_type && offer.offer_type.startsWith('rent_')) {
+        const rentTypes = {
+            'rent_daily': 'عرض إيجار يومي',
+            'rent_monthly': 'عرض إيجار شهري',
+            'rent_yearly': 'عرض إيجار سنوي'
+        };
+        offerTypeDisplay = rentTypes[offer.offer_type] || 'عرض إيجار';
+    }
+    
     let html = `
         <div class="space-y-6">
             <!-- Main Offer Details -->
             <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <div class="flex items-center justify-between mb-3">
-                    <h4 class="text-lg font-semibold text-blue-900">${offer.title || 'عرض للبيع'}</h4>
+                    <h4 class="text-lg font-semibold text-blue-900">${offer.title || offerTypeDisplay}</h4>
                     ${offer.is_featured ? '<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800"><i class="fas fa-star ml-1"></i>موصى به</span>' : ''}
                 </div>
                 
@@ -653,7 +668,7 @@ function renderOfferDetails(offer, relatedOffers = []) {
                         ${offer.deposit_amount ? `<div class="text-sm text-gray-600">عربون: ${offer.deposit_amount.toLocaleString()} ريال</div>` : ''}
                     </div>
                     <div class="text-right">
-                        ${offer.valid_to ? `<div class="text-sm text-gray-600">صالح حتى: ${new Date(offer.valid_to).toLocaleDateString('ar-SA')}</div>` : ''}
+                        ${offer.valid_to ? `<div class="text-sm text-gray-600">صالح حتى: ${new Date(offer.valid_to).toLocaleDateString('en-GB')}</div>` : ''}
                         <div class="text-sm text-gray-600 mt-1">تاريخ الإنشاء: ${new Date(offer.created_at).toLocaleDateString('ar-SA')}</div>
                     </div>
                 </div>
@@ -666,28 +681,43 @@ function renderOfferDetails(offer, relatedOffers = []) {
                 <div>
                     <h5 class="text-md font-medium text-gray-800 mb-3">عروض أخرى متاحة</h5>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        ${relatedOffers.map(relatedOffer => `
-                            <div class="border border-gray-200 rounded-lg p-3 hover:border-blue-300 transition-colors">
-                                <div class="flex justify-between items-center">
-                                    <div>
-                                        <div class="font-medium text-gray-900">${relatedOffer.title || 'عرض'}</div>
-                                        <div class="text-lg font-bold text-green-600">${relatedOffer.price ? relatedOffer.price.toLocaleString() : 'غير محدد'} ريال</div>
+                        ${relatedOffers.map(relatedOffer => {
+                            // Determine related offer type display
+                            let relatedOfferTypeDisplay = 'عرض';
+                            if (relatedOffer.offer_type === 'sale') {
+                                relatedOfferTypeDisplay = 'عرض للبيع';
+                            } else if (relatedOffer.offer_type && relatedOffer.offer_type.startsWith('rent_')) {
+                                const rentTypes = {
+                                    'rent_daily': 'عرض إيجار يومي',
+                                    'rent_monthly': 'عرض إيجار شهري',
+                                    'rent_yearly': 'عرض إيجار سنوي'
+                                };
+                                relatedOfferTypeDisplay = rentTypes[relatedOffer.offer_type] || 'عرض إيجار';
+                            }
+                            
+                            return `
+                                <div class="border border-gray-200 rounded-lg p-3 hover:border-blue-300 transition-colors">
+                                    <div class="flex justify-between items-center">
+                                        <div>
+                                            <div class="font-medium text-gray-900">${relatedOffer.title || relatedOfferTypeDisplay}</div>
+                                            <div class="text-lg font-bold text-green-600">${relatedOffer.price ? relatedOffer.price.toLocaleString() : 'غير محدد'} ريال</div>
+                                        </div>
+                                        ${relatedOffer.is_featured ? '<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800"><i class="fas fa-crown ml-1"></i>موصى به</span>' : ''}
                                     </div>
-                                    ${relatedOffer.is_featured ? '<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800"><i class="fas fa-crown ml-1"></i>موصى به</span>' : ''}
                                 </div>
-                            </div>
-                        `).join('')}
+                            `;
+                        }).join('')}
                     </div>
                 </div>
             ` : ''}
             
             <!-- Action Buttons -->
             <div class="flex space-x-3 space-x-reverse">
-                <button class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200">
+                <button onclick="bookAppointment(${offer.id})" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200">
                     <i class="fas fa-calendar-check ml-2"></i>
                     احجز موعد للمعاينة
                 </button>
-                <button class="flex-1 bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200">
+                <button onclick="requestQuote(${offer.id})" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200">
                     <i class="fas fa-handshake ml-2"></i>
                     طلب عرض سعر
                 </button>
@@ -705,7 +735,7 @@ function renderAllOffers(offers) {
     
     // Group offers by type
     const saleOffers = offers.filter(offer => offer.offer_type === 'sale');
-    const rentOffers = offers.filter(offer => offer.offer_type !== 'sale');
+    const rentOffers = offers.filter(offer => offer.offer_type && offer.offer_type.startsWith('rent_'));
     
     let html = '<div class="space-y-6">';
     
@@ -731,7 +761,7 @@ function renderAllOffers(offers) {
                                     ${offer.deposit_amount ? `<div class="text-sm text-gray-600 mb-2">عربون: ${offer.deposit_amount.toLocaleString()} ريال</div>` : ''}
                                     ${offer.title ? `<p class="text-sm text-gray-700">${offer.title}</p>` : ''}
                                 </div>
-                                ${offer.valid_to ? `<div class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">صالح حتى<br>${new Date(offer.valid_to).toLocaleDateString('ar-SA')}</div>` : ''}
+                                ${offer.valid_to ? `<div class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">صالح حتى<br>${new Date(offer.valid_to).toLocaleDateString('en-GB')}</div>` : ''}
                             </div>
                         </div>
                     `).join('')}
@@ -781,6 +811,157 @@ document.getElementById('offersModal').addEventListener('click', function(e) {
         closeOfferModal();
     }
 });
+
+// Function to handle booking appointment
+function bookAppointment(offerId) {
+    // Close the modal first
+    closeOfferModal();
+    
+    // Check if user is authenticated
+    @auth
+        // Redirect to booking form with offer ID
+        window.location.href = '{{ route("facility.bookings.create") }}?offer_id=' + offerId;
+    @else
+        // Show login modal or redirect to login
+        if (confirm('يجب تسجيل الدخول أولاً لحجز الموعد. هل تريد الانتقال إلى صفحة تسجيل الدخول؟')) {
+            window.location.href = '{{ route("login") }}?redirect=' + encodeURIComponent(window.location.href);
+        }
+    @endauth
+}
+
+// Function to handle quote request
+function requestQuote(offerId) {
+    // Close the modal first
+    closeOfferModal();
+    
+    // Check if user is authenticated
+    @auth
+        // Show quote request form
+        showQuoteRequestForm(offerId);
+    @else
+        // Show login modal or redirect to login
+        if (confirm('يجب تسجيل الدخول أولاً لطلب عرض السعر. هل تريد الانتقال إلى صفحة تسجيل الدخول؟')) {
+            window.location.href = '{{ route("login") }}?redirect=' + encodeURIComponent(window.location.href);
+        }
+    @endauth
+}
+
+// Function to show quote request form
+function showQuoteRequestForm(offerId) {
+    // Create a modal for quote request
+    const quoteModal = document.createElement('div');
+    quoteModal.id = 'quoteModal';
+    quoteModal.className = 'fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50';
+    quoteModal.innerHTML = `
+        <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-2/3 lg:w-1/2 shadow-lg rounded-md bg-white">
+            <div class="mt-3">
+                <div class="flex items-center justify-between pb-4 border-b border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-900">طلب عرض سعر</h3>
+                    <button onclick="closeQuoteModal()" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <form id="quoteForm" class="mt-4">
+                    <input type="hidden" name="offer_id" value="${offerId}">
+                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">الاسم الكامل *</label>
+                            <input type="text" name="name" required 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">رقم الهاتف *</label>
+                            <input type="tel" name="phone" required 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">البريد الإلكتروني</label>
+                            <input type="email" name="email" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">الرسالة</label>
+                            <textarea name="message" rows="4" 
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                      placeholder="اكتب رسالتك هنا..."></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-end space-x-3 space-x-reverse pt-4 border-t border-gray-200 mt-6">
+                        <button type="button" onclick="closeQuoteModal()" 
+                                class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition duration-200">
+                            إلغاء
+                        </button>
+                        <button type="submit" 
+                                class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition duration-200">
+                            إرسال الطلب
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(quoteModal);
+    
+    // Handle form submission
+    document.getElementById('quoteForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        submitQuoteRequest(this);
+    });
+}
+
+// Function to submit quote request
+function submitQuoteRequest(form) {
+    const formData = new FormData(form);
+    
+    // Show loading
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'جاري الإرسال...';
+    submitBtn.disabled = true;
+    
+    // Submit the form
+    fetch('{{ route("public.contact.quote") }}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('تم إرسال طلب عرض السعر بنجاح! سنتواصل معك قريباً.');
+            closeQuoteModal();
+        } else {
+            alert('حدث خطأ في إرسال الطلب. يرجى المحاولة مرة أخرى.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('حدث خطأ في إرسال الطلب. يرجى المحاولة مرة أخرى.');
+    })
+    .finally(() => {
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+    });
+}
+
+// Function to close quote modal
+function closeQuoteModal() {
+    const modal = document.getElementById('quoteModal');
+    if (modal) {
+        modal.remove();
+    }
+}
 </script>
 @endpush
 @endsection

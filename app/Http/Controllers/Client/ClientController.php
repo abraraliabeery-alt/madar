@@ -27,8 +27,8 @@ class ClientController extends Controller
             'favorite_products' => $user->products()->count(),
             'recent_bookings' => $user->bookings()->with(['product', 'facility'])->latest()->take(5)->get(),
             'recent_appointments' => $user->appointments()->with(['facility'])->latest()->take(5)->get(),
-            'pending_bookings' => $user->bookings()->where('status_id', 1)->count(), // pending status
-            'active_contracts' => $user->contracts()->where('status_id', 2)->count(), // active status
+            'pending_bookings' => $user->bookings()->where('status', 'reserved')->count(), // pending status
+            'active_contracts' => $user->contracts()->where('status', 'active')->count(), // active status
         ];
 
         return view('client.dashboard', compact('stats'));
@@ -98,7 +98,7 @@ class ClientController extends Controller
     {
         $user = Auth::user();
         $favoriteProducts = $user->favoriteProducts()->with(['facility', 'category', 'status'])->paginate(12);
-        $favoriteFacilities = $user->favoriteFacilities()->with(['category', 'owner'])->paginate(12);
+        $favoriteFacilities = $user->favoriteFacilities()->with(['facilityCategory', 'owner'])->paginate(12);
 
         return view('client.favorites', compact('favoriteProducts', 'favoriteFacilities'));
     }
@@ -120,7 +120,7 @@ class ClientController extends Controller
     public function favoriteFacilities()
     {
         $user = Auth::user();
-        $favorites = $user->favoriteFacilities()->with(['category', 'owner'])->paginate(12);
+        $favorites = $user->favoriteFacilities()->with(['facilityCategory', 'owner'])->paginate(12);
 
         return view('client.favorites', compact('favorites', 'favoriteProducts', 'favoriteFacilities'));
     }
@@ -328,5 +328,115 @@ class ClientController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'تم تحديث إعدادات الإشعارات بنجاح');
+    }
+
+    /**
+     * عرض المواعيد
+     */
+    public function appointments()
+    {
+        $user = Auth::user();
+        $appointments = $user->appointments()->with(['facility'])->latest()->paginate(15);
+
+        return view('client.appointments', compact('appointments'));
+    }
+
+    /**
+     * عرض نموذج إنشاء موعد جديد
+     */
+    public function createAppointment()
+    {
+        $user = Auth::user();
+        $facilities = Facility::where('status', 'active')->get();
+
+        return view('client.appointments.create', compact('facilities'));
+    }
+
+    /**
+     * حفظ موعد جديد
+     */
+    public function storeAppointment(Request $request)
+    {
+        $user = Auth::user();
+
+        $request->validate([
+            'facility_id' => 'required|exists:facilities,id',
+            'appointment_time' => 'required|date|after:now',
+            'notes' => 'nullable|string|max:500',
+        ]);
+
+        $appointment = $user->appointments()->create([
+            'facility_id' => $request->facility_id,
+            'appointment_time' => $request->appointment_time,
+            'status' => 'scheduled',
+            'notes' => $request->notes,
+        ]);
+
+        return redirect()->route('client.appointments.show', $appointment)
+            ->with('success', 'تم إنشاء الموعد بنجاح');
+    }
+
+    /**
+     * عرض تفاصيل موعد
+     */
+    public function showAppointment(Appointment $appointment)
+    {
+        $user = Auth::user();
+        
+        // التأكد من أن الموعد يخص المستخدم الحالي
+        if ($appointment->user_id !== $user->id) {
+            abort(403, 'غير مصرح لك بعرض هذا الموعد');
+        }
+
+        $appointment->load(['facility', 'user']);
+
+        return view('client.appointments.show', compact('appointment'));
+    }
+
+    /**
+     * إلغاء موعد
+     */
+    public function cancelAppointment(Appointment $appointment)
+    {
+        $user = Auth::user();
+        
+        // التأكد من أن الموعد يخص المستخدم الحالي
+        if ($appointment->user_id !== $user->id) {
+            abort(403, 'غير مصرح لك بإلغاء هذا الموعد');
+        }
+
+        if ($appointment->status === 'cancelled') {
+            return redirect()->back()->with('error', 'الموعد ملغي بالفعل');
+        }
+
+        $appointment->update(['status' => 'cancelled']);
+
+        return redirect()->back()->with('success', 'تم إلغاء الموعد بنجاح');
+    }
+
+    /**
+     * إعادة جدولة موعد
+     */
+    public function rescheduleAppointment(Request $request, Appointment $appointment)
+    {
+        $user = Auth::user();
+        
+        // التأكد من أن الموعد يخص المستخدم الحالي
+        if ($appointment->user_id !== $user->id) {
+            abort(403, 'غير مصرح لك بإعادة جدولة هذا الموعد');
+        }
+
+        $request->validate([
+            'appointment_time' => 'required|date|after:now',
+            'notes' => 'nullable|string|max:500',
+        ]);
+
+        $appointment->update([
+            'appointment_time' => $request->appointment_time,
+            'status' => 'rescheduled',
+            'notes' => $request->notes,
+        ]);
+
+        return redirect()->back()->with('success', 'تم إعادة جدولة الموعد بنجاح');
     }
 }

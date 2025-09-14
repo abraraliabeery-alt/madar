@@ -153,7 +153,7 @@ Route::group([], function () {
     // Search Routes
     Route::get('search/global', [AdminController::class, 'globalSearch'])->name('search.global');
     Route::get('search/results', [AdminController::class, 'searchResults'])->name('search.results');
-    Route::get('profile', [AdminController::class, 'profile'])->name('profile');
+    Route::get('profile', [AdminController::class, 'profile'])->name('admin.profile');
     Route::post('profile', [AdminController::class, 'updateProfile'])->name('profile.update');
     Route::get('change-password', [AdminController::class, 'changePassword'])->name('change-password');
     Route::post('change-password', [AdminController::class, 'updatePassword'])->name('change-password.update');

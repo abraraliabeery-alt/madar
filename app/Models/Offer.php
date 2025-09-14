@@ -36,10 +36,10 @@ class Offer extends Model
     ];
 
     protected $casts = [
-        'price' => 'decimal:2',
-        'deposit_amount' => 'decimal:2',
-        'commission_rate' => 'decimal:5,4', // نسبة العمولة (مثل 0.05 = 5%)
-        'commission_amount' => 'decimal:2',
+        'price' => 'float',
+        'deposit_amount' => 'float',
+        'commission_rate' => 'float', // نسبة العمولة (مثل 0.05 = 5%)
+        'commission_amount' => 'float',
         'is_active' => 'boolean',
         'is_featured' => 'boolean',
         'valid_from' => 'date',
