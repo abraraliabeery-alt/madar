@@ -16,6 +16,7 @@ use App\Http\Controllers\Public\StaticController;
 use App\Http\Controllers\Public\CityController;
 use App\Http\Controllers\Public\NewsletterController;
 use App\Http\Controllers\Public\ErrorController;
+use App\Http\Controllers\Public\BookingController;
 
 // Public Routes - لا تحتاج تسجيل دخول
 Route::group([], function () {
@@ -86,6 +87,16 @@ Route::group([], function () {
     Route::get('/cities/{city}', [CityController::class, 'show'])->name('cities.show');
     Route::get('/cities/{city}/products', [CityController::class, 'products'])->name('cities.products');
     Route::get('/cities/{city}/facilities', [CityController::class, 'facilities'])->name('cities.facilities');
+
+    // Booking Routes (require authentication)
+    Route::middleware('auth')->group(function () {
+        Route::get('/bookings/create', [BookingController::class, 'create'])->name('bookings.create');
+        Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
+        Route::get('/bookings/{id}/success', [BookingController::class, 'success'])->name('bookings.success');
+        Route::get('/bookings/{id}', [BookingController::class, 'show'])->name('bookings.show');
+        Route::post('/bookings/{id}/cancel', [BookingController::class, 'cancel'])->name('bookings.cancel');
+        Route::post('/bookings/{id}/reschedule', [BookingController::class, 'reschedule'])->name('bookings.reschedule');
+    });
 
     // User Actions (require authentication)
     Route::middleware('auth')->group(function () {

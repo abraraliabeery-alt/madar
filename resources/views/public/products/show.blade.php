@@ -823,7 +823,7 @@ function bookAppointment(offerId) {
     // Check if user is authenticated
     @auth
         // Redirect to booking form with offer ID
-        window.location.href = '{{ route("public.bookings.create") }}?offer_id=' + offerId;
+        window.location.href = '{{ route("bookings.create") }}?offer_id=' + offerId;
     @else
         // Show login modal or redirect to login
         if (confirm('يجب تسجيل الدخول أولاً لحجز الموعد. هل تريد الانتقال إلى صفحة تسجيل الدخول؟')) {
@@ -931,7 +931,7 @@ function submitQuoteRequest(form) {
     submitBtn.disabled = true;
     
     // Submit the form
-    fetch('{{ route("public.contact.quote") }}', {
+    fetch('{{ route("contact.quote.send") }}', {
         method: 'POST',
         body: formData,
         headers: {
