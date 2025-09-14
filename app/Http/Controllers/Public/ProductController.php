@@ -17,9 +17,10 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Product::with(['facility', 'category'])
+        $query = Product::with(['facility', 'category', 'offers'])
             ->where('is_active', true)
-            ->where('is_verified', true);
+            ->where('is_verified', true)
+            ->withActiveOffers();
 
         // Filter by category
         if ($request->filled('category_id')) {
@@ -93,20 +94,22 @@ class ProductController extends Controller
         }
 
         // المنتجات المشابهة
-        $similarProducts = Product::with(['facility', 'category'])
+        $similarProducts = Product::with(['facility', 'category', 'offers'])
             ->where('id', '!=', $product->id)
             ->where('category_id', $product->category_id)
             ->where('is_active', true)
             ->where('is_verified', true)
+            ->withActiveOffers()
             ->take(6)
             ->get();
 
         // منتجات نفس المنشأة
-        $facilityProducts = Product::with(['category'])
+        $facilityProducts = Product::with(['category', 'offers'])
             ->where('id', '!=', $product->id)
             ->where('facility_id', $product->facility_id)
             ->where('is_active', true)
             ->where('is_verified', true)
+            ->withActiveOffers()
             ->take(4)
             ->get();
 

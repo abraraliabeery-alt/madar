@@ -44,11 +44,17 @@
                                 @foreach($offers as $offer)
                                     <td class="px-6 py-4 whitespace-nowrap text-center">
                                         <div class="text-lg font-bold text-primary-600">
-                                            {{ number_format($offer->price, 2) }} {{ $offer->currency }}
+                                            <span class="flex items-center">
+                                                {{ number_format($offer->price, 2) }}
+                                                <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-4 h-4 mr-1">
+                                            </span>
                                         </div>
                                         @if($offer->deposit_amount)
                                             <div class="text-sm text-gray-600">
-                                                العربون: {{ number_format($offer->deposit_amount, 2) }} {{ $offer->currency }}
+                                                <span class="flex items-center">
+                                                    العربون: {{ number_format($offer->deposit_amount, 2) }}
+                                                    <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-3 h-3 mr-1">
+                                                </span>
                                             </div>
                                         @endif
                                     </td>

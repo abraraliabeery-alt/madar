@@ -11,6 +11,8 @@ return [
     |
     */
 
+    'close' => 'Close',
+    
     'home' => [
         'title' => 'Welcome to Aqar',
         'subtitle' => 'Discover the best properties and real estate facilities in your area',

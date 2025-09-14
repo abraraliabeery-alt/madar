@@ -30,8 +30,9 @@ class SearchController extends Controller
      */
     public function products(Request $request)
     {
-        $query = Product::with(['facility', 'category', 'statuses', 'features'])
-            ->where('is_active', true);
+        $query = Product::with(['facility', 'category', 'statuses', 'features', 'offers'])
+            ->where('is_active', true)
+            ->withActiveOffers();
 
         // البحث النصي
         if ($request->has('q') && $request->q) {
@@ -378,8 +379,9 @@ class SearchController extends Controller
     public function searchByCategory(Category $category, Request $request)
     {
         $query = $category->products()
-            ->with(['facility', 'statuses'])
-            ->where('is_active', true);
+            ->with(['facility', 'statuses', 'offers'])
+            ->where('is_active', true)
+            ->withActiveOffers();
 
         // تطبيق الفلاتر الإضافية
         if ($request->has('min_price') && $request->min_price) {
@@ -401,9 +403,10 @@ class SearchController extends Controller
     {
         $area = $request->get('area', '');
 
-        $query = Product::with(['facility', 'category'])
+        $query = Product::with(['facility', 'category', 'offers'])
             ->where('is_active', true)
-            ->where('address', 'like', '%' . $area . '%');
+            ->where('address', 'like', '%' . $area . '%')
+            ->withActiveOffers();
 
         $products = $query->paginate(12);
 

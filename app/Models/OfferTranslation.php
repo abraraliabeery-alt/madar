@@ -12,10 +12,12 @@ class OfferTranslation extends Model
     protected $fillable = [
         'offer_id',
         'locale',
+        'offer_title',
+        'offer_description',
         'terms_conditions',
-        'special_notes',
     ];
 
+    // العلاقات
     public function offer()
     {
         return $this->belongsTo(Offer::class);

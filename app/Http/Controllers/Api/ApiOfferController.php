@@ -41,7 +41,6 @@ class ApiOfferController extends Controller
             'product_id' => 'required|exists:products,id',
             'offer_type' => 'required|in:sale,rent_monthly,rent_yearly,rent_daily',
             'price' => 'required|numeric|min:0',
-            'currency' => 'required|string|max:3',
             'deposit_amount' => 'nullable|numeric|min:0',
             'commission_rate' => 'nullable|numeric|min:0|max:1',
             'valid_from' => 'nullable|date',
@@ -83,7 +82,6 @@ class ApiOfferController extends Controller
         $request->validate([
             'offer_type' => 'sometimes|in:sale,rent_monthly,rent_yearly,rent_daily',
             'price' => 'sometimes|numeric|min:0',
-            'currency' => 'sometimes|string|max:3',
             'deposit_amount' => 'nullable|numeric|min:0',
             'commission_rate' => 'nullable|numeric|min:0|max:1',
             'is_active' => 'sometimes|boolean',
@@ -185,6 +183,42 @@ class ApiOfferController extends Controller
         return response()->json([
             'success' => true,
             'data' => $data
+        ]);
+    }
+
+    /**
+     * عرض تفاصيل عرض مع العروض ذات الصلة
+     */
+    public function getOfferDetails(Offer $offer)
+    {
+        $relatedOffers = Offer::where('product_id', $offer->product_id)
+            ->where('id', '!=', $offer->id)
+            ->where('is_active', true)
+            ->take(5)
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'offer' => $offer->load(['product', 'facility', 'translations']),
+            'relatedOffers' => $relatedOffers->load(['translations'])
+        ]);
+    }
+
+    /**
+     * عرض جميع عروض منتج محدد
+     */
+    public function getAllProductOffers(Product $product)
+    {
+        $offers = $product->offers()
+            ->where('is_active', true)
+            ->orderBy('is_featured', 'desc')
+            ->orderBy('price', 'asc')
+            ->get()
+            ->load(['translations']);
+
+        return response()->json([
+            'success' => true,
+            'offers' => $offers
         ]);
     }
 }

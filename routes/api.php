@@ -74,6 +74,8 @@ Route::prefix('v1')->group(function () {
     Route::get('/offers/statistics', [ApiOfferController::class, 'statistics']);
     Route::get('/offers/export', [ApiOfferController::class, 'export']);
     Route::get('/products/{product}/offers', [ApiOfferController::class, 'getProductOffers']);
+    Route::get('/products/{product}/all-offers', [ApiOfferController::class, 'getAllProductOffers']);
+    Route::get('/offers/{offer}/details', [ApiOfferController::class, 'getOfferDetails']);
     Route::get('/offers/{offer}', [ApiOfferController::class, 'show']);
 
     // Public Facility Routes
@@ -364,6 +366,8 @@ Route::middleware(['auth:sanctum', 'role:facility'])->prefix('v1/facility')->nam
     Route::post('/offers/{id}/copy', [ApiFacilityOfferController::class, 'copyOffer']);
     Route::get('/offers/statistics', [ApiFacilityOfferController::class, 'getOfferStatistics']);
     Route::post('/offers/bulk-update-prices', [ApiFacilityOfferController::class, 'bulkUpdatePrices']);
+    Route::get('/offers/{id}/details', [ApiFacilityOfferController::class, 'getOfferDetails']);
+    Route::get('/products/{product}/all-offers', [ApiFacilityOfferController::class, 'getAllProductOffers']);
 
     // Facility Contracts Routes (New Enhanced)
     Route::get('/contracts', [ApiFacilityOfferController::class, 'getContracts']);

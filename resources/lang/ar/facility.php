@@ -142,6 +142,27 @@ return [
         'created_at' => 'تاريخ الإنشاء',
         'updated_at' => 'تاريخ التحديث',
         
+        // Pricing & Offers
+        'pricing' => 'الأسعار والعروض',
+        'available_offers' => 'العروض المتاحة',
+        'offer_type' => 'نوع العرض',
+        'offer_price' => 'سعر العرض',
+        'deposit' => 'الضمان',
+        'commission' => 'العمولة',
+        'valid_until' => 'صالح حتى',
+        'no_offers' => 'لا توجد عروض متاحة',
+        'contact_for_pricing' => 'تواصل للحصول على السعر',
+        'sale_offers' => 'عروض البيع',
+        'rent_offers' => 'عروض الإيجار',
+        'daily_rent' => 'إيجار يومي',
+        'monthly_rent' => 'إيجار شهري',
+        'yearly_rent' => 'إيجار سنوي',
+        'price_from' => 'من',
+        'price_to' => 'إلى',
+        'best_offer' => 'أفضل عرض',
+        'offer_details' => 'تفاصيل العرض',
+        'view_all_offers' => 'عرض جميع العروض',
+        
         // Create Product
         'create' => [
             'title' => 'إضافة منتج جديد',

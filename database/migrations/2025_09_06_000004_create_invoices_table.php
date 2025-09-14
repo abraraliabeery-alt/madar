@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('invoice_number')->unique();
             $table->enum('invoice_type', ['rent', 'sale', 'deposit', 'commission', 'refund']);
             $table->decimal('amount', 12, 2);
-            $table->string('currency', 3)->default('SAR');
             $table->date('due_date')->nullable();
             $table->decimal('paid_amount', 12, 2)->default(0);
             $table->decimal('remaining_amount', 12, 2);

@@ -16,7 +16,6 @@ return new class extends Migration
             $table->unsignedBigInteger('product_id');
             $table->enum('offer_type', ['sale', 'rent_monthly', 'rent_yearly', 'rent_daily']);
             $table->decimal('price', 12, 2);
-            $table->string('currency', 3)->default('SAR');
             $table->decimal('deposit_amount', 12, 2)->nullable();
             $table->decimal('commission_rate', 5, 4)->nullable(); // نسبة العمولة (مثل 0.05 = 5%)
             $table->decimal('commission_amount', 12, 2)->nullable();

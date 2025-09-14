@@ -107,7 +107,6 @@ class AdminOfferController extends Controller
             'facility_id' => 'required|exists:facilities,id',
             'offer_type' => 'required|in:sale,rent_monthly,rent_yearly,rent_daily',
             'price' => 'required|numeric|min:0',
-            'currency' => 'required|string|max:3',
             'deposit_amount' => 'nullable|numeric|min:0',
             'commission_rate' => 'nullable|numeric|min:0|max:1',
             'is_active' => 'boolean',
@@ -210,7 +209,7 @@ class AdminOfferController extends Controller
             
             // رؤوس الأعمدة
             fputcsv($file, [
-                'ID', 'Product Title', 'Facility Name', 'Offer Type', 'Price', 'Currency',
+                'ID', 'Product Title', 'Facility Name', 'Offer Type', 'Price',
                 'Deposit Amount', 'Commission Rate', 'Commission Amount',
                 'Is Active', 'Valid From', 'Valid To', 'Created At'
             ]);

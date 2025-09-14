@@ -130,7 +130,6 @@ class ApiFacilityOfferController extends Controller
                 'created_by' => Auth::id(),
                 'is_active' => $request->is_active ?? true,
                 'is_featured' => $request->is_featured ?? false,
-                'currency' => 'SAR',
             ]);
 
             $offer = $this->offerService->createOffer($offerData);
@@ -576,6 +575,101 @@ class ApiFacilityOfferController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'حدث خطأ في تحديث الأسعار: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * عرض تفاصيل عرض مع العروض ذات الصلة
+     * GET /api/facility/offers/{id}/details
+     */
+    public function getOfferDetails($id)
+    {
+        try {
+            $facilityId = Auth::user()->facility_id;
+            
+            if (!$facilityId) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'غير مصرح لك بالوصول'
+                ], 403);
+            }
+
+            $offer = Offer::where('id', $id)
+                ->where('facility_id', $facilityId)
+                ->first();
+
+            if (!$offer) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'العرض غير موجود'
+                ], 404);
+            }
+
+            $relatedOffers = Offer::where('product_id', $offer->product_id)
+                ->where('facility_id', $facilityId)
+                ->where('id', '!=', $offer->id)
+                ->where('is_active', true)
+                ->take(5)
+                ->get();
+
+            return response()->json([
+                'success' => true,
+                'offer' => $offer->load(['product', 'facility', 'translations']),
+                'relatedOffers' => $relatedOffers->load(['translations'])
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'حدث خطأ في جلب تفاصيل العرض: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * عرض جميع عروض منتج محدد
+     * GET /api/facility/products/{product}/all-offers
+     */
+    public function getAllProductOffers($productId)
+    {
+        try {
+            $facilityId = Auth::user()->facility_id;
+            
+            if (!$facilityId) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'غير مصرح لك بالوصول'
+                ], 403);
+            }
+
+            $product = Product::where('id', $productId)
+                ->where('facility_id', $facilityId)
+                ->first();
+
+            if (!$product) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'المنتج غير موجود'
+                ], 404);
+            }
+
+            $offers = $product->offers()
+                ->where('is_active', true)
+                ->orderBy('is_featured', 'desc')
+                ->orderBy('price', 'asc')
+                ->get()
+                ->load(['translations']);
+
+            return response()->json([
+                'success' => true,
+                'offers' => $offers
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'حدث خطأ في جلب عروض المنتج: ' . $e->getMessage()
             ], 500);
         }
     }

@@ -101,12 +101,18 @@
                     <div class="space-y-3">
                         <div class="flex justify-between">
                             <span class="text-gray-600">المبلغ الإجمالي:</span>
-                            <span class="font-bold text-lg text-gray-800">{{ number_format($contract->total_amount, 2) }} {{ $contract->currency }}</span>
+                            <span class="font-bold text-lg text-gray-800 flex items-center">
+                                {{ number_format($contract->total_amount, 2) }}
+                                <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-5 h-5 mr-1">
+                            </span>
                         </div>
                         @if($contract->deposit_amount)
                             <div class="flex justify-between">
                                 <span class="text-gray-600">العربون:</span>
-                                <span class="font-semibold text-gray-800">{{ number_format($contract->deposit_amount, 2) }} {{ $contract->currency }}</span>
+                                <span class="font-semibold text-gray-800 flex items-center">
+                                    {{ number_format($contract->deposit_amount, 2) }}
+                                    <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-4 h-4 mr-1">
+                                </span>
                             </div>
                         @endif
                         @if($contract->commission_rate)
@@ -124,7 +130,10 @@
                         @if($contract->early_payment_discount)
                             <div class="flex justify-between">
                                 <span class="text-gray-600">خصم الدفع المبكر:</span>
-                                <span class="font-semibold text-gray-800">{{ number_format($contract->early_payment_discount, 2) }} {{ $contract->currency }}</span>
+                                <span class="font-semibold text-gray-800 flex items-center">
+                                    {{ number_format($contract->early_payment_discount, 2) }}
+                                    <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-4 h-4 mr-1">
+                                </span>
                             </div>
                         @endif
                     </div>

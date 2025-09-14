@@ -44,15 +44,24 @@
                                         </tr>
                                         <tr>
                                             <td><strong>المبلغ الإجمالي:</strong></td>
-                                            <td>{{ number_format($contract->total_amount, 2) }} {{ $contract->currency }}</td>
+                                            <td class="flex items-center">
+                                                {{ number_format($contract->total_amount, 2) }}
+                                                <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-4 h-4 mr-1">
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td><strong>المدفوع:</strong></td>
-                                            <td class="text-success">{{ number_format($contract->getTotalPaidAmount(), 2) }} {{ $contract->currency }}</td>
+                                            <td class="text-success flex items-center">
+                                                {{ number_format($contract->getTotalPaidAmount(), 2) }}
+                                                <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-4 h-4 mr-1">
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td><strong>المتبقي:</strong></td>
-                                            <td class="text-warning">{{ number_format($contract->getRemainingAmount(), 2) }} {{ $contract->currency }}</td>
+                                            <td class="text-warning flex items-center">
+                                                {{ number_format($contract->getRemainingAmount(), 2) }}
+                                                <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-4 h-4 mr-1">
+                                            </td>
                                         </tr>
                                     </table>
                                 </div>
@@ -92,9 +101,18 @@
                                                                 @case('refund') فاتورة استرداد @break
                                                             @endswitch
                                                         </td>
-                                                        <td>{{ number_format($invoice->amount, 2) }} {{ $invoice->currency }}</td>
-                                                        <td class="text-success">{{ number_format($invoice->paid_amount, 2) }} {{ $invoice->currency }}</td>
-                                                        <td class="text-warning">{{ number_format($invoice->remaining_amount, 2) }} {{ $invoice->currency }}</td>
+                                                        <td class="flex items-center">
+                                                            {{ number_format($invoice->amount, 2) }}
+                                                            <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-3 h-3 mr-1">
+                                                        </td>
+                                                        <td class="text-success flex items-center">
+                                                            {{ number_format($invoice->paid_amount, 2) }}
+                                                            <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-3 h-3 mr-1">
+                                                        </td>
+                                                        <td class="text-warning flex items-center">
+                                                            {{ number_format($invoice->remaining_amount, 2) }}
+                                                            <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-3 h-3 mr-1">
+                                                        </td>
                                                         <td>{{ $invoice->due_date ? $invoice->due_date->format('Y-m-d') : 'غير محدد' }}</td>
                                                         <td>
                                                             @switch($invoice->status)
@@ -109,7 +127,7 @@
                                                             <button class="btn btn-sm btn-primary pay-invoice-btn" 
                                                                     data-invoice-id="{{ $invoice->id }}"
                                                                     data-amount="{{ $invoice->remaining_amount }}"
-                                                                    data-currency="{{ $invoice->currency }}">
+                                                                    data-currency="SAR">
                                                                 <i class="fas fa-credit-card"></i> دفع
                                                             </button>
                                                         </td>
@@ -159,7 +177,10 @@
                                                             @case('online') عبر الإنترنت @break
                                                         @endswitch
                                                     </td>
-                                                    <td>{{ number_format($payment->amount, 2) }} {{ $payment->currency }}</td>
+                                                    <td class="flex items-center">
+                                                        {{ number_format($payment->amount, 2) }}
+                                                        <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-3 h-3 mr-1">
+                                                    </td>
                                                     <td>{{ $payment->payment_date->format('Y-m-d') }}</td>
                                                     <td>
                                                         @switch($payment->status)
@@ -270,7 +291,6 @@
         button.addEventListener('click', function() {
             currentInvoiceId = this.dataset.invoiceId;
             const amount = this.dataset.amount;
-            const currency = this.dataset.currency;
             
             document.getElementById('amount').value = amount;
             document.getElementById('amount').max = amount;

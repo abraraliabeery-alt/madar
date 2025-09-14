@@ -90,17 +90,6 @@
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
-                            <div>
-                                <label for="currency" class="block text-sm font-medium text-gray-700 mb-2">العملة <span class="text-red-500">*</span></label>
-                                <select name="currency" id="currency" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 @error('currency') border-red-500 @enderror" required>
-                                    <option value="SAR" {{ old('currency', $offer->currency) == 'SAR' ? 'selected' : '' }}>ريال سعودي</option>
-                                    <option value="USD" {{ old('currency', $offer->currency) == 'USD' ? 'selected' : '' }}>دولار أمريكي</option>
-                                    <option value="EUR" {{ old('currency', $offer->currency) == 'EUR' ? 'selected' : '' }}>يورو</option>
-                                </select>
-                                @error('currency')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
                         </div>
 
                         <div class="mb-4">

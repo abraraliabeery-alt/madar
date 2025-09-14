@@ -17,7 +17,6 @@ return new class extends Migration
             $table->unsignedBigInteger('contract_id');
             $table->enum('payment_method', ['cash', 'bank_transfer', 'credit_card', 'check', 'online']);
             $table->decimal('amount', 12, 2);
-            $table->string('currency', 3)->default('SAR');
             $table->date('payment_date');
             $table->string('reference_number')->nullable();
             $table->string('bank_name')->nullable();

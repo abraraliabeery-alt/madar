@@ -16,7 +16,6 @@ return new class extends Migration
             $table->enum('entry_type', ['debit', 'credit']);
             $table->enum('account_type', ['revenue', 'receivable', 'commission', 'liability', 'expense']);
             $table->decimal('amount', 12, 2);
-            $table->string('currency', 3)->default('SAR');
             $table->text('description');
             $table->string('reference_type')->nullable(); // 'invoice', 'payment', 'contract', 'commission'
             $table->unsignedBigInteger('reference_id')->nullable();

@@ -116,8 +116,9 @@
                                                 @endif
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="text-sm font-medium text-gray-900">
-                                                    {{ number_format($payment->amount, 2) }} {{ $payment->currency }}
+                                                <div class="text-sm font-medium text-gray-900 flex items-center">
+                                                    {{ number_format($payment->amount, 2) }}
+                                                    <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-4 h-4 mr-1">
                                                 </div>
                                                 @if($payment->processing_fee > 0)
                                                     <div class="text-sm text-gray-500">رسوم: {{ number_format($payment->processing_fee, 2) }}</div>

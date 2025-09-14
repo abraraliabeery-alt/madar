@@ -93,20 +93,29 @@
                                                 </span>
                                             </td>
                                             <td>
-                                                <strong>{{ number_format($contract->total_amount, 2) }} {{ $contract->currency }}</strong>
+                                                <strong class="flex items-center">
+                                                    {{ number_format($contract->total_amount, 2) }}
+                                                    <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-4 h-4 mr-1">
+                                                </strong>
                                             </td>
                                             <td>
                                                 @php
                                                     $totalPaid = $contract->getTotalPaidAmount();
                                                 @endphp
-                                                <span class="text-success">{{ number_format($totalPaid, 2) }} {{ $contract->currency }}</span>
+                                                <span class="text-success flex items-center">
+                                                    {{ number_format($totalPaid, 2) }}
+                                                    <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-3 h-3 mr-1">
+                                                </span>
                                             </td>
                                             <td>
                                                 @php
                                                     $remaining = $contract->getRemainingAmount();
                                                 @endphp
                                                 <span class="text-{{ $remaining > 0 ? 'warning' : 'success' }}">
-                                                    {{ number_format($remaining, 2) }} {{ $contract->currency }}
+                                                    <span class="flex items-center">
+                                                        {{ number_format($remaining, 2) }}
+                                                        <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-3 h-3 mr-1">
+                                                    </span>
                                                 </span>
                                             </td>
                                             <td>

@@ -79,12 +79,18 @@
                     <div class="space-y-3">
                         <div class="flex justify-between">
                             <span class="text-gray-600">السعر:</span>
-                            <span class="font-bold text-lg text-gray-800">{{ number_format($offer->price, 2) }} {{ $offer->currency }}</span>
+                            <span class="font-bold text-lg text-gray-800 flex items-center">
+                                {{ number_format($offer->price, 2) }}
+                                <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-5 h-5 mr-1">
+                            </span>
                         </div>
                         @if($offer->deposit_amount)
                             <div class="flex justify-between">
                                 <span class="text-gray-600">العربون:</span>
-                                <span class="font-semibold text-gray-800">{{ number_format($offer->deposit_amount, 2) }} {{ $offer->currency }}</span>
+                                <span class="font-semibold text-gray-800 flex items-center">
+                                    {{ number_format($offer->deposit_amount, 2) }}
+                                    <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-4 h-4 mr-1">
+                                </span>
                             </div>
                         @endif
                         @if($offer->commission_rate)
@@ -96,7 +102,10 @@
                         @if($offer->commission_amount)
                             <div class="flex justify-between">
                                 <span class="text-gray-600">مبلغ العمولة:</span>
-                                <span class="font-semibold text-gray-800">{{ number_format($offer->commission_amount, 2) }} {{ $offer->currency }}</span>
+                                <span class="font-semibold text-gray-800 flex items-center">
+                                    {{ number_format($offer->commission_amount, 2) }}
+                                    <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-4 h-4 mr-1">
+                                </span>
                             </div>
                         @endif
                     </div>

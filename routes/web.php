@@ -51,6 +51,12 @@ Route::get('/language-info', [App\Http\Controllers\LanguageController::class, 'i
 // Laravel UI Auth Routes
 Auth::routes();
 
+// Home route for Laravel Auth redirects
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+// General dashboard route (redirects to role-specific dashboard)
+Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
+
 // Profile routes for authenticated users (must come before public profile route)
 Route::middleware(['auth'])->group(function () {
     Route::get('/profile/edit', [App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
@@ -117,7 +123,7 @@ Route::get('/welcome', function () {
 // Route files are now registered through RouteServiceProvider
 // This provides better organization, middleware handling, and performance
 
-// Fallback route for 404 errors
-Route::fallback(function () {
-    return view('errors.404');
+// Fallback route for 404 errors with enhanced handling
+Route::fallback(function (Illuminate\Http\Request $request) {
+    return \App\Services\RouteFallbackService::handleMissingRoute($request);
 });

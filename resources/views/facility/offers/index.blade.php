@@ -98,9 +98,15 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div>
-                                        <strong class="text-gray-900">{{ number_format($offer->price, 2) }} {{ $offer->currency }}</strong>
+                                        <strong class="text-gray-900 flex items-center">
+                                            {{ number_format($offer->price, 2) }}
+                                            <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-4 h-4 mr-1">
+                                        </strong>
                                         @if($offer->deposit_amount)
-                                            <p class="text-sm text-gray-500 mt-1">عربون: {{ number_format($offer->deposit_amount, 2) }}</p>
+                                            <p class="text-sm text-gray-500 mt-1 flex items-center">
+                                                عربون: {{ number_format($offer->deposit_amount, 2) }}
+                                                <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-3 h-3 mr-1">
+                                            </p>
                                         @endif
                                     </div>
                                 </td>
@@ -108,7 +114,10 @@
                                     @if($offer->commission_rate)
                                         {{ number_format($offer->commission_rate * 100, 2) }}%
                                     @elseif($offer->commission_amount)
-                                        {{ number_format($offer->commission_amount, 2) }} {{ $offer->currency }}
+                                        <span class="flex items-center">
+                                            {{ number_format($offer->commission_amount, 2) }}
+                                            <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-3 h-3 mr-1">
+                                        </span>
                                     @else
                                         -
                                     @endif

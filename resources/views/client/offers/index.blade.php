@@ -63,11 +63,17 @@
                                             
                                             <div class="mb-3">
                                                 <h4 class="text-primary mb-0">
-                                                    {{ number_format($offer->price, 2) }} {{ $offer->currency }}
+                                                    <span class="flex items-center">
+                                                        {{ number_format($offer->price, 2) }}
+                                                        <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-4 h-4 mr-1">
+                                                    </span>
                                                 </h4>
                                                 @if($offer->deposit_amount)
                                                     <small class="text-muted">
-                                                        العربون: {{ number_format($offer->deposit_amount, 2) }} {{ $offer->currency }}
+                                                        <span class="flex items-center">
+                                                            العربون: {{ number_format($offer->deposit_amount, 2) }}
+                                                            <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-3 h-3 mr-1">
+                                                        </span>
                                                     </small>
                                                 @endif
                                             </div>

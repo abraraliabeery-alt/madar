@@ -15,7 +15,6 @@ class Invoice extends Model
         'invoice_number',
         'invoice_type', // 'rent', 'sale', 'deposit', 'commission', 'refund'
         'amount',
-        'currency', // العملة
         'due_date',
         'paid_amount',
         'remaining_amount',

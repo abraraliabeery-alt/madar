@@ -114,16 +114,12 @@
                                 <input type="number" name="total_amount" id="total_amount" 
                                        class="flex-1 border border-gray-300 rounded-l-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 @error('total_amount') border-red-500 @enderror" 
                                        value="{{ old('total_amount', $contract->total_amount) }}" step="0.01" min="0" required>
-                                <select name="currency" id="currency" class="border border-gray-300 rounded-r-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 @error('currency') border-red-500 @enderror" required>
-                                    <option value="SAR" {{ old('currency', $contract->currency) == 'SAR' ? 'selected' : '' }}>ريال سعودي</option>
-                                    <option value="USD" {{ old('currency', $contract->currency) == 'USD' ? 'selected' : '' }}>دولار أمريكي</option>
-                                    <option value="EUR" {{ old('currency', $contract->currency) == 'EUR' ? 'selected' : '' }}>يورو</option>
-                                </select>
+                                <span class="border border-gray-300 rounded-r-lg px-3 py-2 bg-gray-50 text-gray-700 flex items-center">
+                                    <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-4 h-4 mr-1">
+                                    ريال سعودي
+                                </span>
                             </div>
                             @error('total_amount')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                            @error('currency')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>

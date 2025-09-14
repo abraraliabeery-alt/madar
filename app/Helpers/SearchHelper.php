@@ -256,13 +256,12 @@ class SearchHelper
      * Format price for display
      *
      * @param float $price
-     * @param string $currency
      * @param string $locale
      * @return string
      */
-    public static function formatPrice($price, $currency = 'SAR', $locale = 'ar-SA')
+    public static function formatPrice($price, $locale = 'ar-SA')
     {
-        return number_format($price, 0) . ' ' . $currency;
+        return number_format($price, 0) . ' SAR';
     }
     
     /**

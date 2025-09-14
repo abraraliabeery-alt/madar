@@ -63,18 +63,27 @@
                             <table class="table table-sm">
                                 <tr>
                                     <td><strong>السعر:</strong></td>
-                                    <td class="text-primary fs-5">{{ number_format($offer->price, 2) }} {{ $offer->currency }}</td>
+                                    <td class="text-primary fs-5 flex items-center">
+                                        {{ number_format($offer->price, 2) }}
+                                        <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-5 h-5 mr-1">
+                                    </td>
                                 </tr>
                                 @if($offer->deposit_amount)
                                     <tr>
                                         <td><strong>العربون:</strong></td>
-                                        <td>{{ number_format($offer->deposit_amount, 2) }} {{ $offer->currency }}</td>
+                                        <td class="flex items-center">
+                                            {{ number_format($offer->deposit_amount, 2) }}
+                                            <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-4 h-4 mr-1">
+                                        </td>
                                     </tr>
                                 @endif
                                 @if($offer->commission_amount)
                                     <tr>
                                         <td><strong>العمولة:</strong></td>
-                                        <td>{{ number_format($offer->commission_amount, 2) }} {{ $offer->currency }}</td>
+                                        <td class="flex items-center">
+                                            {{ number_format($offer->commission_amount, 2) }}
+                                            <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-4 h-4 mr-1">
+                                        </td>
                                     </tr>
                                 @endif
                                 <tr>
@@ -120,7 +129,10 @@
                                             <p class="card-text text-muted small">{{ $similarOffer->product->address }}</p>
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <span class="text-primary fw-bold">
-                                                    {{ number_format($similarOffer->price, 2) }} {{ $similarOffer->currency }}
+                                                    <span class="flex items-center">
+                                                        {{ number_format($similarOffer->price, 2) }}
+                                                        <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-4 h-4 mr-1">
+                                                    </span>
                                                 </span>
                                                 <a href="{{ route('client.offers.show', $similarOffer) }}" 
                                                    class="btn btn-sm btn-outline-primary">عرض</a>

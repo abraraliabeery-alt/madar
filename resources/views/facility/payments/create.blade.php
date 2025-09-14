@@ -35,11 +35,11 @@
                                 <option value="{{ $invoice->id }}" 
                                         data-contract="{{ $invoice->contract_id }}"
                                         data-amount="{{ $invoice->remaining_amount }}"
-                                        data-currency="{{ $invoice->currency }}"
+                                        data-currency="SAR"
                                         {{ old('invoice_id') == $invoice->id ? 'selected' : '' }}>
                                     {{ $invoice->invoice_number ?: 'INV-' . $invoice->id }} - 
                                     {{ $invoice->contract->product->getTranslatedTitle() }} - 
-                                    {{ number_format($invoice->remaining_amount, 2) }} {{ $invoice->currency }}
+                                    {{ number_format($invoice->remaining_amount, 2) }} SAR
                                 </option>
                             @endforeach
                         </select>
@@ -99,28 +99,16 @@
                                    step="0.01" 
                                    min="0" 
                                    required>
-                            <span class="absolute left-3 top-2 text-gray-500" id="currency_display">SAR</span>
+                            <span class="absolute left-3 top-2 text-gray-500 flex items-center" id="currency_display">
+                                <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-4 h-4 mr-1">
+                                SAR
+                            </span>
                         </div>
                         @error('amount')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    <!-- العملة -->
-                    <div class="mb-6">
-                        <label for="currency" class="block text-sm font-medium text-gray-700 mb-2">
-                            العملة <span class="text-red-500">*</span>
-                        </label>
-                        <select name="currency" id="currency" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 @error('currency') border-red-500 @enderror" required>
-                            <option value="SAR" {{ old('currency') == 'SAR' ? 'selected' : '' }}>ريال سعودي (SAR)</option>
-                            <option value="USD" {{ old('currency') == 'USD' ? 'selected' : '' }}>دولار أمريكي (USD)</option>
-                            <option value="EUR" {{ old('currency') == 'EUR' ? 'selected' : '' }}>يورو (EUR)</option>
-                            <option value="AED" {{ old('currency') == 'AED' ? 'selected' : '' }}>درهم إماراتي (AED)</option>
-                        </select>
-                        @error('currency')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
 
                     <!-- تاريخ الدفع -->
                     <div class="mb-6">
@@ -225,7 +213,10 @@
                                    value="{{ old('processing_fee', 0) }}" 
                                    step="0.01" 
                                    min="0">
-                            <span class="absolute left-3 top-2 text-gray-500" id="processing_fee_currency">SAR</span>
+                            <span class="absolute left-3 top-2 text-gray-500 flex items-center" id="processing_fee_currency">
+                                <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-4 h-4 mr-1">
+                                SAR
+                            </span>
                         </div>
                         @error('processing_fee')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -243,7 +234,10 @@
                                    value="{{ old('discount_applied', 0) }}" 
                                    step="0.01" 
                                    min="0">
-                            <span class="absolute left-3 top-2 text-gray-500" id="discount_currency">SAR</span>
+                            <span class="absolute left-3 top-2 text-gray-500 flex items-center" id="discount_currency">
+                                <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-4 h-4 mr-1">
+                                SAR
+                            </span>
                         </div>
                         @error('discount_applied')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -261,7 +255,10 @@
                                    value="{{ old('late_fee_paid', 0) }}" 
                                    step="0.01" 
                                    min="0">
-                            <span class="absolute left-3 top-2 text-gray-500" id="late_fee_currency">SAR</span>
+                            <span class="absolute left-3 top-2 text-gray-500 flex items-center" id="late_fee_currency">
+                                <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-4 h-4 mr-1">
+                                SAR
+                            </span>
                         </div>
                         @error('late_fee_paid')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -328,46 +325,30 @@
 @push('scripts')
 <script>
 $(document).ready(function() {
-    // تحديث العملة في جميع الحقول
-    function updateCurrency() {
-        const currency = $('#currency').val();
-        $('#currency_display').text(currency);
-        $('#processing_fee_currency').text(currency);
-        $('#discount_currency').text(currency);
-        $('#late_fee_currency').text(currency);
-        updateSummary();
-    }
-
     // تحديث ملخص الدفعة
     function updateSummary() {
         const amount = parseFloat($('#amount').val()) || 0;
         const processingFee = parseFloat($('#processing_fee').val()) || 0;
         const discount = parseFloat($('#discount_applied').val()) || 0;
         const lateFee = parseFloat($('#late_fee_paid').val()) || 0;
-        const currency = $('#currency').val();
 
         const total = amount + processingFee + lateFee - discount;
 
-        $('#summary_amount').text(amount.toFixed(2) + ' ' + currency);
-        $('#summary_processing_fee').text(processingFee.toFixed(2) + ' ' + currency);
-        $('#summary_discount').text(discount.toFixed(2) + ' ' + currency);
-        $('#summary_total').text(total.toFixed(2) + ' ' + currency);
+        $('#summary_amount').text(amount.toFixed(2) + ' SAR');
+        $('#summary_processing_fee').text(processingFee.toFixed(2) + ' SAR');
+        $('#summary_discount').text(discount.toFixed(2) + ' SAR');
+        $('#summary_total').text(total.toFixed(2) + ' SAR');
     }
-
-    // تحديث العملة عند التغيير
-    $('#currency').on('change', updateCurrency);
 
     // تحديث المبلغ عند تغيير الفاتورة
     $('#invoice_id').on('change', function() {
         const selectedOption = $(this).find('option:selected');
         const amount = selectedOption.data('amount');
-        const currency = selectedOption.data('currency');
         const contractId = selectedOption.data('contract');
 
         if (amount) {
             $('#amount').val(amount);
-            $('#currency').val(currency);
-            updateCurrency();
+            updateSummary();
         }
 
         if (contractId) {

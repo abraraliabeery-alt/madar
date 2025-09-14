@@ -19,9 +19,10 @@ class ApiProductController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Product::with(['facility', 'category', 'features'])
+        $query = Product::with(['facility', 'category', 'features', 'offers'])
             ->where('is_active', true)
-            ->where('is_verified', true);
+            ->where('is_verified', true)
+            ->withActiveOffers();
 
         // Filter by category
         if ($request->has('category_id')) {

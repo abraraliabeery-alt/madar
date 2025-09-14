@@ -82,7 +82,10 @@
                                    value="{{ old('amount', $invoice->amount) }}"
                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 pr-12 focus:outline-none focus:ring-2 focus:ring-primary-500 @error('amount') border-red-500 @enderror" 
                                    required>
-                            <span class="absolute left-3 top-2 text-gray-500" id="amount_currency">SAR</span>
+                            <span class="absolute left-3 top-2 text-gray-500 flex items-center" id="amount_currency">
+                                <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-4 h-4 mr-1">
+                                SAR
+                            </span>
                         </div>
                         @error('amount')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -142,7 +145,10 @@
                                    min="0" 
                                    value="{{ old('installment_amount', $invoice->installment_amount) }}"
                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 pr-12 focus:outline-none focus:ring-2 focus:ring-primary-500 @error('installment_amount') border-red-500 @enderror">
-                            <span class="absolute left-3 top-2 text-gray-500" id="installment_currency">SAR</span>
+                            <span class="absolute left-3 top-2 text-gray-500 flex items-center" id="installment_currency">
+                                <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-4 h-4 mr-1">
+                                SAR
+                            </span>
                         </div>
                         @error('installment_amount')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -162,7 +168,10 @@
                                    min="0" 
                                    value="{{ old('late_fee_amount', $invoice->late_fee_amount) }}"
                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 pr-12 focus:outline-none focus:ring-2 focus:ring-primary-500 @error('late_fee_amount') border-red-500 @enderror">
-                            <span class="absolute left-3 top-2 text-gray-500" id="late_fee_currency">SAR</span>
+                            <span class="absolute left-3 top-2 text-gray-500 flex items-center" id="late_fee_currency">
+                                <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-4 h-4 mr-1">
+                                SAR
+                            </span>
                         </div>
                         @error('late_fee_amount')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -182,7 +191,10 @@
                                    min="0" 
                                    value="{{ old('discount_amount', $invoice->discount_amount) }}"
                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 pr-12 focus:outline-none focus:ring-2 focus:ring-primary-500 @error('discount_amount') border-red-500 @enderror">
-                            <span class="absolute left-3 top-2 text-gray-500" id="discount_currency">SAR</span>
+                            <span class="absolute left-3 top-2 text-gray-500 flex items-center" id="discount_currency">
+                                <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-4 h-4 mr-1">
+                                SAR
+                            </span>
                         </div>
                         @error('discount_amount')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>

@@ -29,6 +29,12 @@
                 {{ __('products.property_card.featured') }}
             </div>
         @endif
+        
+        @if($product->hasActiveOffers())
+            <div class="absolute top-2 left-2 bg-green-600 text-white px-2 py-1 rounded text-xs">
+                {{ __('products.property_card.has_offers') }}
+            </div>
+        @endif
     </div>
     
     <div class="p-4 flex-1 flex flex-col">
@@ -56,13 +62,43 @@
 
         <div class="flex items-center justify-between mt-auto">
             @if($showPrice)
-                <div class="font-bold text-primary-600">
-                                            {{ number_format($product->price) }} {!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}
+                <div class="font-bold text-primary-600 flex items-center">
+                    @if($product->hasActiveOffers())
+                        <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-4 h-4 mr-1">
+                        {{ $product->getFormattedPrice() }}
+                    @else
+                        {{ __('products.actions.price_on_request') }}
+                    @endif
                 </div>
             @endif
             <a href="{{ route('public.products.show', $product) }}" class="text-primary-600 hover:text-primary-700 text-sm">
                 {{ __('products.property_card.view_details') }}
             </a>
+        </div>
+
+        <!-- Comments and Likes Count -->
+        <div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
+            <div class="flex items-center space-x-4 text-sm text-gray-500">
+                <!-- Comments Count -->
+                <div class="flex items-center">
+                    <i class="fas fa-comment-alt mr-1"></i>
+                    <span>{{ $product->comments_count ?? $product->comments()->count() }}</span>
+                </div>
+                
+                <!-- Likes/Favorites Count -->
+                <div class="flex items-center">
+                    <i class="fas fa-heart mr-1"></i>
+                    <span>{{ $product->favorites_count ?? $product->favoredByUsers()->count() }}</span>
+                </div>
+            </div>
+            
+            <!-- Views Count (if available) -->
+            @if($product->views_count)
+                <div class="flex items-center text-sm text-gray-500">
+                    <i class="fas fa-eye mr-1"></i>
+                    <span>{{ number_format($product->views_count) }}</span>
+                </div>
+            @endif
         </div>
     </div>
 </div>

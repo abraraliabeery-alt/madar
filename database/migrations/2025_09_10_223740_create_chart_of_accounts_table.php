@@ -43,7 +43,6 @@ return new class extends Migration
             $table->boolean('is_active')->default(true); // نشط
             $table->boolean('is_system')->default(false); // حساب نظام (لا يمكن حذفه)
             $table->text('description')->nullable(); // وصف الحساب
-            $table->string('currency', 3)->default('SAR'); // العملة
             $table->decimal('opening_balance', 15, 2)->default(0); // الرصيد الافتتاحي
             $table->decimal('current_balance', 15, 2)->default(0); // الرصيد الحالي
             $table->unsignedBigInteger('facility_id'); // المنشأة

@@ -110,8 +110,9 @@
                                                 </span>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="text-sm font-medium text-gray-900">
-                                                    {{ number_format($invoice->amount, 2) }} {{ $invoice->currency }}
+                                                <div class="text-sm font-medium text-gray-900 flex items-center">
+                                                    {{ number_format($invoice->amount, 2) }}
+                                                    <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-4 h-4 mr-1">
                                                 </div>
                                                 @if($invoice->tax_amount > 0)
                                                     <div class="text-sm text-gray-500">ضريبة: {{ number_format($invoice->tax_amount, 2) }}</div>

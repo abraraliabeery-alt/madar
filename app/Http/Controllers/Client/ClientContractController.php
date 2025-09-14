@@ -146,7 +146,6 @@ class ClientContractController extends Controller
             'start_date' => $request->start_date,
             'end_date' => $request->end_date,
             'total_amount' => $offer->price,
-            'currency' => $offer->currency,
             'deposit_amount' => $offer->deposit_amount,
             'commission_rate' => $offer->commission_rate,
             'facility_id' => $offer->facility_id,

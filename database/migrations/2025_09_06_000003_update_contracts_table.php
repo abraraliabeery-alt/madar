@@ -16,8 +16,7 @@ return new class extends Migration
             $table->enum('contract_type', ['sale', 'rent'])->after('offer_id');
             $table->string('contract_number')->unique()->nullable()->after('contract_type');
             $table->decimal('total_amount', 12, 2)->nullable()->after('end_date');
-            $table->string('currency', 3)->default('SAR')->after('total_amount');
-            $table->decimal('deposit_amount', 12, 2)->nullable()->after('currency');
+            $table->decimal('deposit_amount', 12, 2)->nullable()->after('total_amount');
             $table->decimal('commission_rate', 5, 4)->nullable()->after('deposit_amount');
             $table->decimal('commission_amount', 12, 2)->nullable()->after('commission_rate');
             $table->enum('status', ['draft', 'active', 'completed', 'cancelled'])->default('draft')->after('commission_amount');
@@ -42,7 +41,6 @@ return new class extends Migration
                 'contract_type',
                 'contract_number',
                 'total_amount',
-                'currency',
                 'deposit_amount',
                 'commission_rate',
                 'commission_amount',
