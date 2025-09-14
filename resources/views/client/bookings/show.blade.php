@@ -90,7 +90,13 @@
                         
                         <div>
                             <h3 class="text-sm font-medium text-gray-500 mb-2">التاريخ المفضل</h3>
-                            <p class="text-gray-900">{{ $booking->preferred_date->format('Y/m/d') }}</p>
+                            <p class="text-gray-900">
+                                @if($booking->preferred_date)
+                                    {{ $booking->preferred_date->format('Y/m/d') }}
+                                @else
+                                    غير محدد
+                                @endif
+                            </p>
                         </div>
                         
                         <div>
@@ -175,7 +181,7 @@
                             </div>
                         </div>
                         
-                        <a href="{{ route('products.show', $booking->product) }}" 
+                        <a href="{{ route('public.products.show', $booking->product) }}" 
                            class="inline-flex items-center text-primary-600 hover:text-primary-700 text-sm font-medium">
                             <i class="fas fa-external-link-alt ml-2"></i>
                             عرض العقار

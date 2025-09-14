@@ -243,10 +243,10 @@ class Product extends Model
         // Add period indicator for rent offers
         if ($primaryOffer->isForRent()) {
             $period = $this->getRentPeriodText($primaryOffer->offer_type);
-            return "{$price} SAR / {$period}";
+            return "{$price} / {$period}";
         }
 
-        return "{$price} SAR";
+        return "{$price}";
     }
 
     /**

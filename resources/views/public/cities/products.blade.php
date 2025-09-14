@@ -86,7 +86,7 @@
                                 <option value="">{{ __('cities.products.all_categories') }}</option>
                                 @foreach($categories as $category)
                                     <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
-                                        {{ app()->getLocale() === 'en' && $category->name_en ? $category->name_en : $category->name }}
+                                        {{ $category->getTranslatedName() }}
                                     </option>
                                 @endforeach
                             </select>

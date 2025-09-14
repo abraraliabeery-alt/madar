@@ -14,11 +14,8 @@
                         {{ $product->address ?? __('products.property_card.location_unknown') }}
                     </p>
                     <div class="flex items-center space-x-6 space-x-reverse">
-                        <div class="text-2xl font-bold">
-                            {{ number_format($product->price) }} {!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}
-                        </div>
                         @if($product->is_featured)
-                            <div class="bg-yellow-600 text-white px-3 py-1 rounded-full text-sm">
+                            <div class="bg-yellow-600 text-white px-3 px-2 py-1 rounded-full text-sm">
                                 <i class="fas fa-star ml-1"></i>{{ __('products.property_card.featured') }}
                             </div>
                         @endif
@@ -823,7 +820,7 @@ function bookAppointment(offerId) {
     // Check if user is authenticated
     @auth
         // Redirect to booking form with offer ID
-        window.location.href = '{{ route("bookings.create") }}?offer_id=' + offerId;
+        window.location.href = '{{ route("public.bookings.create") }}?offer_id=' + offerId;
     @else
         // Show login modal or redirect to login
         if (confirm('يجب تسجيل الدخول أولاً لحجز الموعد. هل تريد الانتقال إلى صفحة تسجيل الدخول؟')) {
@@ -931,7 +928,7 @@ function submitQuoteRequest(form) {
     submitBtn.disabled = true;
     
     // Submit the form
-    fetch('{{ route("contact.quote.send") }}', {
+    fetch('{{ route("public.contact.quote.send") }}', {
         method: 'POST',
         body: formData,
         headers: {

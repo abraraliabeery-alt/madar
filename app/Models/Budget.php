@@ -87,17 +87,17 @@ class Budget extends Model
     // Accessors
     public function getFormattedTotalBudgetAttribute()
     {
-        return number_format($this->total_budget, 2) . ' SAR';
+        return number_format($this->total_budget, 2);
     }
 
     public function getFormattedSpentAmountAttribute()
     {
-        return number_format($this->spent_amount, 2) . ' SAR';
+        return number_format($this->spent_amount, 2);
     }
 
     public function getFormattedRemainingAmountAttribute()
     {
-        return number_format($this->remaining_amount, 2) . ' SAR';
+        return number_format($this->remaining_amount, 2);
     }
 
     public function getUtilizationPercentageAttribute()

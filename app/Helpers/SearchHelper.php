@@ -261,7 +261,7 @@ class SearchHelper
      */
     public static function formatPrice($price, $locale = 'ar-SA')
     {
-        return number_format($price, 0) . ' SAR';
+        return number_format($price, 0);
     }
     
     /**

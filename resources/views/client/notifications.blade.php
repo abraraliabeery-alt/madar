@@ -86,7 +86,7 @@
                             <!-- Content -->
                             <div class="flex-1 mr-4">
                                 <div class="flex items-center justify-between">
-                                    <h3 class="text-lg font-semibold text-gray-900">{{ $notification->title }}</h3>
+                                    <h3 class="text-lg font-semibold text-gray-900">{{ $notification->data['message'] ?? 'إشعار جديد' }}</h3>
                                     <div class="flex items-center space-x-2 space-x-reverse">
                                         @if(!$notification->read_at)
                                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
@@ -97,11 +97,35 @@
                                     </div>
                                 </div>
                                 
-                                <p class="text-gray-600 mt-1">{{ $notification->body }}</p>
+                                <p class="text-gray-600 mt-1">
+                                    @if(isset($notification->data['type']))
+                                        @if($notification->data['type'] == 'booking_created')
+                                            تم إنشاء حجز جديد
+                                        @elseif($notification->data['type'] == 'booking_status_changed')
+                                            تم تحديث حالة الحجز
+                                        @elseif($notification->data['type'] == 'new_product_added')
+                                            تم إضافة عقار جديد
+                                        @else
+                                            {{ $notification->data['message'] ?? 'إشعار جديد' }}
+                                        @endif
+                                    @else
+                                        {{ $notification->data['message'] ?? 'إشعار جديد' }}
+                                    @endif
+                                </p>
                                 
                                 @if($notification->data)
                                     <div class="mt-3">
-                                        @if(isset($notification->data['action_url']))
+                                        @if(isset($notification->data['booking_id']))
+                                            <a href="{{ route('client.bookings.show', $notification->data['booking_id']) }}" 
+                                               class="inline-flex items-center text-sm text-blue-600 hover:text-blue-700">
+                                                عرض تفاصيل الحجز <i class="fas fa-arrow-left mr-1"></i>
+                                            </a>
+                                        @elseif(isset($notification->data['product_id']))
+                                            <a href="{{ route('public.products.show', $notification->data['product_id']) }}" 
+                                               class="inline-flex items-center text-sm text-blue-600 hover:text-blue-700">
+                                                عرض العقار <i class="fas fa-arrow-left mr-1"></i>
+                                            </a>
+                                        @elseif(isset($notification->data['action_url']))
                                             <a href="{{ $notification->data['action_url'] }}" 
                                                class="inline-flex items-center text-sm text-blue-600 hover:text-blue-700">
                                                 عرض التفاصيل <i class="fas fa-arrow-left mr-1"></i>
@@ -189,12 +213,15 @@
     }
 
     function markAsRead(notificationId) {
-        fetch(`/client/notifications/${notificationId}/mark-read`, {
+        fetch(`{{ route('client.notifications.mark-read') }}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            }
+            },
+            body: JSON.stringify({
+                notification_id: notificationId
+            })
         })
         .then(response => response.json())
         .then(data => {
@@ -209,7 +236,7 @@
 
     function markAllAsRead() {
         if (confirm('هل أنت متأكد من تعيين جميع الإشعارات كمقروءة؟')) {
-            fetch('/client/notifications/mark-all-read', {
+            fetch(`{{ route('client.notifications.mark-all-read') }}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

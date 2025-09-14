@@ -106,6 +106,7 @@ return [
     'show' => [
         'description' => 'الوصف',
         'no_description' => 'لا يوجد وصف متاح',
+        'no_attributes' => 'لا توجد خصائص متاحة',
         'bedrooms' => 'غرف النوم',
         'bathrooms' => 'الحمامات',
         'square_meters' => 'المتر المربع',
@@ -138,12 +139,6 @@ return [
         'deposit' => 'عربون',
         'valid_until' => 'صالح حتى',
         'view_all_offers' => 'عرض جميع العروض',
-    ],
-
-    'rent_periods' => [
-        'daily' => 'يوم',
-        'monthly' => 'شهر',
-        'yearly' => 'سنة',
         'available_from' => 'متاح من',
         'available_until' => 'متاح حتى',
         'facility' => 'المنشأة',
@@ -153,6 +148,12 @@ return [
         'contact_info' => 'معلومات الاتصال',
         'not_specified' => 'غير محدد',
         'all_attributes' => 'جميع الخصائص',
+    ],
+
+    'rent_periods' => [
+        'daily' => 'يوم',
+        'monthly' => 'شهر',
+        'yearly' => 'سنة',
     ],
     
     'search' => [

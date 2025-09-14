@@ -215,7 +215,23 @@
                                                 @endif
                                             </div>
                                             <div class="flex-1 {{ app()->getLocale() == 'ar' ? 'mr-3' : 'ml-3' }}">
-                                                <p class="text-sm text-gray-900">{{ $notification->data['message'] ?? __('layout.notifications.new_notification') }}</p>
+                                                <p class="text-sm text-gray-900">
+                                                    @if(isset($notification->data['message']))
+                                                        {{ $notification->data['message'] }}
+                                                    @elseif(isset($notification->data['type']))
+                                                        @if($notification->data['type'] == 'booking_created')
+                                                            تم إنشاء حجز جديد
+                                                        @elseif($notification->data['type'] == 'booking_status_changed')
+                                                            تم تحديث حالة الحجز
+                                                        @elseif($notification->data['type'] == 'new_product_added')
+                                                            تم إضافة عقار جديد
+                                                        @else
+                                                            {{ __('layout.notifications.new_notification') }}
+                                                        @endif
+                                                    @else
+                                                        {{ __('layout.notifications.new_notification') }}
+                                                    @endif
+                                                </p>
                                                 <p class="text-xs text-gray-500 mt-1">{{ $notification->created_at->diffForHumans() }}</p>
                                             </div>
                                             @if(!$notification->read_at)
@@ -387,7 +403,23 @@
                                             @endif
                                         </div>
                                         <div class="flex-1">
-                                            <p class="text-sm text-gray-900">{{ $notification->data['message'] ?? __('layout.notifications.new_notification') }}</p>
+                                            <p class="text-sm text-gray-900">
+                                                @if(isset($notification->data['message']))
+                                                    {{ $notification->data['message'] }}
+                                                @elseif(isset($notification->data['type']))
+                                                    @if($notification->data['type'] == 'booking_created')
+                                                        تم إنشاء حجز جديد
+                                                    @elseif($notification->data['type'] == 'booking_status_changed')
+                                                        تم تحديث حالة الحجز
+                                                    @elseif($notification->data['type'] == 'new_product_added')
+                                                        تم إضافة عقار جديد
+                                                    @else
+                                                        {{ __('layout.notifications.new_notification') }}
+                                                    @endif
+                                                @else
+                                                    {{ __('layout.notifications.new_notification') }}
+                                                @endif
+                                            </p>
                                             <p class="text-xs text-gray-500">{{ $notification->created_at->diffForHumans() }}</p>
                                         </div>
                                     </div>

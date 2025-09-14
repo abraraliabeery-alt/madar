@@ -86,7 +86,7 @@
                                 <option value="">{{ __('cities.facilities.all_categories') }}</option>
                                 @foreach($categories as $category)
                                     <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
-                                        {{ app()->getLocale() === 'en' && $category->name_en ? $category->name_en : $category->name }}
+                                        {{ $category->getTranslatedName() }}
                                     </option>
                                 @endforeach
                             </select>
@@ -180,7 +180,7 @@
                                     <p class="text-gray-600 text-xs mb-2 line-clamp-2">{{ $facility->address ?? __('facilities.facility_card.location_unknown') }}</p>
 
                                     <div class="flex items-center justify-between text-xs text-gray-500 mb-2">
-                                        <span><i class="fas fa-th-large ml-1"></i>{{ $facility->category->name ?? __('facilities.facility_card.no_category') }}</span>
+                                        <span><i class="fas fa-th-large ml-1"></i>{{ $facility->facilityCategory->getTranslatedName() ?? __('facilities.facility_card.no_category') }}</span>
                                         <span><i class="fas fa-home ml-1"></i>{{ $facility->products_count ?? 0 }}</span>
                                     </div>
 
@@ -227,7 +227,7 @@
                                     <p class="text-gray-600 text-sm mb-3">{{ $facility->address ?? __('facilities.facility_card.location_unknown') }}</p>
 
                                     <div class="flex items-center justify-between text-sm text-gray-500 mb-3">
-                                        <span><i class="fas fa-th-large ml-1"></i>{{ $facility->category->name ?? __('facilities.facility_card.no_category') }}</span>
+                                        <span><i class="fas fa-th-large ml-1"></i>{{ $facility->facilityCategory->getTranslatedName() ?? __('facilities.facility_card.no_category') }}</span>
                                         <span><i class="fas fa-home ml-1"></i>{{ $facility->products_count ?? 0 }} {{ __('facilities.facility_card.properties') }}</span>
                                     </div>
 
@@ -284,7 +284,7 @@
                                         <p class="text-gray-600 text-sm mb-3">{{ $facility->address ?? __('facilities.facility_card.location_unknown') }}</p>
 
                                         <div class="flex items-center justify-between text-sm text-gray-500 mb-3">
-                                            <span><i class="fas fa-th-large ml-1"></i>{{ $facility->category->name ?? __('facilities.facility_card.no_category') }}</span>
+                                            <span><i class="fas fa-th-large ml-1"></i>{{ $facility->facilityCategory->getTranslatedName() ?? __('facilities.facility_card.no_category') }}</span>
                                             <span><i class="fas fa-home ml-1"></i>{{ $facility->products_count ?? 0 }} {{ __('facilities.facility_card.properties') }}</span>
                                         </div>
 

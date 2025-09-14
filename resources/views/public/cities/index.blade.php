@@ -36,7 +36,7 @@
                                 <option value="">{{ __('cities.search.all_categories') }}</option>
                                 @foreach($categories ?? [] as $category)
                                     <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
-                                        {{ $category->name }}
+                                        {{ $category->getTranslatedName() }}
                                     </option>
                                 @endforeach
                             </select>

@@ -107,6 +107,7 @@ return [
     'show' => [
         'description' => 'Description',
         'no_description' => 'No description available',
+        'no_attributes' => 'No attributes available',
         'bedrooms' => 'Bedrooms',
         'bathrooms' => 'Bathrooms',
         'square_meters' => 'Square Meters',
@@ -139,12 +140,6 @@ return [
         'deposit' => 'Deposit',
         'valid_until' => 'Valid Until',
         'view_all_offers' => 'View All Offers',
-    ],
-
-    'rent_periods' => [
-        'daily' => 'Day',
-        'monthly' => 'Month',
-        'yearly' => 'Year',
         'available_from' => 'Available From',
         'available_until' => 'Available Until',
         'facility' => 'Facility',
@@ -154,6 +149,12 @@ return [
         'contact_info' => 'Contact Information',
         'not_specified' => 'Not Specified',
         'all_attributes' => 'All Attributes',
+    ],
+
+    'rent_periods' => [
+        'daily' => 'Day',
+        'monthly' => 'Month',
+        'yearly' => 'Year',
     ],
     
     'search' => [

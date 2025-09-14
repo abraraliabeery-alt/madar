@@ -56,11 +56,12 @@ class NewProductAdded extends Notification
     {
         return [
             'product_id' => $this->product->id,
-            'product_name' => $this->product->name,
-            'location' => $this->product->location,
-            'price' => $this->product->price,
+            'product_name' => $this->product->title ?? 'عقار جديد',
+            'location' => $this->product->address ?? 'غير محدد',
+            'price' => $this->product->price ?? 0,
             'type' => 'new_product_added',
-            'message' => 'تم إضافة عقار جديد: ' . $this->product->name,
+            'message' => 'تم إضافة عقار جديد: ' . ($this->product->title ?? 'عقار جديد'),
+            'action_url' => route('public.products.show', $this->product->id),
         ];
     }
 }

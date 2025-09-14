@@ -8,6 +8,7 @@ use App\Models\City;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Facility;
+use App\Models\FacilityCategory;
 
 class CityController extends Controller
 {
@@ -169,7 +170,7 @@ class CityController extends Controller
 
         // Filter by category
         if ($request->filled('category_id')) {
-            $query->where('category_id', $request->category_id);
+            $query->where('facility_category_id', $request->category_id);
         }
 
         // Search by keyword
@@ -188,7 +189,7 @@ class CityController extends Controller
         $query->orderBy($sortBy, $sortOrder);
 
         $facilities = $query->paginate(12);
-        $categories = Category::where('is_active', true)->get();
+        $categories = FacilityCategory::where('is_active', true)->get();
 
         return view('public.cities.facilities', compact('city', 'facilities', 'categories'));
     }

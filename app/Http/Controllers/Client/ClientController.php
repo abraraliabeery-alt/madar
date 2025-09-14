@@ -283,16 +283,30 @@ class ClientController extends Controller
         $notification = $user->notifications()->findOrFail($request->notification_id);
         $notification->markAsRead();
 
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'تم تحديث حالة الإشعار'
+            ]);
+        }
+
         return redirect()->back()->with('success', 'تم تحديث حالة الإشعار');
     }
 
     /**
      * تحديد جميع الإشعارات كمقروءة
      */
-    public function markAllNotificationsRead()
+    public function markAllNotificationsRead(Request $request)
     {
         $user = Auth::user();
         $user->unreadNotifications->markAsRead();
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'تم تحديد جميع الإشعارات كمقروءة'
+            ]);
+        }
 
         return redirect()->back()->with('success', 'تم تحديد جميع الإشعارات كمقروءة');
     }
@@ -338,7 +352,7 @@ class ClientController extends Controller
         $user = Auth::user();
         $appointments = $user->appointments()->with(['facility'])->latest()->paginate(15);
 
-        return view('client.appointments', compact('appointments'));
+        return view('client.appointments.index', compact('appointments'));
     }
 
     /**
