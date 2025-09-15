@@ -60,3 +60,5 @@ class GenericNotification extends Notification
         ], $this->data);
     }
 }
+
+
