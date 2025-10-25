@@ -54,7 +54,7 @@
                                                             تاريخ الحجز: {{ $notification->data['booking_date'] }}
                                                         @endif
                                                         @if(isset($notification->data['total_amount']))
-                                                            المبلغ: {{ $notification->data['total_amount'] }} ريال
+                                                            المبلغ: {{ $notification->data['total_amount'] }} {!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}
                                                         @endif
                                                     </p>
                                                     <small class="text-muted">
@@ -82,7 +82,7 @@
                             @endforeach
                         </div>
                         
-                        <div class="d-flex justify-content-center mt-4">
+                        <div class="pagination-container">
                             {{ $notifications->links() }}
                         </div>
                     @else

@@ -43,7 +43,7 @@
                                         <option value="">اختر المنتج</option>
                                         @foreach($products as $product)
                                             <option value="{{ $product->id }}" data-facility="{{ $product->facility_id }}" data-price="{{ $product->price }}" {{ old('product_id', $contract->product_id) == $product->id ? 'selected' : '' }}>
-                                                {{ $product->name }} - {{ number_format($product->price, 2) }} ريال
+                                                {{ $product->name }} - {{ number_format($product->price, 2) }} {!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}
                                             </option>
                                         @endforeach
                                     </select>
@@ -119,7 +119,7 @@
                                             <label for="total_amount" class="form-label">المبلغ الإجمالي <span class="text-danger">*</span></label>
                                             <div class="input-group">
                                                 <input type="number" class="form-control @error('total_amount') is-invalid @enderror" id="total_amount" name="total_amount" value="{{ old('total_amount', $contract->total_amount) }}" required min="0" step="0.01">
-                                                <span class="input-group-text">ريال</span>
+                                                <span class="input-group-text">{!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}</span>
                                             </div>
                                             @error('total_amount')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -131,7 +131,7 @@
                                             <label for="down_payment" class="form-label">الدفعة المقدمة <span class="text-danger">*</span></label>
                                             <div class="input-group">
                                                 <input type="number" class="form-control @error('down_payment') is-invalid @enderror" id="down_payment" name="down_payment" value="{{ old('down_payment', $contract->down_payment) }}" required min="0" step="0.01">
-                                                <span class="input-group-text">ريال</span>
+                                                <span class="input-group-text">{!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}</span>
                                             </div>
                                             @error('down_payment')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -143,7 +143,7 @@
                                             <label for="monthly_payment" class="form-label">القسط الشهري <span class="text-danger">*</span></label>
                                             <div class="input-group">
                                                 <input type="number" class="form-control @error('monthly_payment') is-invalid @enderror" id="monthly_payment" name="monthly_payment" value="{{ old('monthly_payment', $contract->monthly_payment) }}" required min="0" step="0.01">
-                                                <span class="input-group-text">ريال</span>
+                                                <span class="input-group-text">{!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}</span>
                                             </div>
                                             @error('monthly_payment')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -183,7 +183,7 @@
                                             <label for="loan_amount" class="form-label">مبلغ القرض</label>
                                             <div class="input-group">
                                                 <input type="number" class="form-control @error('loan_amount') is-invalid @enderror" id="loan_amount" name="loan_amount" value="{{ old('loan_amount', $contract->loan_amount) }}" min="0" step="0.01">
-                                                <span class="input-group-text">ريال</span>
+                                                <span class="input-group-text">{!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}</span>
                                             </div>
                                             @error('loan_amount')
                                                 <div class="invalid-feedback">{{ $message }}</div>

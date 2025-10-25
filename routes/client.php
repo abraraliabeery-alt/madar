@@ -3,13 +3,16 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Client\ClientController;
 use App\Http\Controllers\Client\ClientBookingController;
+use App\Http\Controllers\Client\ClientOfferController;
+use App\Http\Controllers\Client\ClientContractController;
+use App\Http\Controllers\Client\ClientFinancialController;
 
 // Client Routes - جميع routes تحتاج middleware client
-Route::middleware(['auth', 'role:client'])->prefix('client')->name('client.')->group(function () {
+Route::group([], function () {
 
     // Dashboard
     Route::get('/', [ClientController::class, 'dashboard'])->name('dashboard');
-    Route::get('/profile', [ClientController::class, 'profile'])->name('profile');
+    Route::get('/profile', [ClientController::class, 'profile'])->name('client.profile');
     Route::post('/profile', [ClientController::class, 'updateProfile'])->name('profile.update');
     Route::get('/change-password', [ClientController::class, 'changePassword'])->name('change-password');
     Route::post('/change-password', [ClientController::class, 'updatePassword'])->name('change-password.update');
@@ -43,10 +46,31 @@ Route::middleware(['auth', 'role:client'])->prefix('client')->name('client.')->g
     Route::post('bookings/{booking}/review', [ClientBookingController::class, 'review'])->name('bookings.review');
     Route::get('bookings/statistics', [ClientBookingController::class, 'statistics'])->name('bookings.statistics');
 
+    // Offers
+    Route::get('/offers', [ClientOfferController::class, 'index'])->name('offers.index');
+    Route::get('/offers/{offer}', [ClientOfferController::class, 'show'])->name('offers.show');
+    Route::get('/offers/type/{type}', [ClientOfferController::class, 'byType'])->name('offers.by-type');
+    Route::get('/offers/product/{product}', [ClientOfferController::class, 'byProduct'])->name('offers.by-product');
+    Route::get('/offers/search', [ClientOfferController::class, 'search'])->name('offers.search');
+    Route::post('/offers/{offer}/add-to-favorites', [ClientOfferController::class, 'addToFavorites'])->name('offers.add-to-favorites');
+    Route::delete('/offers/{offer}/remove-from-favorites', [ClientOfferController::class, 'removeFromFavorites'])->name('offers.remove-from-favorites');
+    Route::post('/offers/{offer}/request-info', [ClientOfferController::class, 'requestInfo'])->name('offers.request-info');
+    Route::post('/offers/{offer}/book-visit', [ClientOfferController::class, 'bookVisit'])->name('offers.book-visit');
+    Route::get('/offers/compare', [ClientOfferController::class, 'compare'])->name('offers.compare');
+    Route::get('/offers/statistics', [ClientOfferController::class, 'statistics'])->name('offers.statistics');
+
     // Contracts
-    Route::get('/contracts', [ClientController::class, 'contracts'])->name('contracts');
-    Route::get('/contracts/{contract}', [ClientController::class, 'showContract'])->name('contracts.show');
-    Route::get('/contracts/{contract}/download', [ClientController::class, 'downloadContract'])->name('contracts.download');
+    Route::resource('contracts', ClientContractController::class);
+    Route::get('contracts/{contract}/invoices', [ClientContractController::class, 'invoices'])->name('contracts.invoices');
+    Route::get('contracts/{contract}/payments', [ClientContractController::class, 'payments'])->name('contracts.payments');
+    Route::get('contracts/{contract}/financial-report', [ClientContractController::class, 'financialReport'])->name('contracts.financial-report');
+    Route::post('contracts/request/{offer}', [ClientContractController::class, 'requestContract'])->name('contracts.request');
+    Route::post('contracts/{contract}/confirm', [ClientContractController::class, 'confirmContract'])->name('contracts.confirm');
+    Route::post('contracts/{contract}/cancel', [ClientContractController::class, 'cancelContract'])->name('contracts.cancel');
+    Route::get('contracts/{contract}/download', [ClientContractController::class, 'download'])->name('contracts.download');
+    Route::get('contracts/{contract}/payment', [ClientContractController::class, 'paymentPage'])->name('contracts.payment-page');
+    Route::post('contracts/{contract}/pay-invoice', [ClientContractController::class, 'payInvoice'])->name('contracts.pay-invoice');
+    Route::get('contracts/statistics', [ClientContractController::class, 'statistics'])->name('contracts.statistics');
 
     // Appointments
     Route::get('/appointments', [ClientController::class, 'appointments'])->name('appointments');
@@ -94,4 +118,34 @@ Route::middleware(['auth', 'role:client'])->prefix('client')->name('client.')->g
     Route::post('/help/tickets', [ClientController::class, 'storeTicket'])->name('help.tickets.store');
     Route::get('/help/tickets/{ticket}', [ClientController::class, 'showTicket'])->name('help.tickets.show');
     Route::post('/help/tickets/{ticket}/reply', [ClientController::class, 'replyTicket'])->name('help.tickets.reply');
+
+    // Enhanced Financial Management System for Clients
+    Route::prefix('financial')->name('financial.')->group(function () {
+        // Main Dashboard
+        Route::get('/dashboard', [ClientFinancialController::class, 'dashboard'])->name('dashboard');
+        
+        // Available Offers
+        Route::get('/offers', [ClientFinancialController::class, 'offers'])->name('offers');
+        Route::get('/offers/{id}', [ClientFinancialController::class, 'offerDetails'])->name('offer-details');
+        
+        // Contract Management
+        Route::post('/request-contract', [ClientFinancialController::class, 'requestContract'])->name('request-contract');
+        Route::get('/contracts', [ClientFinancialController::class, 'contracts'])->name('contracts');
+        Route::get('/contracts/{id}', [ClientFinancialController::class, 'contractDetails'])->name('contract-details');
+        Route::delete('/contracts/{id}/cancel', [ClientFinancialController::class, 'cancelContract'])->name('cancel-contract');
+        
+        // Contract Printing
+        Route::get('/contracts/{id}/print', [ClientFinancialController::class, 'printContract'])->name('print-contract');
+        
+        // Invoices Management
+        Route::get('/invoices', [ClientFinancialController::class, 'invoices'])->name('invoices');
+        Route::get('/invoices/{id}/download', [ClientFinancialController::class, 'downloadInvoice'])->name('download-invoice');
+        
+        // Payments Management
+        Route::post('/make-payment', [ClientFinancialController::class, 'makePayment'])->name('make-payment');
+        Route::get('/payments', [ClientFinancialController::class, 'payments'])->name('payments');
+        
+        // Financial Summary and Reports
+        Route::get('/summary', [ClientFinancialController::class, 'financialSummary'])->name('summary');
+    });
 });

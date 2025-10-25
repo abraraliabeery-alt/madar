@@ -16,11 +16,11 @@ class AdminBookingController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Booking::with(['user', 'product', 'facility', 'statuses']);
+        $query = Booking::with(['user', 'product', 'facility']);
 
         // فلترة حسب الحالة
-        if ($request->has('status_id') && $request->status_id) {
-            $query->where('status_id', $request->status_id);
+        if ($request->has('status') && $request->status) {
+            $query->where('status', $request->status);
         }
 
         // فلترة حسب المستخدم
@@ -44,7 +44,7 @@ class AdminBookingController extends Controller
         // البحث
         if ($request->has('search') && $request->search) {
             $query->where(function ($q) use ($request) {
-                $q->where('booking_number', 'like', '%' . $request->search . '%')
+                $q->where('id', 'like', '%' . $request->search . '%')
                   ->orWhereHas('user', function ($userQuery) use ($request) {
                       $userQuery->where('name', 'like', '%' . $request->search . '%')
                                ->orWhere('email', 'like', '%' . $request->search . '%');
@@ -83,23 +83,14 @@ class AdminBookingController extends Controller
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'product_id' => 'required|exists:products,id',
-            'facility_id' => 'required|exists:facilities,id',
             'status_id' => 'required|exists:statuses,id',
-            'booking_date' => 'required|date|after:today',
-            'booking_time' => 'required|date_format:H:i',
-            'duration' => 'required|integer|min:1',
             'total_amount' => 'required|numeric|min:0',
-            'notes' => 'nullable|string',
+            'payment_method' => 'nullable|string',
             'is_confirmed' => 'boolean',
             'is_paid' => 'boolean',
         ]);
 
-        // إنشاء رقم الحجز
-        $bookingNumber = 'BK-' . date('Ymd') . '-' . str_pad(Booking::whereDate('created_at', today())->count() + 1, 4, '0', STR_PAD_LEFT);
-
         $bookingData = $request->except(['status_id']);
-        $bookingData['booking_number'] = $bookingNumber;
-
         $booking = Booking::create($bookingData);
 
         // ربط الحالة
@@ -121,7 +112,7 @@ class AdminBookingController extends Controller
      */
     public function edit(Booking $booking)
     {
-        $booking->load(['user', 'product', 'facility', 'statuses']);
+        $booking->load(['user', 'product', 'facility']);
         $users = User::all();
         $products = Product::where('is_active', true)->get();
         $statuses = Status::all();
@@ -137,13 +128,9 @@ class AdminBookingController extends Controller
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'product_id' => 'required|exists:products,id',
-            'facility_id' => 'required|exists:facilities,id',
             'status_id' => 'required|exists:statuses,id',
-            'booking_date' => 'required|date',
-            'booking_time' => 'required|date_format:H:i',
-            'duration' => 'required|integer|min:1',
             'total_amount' => 'required|numeric|min:0',
-            'notes' => 'nullable|string',
+            'payment_method' => 'nullable|string',
             'is_confirmed' => 'boolean',
             'is_paid' => 'boolean',
         ]);
@@ -214,7 +201,7 @@ class AdminBookingController extends Controller
      */
     public function show(Booking $booking)
     {
-        $booking->load(['user', 'product', 'facility', 'statuses']);
+        $booking->load(['user', 'product', 'facility']);
         return view('admin.bookings.show', compact('booking'));
     }
 

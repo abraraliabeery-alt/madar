@@ -210,4 +210,26 @@ return [
         'permission' => 'Permission',
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Global Validation Error Messages
+    |--------------------------------------------------------------------------
+    |
+    | These messages are used for the global validation error display system.
+    |
+    */
+
+    'errors' => [
+        'title' => 'Validation Error',
+        'close' => 'Close',
+    ],
+
+    'success' => [
+        'title' => 'Success',
+    ],
+
+    'info' => [
+        'title' => 'Information',
+    ],
+
 ];

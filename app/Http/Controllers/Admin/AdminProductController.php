@@ -80,11 +80,9 @@ class AdminProductController extends Controller
         $facilities = Facility::all();
         $categories = Category::all();
         $statuses = Status::all();
-        $features = Feature::all();
-        $attributes = Attribute::all();
         $cities = City::where('is_active', true)->orderBy('name')->get();
 
-        return view('admin.products.create', compact('facilities', 'categories', 'statuses', 'features', 'attributes', 'cities'));
+        return view('admin.products.create', compact('facilities', 'categories', 'statuses', 'cities'));
     }
 
     /**
@@ -167,15 +165,13 @@ class AdminProductController extends Controller
      */
     public function edit(Product $product)
     {
-        $product->load(['facility', 'category', 'city', 'statuses', 'features', 'attributes']);
+        $product->load(['facility', 'category', 'city', 'statuses', 'features', 'attributes.translations']);
         $facilities = Facility::all();
         $categories = Category::all();
         $statuses = Status::all();
-        $features = Feature::all();
-        $attributes = Attribute::all();
         $cities = City::where('is_active', true)->orderBy('name')->get();
 
-        return view('admin.products.edit', compact('product', 'facilities', 'categories', 'statuses', 'features', 'attributes', 'cities'));
+        return view('admin.products.edit', compact('product', 'facilities', 'categories', 'statuses', 'cities'));
     }
 
     /**
@@ -316,7 +312,7 @@ class AdminProductController extends Controller
      */
     public function show(Product $product)
     {
-        $product->load(['facility', 'category', 'statuses', 'features', 'attributes', 'bookings']);
+        $product->load(['facility', 'category', 'statuses', 'features', 'attributes.translations', 'bookings']);
         return view('admin.products.show', compact('product'));
     }
 }

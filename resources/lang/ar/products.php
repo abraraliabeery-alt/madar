@@ -62,11 +62,17 @@ return [
     
     'actions' => [
         'view_details' => 'عرض التفاصيل',
+        'price_on_request' => 'السعر عند الطلب',
         'add_to_favorites' => 'إضافة للمفضلة',
         'contact_publisher' => 'تواصل مع الناشر',
         'book_now' => 'احجز الآن',
         'login_to_interact' => 'سجل دخولك للتفاعل مع المنتج',
         'login' => 'تسجيل الدخول',
+        'add_to_cart' => 'أضف إلى السلة',
+        'buy_now' => 'اشتري الآن',
+        'select_option' => 'اختر الخيار',
+        'select_rental' => 'اختر الإيجار',
+        'contact_now' => 'تواصل الآن',
     ],
     
     'social_media' => [
@@ -100,6 +106,7 @@ return [
     'show' => [
         'description' => 'الوصف',
         'no_description' => 'لا يوجد وصف متاح',
+        'no_attributes' => 'لا توجد خصائص متاحة',
         'bedrooms' => 'غرف النوم',
         'bathrooms' => 'الحمامات',
         'square_meters' => 'المتر المربع',
@@ -126,6 +133,12 @@ return [
         'floor' => 'الطابق',
         'floors_count' => 'عدد الطوابق',
         'parking_spaces' => 'مواقف السيارات',
+        'daily_rent' => 'إيجار يومي',
+        'monthly_rent' => 'إيجار شهري',
+        'yearly_rent' => 'إيجار سنوي',
+        'deposit' => 'عربون',
+        'valid_until' => 'صالح حتى',
+        'view_all_offers' => 'عرض جميع العروض',
         'available_from' => 'متاح من',
         'available_until' => 'متاح حتى',
         'facility' => 'المنشأة',
@@ -135,6 +148,12 @@ return [
         'contact_info' => 'معلومات الاتصال',
         'not_specified' => 'غير محدد',
         'all_attributes' => 'جميع الخصائص',
+    ],
+
+    'rent_periods' => [
+        'daily' => 'يوم',
+        'monthly' => 'شهر',
+        'yearly' => 'سنة',
     ],
     
     'search' => [
@@ -191,12 +210,26 @@ return [
     
     'property_card' => [
         'featured' => 'مميز',
+        'has_offers' => 'له عروض',
         'verified' => 'موثق',
         'location_unknown' => 'موقع غير معروف',
         'rooms' => 'غرف',
         'bathrooms' => 'حمامات',
         'square_meters' => 'م²',
         'view_details' => 'عرض التفاصيل',
+        'best_seller' => 'الأكثر مبيعاً',
+        'limited_time' => 'عرض لفترة محدودة',
+        'in_stock' => 'متوفر',
+        'available' => 'متاح',
+        'property_available' => 'العقار متاح',
+        'offers_available' => 'عروض متاحة',
+        'available_options' => 'الخيارات المتاحة',
+        'purchase_options' => 'خيارات الشراء',
+        'rental_options' => 'خيارات الإيجار',
+        'recommended' => 'موصى به',
+        'contact_for_pricing_description' => 'تواصل معنا للحصول على أفضل الأسعار والمعلومات التفصيلية',
+        'call_for_price' => 'اتصل للسعر',
+        'email_for_price' => 'راسل للسعر',
     ],
     
     'by_facility' => [

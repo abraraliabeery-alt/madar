@@ -19,11 +19,11 @@
     <!-- Search and Filter Section -->
     <div class="bg-white shadow-md">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <form action="{{ route('public.facilities.index') }}" method="GET" class="space-y-6">
+            <form action="{{ route('public.facilities.index') }}" method="GET" class="space-y-6" id="facilities-filter-form">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div>
-                        <label for="search" class="block text-sm font-medium text-gray-700 mb-2">{{ __('facilities.search.title') }}</label>
-                        <input type="text" name="search" id="search" value="{{ request('search') }}"
+                        <label for="q" class="block text-sm font-medium text-gray-700 mb-2">{{ __('facilities.search.title') }}</label>
+                        <input type="text" name="q" id="q" value="{{ request('q') }}"
                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
                                placeholder="{{ __('facilities.search.placeholder') }}">
                     </div>
@@ -62,6 +62,8 @@
                         </select>
                     </div>
                 </div>
+                <input type="hidden" name="sort_by" id="sort_by" value="{{ request('sort_by', 'created_at') }}">
+                <input type="hidden" name="sort_order" id="sort_order" value="{{ request('sort_order', 'desc') }}">
                 <div class="flex justify-between items-center">
                     <button type="submit" class="btn-primary text-white px-6 py-2 rounded-lg font-medium">
                         <i class="fas fa-search ml-2"></i>{{ __('facilities.search.button') }}
@@ -84,11 +86,11 @@
             </div>
             <div class="flex items-center space-x-4 space-x-reverse">
                 <span class="text-sm text-gray-600">{{ __('facilities.search.sort_by') }}:</span>
-                <select class="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
-                    <option value="latest">{{ __('facilities.search.latest') }}</option>
-                    <option value="rating">{{ __('facilities.search.highest_rating') }}</option>
-                    <option value="name">{{ __('facilities.search.name') }}</option>
-                    <option value="products">{{ __('facilities.search.properties_count') }}</option>
+                <select id="sort_selector" class="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
+                    <option value="created_at_desc" {{ (request('sort_by','created_at')==='created_at' && request('sort_order','desc')==='desc') ? 'selected' : '' }}>{{ __('facilities.search.latest') }}</option>
+                    <option value="rating_desc" {{ (request('sort_by')==='rating' && request('sort_order')==='desc') ? 'selected' : '' }}>{{ __('facilities.search.highest_rating') }}</option>
+                    <option value="name_asc" {{ (request('sort_by')==='name' && request('sort_order')==='asc') ? 'selected' : '' }}>{{ __('facilities.search.name') }}</option>
+                    <option value="products_desc" {{ (request('sort_by')==='products_count' && request('sort_order')==='desc') ? 'selected' : '' }}>{{ __('facilities.search.properties_count') }}</option>
                 </select>
             </div>
         </div>
@@ -97,19 +99,19 @@
         <div class="flex justify-end items-center mb-8">
             <div class="flex items-center space-x-2 rtl:space-x-reverse">
                 <span class="text-sm text-gray-600 mr-3 rtl:ml-3 rtl:mr-0">{{ __('general.view_toggle.display') }}</span>
-                <button id="small-grid-view" 
+                <button id="small-grid-view"
                         class="view-toggle-btn bg-primary-600 text-white p-2 rounded-lg transition-colors"
                         onclick="switchView('small-grid')"
                         title="{{ __('general.view_toggle.small_grid') }}">
                     <i class="fas fa-th"></i>
                 </button>
-                <button id="large-grid-view" 
+                <button id="large-grid-view"
                         class="view-toggle-btn bg-gray-200 text-gray-600 p-2 rounded-lg hover:bg-gray-300 transition-colors"
                         onclick="switchView('large-grid')"
                         title="{{ __('general.view_toggle.large_grid') }}">
                     <i class="fas fa-th-large"></i>
                 </button>
-                <button id="list-view" 
+                <button id="list-view"
                         class="view-toggle-btn bg-gray-200 text-gray-600 p-2 rounded-lg hover:bg-gray-300 transition-colors"
                         onclick="switchView('list')"
                         title="{{ __('general.view_toggle.list') }}">
@@ -119,9 +121,9 @@
         </div>
 
         @if(isset($facilities) && $facilities->count() > 0)
-            <x-multi-view-grid 
-                :items="$facilities" 
-                type="facilities" 
+            <x-multi-view-grid
+                :items="$facilities"
+                type="facilities"
                 :showPagination="true"
                 :showViewToggle="false"
                 idPrefix="facilities"
@@ -192,5 +194,71 @@
     </div>
 </div>
 
+@push('scripts')
+<script>
+function switchView(viewType) {
+    const facilitiesSmallGridView = document.getElementById('facilities-small-grid');
+    const facilitiesLargeGridView = document.getElementById('facilities-large-grid');
+    const facilitiesListView = document.getElementById('facilities-list');
+    const smallGridBtn = document.getElementById('small-grid-view');
+    const largeGridBtn = document.getElementById('large-grid-view');
+    const listBtn = document.getElementById('list-view');
+
+    // Hide all views first
+    facilitiesSmallGridView.classList.add('hidden');
+    facilitiesLargeGridView.classList.add('hidden');
+    facilitiesListView.classList.add('hidden');
+
+    // Reset all button styles
+    smallGridBtn.classList.remove('bg-primary-600', 'text-white');
+    smallGridBtn.classList.add('bg-gray-200', 'text-gray-600');
+    largeGridBtn.classList.remove('bg-primary-600', 'text-white');
+    largeGridBtn.classList.add('bg-gray-200', 'text-gray-600');
+    listBtn.classList.remove('bg-primary-600', 'text-white');
+    listBtn.classList.add('bg-gray-200', 'text-gray-600');
+
+    if (viewType === 'small-grid') {
+        facilitiesSmallGridView.classList.remove('hidden');
+        smallGridBtn.classList.remove('bg-gray-200', 'text-gray-600');
+        smallGridBtn.classList.add('bg-primary-600', 'text-white');
+    } else if (viewType === 'large-grid') {
+        facilitiesLargeGridView.classList.remove('hidden');
+        largeGridBtn.classList.remove('bg-gray-200', 'text-gray-600');
+        largeGridBtn.classList.add('bg-primary-600', 'text-white');
+    } else if (viewType === 'list') {
+        facilitiesListView.classList.remove('hidden');
+        listBtn.classList.remove('bg-gray-200', 'text-gray-600');
+        listBtn.classList.add('bg-primary-600', 'text-white');
+    }
+
+    // Store user preference in localStorage
+    localStorage.setItem('preferredView', viewType);
+}
+
+// Set initial view based on user preference
+document.addEventListener('DOMContentLoaded', function() {
+    const preferredView = localStorage.getItem('preferredView') || 'small-grid';
+    switchView(preferredView);
+});
+
+// Sort functionality
+(function(){
+    const sortSelector = document.getElementById('sort_selector');
+    if (!sortSelector) return;
+    const sortBy = document.getElementById('sort_by');
+    const sortOrder = document.getElementById('sort_order');
+    const form = document.getElementById('facilities-filter-form');
+
+    sortSelector.addEventListener('change', function(){
+        const value = this.value;
+        if (value === 'rating_desc') { sortBy.value = 'rating'; sortOrder.value = 'desc'; }
+        else if (value === 'name_asc') { sortBy.value = 'name'; sortOrder.value = 'asc'; }
+        else if (value === 'products_desc') { sortBy.value = 'products_count'; sortOrder.value = 'desc'; }
+        else { sortBy.value = 'created_at'; sortOrder.value = 'desc'; }
+        form.submit();
+    });
+})();
+</script>
+@endpush
 
 @endsection

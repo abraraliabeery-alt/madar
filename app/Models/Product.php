@@ -11,14 +11,10 @@ class Product extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'title',
-        'description',
         'address',
-        'is_active',
         'is_featured',
         'is_verified',
-        'price',
-        'image',
+        'main_image',
         'video',
         'image_gallery',
         'latitude',
@@ -29,6 +25,16 @@ class Product extends Model
         'seller_user_id',
         'category_id',
         'city_id',
+        'status_id',
+        'building_id',
+        'project_id',
+        'package_id',
+        'bedrooms',
+        'bathrooms',
+        'area',
+        'floor_number',
+        'total_floors',
+        'parking_spaces',
         'views_count',
         'rating',
         'rating_count',
@@ -41,12 +47,11 @@ class Product extends Model
     ];
 
     protected $casts = [
-        'is_active' => 'boolean',
         'is_featured' => 'boolean',
         'is_verified' => 'boolean',
-        'price' => 'float',
         'latitude' => 'float',
         'longitude' => 'float',
+        'area' => 'float',
         'image_gallery' => 'array',
         'rating' => 'float',
         'available_from' => 'date',
@@ -77,6 +82,26 @@ class Product extends Model
     public function city()
     {
         return $this->belongsTo(City::class);
+    }
+
+    public function status()
+    {
+        return $this->belongsTo(Status::class);
+    }
+
+    public function building()
+    {
+        return $this->belongsTo(Building::class);
+    }
+
+    public function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
+
+    public function package()
+    {
+        return $this->belongsTo(Package::class);
     }
 
     public function translations()
@@ -111,6 +136,162 @@ class Product extends Model
     {
         return $this->morphToMany(User::class, 'favoritable', 'favorites', 'favoritable_id', 'user_id');
     }
+
+    public function offers()
+    {
+        return $this->hasMany(Offer::class);
+    }
+
+    public function contracts()
+    {
+        return $this->hasMany(Contract::class);
+    }
+
+    public function activeOffers()
+    {
+        return $this->offers()->active()->valid();
+    }
+
+    public function saleOffers()
+    {
+        return $this->offers()->where('offer_type', 'sale');
+    }
+
+    public function rentOffers()
+    {
+        return $this->offers()->where('offer_type', 'like', 'rent_%');
+    }
+
+    public function getActiveSaleOffers()
+    {
+        return $this->saleOffers()->active()->valid()->get();
+    }
+
+    public function getActiveRentOffers()
+    {
+        return $this->rentOffers()->active()->valid()->get();
+    }
+
+    /**
+     * Get the lowest price from active offers
+     */
+    public function getLowestPrice()
+    {
+        $lowestOffer = $this->activeOffers()->orderBy('price', 'asc')->first();
+        return $lowestOffer ? $lowestOffer->price : null;
+    }
+
+    /**
+     * Get the highest price from active offers
+     */
+    public function getHighestPrice()
+    {
+        $highestOffer = $this->activeOffers()->orderBy('price', 'desc')->first();
+        return $highestOffer ? $highestOffer->price : null;
+    }
+
+    /**
+     * Get price range from active offers
+     */
+    public function getPriceRange()
+    {
+        $offers = $this->activeOffers()->get();
+        if ($offers->isEmpty()) {
+            return null;
+        }
+
+        $minPrice = $offers->min('price');
+        $maxPrice = $offers->max('price');
+
+        if ($minPrice == $maxPrice) {
+            return $minPrice;
+        }
+
+        return [
+            'min' => $minPrice,
+            'max' => $maxPrice
+        ];
+    }
+
+    /**
+     * Get the primary offer (sale offer or first active offer)
+     */
+    public function getPrimaryOffer()
+    {
+        // First try to get a sale offer
+        $saleOffer = $this->saleOffers()->active()->valid()->first();
+        if ($saleOffer) {
+            return $saleOffer;
+        }
+
+        // If no sale offer, get the first active offer
+        return $this->activeOffers()->first();
+    }
+
+    /**
+     * Get formatted price display
+     */
+    public function getFormattedPrice()
+    {
+        $primaryOffer = $this->getPrimaryOffer();
+        if (!$primaryOffer) {
+            return null;
+        }
+
+        $price = number_format($primaryOffer->price);
+        
+        // Add period indicator for rent offers
+        if ($primaryOffer->isForRent()) {
+            $period = $this->getRentPeriodText($primaryOffer->offer_type);
+            return "{$price} / {$period}";
+        }
+
+        return "{$price}";
+    }
+
+    /**
+     * Get rent period text
+     */
+    private function getRentPeriodText($offerType)
+    {
+        switch ($offerType) {
+            case 'rent_daily':
+                return __('products.rent_periods.daily');
+            case 'rent_monthly':
+                return __('products.rent_periods.monthly');
+            case 'rent_yearly':
+                return __('products.rent_periods.yearly');
+            default:
+                return '';
+        }
+    }
+
+    /**
+     * Check if product has active offers
+     */
+    public function hasActiveOffers()
+    {
+        return $this->activeOffers()->exists();
+    }
+
+    /**
+     * Scope to filter products that have active offers
+     */
+    public function scopeWithActiveOffers($query)
+    {
+        return $query->whereHas('offers', function($q) {
+            $q->where('is_active', true)
+              ->where(function($dateQuery) {
+                  $dateQuery->whereNull('valid_from')
+                           ->orWhere('valid_from', '<=', now()->toDateString());
+              })
+              ->where(function($dateQuery) {
+                  $dateQuery->whereNull('valid_to')
+                           ->orWhere('valid_to', '>=', now()->toDateString());
+              });
+        });
+    }
+
 
 
 
@@ -176,11 +357,6 @@ class Product extends Model
     }
 
     // Scopes
-    public function scopeActive($query)
-    {
-        return $query->where('is_active', true);
-    }
-
     public function scopeFeatured($query)
     {
         return $query->where('is_featured', true);
@@ -208,10 +384,10 @@ class Product extends Model
 
 
 
-    // Accessors
+    // Accessors - Updated to use offers-based pricing
     public function getFormattedPriceAttribute()
     {
-        return number_format($this->price, 2) . ' ريال';
+        return $this->getFormattedPrice();
     }
 
 
@@ -237,6 +413,7 @@ class Product extends Model
     public function getCardAttributesAttribute()
     {
         return $this->attributes()
+            ->with('translations')
             ->where('show_in_card', true)
             ->where(function($query) {
                 $query->where('category_id', $this->category_id)

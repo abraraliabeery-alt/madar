@@ -60,11 +60,12 @@ class BookingStatusChanged extends Notification
     {
         return [
             'booking_id' => $this->booking->id,
-            'product_name' => $this->booking->product->name,
+            'product_name' => $this->booking->product->title ?? 'عقار',
             'old_status' => $this->oldStatus,
             'new_status' => $this->newStatus,
             'type' => 'booking_status_changed',
-            'message' => 'تم تحديث حالة حجزك للعقار: ' . $this->booking->product->name . ' من ' . $this->oldStatus . ' إلى ' . $this->newStatus,
+            'message' => 'تم تحديث حالة حجزك للعقار: ' . ($this->booking->product->title ?? 'عقار') . ' من ' . $this->oldStatus . ' إلى ' . $this->newStatus,
+            'action_url' => route('client.bookings.show', $this->booking->id),
         ];
     }
 }

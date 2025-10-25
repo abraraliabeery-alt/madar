@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('facility.layouts.app')
 
 @section('title', __('facilities.customization.page_title'))
 

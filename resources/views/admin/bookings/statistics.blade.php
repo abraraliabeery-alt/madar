@@ -81,7 +81,7 @@
                         </div>
                         <div class="card-body">
                             <div class="text-center mb-4">
-                                <h3 class="mb-0">{{ number_format($stats['monthly_revenue'], 2) }} ريال</h3>
+                                <h3 class="mb-0">{{ number_format($stats['monthly_revenue'], 2) }} {!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}</h3>
                                 <small class="text-muted">إجمالي الإيرادات لهذا الشهر</small>
                             </div>
                             <div style="height: 300px;">
@@ -132,7 +132,7 @@
                                             <td>{{ $booking->user->name }}</td>
                                             <td>{{ $booking->product->name }}</td>
                                             <td>{{ $booking->booking_date }}</td>
-                                            <td>{{ number_format($booking->total_amount, 2) }} ريال</td>
+                                            <td>{{ number_format($booking->total_amount, 2) }} {!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}</td>
                                             <td>
                                                 @if($booking->is_confirmed)
                                                     <span class="badge bg-success">مؤكد</span>

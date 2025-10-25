@@ -18,25 +18,25 @@ class ClientBookingController extends Controller
     {
         $user = Auth::user();
 
-        $query = $user->bookings()->with(['product', 'facility', 'status']);
+        $query = $user->bookings()->with(['product', 'facility']);
 
         // فلترة حسب الحالة
-        if ($request->has('status_id') && $request->status_id) {
-            $query->where('status_id', $request->status_id);
+        if ($request->has('status') && $request->status) {
+            $query->where('status', $request->status);
         }
 
         // فلترة حسب التاريخ
         if ($request->has('date_from') && $request->date_from) {
-            $query->whereDate('booking_date', '>=', $request->date_from);
+            $query->whereDate('created_at', '>=', $request->date_from);
         }
         if ($request->has('date_to') && $request->date_to) {
-            $query->whereDate('booking_date', '<=', $request->date_to);
+            $query->whereDate('created_at', '<=', $request->date_to);
         }
 
         // البحث
         if ($request->has('search') && $request->search) {
             $query->where(function ($q) use ($request) {
-                $q->where('booking_number', 'like', '%' . $request->search . '%')
+                $q->where('id', 'like', '%' . $request->search . '%')
                   ->orWhereHas('product', function ($productQuery) use ($request) {
                       $productQuery->where('name', 'like', '%' . $request->search . '%');
                   })
@@ -75,9 +75,8 @@ class ClientBookingController extends Controller
 
         $request->validate([
             'product_id' => 'required|exists:products,id',
-            'booking_date' => 'required|date|after:today',
-            'booking_time' => 'required|date_format:H:i',
-            'duration' => 'required|integer|min:1',
+            'total_amount' => 'required|numeric|min:0',
+            'payment_method' => 'nullable|string',
             'notes' => 'nullable|string',
         ]);
 
@@ -92,36 +91,15 @@ class ClientBookingController extends Controller
                 ->withInput();
         }
 
-        // التحقق من توفر الموعد
-        $conflictingBooking = Booking::where('product_id', $request->product_id)
-            ->where('booking_date', $request->booking_date)
-            ->where('booking_time', $request->booking_time)
-            ->where('is_confirmed', true)
-            ->first();
-
-        if ($conflictingBooking) {
-            return redirect()->back()
-                ->with('error', 'هذا الموعد محجوز مسبقاً')
-                ->withInput();
-        }
-
         // حساب السعر الإجمالي
-        $totalAmount = $product->price * $request->duration;
-
-        // إنشاء رقم الحجز
-        $bookingNumber = 'BK-' . date('Ymd') . '-' . str_pad(Booking::whereDate('created_at', today())->count() + 1, 4, '0', STR_PAD_LEFT);
+        $totalAmount = $request->total_amount ?? $product->price;
 
         $booking = Booking::create([
-            'booking_number' => $bookingNumber,
             'user_id' => $user->id,
             'product_id' => $request->product_id,
-            'facility_id' => $product->facility_id,
-            'status_id' => 1, // pending status
-            'booking_date' => $request->booking_date,
-            'booking_time' => $request->booking_time,
-            'duration' => $request->duration,
             'total_amount' => $totalAmount,
-            'notes' => $request->notes,
+            'payment_method' => $request->payment_method,
+            'status' => 'reserved', // pending status
             'is_confirmed' => false,
             'is_paid' => false,
         ]);
@@ -142,7 +120,7 @@ class ClientBookingController extends Controller
                 ->with('error', 'غير مصرح لك بعرض هذا الحجز');
         }
 
-        $booking->load(['product', 'facility', 'statuses']);
+        $booking->load(['product', 'facility']);
         return view('client.bookings.show', compact('booking'));
     }
 
@@ -163,7 +141,7 @@ class ClientBookingController extends Controller
                 ->with('error', 'لا يمكن إلغاء الحجز بعد تأكيده');
         }
 
-        $booking->update(['status_id' => 4]); // cancelled status
+        $booking->update(['status' => 'cancelled']); // cancelled status
 
         return redirect()->route('client.bookings.index')
             ->with('success', 'تم إلغاء الحجز بنجاح');
@@ -182,27 +160,20 @@ class ClientBookingController extends Controller
         }
 
         $request->validate([
-            'booking_date' => 'required|date|after:today',
-            'booking_time' => 'required|date_format:H:i',
+            'total_amount' => 'required|numeric|min:0',
+            'payment_method' => 'nullable|string',
         ]);
 
-        // التحقق من توفر الموعد الجديد
-        $conflictingBooking = Booking::where('product_id', $booking->product_id)
-            ->where('booking_date', $request->booking_date)
-            ->where('booking_time', $request->booking_time)
-            ->where('id', '!=', $booking->id)
-            ->where('is_confirmed', true)
-            ->first();
-
-        if ($conflictingBooking) {
+        // التحقق من أن الحجز يمكن تعديله
+        if ($booking->is_confirmed) {
             return redirect()->back()
-                ->with('error', 'هذا الموعد محجوز مسبقاً')
+                ->with('error', 'لا يمكن تعديل الحجز بعد تأكيده')
                 ->withInput();
         }
 
         $booking->update([
-            'booking_date' => $request->booking_date,
-            'booking_time' => $request->booking_time,
+            'total_amount' => $request->total_amount,
+            'payment_method' => $request->payment_method,
             'is_confirmed' => false, // إعادة الحجز إلى حالة الانتظار
         ]);
 
@@ -243,8 +214,8 @@ class ClientBookingController extends Controller
         $stats = [
             'total_bookings' => $user->bookings()->count(),
             'confirmed_bookings' => $user->bookings()->where('is_confirmed', true)->count(),
-            'pending_bookings' => $user->bookings()->where('status_id', 1)->count(),
-            'cancelled_bookings' => $user->bookings()->where('status_id', 4)->count(),
+            'pending_bookings' => $user->bookings()->where('status', 'reserved')->count(),
+            'cancelled_bookings' => $user->bookings()->where('status', 'cancelled')->count(),
             'total_spent' => $user->bookings()->where('is_paid', true)->sum('total_amount'),
             'recent_bookings' => $user->bookings()->with(['product', 'facility'])
                 ->latest()

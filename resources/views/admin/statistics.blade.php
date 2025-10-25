@@ -360,7 +360,7 @@
                                         <i class="fas fa-calendar-check me-1"></i>{{ $facility['bookings_count'] }} حجز
                                     </small>
                                     <small class="text-muted">
-                                        <i class="fas fa-dollar-sign me-1"></i>{{ number_format($facility['total_revenue']) }} ريال
+                                        <i class="fas fa-dollar-sign me-1"></i>{{ number_format($facility['total_revenue']) }} {!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}
                                     </small>
                                 </div>
                             </div>
@@ -543,7 +543,7 @@ $(document).ready(function() {
                     beginAtZero: true,
                     ticks: {
                         callback: function(value) {
-                            return value.toLocaleString('ar-SA') + ' ريال';
+                            return value.toLocaleString('ar-SA') + ' ' + '<?php echo \App\Helpers\LanguageHelper::getSaudiRiyalSymbol(); ?>';
                         }
                     }
                 }

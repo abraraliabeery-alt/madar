@@ -100,7 +100,7 @@
                     <!-- Price and Action -->
                     <div class="flex justify-between items-center">
                         @if($product->price)
-                            <span class="text-xl font-bold text-primary-600">{{ number_format($product->price) }} {{ __('general.currency.sar') }}</span>
+                            <span class="text-xl font-bold text-primary-600">{{ number_format($product->price) }} {!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}</span>
                         @else
                             <span class="text-gray-500">{{ __('general.status.price_on_request') }}</span>
                         @endif

@@ -22,6 +22,183 @@
     @stack('styles')
 
     <style>
+        /* Mobile Responsive Improvements */
+        @media (max-width: 768px) {
+            .main-header {
+                padding: 0.5rem 1rem;
+                height: 60px;
+            }
+            
+            .navbar-tools {
+                gap: 0.5rem;
+            }
+            
+            .search-box {
+                display: none;
+            }
+            
+            .btn {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.875rem;
+            }
+            
+            .dropdown-menu {
+                min-width: 250px;
+                max-width: 90vw;
+            }
+            
+            .card-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: stretch;
+            }
+            
+            .card-header .btn {
+                width: 100%;
+            }
+            
+            .main-content {
+                padding: calc(60px + 1rem) 0.75rem 1rem;
+            }
+            
+            .sidebar {
+                width: 100%;
+                max-width: 320px;
+            }
+            
+            .sidebar-header {
+                padding: 1rem;
+            }
+            
+            .nav-scroll {
+                padding: 1rem;
+            }
+            
+            .sidebar .nav-link {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .sidebar .nav-link i {
+                font-size: 1.1rem;
+            }
+            
+            /* Mobile DataTables */
+            .dataTables_wrapper .row {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .dataTables_filter,
+            .dataTables_length {
+                text-align: center !important;
+            }
+            
+            .dataTables_filter input {
+                width: 100% !important;
+                margin: 0 !important;
+            }
+            
+            .dataTables_length select {
+                width: 100% !important;
+                margin: 0 !important;
+            }
+            
+            .dt-buttons {
+                justify-content: center !important;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+            
+            .dt-button {
+                flex: 1;
+                min-width: 120px;
+                text-align: center;
+            }
+            
+            /* Mobile table improvements */
+            .table-responsive.has-horizontal-scroll::after {
+                content: '← اسحب للعرض →';
+                position: absolute;
+                bottom: 5px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(0,0,0,0.7);
+                color: white;
+                padding: 2px 8px;
+                border-radius: 4px;
+                font-size: 0.75rem;
+                pointer-events: none;
+            }
+            
+            /* Mobile button groups */
+            .btn-group-mobile {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.25rem;
+                width: 100%;
+            }
+            
+            .btn-group-mobile .btn {
+                flex: 1;
+                min-width: 120px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .main-header {
+                padding: 0.5rem;
+                height: 55px;
+            }
+            
+            .navbar-tools {
+                gap: 0.25rem;
+            }
+            
+            .btn {
+                padding: 0.4rem 0.6rem;
+                font-size: 0.8rem;
+            }
+            
+            .main-content {
+                padding: calc(55px + 0.75rem) 0.5rem 0.75rem;
+            }
+            
+            .card {
+                margin-bottom: 1rem;
+            }
+            
+            .card-body {
+                padding: 1rem;
+            }
+            
+            .card-header {
+                padding: 1rem;
+            }
+            
+            .alert {
+                padding: 0.75rem 1rem;
+                margin-bottom: 1rem;
+            }
+            
+            .table-responsive {
+                font-size: 0.875rem;
+            }
+            
+            .table td, .table th {
+                padding: 0.5rem 0.75rem;
+            }
+            
+            .form-control, .form-select {
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+            
+            .dropdown-menu {
+                min-width: 200px;
+                max-width: 85vw;
+            }
+        }
+        
         /* Dark Mode Styles */
         body.dark-mode {
             background-color: #1a1a1a;
@@ -426,10 +603,30 @@
                     <i class="fas fa-home"></i>
                     <span>لوحة التحكم</span>
                 </a>
-                <a href="{{ route('admin.users.index') }}" class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
-                    <i class="fas fa-users"></i>
-                    <span>المستخدمين</span>
-                </a>
+                <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle {{ request()->routeIs('admin.users.*') ? 'active' : '' }}" data-bs-toggle="dropdown">
+                        <i class="fas fa-users"></i>
+                        <span>المستخدمين</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{{ route('admin.users.index') }}">
+                            <i class="fas fa-list me-2"></i>قائمة المستخدمين
+                        </a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.users.statistics') }}">
+                            <i class="fas fa-chart-line me-2"></i>إحصائيات المستخدمين
+                        </a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.users.export') }}">
+                            <i class="fas fa-download me-2"></i>تصدير البيانات
+                        </a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.users.activity-logs') }}">
+                            <i class="fas fa-history me-2"></i>سجل النشاط
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.permissions.index') }}">
+                            <i class="fas fa-user-cog me-2"></i>إدارة الصلاحيات
+                        </a></li>
+                    </ul>
+                </div>
                 <a href="{{ route('admin.roles.index') }}" class="nav-link {{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">
                     <i class="fas fa-user-shield"></i>
                     <span>الأدوار</span>
@@ -817,11 +1014,21 @@
 
         // تبديل القائمة الجانبية
         $('#sidebarToggle').on('click', function() {
-            $('.sidebar').addClass('show');
-            $('.main-content').addClass('sidebar-open');
-            $('.main-header').addClass('sidebar-open');
-            $('body').addClass('sidebar-open');
-            localStorage.setItem('adminSidebarOpen', 'true');
+            if ($(window).width() <= 992) {
+                // Mobile behavior - show sidebar
+                $('.sidebar').addClass('show');
+                $('.main-content').addClass('sidebar-open');
+                $('.main-header').addClass('sidebar-open');
+                $('body').addClass('sidebar-open');
+                localStorage.setItem('adminSidebarOpen', 'true');
+            } else {
+                // Desktop behavior - toggle sidebar
+                $('.sidebar').toggleClass('hide');
+                $('.main-content').toggleClass('sidebar-closed');
+                $('.main-header').toggleClass('sidebar-closed');
+                let isHidden = $('.sidebar').hasClass('hide');
+                localStorage.setItem('adminSidebarHidden', isHidden);
+            }
         });
 
         $('#sidebarClose').on('click', function() {
@@ -870,18 +1077,112 @@
 
         // استعادة حالة القائمة الجانبية عند تحميل الصفحة
         function restoreSidebarState() {
-            const savedSidebarState = localStorage.getItem('adminSidebarOpen');
-            if (savedSidebarState === 'true') {
-                $('.sidebar').addClass('show');
-                $('.main-content').addClass('sidebar-open');
-                $('.main-header').addClass('sidebar-open');
-                $('body').addClass('sidebar-open');
+            if ($(window).width() <= 992) {
+                // Mobile - restore mobile state
+                const savedSidebarState = localStorage.getItem('adminSidebarOpen');
+                if (savedSidebarState === 'true') {
+                    $('.sidebar').addClass('show');
+                    $('.main-content').addClass('sidebar-open');
+                    $('.main-header').addClass('sidebar-open');
+                    $('body').addClass('sidebar-open');
+                }
+            } else {
+                // Desktop - restore desktop state
+                const savedSidebarHidden = localStorage.getItem('adminSidebarHidden');
+                if (savedSidebarHidden === 'true') {
+                    $('.sidebar').addClass('hide');
+                    $('.main-content').addClass('sidebar-closed');
+                    $('.main-header').addClass('sidebar-closed');
+                }
             }
         }
 
         // استدعاء الدالة عند تحميل الصفحة
         restoreDarkMode();
         restoreSidebarState();
+
+        // Handle window resize for responsive sidebar
+        $(window).on('resize', function() {
+            if ($(window).width() > 992) {
+                // Desktop - remove mobile classes
+                $('.sidebar').removeClass('show');
+                $('.main-content').removeClass('sidebar-open');
+                $('.main-header').removeClass('sidebar-open');
+                $('body').removeClass('sidebar-open');
+                restoreSidebarState();
+            } else {
+                // Mobile - remove desktop classes
+                $('.sidebar').removeClass('hide');
+                $('.main-content').removeClass('sidebar-closed');
+                $('.main-header').removeClass('sidebar-closed');
+                restoreSidebarState();
+            }
+        });
+
+        // Mobile-specific enhancements
+        function initMobileEnhancements() {
+            if ($(window).width() <= 768) {
+                // Mobile DataTables configuration
+                if ($('.datatable').length) {
+                    $('.datatable').each(function() {
+                        if ($.fn.DataTable.isDataTable(this)) {
+                            let table = $(this).DataTable();
+                            table.responsive.recalc();
+                        }
+                    });
+                }
+                
+                // Mobile form improvements
+                $('.form-control, .form-select').on('focus', function() {
+                    // Prevent zoom on iOS
+                    $(this).css('font-size', '16px');
+                });
+                
+                // Mobile dropdown improvements
+                $('.dropdown-menu').on('show.bs.dropdown', function() {
+                    let $this = $(this);
+                    let $parent = $this.parent();
+                    let offset = $parent.offset();
+                    let width = $this.width();
+                    
+                    // Check if dropdown goes off screen
+                    if (offset.left + width > $(window).width()) {
+                        $this.css('right', '0');
+                        $this.css('left', 'auto');
+                    }
+                });
+                
+                // Mobile table improvements
+                $('.table-responsive').each(function() {
+                    let $table = $(this);
+                    let $tableElement = $table.find('table');
+                    
+                    // Add horizontal scroll indicator
+                    if ($tableElement.width() > $table.width()) {
+                        $table.addClass('has-horizontal-scroll');
+                    }
+                });
+                
+                // Mobile card improvements
+                $('.card-header').each(function() {
+                    let $header = $(this);
+                    let $buttons = $header.find('.btn');
+                    
+                    if ($buttons.length > 2 && $(window).width() <= 576) {
+                        // Create mobile-friendly button group
+                        $buttons.wrapAll('<div class="btn-group-mobile d-flex flex-wrap gap-1"></div>');
+                    }
+                });
+            }
+        }
+        
+        // Initialize mobile enhancements
+        initMobileEnhancements();
+        
+        // Re-initialize on window resize
+        $(window).on('resize', function() {
+            setTimeout(initMobileEnhancements, 100);
+        });
 
         // تحميل الإشعارات
         function loadNotifications() {

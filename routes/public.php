@@ -16,9 +16,10 @@ use App\Http\Controllers\Public\StaticController;
 use App\Http\Controllers\Public\CityController;
 use App\Http\Controllers\Public\NewsletterController;
 use App\Http\Controllers\Public\ErrorController;
+use App\Http\Controllers\Public\BookingController;
 
 // Public Routes - لا تحتاج تسجيل دخول
-Route::name('public.')->group(function () {
+Route::group([], function () {
 
     // Home Page
     Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -30,10 +31,10 @@ Route::name('public.')->group(function () {
 
     // Search Routes
     Route::get('/search', [SearchController::class, 'index'])->name('search');
-    Route::get('/search/products', [SearchController::class, 'searchProducts'])->name('search.products');
-    Route::get('/search/facilities', [SearchController::class, 'searchFacilities'])->name('search.facilities');
-    Route::get('/search/advanced', [SearchController::class, 'advancedSearch'])->name('search.advanced');
-    Route::get('/search/map', [SearchController::class, 'mapSearch'])->name('search.map');
+    Route::get('/search/products', [SearchController::class, 'products'])->name('search.products');
+    Route::get('/search/facilities', [SearchController::class, 'facilities'])->name('search.facilities');
+    Route::get('/search/advanced', [SearchController::class, 'advanced'])->name('search.advanced');
+    Route::get('/search/map', [SearchController::class, 'map'])->name('search.map');
     Route::get('/search/quick', [SearchController::class, 'quickSearch'])->name('search.quick');
 
     // Contact Routes
@@ -86,6 +87,16 @@ Route::name('public.')->group(function () {
     Route::get('/cities/{city}', [CityController::class, 'show'])->name('cities.show');
     Route::get('/cities/{city}/products', [CityController::class, 'products'])->name('cities.products');
     Route::get('/cities/{city}/facilities', [CityController::class, 'facilities'])->name('cities.facilities');
+
+    // Booking Routes (require authentication)
+    Route::middleware('auth')->group(function () {
+        Route::get('/bookings/create', [BookingController::class, 'create'])->name('bookings.create');
+        Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
+        Route::get('/bookings/{id}/success', [BookingController::class, 'success'])->name('bookings.success');
+        Route::get('/bookings/{id}', [BookingController::class, 'show'])->name('bookings.show');
+        Route::post('/bookings/{id}/cancel', [BookingController::class, 'cancel'])->name('bookings.cancel');
+        Route::post('/bookings/{id}/reschedule', [BookingController::class, 'reschedule'])->name('bookings.reschedule');
+    });
 
     // User Actions (require authentication)
     Route::middleware('auth')->group(function () {

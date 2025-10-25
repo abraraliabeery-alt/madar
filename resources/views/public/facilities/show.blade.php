@@ -30,8 +30,9 @@
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
 
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800,900&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -198,6 +199,65 @@
             @endif
         }
 
+        /* Product Grid Component Styling for Facility Context */
+        .facility-product-grid .bg-white {
+            @if(($facility->layout_style ?? 'default') === 'minimal')
+                box-shadow: none !important;
+                border: 1px solid var(--border-color);
+                background: var(--surface-color);
+            @elseif(($facility->layout_style ?? 'default') === 'corporate')
+                border-radius: 0.25rem !important;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+                border: 1px solid var(--border-color);
+                background: var(--surface-color);
+            @elseif(($facility->layout_style ?? 'default') === 'classic')
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+                border: 1px solid var(--border-color);
+                background: var(--surface-color);
+            @elseif(($facility->layout_style ?? 'default') === 'elegant')
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+                border-radius: 1rem !important;
+                border: 1px solid var(--border-color);
+                background: var(--surface-color);
+            @elseif(($facility->layout_style ?? 'default') === 'bold')
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+                border-radius: 0.75rem !important;
+                border: 2px solid var(--primary-100);
+                background: var(--surface-color);
+            @endif
+        }
+
+        .facility-product-grid .bg-white:hover {
+            @if(($facility->enable_animations ?? true))
+                transform: translateY(-2px);
+            @endif
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+        }
+
+        .facility-product-grid .text-primary-600 {
+            color: var(--primary-color) !important;
+        }
+
+        .facility-product-grid .hover\:text-primary-600:hover {
+            color: var(--primary-color) !important;
+        }
+
+        .facility-product-grid .bg-primary-600 {
+            background-color: var(--primary-color) !important;
+        }
+
+        .facility-product-grid .text-gray-900 {
+            color: var(--heading-text-color) !important;
+        }
+
+        .facility-product-grid .text-gray-600 {
+            color: var(--muted-text-color) !important;
+        }
+
+        .facility-product-grid .text-gray-500 {
+            color: var(--secondary-text-color) !important;
+        }
+
         /* Card Design Classes */
         .facility-card, .stats-card, .contact-card, .action-card {
             @if(($facility->layout_style ?? 'default') === 'minimal')
@@ -257,6 +317,35 @@
             font-family: var(--font-family);
             color: var(--text-color);
             background-color: var(--background-color);
+        }
+
+        /* RTL Language Support */
+        [dir="rtl"] {
+            font-family: 'Cairo', 'Segoe UI', Tahoma, Arial, sans-serif;
+        }
+
+        [dir="rtl"] .font-sans {
+            font-family: 'Cairo', 'Segoe UI', Tahoma, Arial, sans-serif !important;
+        }
+
+        /* Font Loading Optimization */
+        .font-loading {
+            font-display: swap;
+        }
+
+        .font-loading * {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+        }
+
+        .font-loaded * {
+            font-family: var(--font-family) !important;
+        }
+
+        /* Ensure proper font rendering */
+        * {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
         }
 
         .primary-gradient {
@@ -444,7 +533,14 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Figtree', 'sans-serif'],
+                        sans: ['Figtree', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                        figtree: ['Figtree', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                        inter: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                        poppins: ['Poppins', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                        roboto: ['Roboto', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                        'open-sans': ['Open Sans', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                        lato: ['Lato', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                        cairo: ['Cairo', 'Segoe UI', 'Tahoma', 'Arial', 'sans-serif'],
                     }
                 }
             }
@@ -452,7 +548,7 @@
     </script>
 </head>
 
-<body class="font-sans antialiased" style="background-color: var(--background-color);">
+<body class="font-sans antialiased font-loading" style="background-color: var(--background-color); font-family: var(--font-family);">
     <!-- Navigation -->
     <nav class="main-navigation fixed top-0 w-full nav-bg backdrop-blur-sm z-50 shadow-sm">
         <div class="content-container mx-auto px-4 sm:px-6 lg:px-8">
@@ -654,50 +750,8 @@
                     </div>
 
                     @if($products->count() > 0)
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-                    @foreach($products->take(6) as $product)
-                        <div class="facility-card bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
-                            <div class="relative">
-                                    <img src="{{ $product->image ?? 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80' }}"
-                                     alt="{{ $product->title }}" class="w-full h-64 object-cover">
-                                <div class="absolute top-4 right-4 bg-primary-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                                    {{ number_format($product->price) }} {{ __('facilities.show.currency') }}
-                                </div>
-                            </div>
-                            <div class="p-6">
-                                <h3 class="text-xl font-bold text-heading mb-2">
-                                            <a href="{{ route('public.products.show', $product) }}" class="hover:text-primary transition-colors">
-                                                {{ $product->title }}
-                                            </a>
-                                        </h3>
-                                <p class="text-muted text-sm mb-4 flex items-center">
-                                    <i class="fas fa-map-marker-alt ml-2"></i>
-                                    {{ $product->address ?? __('facilities.facility_card.location_unknown') }}
-                                </p>
-
-                                <div class="flex items-center justify-between text-sm text-muted mb-4">
-                                    @foreach($product->card_attributes->take(3) as $attribute)
-                                        <span class="flex items-center">
-                                                    @if($attribute->icon)
-                                                        <i class="{{ $attribute->icon }} ml-1"></i>
-                                                    @else
-                                                        <i class="fas fa-info-circle ml-1"></i>
-                                                    @endif
-                                                    {{ $attribute->pivot->value }}
-                                                    @if($attribute->Symbol)
-                                                        {{ $attribute->Symbol }}
-                                                    @endif
-                                                </span>
-                                            @endforeach
-                                        </div>
-
-                                            <a href="{{ route('public.products.show', $product) }}"
-                                   class="w-full btn-primary text-white py-3 font-semibold text-center block">
-                                                {{ __('facilities.product.view_details') }}
-                                            </a>
-                                    </div>
-                                </div>
-                            @endforeach
+                        <div class="facility-product-grid">
+                            <x-product-grid :products="$products->take(6)" :columns="3" class="mb-12" />
                         </div>
 
                 <div class="text-center">
@@ -943,6 +997,20 @@
 
     <!-- Scripts -->
     <script>
+        // Font loading optimization
+        if ('fonts' in document) {
+            document.fonts.ready.then(function() {
+                document.body.classList.remove('font-loading');
+                document.body.classList.add('font-loaded');
+            });
+        } else {
+            // Fallback for browsers that don't support Font Loading API
+            setTimeout(function() {
+                document.body.classList.remove('font-loading');
+                document.body.classList.add('font-loaded');
+            }, 3000);
+        }
+
         // Mobile menu toggle
         function toggleMobileMenu() {
             const menu = document.getElementById('mobile-menu');

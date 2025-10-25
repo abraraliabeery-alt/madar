@@ -110,6 +110,21 @@ class Facility extends Model
         return $this->hasMany(Contract::class);
     }
 
+    public function offers()
+    {
+        return $this->hasMany(Offer::class);
+    }
+
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class);
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
     public function tasks()
     {
         // Tasks are not directly related to facilities, so return empty query builder
@@ -267,15 +282,17 @@ class Facility extends Model
     public function getFontFamilyValue($fontFamily)
     {
         $fontMap = [
-            'figtree' => "'Figtree', sans-serif",
-            'inter' => "'Inter', sans-serif",
-            'poppins' => "'Poppins', sans-serif", 
-            'roboto' => "'Roboto', sans-serif",
-            'open-sans' => "'Open Sans', sans-serif",
-            'lato' => "'Lato', sans-serif",
+            'figtree' => "'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+            'inter' => "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+            'poppins' => "'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif", 
+            'roboto' => "'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
+            'open-sans' => "'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+            'lato' => "'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+            'cairo' => "'Cairo', 'Segoe UI', Tahoma, Arial, sans-serif",
+            'default' => "'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
         ];
         
-        return $fontMap[$fontFamily] ?? $fontMap['figtree'];
+        return $fontMap[$fontFamily] ?? $fontMap['default'];
     }
 
     public function hasCustomization()

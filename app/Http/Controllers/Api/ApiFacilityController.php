@@ -347,7 +347,7 @@ class ApiFacilityController extends Controller
     {
         $user = $request->user();
         $favorites = $user->facilities()
-            ->with(['category', 'owner'])
+            ->with(['facilityCategory', 'owner'])
             ->paginate(15);
 
         return response()->json([

@@ -26,7 +26,7 @@ class FacilityProductController extends Controller
             return redirect()->route('facility.create');
         }
 
-        $query = $facility->products()->with(['category', 'status', 'features', 'attributes']);
+        $query = $facility->products()->with(['category', 'statuses', 'features', 'attributes']);
 
         // فلترة حسب الفئة
         if ($request->has('category_id') && $request->category_id) {
@@ -41,14 +41,13 @@ class FacilityProductController extends Controller
         // البحث
         if ($request->has('search') && $request->search) {
             $query->where(function ($q) use ($request) {
-                $q->where('name', 'like', '%' . $request->search . '%')
-                  ->orWhere('description', 'like', '%' . $request->search . '%')
-                  ->orWhere('address', 'like', '%' . $request->search . '%');
+                $q->where('address', 'like', '%' . $request->search . '%')
+                  ->orWhere('additional_info', 'like', '%' . $request->search . '%');
             });
         }
 
         $products = $query->paginate(15);
-        $categories = Category::all();
+        $categories = Category::with('translations')->get();
         $statuses = Status::all();
 
         return view('facility.products.index', compact('products', 'categories', 'statuses'));
@@ -65,13 +64,16 @@ class FacilityProductController extends Controller
             return redirect()->route('facility.create');
         }
 
-        $categories = Category::all();
+        $categories = Category::with('translations')->get();
         $statuses = Status::all();
-        $features = Feature::all();
-        $attributes = Attribute::all();
         $cities = City::where('is_active', true)->orderBy('name')->get();
 
-        return view('facility.products.create', compact('categories', 'statuses', 'features', 'attributes', 'cities'));
+        // Prepare categories options for the select dropdown
+        $categoryOptions = $categories->mapWithKeys(function ($category) {
+            return [$category->id => $category->getTranslatedName()];
+        })->toArray();
+
+        return view('facility.products.create', compact('categories', 'statuses', 'cities', 'categoryOptions'));
     }
 
     /**
@@ -86,14 +88,10 @@ class FacilityProductController extends Controller
         }
 
         $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
             'address' => 'required|string',
-            'price' => 'required|numeric|min:0',
             'category_id' => 'required|exists:categories,id',
             'city_id' => 'required|exists:cities,id',
             'status_id' => 'required|exists:statuses,id',
-            'owner_user_id' => 'required|exists:users,id',
             'building_id' => 'nullable|exists:buildings,id',
             'project_id' => 'nullable|exists:projects,id',
             'package_id' => 'nullable|exists:packages,id',
@@ -108,16 +106,36 @@ class FacilityProductController extends Controller
             'total_floors' => 'nullable|integer|min:1',
             'parking_spaces' => 'nullable|integer|min:0',
             'furnished' => 'boolean',
-            'available_for_rent' => 'boolean',
-            'available_for_sale' => 'boolean',
             'is_featured' => 'boolean',
             'is_verified' => 'boolean',
             'features' => 'array',
             'features.*' => 'exists:features,id',
             'attributes' => 'array',
             'attributes.*.attribute_id' => 'exists:attributes,id',
-            'attributes.*.value' => 'required|string',
+            'attributes.*.value' => 'nullable',
         ]);
+
+        // Custom validation for required attributes only
+        if ($request->has('attributes')) {
+            $requiredAttributes = \App\Models\Attribute::where('required', true)
+                ->whereIn('id', collect($request->attributes)->pluck('attribute_id'))
+                ->pluck('id')
+                ->toArray();
+
+            foreach ($request->attributes as $index => $attribute) {
+                $attributeId = $attribute['attribute_id'];
+                $value = $attribute['value'];
+
+                // Check if required attribute has value
+                if (in_array($attributeId, $requiredAttributes)) {
+                    if (empty($value)) {
+                        return redirect()->back()
+                            ->withErrors(["attributes.{$index}.value" => 'This attribute is required.'])
+                            ->withInput();
+                    }
+                }
+            }
+        }
 
         $productData = $request->except(['main_image', 'features', 'attributes']);
         $productData['facility_id'] = $facility->id;
@@ -162,13 +180,63 @@ class FacilityProductController extends Controller
         }
 
         $product->load(['category', 'city', 'statuses', 'features', 'attributes']);
-        $categories = Category::all();
+        $categories = Category::with('translations')->get();
         $statuses = Status::all();
-        $features = Feature::all();
         $attributes = Attribute::all();
         $cities = City::where('is_active', true)->orderBy('name')->get();
+        
+        // Get attribute values directly from the pivot table
+        $attributeValues = \App\Models\ProductAttributeValue::where('product_id', $product->id)
+            ->pluck('value', 'attribute_id')
+            ->toArray();
 
-        return view('facility.products.edit', compact('product', 'categories', 'statuses', 'features', 'attributes', 'cities'));
+           
+        // Get attributes grouped by category for JavaScript - only those used in product_attribute_values
+        $attributesByCategory = Attribute::with('translations')
+            ->whereNotNull('category_id')
+            ->whereIn('id', function($query) {
+                $query->select('attribute_id')
+                      ->from('product_attribute_values')
+                      ->distinct();
+            })
+            ->get()
+            ->groupBy('category_id')
+            ->map(function ($attributes) {
+                return $attributes->map(function ($attribute) {
+                    return [
+                        'id' => $attribute->id,
+                        'name' => $attribute->getTranslatedName(app()->getLocale()),
+                        'icon' => $attribute->icon,
+                        'required' => $attribute->required,
+                    ];
+                });
+            });
+        // Get features grouped by category for JavaScript - only those used in product_feature
+        $featuresByCategory = \App\Models\Feature::with('translations')
+            ->whereNotNull('category_id')
+            ->whereIn('id', function($query) {
+                $query->select('feature_id')
+                      ->from('product_feature')
+                      ->distinct();
+            })
+            ->get()
+            ->groupBy('category_id')
+            ->map(function ($features) {
+                return $features->map(function ($feature) {
+                    return [
+                        'id' => $feature->id,
+                        'name' => $feature->getTranslatedName(app()->getLocale()),
+                        'icon' => $feature->icon,
+                    ];
+                });
+            });
+
+        // Prepare categories options for the select dropdown
+        $categoryOptions = $categories->mapWithKeys(function ($category) {
+            return [$category->id => $category->getTranslatedName()];
+        })->toArray();
+
+        return view('facility.products.edit', compact('product', 'categories', 'statuses', 'attributes', 'cities', 'categoryOptions', 'attributeValues', 'attributesByCategory', 'featuresByCategory'));
     }
 
     /**
@@ -184,14 +252,10 @@ class FacilityProductController extends Controller
         }
 
         $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
             'address' => 'required|string',
-            'price' => 'required|numeric|min:0',
             'category_id' => 'required|exists:categories,id',
             'city_id' => 'required|exists:cities,id',
             'status_id' => 'required|exists:statuses,id',
-            'owner_user_id' => 'required|exists:users,id',
             'building_id' => 'nullable|exists:buildings,id',
             'project_id' => 'nullable|exists:projects,id',
             'package_id' => 'nullable|exists:packages,id',
@@ -206,16 +270,36 @@ class FacilityProductController extends Controller
             'total_floors' => 'nullable|integer|min:1',
             'parking_spaces' => 'nullable|integer|min:0',
             'furnished' => 'boolean',
-            'available_for_rent' => 'boolean',
-            'available_for_sale' => 'boolean',
             'is_featured' => 'boolean',
             'is_verified' => 'boolean',
             'features' => 'array',
             'features.*' => 'exists:features,id',
             'attributes' => 'array',
             'attributes.*.attribute_id' => 'exists:attributes,id',
-            'attributes.*.value' => 'required|string',
+            'attributes.*.value' => 'nullable',
         ]);
+
+        // Custom validation for required attributes only
+        if ($request->has('attributes')) {
+            $requiredAttributes = \App\Models\Attribute::where('required', true)
+                ->whereIn('id', collect($request->attributes)->pluck('attribute_id'))
+                ->pluck('id')
+                ->toArray();
+
+            foreach ($request->attributes as $index => $attribute) {
+                $attributeId = $attribute['attribute_id'];
+                $value = $attribute['value'];
+
+                // Check if required attribute has value
+                if (in_array($attributeId, $requiredAttributes)) {
+                    if (empty($value)) {
+                        return redirect()->back()
+                            ->withErrors(["attributes.{$index}.value" => 'This attribute is required.'])
+                            ->withInput();
+                    }
+                }
+            }
+        }
 
         $productData = $request->except(['main_image', 'features', 'attributes']);
 
@@ -324,7 +408,7 @@ class FacilityProductController extends Controller
                 ->with('error', 'غير مصرح لك بعرض هذا المنتج');
         }
 
-        $product->load(['category', 'statuses', 'features', 'attributes']);
+        $product->load(['category', 'statuses', 'features', 'attributes.translations']);
 
         return view('facility.products.show', compact('product'));
     }

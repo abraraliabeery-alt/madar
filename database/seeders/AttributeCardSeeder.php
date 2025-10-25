@@ -41,7 +41,7 @@ class AttributeCardSeeder extends Seeder
     private function createAttributeIfNotExists($type, $icon, $showInCard = false)
     {
         if (!Attribute::where('type', $type)->exists()) {
-            Attribute::create([
+            $attribute = Attribute::create([
                 'type' => $type,
                 'required' => false,
                 'category_id' => null, // Global attribute
@@ -49,6 +49,94 @@ class AttributeCardSeeder extends Seeder
                 'Symbol' => null,
                 'show_in_card' => $showInCard,
             ]);
+
+            // Create translations for both Arabic and English
+            $translations = [
+                'ar' => [
+                    'name' => $this->getArabicName($type),
+                    'symbol' => $this->getArabicSymbol($type),
+                ],
+                'en' => [
+                    'name' => $this->getEnglishName($type),
+                    'symbol' => $this->getEnglishSymbol($type),
+                ],
+            ];
+
+            foreach ($translations as $locale => $translationData) {
+                $attribute->translations()->create([
+                    'locale' => $locale,
+                    'name' => $translationData['name'],
+                    'symbol' => $translationData['symbol'],
+                ]);
+            }
         }
+    }
+
+    /**
+     * Get Arabic name for attribute types
+     */
+    private function getArabicName($type)
+    {
+        $translations = [
+            'rooms' => 'عدد الغرف',
+            'bathrooms' => 'عدد الحمامات',
+            'area' => 'المساحة',
+            'floor' => 'رقم الطابق',
+            'floors_count' => 'عدد الطوابق',
+            'parking_spaces' => 'مواقف السيارات',
+        ];
+
+        return $translations[$type] ?? $type;
+    }
+
+    /**
+     * Get Arabic symbol for attribute types
+     */
+    private function getArabicSymbol($type)
+    {
+        $translations = [
+            'rooms' => 'غ',
+            'bathrooms' => 'ح',
+            'area' => 'م²',
+            'floor' => 'ط',
+            'floors_count' => 'طوابق',
+            'parking_spaces' => 'موقف',
+        ];
+
+        return $translations[$type] ?? $type;
+    }
+
+    /**
+     * Get English name for attribute types
+     */
+    private function getEnglishName($type)
+    {
+        $translations = [
+            'rooms' => 'Number of Rooms',
+            'bathrooms' => 'Number of Bathrooms',
+            'area' => 'Area',
+            'floor' => 'Floor Number',
+            'floors_count' => 'Number of Floors',
+            'parking_spaces' => 'Parking Spaces',
+        ];
+
+        return $translations[$type] ?? $type;
+    }
+
+    /**
+     * Get English symbol for attribute types
+     */
+    private function getEnglishSymbol($type)
+    {
+        $translations = [
+            'rooms' => 'rooms',
+            'bathrooms' => 'bath',
+            'area' => 'm²',
+            'floor' => 'floor',
+            'floors_count' => 'floors',
+            'parking_spaces' => 'parking',
+        ];
+
+        return $translations[$type] ?? $type;
     }
 }

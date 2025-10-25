@@ -62,6 +62,7 @@
             :viewAllRoute="route('public.products.index')"
             :viewAllText="__('general.home.view_all_properties')"
             :maxItems="6"
+            :showViewToggle="false"
             idPrefix="products"
         />
     @endif
@@ -75,6 +76,7 @@
             :viewAllRoute="route('public.cities.index')"
             :viewAllText="__('general.home.view_all_cities')"
             :maxItems="6"
+            :showViewToggle="false"
             idPrefix="cities"
         />
     @endif
@@ -86,6 +88,7 @@
             type="categories" 
             :title="__('general.home.featured_categories')"
             :maxItems="6"
+            :showViewToggle="false"
             idPrefix="categories"
         />
     @endif

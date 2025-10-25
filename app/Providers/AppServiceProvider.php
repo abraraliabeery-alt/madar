@@ -101,6 +101,9 @@ class AppServiceProvider extends ServiceProvider
             return "<?php echo App\Helpers\LanguageHelper::getCategoryDescription($expression); ?>";
         });
 
+        // Set pagination theme to Bootstrap 5
+        \Illuminate\Pagination\Paginator::useBootstrapFive();
+
         // Share language data with all views
         view()->composer('*', function ($view) {
             $languageService = app(LanguageService::class);

@@ -23,11 +23,25 @@ class User extends Authenticatable
     protected $fillable = [
         'is_multilanguage_enabled',
         'phone_number',
+        'phone',
         'email',
         'name',
         'email_verified_at',
         'password',
         'avatar',
+        'profile_picture',
+        'bio',
+        'location',
+        'date_of_birth',
+        'gender',
+        'phone_verified_at',
+        'last_login_at',
+        'two_factor_enabled',
+        'notification_settings',
+        'privacy_settings',
+        'preferences',
+        'security_settings',
+        'password_changed_at',
         'bank_account',
         'role_id',
         'facility_id',
@@ -71,12 +85,21 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'phone_verified_at' => 'datetime',
+            'last_login_at' => 'datetime',
+            'password_changed_at' => 'datetime',
+            'date_of_birth' => 'date',
             'is_multilanguage_enabled' => 'boolean',
+            'two_factor_enabled' => 'boolean',
             'latitude' => 'float',
             'longitude' => 'float',
             'notification_email' => 'boolean',
             'notification_sms' => 'boolean',
             'notification_push' => 'boolean',
+            'notification_settings' => 'array',
+            'privacy_settings' => 'array',
+            'preferences' => 'array',
+            'security_settings' => 'array',
         ];
     }
 
@@ -134,6 +157,26 @@ class User extends Authenticatable
     public function contracts()
     {
         return $this->hasMany(Contract::class);
+    }
+
+    public function ownedContracts()
+    {
+        return $this->hasMany(Contract::class, 'owner_id');
+    }
+
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class);
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+    public function activityLogs()
+    {
+        return $this->hasMany(ActivityLog::class);
     }
 
     /**

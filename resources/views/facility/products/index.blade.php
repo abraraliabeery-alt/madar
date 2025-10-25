@@ -1,24 +1,25 @@
-@extends('layouts.app')
+@extends('facility.layouts.app')
 
 @section('title', __('facility.products.title'))
 
 @section('content')
-<div class="w-full px-4">
-    <!-- Page Header -->
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+<div class="container mx-auto px-4 my-10">
+    <div class="w-full max-w-7xl mx-auto">
+        <!-- Page Header -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
         <div>
             <h1 class="text-2xl font-semibold text-gray-800">{{ __('facility.products.title') }}</h1>
             <p class="text-gray-600 mt-1">{{ __('facility.products.subtitle') }}</p>
         </div>
         <a href="{{ route('facility.products.create') }}" 
-           class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition duration-200 inline-flex items-center mt-4 sm:mt-0">
-            <i class="fas fa-plus ml-2"></i>
+           class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition duration-200 inline-flex items-center mt-4 sm:mt-0 group">
+            <i class="fas fa-plus ml-2 group-hover:scale-110 transition-transform"></i>
             {{ __('facility.products.add_new') }}
         </a>
     </div>
 
     <!-- Search and Filters -->
-    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+    <div class="bg-white rounded-lg shadow-lg border border-gray-200 p-6 mb-6">
         <form action="{{ route('facility.products.index') }}" method="GET" class="space-y-4">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <!-- Search -->
@@ -42,7 +43,7 @@
                         @foreach($categories as $category)
                             <option value="{{ $category->id }}" 
                                     {{ request('category_id') == $category->id ? 'selected' : '' }}>
-                                {{ $category->name }}
+                                {{ $category->getTranslatedName('ar') }}
                             </option>
                         @endforeach
                     </select>
@@ -68,13 +69,13 @@
             <!-- Filter Actions -->
             <div class="flex flex-col sm:flex-row gap-3 pt-4">
                 <button type="submit" 
-                        class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-md transition duration-200 inline-flex items-center justify-center">
-                    <i class="fas fa-search ml-2"></i>
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition duration-200 inline-flex items-center justify-center group">
+                    <i class="fas fa-search ml-2 group-hover:scale-110 transition-transform"></i>
                     {{ __('facility.products.search_button') }}
                 </button>
                 <a href="{{ route('facility.products.index') }}" 
-                   class="bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-6 rounded-md transition duration-200 inline-flex items-center justify-center">
-                    <i class="fas fa-undo ml-2"></i>
+                   class="bg-gray-600 hover:bg-gray-700 text-white font-medium py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition duration-200 inline-flex items-center justify-center group">
+                    <i class="fas fa-undo ml-2 group-hover:scale-110 transition-transform"></i>
                     {{ __('facility.products.clear_filters') }}
                 </a>
             </div>
@@ -83,7 +84,7 @@
 
     <!-- Results Summary -->
     @if($products->count() > 0)
-        <div class="bg-gray-50 rounded-lg p-4 mb-6">
+        <div class="bg-gray-50 rounded-lg border border-gray-200 p-4 mb-6">
             <p class="text-gray-700">
                 {{ __('facility.products.showing_results', ['first' => $products->firstItem() ?? 0, 'last' => $products->lastItem() ?? 0, 'total' => $products->total()]) }}
                 @if(request()->hasAny(['search', 'category_id', 'status_id']))
@@ -95,7 +96,7 @@
 
     <!-- Products List -->
     @if($products->count() > 0)
-        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
             <!-- Desktop Table View -->
             <div class="hidden lg:block">
                 <table class="w-full">
@@ -114,54 +115,58 @@
                             <tr class="hover:bg-gray-50">
                                 <td class="px-6 py-4">
                                     <div class="flex items-center">
-                                        @if($product->image)
+                                        @if($product->main_image)
                                             <img class="h-12 w-12 rounded-lg object-cover ml-4" 
-                                                 src="{{ asset('storage/' . $product->image) }}" 
-                                                 alt="{{ $product->name }}">
+                                                 src="{{ asset('storage/' . $product->main_image) }}" 
+                                                 alt="{{ $product->title }}">
                                         @else
                                             <div class="h-12 w-12 rounded-lg bg-gray-200 flex items-center justify-center ml-4">
                                                 <i class="fas fa-image text-gray-400"></i>
                                             </div>
                                         @endif
                                         <div>
-                                            <div class="text-sm font-medium text-gray-900">{{ $product->name }}</div>
-                                            <div class="text-sm text-gray-500">{{ Str::limit($product->description, 50) }}</div>
+                                            <div class="text-sm font-medium text-gray-900">{{ $product->getTranslatedTitle() ?: $product->address }}</div>
+                                            <div class="text-sm text-gray-500">{{ Str::limit($product->additional_info, 50) }}</div>
                                         </div>
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                        {{ $product->category->name ?? __('facility.products.unspecified') }}
+                                        {{ $product->category ? $product->category->getTranslatedName('ar') : __('facility.products.unspecified') }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
+                                    @php
+                                        $status = $product->statuses ? $product->statuses()->latest()->first() : null;
+                                    @endphp
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
-                                        {{ $product->status ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
-                                        {{ $product->status->name ?? __('facility.products.unspecified') }}
+                                        {{ $status ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
+                                        {{ $status ? $status->name : __('facility.products.unspecified') }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                    @if($product->price)
-                                        {{ number_format($product->price) }} ر.س
-                                    @else
-                                        <span class="text-gray-500">{{ __('facility.products.unspecified') }}</span>
-                                    @endif
+                                    <span class="text-gray-500">{{ __('facility.products.price_not_set') }}</span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {{ $product->created_at->format('Y/m/d') }}
+                                    {{ $product->created_at ? $product->created_at->format('Y/m/d') : 'غير محدد' }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <div class="flex items-center space-x-3 space-x-reverse">
+                                    <div class="flex items-center space-x-2 space-x-reverse">
+                                        <!-- View Button -->
                                         <a href="{{ route('facility.products.show', $product) }}" 
-                                           class="text-blue-600 hover:text-blue-900 transition duration-200"
+                                           class="inline-flex items-center justify-center w-8 h-8 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition duration-200 group"
                                            title="{{ __('facility.products.view_details') }}">
-                                            <i class="fas fa-eye"></i>
+                                            <i class="fas fa-eye text-sm group-hover:scale-110 transition-transform"></i>
                                         </a>
+                                        
+                                        <!-- Edit Button -->
                                         <a href="{{ route('facility.products.edit', $product) }}" 
-                                           class="text-yellow-600 hover:text-yellow-900 transition duration-200"
-                                           title="{{ __('facility.products.edit') }}">
-                                            <i class="fas fa-edit"></i>
+                                           class="inline-flex items-center justify-center w-8 h-8 text-yellow-600 bg-yellow-50 hover:bg-yellow-100 rounded-lg transition duration-200 group"
+                                           title="{{ __('facility.products.edit_button') }}">
+                                            <i class="fas fa-edit text-sm group-hover:scale-110 transition-transform"></i>
                                         </a>
+                                        
+                                        <!-- Delete Button -->
                                         <form action="{{ route('facility.products.destroy', $product) }}" 
                                               method="POST" 
                                               class="inline-block"
@@ -169,9 +174,9 @@
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" 
-                                                    class="text-red-600 hover:text-red-900 transition duration-200"
+                                                    class="inline-flex items-center justify-center w-8 h-8 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition duration-200 group"
                                                     title="{{ __('facility.products.delete') }}">
-                                                <i class="fas fa-trash"></i>
+                                                <i class="fas fa-trash text-sm group-hover:scale-110 transition-transform"></i>
                                             </button>
                                         </form>
                                     </div>
@@ -188,10 +193,10 @@
                     @foreach($products as $product)
                         <div class="p-6">
                             <div class="flex items-start space-x-4 space-x-reverse">
-                                @if($product->image)
+                                @if($product->main_image)
                                     <img class="h-16 w-16 rounded-lg object-cover flex-shrink-0" 
-                                         src="{{ asset('storage/' . $product->image) }}" 
-                                         alt="{{ $product->name }}">
+                                         src="{{ asset('storage/' . $product->main_image) }}" 
+                                         alt="{{ $product->title }}">
                                 @else
                                     <div class="h-16 w-16 rounded-lg bg-gray-200 flex items-center justify-center flex-shrink-0">
                                         <i class="fas fa-image text-gray-400"></i>
@@ -200,29 +205,39 @@
                                 <div class="flex-1 min-w-0">
                                     <div class="flex items-start justify-between">
                                         <div>
-                                            <h3 class="text-lg font-medium text-gray-900">{{ $product->name }}</h3>
-                                            <p class="text-sm text-gray-500 mt-1">{{ Str::limit($product->description, 100) }}</p>
+                                            <h3 class="text-lg font-medium text-gray-900">{{ $product->getTranslatedTitle() ?: $product->address }}</h3>
+                                            <p class="text-sm text-gray-500 mt-1">{{ Str::limit($product->additional_info, 100) }}</p>
                                         </div>
                                     </div>
                                     <div class="flex items-center justify-between mt-3">
                                         <div class="flex flex-wrap items-center gap-2">
                                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                                {{ $product->category->name ?? __('facility.products.unspecified') }}
+                                                {{ $product->category ? $product->category->getTranslatedName('ar') : __('facility.products.unspecified') }}
                                             </span>
+                                            @php
+                                                $status = $product->statuses ? $product->statuses()->latest()->first() : null;
+                                            @endphp
                                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
-                                                {{ $product->status ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
-                                                {{ $product->status->name ?? __('facility.products.unspecified') }}
+                                                {{ $status ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
+                                                {{ $status ? $status->name : __('facility.products.unspecified') }}
                                             </span>
                                         </div>
-                                        <div class="flex items-center space-x-3 space-x-reverse">
+                                        <div class="flex items-center space-x-2 space-x-reverse">
+                                            <!-- View Button -->
                                             <a href="{{ route('facility.products.show', $product) }}" 
-                                               class="text-blue-600 hover:text-blue-900 transition duration-200">
-                                                <i class="fas fa-eye"></i>
+                                               class="inline-flex items-center justify-center w-10 h-10 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition duration-200 group"
+                                               title="{{ __('facility.products.view_details') }}">
+                                                <i class="fas fa-eye text-sm group-hover:scale-110 transition-transform"></i>
                                             </a>
+                                            
+                                            <!-- Edit Button -->
                                             <a href="{{ route('facility.products.edit', $product) }}" 
-                                               class="text-yellow-600 hover:text-yellow-900 transition duration-200">
-                                                <i class="fas fa-edit"></i>
+                                               class="inline-flex items-center justify-center w-10 h-10 text-yellow-600 bg-yellow-50 hover:bg-yellow-100 rounded-lg transition duration-200 group"
+                                               title="{{ __('facility.products.edit_button') }}">
+                                                <i class="fas fa-edit text-sm group-hover:scale-110 transition-transform"></i>
                                             </a>
+                                            
+                                            <!-- Delete Button -->
                                             <form action="{{ route('facility.products.destroy', $product) }}" 
                                                   method="POST" 
                                                   class="inline-block"
@@ -230,19 +245,16 @@
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" 
-                                                        class="text-red-600 hover:text-red-900 transition duration-200">
-                                                    <i class="fas fa-trash"></i>
+                                                        class="inline-flex items-center justify-center w-10 h-10 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition duration-200 group"
+                                                        title="{{ __('facility.products.delete') }}">
+                                                    <i class="fas fa-trash text-sm group-hover:scale-110 transition-transform"></i>
                                                 </button>
                                             </form>
                                         </div>
                                     </div>
                                     <div class="flex justify-between items-center mt-3 pt-3 border-t border-gray-200">
-                                        <span class="text-sm text-gray-500">{{ $product->created_at->format('Y/m/d') }}</span>
-                                        @if($product->price)
-                                            <span class="text-lg font-semibold text-gray-900">{{ number_format($product->price) }} ر.س</span>
-                                        @else
-                                            <span class="text-sm text-gray-500">{{ __('facility.products.price_not_set') }}</span>
-                                        @endif
+                                        <span class="text-sm text-gray-500">{{ $product->created_at ? $product->created_at->format('Y/m/d') : 'غير محدد' }}</span>
+                                        <span class="text-sm text-gray-500">{{ __('facility.products.price_not_set') }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -260,7 +272,7 @@
         @endif
     @else
         <!-- Empty State -->
-        <div class="bg-white rounded-lg shadow-md p-12 text-center">
+        <div class="bg-white rounded-lg shadow-lg border border-gray-200 p-12 text-center">
             <div class="w-24 h-24 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-4">
                 <i class="fas fa-box text-3xl text-gray-400"></i>
             </div>
@@ -274,18 +286,19 @@
             </p>
             @if(request()->hasAny(['search', 'category_id', 'status_id']))
                 <a href="{{ route('facility.products.index') }}" 
-                   class="bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-6 rounded-md transition duration-200 inline-flex items-center">
-                    <i class="fas fa-undo ml-2"></i>
+                   class="bg-gray-600 hover:bg-gray-700 text-white font-medium py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition duration-200 inline-flex items-center group">
+                    <i class="fas fa-undo ml-2 group-hover:scale-110 transition-transform"></i>
                     {{ __('facility.products.view_all') }}
                 </a>
             @else
                 <a href="{{ route('facility.products.create') }}" 
-                   class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-md transition duration-200 inline-flex items-center">
-                    <i class="fas fa-plus ml-2"></i>
+                   class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition duration-200 inline-flex items-center group">
+                    <i class="fas fa-plus ml-2 group-hover:scale-110 transition-transform"></i>
                     {{ __('facility.products.add_new') }}
                 </a>
             @endif
         </div>
     @endif
+    </div>
 </div>
 @endsection

@@ -71,7 +71,7 @@
                                         @foreach($reports['booking_revenue'] as $data)
                                         <tr>
                                             <td>{{ $data->date }}</td>
-                                            <td>{{ number_format($data->revenue, 2) }} ريال</td>
+                                            <td>{{ number_format($data->revenue, 2) }} {!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}</td>
                                         </tr>
                                         @endforeach
                                     </tbody>
@@ -180,7 +180,7 @@ $(document).ready(function() {
                     beginAtZero: true,
                     ticks: {
                         callback: function(value) {
-                            return value.toLocaleString() + ' ريال';
+                            return value.toLocaleString() + ' ' + '<?php echo \App\Helpers\LanguageHelper::getSaudiRiyalSymbol(); ?>';
                         }
                     }
                 }

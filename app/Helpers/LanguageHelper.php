@@ -375,6 +375,15 @@ class LanguageHelper
     }
 
     /**
+     * Get Saudi Riyal symbol HTML
+     */
+    public static function getSaudiRiyalSymbol($class = '', $width = '16', $height = '16')
+    {
+        $svgPath = asset('Saudi_Riyal_Symbol.svg');
+        return '<img src="' . $svgPath . '" alt="SAR" class="' . $class . '" width="' . $width . '" height="' . $height . '" style="display: inline-block; vertical-align: middle;">';
+    }
+
+    /**
      * Get language switcher HTML
      */
     public static function getLanguageSwitcherHTML($class = '', $showFlags = true, $showNames = true, $dropdown = true)

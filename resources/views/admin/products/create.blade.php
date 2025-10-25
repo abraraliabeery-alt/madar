@@ -36,7 +36,7 @@
                                             <label for="price" class="form-label">السعر <span class="text-danger">*</span></label>
                                             <div class="input-group">
                                                 <input type="number" step="0.01" class="form-control @error('price') is-invalid @enderror" id="price" name="price" value="{{ old('price') }}" required>
-                                                <span class="input-group-text">ريال</span>
+                                                <span class="input-group-text">{!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}</span>
                                             </div>
                                             @error('price')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -66,7 +66,7 @@
                                                 <option value="">اختر الفئة</option>
                                                 @foreach($categories as $category)
                                                     <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
-                                                        {{ $category->name }}
+                                                        {{ $category->getTranslatedName('ar') }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -164,20 +164,8 @@
                                 <h6 class="mb-0">المميزات</h6>
                             </div>
                             <div class="card-body">
-                                <div class="row">
-                                    @foreach($features as $feature)
-                                    <div class="col-md-4">
-                                        <div class="form-check mb-2">
-                                            <input type="checkbox" class="form-check-input" id="feature_{{ $feature->id }}" name="features[]" value="{{ $feature->id }}" {{ in_array($feature->id, old('features', [])) ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="feature_{{ $feature->id }}">
-                                                @if($feature->icon)
-                                                    <img src="{{ asset($feature->icon) }}" alt="icon" width="20" class="me-1">
-                                                @endif
-                                                {{ $feature->getTranslatedName('ar') }}
-                                            </label>
-                                        </div>
-                                    </div>
-                                    @endforeach
+                                <div id="features-container">
+                                    <p class="text-muted">اختر فئة أولاً لعرض المميزات المتاحة</p>
                                 </div>
                             </div>
                         </div>
@@ -190,48 +178,14 @@
                                 <h6 class="mb-0">الخصائص</h6>
                             </div>
                             <div class="card-body">
-                                <div class="row">
-                                    @foreach($attributes as $attribute)
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="attribute_{{ $attribute->id }}" class="form-label">{{ $attribute->name }}</label>
-                                            <input type="text" class="form-control" id="attribute_{{ $attribute->id }}" name="attributes[{{ $attribute->id }}][value]" value="{{ old('attributes.'.$attribute->id.'.value') }}">
-                                            <input type="hidden" name="attributes[{{ $attribute->id }}][attribute_id]" value="{{ $attribute->id }}">
-                                        </div>
-                                    </div>
-                                    @endforeach
+                                <div id="attributes-container">
+                                    <p class="text-muted">اختر فئة أولاً لعرض الخصائص المتاحة</p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Property Details -->
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <h6 class="mb-0">تفاصيل العقار</h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="parking_spaces" class="form-label">عدد مواقف السيارات</label>
-                                            <input type="number" class="form-control @error('parking_spaces') is-invalid @enderror" id="parking_spaces" name="parking_spaces" value="{{ old('parking_spaces') }}" min="0">
-                                            @error('parking_spaces')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-check mb-3">
-                                            <input type="checkbox" class="form-check-input" id="furnished" name="furnished" value="1" {{ old('furnished') ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="furnished">مفروش</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
 
                     <!-- Location -->
                     <div class="col-md-6">
@@ -384,6 +338,114 @@ $(document).ready(function() {
             $('#owner_user_id').val(ownerId).trigger('change');
         }
     });
+
+    // Load attributes and features based on selected category
+    $('#category_id').change(function() {
+        let categoryId = $(this).val();
+        if (categoryId) {
+            loadAttributesByCategory(categoryId);
+            loadFeaturesByCategory(categoryId);
+        } else {
+            $('#attributes-container').html('<p class="text-muted">اختر فئة أولاً لعرض الخصائص المتاحة</p>');
+            $('#features-container').html('<p class="text-muted">اختر فئة أولاً لعرض المميزات المتاحة</p>');
+        }
+    });
+
+    function loadAttributesByCategory(categoryId) {
+        $.ajax({
+            url: '/api/v1/attributes/by-category',
+            method: 'GET',
+            data: { 
+                category_id: categoryId,
+                locale: '{{ app()->getLocale() }}'
+            },
+            success: function(response) {
+                if (response.success && response.data.length > 0) {
+                    let attributesHtml = '<div class="row">';
+                    response.data.forEach(function(attribute) {
+                        let requiredMark = attribute.required ? ' <span class="text-danger">*</span>' : '';
+                        let iconHtml = attribute.icon ? `<img src="${attribute.icon}" alt="icon" width="20" class="me-1">` : '';
+                        
+                        attributesHtml += `
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="attribute_${attribute.id}" class="form-label">
+                                        ${iconHtml}${attribute.name}${requiredMark}
+                                    </label>
+                                    <input type="text" class="form-control" 
+                                           id="attribute_${attribute.id}" 
+                                           name="attributes[${attribute.id}][value]" 
+                                           value="${getOldAttributeValue(attribute.id)}"
+                                           ${attribute.required ? 'required' : ''}>
+                                    <input type="hidden" name="attributes[${attribute.id}][attribute_id]" value="${attribute.id}">
+                                </div>
+                            </div>
+                        `;
+                    });
+                    attributesHtml += '</div>';
+                    $('#attributes-container').html(attributesHtml);
+                } else {
+                    $('#attributes-container').html('<p class="text-muted">لا توجد خصائص متاحة لهذه الفئة</p>');
+                }
+            },
+            error: function() {
+                $('#attributes-container').html('<p class="text-danger">حدث خطأ في تحميل الخصائص</p>');
+            }
+        });
+    }
+
+    function getOldAttributeValue(attributeId) {
+        // Get old input value if exists
+        let oldValue = $('input[name="attributes[' + attributeId + '][value]"]').val();
+        return oldValue || '';
+    }
+
+    function loadFeaturesByCategory(categoryId) {
+        $.ajax({
+            url: '/api/v1/features/by-category',
+            method: 'GET',
+            data: { 
+                category_id: categoryId,
+                locale: '{{ app()->getLocale() }}'
+            },
+            success: function(response) {
+                if (response.success && response.data.length > 0) {
+                    let featuresHtml = '<div class="row">';
+                    response.data.forEach(function(feature) {
+                        let iconHtml = feature.icon ? `<img src="${feature.icon}" alt="icon" width="20" class="me-1">` : '';
+                        let isChecked = getOldFeatureValue(feature.id) ? 'checked' : '';
+                        
+                        featuresHtml += `
+                            <div class="col-md-4">
+                                <div class="form-check mb-2">
+                                    <input type="checkbox" class="form-check-input" 
+                                           id="feature_${feature.id}" 
+                                           name="features[]" 
+                                           value="${feature.id}" ${isChecked}>
+                                    <label class="form-check-label" for="feature_${feature.id}">
+                                        ${iconHtml}${feature.name}
+                                    </label>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    featuresHtml += '</div>';
+                    $('#features-container').html(featuresHtml);
+                } else {
+                    $('#features-container').html('<p class="text-muted">لا توجد مميزات متاحة لهذه الفئة</p>');
+                }
+            },
+            error: function() {
+                $('#features-container').html('<p class="text-danger">حدث خطأ في تحميل المميزات</p>');
+            }
+        });
+    }
+
+    function getOldFeatureValue(featureId) {
+        // Check if feature was previously selected (for form validation errors)
+        let oldFeatures = @json(old('features', []));
+        return oldFeatures.includes(featureId.toString());
+    }
 
     // Leaflet Map Picker
     (function initMapPicker() {

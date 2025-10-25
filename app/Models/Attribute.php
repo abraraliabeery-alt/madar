@@ -66,4 +66,31 @@ class Attribute extends Model
                           ->orWhereNull('category_id');
                     });
     }
+
+    /**
+     * Get translation for specific locale
+     */
+    public function getTranslation($locale = null)
+    {
+        $locale = $locale ?: app()->getLocale();
+        return $this->translations()->where('locale', $locale)->first();
+    }
+
+    /**
+     * Get name for specific locale
+     */
+    public function getTranslatedName($locale = null)
+    {
+        $translation = $this->getTranslation($locale);
+        return $translation ? $translation->name : '';
+    }
+
+    /**
+     * Get symbol for specific locale
+     */
+    public function getTranslatedSymbol($locale = null)
+    {
+        $translation = $this->getTranslation($locale);
+        return $translation ? $translation->symbol : '';
+    }
 }

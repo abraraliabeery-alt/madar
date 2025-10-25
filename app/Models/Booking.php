@@ -11,19 +11,28 @@ class Booking extends Model
 
     protected $fillable = [
         'product_id',
+        'offer_id',
+        'facility_id',
         'user_id',
-        'total_amount',
-        'payment_method',
-        'expires_at',
-        'is_confirmed',
-        'is_paid',
+        'name',
+        'email',
+        'phone',
+        'preferred_date',
+        'preferred_time',
+        'message',
+        'visit_type',
         'status',
+        'reschedule_reason',
+        'cancellation_reason',
+        'rescheduled_at',
+        'cancelled_at',
+        'created_by',
     ];
 
     protected $casts = [
-        'expires_at' => 'datetime',
-        'is_confirmed' => 'boolean',
-        'is_paid' => 'boolean',
+        'preferred_date' => 'datetime',
+        'rescheduled_at' => 'datetime',
+        'cancelled_at' => 'datetime',
     ];
 
     // العلاقات
@@ -37,9 +46,14 @@ class Booking extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function offer()
+    {
+        return $this->belongsTo(Offer::class);
+    }
+
     public function facility()
     {
-        return $this->hasOneThrough(Facility::class, Product::class, 'id', 'id', 'product_id', 'facility_id');
+        return $this->belongsTo(Facility::class);
     }
 
     // Polymorphic relationship for statuses

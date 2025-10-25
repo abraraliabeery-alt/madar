@@ -29,7 +29,7 @@
                             @endif
 
                             <div class="mb-3">
-                                <h4 class="mb-2">{{ number_format($product->price, 2) }} ريال</h4>
+                                <h4 class="mb-2">{{ number_format($product->price, 2) }} {!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}</h4>
                                 @if($product->status)
     <span class="badge bg-{{ $product->status->color }} fs-6">{{ $product->status->name }}</span>
 @else
@@ -320,7 +320,7 @@
                                                 </a>
                                             </td>
                                             <td>{{ $booking->booking_date }}</td>
-                                            <td>{{ number_format($booking->total_amount, 2) }} ريال</td>
+                                            <td>{{ number_format($booking->total_amount, 2) }} {!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}</td>
                                             <td>
                                                 @if($booking->status)
                                                     <span class="badge bg-{{ $booking->status->color }}">

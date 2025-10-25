@@ -44,7 +44,7 @@ class BookingCreated extends Notification
             ->greeting('مرحباً ' . $notifiable->name)
             ->line('تم إنشاء حجز جديد للعقار: ' . $this->booking->product->name)
             ->line('تاريخ الحجز: ' . $bookingDate)
-            ->line('المبلغ: ' . $this->booking->total_amount . ' ريال')
+                            ->line('المبلغ: ' . $this->booking->total_amount . ' ' . \App\Helpers\LanguageHelper::getSaudiRiyalSymbol())
             ->action('عرض التفاصيل', url('/bookings/' . $this->booking->id))
             ->line('شكراً لاستخدام منصة عقار!');
     }
@@ -56,15 +56,16 @@ class BookingCreated extends Notification
      */
     public function toArray(object $notifiable): array
     {
-        $bookingDate = $this->booking->booking_date ? $this->booking->booking_date->format('Y-m-d') : 'غير محدد';
+        $bookingDate = $this->booking->preferred_date ? $this->booking->preferred_date->format('Y-m-d') : 'غير محدد';
 
         return [
             'booking_id' => $this->booking->id,
-            'product_name' => $this->booking->product->name,
+            'product_name' => $this->booking->product->title ?? 'عقار',
             'booking_date' => $bookingDate,
-            'total_amount' => $this->booking->total_amount,
+            'total_amount' => $this->booking->total_amount ?? 0,
             'type' => 'booking_created',
-            'message' => 'تم إنشاء حجز جديد للعقار: ' . $this->booking->product->name,
+            'message' => 'تم إنشاء حجز جديد للعقار: ' . ($this->booking->product->title ?? 'عقار'),
+            'action_url' => route('client.bookings.show', $this->booking->id),
         ];
     }
 }

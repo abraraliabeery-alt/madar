@@ -184,7 +184,7 @@
                             <td class="d-none d-md-table-cell">{{ $booking->booking_date }}</td>
                             <td class="d-none d-md-table-cell">{{ $booking->booking_time }}</td>
                             <td class="d-none d-lg-table-cell">{{ $booking->duration }} ساعة</td>
-                            <td class="d-none d-md-table-cell">{{ number_format($booking->total_amount, 2) }} ريال</td>
+                                                            <td class="d-none d-md-table-cell">{{ number_format($booking->total_amount, 2) }} {!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}</td>
                             <td class="d-none d-md-table-cell">
                                 @if($booking->status)
                                     <span class="badge bg-{{ $booking->status->color }}">

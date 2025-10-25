@@ -14,7 +14,7 @@
         <!-- Statistics Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <!-- Total Bookings -->
-            <div class="bg-white rounded-lg shadow-sm p-6">
+            <div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
                         <div class="w-8 h-8 bg-blue-100 rounded-md flex items-center justify-center">
@@ -26,10 +26,15 @@
                         <p class="text-2xl font-bold text-gray-900">{{ $stats['total_bookings'] }}</p>
                     </div>
                 </div>
+                <div class="mt-2">
+                    <a href="{{ route('client.bookings.index') }}" class="text-sm text-blue-600 hover:text-blue-700">
+                        عرض التفاصيل <i class="fas fa-arrow-left"></i>
+                    </a>
+                </div>
             </div>
 
             <!-- Total Contracts -->
-            <div class="bg-white rounded-lg shadow-sm p-6">
+            <div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
                         <div class="w-8 h-8 bg-green-100 rounded-md flex items-center justify-center">
@@ -41,10 +46,15 @@
                         <p class="text-2xl font-bold text-gray-900">{{ $stats['total_contracts'] }}</p>
                     </div>
                 </div>
+                <div class="mt-2">
+                    <a href="{{ route('client.contracts.index') }}" class="text-sm text-green-600 hover:text-green-700">
+                        عرض العقود <i class="fas fa-arrow-left"></i>
+                    </a>
+                </div>
             </div>
 
             <!-- Total Appointments -->
-            <div class="bg-white rounded-lg shadow-sm p-6">
+            <div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
                         <div class="w-8 h-8 bg-purple-100 rounded-md flex items-center justify-center">
@@ -56,10 +66,15 @@
                         <p class="text-2xl font-bold text-gray-900">{{ $stats['total_appointments'] }}</p>
                     </div>
                 </div>
+                <div class="mt-2">
+                    <a href="{{ route('client.appointments') }}" class="text-sm text-purple-600 hover:text-purple-700">
+                        عرض المواعيد <i class="fas fa-arrow-left"></i>
+                    </a>
+                </div>
             </div>
 
             <!-- Favorite Products -->
-            <div class="bg-white rounded-lg shadow-sm p-6">
+            <div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
                         <div class="w-8 h-8 bg-red-100 rounded-md flex items-center justify-center">
@@ -71,6 +86,11 @@
                         <p class="text-2xl font-bold text-gray-900">{{ $stats['favorite_products'] }}</p>
                     </div>
                 </div>
+                <div class="mt-2">
+                    <a href="{{ route('client.favorites') }}" class="text-sm text-red-600 hover:text-red-700">
+                        عرض المفضلة <i class="fas fa-arrow-left"></i>
+                    </a>
+                </div>
             </div>
         </div>
 
@@ -78,6 +98,12 @@
         <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
             <h2 class="text-lg font-semibold text-gray-900 mb-4">{{ __('client.dashboard.quick_actions') }}</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <a href="{{ route('client.offers.index') }}" 
+                   class="flex items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                    <i class="fas fa-tags text-green-500 ml-3"></i>
+                    <span class="text-gray-700">العروض المتاحة</span>
+                </a>
+                
                 <a href="{{ route('client.favorites') }}" 
                    class="flex items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                     <i class="fas fa-heart text-red-500 ml-3"></i>
@@ -90,17 +116,59 @@
                     <span class="text-gray-700">{{ __('client.navigation.bookings') }}</span>
                 </a>
                 
-                <a href="{{ route('client.appointments') }}" 
+                <a href="{{ route('client.financial.dashboard') }}" 
                    class="flex items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                    <i class="fas fa-clock text-purple-500 ml-3"></i>
-                    <span class="text-gray-700">{{ __('client.navigation.appointments') }}</span>
+                    <i class="fas fa-chart-line text-indigo-500 ml-3"></i>
+                    <span class="text-gray-700">الإدارة المالية</span>
                 </a>
+            </div>
+        </div>
+
+        <!-- Available Offers Section -->
+        <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-semibold text-gray-900">العروض المتاحة</h2>
+                <a href="{{ route('client.offers.index') }}" class="text-sm text-primary-600 hover:text-primary-700">
+                    عرض جميع العروض <i class="fas fa-arrow-left"></i>
+                </a>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Sample offers - replace with actual data -->
+                <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-semibold text-gray-900">شقة 3 غرف</h3>
+                        <span class="badge bg-green-100 text-green-800">للبيع</span>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-2">الرياض، حي النرجس</p>
+                    <p class="text-lg font-bold text-primary-600">450,000 ريال</p>
+                    <button class="w-full mt-3 bg-primary-600 text-white py-2 px-4 rounded-md hover:bg-primary-700 transition-colors">
+                        عرض التفاصيل
+                    </button>
+                </div>
                 
-                <a href="{{ route('client.notifications') }}" 
-                   class="flex items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                    <i class="fas fa-bell text-yellow-500 ml-3"></i>
-                    <span class="text-gray-700">{{ __('client.navigation.notifications') }}</span>
-                </a>
+                <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-semibold text-gray-900">فيلا 4 غرف</h3>
+                        <span class="badge bg-blue-100 text-blue-800">إيجار شهري</span>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-2">جدة، حي الروضة</p>
+                    <p class="text-lg font-bold text-primary-600">8,000 ريال/شهر</p>
+                    <button class="w-full mt-3 bg-primary-600 text-white py-2 px-4 rounded-md hover:bg-primary-700 transition-colors">
+                        عرض التفاصيل
+                    </button>
+                </div>
+                
+                <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-semibold text-gray-900">مكتب تجاري</h3>
+                        <span class="badge bg-purple-100 text-purple-800">إيجار سنوي</span>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-2">الدمام، حي الفيصلية</p>
+                    <p class="text-lg font-bold text-primary-600">120,000 ريال/سنة</p>
+                    <button class="w-full mt-3 bg-primary-600 text-white py-2 px-4 rounded-md hover:bg-primary-700 transition-colors">
+                        عرض التفاصيل
+                    </button>
+                </div>
             </div>
         </div>
 

@@ -1,6 +1,9 @@
 @props([
     'products',
-    'columns' => 4
+    'columns' => 4,
+    'compact' => false,
+    'showAttributes' => true,
+    'showPrice' => true
 ])
 
 @php
@@ -16,6 +19,10 @@
 
 <div class="grid {{ $gridClasses }} gap-6">
     @foreach($products as $product)
-        <x-product-card-grid :product="$product" />
+        <x-product-card-grid 
+            :product="$product" 
+            :compact="$compact"
+            :showAttributes="$showAttributes"
+            :showPrice="$showPrice" />
     @endforeach
 </div>

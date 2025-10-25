@@ -3,144 +3,144 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Contract;
-use App\Models\User;
+use App\Models\Offer;
 use App\Models\Product;
-use App\Models\Status;
-use App\Models\Bank;
+use App\Models\Facility;
+use App\Models\User;
+use App\Services\ContractService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AdminContractController extends Controller
 {
+    protected $contractService;
+
+    public function __construct(ContractService $contractService)
+    {
+        $this->contractService = $contractService;
+    }
+
     /**
      * عرض قائمة العقود
      */
     public function index(Request $request)
     {
-        $query = Contract::with(['user', 'product', 'facility', 'status', 'bank']);
+        $query = Contract::with(['product', 'offer', 'user', 'owner', 'facility']);
+
+        // فلترة حسب المنشأة
+        if ($request->filled('facility_id')) {
+            $query->where('facility_id', $request->facility_id);
+        }
+
+        // فلترة حسب النوع
+        if ($request->filled('type')) {
+            $query->where('contract_type', $request->type);
+        }
 
         // فلترة حسب الحالة
-        if ($request->has('status_id') && $request->status_id) {
-            $query->where('status_id', $request->status_id);
+        if ($request->filled('status_id')) {
+            $query->where('status', $request->status_id);
         }
 
         // فلترة حسب المستخدم
-        if ($request->has('user_id') && $request->user_id) {
+        if ($request->filled('user_id')) {
             $query->where('user_id', $request->user_id);
         }
 
         // فلترة حسب المنتج
-        if ($request->has('product_id') && $request->product_id) {
+        if ($request->filled('product_id')) {
             $query->where('product_id', $request->product_id);
         }
 
         // فلترة حسب نوع العقد
-        if ($request->has('contract_type') && $request->contract_type) {
+        if ($request->filled('contract_type')) {
             $query->where('contract_type', $request->contract_type);
         }
 
         // فلترة حسب التاريخ
-        if ($request->has('date_from') && $request->date_from) {
-            $query->whereDate('created_at', '>=', $request->date_from);
+        if ($request->filled('date_from')) {
+            $query->where('start_date', '>=', $request->date_from);
         }
-        if ($request->has('date_to') && $request->date_to) {
-            $query->whereDate('created_at', '<=', $request->date_to);
+
+        if ($request->filled('date_to')) {
+            $query->where('start_date', '<=', $request->date_to);
         }
 
         // البحث
-        if ($request->has('search') && $request->search) {
-            $query->where(function ($q) use ($request) {
-                $q->where('contract_number', 'like', '%' . $request->search . '%')
-                  ->orWhereHas('user', function ($userQuery) use ($request) {
-                      $userQuery->where('name', 'like', '%' . $request->search . '%')
-                               ->orWhere('email', 'like', '%' . $request->search . '%');
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('contract_number', 'like', "%{$search}%")
+                  ->orWhereHas('user', function($q2) use ($search) {
+                      $q2->where('name', 'like', "%{$search}%");
                   })
-                  ->orWhereHas('product', function ($productQuery) use ($request) {
-                      $productQuery->where('name', 'like', '%' . $request->search . '%');
+                  ->orWhereHas('owner', function($q2) use ($search) {
+                      $q2->where('name', 'like', "%{$search}%");
+                  })
+                  ->orWhereHas('facility', function($q2) use ($search) {
+                      $q2->where('name', 'like', "%{$search}%");
                   });
             });
         }
 
-        $contracts = $query->latest()->paginate(15);
-        $statuses = Status::all();
-        $users = User::all();
-        $products = Product::all();
-
-        return view('admin.contracts.index', compact('contracts', 'statuses', 'users', 'products'));
-    }
-
-    /**
-     * عرض صفحة إنشاء عقد جديد
-     */
-    public function create()
-    {
-        $users = User::all();
-        $products = Product::where('is_active', true)->get();
-        $statuses = Status::all();
-        $banks = Bank::all();
-
-        return view('admin.contracts.create', compact('users', 'products', 'statuses', 'banks'));
-    }
-
-    /**
-     * حفظ عقد جديد
-     */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'product_id' => 'required|exists:products,id',
-            'facility_id' => 'required|exists:facilities,id',
-            'status_id' => 'required|exists:statuses,id',
-            'contract_type' => 'required|in:sale,rent,lease',
-            'start_date' => 'required|date|after:today',
-            'end_date' => 'required|date|after:start_date',
-            'total_amount' => 'required|numeric|min:0',
-            'down_payment' => 'required|numeric|min:0',
-            'monthly_payment' => 'required|numeric|min:0',
-            'bank_id' => 'nullable|exists:banks,id',
-            'loan_amount' => 'nullable|numeric|min:0',
-            'interest_rate' => 'nullable|numeric|min:0',
-            'loan_term' => 'nullable|integer|min:1',
-            'notes' => 'nullable|string',
-            'is_active' => 'boolean',
-            'is_verified' => 'boolean',
+        $contracts = $query->paginate(20);
+        
+        // Get data for filters
+        $facilities = Facility::all();
+        $users = User::where('primary_role', 'user')->get();
+        $products = Product::with('translations')->get();
+        
+        // Create status objects for the dropdown
+        $statuses = collect([
+            (object)['id' => 'draft', 'name' => 'مسودة'],
+            (object)['id' => 'active', 'name' => 'نشط'],
+            (object)['id' => 'completed', 'name' => 'مكتمل'],
+            (object)['id' => 'cancelled', 'name' => 'ملغي'],
         ]);
 
-        // إنشاء رقم العقد
-        $contractNumber = 'CT-' . date('Ymd') . '-' . str_pad(Contract::whereDate('created_at', today())->count() + 1, 4, '0', STR_PAD_LEFT);
-
-        $contractData = $request->except(['status_id']);
-        $contractData['contract_number'] = $contractNumber;
-
-        $contract = Contract::create($contractData);
-
-        // ربط الحالة
-        if ($request->has('status_id')) {
-            $contract->statuses()->attach($request->status_id, [
-                'notes' => 'تم تعيين الحالة عند إنشاء العقد',
-                'user_id' => auth()->id(),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-        }
-
-        return redirect()->route('admin.contracts.index')
-            ->with('success', 'تم إنشاء العقد بنجاح');
+        return view('admin.contracts.index', compact('contracts', 'facilities', 'users', 'products', 'statuses'));
     }
 
     /**
-     * عرض صفحة تعديل العقد
+     * عرض تفاصيل العقد
+     */
+    public function show(Contract $contract)
+    {
+        $contract->load([
+            'product', 
+            'offer', 
+            'user', 
+            'owner', 
+            'facility',
+            'invoices', 
+            'payments',
+            'accountingEntries',
+            'translations'
+        ]);
+        
+        return view('admin.contracts.show', compact('contract'));
+    }
+
+    /**
+     * عرض نموذج تعديل العقد
      */
     public function edit(Contract $contract)
     {
-        $contract->load(['user', 'product', 'facility', 'statuses', 'bank']);
-        $users = User::all();
-        $products = Product::where('is_active', true)->get();
-        $statuses = Status::all();
-        $banks = Bank::all();
+        $facilities = Facility::all();
+        $products = Product::with('translations')->get();
+        $offers = Offer::active()->valid()->with('product')->get();
+        $users = User::where('primary_role', 'user')->get();
+        $owners = User::where('primary_role', 'owner')->get();
+        
+        $contractTypes = [
+            'sale' => 'بيع',
+            'rent' => 'إيجار',
+        ];
 
-        return view('admin.contracts.edit', compact('contract', 'users', 'products', 'statuses', 'banks'));
+        $contract->load('translations');
+        
+        return view('admin.contracts.edit', compact('contract', 'facilities', 'products', 'offers', 'users', 'owners', 'contractTypes'));
     }
 
     /**
@@ -149,37 +149,38 @@ class AdminContractController extends Controller
     public function update(Request $request, Contract $contract)
     {
         $request->validate([
-            'user_id' => 'required|exists:users,id',
             'product_id' => 'required|exists:products,id',
+            'offer_id' => 'required|exists:offers,id',
+            'user_id' => 'required|exists:users,id',
+            'owner_id' => 'required|exists:users,id',
             'facility_id' => 'required|exists:facilities,id',
-            'status_id' => 'required|exists:statuses,id',
-            'contract_type' => 'required|in:sale,rent,lease',
+            'contract_type' => 'required|in:sale,rent',
             'start_date' => 'required|date',
-            'end_date' => 'required|date|after:start_date',
+            'end_date' => 'nullable|date|after:start_date',
             'total_amount' => 'required|numeric|min:0',
-            'down_payment' => 'required|numeric|min:0',
-            'monthly_payment' => 'required|numeric|min:0',
-            'bank_id' => 'nullable|exists:banks,id',
-            'loan_amount' => 'nullable|numeric|min:0',
-            'interest_rate' => 'nullable|numeric|min:0',
-            'loan_term' => 'nullable|integer|min:1',
-            'notes' => 'nullable|string',
-            'is_active' => 'boolean',
-            'is_verified' => 'boolean',
+            'deposit_amount' => 'nullable|numeric|min:0',
+            'commission_rate' => 'nullable|numeric|min:0|max:1',
+            'status' => 'required|in:draft,active,completed,cancelled',
+            'terms_conditions' => 'nullable|string',
+            'terms_conditions_ar' => 'nullable|string',
         ]);
 
-        $contractData = $request->except(['status_id']);
-        $contract->update($contractData);
+        $contract->update($request->all());
+        
+        if ($request->has('commission_rate')) {
+            $contract->calculateCommission()->save();
+        }
 
-        // تحديث الحالة
-        if ($request->has('status_id')) {
-            // حذف الحالة القديمة وإضافة الحالة الجديدة
-            $contract->statuses()->detach();
-            $contract->statuses()->attach($request->status_id, [
-                'notes' => 'تم تحديث الحالة',
-                'user_id' => auth()->id(),
-                'created_at' => now(),
-                'updated_at' => now(),
+        // تحديث الترجمات
+        $translation = $contract->translations()->where('locale', 'ar')->first();
+        if ($translation) {
+            $translation->update([
+                'terms_conditions' => $request->terms_conditions_ar,
+            ]);
+        } else {
+            $contract->translations()->create([
+                'locale' => 'ar',
+                'terms_conditions' => $request->terms_conditions_ar,
             ]);
         }
 
@@ -199,84 +200,132 @@ class AdminContractController extends Controller
     }
 
     /**
-     * تفعيل/إلغاء تفعيل العقد
+     * تحديث حالة العقد
+     */
+    public function updateStatus(Request $request, Contract $contract)
+    {
+        $request->validate([
+            'status' => 'required|in:draft,active,completed,cancelled'
+        ]);
+
+        $contract = $this->contractService->updateContractStatus($contract, $request->status);
+
+        return redirect()->back()->with('success', 'تم تحديث حالة العقد بنجاح');
+    }
+
+    /**
+     * إلغاء العقد
+     */
+    public function cancel(Request $request, Contract $contract)
+    {
+        $request->validate([
+            'reason' => 'nullable|string'
+        ]);
+
+        $contract = $this->contractService->cancelContract($contract, $request->reason);
+
+        return redirect()->back()->with('success', 'تم إلغاء العقد بنجاح');
+    }
+
+    /**
+     * تسجيل دفعة
+     */
+    public function recordPayment(Request $request, Contract $contract)
+    {
+        $request->validate([
+            'invoice_id' => 'nullable|exists:invoices,id',
+            'payment_method' => 'required|in:cash,bank_transfer,credit_card,check,online',
+            'amount' => 'required|numeric|min:0',
+            'payment_date' => 'required|date',
+            'reference_number' => 'nullable|string',
+            'bank_name' => 'nullable|string',
+            'check_number' => 'nullable|string',
+            'notes' => 'nullable|string',
+        ]);
+
+        $data = $request->all();
+        $data['contract_id'] = $contract->id;
+        $data['facility_id'] = $contract->facility_id;
+        $data['created_by'] = Auth::id();
+
+        $payment = $this->contractService->recordPayment($data);
+
+        return redirect()->back()->with('success', 'تم تسجيل الدفعة بنجاح');
+    }
+
+    /**
+     * عرض فواتير العقد
+     */
+    public function invoices(Contract $contract)
+    {
+        $invoices = $contract->invoices()->with(['payments'])->get();
+
+        return view('admin.contracts.invoices', compact('contract', 'invoices'));
+    }
+
+    /**
+     * عرض مدفوعات العقد
+     */
+    public function payments(Contract $contract)
+    {
+        $payments = $contract->payments()->with(['invoice'])->get();
+
+        return view('admin.contracts.payments', compact('contract', 'payments'));
+    }
+
+    /**
+     * عرض التقرير المالي للعقد
+     */
+    public function financialReport(Contract $contract)
+    {
+        $totalPaid = $contract->getTotalPaidAmount();
+        $remaining = $contract->getRemainingAmount();
+        $isFullyPaid = $contract->isFullyPaid();
+
+        return view('admin.contracts.financial-report', compact(
+            'contract', 
+            'totalPaid', 
+            'remaining', 
+            'isFullyPaid'
+        ));
+    }
+
+    /**
+     * تحميل العقد
+     */
+    public function download(Contract $contract)
+    {
+        // هنا يمكن إضافة منطق إنشاء PDF للعقد
+        return response()->json([
+            'message' => 'سيتم إضافة ميزة تحميل العقد قريباً'
+        ]);
+    }
+
+    /**
+     * تبديل حالة التفعيل للعقد
      */
     public function toggleStatus(Contract $contract)
     {
-        $contract->update(['is_active' => !$contract->is_active]);
+        $contract->update([
+            'is_active' => !$contract->is_active
+        ]);
 
-        $status = $contract->is_active ? 'تفعيل' : 'إلغاء تفعيل';
-        return redirect()->back()->with('success', "تم {$status} العقد بنجاح");
+        $status = $contract->is_active ? 'تم تفعيل' : 'تم إلغاء تفعيل';
+        
+        return redirect()->back()->with('success', $status . ' العقد بنجاح');
     }
 
     /**
-     * التحقق من العقد
+     * تبديل حالة التحقق للعقد
      */
     public function toggleVerification(Contract $contract)
     {
-        $contract->update(['is_verified' => !$contract->is_verified]);
+        $contract->update([
+            'is_verified' => !$contract->is_verified
+        ]);
 
-        $status = $contract->is_verified ? 'التحقق من' : 'إلغاء التحقق من';
-        return redirect()->back()->with('success', "تم {$status} العقد بنجاح");
-    }
-
-    /**
-     * عرض تفاصيل العقد
-     */
-    public function show(Contract $contract)
-    {
-        $contract->load(['user', 'product', 'facility', 'statuses', 'bank']);
-        return view('admin.contracts.show', compact('contract'));
-    }
-
-    /**
-     * تصدير العقود
-     */
-    public function export(Request $request)
-    {
-        $query = Contract::with(['user', 'product', 'facility', 'status']);
-
-        // تطبيق نفس الفلاتر
-        if ($request->has('status_id') && $request->status_id) {
-            $query->where('status_id', $request->status_id);
-        }
-        if ($request->has('date_from') && $request->date_from) {
-            $query->whereDate('created_at', '>=', $request->date_from);
-        }
-        if ($request->has('date_to') && $request->date_to) {
-            $query->whereDate('created_at', '<=', $request->date_to);
-        }
-
-        $contracts = $query->get();
-
-        // هنا يمكن تصدير البيانات إلى Excel أو CSV
-        // سيتم تنفيذ هذا لاحقاً
-
-        return redirect()->back()->with('success', 'تم تصدير البيانات بنجاح');
-    }
-
-    /**
-     * إحصائيات العقود
-     */
-    public function statistics()
-    {
-        $stats = [
-            'total_contracts' => Contract::count(),
-            'active_contracts' => Contract::where('is_active', true)->count(),
-            'verified_contracts' => Contract::where('is_verified', true)->count(),
-            'sale_contracts' => Contract::where('contract_type', 'sale')->count(),
-            'rent_contracts' => Contract::where('contract_type', 'rent')->count(),
-            'lease_contracts' => Contract::where('contract_type', 'lease')->count(),
-            'total_value' => Contract::sum('total_amount'),
-            'monthly_revenue' => Contract::where('is_active', true)
-                ->whereMonth('created_at', now()->month)
-                ->sum('monthly_payment'),
-            'recent_contracts' => Contract::with(['user', 'product'])
-                ->latest()
-                ->take(10)
-                ->get(),
-        ];
-
-        return view('admin.contracts.statistics', compact('stats'));
+        $status = $contract->is_verified ? 'تم التحقق من' : 'تم إلغاء التحقق من';
+        
+        return redirect()->back()->with('success', $status . ' العقد بنجاح');
     }
 }

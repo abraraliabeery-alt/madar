@@ -42,7 +42,7 @@
                                         <option value="">اختر المنتج</option>
                                         @foreach($products as $product)
                                             <option value="{{ $product->id }}" data-facility="{{ $product->facility_id }}" data-price="{{ $product->price }}" {{ old('product_id') == $product->id ? 'selected' : '' }}>
-                                                {{ $product->name }} - {{ number_format($product->price, 2) }} ريال
+                                                {{ $product->name }} - {{ number_format($product->price, 2) }} {!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}
                                             </option>
                                         @endforeach
                                     </select>
@@ -106,7 +106,7 @@
                                     <label for="total_amount" class="form-label">المبلغ الإجمالي <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <input type="number" class="form-control @error('total_amount') is-invalid @enderror" id="total_amount" name="total_amount" value="{{ old('total_amount') }}" required min="0" step="0.01">
-                                        <span class="input-group-text">ريال</span>
+                                        <span class="input-group-text">{!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}</span>
                                     </div>
                                     @error('total_amount')
                                         <div class="invalid-feedback">{{ $message }}</div>

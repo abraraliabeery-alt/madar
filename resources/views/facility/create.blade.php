@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('facility.layouts.app')
 
 @section('title', __('facility.create.title'))
 

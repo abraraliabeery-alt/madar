@@ -10,6 +10,9 @@ use App\Models\Booking;
 use App\Models\Contract;
 use App\Models\Task;
 use App\Models\User;
+use App\Models\Offer;
+use App\Models\Invoice;
+use App\Models\Payment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -34,6 +37,10 @@ class FacilityController extends Controller
             'total_contracts' => $facility->contracts()->count(),
             'total_tasks' => $facility->tasks()->count(), // Now returns 0 from query builder
             'total_employees' => $facility->users()->count(),
+            'total_users' => $facility->users()->count(),
+            'total_offers' => $facility->offers()->count(),
+            'total_invoices' => $facility->invoices()->count(),
+            'total_payments' => $facility->payments()->count(),
             'recent_bookings' => $facility->bookings()->with(['user', 'product'])->latest()->take(5)->get(),
             'recent_tasks' => $facility->tasks()->with(['assignedTo'])->latest()->take(5)->get(), // Now works with query builder
             'pending_bookings' => $facility->bookings()->where('status', 'pending')->count(), // pending status

@@ -62,11 +62,17 @@ return [
     
     'actions' => [
         'view_details' => 'View Details',
+        'price_on_request' => 'Price on Request',
         'add_to_favorites' => 'Add to Favorites',
         'contact_publisher' => 'Contact Publisher',
         'book_now' => 'Book Now',
         'login_to_interact' => 'Login to interact with the product',
         'login' => 'Login',
+        'add_to_cart' => 'Add to Cart',
+        'buy_now' => 'Buy Now',
+        'select_option' => 'Select Option',
+        'select_rental' => 'Select Rental',
+        'contact_now' => 'Contact Now',
     ],
     
     'social_media' => [
@@ -101,6 +107,7 @@ return [
     'show' => [
         'description' => 'Description',
         'no_description' => 'No description available',
+        'no_attributes' => 'No attributes available',
         'bedrooms' => 'Bedrooms',
         'bathrooms' => 'Bathrooms',
         'square_meters' => 'Square Meters',
@@ -127,6 +134,12 @@ return [
         'floor' => 'Floor',
         'floors_count' => 'Floors Count',
         'parking_spaces' => 'Parking Spaces',
+        'daily_rent' => 'Daily Rent',
+        'monthly_rent' => 'Monthly Rent',
+        'yearly_rent' => 'Yearly Rent',
+        'deposit' => 'Deposit',
+        'valid_until' => 'Valid Until',
+        'view_all_offers' => 'View All Offers',
         'available_from' => 'Available From',
         'available_until' => 'Available Until',
         'facility' => 'Facility',
@@ -136,6 +149,12 @@ return [
         'contact_info' => 'Contact Information',
         'not_specified' => 'Not Specified',
         'all_attributes' => 'All Attributes',
+    ],
+
+    'rent_periods' => [
+        'daily' => 'Day',
+        'monthly' => 'Month',
+        'yearly' => 'Year',
     ],
     
     'search' => [
@@ -192,12 +211,26 @@ return [
     
     'property_card' => [
         'featured' => 'Featured',
+        'has_offers' => 'Has Offers',
         'verified' => 'Verified',
         'location_unknown' => 'Location Unknown',
         'rooms' => 'rooms',
         'bathrooms' => 'bathrooms',
         'square_meters' => 'm²',
         'view_details' => 'View Details',
+        'best_seller' => 'Best Seller',
+        'limited_time' => 'Limited Time Offer',
+        'in_stock' => 'In Stock',
+        'available' => 'Available',
+        'property_available' => 'Property Available',
+        'offers_available' => 'Offers Available',
+        'available_options' => 'Available Options',
+        'purchase_options' => 'Purchase Options',
+        'rental_options' => 'Rental Options',
+        'recommended' => 'Recommended',
+        'contact_for_pricing_description' => 'Contact us for the best prices and detailed information',
+        'call_for_price' => 'Call for Price',
+        'email_for_price' => 'Email for Price',
     ],
     
     'by_facility' => [

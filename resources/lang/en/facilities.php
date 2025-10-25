@@ -56,8 +56,10 @@ return [
         'properties' => 'properties',
         'view_facility' => 'View Facility',
         'view_properties' => 'View Properties',
+        'view_details' => 'View Details',
         'location_unknown' => 'Location not specified',
         'no_description' => 'No description available',
+        'no_category' => 'No category',
         'unverified' => 'Unverified',
     ],
 
@@ -103,7 +105,7 @@ return [
         'featured_properties' => 'Featured Properties',
         'discover_properties' => 'Discover our premium property collection',
         'properties_coming_soon' => 'Properties coming soon',
-        'currency' => 'SAR',
+        'currency' => \App\Helpers\LanguageHelper::getSaudiRiyalSymbol(),
         'ready_to_start' => 'Ready to Get Started?',
         'contact_us_today' => 'Contact us today and let our experts help you find your dream property',
         'schedule_consultation' => 'Schedule Consultation',
@@ -231,7 +233,7 @@ return [
         'rooms' => 'rooms',
         'bathrooms' => 'bathrooms',
         'area' => 'm²',
-        'currency' => 'SAR',
+        'currency' => \App\Helpers\LanguageHelper::getSaudiRiyalSymbol(),
         'view_details' => 'View Details',
     ],
 

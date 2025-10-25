@@ -26,7 +26,7 @@
                         <option value="">كل الفئات</option>
                         @foreach($categories as $category)
                             <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
-                                {{ $category->name }}
+                                {{ $category->getTranslatedName('ar') }}
                             </option>
                         @endforeach
                     </select>
@@ -91,9 +91,9 @@
                                 </a>
                             </td>
                             <td>
-                                <span class="badge bg-info">{{ $product->category->name }}</span>
+                                <span class="badge bg-info">{{ $product->category->getTranslatedName('ar') }}</span>
                             </td>
-                            <td>{{ number_format($product->price, 2) }} ريال</td>
+                                                            <td>{{ number_format($product->price, 2) }} {!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}</td>
                             <td>{{ Str::limit($product->address, 30) }}</td>
                             <td>
                                 @if($product->status)
@@ -250,7 +250,7 @@
             </div>
 
             <!-- Pagination -->
-            <div class="mt-4">
+            <div class="pagination-container">
                 {{ $products->withQueryString()->links() }}
             </div>
         </div>

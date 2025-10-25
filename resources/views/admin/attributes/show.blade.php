@@ -8,7 +8,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h4 class="mb-0">تفاصيل الخاصية: {{ $attribute->translations->first()->name ?? 'N/A' }}</h4>
+                    <h4 class="mb-0">تفاصيل الخاصية: {{ $attribute->getTranslatedName() ?? 'N/A' }}</h4>
                     <div>
                         <a href="{{ route('admin.attributes.edit', $attribute) }}" class="btn btn-warning">
                             <i class="fas fa-edit"></i> تعديل
@@ -31,7 +31,7 @@
                                         <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label class="form-label fw-bold">اسم الخاصية:</label>
-                                                <p class="form-control-plaintext">{{ $attribute->translations->first()->name ?? 'N/A' }}</p>
+                                                <p class="form-control-plaintext">{{ $attribute->getTranslatedName() ?? 'N/A' }}</p>
                                             </div>
                                         </div>
                                         <div class="col-md-6">

@@ -71,6 +71,14 @@ class Category extends Model
     }
 
     /**
+     * Get translated name accessor attribute for pluck operations
+     */
+    public function getTranslatedNameAttribute()
+    {
+        return $this->getTranslatedName();
+    }
+
+    /**
      * Get description for specific locale
      */
     public function getTranslatedDescription($locale = null)

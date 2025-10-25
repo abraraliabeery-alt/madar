@@ -63,7 +63,7 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
                                     <h6 class="mb-0">إجمالي القيمة</h6>
-                                    <h3 class="mb-0">{{ number_format($stats['total_value'], 2) }} ريال</h3>
+                                    <h3 class="mb-0">{{ number_format($stats['total_value'], 2) }} {!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}</h3>
                                 </div>
                                 <div class="fs-1">
                                     <i class="fas fa-money-bill-wave"></i>
@@ -95,7 +95,7 @@
                         </div>
                         <div class="card-body">
                             <div class="text-center mb-4">
-                                <h3 class="mb-0">{{ number_format($stats['monthly_revenue'], 2) }} ريال</h3>
+                                <h3 class="mb-0">{{ number_format($stats['monthly_revenue'], 2) }} {!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}</h3>
                                 <small class="text-muted">إجمالي الإيرادات لهذا الشهر</small>
                             </div>
                             <div style="height: 300px;">
@@ -153,7 +153,7 @@
                                                         @break
                                                 @endswitch
                                             </td>
-                                            <td>{{ number_format($contract->total_amount, 2) }} ريال</td>
+                                            <td>{{ number_format($contract->total_amount, 2) }} {!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}</td>
                                             <td>{{ $contract->created_at->format('Y-m-d') }}</td>
                                             <td>
                                                 @if($contract->status)
@@ -252,7 +252,7 @@ $(document).ready(function() {
                     beginAtZero: true,
                     ticks: {
                         callback: function(value) {
-                            return value.toLocaleString() + ' ريال';
+                            return value.toLocaleString() + ' ' + '<?php echo \App\Helpers\LanguageHelper::getSaudiRiyalSymbol(); ?>';
                         }
                     }
                 }

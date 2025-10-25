@@ -103,7 +103,7 @@
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label text-muted">المبلغ الإجمالي</label>
-                                    <p class="fs-5">{{ number_format($booking->total_amount, 2) }} ريال</p>
+                                    <p class="fs-5">{{ number_format($booking->total_amount, 2) }} {!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}</p>
                                 </div>
                                 <div class="col-12 mb-3">
                                     <label class="form-label text-muted">ملاحظات</label>
@@ -168,7 +168,7 @@
                                 @endif
                                 <div>
                                     <h5 class="mb-1">{{ $booking->product->name }}</h5>
-                                    <p class="text-muted mb-0">{{ number_format($booking->product->price, 2) }} ريال</p>
+                                    <p class="text-muted mb-0">{{ number_format($booking->product->price, 2) }} {!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}</p>
                                 </div>
                             </div>
                             <div class="row">

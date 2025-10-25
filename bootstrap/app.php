@@ -19,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
             'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
             'facility.mode' => \App\Http\Middleware\FacilityModeMiddleware::class,
+            'facility.access' => \App\Http\Middleware\FacilityModeMiddleware::class,
         ]);
         
         // Add SetLocale middleware to web middleware group

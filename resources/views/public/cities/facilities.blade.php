@@ -25,7 +25,7 @@
                 </div>
                 <div class="relative">
                     @if($city->image)
-                        <img src="{{ asset('storage/' . $city->image) }}" 
+                        <img src="{{ asset('storage/' . $city->image) }}"
                              alt="{{ $city->name }}" class="rounded-lg shadow-xl w-full">
                     @else
                         <div class="bg-gradient-to-br from-blue-400 to-purple-600 rounded-lg shadow-xl w-full h-64 flex items-center justify-center">
@@ -69,12 +69,12 @@
             <div class="lg:col-span-1">
                 <div class="bg-white rounded-lg shadow-md p-6 sticky top-4">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ __('cities.facilities.filters') }}</h3>
-                    
+
                     <form method="GET" action="{{ route('public.cities.facilities', $city) }}" class="space-y-4">
                         <!-- Search -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('cities.facilities.search') }}</label>
-                            <input type="text" name="q" value="{{ request('q') }}" 
+                            <input type="text" name="q" value="{{ request('q') }}"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                                    placeholder="{{ __('cities.facilities.search_placeholder') }}">
                         </div>
@@ -86,7 +86,7 @@
                                 <option value="">{{ __('cities.facilities.all_categories') }}</option>
                                 @foreach($categories as $category)
                                     <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
-                                        {{ app()->getLocale() === 'en' && $category->name_en ? $category->name_en : $category->name }}
+                                        {{ $category->getTranslatedName() }}
                                     </option>
                                 @endforeach
                             </select>
@@ -131,19 +131,19 @@
                     </div>
                     <div class="flex items-center space-x-2 rtl:space-x-reverse">
                         <span class="text-sm text-gray-600 mr-3 rtl:ml-3 rtl:mr-0">{{ __('general.view_toggle.display') }}</span>
-                        <button id="small-grid-view" 
+                        <button id="small-grid-view"
                                 class="view-toggle-btn bg-primary-600 text-white p-2 rounded-lg transition-colors"
                                 onclick="switchView('small-grid')"
                                 title="{{ __('general.view_toggle.small_grid') }}">
                             <i class="fas fa-th"></i>
                         </button>
-                        <button id="large-grid-view" 
+                        <button id="large-grid-view"
                                 class="view-toggle-btn bg-gray-200 text-gray-600 p-2 rounded-lg hover:bg-gray-300 transition-colors"
                                 onclick="switchView('large-grid')"
                                 title="{{ __('general.view_toggle.large_grid') }}">
                             <i class="fas fa-th-large"></i>
                         </button>
-                        <button id="list-view" 
+                        <button id="list-view"
                                 class="view-toggle-btn bg-gray-200 text-gray-600 p-2 rounded-lg hover:bg-gray-300 transition-colors"
                                 onclick="switchView('list')"
                                 title="{{ __('general.view_toggle.list') }}">
@@ -180,7 +180,7 @@
                                     <p class="text-gray-600 text-xs mb-2 line-clamp-2">{{ $facility->address ?? __('facilities.facility_card.location_unknown') }}</p>
 
                                     <div class="flex items-center justify-between text-xs text-gray-500 mb-2">
-                                        <span><i class="fas fa-th-large ml-1"></i>{{ $facility->category->name ?? __('facilities.facility_card.no_category') }}</span>
+                                        <span><i class="fas fa-th-large ml-1"></i>{{ $facility->facilityCategory->getTranslatedName() ?? __('facilities.facility_card.no_category') }}</span>
                                         <span><i class="fas fa-home ml-1"></i>{{ $facility->products_count ?? 0 }}</span>
                                     </div>
 
@@ -227,7 +227,7 @@
                                     <p class="text-gray-600 text-sm mb-3">{{ $facility->address ?? __('facilities.facility_card.location_unknown') }}</p>
 
                                     <div class="flex items-center justify-between text-sm text-gray-500 mb-3">
-                                        <span><i class="fas fa-th-large ml-1"></i>{{ $facility->category->name ?? __('facilities.facility_card.no_category') }}</span>
+                                        <span><i class="fas fa-th-large ml-1"></i>{{ $facility->facilityCategory->getTranslatedName() ?? __('facilities.facility_card.no_category') }}</span>
                                         <span><i class="fas fa-home ml-1"></i>{{ $facility->products_count ?? 0 }} {{ __('facilities.facility_card.properties') }}</span>
                                     </div>
 
@@ -284,7 +284,7 @@
                                         <p class="text-gray-600 text-sm mb-3">{{ $facility->address ?? __('facilities.facility_card.location_unknown') }}</p>
 
                                         <div class="flex items-center justify-between text-sm text-gray-500 mb-3">
-                                            <span><i class="fas fa-th-large ml-1"></i>{{ $facility->category->name ?? __('facilities.facility_card.no_category') }}</span>
+                                            <span><i class="fas fa-th-large ml-1"></i>{{ $facility->facilityCategory->getTranslatedName() ?? __('facilities.facility_card.no_category') }}</span>
                                             <span><i class="fas fa-home ml-1"></i>{{ $facility->products_count ?? 0 }} {{ __('facilities.facility_card.properties') }}</span>
                                         </div>
 
@@ -368,12 +368,12 @@ function switchView(viewType) {
     const smallGridBtn = document.getElementById('small-grid-view');
     const largeGridBtn = document.getElementById('large-grid-view');
     const listBtn = document.getElementById('list-view');
-    
+
     // Hide all views first
     facilitiesSmallGridView.classList.add('hidden');
     facilitiesLargeGridView.classList.add('hidden');
     facilitiesListView.classList.add('hidden');
-    
+
     // Reset all button styles
     smallGridBtn.classList.remove('bg-primary-600', 'text-white');
     smallGridBtn.classList.add('bg-gray-200', 'text-gray-600');
@@ -381,7 +381,7 @@ function switchView(viewType) {
     largeGridBtn.classList.add('bg-gray-200', 'text-gray-600');
     listBtn.classList.remove('bg-primary-600', 'text-white');
     listBtn.classList.add('bg-gray-200', 'text-gray-600');
-    
+
     if (viewType === 'small-grid') {
         facilitiesSmallGridView.classList.remove('hidden');
         smallGridBtn.classList.remove('bg-gray-200', 'text-gray-600');
@@ -395,14 +395,14 @@ function switchView(viewType) {
         listBtn.classList.remove('bg-gray-200', 'text-gray-600');
         listBtn.classList.add('bg-primary-600', 'text-white');
     }
-    
+
     // Store user preference in localStorage
-    localStorage.setItem('cityFacilitiesPreferredView', viewType);
+    localStorage.setItem('citypreferredView', viewType);
 }
 
 // Set initial view based on user preference
 document.addEventListener('DOMContentLoaded', function() {
-    const preferredView = localStorage.getItem('cityFacilitiesPreferredView') || 'small-grid';
+    const preferredView = localStorage.getItem('citypreferredView') || 'small-grid';
     switchView(preferredView);
 });
 });

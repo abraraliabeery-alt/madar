@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
             ProductSeeder::class,
             ProductStatusSeeder::class,
             FacilityStatusSeeder::class,
+            OfferSeeder::class,
             NotificationSeeder::class,
             FavoriteSeeder::class,
             FaqSeeder::class,
