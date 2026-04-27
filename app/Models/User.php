@@ -134,6 +134,11 @@ class User extends Authenticatable
         return $this->belongsTo(Bank::class);
     }
 
+    public function customerBanks()
+    {
+        return $this->belongsToMany(Bank::class, 'bank_customer')->withTimestamps();
+    }
+
     public function appointments()
     {
         return $this->hasMany(Appointment::class);

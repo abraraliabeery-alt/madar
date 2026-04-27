@@ -84,15 +84,16 @@
                                 <h6 class="mb-0">الوسائط</h6>
                             </div>
                             <div class="card-body">
-                                <div class="mb-3">
-                                    <label for="icon" class="form-label">الأيقونة</label>
-                                    <input type="file" class="form-control @error('icon') is-invalid @enderror" id="icon" name="icon" accept="image/*">
-                                    <small class="text-muted d-block mt-2">الأبعاد المثالية: 100x100 بكسل</small>
-                                    <div class="mt-2" id="icon-preview"></div>
-                                    @error('icon')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
+                                <x-icon-picker
+                                    nameIcon="icon_name"
+                                    nameImage="icon"
+                                    :valueIconName="old('icon_name')"
+                                    labelIcon="أيقونة Font Awesome (اختيارية)"
+                                    labelImage="أيقونة صورة (اختيارية)"
+                                    imageHelpText="الأبعاد المثالية: 100x100 بكسل. في حال رفع صورة سيتم استخدامها بدلاً من أيقونة Font Awesome."
+                                    pickerTitle="اختيار أيقونة للمميزة"
+                                    pickerButtonText="استعراض الأيقونات"
+                                />
                             </div>
                         </div>
                     </div>
@@ -107,7 +108,6 @@
             </form>
         </div>
     </div>
-</div>
 @endsection
 
 @push('scripts')
@@ -121,18 +121,6 @@ $(document).ready(function() {
             ['font', ['strikethrough']],
             ['para', ['ul', 'ol']],
         ]
-    });
-
-    // Preview icon
-    $('#icon').change(function() {
-        const file = this.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                $('#icon-preview').html(`<img src="${e.target.result}" class="img-thumbnail" width="100">`);
-            }
-            reader.readAsDataURL(file);
-        }
     });
 });
 </script>

@@ -2,28 +2,28 @@
 
 return [
     'page_titles' => [
-        'products' => 'المنتجات',
-        'product_details' => 'تفاصيل المنتج',
+        'products' => 'المشاريع',
+        'product_details' => 'تفاصيل المشروع',
     ],
     
     'headers' => [
-        'products' => 'المنتجات',
-        'browse_products' => 'تصفح جميع المنتجات المتاحة',
-        'product_details' => 'تفاصيل المنتج',
-        'product_information' => 'معلومات المنتج',
+        'products' => 'المشاريع',
+        'browse_products' => 'تصفح جميع المشاريع المتاحة',
+        'product_details' => 'تفاصيل المشروع',
+        'product_information' => 'معلومات المشروع',
         'product_features' => 'المميزات',
         'product_attributes' => 'الخصائص',
-        'product_status' => 'حالة المنتج',
-        'product_comments' => 'التعليقات',
+        'product_status' => 'حالة المشروع',
+        'product_comments' => 'تعليقات المشروع',
         'publisher_information' => 'معلومات الناشر',
         'actions' => 'إجراءات',
-        'product_details_section' => 'تفاصيل المنتج',
-        'share_product' => 'مشاركة المنتج',
+        'product_details_section' => 'تفاصيل المشروع',
+        'share_product' => 'مشاركة المشروع',
     ],
     
     'filters' => [
         'search' => 'البحث',
-        'search_placeholder' => 'ابحث في المنتجات...',
+        'search_placeholder' => 'ابحث في المشاريع...',
         'category' => 'الفئة',
         'all_categories' => 'جميع الفئات',
         'status' => 'الحالة',
@@ -82,9 +82,9 @@ return [
     ],
     
     'empty_state' => [
-        'no_products' => 'لا توجد منتجات',
-        'no_products_message' => 'لم يتم العثور على منتجات تطابق معايير البحث.',
-        'add_new_product' => 'إضافة منتج جديد',
+        'no_products' => 'لا توجد مشاريع',
+        'no_products_message' => 'لم يتم العثور على مشاريع تطابق معايير البحث.',
+        'add_new_product' => 'إضافة مشروع جديد',
     ],
     
     'pagination' => [
@@ -94,8 +94,8 @@ return [
     
     'breadcrumb' => [
         'home' => 'الرئيسية',
-        'products' => 'المنتجات',
-        'product' => 'المنتج',
+        'products' => 'المشاريع',
+        'product' => 'المشروع',
     ],
     
     'comments' => [
@@ -128,7 +128,7 @@ return [
         'request_quote' => 'طلب عرض سعر',
         'remove_from_favorites' => 'إزالة من المفضلة',
         'add_to_favorites' => 'إضافة للمفضلة',
-        'property_details' => 'تفاصيل العقار',
+        'property_details' => 'تفاصيل المشروع',
         'type' => 'النوع',
         'floor' => 'الطابق',
         'floors_count' => 'عدد الطوابق',
@@ -157,8 +157,8 @@ return [
     ],
     
     'search' => [
-        'title' => 'البحث في العقارات',
-        'placeholder' => 'ابحث عن عقارات...',
+        'title' => 'البحث في المشاريع',
+        'placeholder' => 'ابحث عن مشاريع...',
         'category' => 'الفئة',
         'all_categories' => 'جميع الفئات',
         'city' => 'المدينة',
@@ -184,10 +184,10 @@ return [
     
     'results' => [
         'title' => 'نتائج البحث',
-        'properties_available' => 'عقار متاح',
+        'properties_available' => 'مشروع متاح',
         'no_results' => 'لم يتم العثور على نتائج',
-        'no_results_message' => 'لم نتمكن من العثور على عقارات تطابق معايير البحث الخاصة بك.',
-        'view_all_properties' => 'عرض جميع العقارات',
+        'no_results_message' => 'لم نتمكن من العثور على مشاريع تطابق معايير البحث الخاصة بك.',
+        'view_all_properties' => 'عرض جميع المشاريع',
     ],
     
     'categories' => [

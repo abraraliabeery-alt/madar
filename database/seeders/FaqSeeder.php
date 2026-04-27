@@ -16,16 +16,16 @@ class FaqSeeder extends Seeder
         $faqs = [
             // Arabic FAQs
             [
-                'question' => 'كيف يمكنني البحث عن عقار؟',
-                'answer' => 'يمكنك استخدام صفحة البحث المتقدم أو تصفح العقارات المتاحة حسب الفئة أو المنطقة. يمكنك أيضاً تحديد السعر والمساحة والموقع للحصول على نتائج أكثر دقة.',
+                'question' => 'كيف يمكنني البحث عن مشروع؟',
+                'answer' => 'يمكنك استخدام صفحة البحث المتقدم أو تصفح المشاريع المتاحة حسب الفئة أو المنطقة. يمكنك أيضاً تحديد الميزانية والمساحة والموقع للحصول على نتائج أكثر دقة.',
                 'category' => 'عام',
                 'order' => 1,
                 'is_active' => true,
                 'locale' => 'ar'
             ],
             [
-                'question' => 'كيف يمكنني التواصل مع مالك العقار؟',
-                'answer' => 'يمكنك إرسال رسالة مباشرة من صفحة العقار أو الاتصال بالرقم المرفق. كما يمكنك حجز موعد لزيارة العقار من خلال النموذج المخصص.',
+                'question' => 'كيف يمكنني التواصل مع صاحب المشروع؟',
+                'answer' => 'يمكنك إرسال رسالة مباشرة من صفحة المشروع أو الاتصال بالرقم المرفق. كما يمكنك حجز موعد لمعاينة الموقع من خلال النموذج المخصص.',
                 'category' => 'تواصل',
                 'order' => 2,
                 'is_active' => true,
@@ -40,9 +40,9 @@ class FaqSeeder extends Seeder
                 'locale' => 'ar'
             ],
             [
-                'question' => 'كيف يمكنني إضافة عقاري للموقع؟',
-                'answer' => 'يمكنك التسجيل كمالك منشأة وإضافة عقاراتك من خلال لوحة التحكم الخاصة بك. ستحتاج إلى تقديم الوثائق المطلوبة للحصول على الموافقة.',
-                'category' => 'إضافة عقارات',
+                'question' => 'كيف يمكنني إضافة مشروعي للموقع؟',
+                'answer' => 'يمكنك التسجيل كمالك منشأة وإضافة مشاريعك من خلال لوحة التحكم الخاصة بك. ستحتاج إلى تقديم الوثائق المطلوبة للحصول على الموافقة.',
+                'category' => 'إضافة مشاريع',
                 'order' => 4,
                 'is_active' => true,
                 'locale' => 'ar'
@@ -56,8 +56,8 @@ class FaqSeeder extends Seeder
                 'locale' => 'ar'
             ],
             [
-                'question' => 'كيف يمكنني حجز موعد لزيارة عقار؟',
-                'answer' => 'يمكنك حجز موعد من خلال صفحة العقار أو التواصل معنا مباشرة عبر الهاتف أو البريد الإلكتروني. سنقوم بتأكيد الموعد وإرسال التفاصيل.',
+                'question' => 'كيف يمكنني حجز موعد لمعاينة مشروع؟',
+                'answer' => 'يمكنك حجز موعد من خلال صفحة المشروع أو التواصل معنا مباشرة عبر الهاتف أو البريد الإلكتروني. سنقوم بتأكيد الموعد وإرسال التفاصيل.',
                 'category' => 'حجوزات',
                 'order' => 6,
                 'is_active' => true,
@@ -73,7 +73,7 @@ class FaqSeeder extends Seeder
             ],
             [
                 'question' => 'ما هي رسوم الخدمة؟',
-                'answer' => 'تختلف الرسوم حسب نوع الخدمة وحجم العقار. يمكنك التواصل معنا للحصول على عرض سعر مفصل. نقدم عروض خاصة للعملاء الجدد.',
+                'answer' => 'تختلف الرسوم حسب نوع الخدمة وحجم المشروع. يمكنك التواصل معنا للحصول على عرض سعر مفصل. نقدم عروض خاصة للعملاء الجدد.',
                 'category' => 'أسعار',
                 'order' => 8,
                 'is_active' => true,
@@ -82,16 +82,16 @@ class FaqSeeder extends Seeder
 
             // English FAQs
             [
-                'question' => 'How can I search for a property?',
-                'answer' => 'You can use the advanced search page or browse available properties by category or area. You can also specify price, area, and location to get more accurate results.',
+                'question' => 'How can I find a contractor for my project?',
+                'answer' => 'You can browse contractors by category and location, or submit an execution request with your project details to receive proposals.',
                 'category' => 'General',
                 'order' => 1,
                 'is_active' => true,
                 'locale' => 'en'
             ],
             [
-                'question' => 'How can I contact the property owner?',
-                'answer' => 'You can send a direct message from the property page or call the provided number. You can also book an appointment to visit the property through the dedicated form.',
+                'question' => 'How can I contact a contractor?',
+                'answer' => 'You can contact the contractor from their profile page via the provided phone number or send a message through the platform.',
                 'category' => 'Communication',
                 'order' => 2,
                 'is_active' => true,
@@ -106,9 +106,9 @@ class FaqSeeder extends Seeder
                 'locale' => 'en'
             ],
             [
-                'question' => 'How can I add my property to the site?',
-                'answer' => 'You can register as a facility owner and add your properties through your dashboard. You will need to submit the required documents for approval.',
-                'category' => 'Adding Properties',
+                'question' => 'How can my company appear on the platform?',
+                'answer' => 'You can register as a facility owner, complete your company profile, and publish your services, projects, and works from your dashboard.',
+                'category' => 'Company Profile',
                 'order' => 4,
                 'is_active' => true,
                 'locale' => 'en'

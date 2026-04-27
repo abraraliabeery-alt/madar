@@ -1,12 +1,12 @@
 @extends('facility.layouts.app')
 
-@section('title', 'إضافة عرض جديد')
+@section('title', 'إضافة خطة إيجار')
 
 @section('content')
 <div class="w-full px-4 my-6">
     <div class="bg-white rounded-lg shadow-lg">
         <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-            <h3 class="text-2xl font-bold text-gray-800">إضافة عرض جديد</h3>
+            <h3 class="text-2xl font-bold text-gray-800">إضافة خطة إيجار</h3>
             <a href="{{ route('facility.offers.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 space-x-reverse transition-colors">
                 <i class="fas fa-arrow-left"></i>
                 <span>العودة للقائمة</span>
@@ -37,9 +37,9 @@
                         </div>
 
                         <div class="mb-4">
-                            <label for="offer_type" class="block text-sm font-medium text-gray-700 mb-2">نوع العرض <span class="text-red-500">*</span></label>
+                            <label for="offer_type" class="block text-sm font-medium text-gray-700 mb-2">نوع الخطة <span class="text-red-500">*</span></label>
                             <select name="offer_type" id="offer_type" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 @error('offer_type') border-red-500 @enderror" required>
-                                <option value="">اختر نوع العرض</option>
+                                <option value="">اختر نوع الخطة</option>
                                 @foreach($offerTypes as $key => $value)
                                     <option value="{{ $key }}" {{ old('offer_type') == $key ? 'selected' : '' }}>
                                         {{ $value }}
@@ -52,7 +52,7 @@
                         </div>
 
                         <div class="mb-4">
-                            <label for="offer_title" class="block text-sm font-medium text-gray-700 mb-2">عنوان العرض</label>
+                            <label for="offer_title" class="block text-sm font-medium text-gray-700 mb-2">عنوان الخطة</label>
                             <input type="text" name="offer_title" id="offer_title" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 @error('offer_title') border-red-500 @enderror" 
                                    value="{{ old('offer_title') }}" placeholder="مثال: شقة فاخرة للإيجار">
                             @error('offer_title')
@@ -61,7 +61,7 @@
                         </div>
 
                         <div class="mb-4">
-                            <label for="offer_description" class="block text-sm font-medium text-gray-700 mb-2">وصف العرض</label>
+                            <label for="offer_description" class="block text-sm font-medium text-gray-700 mb-2">وصف الخطة</label>
                             <textarea name="offer_description" id="offer_description" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 @error('offer_description') border-red-500 @enderror" 
                                       rows="3" placeholder="وصف مفصل للعرض...">{{ old('offer_description') }}</textarea>
                             @error('offer_description')
@@ -85,7 +85,7 @@
                             </div>
                         </div>
 
-                        <div class="mb-4">
+                        <div class="mb-4 rent-only">
                             <label for="deposit_amount" class="block text-sm font-medium text-gray-700 mb-2">مبلغ العربون</label>
                             <input type="number" name="deposit_amount" id="deposit_amount" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 @error('deposit_amount') border-red-500 @enderror" 
                                    value="{{ old('deposit_amount') }}" step="0.01" min="0">
@@ -239,6 +239,26 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    (function() {
+        const typeEl = document.getElementById('offer_type');
+        const rentBlocks = document.querySelectorAll('.rent-only');
+        function isRentType(v){ return ['rent_daily','rent_monthly','rent_yearly'].includes(v); }
+        function applyToggle(){
+            const v = typeEl ? typeEl.value : '';
+            rentBlocks.forEach(el => {
+                el.style.display = isRentType(v) ? '' : 'none';
+            });
+        }
+        if (typeEl) {
+            typeEl.addEventListener('change', applyToggle);
+            applyToggle();
+        }
+    })();
+</script>
+@endpush
 
 @push('scripts')
 <script>

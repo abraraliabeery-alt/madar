@@ -14,12 +14,11 @@ class AttributeCardSeeder extends Seeder
     {
         // Update existing attributes to show in cards
         $attributesToShow = [
-            'rooms' => 'fas fa-bed',
-            'bathrooms' => 'fas fa-bath',
-            'area' => 'fas fa-ruler-combined',
-            'floor' => 'fas fa-building',
-            'floors_count' => 'fas fa-layer-group',
-            'parking_spaces' => 'fas fa-car',
+            'activity' => 'fas fa-briefcase',
+            'delivery_date' => 'fas fa-calendar-check',
+            'duration_days' => 'fas fa-hourglass-half',
+            'warranty_months' => 'fas fa-shield-alt',
+            'budget' => 'fas fa-sack-dollar',
         ];
 
         foreach ($attributesToShow as $type => $icon) {
@@ -30,12 +29,11 @@ class AttributeCardSeeder extends Seeder
         }
 
         // You can also create new attributes if they don't exist
-        $this->createAttributeIfNotExists('rooms', 'fas fa-bed', true);
-        $this->createAttributeIfNotExists('bathrooms', 'fas fa-bath', true);
-        $this->createAttributeIfNotExists('area', 'fas fa-ruler-combined', true);
-        $this->createAttributeIfNotExists('floor', 'fas fa-building', true);
-        $this->createAttributeIfNotExists('floors_count', 'fas fa-layer-group', true);
-        $this->createAttributeIfNotExists('parking_spaces', 'fas fa-car', true);
+        $this->createAttributeIfNotExists('activity', 'fas fa-briefcase', true);
+        $this->createAttributeIfNotExists('delivery_date', 'fas fa-calendar-check', true);
+        $this->createAttributeIfNotExists('duration_days', 'fas fa-hourglass-half', true);
+        $this->createAttributeIfNotExists('warranty_months', 'fas fa-shield-alt', true);
+        $this->createAttributeIfNotExists('budget', 'fas fa-sack-dollar', true);
     }
 
     private function createAttributeIfNotExists($type, $icon, $showInCard = false)
@@ -78,12 +76,11 @@ class AttributeCardSeeder extends Seeder
     private function getArabicName($type)
     {
         $translations = [
-            'rooms' => 'عدد الغرف',
-            'bathrooms' => 'عدد الحمامات',
-            'area' => 'المساحة',
-            'floor' => 'رقم الطابق',
-            'floors_count' => 'عدد الطوابق',
-            'parking_spaces' => 'مواقف السيارات',
+            'activity' => 'النشاط',
+            'delivery_date' => 'موعد التسليم',
+            'duration_days' => 'مدة التنفيذ',
+            'warranty_months' => 'الضمان',
+            'budget' => 'الميزانية',
         ];
 
         return $translations[$type] ?? $type;
@@ -95,12 +92,11 @@ class AttributeCardSeeder extends Seeder
     private function getArabicSymbol($type)
     {
         $translations = [
-            'rooms' => 'غ',
-            'bathrooms' => 'ح',
-            'area' => 'م²',
-            'floor' => 'ط',
-            'floors_count' => 'طوابق',
-            'parking_spaces' => 'موقف',
+            'activity' => '',
+            'delivery_date' => '',
+            'duration_days' => 'يوم',
+            'warranty_months' => 'شهر',
+            'budget' => 'ر.س',
         ];
 
         return $translations[$type] ?? $type;
@@ -112,12 +108,11 @@ class AttributeCardSeeder extends Seeder
     private function getEnglishName($type)
     {
         $translations = [
-            'rooms' => 'Number of Rooms',
-            'bathrooms' => 'Number of Bathrooms',
-            'area' => 'Area',
-            'floor' => 'Floor Number',
-            'floors_count' => 'Number of Floors',
-            'parking_spaces' => 'Parking Spaces',
+            'activity' => 'Activity',
+            'delivery_date' => 'Delivery Date',
+            'duration_days' => 'Duration',
+            'warranty_months' => 'Warranty',
+            'budget' => 'Budget',
         ];
 
         return $translations[$type] ?? $type;
@@ -129,12 +124,11 @@ class AttributeCardSeeder extends Seeder
     private function getEnglishSymbol($type)
     {
         $translations = [
-            'rooms' => 'rooms',
-            'bathrooms' => 'bath',
-            'area' => 'm²',
-            'floor' => 'floor',
-            'floors_count' => 'floors',
-            'parking_spaces' => 'parking',
+            'activity' => '',
+            'delivery_date' => '',
+            'duration_days' => 'days',
+            'warranty_months' => 'months',
+            'budget' => 'SAR',
         ];
 
         return $translations[$type] ?? $type;

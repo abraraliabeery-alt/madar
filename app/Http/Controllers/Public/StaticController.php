@@ -16,6 +16,22 @@ class StaticController extends Controller
     }
 
     /**
+     * Suppliers page
+     */
+    public function suppliers()
+    {
+        return view('public.static.suppliers');
+    }
+
+    /**
+     * Factories page
+     */
+    public function factories()
+    {
+        return view('public.static.factories');
+    }
+
+    /**
      * Pricing page
      */
     public function pricing()

@@ -13,10 +13,12 @@ use App\Http\Controllers\Public\LanguageController;
 use App\Http\Controllers\Public\SitemapController;
 use App\Http\Controllers\Public\RssController;
 use App\Http\Controllers\Public\StaticController;
+use App\Http\Controllers\AI\LandStudyController;
 use App\Http\Controllers\Public\CityController;
 use App\Http\Controllers\Public\NewsletterController;
 use App\Http\Controllers\Public\ErrorController;
 use App\Http\Controllers\Public\BookingController;
+use App\Http\Controllers\FacilitySite\SiteController;
 
 // Public Routes - لا تحتاج تسجيل دخول
 Route::group([], function () {
@@ -29,6 +31,12 @@ Route::group([], function () {
     Route::get('/faq', [HomeController::class, 'faq'])->name('faq');
     Route::get('/sitemap', [HomeController::class, 'sitemap'])->name('sitemap');
 
+    // Investment Properties Page (feature-flagged)
+    if (config('features.public_investment_properties')) {
+        Route::get('/investment-properties', [HomeController::class, 'investmentProperties'])
+            ->name('investment-properties');
+    }
+
     // Search Routes
     Route::get('/search', [SearchController::class, 'index'])->name('search');
     Route::get('/search/products', [SearchController::class, 'products'])->name('search.products');
@@ -40,6 +48,8 @@ Route::group([], function () {
     // Contact Routes
     Route::get('/contact', [ContactController::class, 'index'])->name('contact');
     Route::post('/contact', [ContactController::class, 'sendMessage'])->name('contact.send');
+    // Alias name expected by landing template
+    Route::post('/contact-home', [ContactController::class, 'sendMessage'])->name('contact.home.store');
     Route::get('/contact/quote', [ContactController::class, 'quote'])->name('contact.quote');
     Route::post('/contact/quote', [ContactController::class, 'requestQuote'])->name('contact.quote.send');
     Route::get('/contact/feedback', [ContactController::class, 'feedback'])->name('contact.feedback');
@@ -63,10 +73,17 @@ Route::group([], function () {
         Route::get('/facilities/featured', [FacilityController::class, 'featured'])->name('facilities.featured');
         Route::get('/facilities/search', [FacilityController::class, 'search'])->name('facilities.search');
         Route::get('/facilities/map', [FacilityController::class, 'map'])->name('facilities.map');
-        Route::get('/facilities/{facility}', [FacilityController::class, 'show'])->name('facilities.show');
-        // Public forms for appointment and quote
-        Route::get('/facilities/{facility}/appointment', [FacilityController::class, 'appointmentForm'])->name('facilities.appointment.form');
-        Route::get('/facilities/{facility}/quote', [FacilityController::class, 'quoteForm'])->name('facilities.quote.form');
+        // Single public facility page: redirect legacy public facility profile to the Facility Site
+        Route::get('/facilities/{facility}', function ($facility) {
+            return redirect()->route('public.facility.site.home', $facility);
+        })->name('facilities.show');
+        // Legacy public forms for appointment and quote => redirect to site contact section
+        Route::get('/facilities/{facility}/appointment', function ($facility) {
+            return redirect()->to(route('public.facility.site.home', $facility) . '#contact');
+        })->name('facilities.appointment.form');
+        Route::get('/facilities/{facility}/quote', function ($facility) {
+            return redirect()->to(route('public.facility.site.home', $facility) . '#contact');
+        })->name('facilities.quote.form');
         Route::get('/facility-categories/{category}/facilities', [FacilityController::class, 'byCategory'])->name('facilities.by-category');
     });
 
@@ -130,6 +147,8 @@ Route::group([], function () {
 
     // Static Pages
     Route::get('/how-it-works', [StaticController::class, 'howItWorks'])->name('how-it-works');
+    Route::get('/suppliers', [StaticController::class, 'suppliers'])->name('suppliers');
+    Route::get('/factories', [StaticController::class, 'factories'])->name('factories');
     Route::get('/pricing', [StaticController::class, 'pricing'])->name('pricing');
     Route::get('/testimonials', [StaticController::class, 'testimonials'])->name('testimonials');
     Route::get('/blog', [StaticController::class, 'blog'])->name('blog');
@@ -150,10 +169,37 @@ Route::group([], function () {
     Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
     Route::post('/newsletter/unsubscribe', [NewsletterController::class, 'unsubscribe'])->name('newsletter.unsubscribe');
 
+    // Public AI land study (no auth)
+    Route::get('/investment-studies', [LandStudyController::class, 'form'])->name('public.investment-studies.form');
+    Route::post('/investment-studies', [LandStudyController::class, 'submit'])->name('public.investment-studies.submit');
+
     // Error Pages
     Route::get('/404', [ErrorController::class, 'notFound'])->name('404');
     Route::get('/500', [ErrorController::class, 'serverError'])->name('500');
     Route::get('/maintenance', [ErrorController::class, 'maintenance'])->name('maintenance');
+
+    // Facility public site (initial integration)
+    Route::get('/site/{facility}', [SiteController::class, 'home'])->name('facility.site.home');
+    Route::prefix('/site/{facility}')
+        ->name('facility.site.')
+        ->group(function(){
+            Route::get('/services', [\App\Http\Controllers\FacilitySite\ServiceController::class, 'index'])->name('services.index');
+            Route::get('/services/{slug}', [\App\Http\Controllers\FacilitySite\ServiceController::class, 'show'])->name('services.show');
+            Route::get('/projects', [\App\Http\Controllers\FacilitySite\ProjectController::class, 'index'])->name('projects.index');
+            Route::get('/projects/{slug}', [\App\Http\Controllers\FacilitySite\ProjectController::class, 'show'])->name('projects.show');
+            Route::get('/partners', [\App\Http\Controllers\FacilitySite\PartnerController::class, 'index'])->name('partners.index');
+            Route::get('/partners/{slug}', [\App\Http\Controllers\FacilitySite\PartnerController::class, 'show'])->name('partners.show');
+            Route::get('/faqs', [\App\Http\Controllers\FacilitySite\FaqController::class, 'index'])->name('faqs.index');
+            Route::get('/gallery', [\App\Http\Controllers\FacilitySite\GalleryController::class, 'index'])->name('gallery.index');
+            Route::get('/gallery/{slug}', [\App\Http\Controllers\FacilitySite\GalleryController::class, 'show'])->name('gallery.show');
+            Route::get('/page/{slug}', [\App\Http\Controllers\FacilitySite\PageController::class, 'show'])->name('pages.show');
+            // Landing contact form (compatibility with touralbina template)
+            Route::post('/contact', [\App\Http\Controllers\Public\ContactController::class, 'sendMessage'])->name('contact.home.store');
+            // Tenders (example + pdf)
+            Route::get('/tenders/example', [\App\Http\Controllers\FacilitySite\TenderController::class, 'example'])->name('tenders.example');
+            Route::get('/tenders/{tender}/pdf/preview', [\App\Http\Controllers\FacilitySite\TenderController::class, 'previewPdf'])->name('tenders.pdf.preview');
+            Route::get('/tenders/{tender}/pdf/download', [\App\Http\Controllers\FacilitySite\TenderController::class, 'downloadPdf'])->name('tenders.pdf.download');
+        });
 
     // Dynamic Routes - This should be the LAST route to catch any remaining public.* routes
     Route::get('/{slug}', function ($slug) {

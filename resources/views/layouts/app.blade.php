@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ app()->getLocale() == 'ar' ? 'rtl' : 'ltr' }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ isset($isRTL) && $isRTL ? 'rtl' : 'ltr' }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'عقار') }} - @yield('title', 'الرئيسية')</title>
+    <title>@yield('title', 'الرئيسية')</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,6 +23,7 @@
 
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
@@ -37,33 +38,75 @@
                     },
                     colors: {
                         primary: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            200: '#bae6fd',
-                            300: '#7dd3fc',
-                            400: '#38bdf8',
-                            500: '#0ea5e9',
-                            600: '#0284c7',
-                            700: '#0369a1',
-                            800: '#075985',
-                            900: '#0c4a6e',
+                            50: '#fbf7f2',
+                            100: '#f3e6d6',
+                            200: '#e7ccb0',
+                            300: '#d6ab84',
+                            400: '#c1885c',
+                            500: '#a86a43',
+                            600: '#8c5235',
+                            700: '#6f3f2b',
+                            800: '#553225',
+                            900: '#3c231b',
                         },
                         secondary: {
-                            50: '#f8fafc',
-                            100: '#f1f5f9',
-                            200: '#e2e8f0',
-                            300: '#cbd5e1',
-                            400: '#94a3b8',
-                            500: '#64748b',
-                            600: '#475569',
-                            700: '#334155',
-                            800: '#1e293b',
-                            900: '#0f172a',
+                            50: '#f7f7f8',
+                            100: '#ededf0',
+                            200: '#d7dbe1',
+                            300: '#b4bac6',
+                            400: '#8d96a7',
+                            500: '#6b7280',
+                            600: '#4b5563',
+                            700: '#374151',
+                            800: '#1f2937',
+                            900: '#111827',
                         }
                     }
                 }
             }
         }
+    </script>
+
+    <script>
+        (function () {
+            try {
+                const stored = localStorage.getItem('theme');
+                const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                const shouldUseDark = stored ? stored === 'dark' : prefersDark;
+                document.documentElement.classList.toggle('dark', shouldUseDark);
+            } catch (e) {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            try { localStorage.setItem('theme', isDark ? 'dark' : 'light'); } catch (e) {}
+            const btn = document.getElementById('theme-toggle');
+            if (btn) {
+                btn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+                btn.setAttribute('title', isDark ? 'Light mode' : 'Dark mode');
+                const sun = btn.querySelector('[data-icon="sun"]');
+                const moon = btn.querySelector('[data-icon="moon"]');
+                if (sun && moon) {
+                    sun.classList.toggle('hidden', !isDark);
+                    moon.classList.toggle('hidden', isDark);
+                }
+            }
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+            const isDark = document.documentElement.classList.contains('dark');
+            const btn = document.getElementById('theme-toggle');
+            if (btn) {
+                btn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+                btn.setAttribute('title', isDark ? 'Light mode' : 'Dark mode');
+                const sun = btn.querySelector('[data-icon="sun"]');
+                const moon = btn.querySelector('[data-icon="moon"]');
+                if (sun && moon) {
+                    sun.classList.toggle('hidden', !isDark);
+                    moon.classList.toggle('hidden', isDark);
+                }
+            }
+        });
     </script>
 
     <style>
@@ -93,30 +136,26 @@
         .dropdown-menu { display: none; }
         .dropdown-menu.show { display: block; }
 
-        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .gradient-bg { background: linear-gradient(135deg, #8c5235 0%, #6f3f2b 100%); }
         .card-hover { transition: all 0.3s ease; }
         .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0,0,0,.1), 0 10px 10px -5px rgba(0,0,0,.04); }
-        .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); transition: all .3s ease; }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(102,126,234,.4); }
+        .btn-primary { background: linear-gradient(135deg, #a86a43 0%, #8c5235 100%); transition: all .3s ease; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(172, 112, 73, .35); }
     </style>
 
     @stack('styles')
 </head>
-<body class="font-cairo bg-gray-50 text-gray-900">
+<body class="font-cairo bg-white text-gray-900 dark:bg-black dark:text-white">
 <!-- Navigation -->
-<nav class="bg-white shadow-lg sticky top-0 z-50" x-data="{ mobileMenuOpen: false }">
+<nav class="bg-white shadow-lg sticky top-0 z-50 dark:bg-black dark:border-b dark:border-secondary-800" x-data="{ mobileMenuOpen: false }">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-            <div class="flex items-center">
-                <div class="flex-shrink-0">
-                    <a href="{{ route('public.home') }}" class="text-2xl font-bold text-primary-600">
-                        <i class="fas fa-home {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>
-                        {{ app()->getLocale() == 'ar' ? 'عقار' : 'Aqar' }}
-                    </a>
-                </div>
+        <div class="flex items-center justify-between h-16">
+            <!-- Logo and Brand -->
+            <div class="flex-shrink-0">
+                <a href="{{ route('public.home') }}" class="text-2xl font-bold text-primary-600">
+                    <span class="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-primary-600 text-white font-extrabold text-xl leading-none {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}">م</span>
+                </a>
             </div>
-
-            <!-- Desktop Navigation -->
             <div class="hidden md:flex items-center {{ app()->getLocale() == 'ar' ? 'space-x-8 space-x-reverse' : 'space-x-8' }}">
                 <a href="{{ route('public.home') }}" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
                     {{ __('layout.navigation.home') }}
@@ -181,7 +220,7 @@
                 </div>
 
                 <a href="{{ route('public.products.index') }}" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                    {{ __('layout.navigation.properties') }}
+                    {{ app()->getLocale() == 'ar' ? 'المشاريع' : 'Projects' }}
                 </a>
                 @if(\App\Helpers\FacilityHelper::isMultiMode())
                     <a href="{{ route('public.facilities.index') }}" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
@@ -189,11 +228,11 @@
                     </a>
                 @endif
 
-                <a href="{{ route('public.about') }}" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                    {{ __('layout.navigation.about_us') }}
+                <a href="{{ route('public.suppliers') }}" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                    {{ __('layout.navigation.suppliers') }}
                 </a>
-                <a href="{{ route('public.contact') }}" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                    {{ __('layout.navigation.contact_us') }}
+                <a href="{{ route('public.factories') }}" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                    {{ __('layout.navigation.factories') }}
                 </a>
 
                 @guest
@@ -203,6 +242,10 @@
 
             <!-- Desktop User Menu -->
             <div class="hidden md:flex items-center {{ app()->getLocale() == 'ar' ? 'space-x-4 space-x-reverse' : 'space-x-4' }}">
+                <button id="theme-toggle" type="button" onclick="toggleTheme()" class="p-2 rounded-lg border border-gray-200 text-gray-700 hover:text-primary-700 hover:border-primary-300 transition-colors dark:border-secondary-800 dark:text-gray-200 dark:hover:text-white" aria-pressed="false">
+                    <i class="fas fa-moon" data-icon="moon"></i>
+                    <i class="fas fa-sun hidden" data-icon="sun"></i>
+                </button>
                 @auth
                     <!-- Notifications -->
                     <div class="relative" x-data="{ open: false }" @click.outside="open=false" @keydown.escape.window="open=false">
@@ -246,7 +289,7 @@
                                                         @elseif($notification->data['type'] == 'booking_status_changed')
                                                             تم تحديث حالة الحجز
                                                         @elseif($notification->data['type'] == 'new_product_added')
-                                                            تم إضافة عقار جديد
+                                                            تم إضافة مشروع جديد
                                                         @else
                                                             {{ __('layout.notifications.new_notification') }}
                                                         @endif
@@ -317,11 +360,16 @@
 
                             <!-- Language Switcher in Profile Menu -->
                             <div class="px-4 py-2 border-t border-gray-200">
-                                <div class="text-xs text-gray-500 mb-2">{{ __('layout.navigation.language') }}</div>
                                 <div class="space-y-1">
                                     <a href="{{ route('public.language.change', 'ar') }}"
                                        class="flex items-center px-2 py-1 text-sm text-gray-700 hover:bg-gray-100 rounded {{ app()->getLocale() === 'ar' ? 'bg-primary-50 text-primary-700' : '' }}">
-                                        <span class="w-4 h-3 bg-green-500 rounded {{ app()->getLocale() == 'ar' ? 'mr-2' : 'ml-2' }} flex-shrink-0"></span>
+                                        <span class="{{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }} leading-none flex-shrink-0" aria-hidden="true">
+                                            <svg width="16" height="11" viewBox="0 0 18 12" xmlns="http://www.w3.org/2000/svg" class="block rounded-sm">
+                                                <rect width="18" height="12" rx="2" fill="#0B7A3B"/>
+                                                <path d="M4.2 6.3h8.6" stroke="#ffffff" stroke-width="1" stroke-linecap="round" opacity="0.95"/>
+                                                <path d="M6.2 8.7h6.2" stroke="#ffffff" stroke-width="1" stroke-linecap="round" opacity="0.95"/>
+                                            </svg>
+                                        </span>
                                         <span>{{ __('layout.navigation.arabic') }}</span>
                                         @if(app()->getLocale() === 'ar')
                                             <i class="fas fa-check text-primary-600 {{ app()->getLocale() == 'ar' ? 'mr-auto' : 'ml-auto' }} text-xs"></i>
@@ -329,9 +377,56 @@
                                     </a>
                                     <a href="{{ route('public.language.change', 'en') }}"
                                        class="flex items-center px-2 py-1 text-sm text-gray-700 hover:bg-gray-100 rounded {{ app()->getLocale() === 'en' ? 'bg-primary-50 text-primary-700' : '' }}">
-                                        <span class="w-4 h-3 bg-blue-500 rounded {{ app()->getLocale() == 'ar' ? 'mr-2' : 'ml-2' }} flex-shrink-0"></span>
+                                        <span class="{{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }} leading-none flex-shrink-0" aria-hidden="true">
+                                            <svg width="16" height="11" viewBox="0 0 18 12" xmlns="http://www.w3.org/2000/svg" class="block rounded-sm">
+                                                <rect width="18" height="12" rx="2" fill="#ffffff"/>
+                                                <rect y="0" width="18" height="1" fill="#B22234"/>
+                                                <rect y="2" width="18" height="1" fill="#B22234"/>
+                                                <rect y="4" width="18" height="1" fill="#B22234"/>
+                                                <rect y="6" width="18" height="1" fill="#B22234"/>
+                                                <rect y="8" width="18" height="1" fill="#B22234"/>
+                                                <rect y="10" width="18" height="1" fill="#B22234"/>
+                                                <rect width="8" height="6" rx="1" fill="#3C3B6E"/>
+                                                <circle cx="2" cy="2" r="0.55" fill="#ffffff"/>
+                                                <circle cx="4" cy="2" r="0.55" fill="#ffffff"/>
+                                                <circle cx="6" cy="2" r="0.55" fill="#ffffff"/>
+                                                <circle cx="3" cy="4" r="0.55" fill="#ffffff"/>
+                                                <circle cx="5" cy="4" r="0.55" fill="#ffffff"/>
+                                                <circle cx="7" cy="4" r="0.55" fill="#ffffff"/>
+                                            </svg>
+                                        </span>
                                         <span>{{ __('layout.navigation.english') }}</span>
                                         @if(app()->getLocale() === 'en')
+                                            <i class="fas fa-check text-primary-600 {{ app()->getLocale() == 'ar' ? 'mr-auto' : 'ml-auto' }} text-xs"></i>
+                                        @endif
+                                    </a>
+
+                                    <a href="{{ route('public.language.change', 'ur') }}"
+                                       class="flex items-center px-2 py-1 text-sm text-gray-700 hover:bg-gray-100 rounded {{ app()->getLocale() === 'ur' ? 'bg-primary-50 text-primary-700' : '' }}">
+                                        <span class="{{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }} leading-none flex-shrink-0" aria-hidden="true">
+                                            <svg width="16" height="11" viewBox="0 0 18 12" xmlns="http://www.w3.org/2000/svg" class="block rounded-sm">
+                                                <rect width="18" height="12" rx="2" fill="#0A7F3F"/>
+                                                <rect width="4" height="12" rx="2" fill="#ffffff"/>
+                                                <path d="M12.2 6.2a3.0 3.0 0 1 1-1.6-2.7a2.4 2.4 0 1 0 1.6 2.7Z" fill="#ffffff" opacity="0.95"/>
+                                                <path d="M13.9 4.2l.35.95.95.05-.75.58.25.92-.8-.5-.8.5.25-.92-.75-.58.95-.05.35-.95Z" fill="#ffffff" opacity="0.95"/>
+                                            </svg>
+                                        </span>
+                                        <span>{{ __('layout.navigation.urdu') }}</span>
+                                        @if(app()->getLocale() === 'ur')
+                                            <i class="fas fa-check text-primary-600 {{ app()->getLocale() == 'ar' ? 'mr-auto' : 'ml-auto' }} text-xs"></i>
+                                        @endif
+                                    </a>
+
+                                    <a href="{{ route('public.language.change', 'zh') }}"
+                                       class="flex items-center px-2 py-1 text-sm text-gray-700 hover:bg-gray-100 rounded {{ app()->getLocale() === 'zh' ? 'bg-primary-50 text-primary-700' : '' }}">
+                                        <span class="{{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }} leading-none flex-shrink-0" aria-hidden="true">
+                                            <svg width="16" height="11" viewBox="0 0 18 12" xmlns="http://www.w3.org/2000/svg" class="block rounded-sm">
+                                                <rect width="18" height="12" rx="2" fill="#DE2910"/>
+                                                <path d="M4 2.2l.6 1.6 1.6.1-1.25 1 .42 1.55L4 5.6l-1.37.85.42-1.55-1.25-1 1.6-.1L4 2.2Z" fill="#FFDE00"/>
+                                            </svg>
+                                        </span>
+                                        <span>{{ __('layout.navigation.chinese') }}</span>
+                                        @if(app()->getLocale() === 'zh')
                                             <i class="fas fa-check text-primary-600 {{ app()->getLocale() == 'ar' ? 'mr-auto' : 'ml-auto' }} text-xs"></i>
                                         @endif
                                     </a>
@@ -349,11 +444,13 @@
                         </div>
                     </div>
                 @else
-                    <a href="{{ route('login') }}" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                        {{ __('layout.user_menu.login') }}
+                    <a href="{{ route('login') }}" aria-label="{{ __('layout.user_menu.login') }}" title="{{ __('layout.user_menu.login') }}"
+                       class="p-2 rounded-lg border border-gray-200 text-gray-700 hover:text-primary-700 hover:border-primary-300 transition-colors dark:border-secondary-800 dark:text-gray-200 dark:hover:text-white">
+                        <i class="fas fa-right-to-bracket"></i>
                     </a>
-                    <a href="{{ route('register') }}" class="btn-primary text-white px-4 py-2 rounded-md text-sm font-medium">
-                        {{ __('layout.user_menu.create_account') }}
+                    <a href="{{ route('register') }}" aria-label="{{ __('layout.user_menu.create_account') }}" title="{{ __('layout.user_menu.create_account') }}"
+                       class="p-2 rounded-lg bg-primary-600 text-white hover:bg-primary-700 transition-colors">
+                        <i class="fas fa-user-plus"></i>
                     </a>
                 @endauth
             </div>
@@ -387,11 +484,12 @@
                         {{ __('layout.navigation.facilities') }}
                     </a>
                 @endif
-                <a href="{{ route('public.about') }}" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
-                    {{ __('layout.navigation.about_us') }}
+
+                <a href="{{ route('public.suppliers') }}" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
+                    {{ __('layout.navigation.suppliers') }}
                 </a>
-                <a href="{{ route('public.contact') }}" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
-                    {{ __('layout.navigation.contact_us') }}
+                <a href="{{ route('public.factories') }}" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
+                    {{ __('layout.navigation.factories') }}
                 </a>
 
                 <div class="px-3 py-2">
@@ -434,7 +532,7 @@
                                                     @elseif($notification->data['type'] == 'booking_status_changed')
                                                         تم تحديث حالة الحجز
                                                     @elseif($notification->data['type'] == 'new_product_added')
-                                                        تم إضافة عقار جديد
+                                                        تم إضافة مشروع جديد
                                                     @else
                                                         {{ __('layout.notifications.new_notification') }}
                                                     @endif
@@ -484,11 +582,16 @@
                     <hr class="my-2">
 
                     <div class="px-3 py-2 border-t border-gray-200">
-                        <div class="text-sm text-gray-500 mb-2">{{ __('layout.navigation.language') }}</div>
                         <div class="space-y-1">
                             <a href="{{ route('public.language.change', 'ar') }}"
                                class="flex items-center px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded {{ app()->getLocale() === 'ar' ? 'bg-primary-50 text-primary-700' : '' }}">
-                                <span class="w-4 h-3 bg-green-500 rounded {{ app()->getLocale() == 'ar' ? 'mr-2' : 'ml-2' }} flex-shrink-0"></span>
+                                <span class="{{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }} leading-none flex-shrink-0" aria-hidden="true">
+                                    <svg width="16" height="11" viewBox="0 0 18 12" xmlns="http://www.w3.org/2000/svg" class="block rounded-sm">
+                                        <rect width="18" height="12" rx="2" fill="#0B7A3B"/>
+                                        <path d="M4.2 6.3h8.6" stroke="#ffffff" stroke-width="1" stroke-linecap="round" opacity="0.95"/>
+                                        <path d="M6.2 8.7h6.2" stroke="#ffffff" stroke-width="1" stroke-linecap="round" opacity="0.95"/>
+                                    </svg>
+                                </span>
                                 <span>{{ __('layout.navigation.arabic') }}</span>
                                 @if(app()->getLocale() === 'ar')
                                     <i class="fas fa-check text-primary-600 {{ app()->getLocale() == 'ar' ? 'mr-auto' : 'ml-auto' }} text-xs"></i>
@@ -496,9 +599,56 @@
                             </a>
                             <a href="{{ route('public.language.change', 'en') }}"
                                class="flex items-center px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded {{ app()->getLocale() === 'en' ? 'bg-primary-50 text-primary-700' : '' }}">
-                                <span class="w-4 h-3 bg-blue-500 rounded {{ app()->getLocale() == 'ar' ? 'mr-2' : 'ml-2' }} flex-shrink-0"></span>
+                                <span class="{{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }} leading-none flex-shrink-0" aria-hidden="true">
+                                    <svg width="16" height="11" viewBox="0 0 18 12" xmlns="http://www.w3.org/2000/svg" class="block rounded-sm">
+                                        <rect width="18" height="12" rx="2" fill="#ffffff"/>
+                                        <rect y="0" width="18" height="1" fill="#B22234"/>
+                                        <rect y="2" width="18" height="1" fill="#B22234"/>
+                                        <rect y="4" width="18" height="1" fill="#B22234"/>
+                                        <rect y="6" width="18" height="1" fill="#B22234"/>
+                                        <rect y="8" width="18" height="1" fill="#B22234"/>
+                                        <rect y="10" width="18" height="1" fill="#B22234"/>
+                                        <rect width="8" height="6" rx="1" fill="#3C3B6E"/>
+                                        <circle cx="2" cy="2" r="0.55" fill="#ffffff"/>
+                                        <circle cx="4" cy="2" r="0.55" fill="#ffffff"/>
+                                        <circle cx="6" cy="2" r="0.55" fill="#ffffff"/>
+                                        <circle cx="3" cy="4" r="0.55" fill="#ffffff"/>
+                                        <circle cx="5" cy="4" r="0.55" fill="#ffffff"/>
+                                        <circle cx="7" cy="4" r="0.55" fill="#ffffff"/>
+                                    </svg>
+                                </span>
                                 <span>{{ __('layout.navigation.english') }}</span>
                                 @if(app()->getLocale() === 'en')
+                                    <i class="fas fa-check text-primary-600 {{ app()->getLocale() == 'ar' ? 'mr-auto' : 'ml-auto' }} text-xs"></i>
+                                @endif
+                            </a>
+
+                            <a href="{{ route('public.language.change', 'ur') }}"
+                               class="flex items-center px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded {{ app()->getLocale() === 'ur' ? 'bg-primary-50 text-primary-700' : '' }}">
+                                <span class="{{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }} leading-none flex-shrink-0" aria-hidden="true">
+                                    <svg width="16" height="11" viewBox="0 0 18 12" xmlns="http://www.w3.org/2000/svg" class="block rounded-sm">
+                                        <rect width="18" height="12" rx="2" fill="#0A7F3F"/>
+                                        <rect width="4" height="12" rx="2" fill="#ffffff"/>
+                                        <path d="M12.2 6.2a3.0 3.0 0 1 1-1.6-2.7a2.4 2.4 0 1 0 1.6 2.7Z" fill="#ffffff" opacity="0.95"/>
+                                        <path d="M13.9 4.2l.35.95.95.05-.75.58.25.92-.8-.5-.8.5.25-.92-.75-.58.95-.05.35-.95Z" fill="#ffffff" opacity="0.95"/>
+                                    </svg>
+                                </span>
+                                <span>{{ __('layout.navigation.urdu') }}</span>
+                                @if(app()->getLocale() === 'ur')
+                                    <i class="fas fa-check text-primary-600 {{ app()->getLocale() == 'ar' ? 'mr-auto' : 'ml-auto' }} text-xs"></i>
+                                @endif
+                            </a>
+
+                            <a href="{{ route('public.language.change', 'zh') }}"
+                               class="flex items-center px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded {{ app()->getLocale() === 'zh' ? 'bg-primary-50 text-primary-700' : '' }}">
+                                <span class="{{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }} leading-none flex-shrink-0" aria-hidden="true">
+                                    <svg width="16" height="11" viewBox="0 0 18 12" xmlns="http://www.w3.org/2000/svg" class="block rounded-sm">
+                                        <rect width="18" height="12" rx="2" fill="#DE2910"/>
+                                        <path d="M4 2.2l.6 1.6 1.6.1-1.25 1 .42 1.55L4 5.6l-1.37.85.42-1.55-1.25-1 1.6-.1L4 2.2Z" fill="#FFDE00"/>
+                                    </svg>
+                                </span>
+                                <span>{{ __('layout.navigation.chinese') }}</span>
+                                @if(app()->getLocale() === 'zh')
                                     <i class="fas fa-check text-primary-600 {{ app()->getLocale() == 'ar' ? 'mr-auto' : 'ml-auto' }} text-xs"></i>
                                 @endif
                             </a>
@@ -515,12 +665,16 @@
                     </form>
                 @else
                     <hr class="my-2">
-                    <a href="{{ route('login') }}" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
-                        {{ __('layout.user_menu.login') }}
-                    </a>
-                    <a href="{{ route('register') }}" class="btn-primary text-white block px-3 py-2 rounded-md text-base font-medium text-center">
-                        {{ __('layout.user_menu.create_account') }}
-                    </a>
+                    <div class="flex items-center gap-2 px-3 py-2">
+                        <a href="{{ route('login') }}" aria-label="{{ __('layout.user_menu.login') }}" title="{{ __('layout.user_menu.login') }}"
+                           class="p-2 rounded-lg border border-gray-200 text-gray-700 hover:text-primary-700 hover:border-primary-300 transition-colors dark:border-secondary-800 dark:text-gray-200 dark:hover:text-white">
+                            <i class="fas fa-right-to-bracket"></i>
+                        </a>
+                        <a href="{{ route('register') }}" aria-label="{{ __('layout.user_menu.create_account') }}" title="{{ __('layout.user_menu.create_account') }}"
+                           class="p-2 rounded-lg bg-primary-600 text-white hover:bg-primary-700 transition-colors">
+                            <i class="fas fa-user-plus"></i>
+                        </a>
+                    </div>
                 @endauth
             </div>
         </div>
@@ -559,8 +713,23 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <!-- محتوى الفوتر كما هو في كودك الأصلي -->
         @php /* إبقيه كما أرسلته لتقليل طول الرد */ @endphp
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+            <div>
+                <div class="text-sm font-semibold text-white mb-3">{{ __('layout.footer.quick_links') }}</div>
+                <div class="space-y-2">
+                    <a href="{{ route('public.about') }}" class="block text-sm text-gray-300 hover:text-white">
+                        {{ __('layout.navigation.about_us') }}
+                    </a>
+                    <a href="{{ route('public.contact') }}" class="block text-sm text-gray-300 hover:text-white">
+                        {{ __('layout.navigation.contact_us') }}
+                    </a>
+                </div>
+            </div>
+        </div>
+
         <div class="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-400">
-            <p>&copy; {{ date('Y') }} {{ app()->getLocale() == 'ar' ? 'عقار' : 'Aqar' }}. {{ app()->getLocale() == 'ar' ? 'جميع الحقوق محفوظة.' : 'All rights reserved.' }}</p>
+            <p>&copy; {{ date('Y') }}. {{ app()->getLocale() == 'ar' ? 'جميع الحقوق محفوظة.' : 'All rights reserved.' }}</p>
         </div>
     </div>
 </footer>

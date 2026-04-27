@@ -8,7 +8,10 @@ use App\Models\Booking;
 use App\Models\Contract;
 use App\Models\Appointment;
 use App\Models\Product;
+use App\Models\LoanRequest;
+use App\Models\LoanOffer;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Carbon;
 use App\Models\Facility;
 
 class ClientController extends Controller
@@ -222,10 +225,137 @@ class ClientController extends Controller
             ]);
         }
 
-        // ترتيب النشاطات حسب التاريخ
-        $activities = $activities->sortByDesc('date')->paginate(15);
+        // ترتيب النشاطات حسب التاريخ (كمجموعة بسيطة بدون تقسيم صفحات حالياً)
+        $activities = $activities->sortByDesc('date')->values();
 
         return view('client.activity', compact('activities'));
+    }
+
+    /**
+     * طلبات التمويل للعميل الحالي
+     */
+    public function loanRequests(Request $request)
+    {
+        $user = Auth::user();
+
+        $query = LoanRequest::with(['product'])
+            ->withCount('offers')
+            ->where('user_id', $user->id)
+            ->latest();
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->get('status'));
+        }
+
+        $requests = $query->paginate(15)->appends($request->query());
+
+        return view('client.loans.requests', compact('requests'));
+    }
+
+    /**
+     * عرض طلب تمويل واحد مع عروضه
+     */
+    public function showLoanRequest(LoanRequest $loanRequest)
+    {
+        $user = Auth::user();
+        if ($loanRequest->user_id !== $user->id) {
+            abort(403, 'غير مصرح لك بعرض هذا الطلب');
+        }
+
+        $loanRequest->load(['product', 'offers.banker']);
+        $contract = null;
+
+        if ($loanRequest->product_id) {
+            $contract = Contract::where('product_id', $loanRequest->product_id)
+                ->where('user_id', $loanRequest->user_id)
+                ->latest()
+                ->first();
+        }
+
+        return view('client.loans.show', compact('loanRequest', 'contract'));
+    }
+
+    /**
+     * اختيار عرض تمويل من العميل
+     */
+    public function chooseLoanOffer(LoanRequest $loanRequest, LoanOffer $offer)
+    {
+        $user = Auth::user();
+
+        if ($loanRequest->user_id !== $user->id) {
+            abort(403, 'غير مصرح لك باختيار عرض لهذا الطلب');
+        }
+
+        if ($offer->loan_request_id !== $loanRequest->id) {
+            return redirect()->back()->with('error', 'العرض لا ينتمي لهذا الطلب');
+        }
+
+        $loanRequest->update([
+            'chosen_offer_id' => $offer->id,
+            'status' => 'selected',
+        ]);
+
+        $product = $loanRequest->product;
+
+        if ($product) {
+            $startDate = Carbon::now();
+            $termMonths = $offer->term_months ?? 0;
+            $endDate = $termMonths > 0 ? $startDate->copy()->addMonths($termMonths) : null;
+
+            $contract = Contract::create([
+                'product_id' => $product->id,
+                'user_id' => $loanRequest->user_id,
+                'owner_id' => $product->owner_user_id ?? null,
+                'facility_id' => $product->facility_id ?? null,
+                'contract_type' => 'sale',
+                'start_date' => $startDate,
+                'end_date' => $endDate,
+                'total_amount' => $offer->amount,
+                'status' => 'draft',
+                'payment_frequency' => 'monthly',
+                'total_installments' => $termMonths > 0 ? $termMonths : null,
+                'created_by' => $loanRequest->user_id,
+                'is_active' => false,
+                'is_verified' => false,
+            ]);
+
+            $contract->generateContractNumber();
+
+            if ($termMonths > 0) {
+                $contract->generatePaymentPlan();
+            }
+
+            $contract->save();
+        }
+
+        return redirect()->route('client.loans.requests.show', $loanRequest)
+            ->with('success', 'تم اختيار عرض التمويل وإنشاء عقد مبدئي بنجاح');
+    }
+
+    /**
+     * إنشاء طلب تمويل جديد (بسيط)
+     */
+    public function storeLoanRequest(Request $request)
+    {
+        $user = Auth::user();
+
+        $data = $request->validate([
+            'product_id' => 'nullable|exists:products,id',
+            'notes' => 'nullable|string',
+        ]);
+
+        $loan = LoanRequest::create([
+            'user_id' => $user->id,
+            'product_id' => $data['product_id'] ?? null,
+            'status' => 'new',
+            'sla_due_at' => now()->addHours(24),
+            'notes' => $data['notes'] ?? null,
+        ]);
+
+        $loan->update(['status' => 'dispatched']);
+
+        return redirect()->route('client.loans.requests')
+            ->with('success', 'تم إنشاء طلب التمويل بنجاح');
     }
 
     /**

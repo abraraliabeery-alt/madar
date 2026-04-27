@@ -35,4 +35,21 @@ return [
         ],
     ],
 
+    'browser_service' => [
+        'base_url' => env('BROWSER_SERVICE_URL', 'http://127.0.0.1:4001'),
+    ],
+
+    'google_maps' => [
+        'api_key' => env('GOOGLE_MAPS_API_KEY'),
+    ],
+
+    'unifonic' => [
+        'base_url' => env('UNIFONIC_BASE_URL', 'https://api.unifonic.com'),
+        'api_key' => env('UNIFONIC_API_KEY'),
+        'app_sid' => env('UNIFONIC_APP_SID'),
+        'sender_id' => env('UNIFONIC_SENDER_ID'),
+        'send_path' => env('UNIFONIC_SEND_PATH', '/rest/Messages/Send'),
+        'timeout' => (int) env('UNIFONIC_TIMEOUT', 15),
+    ],
+
 ];

@@ -82,7 +82,11 @@
                                     <td>
                                         <div class="d-flex align-items-center">
                                                                                     @if($attribute->icon)
-                                            <img src="{{ asset($attribute->icon) }}" alt="{{ $attribute->getTranslatedName() ?? 'N/A' }}" class="me-2" style="width: 20px; height: 20px;">
+                                            @if(\Illuminate\Support\Str::contains($attribute->icon, 'fa-') || !\Illuminate\Support\Str::contains($attribute->icon, '/'))
+                                                <span class="me-2"><i class="{{ $attribute->icon }}"></i></span>
+                                            @else
+                                                <img src="{{ asset($attribute->icon) }}" alt="{{ $attribute->getTranslatedName() ?? 'N/A' }}" class="me-2" style="width: 20px; height: 20px;">
+                                            @endif
                                         @else
                                             <div class="avatar-placeholder me-2" style="width: 20px; height: 20px;">
                                                 <i class="fas fa-tag"></i>

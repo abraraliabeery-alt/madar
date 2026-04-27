@@ -2,6 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Bank\BankLoanController;
+use App\Http\Controllers\AI\LandStudyController;
+use App\Http\Controllers\Public\SmartBrokerController;
+use App\Http\Controllers\Auth\PhoneOtpAuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,6 +19,9 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::get('/migration', function () {
+    if (!app()->isLocal()) {
+        abort(404);
+    }
     try {
         Artisan::call('migrate', ['--force' => true]);
         return nl2br(Artisan::output()); // يعرض الإخراج بالتنسيق المناسب
@@ -26,8 +33,17 @@ Route::get('/migration', function () {
     }
 });
 
+// Facility rentals management
+Route::middleware(['auth'])->group(function () {
+    Route::get('/facility/rentals', [App\Http\Controllers\Facility\FacilityRentalController::class, 'index'])
+        ->name('facility.rentals.index');
+});
+
 
 Route::get('/migration-seeder', function () {
+    if (!app()->isLocal()) {
+        abort(404);
+    }
     try {
         Artisan::call('migrate:fresh', ['--force' => true]);
         $output = Artisan::output();
@@ -51,8 +67,40 @@ Route::get('/language-info', [App\Http\Controllers\LanguageController::class, 'i
 // Laravel UI Auth Routes
 Auth::routes();
 
+// Phone OTP login (like Aqar)
+Route::middleware('guest')->group(function () {
+    Route::get('/login/phone', [PhoneOtpAuthController::class, 'showPhoneForm'])
+        ->name('phone.otp.login.form');
+    Route::post('/login/phone', [PhoneOtpAuthController::class, 'sendOtp'])
+        ->middleware('throttle:otp-request')
+        ->name('phone.otp.login.send');
+    Route::get('/login/phone/verify', [PhoneOtpAuthController::class, 'showVerifyForm'])
+        ->name('phone.otp.verify.form');
+    Route::post('/login/phone/verify', [PhoneOtpAuthController::class, 'verify'])
+        ->middleware('throttle:otp-verify')
+        ->name('phone.otp.verify');
+});
+
+// Facility onboarding (public-style, auth-only)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/register/facility', [App\Http\Controllers\Facility\FacilityController::class, 'onboardingCreate'])
+        ->name('facility.onboarding.create');
+    Route::post('/register/facility', [App\Http\Controllers\Facility\FacilityController::class, 'onboardingStore'])
+        ->name('facility.onboarding.store');
+});
+
+// Temporary public Smart Broker page (no-auth) for testing
+Route::get('/smart-broker', [SmartBrokerController::class, 'index'])->name('public.smart-broker.index');
+Route::get('/smart-broker/data', [SmartBrokerController::class, 'data'])->middleware('throttle:30,1')->name('public.smart-broker.data');
+Route::post('/smart-broker/fetch', [SmartBrokerController::class, 'fetch'])->middleware('throttle:10,1')->name('public.smart-broker.fetch');
+Route::post('/smart-broker/match', [SmartBrokerController::class, 'match'])->middleware('throttle:10,1')->name('public.smart-broker.match');
+
 // Home route for Laravel Auth redirects
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+// Compatibility route for landing contact form (touralbina template)
+Route::post('/contact-home', [App\Http\Controllers\Public\ContactController::class, 'sendMessage'])
+    ->name('contact.home.store');
 
 // General dashboard route (redirects to role-specific dashboard)
 Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
@@ -103,6 +151,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/user/statistics/period', [App\Http\Controllers\UserStatisticsController::class, 'getPeriodStats'])->name('user.statistics.period');
 });
 
+// Bank employee simple loan panel
+Route::middleware(['auth'])->prefix('bank')->name('bank.')->group(function () {
+    Route::get('/loans/requests', [BankLoanController::class, 'index'])->name('loans.requests');
+    Route::post('/loans/{loanRequest}/offers', [BankLoanController::class, 'storeOffer'])->name('loans.offers.store');
+});
+
 // User Export Routes
 Route::middleware(['auth'])->group(function () {
     Route::get('/user/export', [App\Http\Controllers\UserExportController::class, 'index'])->name('user.export.index');
@@ -121,8 +175,35 @@ Route::get('/welcome', function () {
     return view('welcome');
 })->name('welcome');
 
+// Public execution marketplace (requests & bids)
+Route::get('/execution', [App\Http\Controllers\Public\ExecutionMarketplaceController::class, 'index'])
+    ->name('public.execution.marketplace');
+Route::get('/execution/requests/{executionRequest}', [App\Http\Controllers\Public\ExecutionMarketplaceController::class, 'show'])
+    ->name('public.execution.show');
+Route::post('/execution/requests/{executionRequest}/bids', [App\Http\Controllers\Public\ExecutionMarketplaceController::class, 'storeBid'])
+    ->middleware('auth')
+    ->name('public.execution.bids.store');
+
+// Public investment studies (no auth required)
+Route::get('/investment-studies', [LandStudyController::class, 'form'])
+    ->name('web.investment-studies.form');
+Route::post('/investment-studies', [LandStudyController::class, 'submit'])
+    ->name('web.investment-studies.submit');
+
 // Route files are now registered through RouteServiceProvider
 // This provides better organization, middleware handling, and performance
+
+// (Removed experimental facility dashboard route block to avoid duplication)
+
+// AI investment chat endpoint (used by investment-studies chat UI)
+Route::post('/ai/investment-chat', [App\Http\Controllers\AI\InvestmentChatController::class, 'handle'])
+    ->name('ai.investment.chat');
+
+Route::get('/site/{facility}', [App\Http\Controllers\FacilitySite\SiteController::class, 'home'])
+    ->name('facility.site.home');
+
+Route::get('/site/{facility}', [App\Http\Controllers\FacilitySite\SiteController::class, 'home'])
+    ->name('public.facility.site.home');
 
 // Fallback route for 404 errors with enhanced handling
 Route::fallback(function (Illuminate\Http\Request $request) {

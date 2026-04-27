@@ -49,7 +49,7 @@
                     </div>
                 </div>
                 <div class="flex items-center space-x-4 space-x-reverse">
-                    <a href="{{ route('public.facilities.show', $facility) }}" class="text-primary-600 hover:text-primary-700 font-medium">
+                    <a href="{{ route('facility.site.home', $facility->slug ?? $facility->id) }}" class="text-primary-600 hover:text-primary-700 font-medium">
                         <i class="fas fa-building ml-2"></i>{{ __('products.by_facility.view_facility') }}
                     </a>
                     <a href="{{ route('public.products.index') }}" class="text-primary-600 hover:text-primary-700 font-medium">

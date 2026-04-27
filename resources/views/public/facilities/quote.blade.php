@@ -71,7 +71,7 @@
 
                     <div class="flex items-center gap-3">
                         <button type="submit" class="btn-primary text-white px-6 py-2 rounded-lg font-medium">{{ __('facilities.quote.submit_request') }}</button>
-                        <a href="{{ route('public.facilities.show', $facility) }}" class="text-primary-600 hover:text-primary-700">{{ __('facilities.quote.back_to_facility') }}</a>
+                        <a href="{{ route('facility.site.home', $facility->slug ?? $facility->id) }}" class="text-primary-600 hover:text-primary-700">{{ __('facilities.quote.back_to_facility') }}</a>
                     </div>
                 </form>
             </div>

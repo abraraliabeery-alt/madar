@@ -52,6 +52,11 @@ class Category extends Model
         return $this->hasMany(Attribute::class);
     }
 
+    public function productLifecycleStages()
+    {
+        return $this->hasMany(CategoryProductLifecycleStage::class);
+    }
+
     /**
      * Get translation for specific locale
      */

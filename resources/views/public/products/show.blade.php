@@ -38,7 +38,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Main Content -->
-            <div class="lg:col-span-2">
+            <div class="lg:col-span-2 order-2 lg:order-1">
                 <!-- Description Section -->
                 <div class="bg-white rounded-lg shadow-md p-6 mb-8">
                     <h2 class="text-2xl font-bold text-gray-900 mb-4">{{ __('products.show.description') }}</h2>
@@ -208,7 +208,7 @@
             </div>
 
             <!-- Sidebar -->
-            <div class="space-y-6">
+            <div class="space-y-6 order-1 lg:order-2">
                 <!-- Price Card (Amazon Style) -->
                 <div class="bg-white rounded-lg shadow-lg border border-gray-200 p-6">
                     @php
@@ -470,7 +470,7 @@
                         @if($product->facility->address)
                             <p class="text-sm text-gray-600 mb-2"><i class="fas fa-map-marker-alt ml-2"></i>{{ $product->facility->address }}</p>
                         @endif
-                        <a href="{{ route('public.facilities.show', $product->facility) }}"
+                        <a href="{{ route('facility.site.home', $product->facility->slug ?? $product->facility->id) }}"
                            class="text-primary-600 hover:text-primary-700 text-sm font-medium">
                             {{ __('products.show.view_facility') }}
                         </a>
@@ -547,6 +547,28 @@
             </div>
         </div>
     </div>
+
+    {{-- Mobile sticky CTA bar: shows primary actions on small screens only --}}
+    @if($product->facility && $product->activeOffers && $product->activeOffers->count() > 0)
+        <div class="fixed inset-x-0 bottom-0 z-40 bg-white border-t border-gray-200 shadow-lg lg:hidden">
+            <div class="max-w-7xl mx-auto px-4 py-3 flex items-center gap-3">
+                <div class="flex-1">
+                    <a href="{{ route('public.facilities.appointment.form', $product->facility) }}"
+                       class="w-full inline-flex justify-center items-center px-4 py-2.5 rounded-lg bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold text-sm transition-colors">
+                        <i class="fas fa-calendar-check ml-2 text-xs"></i>
+                        {{ __('products.show.book_now') }}
+                    </a>
+                </div>
+                <div class="flex-1">
+                    <a href="{{ route('public.facilities.quote.form', $product->facility) }}"
+                       class="w-full inline-flex justify-center items-center px-4 py-2.5 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-semibold text-sm transition-colors">
+                        <i class="fas fa-quote-left ml-2 text-xs"></i>
+                        {{ __('products.show.request_quote') }}
+                    </a>
+                </div>
+            </div>
+        </div>
+    @endif
 </div>
 
 <!-- Offers Modal -->

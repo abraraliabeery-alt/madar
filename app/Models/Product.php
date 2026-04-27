@@ -25,16 +25,21 @@ class Product extends Model
         'seller_user_id',
         'category_id',
         'city_id',
+        'neighborhood_id',
+        'street_id',
         'status_id',
         'building_id',
         'project_id',
         'package_id',
+        'price',
         'bedrooms',
         'bathrooms',
         'area',
         'floor_number',
         'total_floors',
         'parking_spaces',
+        'available_for_rent',
+        'available_for_sale',
         'views_count',
         'rating',
         'rating_count',
@@ -49,9 +54,12 @@ class Product extends Model
     protected $casts = [
         'is_featured' => 'boolean',
         'is_verified' => 'boolean',
+        'available_for_rent' => 'boolean',
+        'available_for_sale' => 'boolean',
         'latitude' => 'float',
         'longitude' => 'float',
         'area' => 'float',
+        'price' => 'float',
         'image_gallery' => 'array',
         'rating' => 'float',
         'available_from' => 'date',
@@ -82,6 +90,16 @@ class Product extends Model
     public function city()
     {
         return $this->belongsTo(City::class);
+    }
+
+    public function neighborhood()
+    {
+        return $this->belongsTo(Neighborhood::class);
+    }
+
+    public function street()
+    {
+        return $this->belongsTo(Street::class);
     }
 
     public function status()
@@ -392,9 +410,35 @@ class Product extends Model
 
 
 
+    /**
+     * Backward-compatible image accessor.
+     * Uses `image` attribute if explicitly set; otherwise falls back to `main_image`.
+     */
+    public function getImageAttribute()
+    {
+        // If an explicit `image` attribute exists in the model attributes, prefer it
+        if (array_key_exists('image', $this->attributes) && $this->attributes['image']) {
+            return $this->attributes['image'];
+        }
+        // Fallback to main_image
+        return $this->main_image ?? null;
+    }
+
     public function getImageUrlAttribute()
     {
-        return $this->image ? asset('storage/' . $this->image) : asset('images/default-product.jpg');
+        $image = $this->image; // uses accessor above
+        if ($image) {
+            return asset('storage/' . $image);
+        }
+
+        $categoryName = (string) optional($this->category)->name;
+        $isLand = ($this->category_id == 7)
+            || str_contains($categoryName, 'أراضي')
+            || str_contains($categoryName, 'اراضي');
+
+        return $isLand
+            ? 'https://www.abujudom.com/App_File/RealEstate/37914032023015208.PNG'
+            : asset('images/default-product.svg');
     }
 
     // Mutators

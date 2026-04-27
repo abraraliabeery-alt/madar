@@ -6,6 +6,7 @@ use App\Http\Controllers\Client\ClientBookingController;
 use App\Http\Controllers\Client\ClientOfferController;
 use App\Http\Controllers\Client\ClientContractController;
 use App\Http\Controllers\Client\ClientFinancialController;
+use App\Http\Controllers\AI\LandStudyController;
 
 // Client Routes - جميع routes تحتاج middleware client
 Route::group([], function () {
@@ -31,6 +32,12 @@ Route::group([], function () {
     Route::get('/activity/bookings', [ClientController::class, 'bookingActivity'])->name('activity.bookings');
     Route::get('/activity/views', [ClientController::class, 'viewActivity'])->name('activity.views');
     Route::get('/activity/searches', [ClientController::class, 'searchActivity'])->name('activity.searches');
+
+    // Loan Requests (Client-side simple UI)
+    Route::get('/loans/requests', [ClientController::class, 'loanRequests'])->name('loans.requests');
+    Route::post('/loans/requests', [ClientController::class, 'storeLoanRequest'])->name('loans.requests.store');
+    Route::get('/loans/requests/{loanRequest}', [ClientController::class, 'showLoanRequest'])->name('loans.requests.show');
+    Route::post('/loans/requests/{loanRequest}/offers/{offer}/choose', [ClientController::class, 'chooseLoanOffer'])->name('loans.offers.choose');
 
     // Notifications
     Route::get('/notifications', [ClientController::class, 'notifications'])->name('notifications');
@@ -147,5 +154,13 @@ Route::group([], function () {
         
         // Financial Summary and Reports
         Route::get('/summary', [ClientFinancialController::class, 'financialSummary'])->name('summary');
+    });
+
+    // AI Land Studies - always enabled routes (no feature flag on routing)
+    Route::prefix('ai/land-studies')->name('client.ai.land-studies.')->group(function () {
+        Route::get('/', [LandStudyController::class, 'list'])->name('index');
+        Route::get('/new', [LandStudyController::class, 'form'])->name('form');
+        Route::post('/', [LandStudyController::class, 'submit'])->name('submit');
+        Route::get('/{id}', [LandStudyController::class, 'show'])->name('show');
     });
 });

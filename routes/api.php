@@ -36,6 +36,8 @@ use App\Http\Controllers\Api\ApiFacilityBookingController;
 use App\Http\Controllers\Api\ApiFacilityProfileController;
 use App\Http\Controllers\Api\ApiTicketController;
 use App\Http\Controllers\Api\ApiAttributeController;
+use App\Http\Controllers\Api\ApiLoanController;
+use App\Http\Controllers\Api\ApiLocationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,13 +53,16 @@ use App\Http\Controllers\Api\ApiAttributeController;
 // Public API Routes
 Route::prefix('v1')->group(function () {
 
-    // Authentication Routes
+    // Authentication Routes (email/password + phone OTP)
     Route::post('/register', [ApiAuthController::class, 'register']);
     Route::post('/login', [ApiAuthController::class, 'login']);
     Route::post('/forgot-password', [ApiAuthController::class, 'forgotPassword']);
     Route::post('/reset-password', [ApiAuthController::class, 'resetPassword']);
     Route::post('/verify-email', [ApiAuthController::class, 'verifyEmail']);
     Route::post('/resend-verification', [ApiAuthController::class, 'resendVerification']);
+    // Phone-based OTP flow (تجريبي)
+    Route::post('/otp/request', [ApiAuthController::class, 'requestOtp'])->middleware('throttle:otp-request');
+    Route::post('/otp/verify', [ApiAuthController::class, 'verifyOtp'])->middleware('throttle:otp-verify');
 
     // Public Product Routes
     Route::get('/products', [ApiProductController::class, 'index']);
@@ -100,6 +105,10 @@ Route::prefix('v1')->group(function () {
     // Public Attribute Routes
     Route::get('/attributes', [ApiAttributeController::class, 'index']);
     Route::get('/attributes/by-category', [ApiAttributeController::class, 'getByCategory']);
+
+    // Public Location Routes
+    Route::get('/locations/neighborhoods', [ApiLocationController::class, 'neighborhoods']);
+    Route::get('/locations/streets', [ApiLocationController::class, 'streets']);
 
     // Public Search Routes
     Route::get('/search', [ApiSearchController::class, 'globalSearch']);
@@ -245,6 +254,21 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     Route::get('/help/tickets/{ticket}', [ApiTicketController::class, 'show']);
     Route::post('/help/tickets/{ticket}/reply', [ApiTicketController::class, 'reply']);
     Route::delete('/help/tickets/{ticket}', [ApiTicketController::class, 'destroy']);
+
+    // Loan Requests and Offers (Competitive flow like Mrsool)
+    Route::prefix('loan')->group(function () {
+        // Client creates a loan request
+        Route::post('/requests', [ApiLoanController::class, 'storeRequest']);
+
+        // Bank employees actions
+        Route::post('/requests/{loanRequest}/claim', [ApiLoanController::class, 'claim']);
+        Route::post('/requests/{loanRequest}/release', [ApiLoanController::class, 'release']);
+        Route::post('/requests/{loanRequest}/offers', [ApiLoanController::class, 'submitOffer']);
+
+        // Client selects offer and admin assigns advisor
+        Route::post('/requests/{loanRequest}/choose-offer/{offer}', [ApiLoanController::class, 'chooseOffer']);
+        Route::post('/requests/{loanRequest}/assign-advisor', [ApiLoanController::class, 'assignAdvisor']);
+    });
 
     // Rating Routes
     Route::post('/products/{product}/rate', [ApiProductController::class, 'rate']);

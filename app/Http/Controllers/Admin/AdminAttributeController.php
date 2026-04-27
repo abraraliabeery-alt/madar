@@ -65,20 +65,23 @@ class AdminAttributeController extends Controller
             'required' => 'boolean',
             'category_id' => 'nullable|exists:categories,id',
             'icon' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'icon_name' => 'nullable|string|max:255',
             'Symbol' => 'nullable|string|max:255',
             'name' => 'required|string|max:255',
             'symbol' => 'nullable|string|max:255',
         ]);
 
-        $attributeData = $request->except(['icon', 'name', 'symbol']);
+        $attributeData = $request->except(['icon', 'icon_name', 'name', 'symbol']);
 
         // Handle checkbox fields
         $attributeData['required'] = $request->has('required');
 
-        // معالجة الأيقونة
+        // معالجة الأيقونة (صورة مرفوعة أو اسم أيقونة Font Awesome)
         if ($request->hasFile('icon')) {
             $iconPath = $request->file('icon')->store('attributes/icons', 'public');
             $attributeData['icon'] = $iconPath;
+        } elseif ($request->filled('icon_name')) {
+            $attributeData['icon'] = $request->input('icon_name');
         }
 
         $attribute = Attribute::create($attributeData);
@@ -124,14 +127,16 @@ class AdminAttributeController extends Controller
         // Handle checkbox fields
         $attributeData['required'] = $request->has('required');
 
-        // معالجة الأيقونة
+        // معالجة الأيقونة (صورة مرفوعة أو اسم أيقونة Font Awesome)
         if ($request->hasFile('icon')) {
-            // حذف الأيقونة القديمة
-            if ($attribute->icon) {
+            // حذف الأيقونة القديمة إذا كانت صورة
+            if ($attribute->icon && str_contains($attribute->icon, '/')) {
                 Storage::disk('public')->delete($attribute->icon);
             }
             $iconPath = $request->file('icon')->store('attributes/icons', 'public');
             $attributeData['icon'] = $iconPath;
+        } elseif ($request->filled('icon_name')) {
+            $attributeData['icon'] = $request->input('icon_name');
         }
 
         $attribute->update($attributeData);

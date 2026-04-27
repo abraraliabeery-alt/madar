@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Models\Facility;
+use App\Models\Loan;
 use App\Policies\FacilityPolicy;
+use App\Policies\LoanPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -15,6 +17,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         Facility::class => FacilityPolicy::class,
+        Loan::class => LoanPolicy::class,
     ];
 
     /**

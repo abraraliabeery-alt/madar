@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="48" viewBox="0 0 180 48" fill="none">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="180" y2="48" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0a66ff"/>
+      <stop offset="1" stop-color="#5aa0ff"/>
+    </linearGradient>
+  </defs>
+  <rect x="1" y="1" width="178" height="46" rx="10" stroke="url(#g)" stroke-width="2" fill="none"/>
+  <g fill="#0a66ff">
+    <path d="M24 32 L32 16 L40 32 L48 16" stroke="#0a66ff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="58" y="31" font-family="Cairo, Arial, sans-serif" font-weight="700" font-size="16" fill="#0a66ff">Top Level | توب ليفل</text>
+  </g>
+</svg>

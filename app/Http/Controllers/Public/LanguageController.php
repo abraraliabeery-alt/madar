@@ -15,7 +15,7 @@ class LanguageController extends Controller
      */
     public function change($locale)
     {
-        $availableLocales = ['ar', 'en'];
+        $availableLocales = array_keys((array) config('locales.available', []));
 
         if (in_array($locale, $availableLocales)) {
             // Set the application locale

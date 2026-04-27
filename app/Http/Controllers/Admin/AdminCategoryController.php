@@ -270,4 +270,22 @@ class AdminCategoryController extends Controller
 
         return view('admin.categories.statistics', compact('stats'));
     }
+
+    /**
+     * فحص ما إذا كانت الفئة المختارة فئة رئيسية
+     */
+    public function checkParent(Request $request)
+    {
+        $request->validate([
+            'category_id' => 'required|exists:categories,id',
+        ]);
+
+        $category = Category::find($request->category_id);
+
+        return response()->json([
+            'id' => $category->id,
+            'name' => $category->name,
+            'is_main_category' => $category->parent_id === null,
+        ]);
+    }
 }

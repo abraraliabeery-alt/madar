@@ -20,6 +20,25 @@ class OfferService
             // حساب العمولة
             $offer->calculateCommission()->save();
             
+            // ضبط أعلام المنتج حسب نوع العرض (بدون إنشاء جداول جديدة)
+            if ($offer->product) {
+                $isRent = in_array($offer->offer_type, ['rent_daily', 'rent_monthly', 'rent_yearly']);
+                $isSale = $offer->offer_type === 'sale';
+
+                $dirty = false;
+                if ($isRent && !$offer->product->available_for_rent) {
+                    $offer->product->available_for_rent = true;
+                    $dirty = true;
+                }
+                if ($isSale && !$offer->product->available_for_sale) {
+                    $offer->product->available_for_sale = true;
+                    $dirty = true;
+                }
+                if ($dirty) {
+                    $offer->product->save();
+                }
+            }
+
             return $offer;
         });
     }
@@ -35,6 +54,25 @@ class OfferService
             // إعادة حساب العمولة
             $offer->calculateCommission()->save();
             
+            // ضبط أعلام المنتج حسب نوع العرض بعد التحديث
+            if ($offer->product) {
+                $isRent = in_array($offer->offer_type, ['rent_daily', 'rent_monthly', 'rent_yearly']);
+                $isSale = $offer->offer_type === 'sale';
+
+                $dirty = false;
+                if ($isRent && !$offer->product->available_for_rent) {
+                    $offer->product->available_for_rent = true;
+                    $dirty = true;
+                }
+                if ($isSale && !$offer->product->available_for_sale) {
+                    $offer->product->available_for_sale = true;
+                    $dirty = true;
+                }
+                if ($dirty) {
+                    $offer->product->save();
+                }
+            }
+
             return $offer;
         });
     }

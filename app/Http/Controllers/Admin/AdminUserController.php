@@ -92,7 +92,17 @@ class AdminUserController extends Controller
             'youtube' => 'nullable|url',
             'whatsapp_number' => 'nullable|string',
             'telegram' => 'nullable|string',
+            'customer_banks' => 'sometimes|array',
+            'customer_banks.*' => 'exists:banks,id',
         ]);
+
+        // Enforce bank selection if role is bank_employee
+        $role = Role::findOrFail($request->role_id);
+        if ($role && $role->name === 'bank_employee') {
+            $request->validate([
+                'bank_id' => 'required|exists:banks,id',
+            ]);
+        }
 
         $userData = $request->except(['password', 'password_confirmation', 'avatar']);
         $userData['password'] = Hash::make($request->password);
@@ -108,9 +118,20 @@ class AdminUserController extends Controller
         // ربط المستخدم بالدور
         $user->roles()->attach($request->role_id);
 
+        // If role is not bank_employee, ensure bank_id is null
+        if ($role->name !== 'bank_employee' && $user->bank_id) {
+            $user->bank_id = null;
+            $user->save();
+        }
+
         // ربط المستخدم بالمنشأة إذا تم تحديدها
         if ($request->facility_id) {
             $user->facilities()->attach($request->facility_id);
+        }
+
+        // ربط المستخدم كبنك عميل (متعدد)
+        if ($request->has('customer_banks')) {
+            $user->customerBanks()->sync($request->customer_banks);
         }
 
         return redirect()->route('admin.users.index')
@@ -122,7 +143,7 @@ class AdminUserController extends Controller
      */
     public function edit(User $user)
     {
-        $user->load(['roles', 'facilities', 'bank']);
+        $user->load(['roles', 'facilities', 'bank', 'customerBanks']);
         $roles = Role::all();
         $facilities = Facility::all();
         $banks = Bank::all();
@@ -161,6 +182,14 @@ class AdminUserController extends Controller
             'telegram' => 'nullable|string',
         ]);
 
+        // Enforce bank selection if role is bank_employee
+        $role = Role::findOrFail($request->role_id);
+        if ($role && $role->name === 'bank_employee') {
+            $request->validate([
+                'bank_id' => 'required|exists:banks,id',
+            ]);
+        }
+
         $userData = $request->except(['password', 'password_confirmation', 'avatar']);
 
         // تحديث كلمة المرور إذا تم توفيرها
@@ -183,11 +212,26 @@ class AdminUserController extends Controller
         // تحديث الدور
         $user->roles()->sync([$request->role_id]);
 
+        // If role is not bank_employee, nullify bank_id
+        if ($role->name !== 'bank_employee') {
+            if ($user->bank_id) {
+                $user->bank_id = null;
+                $user->save();
+            }
+        }
+
         // تحديث المنشأة
         if ($request->facility_id) {
             $user->facilities()->sync([$request->facility_id]);
         } else {
             $user->facilities()->detach();
+        }
+
+        // تحديث بنوك العميل
+        if ($request->has('customer_banks')) {
+            $user->customerBanks()->sync($request->customer_banks);
+        } else {
+            $user->customerBanks()->sync([]);
         }
 
         return redirect()->route('admin.users.index')

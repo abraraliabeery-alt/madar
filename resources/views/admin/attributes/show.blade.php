@@ -112,7 +112,11 @@
                                 </div>
                                 <div class="card-body text-center">
                                     @if($attribute->icon)
-                                        <img src="{{ asset($attribute->icon) }}" alt="Attribute Icon" class="img-thumbnail" style="max-width: 150px; max-height: 150px;">
+                                        @if(\Illuminate\Support\Str::contains($attribute->icon, 'fa-') || !\Illuminate\Support\Str::contains($attribute->icon, '/'))
+                                            <i class="{{ $attribute->icon }} fa-3x"></i>
+                                        @else
+                                            <img src="{{ asset($attribute->icon) }}" alt="Attribute Icon" class="img-thumbnail" style="max-width: 150px; max-height: 150px;">
+                                        @endif
                                     @else
                                         <div class="text-muted">
                                             <i class="fas fa-image fa-3x"></i>

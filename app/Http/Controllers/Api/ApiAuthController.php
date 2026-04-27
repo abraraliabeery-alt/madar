@@ -7,8 +7,9 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Carbon;
+use App\Services\UnifonicSmsService;
 
 class ApiAuthController extends Controller
 {
@@ -61,6 +62,157 @@ class ApiAuthController extends Controller
                 'token' => $token,
                 'token_type' => 'Bearer'
             ]
+        ]);
+    }
+
+    /**
+     * طلب رمز تحقق عبر رقم الجوال (OTP)
+     */
+    public function requestOtp(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'phone_number' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'بيانات غير صحيحة',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $phone = $request->phone_number;
+
+        // إيجاد أو إنشاء مستخدم مبدئي بناءً على رقم الجوال فقط
+        $user = User::where('phone_number', $phone)->first();
+
+        if (!$user) {
+            $user = User::create([
+                'name' => $phone,
+                'email' => $phone . '@example.local',
+                'phone_number' => $phone,
+                'password' => Hash::make(str()->random(16)),
+            ]);
+        }
+
+        // توليد كود OTP بسيط من 6 أرقام وتخزينه مع وقت انتهاء (مثلاً 5 دقائق)
+        $otp = (string) random_int(100000, 999999);
+
+        $user->otp_code = $otp;
+        $user->otp_expires_at = Carbon::now()->addMinutes(5);
+        $user->save();
+
+        $smsSent = false;
+        $smsError = null;
+        $sms = new UnifonicSmsService();
+        if ($sms->isConfigured()) {
+            $message = "رمز التحقق الخاص بك هو: {$otp}";
+            $sendResult = $sms->send($phone, $message);
+            $smsSent = (bool) ($sendResult['ok'] ?? false);
+            if (!$smsSent) {
+                $smsError = $sendResult;
+            }
+        }
+
+        if ($sms->isConfigured() && !$smsSent) {
+            return response()->json([
+                'success' => false,
+                'message' => 'تعذر إرسال رمز التحقق، حاول لاحقاً',
+                'data' => [
+                    'phone_number' => $phone,
+                ],
+                'sms_error' => app()->environment('local') ? $smsError : null,
+            ], 502);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'تم إرسال رمز التحقق بنجاح',
+            'data' => [
+                'phone_number' => $phone,
+                // في بيئة التطوير يمكن إظهار الكود للاختبار، وفي الإنتاج لا يُعاد
+                'otp' => app()->environment('local') ? $otp : null,
+            ],
+        ]);
+    }
+
+    /**
+     * التحقق من رمز OTP وتسجيل الدخول أو إنشاء مستخدم جديد تلقائياً
+     */
+    public function verifyOtp(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'phone_number' => 'required|string',
+            'otp' => 'required|string',
+            'device_name' => 'nullable|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'بيانات غير صحيحة',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $phone = $request->phone_number;
+        $user = User::where('phone_number', $phone)->first();
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'رقم الجوال غير معروف، الرجاء طلب الكود أولاً',
+            ], 404);
+        }
+
+        // التحقق من الكود المخزن ووقت الانتهاء
+        if (!$user->otp_code || !$user->otp_expires_at) {
+            return response()->json([
+                'success' => false,
+                'message' => 'لا يوجد رمز تحقق فعال، الرجاء طلب كود جديد',
+            ], 400);
+        }
+
+        if ($user->otp_code !== $request->otp) {
+            return response()->json([
+                'success' => false,
+                'message' => 'رمز التحقق غير صحيح',
+            ], 400);
+        }
+
+        if (Carbon::now()->greaterThan($user->otp_expires_at)) {
+            // إلغاء الكود المنتهي
+            $user->otp_code = null;
+            $user->otp_expires_at = null;
+            $user->save();
+
+            return response()->json([
+                'success' => false,
+                'message' => 'انتهت صلاحية رمز التحقق، الرجاء طلب كود جديد',
+            ], 400);
+        }
+
+        // مسح الكود بعد استخدامه واعتبار الهاتف موثّقاً
+        $user->otp_code = null;
+        $user->otp_expires_at = null;
+        $user->phone_verified_at = Carbon::now();
+        $user->last_login_at = Carbon::now();
+        $user->save();
+
+        $deviceName = $request->device_name ?? $request->ip();
+        $token = $user->createToken($deviceName)->plainTextToken;
+
+        $user->load(['roles', 'facilities']);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'تم تسجيل الدخول برقم الجوال بنجاح',
+            'data' => [
+                'user' => $user,
+                'token' => $token,
+                'token_type' => 'Bearer',
+            ],
         ]);
     }
 

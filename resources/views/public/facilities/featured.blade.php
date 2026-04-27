@@ -75,7 +75,7 @@
                         <div class="p-6">
                             <div class="flex items-start justify-between mb-4">
                                 <h3 class="text-xl font-semibold text-gray-900">
-                                    <a href="{{ route('public.facilities.show', $facility) }}" class="hover:text-primary-600 transition-colors">
+                                    <a href="{{ route('facility.site.home', $facility->slug ?? $facility->id) }}" class="hover:text-primary-600 transition-colors">
                                         {{ $facility->name }}
                                     </a>
                                 </h3>
@@ -100,7 +100,7 @@
                             </div>
 
                             <div class="flex items-center justify-between">
-                                <a href="{{ route('public.facilities.show', $facility) }}"
+                                <a href="{{ route('facility.site.home', $facility->slug ?? $facility->id) }}"
                                    class="btn-primary text-white px-4 py-2 rounded-lg text-sm font-medium">
                                     {{ __('facilities.facility_card.view_facility') }}
                                 </a>
@@ -134,7 +134,7 @@
                             <div class="flex-1 p-6">
                                 <div class="flex justify-between items-start mb-3">
                                     <h3 class="text-xl font-semibold text-gray-900">
-                                        <a href="{{ route('public.facilities.show', $facility) }}" class="hover:text-primary-600 transition-colors">
+                                        <a href="{{ route('facility.site.home', $facility->slug ?? $facility->id) }}" class="hover:text-primary-600 transition-colors">
                                             {{ $facility->name }}
                                         </a>
                                     </h3>
@@ -159,7 +159,7 @@
                                 </div>
 
                                 <div class="flex items-center justify-between">
-                                    <a href="{{ route('public.facilities.show', $facility) }}"
+                                    <a href="{{ route('facility.site.home', $facility->slug ?? $facility->id) }}"
                                        class="btn-primary text-white px-4 py-2 rounded-lg text-sm font-medium">
                                         {{ __('facilities.facility_card.view_facility') }}
                                     </a>

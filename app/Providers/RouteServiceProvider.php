@@ -28,6 +28,18 @@ class RouteServiceProvider extends ServiceProvider
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
 
+        RateLimiter::for('otp-request', function (Request $request) {
+            $phone = (string) $request->input('phone_number', '');
+            $key = $phone !== '' ? ('otp-req:' . $phone) : ('otp-req-ip:' . $request->ip());
+            return Limit::perMinute(5)->by($key);
+        });
+
+        RateLimiter::for('otp-verify', function (Request $request) {
+            $phone = (string) $request->input('phone_number', '');
+            $key = $phone !== '' ? ('otp-ver:' . $phone) : ('otp-ver-ip:' . $request->ip());
+            return Limit::perMinute(10)->by($key);
+        });
+
         // Enable route caching in production
         if ($this->app->environment('production')) {
             $this->app->booted(function () {

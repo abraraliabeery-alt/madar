@@ -22,7 +22,6 @@
                             </h5>
                             
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                
                                 <div>
                                     <x-form-select 
                                         name="category_id"
@@ -34,6 +33,29 @@
                                     />
                                 </div>
                             </div>
+
+                            @if(!empty($userOptions))
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                                    <div>
+                                        <x-form-select 
+                                            name="owner_user_id"
+                                            :label="'المالك (اختياري)'"
+                                            :options="$userOptions"
+                                            :selected="$product->owner_user_id"
+                                            :placeholder="'اختر المالك (إن وجد)'"
+                                        />
+                                    </div>
+                                    <div>
+                                        <x-form-select 
+                                            name="seller_user_id"
+                                            :label="'الموظف المسؤول (اختياري)'"
+                                            :options="$userOptions"
+                                            :selected="$product->seller_user_id"
+                                            :placeholder="'اختر الموظف المسؤول'"
+                                        />
+                                    </div>
+                                </div>
+                            @endif
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>

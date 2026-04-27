@@ -20,6 +20,11 @@ class Bank extends Model
         return $this->hasMany(User::class);
     }
 
+    public function customers()
+    {
+        return $this->belongsToMany(User::class, 'bank_customer')->withTimestamps();
+    }
+
     public function loans()
     {
         return $this->hasMany(Loan::class);

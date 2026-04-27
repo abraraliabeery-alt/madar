@@ -54,8 +54,16 @@ class SearchController extends Controller
         }
 
         // فلترة حسب الفئة
-        if ($request->has('category_id') && $request->category_id) {
+        // المنتجات تستخدم category_id. نحافظ على التوافق: إذا تم إرسال facility_category_id نستخدمه أيضًا.
+        if ($request->filled('category_id')) {
             $query->where('category_id', $request->category_id);
+        } elseif ($request->filled('facility_category_id')) {
+            $query->where('facility_category_id', $request->facility_category_id);
+        }
+
+        // فلترة حسب العنوان/الحي (موجود في صفحة البحث المتقدم)
+        if ($request->filled('address')) {
+            $query->where('address', 'like', '%' . $request->address . '%');
         }
 
         // فلترة حسب السعر
@@ -339,7 +347,7 @@ class SearchController extends Controller
                         'name' => $facility->name,
                         'address' => $facility->address,
                         'image' => $facility->logo,
-                        'url' => route('facilities.show', $facility->id),
+                        'url' => route('public.facilities.show', $facility->id),
                         'type' => 'facility'
                     ];
                 });
@@ -364,7 +372,7 @@ class SearchController extends Controller
                         'address' => $product->address,
                         'price' => $product->price,
                         'image' => $product->image,
-                        'url' => route('products.show', $product->id),
+                        'url' => route('public.products.show', $product->id),
                         'type' => 'product'
                     ];
                 });

@@ -111,6 +111,11 @@ class Contract extends Model
         return $this->hasMany(Payment::class);
     }
 
+    public function commissions()
+    {
+        return $this->hasMany(CommissionParty::class);
+    }
+
     public function accountingEntries()
     {
         return $this->hasMany(AccountingEntry::class);
@@ -158,6 +163,11 @@ class Contract extends Model
     public function getFormattedCommissionAmountAttribute()
     {
         return number_format($this->commission_amount, 2) . ' ريال';
+    }
+
+    public function getTotalCommissionsAmountAttribute()
+    {
+        return $this->commissions()->sum('calculated_amount');
     }
 
     // Methods

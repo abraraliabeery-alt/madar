@@ -23,9 +23,9 @@ class FacilityCategorySeeder extends Seeder
                 'order' => 1,
             ],
             [
-                'name' => 'شركات عقارات',
-                'display_name' => 'شركات العقارات',
-                'description' => 'شركات بيع وشراء وإدارة العقارات',
+                'name' => 'شركات مقاولات',
+                'display_name' => 'شركات المقاولات',
+                'description' => 'شركات المقاولات والتنفيذ والتشطيبات والإشراف',
                 'icon' => 'fas fa-building',
                 'is_active' => true,
                 'is_featured' => true,

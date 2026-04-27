@@ -7,6 +7,7 @@ use App\Models\Facility;
 use App\Models\Category;
 use App\Models\FacilityCategory;
 use App\Models\Product;
+use App\Models\ExecutionRequest;
 use App\Helpers\FacilityHelper;
 use Illuminate\Http\Request;
 
@@ -112,11 +113,14 @@ class FacilityController extends Controller
 
         $facility->load(['facilityCategory', 'owner']);
 
-        // منتجات المنشأة
-        $products = $facility->products()
-            ->with(['category', 'statuses'])
-            ->where('is_active', true)
-            ->where('is_verified', true)
+        // طلبات التنفيذ الخاصة بالمنشأة (تعكس سياق المقاولات/التنفيذ)
+        $executionRequestsQuery = ExecutionRequest::query()
+            ->where('facility_id', $facility->id);
+
+        $executionRequestsCount = (int) (clone $executionRequestsQuery)->count();
+        $executionRequests = (clone $executionRequestsQuery)
+            ->with(['translations'])
+            ->latest()
             ->take(8)
             ->get();
 
@@ -130,7 +134,7 @@ class FacilityController extends Controller
             ->get();
         $facility_raw = $facility;
 
-        return view('public.facilities.show', compact('facility', 'facility_raw', 'products', 'similarFacilities'));
+        return view('public.facilities.show', compact('facility', 'facility_raw', 'executionRequests', 'executionRequestsCount', 'similarFacilities'));
     }
 
     /**

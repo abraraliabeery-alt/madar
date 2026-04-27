@@ -200,7 +200,7 @@
                                 @endif
 
                                 <div class="flex space-x-2 space-x-reverse">
-                                    <a href="{{ route('public.facilities.show', $facility) }}" 
+                                    <a href="{{ route('facility.site.home', $facility->slug ?? $facility->id) }}" 
                                        class="flex-1 bg-primary-600 text-white text-center py-2 px-4 rounded-md hover:bg-primary-700 transition-colors text-sm">
                                         {{ __('client.favorites.view_facility') }}
                                     </a>

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ config('app.name') }} - لوحة التحكم</title>
+    <title>لوحة التحكم</title>
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -653,7 +653,7 @@
                 </a>
                 <a href="{{ route('admin.products.index') }}" class="nav-link {{ request()->routeIs('admin.products.*') ? 'active' : '' }}">
                     <i class="fas fa-box"></i>
-                    <span>المنتجات</span>
+                    <span>العقارات</span>
                 </a>
                 <a href="{{ route('admin.bookings.index') }}" class="nav-link {{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}">
                     <i class="fas fa-calendar-check"></i>
@@ -697,7 +697,7 @@
             <div class="navbar-tools">
                 <!-- Search -->
                 <div class="search-box position-relative">
-                    <input type="text" class="form-control" id="globalSearch" placeholder="بحث في المستخدمين، المنشآت، المنتجات..." autocomplete="off">
+                    <input type="text" class="form-control" id="globalSearch" placeholder="بحث في المستخدمين، المنشآت، العقارات..." autocomplete="off">
                     <i class="fas fa-search"></i>
                     
                     <!-- Search Results Dropdown -->
@@ -734,7 +734,7 @@
                             <i class="fas fa-question-circle ms-2"></i>سؤال جديد
                         </a>
                         <a href="{{ route('admin.products.create') }}" class="dropdown-item">
-                            <i class="fas fa-box-open ms-2"></i>منتج جديد
+                            <i class="fas fa-box-open ms-2"></i>عقار جديد
                         </a>
                         <a href="{{ route('admin.bookings.create') }}" class="dropdown-item">
                             <i class="fas fa-calendar-plus ms-2"></i>حجز جديد

@@ -177,9 +177,13 @@
                                 </a>
                             </td>
                             <td class="d-none d-lg-table-cell">
-                                <a href="{{ route('admin.facilities.show', $booking->facility) }}">
-                                    {{ $booking->facility->name }}
-                                </a>
+                                @if($booking->facility)
+                                    <a href="{{ route('admin.facilities.show', $booking->facility) }}">
+                                        {{ $booking->facility->name }}
+                                    </a>
+                                @else
+                                    <span class="text-muted">-</span>
+                                @endif
                             </td>
                             <td class="d-none d-md-table-cell">{{ $booking->booking_date }}</td>
                             <td class="d-none d-md-table-cell">{{ $booking->booking_time }}</td>
@@ -398,9 +402,14 @@ $(document).ready(function() {
     });
 
     // Initialize select2
-    $('.form-select').select2({
-        theme: 'bootstrap-5',
-        width: '100%'
+    $('.form-select').each(function () {
+        $(this).select2({
+            theme: 'bootstrap-5',
+            width: '100%',
+            dir: 'rtl',
+            dropdownAutoWidth: true,
+            dropdownParent: $(this).parent()
+        });
     });
 
     // Delete confirmation

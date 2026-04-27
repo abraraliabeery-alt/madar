@@ -78,29 +78,29 @@ class PermissionSeeder extends Seeder
             [
                 'name' => 'products.view',
                 'translations' => [
-                    'ar' => ['name' => 'products.view', 'display_name' => 'عرض المنتجات'],
+                    'ar' => ['name' => 'products.view', 'display_name' => 'عرض المشاريع'],
                     'en' => ['name' => 'products.view', 'display_name' => 'View Products'],
                 ]
             ],
             [
                 'name' => 'products.create',
                 'translations' => [
-                    'ar' => ['name' => 'products.create', 'display_name' => 'إنشاء منتج'],
-                    'en' => ['name' => 'products.create', 'display_name' => 'Create Product'],
+                    'ar' => ['name' => 'products.create', 'display_name' => 'إنشاء مشروع/طلب تنفيذ'],
+                    'en' => ['name' => 'products.create', 'display_name' => 'Create Project/Request'],
                 ]
             ],
             [
                 'name' => 'products.edit',
                 'translations' => [
-                    'ar' => ['name' => 'products.edit', 'display_name' => 'تعديل منتج'],
-                    'en' => ['name' => 'products.edit', 'display_name' => 'Edit Product'],
+                    'ar' => ['name' => 'products.edit', 'display_name' => 'تعديل مشروع/طلب تنفيذ'],
+                    'en' => ['name' => 'products.edit', 'display_name' => 'Edit Project/Request'],
                 ]
             ],
             [
                 'name' => 'products.delete',
                 'translations' => [
-                    'ar' => ['name' => 'products.delete', 'display_name' => 'حذف منتج'],
-                    'en' => ['name' => 'products.delete', 'display_name' => 'Delete Product'],
+                    'ar' => ['name' => 'products.delete', 'display_name' => 'حذف مشروع/طلب تنفيذ'],
+                    'en' => ['name' => 'products.delete', 'display_name' => 'Delete Project/Request'],
                 ]
             ],
 
@@ -108,29 +108,29 @@ class PermissionSeeder extends Seeder
             [
                 'name' => 'bookings.view',
                 'translations' => [
-                    'ar' => ['name' => 'bookings.view', 'display_name' => 'عرض الحجوزات'],
-                    'en' => ['name' => 'bookings.view', 'display_name' => 'View Bookings'],
+                    'ar' => ['name' => 'bookings.view', 'display_name' => 'عرض الطلبات/المواعيد'],
+                    'en' => ['name' => 'bookings.view', 'display_name' => 'View Requests/Appointments'],
                 ]
             ],
             [
                 'name' => 'bookings.create',
                 'translations' => [
-                    'ar' => ['name' => 'bookings.create', 'display_name' => 'إنشاء حجز'],
-                    'en' => ['name' => 'bookings.create', 'display_name' => 'Create Booking'],
+                    'ar' => ['name' => 'bookings.create', 'display_name' => 'إنشاء طلب/موعد'],
+                    'en' => ['name' => 'bookings.create', 'display_name' => 'Create Request/Appointment'],
                 ]
             ],
             [
                 'name' => 'bookings.edit',
                 'translations' => [
-                    'ar' => ['name' => 'bookings.edit', 'display_name' => 'تعديل حجز'],
-                    'en' => ['name' => 'bookings.edit', 'display_name' => 'Edit Booking'],
+                    'ar' => ['name' => 'bookings.edit', 'display_name' => 'تعديل طلب/موعد'],
+                    'en' => ['name' => 'bookings.edit', 'display_name' => 'Edit Request/Appointment'],
                 ]
             ],
             [
                 'name' => 'bookings.delete',
                 'translations' => [
-                    'ar' => ['name' => 'bookings.delete', 'display_name' => 'حذف حجز'],
-                    'en' => ['name' => 'bookings.delete', 'display_name' => 'Delete Booking'],
+                    'ar' => ['name' => 'bookings.delete', 'display_name' => 'حذف طلب/موعد'],
+                    'en' => ['name' => 'bookings.delete', 'display_name' => 'Delete Request/Appointment'],
                 ]
             ],
 

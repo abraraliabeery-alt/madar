@@ -13,16 +13,16 @@
             <div class="mb-6">
                 <h3 class="text-xl font-semibold text-gray-800 mb-4">{{ __('public.search.search_type') }}</h3>
                 <div class="flex space-x-4">
-                    <label class="flex items-center">
+                    <label class="flex items-center gap-2 rtl:flex-row-reverse">
                         <input type="radio" name="search_type" value="products" 
                                {{ request('search_type', 'products') == 'products' ? 'checked' : '' }}
-                               class="mr-2 text-blue-600 focus:ring-blue-500" onchange="updateFormAction()">
+                               class="text-blue-600 focus:ring-blue-500" onchange="updateFormAction()">
                         <span class="text-sm font-medium text-gray-700">{{ __('public.navigation.products') }}</span>
                     </label>
-                    <label class="flex items-center">
+                    <label class="flex items-center gap-2 rtl:flex-row-reverse">
                         <input type="radio" name="search_type" value="facilities" 
                                {{ request('search_type') == 'facilities' ? 'checked' : '' }}
-                               class="mr-2 text-blue-600 focus:ring-blue-500" onchange="updateFormAction()">
+                               class="text-blue-600 focus:ring-blue-500" onchange="updateFormAction()">
                         <span class="text-sm font-medium text-gray-700">{{ __('public.navigation.facilities') }}</span>
                     </label>
                 </div>
@@ -113,26 +113,26 @@
                     <h3 class="text-xl font-semibold text-gray-800 mb-4">{{ __('public.advanced_search.property_type') }}</h3>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div>
-                            <label class="flex items-center">
+                            <label class="flex items-center gap-2 rtl:flex-row-reverse">
                                 <input type="radio" name="property_type" value="sale" 
                                        {{ request('property_type') == 'sale' ? 'checked' : '' }}
-                                       class="mr-2 text-blue-600 focus:ring-blue-500">
+                                       class="text-blue-600 focus:ring-blue-500">
                                 <span class="text-sm font-medium text-gray-700">{{ __('public.advanced_search.for_sale') }}</span>
                             </label>
                         </div>
                         <div>
-                            <label class="flex items-center">
+                            <label class="flex items-center gap-2 rtl:flex-row-reverse">
                                 <input type="radio" name="property_type" value="rent" 
                                        {{ request('property_type') == 'rent' ? 'checked' : '' }}
-                                       class="mr-2 text-blue-600 focus:ring-blue-500">
+                                       class="text-blue-600 focus:ring-blue-500">
                                 <span class="text-sm font-medium text-gray-700">{{ __('public.advanced_search.for_rent') }}</span>
                             </label>
                         </div>
                         <div>
-                            <label class="flex items-center">
+                            <label class="flex items-center gap-2 rtl:flex-row-reverse">
                                 <input type="radio" name="property_type" value="" 
                                        {{ !request('property_type') ? 'checked' : '' }}
-                                       class="mr-2 text-blue-600 focus:ring-blue-500">
+                                       class="text-blue-600 focus:ring-blue-500">
                                 <span class="text-sm font-medium text-gray-700">{{ __('public.advanced_search.both') }}</span>
                             </label>
                         </div>
@@ -161,23 +161,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Features -->
-                @if($features->count() > 0)
-                <div class="mb-8">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-4">{{ __('public.advanced_search.features') }}</h3>
-                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                        @foreach($features as $feature)
-                        <label class="flex items-center">
-                            <input type="checkbox" name="features[]" value="{{ $feature->id }}" 
-                                   {{ in_array($feature->id, (array) request('features', [])) ? 'checked' : '' }}
-                                   class="mr-2 text-blue-600 focus:ring-blue-500 rounded">
-                            <span class="text-sm text-gray-700">{{ $feature->name }}</span>
-                        </label>
-                        @endforeach
-                    </div>
-                </div>
-                @endif
 
                 <!-- Location -->
                 <div class="mb-8">

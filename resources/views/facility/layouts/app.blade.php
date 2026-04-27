@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ config('app.name', 'عقار') }} - @yield('title', 'لوحة تحكم المنشأة')</title>
+    <title>{{ config('app.name', 'ألف (أ)') }} - @yield('title', 'لوحة تحكم المنشأة')</title>
 
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;600;700;800;900&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -17,6 +17,7 @@
                 extend: {
                     fontFamily: {
                         'cairo': ['Cairo', 'sans-serif'],
+                        'tajawal': ['Tajawal', 'Segoe UI', 'Tahoma', 'Arial', 'sans-serif'],
                     },
                     colors: {
                         primary: {
@@ -48,7 +49,7 @@
 
     <style>
         body {
-            font-family: 'Cairo', sans-serif;
+            font-family: 'Tajawal', 'Cairo', 'Segoe UI', Tahoma, Arial, sans-serif;
         }
         
         /* Custom styles for components that need specific styling */
@@ -98,9 +99,28 @@
         .note-editor:focus-within {
             @apply border-primary-500 ring-2 ring-primary-200;
         }
+
+        /* Dark mode (facility) */
+        html[data-theme="dark"] body {
+            background-color: #111827;
+            color: #e5e7eb;
+        }
+        html[data-theme="dark"] .bg-white { background-color: #1f2937 !important; }
+        html[data-theme="dark"] .text-gray-900 { color: #e5e7eb !important; }
+        html[data-theme="dark"] .text-gray-700,
+        html[data-theme="dark"] .text-gray-600 { color: #d1d5db !important; }
+        html[data-theme="dark"] .border-gray-200 { border-color: #374151 !important; }
+        html[data-theme="dark"] .bg-gray-50 { background-color: #0f172a !important; }
+        html[data-theme="dark"] .hover\:bg-gray-100:hover { background-color: #374151 !important; }
+        html[data-theme="dark"] .sidebar-gradient { background: linear-gradient(135deg, #1f2937 0%, #111827 100%); }
+
+        /* Global icon spacing */
+        i.fa, i.fas, i.far, i.fal, i.fab, i.fad {
+            margin-inline: 0.25rem;
+        }
     </style>
 </head>
-<body class="font-cairo bg-gray-50">
+<body class="font-tajawal bg-gray-50">
     <div class="flex">
         <!-- Sidebar -->
         <nav class="sidebar-gradient fixed top-0 right-0 w-72 h-screen z-50 transition-all duration-300 ease-in-out md:translate-x-0 translate-x-full" id="sidebar">
@@ -111,68 +131,170 @@
                 </a>
             </div>
             
+            @php
+                $sidebarUser = auth()->user();
+                $sidebarFacility = $sidebarUser->facilities()->first();
+            @endphp
+
             <div class="py-4 h-screen overflow-y-auto" style="height: calc(100vh - 80px);">
                 <ul class="flex flex-col">
+                    <!-- Essentials -->
+                    <li class="px-6 pt-1 pb-2 text-white text-opacity-70 text-xs uppercase tracking-wider">
+                        الأساسيات
+                    </li>
                     <li>
-                        <a href="{{ route('facility.dashboard') }}" class="flex items-center px-6 py-3 text-white text-opacity-80 hover:text-white hover:bg-white hover:bg-opacity-10 transition-all duration-300 {{ request()->routeIs('facility.dashboard') ? 'bg-white bg-opacity-20 border-l-4 border-white' : '' }}">
+                        <a href="{{ route('facility.dashboard') }}" class="flex items-center px-6 py-2.5 md:py-3 text-white text-opacity-80 hover:text-white hover:bg-white hover:bg-opacity-10 transition-all duration-300 {{ request()->routeIs('facility.dashboard') ? 'bg-white bg-opacity-20 border-l-4 border-white' : '' }}">
                             <i class="fas fa-home w-5 text-center"></i>
                             <span class="mr-3">لوحة التحكم</span>
                         </a>
                     </li>
-                    
+                    @if(config('features.facility_home_v2'))
                     <li>
-                        <a href="{{ route('facility.products.index') }}" class="flex items-center px-6 py-3 text-white text-opacity-80 hover:text-white hover:bg-white hover:bg-opacity-10 transition-all duration-300 {{ request()->routeIs('facility.products.*') ? 'bg-white bg-opacity-20 border-l-4 border-white' : '' }}">
-                            <i class="fas fa-box w-5 text-center"></i>
-                            <span class="mr-3">المنتجات</span>
+                        <a href="{{ route('facility.home-v2') }}" class="flex items-center px-6 py-2.5 md:py-3 text-white text-opacity-80 hover:text-white hover:bg-white hover:bg-opacity-10 transition-all duration-300 {{ request()->routeIs('facility.home-v2') ? 'bg-white bg-opacity-20 border-l-4 border-white' : '' }}">
+                            <i class="fas fa-gauge-high w-5 text-center"></i>
+                            <span class="mr-3 flex items-center gap-2">
+                                لوحة متقدمة
+                                <span class="px-2 py-0.5 rounded-full text-[10px] bg-yellow-400 text-gray-900">تجريبية</span>
+                            </span>
                         </a>
                     </li>
+                    @endif
                     
                     <li>
-                        <a href="{{ route('facility.offers.index') }}" class="flex items-center px-6 py-3 text-white text-opacity-80 hover:text-white hover:bg-white hover:bg-opacity-10 transition-all duration-300 {{ request()->routeIs('facility.offers.*') ? 'bg-white bg-opacity-20 border-l-4 border-white' : '' }}">
-                            <i class="fas fa-tags w-5 text-center"></i>
-                            <span class="mr-3">العروض</span>
+                        <a href="{{ route('facility.projects.index') }}" class="flex items-center px-6 py-2.5 md:py-3 text-white text-opacity-80 hover:text-white hover:bg-white hover:bg-opacity-10 transition-all duration-300 {{ request()->routeIs('facility.projects.*') ? 'bg-white bg-opacity-20 border-l-4 border-white' : '' }}">
+                            <i class="fas fa-diagram-project w-5 text-center"></i>
+                            <span class="mr-3 flex items-center gap-2">
+                                المشاريع
+                            </span>
                         </a>
                     </li>
-                    
+
                     <li>
-                        <a href="{{ route('facility.contracts.index') }}" class="flex items-center px-6 py-3 text-white text-opacity-80 hover:text-white hover:bg-white hover:bg-opacity-10 transition-all duration-300 {{ request()->routeIs('facility.contracts.*') ? 'bg-white bg-opacity-20 border-l-4 border-white' : '' }}">
-                            <i class="fas fa-file-contract w-5 text-center"></i>
-                            <span class="mr-3">العقود</span>
+                        <a href="{{ route('facility.execution-requests.workspace') }}" class="flex items-center px-6 py-2.5 md:py-3 text-white text-opacity-80 hover:text-white hover:bg-white hover:bg-opacity-10 transition-all duration-300 {{ request()->routeIs('facility.execution-requests.*') ? 'bg-white bg-opacity-20 border-l-4 border-white' : '' }}">
+                            <i class="fas fa-gavel w-5 text-center"></i>
+                            <span class="mr-3 flex items-center gap-2">
+                                طلبات التنفيذ
+                            </span>
                         </a>
                     </li>
-                    
                     <li>
-                        <a href="{{ route('facility.invoices.index') }}" class="flex items-center px-6 py-3 text-white text-opacity-80 hover:text-white hover:bg-white hover:bg-opacity-10 transition-all duration-300 {{ request()->routeIs('facility.invoices.*') ? 'bg-white bg-opacity-20 border-l-4 border-white' : '' }}">
-                            <i class="fas fa-file-invoice w-5 text-center"></i>
-                            <span class="mr-3">الفواتير</span>
+                        <a href="{{ route('facility.tasks.index') }}" class="flex items-center px-6 py-3 text-white text-opacity-80 hover:text-white hover:bg-white hover:bg-opacity-10 transition-all duration-300 {{ request()->routeIs('facility.tasks.*') ? 'bg-white bg-opacity-20 border-l-4 border-white' : '' }}">
+                            <i class="fas fa-list-check w-5 text-center"></i>
+                            <span class="mr-3">المهام</span>
                         </a>
                     </li>
-                    
-                    <li>
-                        <a href="{{ route('facility.payments.index') }}" class="flex items-center px-6 py-3 text-white text-opacity-80 hover:text-white hover:bg-white hover:bg-opacity-10 transition-all duration-300 {{ request()->routeIs('facility.payments.*') ? 'bg-white bg-opacity-20 border-l-4 border-white' : '' }}">
-                            <i class="fas fa-credit-card w-5 text-center"></i>
-                            <span class="mr-3">المدفوعات</span>
-                        </a>
+                    <li class="px-6 my-3"><div class="h-px bg-white bg-opacity-10"></div></li>
+
+                    <!-- Finance -->
+                    <li class="px-6 pt-4 pb-2 text-white text-opacity-70 text-xs uppercase tracking-wider flex items-center justify-between cursor-pointer" data-section-toggle="finance">
+                        <span class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-emerald-300"></span>
+                            المالية
+                        </span>
+                        <i class="fas fa-chevron-down text-[10px] opacity-70"></i>
                     </li>
-                    
-                    <li>
-                        <a href="{{ route('facility.accounting.dashboard') }}" class="flex items-center px-6 py-3 text-white text-opacity-80 hover:text-white hover:bg-white hover:bg-opacity-10 transition-all duration-300 {{ request()->routeIs('facility.accounting.*') ? 'bg-white bg-opacity-20 border-l-4 border-white' : '' }}">
+                    <li data-section="finance">
+                        <a href="{{ route('facility.accounting.dashboard') }}" class="flex items-center px-6 py-2.5 md:py-3 text-white text-opacity-80 hover:text-white hover:bg-white hover:bg-opacity-10 transition-all duration-300 {{ request()->routeIs('facility.accounting.*') ? 'bg-white bg-opacity-20 border-l-4 border-white' : '' }}">
                             <i class="fas fa-calculator w-5 text-center"></i>
                             <span class="mr-3">المحاسبة</span>
                         </a>
                     </li>
+
+                    <li data-section="finance">
+                        <a href="{{ route('facility.financial.dashboard') }}" class="flex items-center px-6 py-2.5 md:py-3 text-white text-opacity-80 hover:text-white hover:bg-white hover:bg-opacity-10 transition-all duration-300 {{ request()->routeIs('facility.financial.*') ? 'bg-white bg-opacity-20 border-l-4 border-white' : '' }}">
+                            <i class="fas fa-coins w-5 text-center"></i>
+                            <span class="mr-3">النظام المالي</span>
+                        </a>
+                    </li>
                     
-                    <li>
-                        <a href="{{ route('facility.users.index') }}" class="flex items-center px-6 py-3 text-white text-opacity-80 hover:text-white hover:bg-white hover:bg-opacity-10 transition-all duration-300 {{ request()->routeIs('facility.users.*') ? 'bg-white bg-opacity-20 border-l-4 border-white' : '' }}">
+                    <li class="px-6 my-3"><div class="h-px bg-white bg-opacity-10"></div></li>
+
+                    <!-- Facility & Users -->
+                    <li class="px-6 pt-4 pb-2 text-white text-opacity-70 text-xs uppercase tracking-wider flex items-center justify-between cursor-pointer" data-section-toggle="facility-users">
+                        <span class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-sky-300"></span>
+                            المنشأة والمستخدمون
+                        </span>
+                        <i class="fas fa-chevron-down text-[10px] opacity-70"></i>
+                    </li>
+                    <li data-section="facility-users">
+                        <a href="{{ route('facility.banks.index') }}" class="flex items-center px-6 py-2.5 md:py-3 text-white text-opacity-80 hover:text-white hover:bg-white hover:bg-opacity-10 transition-all duration-300 {{ request()->routeIs('facility.banks.index') ? 'bg-white bg-opacity-20 border-l-4 border-white' : '' }}">
+                            <i class="fas fa-building-columns w-5 text-center"></i>
+                            <span class="mr-3">البنوك</span>
+                        </a>
+                    </li>
+                    <li data-section="facility-users">
+                        <a href="{{ route('facility.appointments.index') }}" class="flex items-center px-6 py-2.5 md:py-3 text-white text-opacity-80 hover:text-white hover:bg-white hover:bg-opacity-10 transition-all duration-300 {{ request()->routeIs('facility.appointments.*') ? 'bg-white bg-opacity-20 border-l-4 border-white' : '' }}">
+                            <i class="fas fa-calendar-alt w-5 text-center"></i>
+                            <span class="mr-3">المواعيد</span>
+                        </a>
+                    </li>
+                    
+                    <li data-section="facility-users">
+                        <a href="{{ route('facility.users.employee-dashboard') }}" class="flex items-center px-6 py-2.5 md:py-3 text-white text-opacity-80 hover:text-white hover:bg-white hover:bg-opacity-10 transition-all duration-300 {{ request()->routeIs('facility.users.employee-dashboard') ? 'bg-white bg-opacity-20 border-l-4 border-white' : '' }}">
+                            <i class="fas fa-user-tie w-5 text-center"></i>
+                            <span class="mr-3 flex items-center gap-2">
+                                لوحة الموظف
+                            </span>
+                        </a>
+                    </li>
+
+                    <li data-section="facility-users">
+                        <a href="{{ route('facility.users.index') }}" class="flex items-center px-6 py-2.5 md:py-3 text-white text-opacity-80 hover:text-white hover:bg-white hover:bg-opacity-10 transition-all duration-300 {{ request()->routeIs('facility.users.*') ? 'bg-white bg-opacity-20 border-l-4 border-white' : '' }}">
                             <i class="fas fa-users w-5 text-center"></i>
                             <span class="mr-3">المستخدمين</span>
                         </a>
                     </li>
                     
-                    <li>
-                        <a href="{{ route('facility.edit') }}" class="flex items-center px-6 py-3 text-white text-opacity-80 hover:text-white hover:bg-white hover:bg-opacity-10 transition-all duration-300 {{ request()->routeIs('facility.edit') ? 'bg-white bg-opacity-20 border-l-4 border-white' : '' }}">
+                    <li data-section="facility-users">
+                        <a href="{{ route('facility.edit') }}" class="flex items-center px-6 py-2.5 md:py-3 text-white text-opacity-80 hover:text-white hover:bg-white hover:bg-opacity-10 transition-all duration-300 {{ request()->routeIs('facility.edit') ? 'bg-white bg-opacity-20 border-l-4 border-white' : '' }}">
                             <i class="fas fa-cog w-5 text-center"></i>
                             <span class="mr-3">الإعدادات</span>
+                        </a>
+                    </li>
+
+                    <li data-section="facility-users">
+                        <a href="{{ route('facility.notifications') }}" class="flex items-center px-6 py-2.5 md:py-3 text-white text-opacity-80 hover:text-white hover:bg-white hover:bg-opacity-10 transition-all duration-300 {{ request()->routeIs('facility.notifications') ? 'bg-white bg-opacity-20 border-l-4 border-white' : '' }}">
+                            <i class="fas fa-bell w-5 text-center"></i>
+                            <span class="mr-3">الإشعارات والتواصل</span>
+                        </a>
+                    </li>
+                    
+                    <li class="px-6 my-3"><div class="h-px bg-white bg-opacity-10"></div></li>
+
+                    <!-- Reports -->
+                    <li class="px-6 pt-4 pb-2 text-white text-opacity-70 text-xs uppercase tracking-wider flex items-center justify-between cursor-pointer" data-section-toggle="reports">
+                        <span class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-pink-300"></span>
+                            التقارير والتحليلات
+                        </span>
+                        <i class="fas fa-chevron-down text-[10px] opacity-70"></i>
+                    </li>
+                    <li data-section="reports">
+                        <a href="{{ route('facility.reports') }}" class="flex items-center px-6 py-2.5 md:py-3 text-white text-opacity-80 hover:text-white hover:bg-white hover:bg-opacity-10 transition-all duration-300 {{ request()->routeIs('facility.reports*') ? 'bg-white bg-opacity-20 border-l-4 border-white' : '' }}">
+                            <i class="fas fa-chart-bar w-5 text-center"></i>
+                            <span class="mr-3">التقارير</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ route('facility.profile') }}" class="flex items-center px-6 py-3 text-white text-opacity-80 hover:text-white hover:bg-white hover:bg-opacity-10 transition-all duration-300 {{ request()->routeIs('facility.profile') ? 'bg-white bg-opacity-20 border-l-4 border-white' : '' }}">
+                            <i class="fas fa-id-card w-5 text-center"></i>
+                            <span class="mr-3">الملف التعريفي</span>
+                        </a>
+                    </li>
+
+                    @php($currentFacility = auth()->user()->facilities()->first())
+                    <li>
+                        <a href="{{ $currentFacility ? route('facility.customization.edit', $currentFacility) : route('facility.dashboard') }}" class="flex items-center px-6 py-3 text-white text-opacity-80 hover:text-white hover:bg-white hover:bg-opacity-10 transition-all duration-300">
+                            <i class="fas fa-wand-magic-sparkles w-5 text-center"></i>
+                            <span class="mr-3">تخصيص الموقع</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ $currentFacility ? route('public.facility.site.home', $currentFacility->slug ?? $currentFacility->id) : route('facility.dashboard') }}" target="_blank" class="flex items-center px-6 py-3 text-white text-opacity-80 hover:text-white hover:bg-white hover:bg-opacity-10 transition-all duration-300">
+                            <i class="fas fa-external-link-alt w-5 text-center"></i>
+                            <span class="mr-3">معاينة الموقع</span>
                         </a>
                     </li>
                 </ul>
@@ -192,14 +314,48 @@
                             <h4 class="text-gray-800 font-semibold mb-0">@yield('title', 'لوحة تحكم المنشأة')</h4>
                             <nav aria-label="breadcrumb">
                                 <ol class="flex items-center space-x-2 space-x-reverse mb-0">
-                                    <li><a href="{{ route('facility.dashboard') }}" class="text-primary-600 hover:text-primary-800 no-underline">الرئيسية</a></li>
+                                    <li><a href="{{ route('facility.dashboard') }}" class="text-primary-600 hover:text-primary-800 no-underline">
+الرئيسية</a></li>
                                     @yield('breadcrumbs')
                                 </ol>
                             </nav>
+                            @php($headerFacility = auth()->user()->facilities()->first())
+                            @if($headerFacility)
+                                <div class="mt-1 flex flex-wrap items-center gap-2 text-xs text-gray-500">
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full bg-gray-100 text-gray-700">
+                                        <i class="fas fa-building ml-1 text-[10px]"></i>
+                                        {{ $headerFacility->name ?? 'منشأة بدون اسم' }}
+                                    </span>
+                                    @if($headerFacility->status)
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 ml-1"></span>
+                                            <i class="{{ $headerFacility->status->icon_class }} ml-1 text-[10px]"></i>
+                                            {{ $headerFacility->status->getTranslatedName() }}
+                                        </span>
+                                    @elseif(!empty($headerFacility->is_active))
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 ml-1"></span>
+                                            منشأة نشطة
+                                        </span>
+                                    @endif
+                                    <a href="{{ route('facility.edit') }}" class="inline-flex items-center px-2.5 py-1 rounded-full bg-white border border-gray-200 text-gray-600 hover:bg-gray-50">
+                                        <i class="fas fa-sliders-h ml-1 text-[10px]"></i>
+                                        إعدادات المنشأة
+                                    </a>
+                                </div>
+                            @endif
                         </div>
                     </div>
                     
                     <div class="flex items-center space-x-3 space-x-reverse">
+                        <!-- Theme Toggle -->
+                        <button class="flex items-center justify-center w-9 h-9 rounded-full border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-600 hover:text-gray-900 shadow-sm transition-colors" id="admin-theme-toggle" type="button" title="تبديل الوضع الليلي/النهاري">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                        <div class="hidden md:flex items-center bg-gray-100 rounded-lg overflow-hidden">
+                            <a href="{{ route('public.language.change', ['locale' => 'ar']) }}" class="px-3 py-1 text-sm {{ app()->getLocale() === 'ar' ? 'bg-primary-500 text-white' : 'text-gray-700 hover:bg-gray-200' }}">AR</a>
+                            <a href="{{ route('public.language.change', ['locale' => 'en']) }}" class="px-3 py-1 text-sm {{ app()->getLocale() === 'en' ? 'bg-primary-500 text-white' : 'text-gray-700 hover:bg-gray-200' }}">EN</a>
+                        </div>
                         <!-- Notifications -->
                         <div class="relative">
                             <button class="relative text-gray-600 hover:text-gray-900 focus:outline-none" id="notificationsDropdown">
@@ -222,7 +378,7 @@
                         <!-- User Menu -->
                         <div class="relative">
                             <button class="flex items-center text-gray-600 hover:text-gray-900 focus:outline-none" id="userDropdown">
-                                <img src="{{ auth()->user()->profile_picture ? Storage::url(auth()->user()->profile_picture) : asset('assets/images/default-avatar.png') }}" 
+                                <img src="{{ auth()->user()->profile_picture ? Storage::url(auth()->user()->profile_picture) : asset('assets/images/default-avatar.svg') }}" 
                                      alt="صورة المستخدم" class="rounded-full mr-2" width="32" height="32">
                                 <span>{{ auth()->user()->name }}</span>
                             </button>
@@ -311,6 +467,7 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ asset('theme.js') }}"></script>
     
     <script>
         // Sidebar toggle
@@ -319,6 +476,34 @@
             sidebar.classList.toggle('translate-x-full');
             sidebar.classList.toggle('translate-x-0');
         });
+
+        // Collapsible sidebar sections (rentals, sales, etc.)
+        (function () {
+            const ACTIVE_CLASS = 'bg-white bg-opacity-20 border-l-4 border-white';
+
+            // Initialize sections: collapse all unless they contain an active item
+            document.querySelectorAll('[data-section-toggle]').forEach(function (header) {
+                const key = header.getAttribute('data-section-toggle');
+                const items = Array.from(document.querySelectorAll('[data-section="' + key + '"]'));
+
+                if (!items.length) return;
+
+                const hasActive = items.some(function (li) {
+                    const link = li.querySelector('a');
+                    return link && link.className && link.className.indexOf('bg-white bg-opacity-20 border-l-4 border-white') !== -1;
+                });
+
+                if (!hasActive) {
+                    items.forEach(function (li) { li.classList.add('hidden'); });
+                }
+
+                header.addEventListener('click', function () {
+                    items.forEach(function (li) {
+                        li.classList.toggle('hidden');
+                    });
+                });
+            });
+        })();
 
         // Close sidebar when clicking outside on mobile
         document.addEventListener('click', function(event) {

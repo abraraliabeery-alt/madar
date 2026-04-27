@@ -15,162 +15,114 @@ class FeatureSeeder extends Seeder
     {
         $features = [
             [
-                'icon' => 'fas fa-snowflake',
-                'description' => 'مكيف هواء مركزي أو منفصل',
+                'icon' => 'fas fa-user-check',
+                'description' => 'تأهيل فني موثق للمقاول',
                 'is_active' => true,
                 'order' => 1,
                 'translations' => [
                     'ar' => [
-                        'name' => 'مكيف هواء',
-                        'description' => 'مكيف هواء مركزي أو منفصل',
+                        'name' => 'تأهيل فني',
+                        'description' => 'تأهيل فني موثق للمقاول',
                     ],
                     'en' => [
-                        'name' => 'Air Conditioning',
-                        'description' => 'Central or split air conditioning',
-                    ],
-                ],
-            ],
-            [
-                'icon' => 'fas fa-utensils',
-                'description' => 'مطبخ كامل التجهيز',
-                'is_active' => true,
-                'order' => 2,
-                'translations' => [
-                    'ar' => [
-                        'name' => 'مطبخ مجهز',
-                        'description' => 'مطبخ كامل التجهيز',
-                    ],
-                    'en' => [
-                        'name' => 'Equipped Kitchen',
-                        'description' => 'Fully equipped kitchen',
-                    ],
-                ],
-            ],
-            [
-                'icon' => 'fas fa-elevator',
-                'description' => 'مصعد للعمارة',
-                'is_active' => true,
-                'order' => 3,
-                'translations' => [
-                    'ar' => [
-                        'name' => 'مصعد',
-                        'description' => 'مصعد للعمارة',
-                    ],
-                    'en' => [
-                        'name' => 'Elevator',
-                        'description' => 'Building elevator',
-                    ],
-                ],
-            ],
-            [
-                'icon' => 'fas fa-car',
-                'description' => 'موقف سيارات خاص',
-                'is_active' => true,
-                'order' => 4,
-                'translations' => [
-                    'ar' => [
-                        'name' => 'موقف سيارات',
-                        'description' => 'موقف سيارات خاص',
-                    ],
-                    'en' => [
-                        'name' => 'Parking',
-                        'description' => 'Private parking space',
-                    ],
-                ],
-            ],
-            [
-                'icon' => 'fas fa-tree',
-                'description' => 'حديقة خاصة',
-                'is_active' => true,
-                'order' => 5,
-                'translations' => [
-                    'ar' => [
-                        'name' => 'حديقة',
-                        'description' => 'حديقة خاصة',
-                    ],
-                    'en' => [
-                        'name' => 'Garden',
-                        'description' => 'Private garden',
-                    ],
-                ],
-            ],
-            [
-                'icon' => 'fas fa-swimming-pool',
-                'description' => 'مسبح خاص',
-                'is_active' => true,
-                'order' => 6,
-                'translations' => [
-                    'ar' => [
-                        'name' => 'مسبح',
-                        'description' => 'مسبح خاص',
-                    ],
-                    'en' => [
-                        'name' => 'Swimming Pool',
-                        'description' => 'Private swimming pool',
-                    ],
-                ],
-            ],
-            [
-                'icon' => 'fas fa-dumbbell',
-                'description' => 'صالة رياضية مجهزة',
-                'is_active' => true,
-                'order' => 7,
-                'translations' => [
-                    'ar' => [
-                        'name' => 'صالة رياضية',
-                        'description' => 'صالة رياضية مجهزة',
-                    ],
-                    'en' => [
-                        'name' => 'Gym',
-                        'description' => 'Equipped gym',
+                        'name' => 'Technical Qualification',
+                        'description' => 'Verified technical qualification',
                     ],
                 ],
             ],
             [
                 'icon' => 'fas fa-shield-alt',
-                'description' => 'حراسة أمنية 24/7',
+                'description' => 'ضمان على الأعمال حسب العقد',
                 'is_active' => true,
-                'order' => 8,
+                'order' => 2,
                 'translations' => [
                     'ar' => [
-                        'name' => 'خدمات أمنية',
-                        'description' => 'حراسة أمنية 24/7',
+                        'name' => 'ضمان',
+                        'description' => 'ضمان على الأعمال حسب العقد',
                     ],
                     'en' => [
-                        'name' => 'Security',
-                        'description' => '24/7 security service',
+                        'name' => 'Warranty',
+                        'description' => 'Work warranty per contract',
                     ],
                 ],
             ],
             [
-                'icon' => 'fas fa-wifi',
-                'description' => 'اتصال إنترنت مجاني',
+                'icon' => 'fas fa-file-contract',
+                'description' => 'عقد واضح وبنود قابلة للتتبع',
                 'is_active' => true,
-                'order' => 9,
+                'order' => 3,
                 'translations' => [
                     'ar' => [
-                        'name' => 'إنترنت مجاني',
-                        'description' => 'اتصال إنترنت مجاني',
+                        'name' => 'عقد وتوثيق',
+                        'description' => 'عقد واضح وبنود قابلة للتتبع',
                     ],
                     'en' => [
-                        'name' => 'Free Internet',
-                        'description' => 'Free internet connection',
+                        'name' => 'Contract & Documentation',
+                        'description' => 'Clear contract with traceable terms',
                     ],
                 ],
             ],
             [
-                'icon' => 'fas fa-tshirt',
-                'description' => 'غسالة ملابس في الوحدة',
+                'icon' => 'fas fa-hard-hat',
+                'description' => 'التزام بإجراءات السلامة بالموقع',
                 'is_active' => true,
-                'order' => 10,
+                'order' => 4,
                 'translations' => [
                     'ar' => [
-                        'name' => 'غسالة ملابس',
-                        'description' => 'غسالة ملابس في الوحدة',
+                        'name' => 'سلامة الموقع',
+                        'description' => 'التزام بإجراءات السلامة بالموقع',
                     ],
                     'en' => [
-                        'name' => 'Washing Machine',
-                        'description' => 'Washing machine in unit',
+                        'name' => 'Site Safety',
+                        'description' => 'Compliance with site safety procedures',
+                    ],
+                ],
+            ],
+            [
+                'icon' => 'fas fa-id-card',
+                'description' => 'تصنيف/اعتماد مقاول (إن وجد)',
+                'is_active' => true,
+                'order' => 5,
+                'translations' => [
+                    'ar' => [
+                        'name' => 'اعتماد وتصنيف',
+                        'description' => 'تصنيف/اعتماد مقاول (إن وجد)',
+                    ],
+                    'en' => [
+                        'name' => 'Accreditation',
+                        'description' => 'Contractor classification/accreditation (if available)',
+                    ],
+                ],
+            ],
+            [
+                'icon' => 'fas fa-clipboard-list',
+                'description' => 'تقديم عرض فني ومالي منظم',
+                'is_active' => true,
+                'order' => 6,
+                'translations' => [
+                    'ar' => [
+                        'name' => 'عرض منظم',
+                        'description' => 'تقديم عرض فني ومالي منظم',
+                    ],
+                    'en' => [
+                        'name' => 'Structured Bid',
+                        'description' => 'Structured technical & financial bid',
+                    ],
+                ],
+            ],
+            [
+                'icon' => 'fas fa-truck',
+                'description' => 'جاهزية توريد المواد والمعدات',
+                'is_active' => true,
+                'order' => 7,
+                'translations' => [
+                    'ar' => [
+                        'name' => 'جاهزية التوريد',
+                        'description' => 'جاهزية توريد المواد والمعدات',
+                    ],
+                    'en' => [
+                        'name' => 'Supply Readiness',
+                        'description' => 'Materials & equipment supply readiness',
                     ],
                 ],
             ],

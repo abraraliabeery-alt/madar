@@ -39,4 +39,34 @@ class Project extends Model
     {
         return $this->hasMany(ProjectTranslation::class);
     }
+
+    public function stages()
+    {
+        return $this->hasMany(ProjectStage::class)->orderBy('order');
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function (Project $project) {
+            $defaultStages = [
+                ['key' => 'idea', 'order' => 1],
+                ['key' => 'feasibility', 'order' => 2],
+                ['key' => 'design', 'order' => 3],
+                ['key' => 'permits', 'order' => 4],
+                ['key' => 'construction', 'order' => 5],
+                ['key' => 'sales_marketing', 'order' => 6],
+                ['key' => 'post_sale', 'order' => 7],
+            ];
+
+            foreach ($defaultStages as $stage) {
+                $project->stages()->create([
+                    'key' => $stage['key'],
+                    'order' => $stage['order'],
+                    'status' => 'not_started',
+                ]);
+            }
+        });
+    }
 }

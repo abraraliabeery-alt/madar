@@ -15,98 +15,98 @@ class CategorySeeder extends Seeder
     {
         $categories = [
             [
-                'icon' => 'fas fa-building',
+                'icon' => 'fas fa-helmet-safety',
                 'is_active' => true,
                 'is_featured' => true,
                 'order' => 1,
                 'translations' => [
                     'ar' => [
-                        'name' => 'شقق',
-                        'description' => 'شقق سكنية للإيجار أو البيع',
+                        'name' => 'تشييد وبناء',
+                        'description' => 'أعمال الهيكل الإنشائي وبناء المباني',
                     ],
                     'en' => [
-                        'name' => 'Apartments',
-                        'description' => 'Residential apartments for rent or sale',
+                        'name' => 'Construction',
+                        'description' => 'Structural and building construction works',
                     ],
                 ],
             ],
             [
-                'icon' => 'fas fa-home',
+                'icon' => 'fas fa-paint-roller',
                 'is_active' => true,
                 'is_featured' => true,
                 'order' => 2,
                 'translations' => [
                     'ar' => [
-                        'name' => 'فيلات',
-                        'description' => 'فيلات فاخرة للإيجار أو البيع',
+                        'name' => 'تشطيبات',
+                        'description' => 'دهانات، أرضيات، أسقف، أبواب ونوافذ',
                     ],
                     'en' => [
-                        'name' => 'Villas',
-                        'description' => 'Luxury villas for rent or sale',
+                        'name' => 'Finishing',
+                        'description' => 'Paint, flooring, ceilings, doors & windows',
                     ],
                 ],
             ],
             [
-                'icon' => 'fas fa-briefcase',
+                'icon' => 'fas fa-bolt',
                 'is_active' => true,
                 'is_featured' => false,
                 'order' => 3,
                 'translations' => [
                     'ar' => [
-                        'name' => 'مكاتب',
-                        'description' => 'مكاتب للاستخدام التجاري',
+                        'name' => 'أعمال كهرباء',
+                        'description' => 'تمديدات، لوحات، إنارة، أنظمة ضعيفة',
                     ],
                     'en' => [
-                        'name' => 'Offices',
-                        'description' => 'Commercial offices for business use',
+                        'name' => 'Electrical',
+                        'description' => 'Wiring, panels, lighting, low-current systems',
                     ],
                 ],
             ],
             [
-                'icon' => 'fas fa-store',
+                'icon' => 'fas fa-fan',
                 'is_active' => true,
                 'is_featured' => false,
                 'order' => 4,
                 'translations' => [
                     'ar' => [
-                        'name' => 'محلات',
-                        'description' => 'محلات للبيع بالتجزئة',
+                        'name' => 'ميكانيكا (HVAC)',
+                        'description' => 'تكييف وتهوية ومجاري هواء وتشغيل',
                     ],
                     'en' => [
-                        'name' => 'Shops',
-                        'description' => 'Retail shops for sale',
+                        'name' => 'Mechanical (HVAC)',
+                        'description' => 'Air-conditioning, ventilation, ducts & commissioning',
                     ],
                 ],
             ],
             [
-                'icon' => 'fas fa-warehouse',
+                'icon' => 'fas fa-road',
                 'is_active' => true,
                 'is_featured' => false,
                 'order' => 5,
                 'translations' => [
                     'ar' => [
-                        'name' => 'مستودعات',
-                        'description' => 'مستودعات للتخزين',
+                        'name' => 'بنية تحتية',
+                        'description' => 'طرق، أرصفة، إنارة، شبكات',
                     ],
                     'en' => [
-                        'name' => 'Warehouses',
-                        'description' => 'Storage warehouses',
+                        'name' => 'Infrastructure',
+                        'description' => 'Roads, sidewalks, lighting, utilities networks',
                     ],
                 ],
             ],
             [
-                'icon' => 'fas fa-map',
+                'icon' => 'fas fa-truck-fast',
                 'is_active' => true,
                 'is_featured' => false,
                 'order' => 6,
                 'translations' => [
                     'ar' => [
-                        'name' => 'أراضي',
-                        'description' => 'أراضي للبناء',
+                        'name' => 'توريد وتركيب',
+                        'description' => 'توريد مواد/معدات مع التركيب والاختبارات',
                     ],
                     'en' => [
-                        'name' => 'Land',
-                        'description' => 'Residential land for construction',
+                        'name' => 'Supply & Installation',
+                        'description' => 'Supply materials/equipment with installation and testing',
                     ],
                 ],
             ],

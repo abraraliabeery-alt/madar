@@ -1,0 +1,56 @@
+/* Tender Document Modern Styles */
+:root{ --brand:#b91c1c; --ink:#111827; --muted:#6b7280; --paper:#ffffff; }
+.tender-doc{ color:var(--ink); }
+.tender-doc .a4{ background:var(--paper); box-shadow:0 1px 10px rgba(0,0,0,.08) }
+
+/* Brand helpers */
+.tender-doc .brand-bg{ background:var(--brand) }
+.tender-doc .brand-text{ color:var(--brand) }
+.tender-doc .brand-border{ border-color:var(--brand) }
+
+/* Cover hero */
+.tender-doc .cover-hero{ position:relative; overflow:hidden; min-height:297mm }
+.tender-doc .cover-hero::before{ content:""; position:absolute; inset:auto -40mm 0 auto; width:140mm; height:140mm; background:var(--brand); border-radius:80mm 0 0 0; opacity:.92 }
+.tender-doc .cover-hero::after{ content:""; position:absolute; inset: -30mm auto auto -30mm; width:110mm; height:110mm; background: color-mix(in oklab, var(--brand), white 35%); border-radius:0 0 80mm 0; opacity:.85 }
+.tender-doc .cover-hero .cover-inner{ position:relative; padding:28mm 18mm }
+.tender-doc .cover-hero h1{ font-size:38px; letter-spacing:.3px; margin:0 0 4mm; font-weight:800 }
+.tender-doc .cover-hero h2{ font-size:18px; color:#fff; margin:0; font-weight:700 }
+.tender-doc .cover-hero .meta{ margin-top:8mm; display:grid; gap:6px; color:#fff; font-weight:600 }
+
+/* Section titles */
+.tender-doc .section-title{ display:flex; align-items:center; gap:8px; margin:0 0 8px }
+.tender-doc .section-title .dot{ width:10px; height:10px; border-radius:999px; background:var(--brand) }
+.tender-doc .section-title h3{ margin:0; font-size:18px; letter-spacing:.2px }
+
+/* Accent band */
+.tender-doc .accent-band{ height:6mm; background:var(--brand); border-radius:6px; margin:8px 0 12px }
+
+/* Tables */
+.tender-doc table{ width:100%; border-collapse:collapse }
+.tender-doc table th{ background:var(--brand); color:#fff; font-weight:700 }
+.tender-doc table th, .tender-doc table td{ border:1.2px solid #e5e7eb; padding:8px 10px; font-size:12px }
+
+/* Badges and chips */
+.tender-doc .chip{ display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:999px; background: color-mix(in oklab, var(--brand), white 82%); color: var(--brand); border:1px solid color-mix(in oklab, var(--brand), white 65%) }
+
+/* Header/Footer styling override for A4 */
+.tender-doc .a4 .page-header, .tender-doc .a4 .page-footer{ border-color:var(--brand) }
+
+/* Utilities */
+.tender-doc .muted{ color:var(--muted) }
+.tender-doc .mb-1{ margin-bottom:4px }
+.tender-doc .mb-2{ margin-bottom:8px }
+.tender-doc .mb-3{ margin-bottom:12px }
+.tender-doc .mt-2{ margin-top:8px }
+.tender-doc .pt-0{ padding-top:0 }
+
+/* Split cover layout */
+.tender-doc .cover-split{ position:relative; min-height:297mm }
+.tender-doc .cover-split .brand-top{ position:absolute; inset:0 0 auto 0; height:10mm; background:var(--brand) }
+.tender-doc .cover-split .grid{ display:grid; grid-template-columns: 7fr 5fr; min-height:297mm }
+.tender-doc .cover-split .image-side{ position:relative; overflow:hidden }
+.tender-doc .cover-split .image-side .overlay{ position:absolute; inset:0; background: linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,.5)) }
+.tender-doc .cover-split .panel{ background:#fff; position:relative }
+.tender-doc .cover-split .logo-card{ position:absolute; top:14mm; right:14mm; background:rgba(255,255,255,.95); border:1px solid #e5e7eb; border-radius:12px; padding:8px 10px; display:flex; align-items:center; gap:8px; box-shadow:0 8px 24px rgba(0,0,0,.08) }
+.tender-doc .cover-split .title-box{ position:absolute; left:33%; right:12mm; top:50%; transform:translateY(-50%); background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:14px 18px; box-shadow:0 10px 30px rgba(0,0,0,.10) }
+.tender-doc .cover-split .brand-bottom{ position:absolute; inset:auto 0 0 0; height:6mm; background:var(--brand) }

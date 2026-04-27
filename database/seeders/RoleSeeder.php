@@ -33,6 +33,12 @@ class RoleSeeder extends Seeder
                 'is_active' => true,
             ],
             [
+                'name' => 'bank_employee',
+                'display_name' => 'مسوّق بنك',
+                'description' => 'مسوّق تابع لبنك محدد',
+                'is_active' => true,
+            ],
+            [
                 'name' => 'moderator',
                 'display_name' => 'مشرف',
                 'description' => 'مشرف للمحتوى',

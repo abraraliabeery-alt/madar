@@ -505,6 +505,20 @@
                             {{ __('facility.products.delete_product') }}
                         </button>
                     </form>
+
+                    <div class="border-t border-gray-200 my-3"></div>
+                    <!-- Contextual quick task create (no DB link, descriptive type carries context) -->
+                    <form method="POST" action="{{ route('facility.tasks.quick') }}" class="w-full">
+                        @csrf
+                        <input type="hidden" name="type" value="متابعة منتج #{{ $product->id }}">
+                        <input type="hidden" name="status" value="open">
+                        <input type="hidden" name="priority" value="medium">
+                        <input type="hidden" name="deadline" value="{{ now()->addDay()->toDateString() }}">
+                        <button type="submit" class="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700">
+                            <i class="fas fa-list-check ml-2"></i>
+                            إنشاء مهمة متابعة سريعة
+                        </button>
+                    </form>
                 </div>
             </div>
 

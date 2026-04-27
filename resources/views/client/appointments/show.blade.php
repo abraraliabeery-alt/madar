@@ -131,7 +131,7 @@
                     @endif
 
                     <div class="mt-6">
-                        <a href="{{ route('public.facilities.show', $appointment->facility) }}" 
+                        <a href="{{ route('facility.site.home', $appointment->facility->slug ?? $appointment->facility->id) }}" 
                            class="w-full bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium text-center block">
                             <i class="fas fa-external-link-alt ml-1"></i>
                             {{ __('client.appointments.view_facility') }}

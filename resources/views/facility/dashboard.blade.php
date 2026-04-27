@@ -9,17 +9,17 @@
     </div>
 
     <!-- {{ __('facility.dashboard.stats_title') }} -->
-    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-6 mb-6">
         <div class="bg-white rounded-lg shadow-lg border-r-4 border-blue-500 p-4 h-full">
             <div class="flex items-center justify-between">
                 <div class="flex-1">
                     <div class="text-xs font-bold text-blue-600 uppercase mb-1">
-                        {{ __('facility.dashboard.total_products') }}
+                        إجمالي طلبات التنفيذ
                     </div>
-                    <div class="text-xl font-bold text-gray-800">{{ $stats['total_products'] }}</div>
+                    <div class="text-xl font-bold text-gray-800">{{ $stats['total_execution_requests'] ?? 0 }}</div>
                 </div>
                 <div class="flex-shrink-0">
-                    <i class="fas fa-box text-3xl text-gray-300"></i>
+                    <i class="fas fa-gavel text-3xl text-gray-300"></i>
                 </div>
             </div>
         </div>
@@ -28,12 +28,12 @@
             <div class="flex items-center justify-between">
                 <div class="flex-1">
                     <div class="text-xs font-bold text-green-600 uppercase mb-1">
-                        {{ __('facility.dashboard.total_bookings') }}
+                        إجمالي العروض المستلمة
                     </div>
-                    <div class="text-xl font-bold text-gray-800">{{ $stats['total_bookings'] }}</div>
+                    <div class="text-xl font-bold text-gray-800">{{ $stats['total_execution_bids_received'] ?? 0 }}</div>
                 </div>
                 <div class="flex-shrink-0">
-                    <i class="fas fa-calendar-check text-3xl text-gray-300"></i>
+                    <i class="fas fa-clipboard-list text-3xl text-gray-300"></i>
                 </div>
             </div>
         </div>
@@ -42,9 +42,9 @@
             <div class="flex items-center justify-between">
                 <div class="flex-1">
                     <div class="text-xs font-bold text-cyan-600 uppercase mb-1">
-                        {{ __('facility.dashboard.pending_bookings') }}
+                        طلبات تنفيذ مفتوحة
                     </div>
-                    <div class="text-xl font-bold text-gray-800">{{ $stats['pending_bookings'] }}</div>
+                    <div class="text-xl font-bold text-gray-800">{{ $stats['open_execution_requests'] ?? 0 }}</div>
                 </div>
                 <div class="flex-shrink-0">
                     <i class="fas fa-clock text-3xl text-gray-300"></i>
@@ -65,32 +65,49 @@
                 </div>
             </div>
         </div>
+
+        <div class="bg-white rounded-lg shadow-lg border-r-4 border-indigo-500 p-4 h-full">
+            <div class="flex items-center justify-between">
+                <div class="flex-1">
+                    <div class="text-xs font-bold text-indigo-600 uppercase mb-1">
+                        طلبات التمويل
+                    </div>
+                    <div class="text-xl font-bold text-gray-800">{{ $stats['total_loan_requests'] ?? 0 }}</div>
+                </div>
+                <div class="flex-shrink-0">
+                    <i class="fas fa-building-columns text-3xl text-gray-300"></i>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- {{ __('facility.dashboard.recent_activity') }} -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         <div class="bg-white rounded-lg shadow-lg">
             <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 rounded-t-lg">
-                <h6 class="text-lg font-semibold text-blue-600 m-0">{{ __('facility.dashboard.recent_bookings') }}</h6>
+                <h6 class="text-lg font-semibold text-blue-600 m-0">طلبات تنفيذ حديثة</h6>
             </div>
             <div class="p-6">
-                @if(isset($stats['recent_bookings']) && $stats['recent_bookings'] && $stats['recent_bookings']->count() > 0)
-                    @foreach($stats['recent_bookings'] as $booking)
+                @if(isset($stats['recent_execution_requests']) && $stats['recent_execution_requests'] && $stats['recent_execution_requests']->count() > 0)
+                    @foreach($stats['recent_execution_requests'] as $req)
                     <div class="flex items-center mb-4 last:mb-0">
                         <div class="flex-shrink-0">
-                            <img class="w-10 h-10 rounded-full object-cover"
-                                 src="{{ $booking->user->avatar ?? asset('images/default-avatar.png') }}"
-                                 alt="{{ __('facility.dashboard.user_avatar') }}">
+                            <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+                                <i class="fas fa-gavel text-white text-sm"></i>
+                            </div>
                         </div>
                         <div class="flex-1 mr-3">
-                            <h6 class="font-semibold text-gray-800 mb-1">{{ $booking->user->name ?? 'غير محدد' }}</h6>
-                            <p class="text-sm text-gray-500 mb-1">{{ $booking->product->name ?? __('facility.dashboard.deleted_product') }}</p>
-                            <p class="text-xs text-gray-400">{{ $booking->created_at ? $booking->created_at->diffForHumans() : 'غير محدد' }}</p>
+                            @php
+                                $t = $req->translations->firstWhere('locale', app()->getLocale());
+                            @endphp
+                            <h6 class="font-semibold text-gray-800 mb-1">{{ $t->title ?? ('طلب #' . $req->id) }}</h6>
+                            <p class="text-sm text-gray-500 mb-1">{{ $req->status }}</p>
+                            <p class="text-xs text-gray-400">{{ $req->created_at ? $req->created_at->diffForHumans() : 'غير محدد' }}</p>
                         </div>
                     </div>
                     @endforeach
                 @else
-                    <p class="text-gray-500">{{ __('facility.dashboard.no_recent_bookings') }}</p>
+                    <p class="text-gray-500">لا توجد طلبات تنفيذ حديثة</p>
                 @endif
             </div>
         </div>
@@ -180,15 +197,15 @@
                     <div class="text-left lg:text-right space-y-3">
                         <div class="space-y-2">
                             <a href="{{ route('facility.customization.edit', $facility) }}"
-                               class="w-full lg:w-auto bg-purple-600 hover:bg-purple-700 text-white font-medium py-3 px-6 rounded-lg transition duration-200 inline-flex items-center justify-center">
+                               class="w-full lg:w-auto bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200 inline-flex items-center justify-center">
                                 <i class="fas fa-palette mr-2"></i>
                                 {{ __('facilities.dashboard.customize_now') }}
                             </a>
-                            <a href="{{ route('public.facilities.show', $facility) }}"
+                            <a href="{{ route('public.facility.site.home', $facility->slug ?? $facility->id) }}"
                                target="_blank"
                                class="w-full lg:w-auto bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200 inline-flex items-center justify-center">
                                 <i class="fas fa-external-link-alt mr-2"></i>
-                                {{ __('facilities.dashboard.view_landing') }}
+                                {{ __('facilities.dashboard.preview_site') }}
                             </a>
                         </div>
                         @if($facility->hasCustomization())
@@ -221,14 +238,14 @@
                         <p class="text-gray-600 mb-3">{{ $facility->description }}</p>
                         <div class="space-y-2">
                             <p class="text-gray-700"><span class="font-semibold">{{ __('facility.form.address') }}:</span> {{ $facility->address }}</p>
-                            <p class="text-gray-700"><span class="font-semibold">{{ __('facility.form.phone') }}:</span> {{ $facility->phone_number }}</p>
+                            <p class="text-gray-700"><span class="font-semibold">{{ __('facility.form.phone') }}:</span> {{ $facility->phone }}</p>
                             <p class="text-gray-700"><span class="font-semibold">{{ __('facility.form.email') }}:</span> {{ $facility->email }}</p>
                             <p class="text-gray-700"><span class="font-semibold">{{ __('facility.form.facility_category') }}:</span> {{ $facility->facilityCategory ? $facility->facilityCategory->name : __('facility.dashboard.no_category') }}</p>
                         </div>
                     </div>
                     <div class="text-left md:text-right">
-                        @if($facility->logo)
-                            <img src="{{ asset($facility->logo) }}"
+                        @if($facility->logo_url)
+                            <img src="{{ $facility->logo_url }}"
                                  alt="{{ __('facility.form.logo') }}"
                                  class="max-h-24 w-auto mb-4 mx-auto md:mx-0 md:mr-0">
                         @endif
@@ -237,9 +254,9 @@
                                class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition duration-200 inline-flex items-center justify-center">
                                 <i class="fas fa-edit ml-2"></i> {{ __('facility.dashboard.edit_facility') }}
                             </a>
-                            <a href="{{ route('facility.products.index') }}"
+                            <a href="{{ route('facility.execution-requests.index') }}"
                                class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-md transition duration-200 inline-flex items-center justify-center">
-                                <i class="fas fa-box ml-2"></i> {{ __('facility.dashboard.manage_products') }}
+                                <i class="fas fa-gavel ml-2"></i> إدارة طلبات التنفيذ
                             </a>
                         </div>
                     </div>
@@ -265,17 +282,17 @@
                             <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
                                 <i class="fas fa-tags text-white"></i>
                             </div>
-                            <h6 class="font-semibold text-gray-800">إدارة العروض</h6>
+                            <h6 class="font-semibold text-gray-800">إدارة عروض التنفيذ</h6>
                         </div>
-                        <p class="text-sm text-gray-600 mb-3">إدارة عروض البيع والإيجار للمنتجات</p>
+                        <p class="text-sm text-gray-600 mb-3">إدارة عروض التنفيذ المقدمة على الطلبات</p>
                         <div class="space-y-2">
-                            <a href="{{ route('facility.offers.index') }}" 
+                            <a href="{{ route('facility.execution-requests.index') }}" 
                                class="w-full bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 px-3 rounded-md transition duration-200 inline-flex items-center justify-center">
-                                <i class="fas fa-list ml-2"></i> عرض العروض
+                                <i class="fas fa-list ml-2"></i> عرض الطلبات
                             </a>
-                            <a href="{{ route('facility.offers.create') }}" 
+                            <a href="{{ route('facility.execution-requests.workspace') }}" 
                                class="w-full bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium py-2 px-3 rounded-md transition duration-200 inline-flex items-center justify-center">
-                                <i class="fas fa-plus ml-2"></i> إضافة عرض
+                                <i class="fas fa-briefcase ml-2"></i> مساحة العمل
                             </a>
                         </div>
                     </div>
@@ -288,7 +305,7 @@
                             </div>
                             <h6 class="font-semibold text-gray-800">إدارة العقود</h6>
                         </div>
-                        <p class="text-sm text-gray-600 mb-3">إدارة عقود البيع والإيجار</p>
+                        <p class="text-sm text-gray-600 mb-3">إدارة عقود المشاريع والتنفيذ</p>
                         <div class="space-y-2">
                             <a href="{{ route('facility.contracts.index') }}" 
                                class="w-full bg-green-600 hover:bg-green-700 text-white text-sm font-medium py-2 px-3 rounded-md transition duration-200 inline-flex items-center justify-center">
@@ -309,7 +326,7 @@
                             </div>
                             <h6 class="font-semibold text-gray-800">إدارة الفواتير</h6>
                         </div>
-                        <p class="text-sm text-gray-600 mb-3">إدارة فواتير المبيعات والإيجار</p>
+                        <p class="text-sm text-gray-600 mb-3">إدارة فواتير المشاريع والتنفيذ</p>
                         <div class="space-y-2">
                             <a href="{{ route('facility.invoices.index') }}" 
                                class="w-full bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium py-2 px-3 rounded-md transition duration-200 inline-flex items-center justify-center">
@@ -330,7 +347,7 @@
                             </div>
                             <h6 class="font-semibold text-gray-800">إدارة المدفوعات</h6>
                         </div>
-                        <p class="text-sm text-gray-600 mb-3">إدارة مدفوعات العملاء</p>
+                        <p class="text-sm text-gray-600 mb-3">إدارة مدفوعات المشاريع</p>
                         <div class="space-y-2">
                             <a href="{{ route('facility.payments.index') }}" 
                                class="w-full bg-yellow-600 hover:bg-yellow-700 text-white text-sm font-medium py-2 px-3 rounded-md transition duration-200 inline-flex items-center justify-center">

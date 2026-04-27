@@ -173,7 +173,7 @@
                                 </div>
                                 <div class="p-3">
                                     <h3 class="text-sm font-semibold text-gray-900 mb-1 line-clamp-1">
-                                        <a href="{{ route('public.facilities.show', $facility) }}" class="hover:text-primary-600 transition-colors">
+                                        <a href="{{ route('facility.site.home', $facility->slug ?? $facility->id) }}" class="hover:text-primary-600 transition-colors">
                                             {{ $facility->name }}
                                         </a>
                                     </h3>
@@ -190,7 +190,7 @@
                                                 <i class="fas fa-star {{ $i <= ($facility->rating ?? 0) ? 'text-yellow-400' : 'text-gray-400' }}"></i>
                                             @endfor
                                         </div>
-                                        <a href="{{ route('public.facilities.show', $facility) }}"
+                                        <a href="{{ route('facility.site.home', $facility->slug ?? $facility->id) }}"
                                            class="text-primary-600 hover:text-primary-700 text-xs font-medium">
                                             {{ __('facilities.facility_card.view_details') }}
                                         </a>
@@ -220,7 +220,7 @@
                                 </div>
                                 <div class="p-6">
                                     <h3 class="text-xl font-semibold text-gray-900 mb-2">
-                                        <a href="{{ route('public.facilities.show', $facility) }}" class="hover:text-primary-600 transition-colors">
+                                        <a href="{{ route('facility.site.home', $facility->slug ?? $facility->id) }}" class="hover:text-primary-600 transition-colors">
                                             {{ $facility->name }}
                                         </a>
                                     </h3>
@@ -238,7 +238,7 @@
                                             @endfor
                                             <span class="text-gray-600 mr-2">({{ $facility->rating ?? 0 }})</span>
                                         </div>
-                                        <a href="{{ route('public.facilities.show', $facility) }}"
+                                        <a href="{{ route('facility.site.home', $facility->slug ?? $facility->id) }}"
                                            class="text-primary-600 hover:text-primary-700 text-sm font-medium">
                                             {{ __('facilities.facility_card.view_details') }}
                                         </a>
@@ -270,7 +270,7 @@
                                     <div class="flex-1 p-6">
                                         <div class="flex justify-between items-start mb-3">
                                             <h3 class="text-xl font-semibold text-gray-900">
-                                                <a href="{{ route('public.facilities.show', $facility) }}" class="hover:text-primary-600 transition-colors">
+                                                <a href="{{ route('facility.site.home', $facility->slug ?? $facility->id) }}" class="hover:text-primary-600 transition-colors">
                                                     {{ $facility->name }}
                                                 </a>
                                             </h3>
@@ -289,7 +289,7 @@
                                         </div>
 
                                         <div class="flex justify-end">
-                                            <a href="{{ route('public.facilities.show', $facility) }}"
+                                            <a href="{{ route('facility.site.home', $facility->slug ?? $facility->id) }}"
                                                class="text-primary-600 hover:text-primary-700 text-sm font-medium">
                                                 {{ __('facilities.facility_card.view_details') }}
                                             </a>

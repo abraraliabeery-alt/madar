@@ -21,7 +21,13 @@
                     <div class="card">
                         <div class="card-body text-center">
                             @if($feature->icon)
-                                <img src="{{ asset($feature->icon) }}" alt="icon" class="img-fluid rounded mb-3" style="max-height: 100px;">
+                                @if(\Illuminate\Support\Str::contains($feature->icon, 'fa-') || !\Illuminate\Support\Str::contains($feature->icon, '/'))
+                                    <div class="rounded d-flex align-items-center justify-content-center mb-3" style="height: 100px;">
+                                        <i class="{{ $feature->icon }} fa-3x"></i>
+                                    </div>
+                                @else
+                                    <img src="{{ asset($feature->icon) }}" alt="icon" class="img-fluid rounded mb-3" style="max-height: 100px;">
+                                @endif
                             @else
                                 <div class="rounded bg-light d-flex align-items-center justify-content-center mb-3" style="height: 100px;">
                                     <i class="fas fa-star text-muted fa-3x"></i>

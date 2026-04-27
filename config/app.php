@@ -13,7 +13,13 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => (function () {
+        $name = env('APP_NAME');
+        if (empty($name) || in_array(trim((string) $name), ['Aqar', 'عقار'], true)) {
+            return 'ميم';
+        }
+        return $name;
+    })(),
 
     /*
     |--------------------------------------------------------------------------

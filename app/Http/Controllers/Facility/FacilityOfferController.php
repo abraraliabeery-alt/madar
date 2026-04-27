@@ -59,7 +59,10 @@ class FacilityOfferController extends Controller
 
         $offers = $query->paginate(15);
 
-        return view('facility.offers.index', compact('offers'));
+        // قائمة المنتجات للاستخدام في إجراء النسخ السريع
+        $productsList = $facility->products()->with('translations')->get(['id','facility_id']);
+
+        return view('facility.offers.index', compact('offers','productsList'));
     }
 
     /**

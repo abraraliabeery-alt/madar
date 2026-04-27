@@ -69,7 +69,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="mb-0">المنتجات</h6>
+                            <h6 class="mb-0">العقارات</h6>
                             <h3 class="mb-0">{{ $stats['total_products'] }}</h3>
                         </div>
                         <div class="fs-1">
@@ -99,6 +99,26 @@
                     <div class="mt-3">
                         <a href="{{ route('admin.bookings.index') }}" class="btn btn-sm btn-light">
                             <i class="fas fa-arrow-right me-1"></i>عرض التفاصيل
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-danger text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-0">إيرادات هذا الشهر</h6>
+                            <h3 class="mb-0">{{ number_format($stats['total_revenue_month'] ?? 0, 2) }}</h3>
+                        </div>
+                        <div class="fs-1">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <a href="{{ route('admin.bookings.index') }}" class="btn btn-sm btn-light">
+                            <i class="fas fa-arrow-right me-1"></i>تفاصيل الحجوزات
                         </a>
                     </div>
                 </div>

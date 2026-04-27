@@ -84,6 +84,20 @@ class FacilityCustomizationController extends Controller
             // SEO
             'meta_keywords' => ['nullable', 'string', 'max:500'],
             'meta_description' => ['nullable', 'string', 'max:160'],
+
+            // Facility site sections visibility
+            'sections' => ['nullable', 'array'],
+            'sections.*' => ['nullable', 'boolean'],
+
+            // Facility site section variants
+            'variants' => ['nullable', 'array'],
+            'variants.*' => ['nullable', 'integer', 'min:1', 'max:4'],
+
+            // Facility site content
+            'content' => ['nullable', 'array'],
+            'content.services' => ['nullable', 'array'],
+            'content.services.enabled' => ['nullable', 'array'],
+            'content.services.enabled.*' => ['nullable', 'boolean'],
         ]);
 
         // Handle hero background image upload
@@ -252,7 +266,54 @@ class FacilityCustomizationController extends Controller
             }
         }
 
+        $sections = $validated['sections'] ?? null;
+        $variants = $validated['variants'] ?? null;
+        $content = $validated['content'] ?? null;
+        unset($validated['sections']);
+        unset($validated['variants']);
+        unset($validated['content']);
+
         $facility->update($validated);
+
+        if (is_array($sections)) {
+            $customizationSettings = $facility->customization_settings ?? [];
+            $existingSections = data_get($customizationSettings, 'sections', []);
+
+            $normalizedSections = [];
+            foreach ($sections as $key => $value) {
+                $normalizedSections[$key] = (bool) $value;
+            }
+
+            $customizationSettings['sections'] = array_merge($existingSections, $normalizedSections);
+            $facility->customization_settings = $customizationSettings;
+            $facility->save();
+        }
+
+        if (is_array($variants)) {
+            $customizationSettings = $facility->customization_settings ?? [];
+            $existingVariants = data_get($customizationSettings, 'variants', []);
+
+            $normalizedVariants = [];
+            foreach ($variants as $key => $value) {
+                if ($value === null || $value === '') {
+                    continue;
+                }
+                $normalizedVariants[$key] = max(1, min(4, (int) $value));
+            }
+
+            $customizationSettings['variants'] = array_merge($existingVariants, $normalizedVariants);
+            $facility->customization_settings = $customizationSettings;
+            $facility->save();
+        }
+
+        if (is_array($content)) {
+            $customizationSettings = $facility->customization_settings ?? [];
+            $existingContent = data_get($customizationSettings, 'content', []);
+
+            $customizationSettings['content'] = array_replace_recursive($existingContent, $content);
+            $facility->customization_settings = $customizationSettings;
+            $facility->save();
+        }
 
 
         return redirect()

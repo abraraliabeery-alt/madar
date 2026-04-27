@@ -7,7 +7,9 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Facility;
 use App\Models\Category;
+use App\Models\CategoryTranslation;
 use App\Models\Status;
+use App\Models\Feature;
 use App\Models\City;
 use App\Models\Page;
 
@@ -35,6 +37,11 @@ class HomeController extends Controller
         $categories = Category::withCount(['products' => function ($query) {
             $query->where('is_active', true);
         }])->take(8)->get();
+
+        $searchCategories = Category::where('is_active', true)->get();
+        $searchFeatures = Feature::where('is_active', true)
+            ->with('translations')
+            ->get();
 
         $latestProducts = Product::with(['facility', 'category'])
             ->where('is_active', true)
@@ -83,6 +90,8 @@ class HomeController extends Controller
             'featuredProducts',
             'featuredFacilities',
             'categories',
+            'searchCategories',
+            'searchFeatures',
             'latestProducts',
             'stats',
             'comingSoonProducts',
@@ -107,47 +116,47 @@ class HomeController extends Controller
     {
         $services = [
             [
-                'title' => 'بيع العقارات',
-                'description' => 'نقدم خدمات بيع العقارات السكنية والتجارية',
-                'icon' => 'fas fa-home',
+                'title' => 'طرح المشاريع والمنافسات',
+                'description' => 'أنشئ منافستك وحدد نطاق الأعمال والميزانية والمدة',
+                'icon' => 'fas fa-gavel',
                 'features' => [
-                    'تقييم العقار',
-                    'إعداد العقود',
-                    'متابعة البيع',
-                    'خدمة ما بعد البيع'
+                    'إنشاء منافسة وربطها بالفئة والمدينة',
+                    'تحديد الميزانية والمدة والموعد النهائي',
+                    'نشر تفاصيل النطاق والمتطلبات',
+                    'تحديثات وإشعارات للمنافسات'
                 ]
             ],
             [
-                'title' => 'تأجير العقارات',
-                'description' => 'خدمات تأجير العقارات قصيرة وطويلة المدى',
-                'icon' => 'fas fa-key',
+                'title' => 'استقبال العروض والمقارنة',
+                'description' => 'استقبل عروض المقاولين وقارن السعر والمدة والضمان',
+                'icon' => 'fas fa-file-invoice-dollar',
                 'features' => [
-                    'عقود الإيجار',
-                    'إدارة الممتلكات',
-                    'صيانة دورية',
-                    'حل النزاعات'
+                    'جمع العروض في صفحة واحدة',
+                    'مقارنة سعر إجمالي ومدد التنفيذ',
+                    'ملاحظات ومرفقات لكل عرض',
+                    'تتبع حالات العروض'
                 ]
             ],
             [
-                'title' => 'إدارة المنشآت',
-                'description' => 'خدمات إدارة المنشآت العقارية',
-                'icon' => 'fas fa-building',
+                'title' => 'التأهيل والاعتماد',
+                'description' => 'تأهيل مبدئي والتحقق من جاهزية المقاول قبل الترسية',
+                'icon' => 'fas fa-user-check',
                 'features' => [
-                    'إدارة الموظفين',
-                    'إدارة المهام',
-                    'التقارير المالية',
-                    'التسويق والإعلان'
+                    'متطلبات تأهيل قابلة للتخصيص',
+                    'سجل اعتمادات وخبرات المقاول',
+                    'قوائم مختصرة للمنافسات',
+                    'شفافية في قرارات التأهيل'
                 ]
             ],
             [
-                'title' => 'الاستشارات العقارية',
-                'description' => 'استشارات متخصصة في مجال العقارات',
-                'icon' => 'fas fa-chart-line',
+                'title' => 'الترسية والعقود والمتابعة',
+                'description' => 'ترسية واضحة ثم متابعة التنفيذ عبر مراحل ومحاضر',
+                'icon' => 'fas fa-file-contract',
                 'features' => [
-                    'دراسات الجدوى',
-                    'تقييم الاستثمارات',
-                    'تحليل السوق',
-                    'التخطيط الاستراتيجي'
+                    'توثيق قرار الترسية',
+                    'بنود وملاحق العقود',
+                    'متابعة مراحل التنفيذ',
+                    'إدارة التغييرات والتسليمات'
                 ]
             ]
         ];
@@ -164,7 +173,7 @@ class HomeController extends Controller
             [
                 'name' => 'أحمد محمد',
                 'position' => 'المدير التنفيذي',
-                'description' => 'خبرة 15 عام في مجال العقارات',
+                'description' => 'خبرة 15 عام في إدارة المشاريع',
                 'image' => 'team/ceo.jpg',
                 'social' => [
                     'linkedin' => '#',
@@ -175,7 +184,7 @@ class HomeController extends Controller
             [
                 'name' => 'فاطمة علي',
                 'position' => 'مدير المبيعات',
-                'description' => 'متخصصة في تسويق العقارات الفاخرة',
+                'description' => 'متخصصة في تطوير الأعمال والشراكات',
                 'image' => 'team/sales.jpg',
                 'social' => [
                     'linkedin' => '#',
@@ -186,7 +195,7 @@ class HomeController extends Controller
             [
                 'name' => 'محمد حسن',
                 'position' => 'مدير العمليات',
-                'description' => 'خبرة في إدارة المشاريع العقارية',
+                'description' => 'خبرة في تشغيل منصات المشاريع والمنافسات',
                 'image' => 'team/operations.jpg',
                 'social' => [
                     'linkedin' => '#',
@@ -197,7 +206,7 @@ class HomeController extends Controller
             [
                 'name' => 'سارة أحمد',
                 'position' => 'مدير التسويق',
-                'description' => 'متخصصة في التسويق الرقمي للعقارات',
+                'description' => 'متخصصة في التسويق الرقمي للمنصات والخدمات',
                 'image' => 'team/marketing.jpg',
                 'social' => [
                     'linkedin' => '#',
@@ -233,24 +242,24 @@ class HomeController extends Controller
     {
         $faqs = [
             [
-                'question' => 'كيف يمكنني البحث عن عقار؟',
-                'answer' => 'يمكنك استخدام محرك البحث في الصفحة الرئيسية أو تصفح الفئات المختلفة للعثور على العقار المناسب.'
+                'question' => 'كيف يمكنني البحث عن مشروع أو منافسة؟',
+                'answer' => 'يمكنك استخدام البحث في الصفحة الرئيسية أو تصفح الفئات للعثور على المشاريع والمنافسات المناسبة.'
             ],
             [
                 'question' => 'ما هي رسوم الخدمة؟',
-                'answer' => 'تختلف الرسوم حسب نوع الخدمة وحجم العقار. يمكنك التواصل معنا للحصول على عرض سعر مفصل.'
+                'answer' => 'تختلف الرسوم حسب نوع الخدمة وحجم المشروع. يمكنك التواصل معنا للحصول على عرض سعر مفصل.'
             ],
             [
-                'question' => 'كيف يمكنني حجز موعد لزيارة عقار؟',
-                'answer' => 'يمكنك حجز موعد من خلال صفحة العقار أو التواصل معنا مباشرة عبر الهاتف أو البريد الإلكتروني.'
+                'question' => 'كيف يمكنني تقديم عرض؟',
+                'answer' => 'يمكنك تقديم عرض من خلال صفحة المشروع وإرفاق السعر والمدة والملاحظات، ثم متابعة حالة التأهيل والترسية.'
             ],
             [
                 'question' => 'هل تقدمون خدمات التمويل؟',
                 'answer' => 'نعم، نتعاون مع عدة بنوك ومؤسسات مالية لتقديم أفضل عروض التمويل لعملائنا.'
             ],
             [
-                'question' => 'كيف يمكنني إضافة عقاري للموقع؟',
-                'answer' => 'يمكنك التسجيل كمالك منشأة وإضافة عقاراتك من خلال لوحة التحكم الخاصة بك.'
+                'question' => 'كيف يمكنني إضافة مشروع أو منافسة؟',
+                'answer' => 'يمكنك التسجيل كجهة/منشأة ثم إضافة مشروعك من خلال لوحة التحكم، وتحديد المتطلبات والمدة والميزانية.'
             ],
             [
                 'question' => 'ما هي ضمانات الخدمة؟',
@@ -318,5 +327,102 @@ class HomeController extends Controller
         ];
 
         return view('public.sitemap', compact('sitemap'));
+    }
+
+    public function investmentProperties(Request $request)
+    {
+        $searchCategories = Category::where('is_active', true)->get();
+        $searchFeatures = Feature::where('is_active', true)
+            ->with('translations')
+            ->get();
+
+        $investmentCategoryId = CategoryTranslation::query()
+            ->where(function ($q) {
+                $q->where(function ($q) {
+                    $q->where('name', 'like', '%أراضي%')
+                        ->where('name', 'like', '%استثمار%');
+                })->orWhere(function ($q) {
+                    $q->where('name', 'like', '%اراضي%')
+                        ->where('name', 'like', '%استثمار%');
+                });
+            })
+            ->value('category_id');
+
+        // Collect root + all descendants (not only direct children)
+        $investmentCategoryIds = collect();
+        if ($investmentCategoryId) {
+            $investmentCategoryIds = collect([$investmentCategoryId]);
+
+            $queue = collect([$investmentCategoryId]);
+            while ($queue->isNotEmpty()) {
+                $children = Category::whereIn('parent_id', $queue)->pluck('id');
+                $new = $children->diff($investmentCategoryIds);
+                if ($new->isEmpty()) {
+                    break;
+                }
+                $investmentCategoryIds = $investmentCategoryIds->merge($new);
+                $queue = $new;
+            }
+        }
+
+        // Also include the specific category id=7 (requested for this page)
+        if (Category::where('id', 7)->where('is_active', true)->exists()) {
+            $investmentCategoryIds = $investmentCategoryIds->merge([7])->unique()->values();
+        }
+
+        // Hard stop: do not show unrelated products if the investment category wasn't found
+        if ($investmentCategoryIds->isEmpty()) {
+            $featuredInvestmentProperties = collect();
+            $latestInvestmentProperties = collect();
+            $stats = [
+                'properties' => 0,
+                'developers' => 0,
+                'offers' => 0,
+            ];
+
+            return view('public.investment-properties', compact(
+                'searchCategories',
+                'searchFeatures',
+                'featuredInvestmentProperties',
+                'latestInvestmentProperties',
+                'stats'
+            ));
+        }
+
+        $baseInvestmentProductsQuery = Product::query()
+            ->where('is_active', true)
+            ->where('is_verified', true)
+            ->withActiveOffers()
+            ->whereIn('category_id', $investmentCategoryIds);
+
+        $featuredInvestmentProperties = (clone $baseInvestmentProductsQuery)
+            ->with(['facility', 'category', 'offers'])
+            ->where('is_featured', true)
+            ->latest()
+            ->take(8)
+            ->get();
+
+        $latestInvestmentProperties = (clone $baseInvestmentProductsQuery)
+            ->with(['facility', 'category', 'offers'])
+            ->latest()
+            ->take(12)
+            ->get();
+
+        $investmentProductIds = (clone $baseInvestmentProductsQuery)->pluck('id');
+        $investmentFacilityIds = Product::whereIn('id', $investmentProductIds)->pluck('facility_id')->filter()->unique();
+
+        $stats = [
+            'properties' => $investmentProductIds->count(),
+            'developers' => Facility::whereIn('id', $investmentFacilityIds)->where('is_active', true)->where('is_verified', true)->count(),
+            'offers' => \App\Models\Offer::whereIn('product_id', $investmentProductIds)->where('is_active', true)->count(),
+        ];
+
+        return view('public.investment-properties', compact(
+            'searchCategories',
+            'searchFeatures',
+            'featuredInvestmentProperties',
+            'latestInvestmentProperties',
+            'stats'
+        ));
     }
 }

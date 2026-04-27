@@ -174,16 +174,18 @@
                             <div class="row">
                                 <div class="col-12 mb-2">
                                     <label class="form-label text-muted">المنشأة</label>
-                                    <p>{{ $booking->facility->name }}</p>
+                                    <p>{{ $booking->facility?->name ?? '-' }}</p>
                                 </div>
                                 <div class="col-12">
                                     <div class="btn-group">
                                         <a href="{{ route('admin.products.show', $booking->product) }}" class="btn btn-sm btn-primary">
                                             <i class="fas fa-box me-2"></i>عرض المنتج
                                         </a>
-                                        <a href="{{ route('admin.facilities.show', $booking->facility) }}" class="btn btn-sm btn-info">
-                                            <i class="fas fa-building me-2"></i>عرض المنشأة
-                                        </a>
+                                        @if($booking->facility)
+                                            <a href="{{ route('admin.facilities.show', $booking->facility) }}" class="btn btn-sm btn-info">
+                                                <i class="fas fa-building me-2"></i>عرض المنشأة
+                                            </a>
+                                        @endif
                                     </div>
                                 </div>
                             </div>

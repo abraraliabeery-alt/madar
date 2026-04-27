@@ -123,6 +123,66 @@
 </div>
 @endif
 
+<!-- Receivables & Collections KPIs -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-6">
+    <div class="bg-white rounded-lg shadow-lg border border-gray-200 p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <div class="text-sm text-gray-500 mb-1">إجمالي الذمم</div>
+                <div class="text-2xl font-bold text-gray-900">{{ number_format($receivablesTotal ?? 0) }}</div>
+            </div>
+            <i class="fas fa-file-invoice-dollar text-gray-300 text-3xl"></i>
+        </div>
+        <div class="mt-3">
+            <a href="{{ route('facility.invoices.index') }}" class="text-blue-600 text-sm hover:underline">عرض الفواتير</a>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-lg border border-gray-200 p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <div class="text-sm text-gray-500 mb-1">عدد الفواتير المتأخرة</div>
+                <div class="text-2xl font-bold text-amber-600">{{ number_format($overdueInvoicesCount ?? 0) }}</div>
+            </div>
+            <i class="fas fa-exclamation-circle text-amber-300 text-3xl"></i>
+        </div>
+        <div class="mt-3 text-sm text-gray-600">قيمة المتأخرات: <span class="font-semibold">{{ number_format($overdueAmount ?? 0) }}</span></div>
+        <div class="mt-2">
+            <a href="{{ route('facility.invoices.index', ['status' => 'sent']) }}" class="text-blue-600 text-sm hover:underline">عرض المتأخرات</a>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-lg border border-gray-200 p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <div class="text-sm text-gray-500 mb-1">معدل التحصيل (30 يوم)</div>
+                <div class="text-2xl font-bold {{ ($collectionRate ?? 0) >= 75 ? 'text-green-600' : (($collectionRate ?? 0) >= 50 ? 'text-amber-600' : 'text-red-600') }}">{{ number_format($collectionRate ?? 0, 1) }}%</div>
+            </div>
+            <i class="fas fa-bullseye text-gray-300 text-3xl"></i>
+        </div>
+        <div class="mt-3">
+            <a href="{{ route('facility.financial.payments') }}" class="text-blue-600 text-sm hover:underline">دفعات المنشأة</a>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-lg border border-gray-200 p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <div class="text-sm text-gray-500 mb-1">أعمار الديون (متأخر)</div>
+                <div class="text-sm text-gray-700">
+                    <span class="inline-block mr-2">0–30: <span class="font-semibold">{{ number_format(($aging['d0_30'] ?? 0)) }}</span></span>
+                    <span class="inline-block mr-2">31–60: <span class="font-semibold">{{ number_format(($aging['d31_60'] ?? 0)) }}</span></span>
+                </div>
+                <div class="text-sm text-gray-700">
+                    <span class="inline-block mr-2">61–90: <span class="font-semibold">{{ number_format(($aging['d61_90'] ?? 0)) }}</span></span>
+                    <span class="inline-block mr-2">90+: <span class="font-semibold">{{ number_format(($aging['d90_plus'] ?? 0)) }}</span></span>
+                </div>
+            </div>
+            <i class="fas fa-layer-group text-gray-300 text-3xl"></i>
+        </div>
+    </div>
+</div>
+
 <!-- Charts and Analytics -->
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
     <!-- Revenue Chart -->

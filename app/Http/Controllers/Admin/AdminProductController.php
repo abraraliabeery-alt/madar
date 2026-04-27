@@ -11,6 +11,7 @@ use App\Models\Status;
 use App\Models\Feature;
 use App\Models\Attribute;
 use App\Models\City;
+use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 
 class AdminProductController extends Controller
@@ -183,7 +184,7 @@ class AdminProductController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'address' => 'required|string',
-            'price' => 'required|numeric|min:0',
+            'price' => 'nullable|numeric|min:0',
             'facility_id' => 'required|exists:facilities,id',
             'category_id' => 'required|exists:categories,id',
             'city_id' => 'required|exists:cities,id',
@@ -314,5 +315,205 @@ class AdminProductController extends Controller
     {
         $product->load(['facility', 'category', 'statuses', 'features', 'attributes.translations', 'bookings']);
         return view('admin.products.show', compact('product'));
+    }
+
+    /**
+     * عرض الخط الزمني للمنتج (تجميع للأحداث من النظام الحالي بدون تعديل قاعدة البيانات)
+     */
+    public function timeline(Product $product, Request $request)
+    {
+        $events = [];
+
+        // 1) أحداث المنتج الأساسية
+        $events[] = [
+            'type' => 'product_created',
+            'title' => 'تم إنشاء المنتج',
+            'description' => null,
+            'date' => $product->created_at,
+            'actor' => null,
+            'link' => route('admin.products.show', $product),
+            'source' => 'product',
+        ];
+        if ($product->updated_at && $product->updated_at->ne($product->created_at)) {
+            $events[] = [
+                'type' => 'product_updated',
+                'title' => 'تم تحديث بيانات المنتج',
+                'description' => null,
+                'date' => $product->updated_at,
+                'actor' => null,
+                'link' => route('admin.products.edit', $product),
+                'source' => 'product',
+            ];
+        }
+
+        // 2) الحالات (statuses) عبر العلاقة متعددة الأشكال
+        try {
+            $statuses = $product->statuses()->with('translations')->get();
+            foreach ($statuses as $status) {
+                $pivot = $status->pivot ?? null;
+                $events[] = [
+                    'type' => 'status_changed',
+                    'title' => 'تغيير حالة المنتج',
+                    'description' => $status->name ?? ($status->translations->first()->name ?? null),
+                    'date' => $pivot->created_at ?? $status->created_at,
+                    'actor' => $pivot->user_id ?? null,
+                    'link' => route('admin.products.show', $product),
+                    'source' => 'status',
+                ];
+            }
+        } catch (\Throwable $e) {
+            // تجاهل في حال عدم توفر البنية
+        }
+
+        // 3) العروض Offers
+        try {
+            $offers = $product->offers()->get();
+            foreach ($offers as $offer) {
+                $events[] = [
+                    'type' => 'offer_created',
+                    'title' => 'تم إنشاء عرض',
+                    'description' => 'السعر: ' . number_format((float)($offer->price ?? 0)),
+                    'date' => $offer->created_at,
+                    'actor' => $offer->user_id ?? null,
+                    'link' => route('admin.offers.index'),
+                    'source' => 'offer',
+                ];
+                if ($offer->updated_at && $offer->updated_at->ne($offer->created_at)) {
+                    $events[] = [
+                        'type' => 'offer_updated',
+                        'title' => 'تم تحديث العرض',
+                        'description' => null,
+                        'date' => $offer->updated_at,
+                        'actor' => $offer->user_id ?? null,
+                        'link' => route('admin.offers.index'),
+                        'source' => 'offer',
+                    ];
+                }
+            }
+        } catch (\Throwable $e) {
+            // تجاهل إذا لم تكن العروض مفعلة
+        }
+
+        // 4) الحجوزات Bookings
+        try {
+            $bookings = $product->bookings()->get();
+            foreach ($bookings as $booking) {
+                $events[] = [
+                    'type' => 'booking_created',
+                    'title' => 'تم إنشاء حجز',
+                    'description' => 'رقم الحجز: ' . ($booking->id),
+                    'date' => $booking->created_at,
+                    'actor' => $booking->user_id ?? null,
+                    'link' => route('admin.bookings.index'),
+                    'source' => 'booking',
+                ];
+                if ($booking->updated_at && $booking->updated_at->ne($booking->created_at)) {
+                    $events[] = [
+                        'type' => 'booking_updated',
+                        'title' => 'تم تحديث الحجز',
+                        'description' => null,
+                        'date' => $booking->updated_at,
+                        'actor' => $booking->user_id ?? null,
+                        'link' => route('admin.bookings.index'),
+                        'source' => 'booking',
+                    ];
+                }
+            }
+        } catch (\Throwable $e) {
+            // تجاهل إذا لم تكن الحجوزات مفعلة
+        }
+
+        // 5) العقود Contracts
+        try {
+            $contracts = $product->contracts()->get();
+            foreach ($contracts as $contract) {
+                $events[] = [
+                    'type' => 'contract_created',
+                    'title' => 'تم إنشاء عقد',
+                    'description' => 'رقم العقد: ' . ($contract->id),
+                    'date' => $contract->created_at,
+                    'actor' => $contract->user_id ?? null,
+                    'link' => route('admin.contracts.index'),
+                    'source' => 'contract',
+                ];
+                if ($contract->updated_at && $contract->updated_at->ne($contract->created_at)) {
+                    $events[] = [
+                        'type' => 'contract_updated',
+                        'title' => 'تم تحديث العقد',
+                        'description' => null,
+                        'date' => $contract->updated_at,
+                        'actor' => $contract->user_id ?? null,
+                        'link' => route('admin.contracts.index'),
+                        'source' => 'contract',
+                    ];
+                }
+            }
+        } catch (\Throwable $e) {
+            // تجاهل إذا لم تكن العقود مفعلة
+        }
+
+        // 6) التعليقات Comments على المنتج (إن وجدت)
+        try {
+            $comments = $product->comments()->get();
+            foreach ($comments as $comment) {
+                $events[] = [
+                    'type' => 'comment_added',
+                    'title' => 'تعليق جديد على المنتج',
+                    'description' => mb_strimwidth((string)($comment->content ?? ''), 0, 120, '...'),
+                    'date' => $comment->created_at,
+                    'actor' => $comment->user_id ?? null,
+                    'link' => route('admin.products.show', $product) . '#comments',
+                    'source' => 'comment',
+                ];
+            }
+        } catch (\Throwable $e) {
+            // تجاهل إن لم تكن خاصية التعليقات متاحة
+        }
+
+        // فرز الأحداث زمنيًا (الأحدث أولاً)
+        usort($events, function ($a, $b) {
+            $da = $a['date'] ? strtotime((string)$a['date']) : 0;
+            $db = $b['date'] ? strtotime((string)$b['date']) : 0;
+            return $db <=> $da;
+        });
+
+        // فلاتر بسيطة عبر الاستعلام (type, source, from/to)
+        $type = $request->get('type');
+        $source = $request->get('source');
+        $from = $request->get('from');
+        $to = $request->get('to');
+        if ($type) {
+            $events = array_values(array_filter($events, fn($e) => $e['type'] === $type));
+        }
+        if ($source) {
+            $events = array_values(array_filter($events, fn($e) => $e['source'] === $source));
+        }
+        if ($from) {
+            $fromTs = strtotime($from . ' 00:00:00');
+            $events = array_values(array_filter($events, fn($e) => $e['date'] && strtotime((string)$e['date']) >= $fromTs));
+        }
+        if ($to) {
+            $toTs = strtotime($to . ' 23:59:59');
+            $events = array_values(array_filter($events, fn($e) => $e['date'] && strtotime((string)$e['date']) <= $toTs));
+        }
+
+        // حل أسماء المنفذين (Actors)
+        $actorIds = collect($events)->pluck('actor')->filter()->unique()->values();
+        $actors = $actorIds->isNotEmpty() ? User::whereIn('id', $actorIds)->pluck('name', 'id') : collect();
+        foreach ($events as &$ev) {
+            $ev['actor_name'] = $ev['actor'] && isset($actors[$ev['actor']]) ? $actors[$ev['actor']] : null;
+        }
+        unset($ev);
+
+        return view('admin.products.timeline', [
+            'product' => $product,
+            'events' => $events,
+            'filters' => [
+                'type' => $type,
+                'source' => $source,
+                'from' => $from,
+                'to' => $to,
+            ],
+        ]);
     }
 }

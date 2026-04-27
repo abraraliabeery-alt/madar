@@ -107,7 +107,7 @@
                         @else
                             <span class="text-gray-500 text-sm">{{ __('general.status.no_rating') }}</span>
                         @endif
-                        <a href="{{ route('public.facilities.show', $facility->id) }}" 
+                        <a href="{{ route('facility.site.home', $facility->slug ?? $facility->id) }}" 
                            class="text-primary-600 hover:text-primary-700 font-medium">
                             {{ __('general.actions.view_details') }}
                         </a>

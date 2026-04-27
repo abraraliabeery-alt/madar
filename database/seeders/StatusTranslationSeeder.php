@@ -21,20 +21,20 @@ class StatusTranslationSeeder extends Seeder
                 'en' => 'Available'
             ],
             'rented' => [
-                'ar' => 'مؤجر',
-                'en' => 'Rented'
+                'ar' => 'قيد التنفيذ',
+                'en' => 'In Progress'
             ],
             'sold' => [
-                'ar' => 'مباع',
-                'en' => 'Sold'
+                'ar' => 'مكتمل',
+                'en' => 'Completed'
             ],
             'under_maintenance' => [
-                'ar' => 'تحت الصيانة',
-                'en' => 'Under Maintenance'
+                'ar' => 'موقوف مؤقتاً',
+                'en' => 'On Hold'
             ],
             'reserved' => [
-                'ar' => 'محجوز',
-                'en' => 'Reserved'
+                'ar' => 'قيد المراجعة',
+                'en' => 'Under Review'
             ]
         ];
 

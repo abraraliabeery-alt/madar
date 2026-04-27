@@ -34,7 +34,13 @@
                             </td>
                             <td class="d-none d-md-table-cell">
                                 @if($feature->icon)
-                                    <img src="{{ asset($feature->icon) }}" alt="icon" width="30" class="rounded">
+                                    @if(\Illuminate\Support\Str::contains($feature->icon, 'fa-') || !\Illuminate\Support\Str::contains($feature->icon, '/'))
+                                        <div class="avatar-placeholder rounded d-flex align-items-center justify-content-center" style="width: 30px; height: 30px; background: transparent; box-shadow: none;">
+                                            <i class="{{ $feature->icon }}"></i>
+                                        </div>
+                                    @else
+                                        <img src="{{ asset($feature->icon) }}" alt="icon" width="30" class="rounded">
+                                    @endif
                                 @else
                                     <div class="avatar-placeholder rounded" style="width: 30px; height: 30px;">
                                         <i class="fas fa-star"></i>
@@ -45,7 +51,13 @@
                                 <div class="d-flex align-items-center">
                                     <div class="avatar me-2 d-md-none">
                                         @if($feature->icon)
-                                            <img src="{{ asset($feature->icon) }}" alt="icon" width="32" class="rounded">
+                                            @if(\Illuminate\Support\Str::contains($feature->icon, 'fa-') || !\Illuminate\Support\Str::contains($feature->icon, '/'))
+                                                <div class="avatar-placeholder rounded d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; background: transparent; box-shadow: none;">
+                                                    <i class="{{ $feature->icon }}"></i>
+                                                </div>
+                                            @else
+                                                <img src="{{ asset($feature->icon) }}" alt="icon" width="32" class="rounded">
+                                            @endif
                                         @else
                                             <div class="avatar-placeholder rounded" style="width: 32px; height: 32px;">
                                                 <i class="fas fa-star"></i>

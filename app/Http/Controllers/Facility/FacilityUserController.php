@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Facility;
+use App\Models\Product;
+use App\Models\Booking;
 use App\Models\UserFacilityRole;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -15,6 +17,67 @@ use Illuminate\Validation\Rule;
 class FacilityUserController extends Controller
 {
     /**
+     * لوحة الموظف الحالي: عرض ملخص عقاراته وأدائه داخل المنشأة
+     */
+    public function employeeDashboard(Request $request)
+    {
+        $user = Auth::user();
+        $facility = $user->facilities()->first();
+
+        if (!$facility) {
+            return redirect()->route('facility.onboarding.create')
+                ->with('error', 'يجب إنشاء منشأة أولاً');
+        }
+
+        // التحقق من أن المستخدم جزء من هذه المنشأة
+        if (!$facility->users()->where('user_id', $user->id)->exists()) {
+            abort(403, 'غير مسموح بالوصول');
+        }
+
+        // عقارات الموظف كموظف مسؤول
+        $productsQuery = $facility->products()
+            ->where('seller_user_id', $user->id)
+            ->with(['owner', 'category'])
+            ->withCount('bookings');
+
+        $totalProducts = (clone $productsQuery)->count();
+
+        // عقارات تحتاج تحسين باستخدام منطق مبسط:
+        // أي عقار بدون صورة رئيسية أو بدون إحداثيات موقع
+        $needsAttentionQuery = (clone $productsQuery)->where(function($q) {
+            $q->whereNull('main_image')
+              ->orWhere('main_image', '=','')
+              ->orWhereNull('latitude')
+              ->orWhereNull('longitude');
+        });
+
+        $needsAttentionCount = (clone $needsAttentionQuery)->count();
+
+        // إجمالي الحجوزات لعقارات الموظف
+        // bookings_count هو alias ناتج عن withCount وليست خانة فعلية في قاعدة البيانات،
+        // لذلك نجمعه على مستوى الـ Collection بدلاً من SUM في الاستعلام.
+        $totalBookings = (int) (clone $productsQuery)->get()->sum('bookings_count');
+
+        // مجموع المشاهدات لعقارات الموظف (إن وجدت)
+        $totalViews = (int) (clone $productsQuery)->sum('views_count');
+
+        // تحميل قائمة العقارات للعرض في الجدول
+        $products = $productsQuery
+            ->orderByDesc('created_at')
+            ->paginate(15)
+            ->appends($request->query());
+
+        $stats = [
+            'total_products' => $totalProducts,
+            'needs_attention' => $needsAttentionCount,
+            'total_bookings' => $totalBookings,
+            'total_views' => $totalViews,
+        ];
+
+        return view('facility.users.employee-dashboard', compact('facility', 'user', 'stats', 'products'));
+    }
+
+    /**
      * عرض قائمة مستخدمي المنشأة
      */
     public function index(Request $request)
@@ -22,7 +85,7 @@ class FacilityUserController extends Controller
         $facility = Auth::user()->facilities()->first();
         
         if (!$facility) {
-            return redirect()->route('facility.create')
+            return redirect()->route('facility.onboarding.create')
                 ->with('error', 'يجب إنشاء منشأة أولاً');
         }
 
@@ -59,7 +122,7 @@ class FacilityUserController extends Controller
         $facility = Auth::user()->facilities()->first();
         
         if (!$facility) {
-            return redirect()->route('facility.create')
+            return redirect()->route('facility.onboarding.create')
                 ->with('error', 'يجب إنشاء منشأة أولاً');
         }
 
@@ -79,7 +142,7 @@ class FacilityUserController extends Controller
         $facility = Auth::user()->facilities()->first();
         
         if (!$facility) {
-            return redirect()->route('facility.create')
+            return redirect()->route('facility.onboarding.create')
                 ->with('error', 'يجب إنشاء منشأة أولاً');
         }
 
@@ -118,7 +181,7 @@ class FacilityUserController extends Controller
         $facility = Auth::user()->facilities()->first();
         
         if (!$facility) {
-            return redirect()->route('facility.create')
+            return redirect()->route('facility.onboarding.create')
                 ->with('error', 'يجب إنشاء منشأة أولاً');
         }
 
@@ -165,7 +228,7 @@ class FacilityUserController extends Controller
         $facility = Auth::user()->facilities()->first();
         
         if (!$facility) {
-            return redirect()->route('facility.create')
+            return redirect()->route('facility.onboarding.create')
                 ->with('error', 'يجب إنشاء منشأة أولاً');
         }
 
@@ -188,7 +251,7 @@ class FacilityUserController extends Controller
         $facility = Auth::user()->facilities()->first();
         
         if (!$facility) {
-            return redirect()->route('facility.create')
+            return redirect()->route('facility.onboarding.create')
                 ->with('error', 'يجب إنشاء منشأة أولاً');
         }
 
@@ -211,7 +274,7 @@ class FacilityUserController extends Controller
         $facility = Auth::user()->facilities()->first();
         
         if (!$facility) {
-            return redirect()->route('facility.create')
+            return redirect()->route('facility.onboarding.create')
                 ->with('error', 'يجب إنشاء منشأة أولاً');
         }
 
@@ -270,7 +333,7 @@ class FacilityUserController extends Controller
         $facility = Auth::user()->facilities()->first();
         
         if (!$facility) {
-            return redirect()->route('facility.create')
+            return redirect()->route('facility.onboarding.create')
                 ->with('error', 'يجب إنشاء منشأة أولاً');
         }
 
@@ -305,7 +368,7 @@ class FacilityUserController extends Controller
         $facility = Auth::user()->facilities()->first();
         
         if (!$facility) {
-            return redirect()->route('facility.create')
+            return redirect()->route('facility.onboarding.create')
                 ->with('error', 'يجب إنشاء منشأة أولاً');
         }
 
@@ -343,7 +406,7 @@ class FacilityUserController extends Controller
         $facility = Auth::user()->facilities()->first();
         
         if (!$facility) {
-            return redirect()->route('facility.create')
+            return redirect()->route('facility.onboarding.create')
                 ->with('error', 'يجب إنشاء منشأة أولاً');
         }
 
@@ -385,7 +448,7 @@ class FacilityUserController extends Controller
         $facility = Auth::user()->facilities()->first();
         
         if (!$facility) {
-            return redirect()->route('facility.create')
+            return redirect()->route('facility.onboarding.create')
                 ->with('error', 'يجب إنشاء منشأة أولاً');
         }
 
@@ -406,7 +469,7 @@ class FacilityUserController extends Controller
         $facility = Auth::user()->facilities()->first();
         
         if (!$facility) {
-            return redirect()->route('facility.create')
+            return redirect()->route('facility.onboarding.create')
                 ->with('error', 'يجب إنشاء منشأة أولاً');
         }
 
@@ -436,7 +499,7 @@ class FacilityUserController extends Controller
         $facility = Auth::user()->facilities()->first();
         
         if (!$facility) {
-            return redirect()->route('facility.create')
+            return redirect()->route('facility.onboarding.create')
                 ->with('error', 'يجب إنشاء منشأة أولاً');
         }
 

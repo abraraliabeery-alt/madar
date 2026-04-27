@@ -24,6 +24,18 @@ return [
             'direction' => 'ltr',
             'native_name' => 'English'
         ],
+        'ur' => [
+            'name' => 'اردو',
+            'flag' => '🇵🇰',
+            'direction' => 'rtl',
+            'native_name' => 'اردو'
+        ],
+        'zh' => [
+            'name' => '中文',
+            'flag' => '🇨🇳',
+            'direction' => 'ltr',
+            'native_name' => '中文'
+        ],
     ],
 
     /*
@@ -60,6 +72,8 @@ return [
     'names' => [
         'ar' => 'العربية',
         'en' => 'English',
+        'ur' => 'اردو',
+        'zh' => '中文',
     ],
 
     /*
@@ -74,5 +88,7 @@ return [
     'flags' => [
         'ar' => '🇸🇦',
         'en' => '🇺🇸',
+        'ur' => '🇵🇰',
+        'zh' => '🇨🇳',
     ],
 ];

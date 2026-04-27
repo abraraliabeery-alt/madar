@@ -72,7 +72,7 @@
                                     </div>
 
                                     <div class="flex space-x-2 space-x-reverse">
-                                        <a href="{{ route('public.facilities.show', $facility) }}"
+                                        <a href="{{ route('facility.site.home', $facility->slug ?? $facility->id) }}"
                                            class="flex-1 bg-primary-600 text-white px-3 py-2 rounded text-sm font-medium text-center hover:bg-primary-700 transition-colors">
                                             {{ __('facilities.common.view') }}
                                         </a>

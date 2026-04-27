@@ -5,97 +5,174 @@
     'showPrice' => true
 ])
 
-<div class="bg-white rounded-lg shadow-md overflow-hidden card-hover">
-    <div class="flex">
-        <div class="relative w-48 h-32 bg-gray-100 flex-shrink-0">
-            <img src="{{ $product->image_url ?? $product->image ?? 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80' }}"
-                 alt="{{ $product->title }}" class="w-full h-full object-cover">
-            @if($product->is_featured)
-                <div class="absolute top-2 right-2 bg-primary-600 text-white px-2 py-1 rounded text-xs font-medium">
-                    {{ __('products.property_card.featured') }}
+@php
+    $daysRemaining = null;
+
+    $activityValue = null;
+    $deliveryValue = null;
+    if ($product->card_attributes && $product->card_attributes->count() > 0) {
+        $activityValue = optional($product->card_attributes->firstWhere('type', 'activity'))->pivot->value ?? null;
+        $deliveryValue = optional($product->card_attributes->firstWhere('type', 'delivery_date'))->pivot->value ?? null;
+    }
+
+    $publishDate = $product->created_at ? $product->created_at->format('d-m-Y') : null;
+
+    $deadlineDate = null;
+    if (!empty($product->available_to) && !is_numeric($product->available_to)) {
+        $deadlineDate = $product->available_to;
+    } elseif (!empty($deliveryValue)) {
+        try {
+            $deadlineDate = \Carbon\Carbon::createFromFormat('d-m-Y', $deliveryValue);
+        } catch (\Throwable $e) {
+            $deadlineDate = null;
+        }
+    }
+
+    if (!empty($deadlineDate)) {
+        try {
+            $daysRemaining = now()->diffInDays($deadlineDate, false);
+            if (!is_int($daysRemaining) || abs($daysRemaining) > 999) {
+                $daysRemaining = null;
+            }
+        } catch (\Throwable $e) {
+            $daysRemaining = null;
+        }
+    }
+
+    $displayAttributes = collect();
+    if ($showAttributes && $product->card_attributes && $product->card_attributes->count() > 0) {
+        $displayAttributes = $product->card_attributes
+            ->reject(function ($a) {
+                return in_array($a->type, ['activity', 'delivery_date']);
+            })
+            ->take(3);
+    }
+@endphp
+
+<div class="bg-white dark:bg-secondary-900 rounded-xl shadow-md overflow-hidden card-hover border border-gray-100 dark:border-secondary-800">
+    <div class="flex flex-col md:flex-row">
+        <div class="p-4 md:p-5 flex items-center justify-center md:w-52 flex-shrink-0 bg-white dark:bg-secondary-900 border-b md:border-b-0 md:border-r border-gray-100 dark:border-secondary-800">
+            <div class="w-20 h-20 md:w-24 md:h-24 rounded-full border-4 border-primary-600 flex items-center justify-center text-center">
+                <div>
+                    <div class="text-2xl font-extrabold text-primary-700 dark:text-primary-300 leading-none tracking-tight tabular-nums">
+                        <span class="block w-[6ch] overflow-hidden text-ellipsis whitespace-nowrap">
+                            {{ is_null($daysRemaining) ? '--' : number_format($daysRemaining) }}
+                        </span>
+                    </div>
+                    <div class="text-xs text-gray-500 dark:text-gray-300">يوم متبقي</div>
                 </div>
-            @endif
-            @if($product->is_verified)
-                <div class="absolute top-2 left-2 bg-green-600 text-white px-2 py-1 rounded text-xs font-medium">
-                    <i class="fas fa-check ml-1"></i>{{ __('products.property_card.verified') }}
-                </div>
-            @elseif($product->hasActiveOffers())
-                <div class="absolute top-2 left-2 bg-green-600 text-white px-2 py-1 rounded text-xs font-medium">
-                    {{ __('products.property_card.has_offers') }}
-                </div>
-            @elseif($product->category)
-                <div class="absolute top-2 left-2 bg-white text-gray-800 px-2 py-1 rounded text-xs font-medium">
-                    {{ $product->category->getTranslatedName() }}
-                </div>
-            @endif
+            </div>
         </div>
-        <div class="flex-1 p-6">
-            <div class="flex justify-between items-start mb-3">
-                <h3 class="text-xl font-semibold text-gray-900">
+
+        <div class="flex-1 p-5">
+            <div class="flex items-start justify-between gap-4">
+                <h3 class="text-lg md:text-xl font-bold text-gray-900 dark:text-white leading-snug">
                     <a href="{{ route('public.products.show', $product) }}" class="hover:text-primary-600 transition-colors">
                         {{ $product->title }}
                     </a>
                 </h3>
-                @if($showPrice)
-                    <div class="text-lg font-bold text-primary-600 flex items-center">
-                        @if($product->hasActiveOffers())
-                            <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-5 h-5 mr-1">
-                            {{ $product->getFormattedPrice() }}
+
+                <div class="flex items-start gap-3">
+                    <div class="w-16 h-16 rounded-lg overflow-hidden bg-gray-100 dark:bg-secondary-800 flex items-center justify-center">
+                        @if($product->image_url || $product->image)
+                            <img src="{{ $product->image_url ?? $product->image }}" alt="{{ $product->title }}" class="w-full h-full object-cover">
                         @else
-                            {{ __('products.actions.price_on_request') }}
+                            <i class="fas fa-briefcase text-gray-400 dark:text-gray-300 text-xl"></i>
                         @endif
                     </div>
-                @endif
+                    <div class="w-16 h-16 rounded-lg bg-gray-50 dark:bg-secondary-800 border border-gray-200 dark:border-secondary-700 flex items-center justify-center">
+                        <div class="text-[10px] text-gray-500 dark:text-gray-300 text-center leading-tight">
+                            QR
+                        </div>
+                    </div>
+                </div>
             </div>
-            <p class="text-gray-600 text-sm mb-3">{{ $product->address ?? __('products.property_card.location_unknown') }}</p>
 
-            @if($showAttributes && $product->card_attributes && $product->card_attributes->count() > 0)
-                <div class="flex items-center justify-between text-sm text-gray-500 mb-3">
-                    @foreach($product->card_attributes as $attribute)
-                        <span>
+            <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-gray-700 dark:text-gray-200">
+                <div class="flex items-center gap-2 rtl:flex-row-reverse">
+                    <i class="fas fa-calendar text-primary-700"></i>
+                    <span class="text-gray-500 dark:text-gray-300">تاريخ النشر</span>
+                    <span class="font-semibold">{{ $publishDate ?? '—' }}</span>
+                </div>
+
+                <div class="flex items-center gap-2 rtl:flex-row-reverse">
+                    <i class="fas fa-eye text-primary-700"></i>
+                    <span class="text-gray-500 dark:text-gray-300">المشاهدات</span>
+                    <span class="font-semibold">{{ $product->views_count ? number_format($product->views_count) : '—' }}</span>
+                </div>
+
+                <div class="flex items-center gap-2 rtl:flex-row-reverse">
+                    <i class="fas fa-briefcase text-primary-700"></i>
+                    <span class="text-gray-500 dark:text-gray-300">النشاط</span>
+                    <span class="font-semibold">{{ $activityValue ?? '—' }}</span>
+                </div>
+
+                <div class="flex items-center gap-2 rtl:flex-row-reverse">
+                    <i class="fas fa-clock text-primary-700"></i>
+                    <span class="text-gray-500 dark:text-gray-300">موعد التسليم</span>
+                    <span class="font-semibold">{{ $deliveryValue ?? '—' }}</span>
+                </div>
+
+                <div class="flex items-center gap-2 rtl:flex-row-reverse md:col-span-2">
+                    <i class="fas fa-map-marker-alt text-primary-700"></i>
+                    <span class="text-gray-500 dark:text-gray-300">المكان</span>
+                    <span class="font-semibold">
+                        {{ $product->address ?? __('products.property_card.location_unknown') }}
+                        @if(!empty($product->city))
+                            - @cityName($product->city)
+                        @endif
+                    </span>
+                </div>
+            </div>
+
+            <div class="mt-4 rounded-xl border border-gray-100 dark:border-secondary-800 bg-gray-50 dark:bg-secondary-800/60 p-3">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs text-gray-600 dark:text-gray-200">
+                    <div class="flex items-center gap-2 rtl:flex-row-reverse">
+                        <span class="w-2.5 h-2.5 rounded-full bg-primary-600"></span>
+                        <span class="text-gray-500 dark:text-gray-300">نُشر</span>
+                        <span class="font-semibold text-gray-900 dark:text-white">{{ $publishDate ?? '—' }}</span>
+                    </div>
+                    <div class="flex items-center gap-2 rtl:flex-row-reverse">
+                        <span class="w-2.5 h-2.5 rounded-full bg-secondary-600"></span>
+                        <span class="text-gray-500 dark:text-gray-300">نهاية التقديم</span>
+                        <span class="font-semibold text-gray-900 dark:text-white">{{ $deadlineDate ? $deadlineDate->format('d-m-Y') : '—' }}</span>
+                    </div>
+                    <div class="flex items-center gap-2 rtl:flex-row-reverse">
+                        <span class="w-2.5 h-2.5 rounded-full bg-gray-400"></span>
+                        <span class="text-gray-500 dark:text-gray-300">التسليم</span>
+                        <span class="font-semibold text-gray-900 dark:text-white">{{ $deliveryValue ?? '—' }}</span>
+                    </div>
+                </div>
+            </div>
+
+            @if($displayAttributes->count() > 0)
+                <div class="mt-4 flex flex-wrap gap-2">
+                    @foreach($displayAttributes as $attribute)
+                        <div class="inline-flex items-center gap-2 rtl:flex-row-reverse bg-gray-50 dark:bg-secondary-800 border border-gray-100 dark:border-secondary-700 px-2.5 py-1.5 rounded-lg text-sm">
                             @if($attribute->icon)
-                                <i class="{{ $attribute->icon }} ml-1"></i>
+                                <i class="{{ $attribute->icon }} text-primary-700"></i>
                             @else
-                                <i class="fas fa-info-circle ml-1"></i>
+                                <i class="fas fa-info-circle text-primary-700"></i>
                             @endif
-                            {{ $attribute->pivot->value }}
+                            <span class="font-semibold text-gray-900 dark:text-white">{{ $attribute->pivot->value }}</span>
                             @if($attribute->Symbol)
-                                {{ $attribute->Symbol }}
-                            @else
-                                {{ $attribute->getTranslatedName() ?? $attribute->type }}
+                                <span class="text-gray-500 dark:text-gray-300">{{ $attribute->Symbol }}</span>
                             @endif
-                        </span>
+                        </div>
                     @endforeach
                 </div>
             @endif
 
-            <div class="flex justify-between items-center">
-                <div class="flex items-center space-x-4 text-sm text-gray-500">
-                    <!-- Comments Count -->
-                    <div class="flex items-center">
-                        <i class="fas fa-comment-alt mr-1"></i>
-                        <span>{{ $product->comments_count ?? $product->comments()->count() }}</span>
-                    </div>
-                    
-                    <!-- Likes/Favorites Count -->
-                    <div class="flex items-center">
-                        <i class="fas fa-heart mr-1"></i>
-                        <span>{{ $product->favorites_count ?? $product->favoredByUsers()->count() }}</span>
-                    </div>
-                    
-                    <!-- Views Count (if available) -->
-                    @if($product->views_count)
-                        <div class="flex items-center">
-                            <i class="fas fa-eye mr-1"></i>
-                            <span>{{ number_format($product->views_count) }}</span>
-                        </div>
-                    @endif
-                </div>
-                
+            <div class="mt-4 flex items-center justify-between">
                 <a href="{{ route('public.products.show', $product) }}"
-                   class="text-primary-600 hover:text-primary-700 text-sm font-medium">
+                   class="text-primary-600 hover:text-primary-700 text-sm font-semibold">
                     {{ __('products.property_card.view_details') }}
                 </a>
+                @if($product->is_featured)
+                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-primary-50 text-primary-700">
+                        {{ __('products.property_card.featured') }}
+                    </span>
+                @endif
             </div>
         </div>
     </div>

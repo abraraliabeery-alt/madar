@@ -38,21 +38,23 @@ class AdminFeatureController extends Controller
             'description_ar' => 'nullable|string',
             'description_en' => 'nullable|string',
             'icon' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'icon_name' => 'nullable|string|max:255',
             'is_active' => 'boolean',
             'order' => 'nullable|integer|min:0',
         ]);
 
         $featureData = [
-            'icon' => $request->icon,
             'description' => $request->description_ar, // Default description
             'is_active' => $request->boolean('is_active', true),
             'order' => $request->order ?? 0,
         ];
 
-        // معالجة الأيقونة
+        // معالجة الأيقونة: صورة مرفوعة أو كلاس Font Awesome من icon_name
         if ($request->hasFile('icon')) {
             $iconPath = $request->file('icon')->store('features/icons', 'public');
             $featureData['icon'] = $iconPath;
+        } elseif ($request->filled('icon_name')) {
+            $featureData['icon'] = $request->input('icon_name');
         }
 
         $feature = Feature::create($featureData);
@@ -102,6 +104,7 @@ class AdminFeatureController extends Controller
             'description_ar' => 'nullable|string',
             'description_en' => 'nullable|string',
             'icon' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'icon_name' => 'nullable|string|max:255',
             'is_active' => 'boolean',
             'order' => 'nullable|integer|min:0',
         ]);
@@ -112,14 +115,16 @@ class AdminFeatureController extends Controller
             'order' => $request->order ?? 0,
         ];
 
-        // معالجة الأيقونة
+        // معالجة الأيقونة: صورة مرفوعة أو كلاس Font Awesome من icon_name
         if ($request->hasFile('icon')) {
-            // حذف الأيقونة القديمة
-            if ($feature->icon) {
+            // حذف الأيقونة القديمة إن كانت مسار ملف
+            if ($feature->icon && str_contains($feature->icon, '/')) {
                 Storage::disk('public')->delete($feature->icon);
             }
             $iconPath = $request->file('icon')->store('features/icons', 'public');
             $featureData['icon'] = $iconPath;
+        } elseif ($request->filled('icon_name')) {
+            $featureData['icon'] = $request->input('icon_name');
         }
 
         $feature->update($featureData);

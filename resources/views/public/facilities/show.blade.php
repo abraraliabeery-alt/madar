@@ -8,22 +8,22 @@
     <title>{{ $facility->name }} - {{ config('app.name', 'Laravel') }}</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="{{ $facility->description ?? 'Premium real estate facility offering quality properties and professional services.' }}">
-    <meta name="keywords" content="real estate, properties, {{ $facility->name }}, {{ $facility->facilityCategory->name ?? 'facility' }}">
+    <meta name="description" content="{{ $facility->description ?? 'منشأة تقدم خدمات المقاولات والتنفيذ باحترافية.' }}">
+    <meta name="keywords" content="مقاولات, تنفيذ, مشاريع, {{ $facility->name }}, {{ $facility->facilityCategory->name ?? 'facility' }}">
     <meta name="author" content="{{ $facility->name }}">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:title" content="{{ $facility->name }}">
-    <meta property="og:description" content="{{ $facility->description ?? 'Premium real estate facility' }}">
+    <meta property="og:description" content="{{ $facility->description ?? 'منشأة مقاولات وتنفيذ' }}">
     <meta property="og:image" content="{{ $facility->logo ?? asset('images/default-facility.jpg') }}">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="{{ url()->current() }}">
     <meta property="twitter:title" content="{{ $facility->name }}">
-    <meta property="twitter:description" content="{{ $facility->description ?? 'Premium real estate facility' }}">
+    <meta property="twitter:description" content="{{ $facility->description ?? 'منشأة مقاولات وتنفيذ' }}">
     <meta property="twitter:image" content="{{ $facility->logo ?? asset('images/default-facility.jpg') }}">
 
     <!-- Favicon -->
@@ -32,7 +32,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Tajawal:wght@200;300;400;500;600;700;800;900&family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -321,11 +321,11 @@
 
         /* RTL Language Support */
         [dir="rtl"] {
-            font-family: 'Cairo', 'Segoe UI', Tahoma, Arial, sans-serif;
+            font-family: 'Tajawal', 'Cairo', 'Segoe UI', Tahoma, Arial, sans-serif;
         }
 
         [dir="rtl"] .font-sans {
-            font-family: 'Cairo', 'Segoe UI', Tahoma, Arial, sans-serif !important;
+            font-family: 'Tajawal', 'Cairo', 'Segoe UI', Tahoma, Arial, sans-serif !important;
         }
 
         /* Font Loading Optimization */
@@ -541,6 +541,7 @@
                         'open-sans': ['Open Sans', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
                         lato: ['Lato', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
                         cairo: ['Cairo', 'Segoe UI', 'Tahoma', 'Arial', 'sans-serif'],
+                        tajawal: ['Tajawal', 'Segoe UI', 'Tahoma', 'Arial', 'sans-serif'],
                     }
                 }
             }
@@ -559,7 +560,7 @@
                 </div>
                 <div class="hidden md:flex items-center space-x-6">
                     <a href="#about" class="nav-text transition-colors">{{ __('facilities.show.about') }}</a>
-                    <a href="#properties" class="nav-text transition-colors">{{ __('facilities.show.properties') }}</a>
+                    <a href="#execution-requests" class="nav-text transition-colors">طلبات التنفيذ</a>
                     <a href="#contact" class="nav-text transition-colors">{{ __('facilities.show.contact') }}</a>
                     <a href="{{ route('public.facilities.appointment.form', $facility) }}"
                        class="btn-primary text-white px-6 py-2 font-semibold">
@@ -577,7 +578,7 @@
         <div id="mobile-menu" class="hidden md:hidden nav-bg border-t">
             <div class="px-2 pt-2 pb-3 space-y-1">
                 <a href="#about" class="block px-3 py-2 nav-text">{{ __('facilities.show.about') }}</a>
-                <a href="#properties" class="block px-3 py-2 nav-text">{{ __('facilities.show.properties') }}</a>
+                <a href="#execution-requests" class="block px-3 py-2 nav-text">طلبات التنفيذ</a>
                 <a href="#contact" class="block px-3 py-2 nav-text">{{ __('facilities.show.contact') }}</a>
                 <a href="{{ route('public.facilities.appointment.form', $facility) }}"
                    class="block px-3 py-2 btn-primary text-white text-center font-semibold">
@@ -638,8 +639,8 @@
                             <span class="text-gray-300 mr-2">/5</span>
                     </div>
                         <div class="flex items-center text-gray-100">
-                            <i class="fas fa-home ml-2"></i>
-                            <span>{{ $facility->products_count ?? 0 }} {{ __('facilities.show.properties') }}</span>
+                            <i class="fas fa-gavel ml-2"></i>
+                            <span>{{ $executionRequestsCount ?? 0 }} طلبات تنفيذ</span>
                         </div>
                     </div>
 
@@ -647,8 +648,8 @@
                     <div class="stats-card bg-white/10 backdrop-blur-sm rounded-2xl p-6 mb-10 max-w-md mx-auto {{ ($facility->enable_animations ?? true) ? 'fade-in' : '' }}">
                         <div class="flex items-center justify-center space-x-6 space-x-reverse">
                             <div class="text-center">
-                                <div class="text-2xl font-bold text-white">{{ $facility->products_count ?? 0 }}</div>
-                                <div class="text-sm text-gray-300">{{ __('facilities.show.properties') }}</div>
+                                <div class="text-2xl font-bold text-white">{{ $executionRequestsCount ?? 0 }}</div>
+                                <div class="text-sm text-gray-300">طلبات التنفيذ</div>
                             </div>
                             <div class="text-center">
                                 <div class="text-2xl font-bold text-white">{{ $facility->rating ?? 0 }}</div>
@@ -741,31 +742,48 @@
                     </div>
                 </div>
 
-    <!-- Properties Section -->
-    <div id="properties" class="section-bg-white section-spacing">
+    <!-- Execution Requests Section -->
+    <div id="execution-requests" class="section-bg-white section-spacing">
         <div class="content-container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
-                <h2 class="text-4xl md:text-5xl font-bold text-heading mb-6">{{ __('facilities.show.featured_properties') }}</h2>
-                <p class="text-xl text-muted">{{ __('facilities.show.discover_properties') }}</p>
+                <h2 class="text-4xl md:text-5xl font-bold text-heading mb-6">طلبات التنفيذ</h2>
+                <p class="text-xl text-muted">اطّلع على أحدث طلبات التنفيذ لدى المنشأة</p>
                     </div>
 
-                    @if($products->count() > 0)
-                        <div class="facility-product-grid">
-                            <x-product-grid :products="$products->take(6)" :columns="3" class="mb-12" />
+                    @if(($executionRequests ?? collect())->count() > 0)
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                            @foreach(($executionRequests ?? collect())->take(6) as $req)
+                                @php($t = $req->translations->firstWhere('locale', app()->getLocale()))
+                                <div class="facility-card bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow">
+                                    <div class="flex items-start justify-between mb-4">
+                                        <div class="flex-1">
+                                            <h3 class="text-lg font-bold text-heading mb-1">{{ $t->title ?? ('طلب #' . $req->id) }}</h3>
+                                            <div class="text-sm text-muted">{{ $req->type }}</div>
+                                        </div>
+                                        <span class="text-xs px-3 py-1 rounded-full bg-primary-100 text-primary">{{ $req->status }}</span>
+                                    </div>
+                                    @if(!empty($t?->description))
+                                        <p class="text-sm text-muted line-clamp-3">{{ $t->description }}</p>
+                                    @endif
+                                    <div class="mt-4 text-xs text-gray-500">
+                                        {{ $req->created_at ? $req->created_at->diffForHumans() : '' }}
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
 
                 <div class="text-center">
-                    <a href="{{ route('public.products.by-facility', $facility) }}"
+                    <a href="{{ route('public.execution.marketplace', ['facility_id' => $facility->id]) }}"
                        class="btn-primary inline-flex items-center px-8 py-4 border-2 border-primary-600 text-primary font-bold text-lg hover:bg-primary-600 hover:text-white transition-all duration-300">
-                        {{ __('facilities.show.view_all_properties') }}
+                        عرض جميع الطلبات
                         <i class="fas fa-arrow-right mr-2"></i>
                     </a>
                         </div>
                     @else
                 <div class="text-center py-16">
-                    <i class="fas fa-home text-6xl text-muted mb-6"></i>
-                    <h3 class="text-2xl font-bold text-heading mb-4">{{ __('facilities.show.no_properties') }}</h3>
-                    <p class="text-muted">{{ __('facilities.show.properties_coming_soon') }}</p>
+                    <i class="fas fa-gavel text-6xl text-muted mb-6"></i>
+                    <h3 class="text-2xl font-bold text-heading mb-4">لا توجد طلبات تنفيذ حالياً</h3>
+                    <p class="text-muted">سيتم إضافة طلبات التنفيذ قريباً</p>
                         </div>
                     @endif
                 </div>
@@ -851,8 +869,8 @@
                         <h3 class="text-2xl font-bold text-heading mb-6">{{ __('facilities.show.our_numbers') }}</h3>
                         <div class="grid grid-cols-2 gap-6">
                             <div class="text-center">
-                                <div class="text-3xl font-bold text-primary mb-2">{{ $facility->products_count ?? 0 }}</div>
-                                <div class="text-muted">{{ __('facilities.show.properties') }}</div>
+                                <div class="text-3xl font-bold text-primary mb-2">{{ $executionRequestsCount ?? 0 }}</div>
+                                <div class="text-muted">طلبات التنفيذ</div>
                             </div>
                             <div class="text-center">
                                 <div class="text-3xl font-bold text-primary mb-2">{{ $facility->rating ?? 0 }}/5</div>
@@ -893,7 +911,7 @@
                             <h3 class="text-xl font-bold text-heading mb-6">{{ __('facilities.show.similar_facilities') }}</h3>
                             <div class="space-y-4">
                                 @foreach($similarFacilities->take(3) as $similar)
-                                <a href="{{ route('public.facilities.show', $similar) }}"
+                                <a href="{{ route('facility.site.home', $similar->slug ?? $similar->id) }}"
                                        class="flex items-center p-4 hover:bg-primary-50 rounded-xl transition-colors">
                                     <img src="{{ $similar->logo ?? 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80' }}"
                                              alt="{{ $similar->name }}" class="w-12 h-12 rounded-xl object-cover mr-4">
@@ -956,7 +974,7 @@
                     <h3 class="text-lg font-semibold mb-4 text-white">{{ __('facilities.show.quick_links') }}</h3>
                     <ul class="space-y-2">
                         <li><a href="#about" class="text-gray-300 hover:text-white transition-colors">{{ __('facilities.show.about') }}</a></li>
-                        <li><a href="#properties" class="text-gray-300 hover:text-white transition-colors">{{ __('facilities.show.properties') }}</a></li>
+                        <li><a href="#execution-requests" class="text-gray-300 hover:text-white transition-colors">طلبات التنفيذ</a></li>
                         <li><a href="#contact" class="text-gray-300 hover:text-white transition-colors">{{ __('facilities.show.contact') }}</a></li>
                         <li><a href="{{ route('public.facilities.appointment.form', $facility) }}" class="text-gray-300 hover:text-white transition-colors">{{ __('facilities.show.appointments') }}</a></li>
                     </ul>

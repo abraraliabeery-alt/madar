@@ -127,7 +127,7 @@
                     <div class="p-4">
                         <!-- Product Title -->
                         <h3 class="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
-                            <a href="{{ route('products.show', $product->id) }}" class="hover:text-blue-600 transition-colors duration-200">
+                            <a href="{{ route('public.products.show', $product->id) }}" class="hover:text-blue-600 transition-colors duration-200">
                                 {{ $product->name ?? 'Product ' . $product->id }}
                             </a>
                         </h3>
@@ -183,7 +183,7 @@
 
                         <!-- Product Actions -->
                         <div class="flex space-x-2 space-x-reverse">
-                            <a href="{{ route('products.show', $product->id) }}"
+                            <a href="{{ route('public.products.show', $product->id) }}"
                                class="flex-1 bg-blue-600 text-white text-center py-2 px-4 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors duration-200">
                                 {{ __('products.actions.view_details') }}
                             </a>

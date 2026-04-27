@@ -10,6 +10,7 @@ class Feature extends Model
     use HasFactory;
 
     protected $fillable = [
+        'category_id',
         'icon',
         'description',
         'is_active',
@@ -22,6 +23,11 @@ class Feature extends Model
     ];
 
     // العلاقات
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
     public function products()
     {
         return $this->belongsToMany(Product::class, 'product_feature');

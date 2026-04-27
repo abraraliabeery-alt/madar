@@ -143,7 +143,7 @@
                             </div>
                         </div>
                         
-                        <a href="{{ route('products.show', $booking->product) }}" 
+                        <a href="{{ route('public.products.show', $booking->product) }}" 
                            class="inline-flex items-center text-primary-600 hover:text-primary-700 text-sm font-medium">
                             <i class="fas fa-external-link-alt ml-2"></i>
                             عرض العقار

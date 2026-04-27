@@ -58,15 +58,15 @@
     <div id="{{ $gridId }}-small-grid" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
         @foreach($items as $item)
             @if($type === 'products')
-                <div class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
-                    <div class="relative h-32 bg-gray-100">
+                <div class="bg-white dark:bg-secondary-900 border border-gray-200 dark:border-secondary-800 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                    <div class="relative h-32 bg-gray-100 dark:bg-secondary-800">
                         @if($item->image)
                             <img src="{{ asset('storage/' . $item->image) }}" 
                                  alt="{{ $item->title }}" 
                                  class="w-full h-full object-cover">
                         @else
                             <div class="w-full h-full flex items-center justify-center">
-                                <i class="fas fa-home text-2xl text-gray-400"></i>
+                                <i class="fas fa-home text-2xl text-gray-400 dark:text-gray-300"></i>
                             </div>
                         @endif
                         @if($item->is_featured)
@@ -76,8 +76,44 @@
                         @endif
                     </div>
                     <div class="p-3">
-                        <h3 class="font-medium text-gray-900 text-sm mb-1 line-clamp-1">{{ $item->title }}</h3>
-                        <p class="text-xs text-gray-600 mb-2 line-clamp-2">{{ $item->description }}</p>
+                        <h3 class="font-medium text-gray-900 dark:text-white text-sm mb-1 line-clamp-1">{{ $item->title }}</h3>
+                        <p class="text-xs text-gray-600 dark:text-gray-300 mb-2 line-clamp-2">{{ $item->description }}</p>
+
+                        @if($item->card_attributes && $item->card_attributes->count() > 0)
+                            <div class="flex flex-wrap gap-1.5 mb-2">
+                                @foreach($item->card_attributes->take(2) as $attribute)
+                                    <span class="inline-flex items-center gap-1 rtl:flex-row-reverse bg-gray-50 dark:bg-secondary-800 border border-gray-100 dark:border-secondary-700 px-2 py-1 rounded text-[11px] text-gray-700 dark:text-gray-200">
+                                        @if($attribute->icon)
+                                            <i class="{{ $attribute->icon }} text-primary-700"></i>
+                                        @else
+                                            <i class="fas fa-info-circle text-primary-700"></i>
+                                        @endif
+                                        <span class="font-semibold">{{ $attribute->pivot->value }}</span>
+                                        @if($attribute->Symbol)
+                                            <span class="text-gray-500 dark:text-gray-300">{{ $attribute->Symbol }}</span>
+                                        @endif
+                                    </span>
+                                @endforeach
+                            </div>
+                        @endif
+                        @if(!$showPrice)
+                            <div class="text-xs text-gray-500 mb-2">
+                                <div class="flex items-center gap-2 rtl:flex-row-reverse flex-wrap">
+                                    @if(!empty($item->area))
+                                        <span class="inline-flex items-center gap-1 rtl:flex-row-reverse">
+                                            <i class="fas fa-ruler-combined"></i>
+                                            <span>{{ number_format($item->area) }} م²</span>
+                                        </span>
+                                    @endif
+                                    @if(!empty($item->facility) && !empty($item->facility->name))
+                                        <span class="inline-flex items-center gap-1 rtl:flex-row-reverse">
+                                            <i class="fas fa-building"></i>
+                                            <span class="line-clamp-1">{{ $item->facility->name }}</span>
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+                        @endif
                         @if($showPrice)
                             <div class="text-sm font-semibold text-primary-600 mb-2">
                                 @if($item->hasActiveOffers())
@@ -153,7 +189,7 @@
                      <div class="p-3">
                          <div class="flex items-start justify-between mb-2">
                              <h3 class="text-sm font-semibold text-gray-900 line-clamp-1">
-                                 <a href="{{ route('public.facilities.show', $item) }}" class="hover:text-primary-600 transition-colors">
+                                 <a href="{{ route('public.facility.site.home', $item->slug ?? $item->id) }}" class="hover:text-primary-600 transition-colors">
                                      {{ $item->name }}
                                  </a>
                              </h3>
@@ -177,7 +213,7 @@
                          </div>
 
                          <div class="flex items-center justify-between">
-                             <a href="{{ route('public.facilities.show', $item) }}"
+                             <a href="{{ route('public.facility.site.home', $item->slug ?? $item->id) }}"
                                 class="btn-primary text-white px-3 py-1 rounded text-xs font-medium">
                                  {{ __('facilities.facility_card.view_facility') }}
                              </a>
@@ -258,7 +294,7 @@
                              <div class="p-6">
                                  <div class="flex items-start justify-between mb-4">
                                      <h3 class="text-xl font-semibold text-gray-900">
-                                         <a href="{{ route('public.facilities.show', $item) }}" class="hover:text-primary-600 transition-colors">
+                                         <a href="{{ route('public.facility.site.home', $item->slug ?? $item->id) }}" class="hover:text-primary-600 transition-colors">
                                              {{ $item->name }}
                                          </a>
                                      </h3>
@@ -283,7 +319,7 @@
                                  </div>
 
                                  <div class="flex items-center justify-between">
-                                     <a href="{{ route('public.facilities.show', $item) }}"
+                                     <a href="{{ route('public.facility.site.home', $item->slug ?? $item->id) }}"
                                         class="btn-primary text-white px-4 py-2 rounded-lg text-sm font-medium">
                                          {{ __('facilities.facility_card.view_facility') }}
                                      </a>
@@ -303,44 +339,12 @@
     <!-- List View (Hidden by default) -->
     <div id="{{ $gridId }}-list" class="hidden space-y-4">
         @foreach($items as $item)
-            <div class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
-                <div class="flex">
-                    @if($type === 'products')
-                        <div class="relative w-48 h-32 bg-gray-100 flex-shrink-0">
-                            @if($item->image)
-                                <img src="{{ asset('storage/' . $item->image) }}" 
-                                     alt="{{ $item->title }}" 
-                                     class="w-full h-full object-cover">
-                            @else
-                                <div class="w-full h-full flex items-center justify-center">
-                                    <i class="fas fa-home text-2xl text-gray-400"></i>
-                                </div>
-                            @endif
-                            @if($item->is_featured)
-                                <div class="absolute top-2 right-2 bg-primary-600 text-white px-2 py-1 rounded text-xs">
-                                    {{ __('general.status.featured') }}
-                                </div>
-                            @endif
-                        </div>
-                        <div class="flex-1 p-4">
-                            <h3 class="font-medium text-gray-900 text-lg mb-2">{{ $item->title }}</h3>
-                            <p class="text-sm text-gray-600 mb-3">{{ $item->description }}</p>
-                            @if($showPrice)
-                                <div class="text-lg font-semibold text-primary-600 mb-3">
-                                    @if($item->hasActiveOffers())
-                                        <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-4 h-4 inline mr-1">
-                                        {{ $item->getFormattedPrice() }}
-                                    @else
-                                        {{ __('products.actions.price_on_request') }}
-                                    @endif
-                                </div>
-                            @endif
-                            <a href="{{ route('public.products.show', $item) }}" 
-                               class="text-primary-600 hover:text-primary-700 font-medium">
-                                {{ __('general.actions.view_details') }}
-                            </a>
-                        </div>
-                    @elseif($type === 'cities')
+            @if($type === 'products')
+                <x-product-card-row :product="$item" :showPrice="$showPrice" />
+            @else
+                <div class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                    <div class="flex">
+                        @if($type === 'cities')
                         <div class="relative w-48 h-32 bg-gray-100 flex-shrink-0">
                             @if($item->image)
                                 <img src="{{ asset('storage/' . $item->image) }}" 
@@ -398,7 +402,7 @@
                          <div class="flex-1 p-6">
                              <div class="flex justify-between items-start mb-3">
                                  <h3 class="text-xl font-semibold text-gray-900">
-                                     <a href="{{ route('public.facilities.show', $item) }}" class="hover:text-primary-600 transition-colors">
+                                     <a href="{{ route('public.facility.site.home', $item->slug ?? $item->id) }}" class="hover:text-primary-600 transition-colors">
                                          {{ $item->name }}
                                      </a>
                                  </h3>
@@ -423,7 +427,7 @@
                              </div>
 
                              <div class="flex items-center justify-between">
-                                 <a href="{{ route('public.facilities.show', $item) }}"
+                                 <a href="{{ route('public.facility.site.home', $item->slug ?? $item->id) }}"
                                     class="btn-primary text-white px-4 py-2 rounded-lg text-sm font-medium">
                                      {{ __('facilities.facility_card.view_facility') }}
                                  </a>
@@ -436,6 +440,7 @@
                      @endif
                 </div>
             </div>
+            @endif
         @endforeach
     </div>
     

@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\AdminUploadController;
 use App\Http\Controllers\Admin\AdminFinancialController;
 use App\Http\Controllers\Admin\AdminPermissionController;
 use App\Http\Controllers\Admin\AdminUserManagementController;
+use App\Http\Controllers\Admin\IconPickerController;
 
 Route::group([], function () {
 
@@ -54,6 +55,24 @@ Route::group([], function () {
     Route::get('facilities/{facility}/products', [AdminFacilityController::class, 'products'])->name('facilities.products');
     Route::get('facilities/{facility}/bookings', [AdminFacilityController::class, 'bookings'])->name('facilities.bookings');
 
+    // Facility Site Management (Pages + Settings)
+    Route::prefix('facilities/{facility}/site')->name('facilities.site.')->group(function(){
+        // Settings
+        Route::get('settings', [\App\Http\Controllers\Admin\FacilitySite\SettingAdminController::class, 'edit'])->name('settings.edit');
+        Route::put('settings', [\App\Http\Controllers\Admin\FacilitySite\SettingAdminController::class, 'update'])->name('settings.update');
+
+        // Pages CRUD
+        if (class_exists(\App\Http\Controllers\Admin\FacilitySite\PageAdminController::class)) {
+            Route::get('pages', [\App\Http\Controllers\Admin\FacilitySite\PageAdminController::class, 'index'])->name('pages.index');
+            Route::get('pages/create', [\App\Http\Controllers\Admin\FacilitySite\PageAdminController::class, 'create'])->name('pages.create');
+            Route::post('pages', [\App\Http\Controllers\Admin\FacilitySite\PageAdminController::class, 'store'])->name('pages.store');
+            Route::get('pages/{page}/edit', [\App\Http\Controllers\Admin\FacilitySite\PageAdminController::class, 'edit'])->name('pages.edit');
+            Route::put('pages/{page}', [\App\Http\Controllers\Admin\FacilitySite\PageAdminController::class, 'update'])->name('pages.update');
+            Route::delete('pages/{page}', [\App\Http\Controllers\Admin\FacilitySite\PageAdminController::class, 'destroy'])->name('pages.destroy');
+            Route::post('pages/{page}/set-home', [\App\Http\Controllers\Admin\FacilitySite\PageAdminController::class, 'setHome'])->name('pages.set-home');
+        }
+    });
+
     // Products Management
     Route::resource('products', AdminProductController::class);
     Route::post('products/{product}/toggle-status', [AdminProductController::class, 'toggleStatus'])->name('products.toggle-status');
@@ -61,6 +80,7 @@ Route::group([], function () {
     Route::post('products/{product}/toggle-featured', [AdminProductController::class, 'toggleFeatured'])->name('products.toggle-featured');
     Route::get('products/{product}/gallery', [AdminProductController::class, 'gallery'])->name('products.gallery');
     Route::get('products/{product}/comments', [AdminProductController::class, 'comments'])->name('products.comments');
+    Route::get('products/{product}/timeline', [AdminProductController::class, 'timeline'])->name('products.timeline');
 
     // Bookings Management
     Route::resource('bookings', AdminBookingController::class);
@@ -123,6 +143,7 @@ Route::group([], function () {
     Route::post('categories/{category}/toggle-status', [AdminCategoryController::class, 'toggleStatus'])->name('categories.toggle-status');
     Route::post('categories/{category}/toggle-featured', [AdminCategoryController::class, 'toggleFeatured'])->name('categories.toggle-featured');
     Route::post('categories/reorder', [AdminCategoryController::class, 'reorder'])->name('categories.reorder');
+    Route::get('categories/check-parent', [AdminCategoryController::class, 'checkParent'])->name('categories.check-parent');
     Route::get('categories/statistics', [AdminCategoryController::class, 'statistics'])->name('categories.statistics');
 
     // Features Management
@@ -164,6 +185,9 @@ Route::group([], function () {
 
     // Upload Routes
     Route::post('upload/image', [AdminUploadController::class, 'uploadImage'])->name('upload.image');
+
+    // Icon Picker API
+    Route::get('icon-picker/search', [IconPickerController::class, 'search'])->name('icon-picker.search');
 
     // Enhanced Financial Management System
     Route::prefix('financial')->name('financial.')->group(function () {

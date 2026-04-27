@@ -18,6 +18,15 @@ use App\Http\Controllers\Facility\BudgetController;
 use App\Http\Controllers\Facility\FinancialReportController;
 use App\Http\Controllers\Facility\FacilityUserController;
 use App\Http\Controllers\FacilityCustomizationController;
+use App\Http\Controllers\Facility\FacilityTaskController;
+use App\Http\Controllers\Facility\FacilityProjectController;
+use App\Http\Controllers\Facility\FacilityAppointmentController;
+use App\Http\Controllers\Facility\FacilityRentalsReportController;
+use App\Http\Controllers\Facility\FacilitySmartBrokerController;
+use App\Http\Controllers\Facility\HR\DepartmentController as FacilityHrDepartmentController;
+use App\Http\Controllers\Facility\HR\PositionController as FacilityHrPositionController;
+use App\Http\Controllers\Facility\ProductLifecycleController;
+use App\Http\Controllers\Facility\FacilityExecutionRequestController;
 
 Route::group([], function () {
 
@@ -26,6 +35,11 @@ Route::group([], function () {
     Route::get('/statistics', [FacilityController::class, 'statistics'])->name('statistics');
     Route::get('/settings', [FacilityController::class, 'settings'])->name('settings');
     Route::post('/settings', [FacilityController::class, 'updateSettings'])->name('settings.update');
+
+    // Optional new Home v2 (behind feature flag)
+    if (config('features.facility_home_v2')) {
+        Route::get('/home-v2', [FacilityController::class, 'homeV2'])->name('home-v2');
+    }
 
     // Facility Management
     Route::get('/create', [FacilityController::class, 'create'])->name('create');
@@ -38,6 +52,8 @@ Route::group([], function () {
 
     // Products Management
     Route::resource('products', FacilityProductController::class);
+    Route::get('categories/{category}/products', [FacilityProductController::class, 'categoryProducts'])->name('categories.products');
+    Route::get('products/{product}/lifecycle', [FacilityProductController::class, 'lifecycle'])->name('products.lifecycle');
     Route::post('products/{product}/toggle-status', [FacilityProductController::class, 'toggleStatus'])->name('products.toggle-status');
     Route::post('products/{product}/toggle-verification', [FacilityProductController::class, 'toggleVerification'])->name('products.toggle-verification');
     Route::post('products/{product}/toggle-featured', [FacilityProductController::class, 'toggleFeatured'])->name('products.toggle-featured');
@@ -56,12 +72,48 @@ Route::group([], function () {
     Route::post('bookings/{booking}/unconfirm', [FacilityBookingController::class, 'unconfirm'])->name('bookings.unconfirm');
     Route::post('bookings/{booking}/update-payment', [FacilityBookingController::class, 'updatePaymentStatus'])->name('bookings.update-payment');
 
+    // Tasks Management (uses existing tasks tables only)
+    Route::post('tasks/quick', [FacilityTaskController::class, 'quickStore'])->name('tasks.quick');
+    Route::post('tasks/generate-reminders', [FacilityTaskController::class, 'generateReminders'])->name('tasks.generate-reminders');
+    Route::resource('tasks', FacilityTaskController::class);
+
+    // Projects Management (basic lifecycle view for facility projects)
+    Route::get('projects', [FacilityProjectController::class, 'index'])->name('projects.index');
+    Route::get('projects/{project}', [FacilityProjectController::class, 'show'])->name('projects.show');
+    Route::get('projects/{project}/lifecycle', [FacilityProjectController::class, 'lifecycle'])->name('projects.lifecycle');
+    Route::post('projects/{project}/lifecycle/ai', [FacilityProjectController::class, 'aiStage'])->name('projects.lifecycle.ai');
+
+    // Smart Real Estate Broker (AI matching)
+    Route::get('smart-broker', [FacilitySmartBrokerController::class, 'index'])->name('smart-broker.index');
+    Route::post('smart-broker/match', [FacilitySmartBrokerController::class, 'match'])->middleware('throttle:10,1')->name('smart-broker.match');
+
+    // Execution Requests (generic executors / offers system)
+    Route::get('execution-requests/workspace', [FacilityExecutionRequestController::class, 'workspace'])->name('execution-requests.workspace');
+    Route::get('execution-requests', [FacilityExecutionRequestController::class, 'index'])->name('execution-requests.index');
+    Route::get('execution-requests/create', [FacilityExecutionRequestController::class, 'create'])->name('execution-requests.create');
+    Route::post('execution-requests', [FacilityExecutionRequestController::class, 'store'])->name('execution-requests.store');
+    Route::get('execution-requests/{executionRequest}', [FacilityExecutionRequestController::class, 'show'])->name('execution-requests.show');
+    Route::post('execution-requests/{executionRequest}/bids', [FacilityExecutionRequestController::class, 'storeBid'])->name('execution-requests.bids.store');
+
+    // Appointments Management
+    Route::get('appointments', [FacilityAppointmentController::class, 'index'])->name('appointments.index');
+    Route::get('appointments/{appointment}', [FacilityAppointmentController::class, 'show'])->name('appointments.show');
+    Route::post('appointments/{appointment}/status', [FacilityAppointmentController::class, 'updateStatus'])->name('appointments.update-status');
+
     // Offers Management
     Route::get('offers/statistics', [FacilityOfferController::class, 'statistics'])->name('offers.statistics');
     Route::get('offers/export', [FacilityOfferController::class, 'export'])->name('offers.export');
     Route::resource('offers', FacilityOfferController::class);
     Route::post('offers/{offer}/toggle-status', [FacilityOfferController::class, 'toggleStatus'])->name('offers.toggle-status');
     Route::post('offers/{offer}/copy', [FacilityOfferController::class, 'copy'])->name('offers.copy');
+
+    // Rentals Reports
+    Route::get('reports/rentals/occupancy', [FacilityRentalsReportController::class, 'occupancy'])->name('reports.rentals.occupancy');
+    Route::get('reports/rentals/collections', [FacilityRentalsReportController::class, 'collections'])->name('reports.rentals.collections');
+    
+    // Facility Loan Requests Dashboard
+    Route::get('loans/requests', [FacilityController::class, 'loanRequests'])->name('loans.requests');
+    Route::get('loans/requests/{loanRequest}', [FacilityController::class, 'showLoanRequest'])->name('loans.requests.show');
 
     // Contracts Management
     Route::get('contracts/statistics', [FacilityContractController::class, 'statistics'])->name('contracts.statistics');
@@ -74,6 +126,7 @@ Route::group([], function () {
     Route::get('contracts/{contract}/invoices', [FacilityContractController::class, 'invoices'])->name('contracts.invoices');
     Route::get('contracts/{contract}/payments', [FacilityContractController::class, 'payments'])->name('contracts.payments');
     Route::get('contracts/{contract}/financial-report', [FacilityContractController::class, 'financialReport'])->name('contracts.financial-report');
+    Route::post('contracts/{contract}/commissions', [FacilityContractController::class, 'storeCommission'])->name('contracts.commissions.store');
 
     // Invoices Management
     Route::get('invoices/statistics', [FacilityInvoiceController::class, 'statistics'])->name('invoices.statistics');
@@ -91,6 +144,7 @@ Route::group([], function () {
     Route::post('payments/{payment}/refund', [FacilityPaymentController::class, 'refund'])->name('payments.refund');
 
     // Users Management
+    Route::get('users/me/dashboard', [FacilityUserController::class, 'employeeDashboard'])->name('users.employee-dashboard');
     Route::get('users/statistics', [FacilityUserController::class, 'statistics'])->name('users.statistics');
     Route::get('users/export', [FacilityUserController::class, 'export'])->name('users.export');
     Route::resource('users', FacilityUserController::class);
@@ -98,6 +152,19 @@ Route::group([], function () {
     Route::delete('users/{user}/remove', [FacilityUserController::class, 'removeFromFacility'])->name('users.remove');
     Route::post('users/{user}/assign-role', [FacilityUserController::class, 'assignRole'])->name('users.assign-role');
     Route::delete('users/{user}/roles/{role}', [FacilityUserController::class, 'removeRole'])->name('users.remove-role');
+
+    // HR Management (behind feature flag)
+    if (config('features.hr_core')) {
+        Route::prefix('hr')->name('hr.')->group(function () {
+            Route::resource('departments', FacilityHrDepartmentController::class)->only(['index','store','show','update','destroy']);
+            Route::resource('positions', FacilityHrPositionController::class)->only(['index','store','show','update','destroy']);
+        });
+    }
+
+    // Product Lifecycle metrics (behind feature flag)
+    if (config('features.facility_lifecycle_widgets')) {
+        Route::get('lifecycle/metrics', [ProductLifecycleController::class, 'metrics'])->name('lifecycle.metrics');
+    }
 
     // Financial Reports
     Route::prefix('financial')->name('financial.')->group(function () {
@@ -118,7 +185,7 @@ Route::group([], function () {
     // Additional Facility Routes
     Route::get('notifications', [FacilityController::class, 'notifications'])->name('notifications');
     Route::post('notifications/mark-read', [FacilityController::class, 'markNotificationsRead'])->name('notifications.mark-read');
-    Route::get('profile', [FacilityController::class, 'profile'])->name('facility.profile');
+    Route::get('profile', [FacilityController::class, 'profile'])->name('profile');
     Route::post('profile', [FacilityController::class, 'updateProfile'])->name('profile.update');
     Route::get('change-password', [FacilityController::class, 'changePassword'])->name('change-password');
     Route::post('change-password', [FacilityController::class, 'updatePassword'])->name('change-password.update');
@@ -126,6 +193,7 @@ Route::group([], function () {
     Route::get('reports/bookings', [FacilityController::class, 'bookingReports'])->name('reports.bookings');
     Route::get('reports/products', [FacilityController::class, 'productReports'])->name('reports.products');
     Route::get('reports/revenue', [FacilityController::class, 'revenueReports'])->name('reports.revenue');
+    Route::get('banks', [FacilityController::class, 'banks'])->name('banks.index');
     
     // Facility Customization Routes
     Route::get('customization/{facility}/edit', [FacilityCustomizationController::class, 'edit'])->name('customization.edit');

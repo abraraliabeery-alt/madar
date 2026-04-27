@@ -11,6 +11,7 @@ class Facility extends Model
 
     protected $fillable = [
         'name',
+        'slug',
         'description',
         'address',
         'phone',
@@ -80,6 +81,12 @@ class Facility extends Model
         return $this->belongsTo(FacilityCategory::class);
     }
 
+    // Alias for backward compatibility in views expecting $facility->category
+    public function category()
+    {
+        return $this->belongsTo(FacilityCategory::class, 'facility_category_id');
+    }
+
     public function city()
     {
         return $this->belongsTo(City::class);
@@ -89,6 +96,13 @@ class Facility extends Model
     {
         return $this->belongsTo(User::class, 'owner_user_id');
     }
+
+    public function setting()
+    {
+        return $this->hasOne(FacilitySetting::class);
+    }
+
+    
 
     public function users()
     {
@@ -123,6 +137,11 @@ class Facility extends Model
     public function payments()
     {
         return $this->hasMany(Payment::class);
+    }
+
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class);
     }
 
     public function tasks()
@@ -185,6 +204,28 @@ class Facility extends Model
     public function scopeByCategory($query, $categoryId)
     {
         return $query->where('facility_category_id', $categoryId);
+    }
+
+    /**
+     * Determine if this facility is eligible to act as an execution provider
+     * based purely on its category/config, without changing database schema.
+     */
+    public function isExecutionEligible(): bool
+    {
+        if (!$this->facilityCategory) {
+            return false;
+        }
+
+        // Simple rule: only certain categories are considered "executors".
+        // This can later be moved to config or extended, but no schema change is needed.
+        $allowedCategoryIds = config('services.execution.allowed_facility_category_ids', []);
+
+        if (!empty($allowedCategoryIds)) {
+            return in_array($this->facility_category_id, $allowedCategoryIds, true);
+        }
+
+        // Fallback: allow all active categories if no explicit config is set.
+        return (bool) $this->facilityCategory->is_active;
     }
 
     // Accessors

@@ -7,13 +7,17 @@ return [
         'view_all_categories' => 'عرض جميع الفئات',
         'cities' => 'المدن',
         'view_all_cities' => 'عرض جميع المدن',
-        'properties' => 'العقارات',
-        'facilities' => 'المنشآت',
+        'properties' => 'المشاريع',
+        'facilities' => 'المقاولون',
         'about_us' => 'من نحن',
         'contact_us' => 'اتصل بنا',
         'language' => 'اللغة',
         'arabic' => 'العربية',
         'english' => 'الإنجليزية',
+        'urdu' => 'الأوردو',
+        'chinese' => 'الصينية',
+        'suppliers' => 'موردون',
+        'factories' => 'مصانع',
     ],
     
     'notifications' => [
@@ -25,7 +29,7 @@ return [
     
     'user_menu' => [
         'dashboard' => 'لوحة التحكم',
-        'facility_management' => 'إدارة المنشأة',
+        'facility_management' => 'إدارة المقاول',
         'my_account' => 'حسابي',
         'edit_profile' => 'تعديل الملف الشخصي',
         'logout' => 'تسجيل الخروج',
@@ -34,12 +38,12 @@ return [
     ],
     
     'footer' => [
-        'description' => 'منصة عقارية متكاملة تقدم أفضل الخدمات في مجال العقارات',
+        'description' => 'منصة مقاولات متكاملة لطرح المشاريع واستقبال عروض التنفيذ',
         'our_services' => 'خدماتنا',
-        'property_sales' => 'بيع العقارات',
-        'property_rental' => 'تأجير العقارات',
-        'property_management' => 'إدارة الممتلكات',
-        'real_estate_consulting' => 'الاستشارات العقارية',
+        'property_sales' => 'طرح مشاريع',
+        'property_rental' => 'تقديم عروض تنفيذ',
+        'property_management' => 'اعتماد المقاولين',
+        'real_estate_consulting' => 'تحليل وتسعير',
         'quick_links' => 'روابط سريعة',
         'contact_us' => 'اتصل بنا',
         'all_rights_reserved' => 'جميع الحقوق محفوظة.',

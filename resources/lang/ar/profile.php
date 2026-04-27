@@ -84,7 +84,7 @@ return [
     'permissions' => 'الصلاحيات',
     'manages' => 'يدير',
     'all_system_parts' => 'جميع أجزاء النظام',
-    'products' => 'المنتجات',
+    'products' => 'العقارات',
     'view_all' => 'عرض الكل',
     'facilities' => 'المنشآت',
     'communication_channels' => 'قنوات الاتصال',

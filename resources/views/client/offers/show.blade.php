@@ -181,7 +181,7 @@
                             @endif
                             <h4 class="font-semibold text-gray-900 mb-2">{{ $offer->facility->name }}</h4>
                             <p class="text-gray-500 text-sm mb-4">{{ $offer->facility->description ?? 'لا يوجد وصف' }}</p>
-                            <a href="{{ route('facilities.show', $offer->facility) }}" 
+                            <a href="{{ route('facility.site.home', $offer->facility->slug ?? $offer->facility->id) }}" 
                                class="inline-flex items-center px-3 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors">
                                 عرض المنشأة
                             </a>

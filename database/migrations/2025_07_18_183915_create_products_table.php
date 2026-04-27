@@ -23,8 +23,6 @@ return new class extends Migration
             $table->string('booking_number')->unique()->nullable();
             $table->date('available_from')->nullable();
             $table->date('available_to')->nullable();
-            $table->string('contact_phone')->nullable();
-            $table->string('contact_email')->nullable();
             $table->text('additional_info')->nullable();
             $table->decimal('price', 12, 2)->nullable();
             $table->string('image')->nullable();

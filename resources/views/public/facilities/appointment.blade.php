@@ -47,7 +47,7 @@
                     </div>
                     <div>
                         <button type="submit" class="btn-primary text-white px-6 py-2 rounded-lg font-medium">{{ __('facilities.appointment.submit_request') }}</button>
-                        <a href="{{ route('public.facilities.show', $facility) }}" class="ml-3 text-primary-600 hover:text-primary-700">{{ __('facilities.appointment.back_to_facility') }}</a>
+                        <a href="{{ route('facility.site.home', $facility->slug ?? $facility->id) }}" class="ml-3 text-primary-600 hover:text-primary-700">{{ __('facilities.appointment.back_to_facility') }}</a>
                     </div>
                 </form>
             </div>

@@ -139,13 +139,13 @@
                             <div class="flex-shrink-0">
                                 <div class="flex items-center space-x-2 space-x-reverse">
                                     @if(!$notification->read_at)
-                                        <button onclick="markAsRead({{ $notification->id }})" 
+                                        <button onclick="markAsRead('{{ $notification->id }}')" 
                                                 class="text-gray-400 hover:text-gray-600" 
                                                 title="تعيين كمقروء">
                                             <i class="fas fa-check"></i>
                                         </button>
                                     @endif
-                                    <button onclick="deleteNotification({{ $notification->id }})" 
+                                    <button onclick="deleteNotification('{{ $notification->id }}')" 
                                             class="text-red-400 hover:text-red-600" 
                                             title="حذف">
                                         <i class="fas fa-trash"></i>

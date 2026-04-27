@@ -113,26 +113,23 @@
                                 </div>
                             </div>
 
-                            <!-- Icon Upload -->
+                            <!-- Icon Selection -->
                             <div class="col-md-4">
                                 <div class="card">
                                     <div class="card-header">
                                         <h6 class="mb-0">الأيقونة</h6>
                                     </div>
                                     <div class="card-body">
-                                        <div class="mb-3">
-                                            <label for="icon" class="form-label">أيقونة الخاصية</label>
-                                            <input type="file" class="form-control @error('icon') is-invalid @enderror"
-                                                   id="icon" name="icon" accept="image/*">
-                                            <small class="form-text text-muted">يفضل استخدام أيقونات SVG أو PNG بحجم صغير</small>
-                                            @error('icon')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-
-                                        <div id="icon-preview" class="text-center" style="display: none;">
-                                            <img id="preview-image" src="" alt="Preview" class="img-thumbnail" style="max-width: 100px; max-height: 100px;">
-                                        </div>
+                                        <x-icon-picker
+                                            nameIcon="icon_name"
+                                            nameImage="icon"
+                                            :valueIconName="old('icon_name')"
+                                            labelIcon="اسم الأيقونة (Font Awesome)"
+                                            labelImage="أيقونة كصورة (اختياري)"
+                                            imageHelpText="يمكنك إما استخدام اسم أيقونة Font Awesome بالأعلى أو رفع صورة SVG/PNG صغيرة"
+                                            pickerTitle="اختيار الأيقونة للخاصية"
+                                            pickerButtonText="استعراض الأيقونات"
+                                        />
                                     </div>
                                 </div>
                             </div>
@@ -159,25 +156,5 @@
 @endsection
 
 @push('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const iconInput = document.getElementById('icon');
-    const iconPreview = document.getElementById('icon-preview');
-    const previewImage = document.getElementById('preview-image');
-
-    iconInput.addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                previewImage.src = e.target.result;
-                iconPreview.style.display = 'block';
-            }
-            reader.readAsDataURL(file);
-        } else {
-            iconPreview.style.display = 'none';
-        }
-    });
-});
-</script>
+    {{-- مكوّن الأيقونة المشترك يتولى تحميل جميع سكربتات الاختيار والمعاينة --}}
 @endpush

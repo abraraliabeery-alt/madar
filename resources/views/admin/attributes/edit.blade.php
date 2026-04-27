@@ -115,35 +115,25 @@
                                 </div>
                             </div>
 
-                            <!-- Icon Upload -->
+                            <!-- Icon Selection -->
                             <div class="col-md-4">
                                 <div class="card">
                                     <div class="card-header">
                                         <h6 class="mb-0">الأيقونة</h6>
                                     </div>
                                     <div class="card-body">
-                                        @if($attribute->icon)
-                                            <div class="mb-3">
-                                                <label class="form-label">الأيقونة الحالية</label>
-                                                <div class="text-center">
-                                                    <img src="{{ asset($attribute->icon) }}" alt="Current Icon" class="img-thumbnail" style="max-width: 100px; max-height: 100px;">
-                                                </div>
-                                            </div>
-                                        @endif
-
-                                        <div class="mb-3">
-                                            <label for="icon" class="form-label">تغيير الأيقونة</label>
-                                            <input type="file" class="form-control @error('icon') is-invalid @enderror"
-                                                   id="icon" name="icon" accept="image/*">
-                                            <small class="form-text text-muted">اترك فارغاً للاحتفاظ بالأيقونة الحالية</small>
-                                            @error('icon')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-
-                                        <div id="icon-preview" class="text-center" style="display: none;">
-                                            <img id="preview-image" src="" alt="Preview" class="img-thumbnail" style="max-width: 100px; max-height: 100px;">
-                                        </div>
+                                        <x-icon-picker
+                                            nameIcon="icon_name"
+                                            nameImage="icon"
+                                            :valueIconName="old('icon_name', $attribute->icon && !\Illuminate\Support\Str::contains($attribute->icon, '/') ? $attribute->icon : '')"
+                                            :currentImagePath="$attribute->icon && \Illuminate\Support\Str::contains($attribute->icon, '/') ? $attribute->icon : null"
+                                            labelIcon="اسم الأيقونة (Font Awesome)"
+                                            labelImage="تغيير الأيقونة كصورة"
+                                            imageHelpText="اترك فارغاً للاحتفاظ بالأيقونة الحالية أو استخدم اسم أيقونة Font Awesome بالأعلى"
+                                            showCurrentImageLabel="الأيقونة الحالية (صورة)"
+                                            pickerTitle="اختيار الأيقونة للخاصية"
+                                            pickerButtonText="استعراض الأيقونات"
+                                        />
                                     </div>
                                 </div>
                             </div>
@@ -170,25 +160,5 @@
 @endsection
 
 @push('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const iconInput = document.getElementById('icon');
-    const iconPreview = document.getElementById('icon-preview');
-    const previewImage = document.getElementById('preview-image');
-
-    iconInput.addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                previewImage.src = e.target.result;
-                iconPreview.style.display = 'block';
-            }
-            reader.readAsDataURL(file);
-        } else {
-            iconPreview.style.display = 'none';
-        }
-    });
-});
-</script>
+    {{-- مكوّن الأيقونة المشترك يتولى تحميل جميع سكربتات الاختيار والمعاينة --}}
 @endpush

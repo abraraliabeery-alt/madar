@@ -318,6 +318,132 @@
                     </div>
                 </div>
 
+                <!-- Site Sections Visibility -->
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-6">
+                        <i class="fas fa-list-check mr-2 text-teal-600"></i>
+                        عرض/إخفاء أقسام صفحة الموقع
+                    </h2>
+
+                    @php($sectionSettings = data_get($facility->customization_settings ?? [], 'sections', []))
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        @php($sections = [
+                            'tpl_hero' => 'الهيرو (المقدمة)',
+                            'projects' => 'المشاريع',
+                            'works' => 'الأعمال',
+                            'kpis' => 'الإحصائيات',
+                            'tiles' => 'المميزات (Tiles)',
+                            'about' => 'عن الشركة',
+                            'band' => 'بانر/عرض',
+                            'services' => 'الخدمات',
+                            'clients' => 'شريط العملاء',
+                            'testimonials' => 'آراء العملاء',
+                            'cta' => 'الدعوة لاتخاذ إجراء (CTA)',
+                            'contact' => 'التواصل',
+                            'why_choose' => 'لماذا تختارنا',
+                            'faq' => 'الأسئلة الشائعة',
+                            'products_carousel' => 'سلايدر الأعمال',
+                            'showcase_a' => 'عرض A',
+                            'showcase_b' => 'عرض B',
+                            'testimony' => 'شهادة عميل',
+                            'installments' => 'بانر التقسيط',
+                            'why_us' => 'لماذا نحن',
+                            'about_brief' => 'نبذة عن الشركة',
+                            'vision_mission' => 'الرؤية والرسالة',
+                            'goals' => 'الأهداف',
+                            'values' => 'القيم',
+                        ])
+
+                        @foreach($sections as $key => $label)
+                            @php($checked = old('sections.'.$key, data_get($sectionSettings, $key, true)))
+                            <label class="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50">
+                                <span class="text-sm font-medium text-gray-700">{{ $label }}</span>
+                                <input type="hidden" name="sections[{{ $key }}]" value="0">
+                                <input type="checkbox"
+                                       name="sections[{{ $key }}]"
+                                       value="1"
+                                       {{ $checked ? 'checked' : '' }}
+                                       class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                            </label>
+                        @endforeach
+                    </div>
+
+                    <p class="mt-3 text-xs text-gray-500">ملاحظة: إذا ألغيت تحديد قسم سيتم إخفاؤه من صفحة الموقع العامة.</p>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-6">
+                        <i class="fas fa-palette mr-2 text-sky-600"></i>
+                        تصاميم الأقسام (4 تصاميم لكل قسم)
+                    </h2>
+
+                    @php($variants = data_get($facility->customization_settings ?? [], 'variants', []))
+                    @php($variantSections = [
+                        'tpl_hero' => 'الهيرو (المقدمة)',
+                        'projects' => 'المشاريع',
+                        'works' => 'الأعمال',
+                        'services' => 'الخدمات',
+                    ])
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        @foreach($variantSections as $key => $label)
+                            @php($selected = (int) old('variants.'.$key, data_get($variants, $key, 1)))
+                            <div class="p-3 border border-gray-200 rounded-lg">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">{{ $label }}</label>
+                                <select name="variants[{{ $key }}]"
+                                        class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    @for($i = 1; $i <= 4; $i++)
+                                        <option value="{{ $i }}" {{ $selected === $i ? 'selected' : '' }}>تصميم {{ $i }}</option>
+                                    @endfor
+                                </select>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+
+                <!-- Site Services Catalog -->
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-6">
+                        <i class="fas fa-briefcase mr-2 text-purple-600"></i>
+                        خدمات المقاولات (اختيار الخدمات المعروضة)
+                    </h2>
+
+                    @php($servicesEnabled = data_get($facility->customization_settings ?? [], 'content.services.enabled', []))
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        @php($servicesCatalog = [
+                            'general_contracting' => 'مقاولات عامة',
+                            'turnkey' => 'تشطيب وتسليم مفتاح',
+                            'construction' => 'أعمال إنشائية',
+                            'finishing' => 'أعمال التشطيب',
+                            'mep' => 'أعمال كهرباء وميكانيكا (MEP)',
+                            'plumbing' => 'أعمال السباكة',
+                            'electrical' => 'أعمال الكهرباء',
+                            'hvac' => 'التكييف والتهوية (HVAC)',
+                            'steel' => 'الهياكل المعدنية',
+                            'renovation' => 'ترميم وتجديد',
+                            'interior' => 'تصميم وتنفيذ داخلي',
+                            'exterior' => 'واجهات خارجية',
+                        ])
+
+                        @foreach($servicesCatalog as $key => $label)
+                            @php($checked = old('content.services.enabled.'.$key, data_get($servicesEnabled, $key, true)))
+                            <label class="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50">
+                                <span class="text-sm font-medium text-gray-700">{{ $label }}</span>
+                                <input type="hidden" name="content[services][enabled][{{ $key }}]" value="0">
+                                <input type="checkbox"
+                                       name="content[services][enabled][{{ $key }}]"
+                                       value="1"
+                                       {{ $checked ? 'checked' : '' }}
+                                       class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                            </label>
+                        @endforeach
+                    </div>
+
+                    <p class="mt-3 text-xs text-gray-500">ملاحظة: عطّل أي خدمة لإخفائها من صفحة الموقع العامة.</p>
+                </div>
+
                 <!-- General Layout Settings -->
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                     <h2 class="text-xl font-semibold text-gray-900 mb-6">

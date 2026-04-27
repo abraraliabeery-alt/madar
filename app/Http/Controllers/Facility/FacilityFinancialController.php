@@ -68,6 +68,50 @@ class FacilityFinancialController extends Controller
                 ->sum('amount'),
         ];
 
+        // الذمم المدينة والمتأخرات (اعتماداً على الفواتير الحالية)
+        $invoicesQuery = $facility->invoices();
+        $receivablesTotal = (float) $invoicesQuery->sum(DB::raw('COALESCE(amount,0) - COALESCE(paid_amount,0)'));
+        $overdueInvoicesCount = (int) $facility->invoices()
+            ->where('status', 'sent')
+            ->where('due_date', '<', Carbon::now())
+            ->count();
+        $overdueAmount = (float) $facility->invoices()
+            ->where('status', 'sent')
+            ->where('due_date', '<', Carbon::now())
+            ->sum(DB::raw('COALESCE(amount,0) - COALESCE(paid_amount,0)'));
+
+        // أعمار الديون (aging) للفواتير المتأخرة
+        $now = Carbon::now();
+        $aging = [
+            'd0_30' => (float) $facility->invoices()
+                ->where('status', 'sent')
+                ->whereBetween('due_date', [$now->copy()->subDays(30), $now])
+                ->sum(DB::raw('COALESCE(amount,0) - COALESCE(paid_amount,0)')),
+            'd31_60' => (float) $facility->invoices()
+                ->where('status', 'sent')
+                ->whereBetween('due_date', [$now->copy()->subDays(60), $now->copy()->subDays(31)])
+                ->sum(DB::raw('COALESCE(amount,0) - COALESCE(paid_amount,0)')),
+            'd61_90' => (float) $facility->invoices()
+                ->where('status', 'sent')
+                ->whereBetween('due_date', [$now->copy()->subDays(90), $now->copy()->subDays(61)])
+                ->sum(DB::raw('COALESCE(amount,0) - COALESCE(paid_amount,0)')),
+            'd90_plus' => (float) $facility->invoices()
+                ->where('status', 'sent')
+                ->where('due_date', '<', $now->copy()->subDays(90))
+                ->sum(DB::raw('COALESCE(amount,0) - COALESCE(paid_amount,0)')),
+        ];
+
+        // معدل التحصيل = المدفوع المؤكد خلال آخر 30 يوم / إجمالي مستحقات آخر 30 يوم (افتراضيًا)
+        $last30From = Carbon::now()->subDays(30);
+        $collectedLast30 = (float) $facility->payments()
+            ->where('status', 'confirmed')
+            ->where('payment_date', '>=', $last30From)
+            ->sum('amount');
+        $dueLast30 = (float) $facility->invoices()
+            ->where('created_at', '>=', $last30From)
+            ->sum(DB::raw('COALESCE(amount,0)'));
+        $collectionRate = $dueLast30 > 0 ? round(($collectedLast30 / $dueLast30) * 100, 1) : 0.0;
+
         // الرسوم البيانية - بيانات الإيرادات الشهرية لآخر 6 أشهر
         $monthlyRevenue = [];
         for ($i = 5; $i >= 0; $i--) {
@@ -157,7 +201,12 @@ class FacilityFinancialController extends Controller
             'pendingContracts', 
             'recentPayments',
             'alerts',
-            'successRate'
+            'successRate',
+            'receivablesTotal',
+            'overdueInvoicesCount',
+            'overdueAmount',
+            'aging',
+            'collectionRate'
         ));
     }
 

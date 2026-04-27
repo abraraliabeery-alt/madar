@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Facility;
 
 use App\Http\Controllers\Controller;
 use App\Models\Contract;
+use App\Models\CommissionParty;
 use App\Models\Offer;
 use App\Models\Product;
 use App\Models\User;
@@ -341,6 +342,43 @@ class FacilityContractController extends Controller
             'remaining', 
             'isFullyPaid'
         ));
+    }
+
+    /**
+     * إضافة وسيط وعمولته للعقد (وساطة عقارية)
+     */
+    public function storeCommission(Request $request, Contract $contract)
+    {
+        $this->authorize('update', $contract);
+
+        $request->validate([
+            'name' => 'nullable|string|max:255',
+            'user_id' => 'nullable|exists:users,id',
+            'role' => 'nullable|string|max:100',
+            'commission_type' => 'required|in:percentage,fixed',
+            'commission_value' => 'required|numeric|min:0',
+        ]);
+
+        $data = $request->only(['name', 'user_id', 'role', 'commission_type', 'commission_value']);
+        $data['contract_id'] = $contract->id;
+
+        // حساب مبلغ العمولة من قيمة العقد لو كانت نسبة
+        if ($data['commission_type'] === 'percentage') {
+            $ratio = (float) $data['commission_value']; // مثال: 0.01 = 1%
+            // إذا المستخدم أدخل 1 أو 2 أو 3 كنسبة مئوية نحولها إلى 0.01, 0.02, ...
+            if ($ratio > 1) {
+                $ratio = $ratio / 100;
+            }
+            $data['calculated_amount'] = round($contract->total_amount * $ratio, 2);
+            $data['commission_value'] = $ratio;
+        } else {
+            // fixed مبلغ ثابت مباشرة
+            $data['calculated_amount'] = round($data['commission_value'], 2);
+        }
+
+        CommissionParty::create($data);
+
+        return redirect()->back()->with('success', 'تم إضافة وسيط وعمولته بنجاح');
     }
 
     /**

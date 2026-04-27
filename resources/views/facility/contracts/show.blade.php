@@ -92,10 +92,98 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="bg-gray-50 rounded-lg p-6">
+                    <h5 class="text-lg font-semibold text-gray-800 mb-4">مسار الوساطة والعمولات</h5>
+                    @php
+                        $commissionParties = $contract->commissions;
+                        $hasCommissions = $commissionParties && $commissionParties->count() > 0;
+                    @endphp
+                    {{-- نموذج إضافة وسيط جديد بسيط --}}
+                    <form method="POST" action="{{ route('facility.contracts.commissions.store', $contract) }}" class="mb-4 space-y-2">
+                        @csrf
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-2 text-xs">
+                            <div>
+                                <label class="block text-gray-600 mb-1">اسم الوسيط</label>
+                                <input type="text" name="name" class="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500" placeholder="مثال: صديق محيل">
+                            </div>
+                            <div>
+                                <label class="block text-gray-600 mb-1">الدور</label>
+                                <input type="text" name="role" class="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500" placeholder="referrer / marketer / agent">
+                            </div>
+                            <div>
+                                <label class="block text-gray-600 mb-1">نوع العمولة</label>
+                                <select name="commission_type" class="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500">
+                                    <option value="percentage">نسبة % من قيمة العقد</option>
+                                    <option value="fixed">مبلغ ثابت</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-gray-600 mb-1">القيمة</label>
+                                <input type="number" step="0.01" name="commission_value" class="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500" placeholder="مثال: 1 أو 5000">
+                            </div>
+                        </div>
+                        <div class="flex justify-end">
+                            <button type="submit" class="inline-flex items-center px-3 py-1.5 bg-purple-600 hover:bg-purple-700 text-white text-xs font-medium rounded-md shadow-sm">
+                                <i class="fas fa-plus ml-1 text-[10px]"></i>
+                                إضافة وسيط
+                            </button>
+                        </div>
+                    </form>
+                    @if($hasCommissions)
+                        <div class="space-y-3 text-sm">
+                            <div>
+                                <span class="text-gray-600 block mb-1">مسار الوساطة (من المصدر حتى المشتري):</span>
+                                <div class="flex flex-wrap items-center gap-1">
+                                    @foreach($commissionParties as $index => $party)
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-purple-100 text-purple-800 text-xs font-medium">
+                                            {{ $party->name ?? optional($party->user)->name ?? 'وسيط' }}
+                                            @if($party->role)
+                                                <span class="mx-1 text-[10px] text-purple-500">({{ $party->role }})</span>
+                                            @endif
+                                        </span>
+                                        @if(!$loop->last)
+                                            <span class="text-gray-400 text-xs mx-1">→</span>
+                                        @endif
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            <div class="flex justify-between items-center mt-3">
+                                <span class="text-gray-600">إجمالي عمولات الوسطاء:</span>
+                                <span class="font-bold text-gray-900 flex items-center">
+                                    {{ number_format($contract->total_commissions_amount, 2) }}
+                                    <img src="{{ asset('Saudi_Riyal_Symbol.svg') }}" alt="SAR" class="w-4 h-4 mr-1">
+                                </span>
+                            </div>
+
+                            <details class="mt-3">
+                                <summary class="text-xs text-blue-600 cursor-pointer hover:underline">عرض تفاصيل العمولات</summary>
+                                <div class="mt-2 border-t border-gray-200 pt-2 space-y-1 text-xs text-gray-700">
+                                    @foreach($commissionParties as $party)
+                                        <div class="flex justify-between">
+                                            <span>
+                                                {{ $party->name ?? optional($party->user)->name ?? 'وسيط' }}
+                                                @if($party->role)
+                                                    <span class="text-gray-400">({{ $party->role }})</span>
+                                                @endif
+                                            </span>
+                                            <span>
+                                                {{ number_format($party->calculated_amount, 2) }} ر.س
+                                            </span>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </details>
+                        </div>
+                    @else
+                        <p class="text-sm text-gray-500">لا توجد بيانات وساطة مسجّلة لهذا العقد حتى الآن.</p>
+                    @endif
+                </div>
             </div>
 
-            <!-- التفاصيل المالية -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <!-- التفاصيل المالية ومسار الوساطة -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
                 <div class="bg-gray-50 rounded-lg p-6">
                     <h5 class="text-lg font-semibold text-gray-800 mb-4">التفاصيل المالية</h5>
                     <div class="space-y-3">

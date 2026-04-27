@@ -119,19 +119,57 @@ class ProductController extends Controller
     /**
      * المنتجات حسب الفئة
      */
-    public function byCategory(Category $category)
+    public function byCategory(Request $request, Category $category)
     {
         if (!$category->is_active) {
             abort(404);
         }
 
-        $products = $category->products()
-            ->with(['facility', 'statuses'])
+        $categoryIds = collect([$category->id]);
+        $queue = collect([$category->id]);
+        while ($queue->isNotEmpty()) {
+            $children = Category::whereIn('parent_id', $queue)->pluck('id');
+            $new = $children->diff($categoryIds);
+            if ($new->isEmpty()) {
+                break;
+            }
+            $categoryIds = $categoryIds->merge($new);
+            $queue = $new;
+        }
+
+        $sortBy = $request->get('sort_by', 'created_at');
+        $sortOrder = $request->get('sort_order', 'desc');
+
+        $allowedSortBy = ['created_at', 'price', 'title'];
+        if (!in_array($sortBy, $allowedSortBy, true)) {
+            $sortBy = 'created_at';
+        }
+        $sortOrder = strtolower($sortOrder) === 'asc' ? 'asc' : 'desc';
+
+        $products = Product::with(['facility', 'category', 'statuses', 'offers'])
+            ->whereIn('category_id', $categoryIds)
             ->where('is_active', true)
             ->where('is_verified', true)
+            ->orderBy($sortBy, $sortOrder)
             ->paginate(12);
 
-        return view('public.products.by-category', compact('category', 'products'));
+        $categories = Category::where('is_active', true)->withCount('products')->get();
+        $searchCategories = $categories;
+        $searchFeatures = Feature::where('is_active', true)->with('translations')->get();
+
+        $productIds = Product::whereIn('category_id', $categoryIds)
+            ->where('is_active', true)
+            ->where('is_verified', true)
+            ->pluck('id');
+
+        $facilityIds = Product::whereIn('id', $productIds)->pluck('facility_id')->filter()->unique();
+        $stats = [
+            'properties' => $productIds->count(),
+            'developers' => Facility::whereIn('id', $facilityIds)->where('is_active', true)->where('is_verified', true)->count(),
+            'offers' => \App\Models\Offer::whereIn('product_id', $productIds)->where('is_active', true)->count(),
+        ];
+
+        return view('public.products.by-category', compact('category', 'products', 'categories', 'searchCategories', 'searchFeatures', 'stats', 'sortBy', 'sortOrder'));
     }
 
     /**

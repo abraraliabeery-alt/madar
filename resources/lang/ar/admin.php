@@ -16,7 +16,7 @@ return [
         'title' => 'لوحة التحكم',
         'welcome' => 'مرحباً بك في لوحة الإدارة',
         'total_users' => 'إجمالي المستخدمين',
-        'total_products' => 'إجمالي المنتجات',
+        'total_products' => 'إجمالي العقارات',
         'total_bookings' => 'إجمالي الحجوزات',
         'total_revenue' => 'إجمالي الإيرادات',
         'recent_activities' => 'الأنشطة الأخيرة',
@@ -26,7 +26,7 @@ return [
     'navigation' => [
         'dashboard' => 'لوحة التحكم',
         'users' => 'المستخدمين',
-        'products' => 'المنتجات',
+        'products' => 'العقارات',
         'categories' => 'التصنيفات',
         'facilities' => 'المنشآت',
         'bookings' => 'الحجوزات',
@@ -152,10 +152,10 @@ return [
     ],
 
     'products' => [
-        'title' => 'إدارة المنتجات',
-        'create' => 'إنشاء منتج',
-        'edit' => 'تعديل منتج',
-        'name' => 'اسم المنتج',
+        'title' => 'إدارة العقارات',
+        'create' => 'إنشاء عقار',
+        'edit' => 'تعديل عقار',
+        'name' => 'اسم العقار',
         'description' => 'الوصف',
         'price' => 'السعر',
         'category' => 'الفئة',
@@ -211,7 +211,7 @@ return [
         'title' => 'التقارير',
         'sales' => 'تقرير المبيعات',
         'users' => 'تقرير المستخدمين',
-        'products' => 'تقرير المنتجات',
+        'products' => 'تقرير العقارات',
         'bookings' => 'تقرير الحجوزات',
         'date_range' => 'نطاق التاريخ',
         'generate' => 'إنشاء تقرير',
@@ -231,7 +231,7 @@ return [
 
     'forms' => [
         'placeholders' => [
-            'search_global' => 'بحث في المستخدمين، المنشآت، المنتجات...',
+            'search_global' => 'بحث في المستخدمين، المنشآت، العقارات...',
             'search' => 'بحث...',
             'permission_name' => 'مثال: users.create',
             'permission_description' => 'وصف الصلاحية...',

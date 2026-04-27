@@ -55,7 +55,7 @@
                                             <select class="form-select @error('role_id') is-invalid @enderror" id="role_id" name="role_id" required>
                                                 <option value="">اختر الدور</option>
                                                 @foreach($roles as $role)
-                                                    <option value="{{ $role->id }}" {{ old('role_id') == $role->id ? 'selected' : '' }}>
+                                                    <option value="{{ $role->id }}" data-role="{{ $role->name }}" {{ old('role_id') == $role->id ? 'selected' : '' }}>
                                                         {{ $role->getTranslatedDisplayName() }}
                                                     </option>
                                                 @endforeach
@@ -122,7 +122,7 @@
                     </div>
 
                     <!-- Bank Information -->
-                    <div class="col-md-6">
+                    <div class="col-md-6" id="bank-section" style="display:none;">
                         <div class="card">
                             <div class="card-header">
                                 <h6 class="mb-0">المعلومات البنكية</h6>
@@ -150,6 +150,21 @@
                                             <label for="bank_account" class="form-label">رقم الحساب</label>
                                             <input type="text" class="form-control @error('bank_account') is-invalid @enderror" id="bank_account" name="bank_account" value="{{ old('bank_account') }}">
                                             @error('bank_account')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="mb-3">
+                                            <label for="customer_banks" class="form-label">بنوك العميل (اختياري)</label>
+                                            <select class="form-select @error('customer_banks') is-invalid @enderror" id="customer_banks" name="customer_banks[]" multiple>
+                                                @foreach($banks as $bank)
+                                                    <option value="{{ $bank->id }}" {{ collect(old('customer_banks', []))->contains($bank->id) ? 'selected' : '' }}>
+                                                        {{ $bank->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            @error('customer_banks')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
@@ -332,6 +347,21 @@ $(document).ready(function() {
             reader.readAsDataURL(file);
         }
     });
+
+    function toggleBankSection() {
+        const selected = $('#role_id').find(':selected');
+        const roleName = selected.data('role');
+        if (roleName === 'bank_employee') {
+            $('#bank-section').show();
+            $('#bank_id').attr('required', true);
+        } else {
+            $('#bank-section').hide();
+            $('#bank_id').removeAttr('required').val('');
+        }
+    }
+
+    $('#role_id').on('change', toggleBankSection);
+    toggleBankSection();
 });
 </script>
 @endpush

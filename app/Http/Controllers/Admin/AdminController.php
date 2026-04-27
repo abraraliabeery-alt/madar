@@ -28,6 +28,9 @@ class AdminController extends Controller
             'total_products' => Product::count(),
             'total_bookings' => Booking::count(),
             'total_contracts' => Contract::count(),
+            'total_revenue_month' => Booking::whereYear('created_at', now()->year)
+                                         ->whereMonth('created_at', now()->month)
+                                         ->sum('total_amount'),
             'recent_users' => User::latest()->take(5)->get(),
             'recent_facilities' => Facility::latest()->take(5)->get(),
             'recent_bookings' => Booking::with(['user', 'product'])->latest()->take(5)->get(),
