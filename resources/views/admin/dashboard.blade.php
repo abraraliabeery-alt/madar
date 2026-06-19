@@ -1,13 +1,13 @@
-@extends('admin.layouts.app')
+@extends('layouts.dashboard-bs')
 
 @section('content')
 <div class="container-fluid">
     <!-- Welcome Card -->
-    <div class="card mb-4">
+    <div class="card shadow-sm mb-4">
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <h4 class="mb-1">مرحباً بك في لوحة التحكم</h4>
+                    <h4 class="mb-1 fw-bold">مرحباً بك في لوحة التحكم</h4>
                     <p class="text-muted mb-0">هذه نظرة عامة على نشاط النظام</p>
                 </div>
                 <div>
@@ -25,101 +25,81 @@
     <!-- Statistics Cards -->
     <div class="row g-4 mb-4">
         <div class="col-md-3">
-            <div class="card bg-primary text-white">
+            <div class="card shadow-sm h-100">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center justify-content-between">
                         <div>
-                            <h6 class="mb-0">المستخدمين</h6>
-                            <h3 class="mb-0">{{ $stats['total_users'] }}</h3>
+                            <div class="text-muted small">المستخدمين</div>
+                            <div class="h4 fw-bold mb-0">{{ $stats['total_users'] }}</div>
                         </div>
-                        <div class="fs-1">
-                            <i class="fas fa-users"></i>
-                        </div>
+                        <div class="text-primary fs-4"><i class="fas fa-users"></i></div>
                     </div>
                     <div class="mt-3">
-                        <a href="{{ route('admin.users.index') }}" class="btn btn-sm btn-light">
-                            <i class="fas fa-arrow-right me-1"></i>عرض التفاصيل
-                        </a>
+                        <a href="{{ route('admin.users.index') }}" class="small text-decoration-none">عرض التفاصيل</a>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card bg-success text-white">
+            <div class="card shadow-sm h-100">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center justify-content-between">
                         <div>
-                            <h6 class="mb-0">المنشآت</h6>
-                            <h3 class="mb-0">{{ $stats['total_facilities'] }}</h3>
+                            <div class="text-muted small">المنشآت</div>
+                            <div class="h4 fw-bold mb-0">{{ $stats['total_facilities'] }}</div>
                         </div>
-                        <div class="fs-1">
-                            <i class="fas fa-building"></i>
-                        </div>
+                        <div class="text-success fs-4"><i class="fas fa-building"></i></div>
                     </div>
                     <div class="mt-3">
-                        <a href="{{ route('admin.facilities.index') }}" class="btn btn-sm btn-light">
-                            <i class="fas fa-arrow-right me-1"></i>عرض التفاصيل
-                        </a>
+                        <a href="{{ route('admin.facilities.index') }}" class="small text-decoration-none">عرض التفاصيل</a>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card bg-info text-white">
+            <div class="card shadow-sm h-100">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center justify-content-between">
                         <div>
-                            <h6 class="mb-0">العقارات</h6>
-                            <h3 class="mb-0">{{ $stats['total_products'] }}</h3>
+                            <div class="text-muted small">المشاريع</div>
+                            <div class="h4 fw-bold mb-0">{{ $stats['total_products'] }}</div>
                         </div>
-                        <div class="fs-1">
-                            <i class="fas fa-box"></i>
-                        </div>
+                        <div class="text-info fs-4"><i class="fas fa-box"></i></div>
                     </div>
                     <div class="mt-3">
-                        <a href="{{ route('admin.products.index') }}" class="btn btn-sm btn-light">
-                            <i class="fas fa-arrow-right me-1"></i>عرض التفاصيل
-                        </a>
+                        <a href="{{ route('admin.products.index') }}" class="small text-decoration-none">عرض التفاصيل</a>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card bg-warning text-white">
+            <div class="card shadow-sm h-100">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center justify-content-between">
                         <div>
-                            <h6 class="mb-0">الحجوزات</h6>
-                            <h3 class="mb-0">{{ $stats['total_bookings'] }}</h3>
+                            <div class="text-muted small">الحجوزات</div>
+                            <div class="h4 fw-bold mb-0">{{ $stats['total_bookings'] }}</div>
                         </div>
-                        <div class="fs-1">
-                            <i class="fas fa-calendar-check"></i>
-                        </div>
+                        <div class="text-warning fs-4"><i class="fas fa-calendar-check"></i></div>
                     </div>
                     <div class="mt-3">
-                        <a href="{{ route('admin.bookings.index') }}" class="btn btn-sm btn-light">
-                            <i class="fas fa-arrow-right me-1"></i>عرض التفاصيل
-                        </a>
+                        <a href="{{ route('admin.bookings.index') }}" class="small text-decoration-none">عرض التفاصيل</a>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card bg-danger text-white">
+            <div class="card shadow-sm h-100">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center justify-content-between">
                         <div>
-                            <h6 class="mb-0">إيرادات هذا الشهر</h6>
-                            <h3 class="mb-0">{{ number_format($stats['total_revenue_month'] ?? 0, 2) }}</h3>
+                            <div class="text-muted small">إيرادات هذا الشهر</div>
+                            <div class="h4 fw-bold mb-0">{{ number_format($stats['total_revenue_month'] ?? 0, 2) }}</div>
                         </div>
-                        <div class="fs-1">
-                            <i class="fas fa-coins"></i>
-                        </div>
+                        <div class="text-danger fs-4"><i class="fas fa-coins"></i></div>
                     </div>
                     <div class="mt-3">
-                        <a href="{{ route('admin.bookings.index') }}" class="btn btn-sm btn-light">
-                            <i class="fas fa-arrow-right me-1"></i>تفاصيل الحجوزات
-                        </a>
+                        <a href="{{ route('admin.bookings.index') }}" class="small text-decoration-none">تفاصيل الحجوزات</a>
                     </div>
                 </div>
             </div>

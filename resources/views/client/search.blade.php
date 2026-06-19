@@ -8,7 +8,7 @@
         <!-- Header -->
         <div class="mb-8">
             <h1 class="text-3xl font-bold text-gray-900 mb-2">البحث المتقدم</h1>
-            <p class="text-gray-600">ابحث عن العقارات والمنشآت بسهولة</p>
+            <p class="text-gray-600">ابحث عن المشاريع والمنشآت بسهولة</p>
         </div>
 
         <!-- Search Form -->
@@ -19,7 +19,7 @@
                     <div>
                         <label for="keyword" class="block text-sm font-medium text-gray-700 mb-2">كلمة البحث</label>
                         <input type="text" id="keyword" name="keyword" value="{{ request('keyword') }}" 
-                               placeholder="ابحث عن عقار أو منطقة..."
+                               placeholder="ابحث عن مشروع أو منطقة..."
                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500">
                     </div>
                     <div>
@@ -34,7 +34,7 @@
                         </select>
                     </div>
                     <div>
-                        <label for="category" class="block text-sm font-medium text-gray-700 mb-2">فئة العقار</label>
+                        <label for="category" class="block text-sm font-medium text-gray-700 mb-2">فئة المشروع</label>
                         <select id="category" name="category" 
                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500">
                             <option value="">جميع الفئات</option>
@@ -93,7 +93,7 @@
 
                 <!-- Property Features -->
                 <div>
-                    <h3 class="text-lg font-medium text-gray-900 mb-4">مواصفات العقار</h3>
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">مواصفات المشروع</h3>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                         <div>
                             <label for="bedrooms" class="block text-sm font-medium text-gray-700 mb-2">عدد الغرف</label>

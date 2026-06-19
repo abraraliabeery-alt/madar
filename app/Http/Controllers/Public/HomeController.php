@@ -12,6 +12,7 @@ use App\Models\Status;
 use App\Models\Feature;
 use App\Models\City;
 use App\Models\Page;
+use App\Models\ExecutionRequest;
 
 class HomeController extends Controller
 {
@@ -47,6 +48,13 @@ class HomeController extends Controller
             ->where('is_active', true)
             ->latest()
             ->take(12)
+            ->get();
+
+        $latestExecutionRequests = ExecutionRequest::query()
+            ->with(['translations'])
+            ->where('status', 'open')
+            ->latest()
+            ->take(8)
             ->get();
 
         // Coming soon products: available in the future
@@ -93,6 +101,7 @@ class HomeController extends Controller
             'searchCategories',
             'searchFeatures',
             'latestProducts',
+            'latestExecutionRequests',
             'stats',
             'comingSoonProducts',
             'featuredCities',

@@ -44,7 +44,7 @@ class AdminCategoryController extends Controller
             'is_featured' => 'boolean',
             'order' => 'nullable|integer|min:0',
             'translations' => 'nullable|array',
-            'translations.*.locale' => 'required|string|in:' . implode(',', array_keys(config('locales.available'))),
+            'translations.*.locale' => 'required|string|in:' . implode(',', array_keys(config('locales.available'))) . '|distinct',
             'translations.*.name' => 'required|string|max:255',
             'translations.*.description' => 'nullable|string',
         ]);
@@ -92,8 +92,7 @@ class AdminCategoryController extends Controller
             ->where('id', '!=', $category->id)
             ->get();
         $locales = config('locales.available');
-        $translations = $category->translations->keyBy('locale');
-        return view('admin.categories.edit', compact('category', 'categories', 'locales', 'translations'));
+        return view('admin.categories.edit', compact('category', 'categories', 'locales'));
     }
 
     /**
@@ -111,7 +110,7 @@ class AdminCategoryController extends Controller
             'is_featured' => 'boolean',
             'order' => 'nullable|integer|min:0',
             'translations' => 'nullable|array',
-            'translations.*.locale' => 'required|string|in:' . implode(',', array_keys(config('locales.available'))),
+            'translations.*.locale' => 'required|string|in:' . implode(',', array_keys(config('locales.available'))) . '|distinct',
             'translations.*.name' => 'required|string|max:255',
             'translations.*.description' => 'nullable|string',
         ]);

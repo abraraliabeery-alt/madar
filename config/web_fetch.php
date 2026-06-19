@@ -20,7 +20,7 @@ return [
         ],
         [
             'key' => 'aqar',
-            'label' => 'عقار',
+            'label' => 'مشروع',
             'base_url' => env('WEB_CRAWL_AQAR_BASE', 'https://aqar.fm'),
         ],
         [

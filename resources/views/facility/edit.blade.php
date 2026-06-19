@@ -200,6 +200,27 @@
                             @enderror
                         </div>
 
+                        <div class="border-t border-gray-200 pt-6 mt-6">
+                            <h4 class="text-base font-semibold text-gray-800 mb-4">تأهيل المنشأة (اعتماد-ستايل)</h4>
+
+                            @php
+                                $qdocs = (array) ($facility->customization_settings['qualification_docs'] ?? []);
+                                $cr = (array) ($qdocs['commercial_register'] ?? []);
+                                $crPath = (string) ($cr['path'] ?? '');
+                            @endphp
+
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">السجل التجاري / وثيقة التأهيل</label>
+                                @if($crPath)
+                                    <a class="inline-block text-sm text-blue-700 hover:underline mb-2" href="{{ asset('storage/' . $crPath) }}" target="_blank">عرض الملف الحالي</a>
+                                @else
+                                    <div class="text-xs text-gray-500 mb-2">لم يتم رفع الملف بعد.</div>
+                                @endif
+                                <input type="file" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" name="qualification_commercial_register" accept="application/pdf,image/png,image/jpeg">
+                                <div class="text-xs text-gray-500 mt-1">ارفعها مرة واحدة، وتُستخدم تلقائيًا عند تقديم العروض.</div>
+                            </div>
+                        </div>
+
                         <div class="flex flex-col sm:flex-row justify-end gap-3">
                             <a href="{{ route('facility.dashboard') }}" class="bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-6 rounded-md transition duration-200 text-center">{{ __('facility.form.cancel') }}</a>
                             <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-md transition duration-200">{{ __('facility.form.save_changes') }}</button>

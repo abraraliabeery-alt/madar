@@ -77,39 +77,29 @@
                             <p class="text-sm text-gray-500 mb-4">{{ __('facility.products.create.basic_info_help') }}</p>
                             
                             <!-- Translations Repeater -->
-                            <div id="translations-repeater" class="space-y-5">
-                                <div class="translation-item border border-gray-200 rounded-md p-4" data-index="0">
-                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                        <div>
-                                            <x-form-select 
-                                                name="translations[0][locale]"
-                                                :label="__('facility.products.create.locale')"
-                                                :options="['ar' => 'العربية', 'en' => 'English']"
-                                                :value="app()->getLocale()"
-                                            />
-                                        </div>
-                                        <div class="md:col-span-2">
-                                            <x-form-input 
-                                                name="translations[0][title]"
-                                                :label="__('facility.products.create.name')"
-                                                :placeholder="__('facility.products.create.title_placeholder')"
-                                            />
-                                        </div>
-                                    </div>
-                                    <div class="mt-4">
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('facility.products.create.description') }}</label>
-                                        <textarea name="translations[0][description]" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="{{ __('facility.products.create.description_placeholder') }}">{{ old('translations.0.description') }}</textarea>
-                                    </div>
-                                    <div class="mt-3 flex justify-end">
-                                        <button type="button" class="remove-translation hidden text-red-600 text-sm hover:underline">{{ __('facility.products.create.remove_translation') }}</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="mt-3">
-                                <button type="button" id="add-translation" class="inline-flex items-center gap-2 text-sm bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 px-3 rounded-md">
-                                    <span>+</span> {{ __('facility.products.create.add_translation') }}
-                                </button>
-                            </div>
+                            @include('components.translations-repeater', [
+                                'locales' => config('locales.available', []),
+                                'namePrefix' => 'translations',
+                                'fields' => [
+                                    [
+                                        'type' => 'input',
+                                        'key' => 'title',
+                                        'label' => __('facility.products.create.name'),
+                                        'requiredFirst' => true,
+                                        'placeholder' => __('facility.products.create.title_placeholder'),
+                                    ],
+                                    [
+                                        'type' => 'textarea',
+                                        'key' => 'description',
+                                        'label' => __('facility.products.create.description'),
+                                        'rows' => 3,
+                                        'placeholder' => __('facility.products.create.description_placeholder'),
+                                    ],
+                                ],
+                                'addLabel' => __('facility.products.create.add_translation'),
+                                'removeLabel' => __('facility.products.create.remove_translation'),
+                                'minItems' => 1,
+                            ])
 
                         <div id="rent-offer-fields" class="mb-8 bg-white rounded-md border border-gray-200 p-5 hidden">
                             <h5 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">تفاصيل الإيجار</h5>
@@ -550,14 +540,6 @@ document.addEventListener('DOMContentLoaded', function() {
     syncRentFields();
 });
 </script>
-@php($hasViteManifest = file_exists(public_path('build/manifest.json')))
-@if ($hasViteManifest)
-    @vite('resources/js/facility/products-create.js')
-@else
-    <script>
-    {!! file_exists(resource_path('js/facility/products-create.js')) ? file_get_contents(resource_path('js/facility/products-create.js')) : '' !!}
-    </script>
-@endif
 @endpush
 
 @push('styles')

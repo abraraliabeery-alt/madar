@@ -240,7 +240,7 @@
                         </div>
                         <div class="col-6">
                             <div class="mb-3">
-                                <h6>العقارات المفضلة</h6>
+                                <h6>المشاريع المفضلة</h6>
                                 <h4 class="text-info">{{ $engagementStats['favorite_products'] }}</h4>
                             </div>
                         </div>

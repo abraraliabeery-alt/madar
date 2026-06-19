@@ -73,7 +73,7 @@
             @csrf
             <div class="md:col-span-2">
                 <label class="block mb-1 text-sm">إضافة سريعة - نوع المهمة</label>
-                <input type="text" name="type" placeholder="مثال: تصوير عقار" class="w-full border rounded px-3 py-2" required>
+                <input type="text" name="type" placeholder="مثال: تصوير مشروع" class="w-full border rounded px-3 py-2" required>
             </div>
             <div>
                 <label class="block mb-1 text-sm">الموعد النهائي</label>

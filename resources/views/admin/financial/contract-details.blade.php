@@ -271,7 +271,7 @@
     <div class="col-lg-4">
         <div class="card">
             <div class="card-header">
-                <h5 class="mb-0"><i class="fas fa-home ms-2"></i>العقار</h5>
+                <h5 class="mb-0"><i class="fas fa-home ms-2"></i>المشروع</h5>
             </div>
             <div class="card-body">
                 <div class="d-flex align-items-center mb-3">
@@ -280,7 +280,7 @@
                     </div>
                     <div>
                         <h6 class="mb-0">{{ $contract->product->getTranslatedTitle() }}</h6>
-                        <small class="text-muted">العقار</small>
+                        <small class="text-muted">المشروع</small>
                     </div>
                 </div>
                 <table class="table table-sm table-borderless">
@@ -294,7 +294,7 @@
                     </tr>
                 </table>
                 <a href="{{ route('admin.products.show', $contract->product_id) }}" class="btn btn-outline-info btn-sm">
-                    <i class="fas fa-eye"></i> عرض العقار
+                    <i class="fas fa-eye"></i> عرض المشروع
                 </a>
             </div>
         </div>

@@ -10,7 +10,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <h1 class="text-3xl md:text-4xl font-bold">مواعيدي</h1>
-                    <p class="text-primary-100 mt-2">إدارة مواعيدك مع المؤسسات العقارية</p>
+                    <p class="text-primary-100 mt-2">إدارة مواعيدك مع المؤسسات المشاريعية</p>
                 </div>
                 <a href="{{ route('client.appointments.create') }}" 
                    class="bg-white text-primary-600 px-6 py-3 rounded-lg font-medium hover:bg-gray-100 transition duration-200">
@@ -252,7 +252,7 @@
                     <i class="fas fa-calendar-alt text-6xl"></i>
                 </div>
                 <h3 class="mt-4 text-lg font-medium text-gray-900">لا توجد مواعيد</h3>
-                <p class="mt-2 text-gray-500">لم تحجز أي مواعيد بعد. ابدأ بحجز موعد مع إحدى المؤسسات العقارية.</p>
+                <p class="mt-2 text-gray-500">لم تحجز أي مواعيد بعد. ابدأ بحجز موعد مع إحدى المؤسسات المشاريعية.</p>
                 <div class="mt-6">
                     <a href="{{ route('client.appointments.create') }}" 
                        class="inline-flex items-center px-6 py-3 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition duration-200">

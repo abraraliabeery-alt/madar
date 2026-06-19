@@ -20,6 +20,7 @@ use App\Http\Controllers\Admin\AdminFinancialController;
 use App\Http\Controllers\Admin\AdminPermissionController;
 use App\Http\Controllers\Admin\AdminUserManagementController;
 use App\Http\Controllers\Admin\IconPickerController;
+use App\Http\Controllers\Admin\AdminPlanLotController;
 
 Route::group([], function () {
 
@@ -78,6 +79,14 @@ Route::group([], function () {
     Route::post('products/{product}/toggle-status', [AdminProductController::class, 'toggleStatus'])->name('products.toggle-status');
     Route::post('products/{product}/toggle-verification', [AdminProductController::class, 'toggleVerification'])->name('products.toggle-verification');
     Route::post('products/{product}/toggle-featured', [AdminProductController::class, 'toggleFeatured'])->name('products.toggle-featured');
+
+    // Plans - Lots management
+    Route::prefix('plans/{slug}')->name('plans.')->group(function () {
+        Route::get('lots', [AdminPlanLotController::class, 'index'])->name('lots.index');
+        Route::post('lots/import', [AdminPlanLotController::class, 'import'])->name('lots.import');
+        Route::post('lots/import-from-extraction', [AdminPlanLotController::class, 'importFromExtractionView'])->name('lots.import_from_extraction');
+        Route::post('lots/{lot}', [AdminPlanLotController::class, 'update'])->name('lots.update');
+    });
     Route::get('products/{product}/gallery', [AdminProductController::class, 'gallery'])->name('products.gallery');
     Route::get('products/{product}/comments', [AdminProductController::class, 'comments'])->name('products.comments');
     Route::get('products/{product}/timeline', [AdminProductController::class, 'timeline'])->name('products.timeline');

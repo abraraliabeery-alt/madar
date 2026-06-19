@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>وسيط عقاري ذكي — تشغيل تلقائي بدون إدخال</title>
+  <title>وسيط مشاريع ذكي — تشغيل تلقائي بدون إدخال</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -32,7 +32,7 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>🏠 وسيط عقاري ذكي — تشغيل تلقائي</h1>
+  <h1>🏠 وسيط مشاريع ذكي — تشغيل تلقائي</h1>
   <p class="sub">
     لا يوجد أي إدخال يدوي. النظام يعمل تلقائيًا:
     <br />

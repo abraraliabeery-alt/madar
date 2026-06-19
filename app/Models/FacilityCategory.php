@@ -11,6 +11,9 @@ class FacilityCategory extends Model
 
     protected $fillable = [
         'parent_id',
+        'name',
+        'display_name',
+        'description',
         'icon',
         'image',
         'is_active',

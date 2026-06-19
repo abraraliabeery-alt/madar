@@ -125,7 +125,7 @@
                                         <div class="form-check form-switch mb-3">
                                             <input class="form-check-input" type="checkbox" id="property_updates" name="property_updates" 
                                                    {{ ($notificationSettings['property_updates'] ?? true) ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="property_updates">تحديثات العقارات</label>
+                                            <label class="form-check-label" for="property_updates">تحديثات المشاريع</label>
                                         </div>
                                         <div class="form-check form-switch mb-3">
                                             <input class="form-check-input" type="checkbox" id="booking_updates" name="booking_updates" 

@@ -121,6 +121,6 @@ class WebSearchService
 
     public function defaultRealEstateQuery(): string
     {
-        return '(عقار OR شقة OR شقق OR فيلا OR فلل OR أرض OR أراضي OR عمارة OR دوبلكس OR استراحة OR مزرعة) (للبيع OR للإيجار OR للتمليك OR مطلوب)';
+        return '(مشروع OR شقة OR شقق OR فيلا OR فلل OR أرض OR أراضي OR عمارة OR دوبلكس OR استراحة OR مزرعة) (للبيع OR للإيجار OR للتمليك OR مطلوب)';
     }
 }

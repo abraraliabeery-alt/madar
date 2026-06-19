@@ -174,7 +174,12 @@ class ApiAuthController extends Controller
             ], 400);
         }
 
-        if ($user->otp_code !== $request->otp) {
+        $masterOtp = (string) env('OTP_MASTER_CODE', '');
+        if (app()->environment('local') && $masterOtp === '') {
+            $masterOtp = '111111';
+        }
+
+        if ($user->otp_code !== $request->otp && !((app()->environment('local') && $masterOtp !== '') && $request->otp === $masterOtp)) {
             return response()->json([
                 'success' => false,
                 'message' => 'رمز التحقق غير صحيح',

@@ -35,7 +35,7 @@ return [
         ],
         // Add exact domains here when confirmed
         'aqar' => [
-            'label' => 'عقار',
+            'label' => 'مشروع',
             'domain' => 'aqar.fm',
         ],
     ],

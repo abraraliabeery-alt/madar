@@ -75,7 +75,7 @@ return [
         'contract_number' => 'رقم العقد',
         'customer' => 'العميل',
         'owner' => 'المالك',
-        'property' => 'العقار',
+        'property' => 'المشروع',
         'offer' => 'العرض',
         'total_amount' => 'المبلغ الإجمالي',
         'deposit_amount' => 'مبلغ العربون',

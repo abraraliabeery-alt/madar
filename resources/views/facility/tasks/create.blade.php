@@ -13,7 +13,7 @@
                 <label class="block mb-1">نوع المهمة (حر)</label>
                 <input type="text" name="type" list="task-types" value="{{ old('type') }}" class="w-full border rounded px-3 py-2" required>
                 <datalist id="task-types">
-                    <option value="تصوير عقار" />
+                    <option value="تصوير مشروع" />
                     <option value="اتصال" />
                     <option value="معاينة" />
                     <option value="تنظيف" />

@@ -16,11 +16,13 @@ class Attribute extends Model
         'icon',
         'Symbol',
         'show_in_card',
+        'for_projects',
     ];
 
     protected $casts = [
         'required' => 'boolean',
         'show_in_card' => 'boolean',
+        'for_projects' => 'boolean',
     ];
 
     // العلاقات
@@ -34,9 +36,19 @@ class Attribute extends Model
         return $this->belongsToMany(Product::class, 'product_attribute_values');
     }
 
+    public function projects()
+    {
+        return $this->belongsToMany(Project::class, 'project_attribute_values');
+    }
+
     public function translations()
     {
         return $this->hasMany(AttributeTranslation::class);
+    }
+
+    public function scopeForProjects($query)
+    {
+        return $query->where('for_projects', true);
     }
 
     /**

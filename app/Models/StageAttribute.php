@@ -29,6 +29,18 @@ class StageAttribute extends Model
         return $this->hasMany(StageAttributeTranslation::class);
     }
 
+    public function getTranslation($locale = null)
+    {
+        $locale = $locale ?: app()->getLocale();
+        return $this->translations()->where('locale', $locale)->first();
+    }
+
+    public function getTranslatedName($locale = null)
+    {
+        $translation = $this->getTranslation($locale);
+        return $translation ? $translation->name : '';
+    }
+
     public function projectValues()
     {
         return $this->hasMany(ProjectStageAttributeValue::class);

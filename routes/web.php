@@ -64,8 +64,24 @@ Route::get('/migration-seeder', function () {
 Route::get('/language/{language}', [App\Http\Controllers\LanguageController::class, 'switch'])->name('language.switch');
 Route::get('/language-info', [App\Http\Controllers\LanguageController::class, 'info'])->name('language.info');
 
-// Laravel UI Auth Routes
-Auth::routes();
+// Auth (Phone OTP only)
+Route::middleware('guest')->group(function () {
+    Route::get('/login', function () {
+        return redirect()->route('phone.otp.login.form');
+    })->name('login');
+
+    Route::get('/register', function () {
+        return redirect()->route('phone.otp.login.form');
+    })->name('register');
+});
+
+Route::post('/logout', function (\Illuminate\Http\Request $request) {
+    Auth::logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+
+    return redirect('/');
+})->middleware('auth')->name('logout');
 
 // Phone OTP login (like Aqar)
 Route::middleware('guest')->group(function () {
@@ -175,14 +191,27 @@ Route::get('/welcome', function () {
     return view('welcome');
 })->name('welcome');
 
+// Public projects listing (alias to execution marketplace)
+Route::get('/projects', [App\Http\Controllers\Public\ExecutionMarketplaceController::class, 'index'])
+    ->name('public.projects.index');
+
 // Public execution marketplace (requests & bids)
 Route::get('/execution', [App\Http\Controllers\Public\ExecutionMarketplaceController::class, 'index'])
     ->name('public.execution.marketplace');
 Route::get('/execution/requests/{executionRequest}', [App\Http\Controllers\Public\ExecutionMarketplaceController::class, 'show'])
     ->name('public.execution.show');
+Route::get('/execution/requests/{executionRequest}/bids/form', [App\Http\Controllers\Public\ExecutionMarketplaceController::class, 'bidForm'])
+    ->middleware('auth')
+    ->name('public.execution.bids.form');
 Route::post('/execution/requests/{executionRequest}/bids', [App\Http\Controllers\Public\ExecutionMarketplaceController::class, 'storeBid'])
     ->middleware('auth')
     ->name('public.execution.bids.store');
+Route::get('/execution/requests/{executionRequest}/bids/pdf/preview', [App\Http\Controllers\Public\ExecutionMarketplaceController::class, 'previewMyBidPdf'])
+    ->middleware('auth')
+    ->name('public.execution.bids.pdf.preview');
+Route::get('/execution/requests/{executionRequest}/bids/pdf/download', [App\Http\Controllers\Public\ExecutionMarketplaceController::class, 'downloadMyBidPdf'])
+    ->middleware('auth')
+    ->name('public.execution.bids.pdf.download');
 
 // Public investment studies (no auth required)
 Route::get('/investment-studies', [LandStudyController::class, 'form'])

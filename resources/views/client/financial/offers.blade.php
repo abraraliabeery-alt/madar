@@ -8,7 +8,7 @@
         <div class="d-flex justify-content-between align-items-center">
             <div>
                 <h2 class="mb-1">العروض المتاحة</h2>
-                <p class="text-muted mb-0">اكتشف أفضل العروض العقارية المتاحة</p>
+                <p class="text-muted mb-0">اكتشف أفضل العروض المشاريعية المتاحة</p>
             </div>
             <div class="d-flex gap-2">
                 <button type="button" class="btn btn-outline-secondary" data-bs-toggle="collapse" data-bs-target="#filtersCollapse">
@@ -66,7 +66,7 @@
                 <div class="row">
                     <div class="col-lg-3 col-md-6 mb-3">
                         <label class="form-label">البحث</label>
-                        <input type="text" name="search" class="form-control" placeholder="اسم العقار أو الموقع..." 
+                        <input type="text" name="search" class="form-control" placeholder="اسم المشروع أو الموقع..." 
                                value="{{ request('search') }}">
                     </div>
 

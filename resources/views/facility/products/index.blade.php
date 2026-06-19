@@ -25,13 +25,13 @@
                         <a href="{{ route('facility.products.index', array_merge(request()->query(), ['seller_user_id' => $currentUserId])) }}"
                            class="inline-flex items-center px-3 py-1 rounded-full border text-gray-700 bg-gray-50 hover:bg-gray-100">
                             <i class="fas fa-user ml-1 text-[10px]"></i>
-                            عقاراتي
+                            مشاريعي
                         </a>
                         @if(config('features.facility_listings_qs'))
                             <a href="{{ route('facility.products.index', array_merge(request()->query(), ['seller_user_id' => $currentUserId, 'quality' => 'attention'])) }}"
                                class="inline-flex items-center px-3 py-1 rounded-full border border-red-200 text-red-700 bg-red-50 hover:bg-red-100">
                                 <i class="fas fa-exclamation-triangle ml-1 text-[10px]"></i>
-                                عقاراتي التي تحتاج تحسين
+                                مشاريعي التي تحتاج تحسين
                             </a>
                         @endif
                     </div>
@@ -293,7 +293,7 @@
                 </span>
                 <span class="hidden sm:inline">|</span>
                 <span>
-                    العقارات التي لديها عروض <strong>بيع</strong>:
+                    المشاريع التي لديها عروض <strong>بيع</strong>:
                     <strong>{{ $products->where('sale_offers_count', '>', 0)->count() }}</strong>
                 </span>
             </div>
@@ -332,7 +332,7 @@
                             <a href="{{ route('facility.products.index', array_merge(request()->query(), ['quality' => 'attention'])) }}"
                                class="bg-red-50 hover:bg-red-100 text-red-700 text-xs font-medium py-2 px-3 rounded-full border border-red-200 flex items-center gap-1">
                                 <span class="inline-block w-2 h-2 rounded-full bg-red-500"></span>
-                                العقارات التي تحتاج تحسين
+                                المشاريع التي تحتاج تحسين
                             </a>
                         @endif
                     </div>
@@ -480,7 +480,7 @@
                                         </a>
                                         <a href="{{ route('facility.products.lifecycle', $product) }}"
                                            class="inline-flex items-center justify-center w-8 h-8 text-purple-600 bg-purple-50 hover:bg-purple-100 rounded-lg"
-                                           title="دورة حياة العقار">
+                                           title="دورة حياة المشروع">
                                             <i class="fas fa-stream text-sm"></i>
                                         </a>
                                         <form action="{{ route('facility.products.destroy', $product) }}" method="POST" class="inline-block"
@@ -579,7 +579,7 @@
                                             </a>
                                             <a href="{{ route('facility.products.lifecycle', $product) }}"
                                                class="inline-flex items-center justify-center w-9 h-9 text-purple-600 bg-purple-50 hover:bg-purple-100 rounded-lg"
-                                               title="دورة حياة العقار">
+                                               title="دورة حياة المشروع">
                                                 <i class="fas fa-stream text-sm"></i>
                                             </a>
                                             <form action="{{ route('facility.products.destroy', $product) }}" method="POST" class="inline-block"

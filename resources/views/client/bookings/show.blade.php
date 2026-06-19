@@ -77,9 +77,9 @@
                             <h3 class="text-sm font-medium text-gray-500 mb-2">نوع الزيارة</h3>
                             <p class="text-gray-900">
                                 @if($booking->visit_type == 'inspection')
-                                    معاينة العقار
+                                    معاينة المشروع
                                 @elseif($booking->visit_type == 'consultation')
-                                    استشارة عقارية
+                                    استشارة مشاريعية
                                 @elseif($booking->visit_type == 'meeting')
                                     اجتماع
                                 @else
@@ -164,7 +164,7 @@
             <div class="space-y-6">
                 <!-- Product Info -->
                 <div class="bg-white rounded-lg shadow-md p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">معلومات العقار</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">معلومات المشروع</h3>
                     <div class="space-y-4">
                         <div class="flex items-center space-x-3 space-x-reverse">
                             <img src="{{ $booking->product->image_url }}" 
@@ -184,7 +184,7 @@
                         <a href="{{ route('public.products.show', $booking->product) }}" 
                            class="inline-flex items-center text-primary-600 hover:text-primary-700 text-sm font-medium">
                             <i class="fas fa-external-link-alt ml-2"></i>
-                            عرض العقار
+                            عرض المشروع
                         </a>
                     </div>
                 </div>

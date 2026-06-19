@@ -10,6 +10,11 @@ use App\Models\Category;
 use App\Models\Status;
 use App\Models\Feature;
 use App\Models\Attribute;
+use App\Models\Plan;
+use App\Models\PlanLot;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 
 class SearchController extends Controller
 {
@@ -23,6 +28,43 @@ class SearchController extends Controller
         $statuses = Status::where('is_active', true)->get();
         
         return view('public.search.index', compact('categories', 'features', 'statuses'));
+    }
+
+    public function ajlanLotShow(Request $request, PlanLot $lot)
+    {
+        $plan = Plan::query()->where('slug', 'ajlan')->first();
+        if (!$plan || (int) $lot->plan_id !== (int) $plan->id) {
+            abort(404);
+        }
+
+        $centroid = null;
+        try {
+            $ring = is_array($lot->geometry) ? ($lot->geometry['coordinates'][0] ?? null) : null;
+            if (is_array($ring) && count($ring) > 0) {
+                $sumLng = 0.0;
+                $sumLat = 0.0;
+                $n = 0;
+                foreach ($ring as $pt) {
+                    if (is_array($pt) && count($pt) >= 2) {
+                        $sumLng += (float) $pt[0];
+                        $sumLat += (float) $pt[1];
+                        $n++;
+                    }
+                }
+                if ($n > 0) {
+                    $centroid = ['lat' => $sumLat / $n, 'lng' => $sumLng / $n];
+                }
+            }
+        } catch (\Throwable $e) {
+            $centroid = null;
+        }
+
+        return view('public.plans.lot_show', [
+            'plan' => $plan,
+            'lot' => $lot,
+            'centroid' => $centroid,
+            'whatsappNumber' => $request->string('whatsapp')->toString(),
+        ]);
     }
  
     /**
@@ -227,6 +269,226 @@ class SearchController extends Controller
         $statuses = Status::all();
 
         return view('public.search.facilities', compact('facilities', 'categories', 'statuses'));
+    }
+
+    public function ajlanPlan(Request $request)
+    {
+        $fallbackCenterLat = 24.550964276;
+        $fallbackCenterLng = 46.824846268;
+        $fallbackPlanNumber = '2705/5';
+        $fallbackPlanAreaKm2 = 3.88;
+
+        $plan = Plan::query()->where('slug', 'ajlan')->with('lots')->first();
+
+        if (!$plan || $plan->lots->count() === 0) {
+            try {
+                $viewPath = resource_path('views/public/plans/plans.blade.php');
+                if (File::exists($viewPath)) {
+                    $content = File::get($viewPath);
+                    $marker = 'const parcelsWGS = ';
+                    $start = strpos($content, $marker);
+                    if ($start !== false) {
+                        $start += strlen($marker);
+                        $end = strpos($content, ';', $start);
+                        if ($end !== false) {
+                            $json = trim(substr($content, $start, $end - $start));
+                            $payload = json_decode($json, true);
+                            if (is_array($payload) && ($payload['type'] ?? null) === 'FeatureCollection' && is_array($payload['features'] ?? null)) {
+                                $plan = Plan::query()->firstOrCreate(
+                                    ['slug' => 'ajlan'],
+                                    [
+                                        'name' => 'عجلان',
+                                        'plan_number' => $fallbackPlanNumber,
+                                        'center_lat' => $fallbackCenterLat,
+                                        'center_lng' => $fallbackCenterLng,
+                                        'area_km2' => $fallbackPlanAreaKm2,
+                                    ]
+                                );
+
+                                foreach ($payload['features'] as $feat) {
+                                    if (!is_array($feat)) continue;
+                                    $props = is_array($feat['properties'] ?? null) ? $feat['properties'] : [];
+                                    $geom = is_array($feat['geometry'] ?? null) ? $feat['geometry'] : null;
+                                    if (!$geom) continue;
+
+                                    $lotNumber = (string) ($props['lot_number'] ?? $props['parcel_no'] ?? $props['id'] ?? '');
+                                    if ($lotNumber === '') continue;
+
+                                    $area = $props['area_m2'] ?? $props['area'] ?? null;
+
+                                    PlanLot::query()->updateOrCreate(
+                                        ['plan_id' => $plan->id, 'lot_number' => $lotNumber],
+                                        [
+                                            'usage' => $props['usage'] ?? null,
+                                            'status' => $props['status'] ?? 'available',
+                                            'area_m2' => is_numeric($area) ? (float) $area : null,
+                                            'price' => isset($props['price']) && is_numeric($props['price']) ? (int) $props['price'] : null,
+                                            'geometry' => $geom,
+                                        ]
+                                    );
+                                }
+
+                                $plan = Plan::query()->where('slug', 'ajlan')->with('lots')->first();
+                            }
+                        }
+                    }
+                }
+            } catch (\Throwable $e) {
+            }
+        }
+
+        $centerLat = $plan?->center_lat ?? $fallbackCenterLat;
+        $centerLng = $plan?->center_lng ?? $fallbackCenterLng;
+        $planNumber = $plan?->plan_number ?? $fallbackPlanNumber;
+        $planAreaKm2 = $plan?->area_km2 ?? $fallbackPlanAreaKm2;
+
+        $planAreaM2 = $planAreaKm2 * 1000 * 1000;
+        $planShadeRadiusMeters = sqrt($planAreaM2 / pi());
+
+        $geoJson = [
+            'type' => 'FeatureCollection',
+            'features' => [],
+        ];
+
+        if ($plan && $plan->lots->count()) {
+            $geoJson['features'] = $plan->lots->map(function ($lot) {
+                return [
+                    'type' => 'Feature',
+                    'properties' => [
+                        'db_id' => $lot->id,
+                        'lot_number' => (string) $lot->lot_number,
+                        'area' => $lot->area_m2,
+                        'usage' => $lot->usage,
+                        'status' => $lot->status,
+                        'price' => $lot->price,
+                    ],
+                    'geometry' => $lot->geometry,
+                ];
+            })->values()->all();
+        } else {
+            // بيانات GeoJSON مؤقتة للتجربة فقط ويجب استبدالها لاحقًا ببيانات قاعدة البيانات.
+            $geoJson['features'] = [
+                [
+                    'type' => 'Feature',
+                    'properties' => [
+                        'lot_number' => '101',
+                        'area' => 540,
+                        'usage' => 'سكني',
+                        'status' => 'available',
+                        'price' => 650000,
+                    ],
+                    'geometry' => [
+                        'type' => 'Polygon',
+                        'coordinates' => [[
+                            [$fallbackCenterLng + 0.00120, $fallbackCenterLat + 0.00040],
+                            [$fallbackCenterLng + 0.00170, $fallbackCenterLat + 0.00040],
+                            [$fallbackCenterLng + 0.00170, $fallbackCenterLat + 0.00010],
+                            [$fallbackCenterLng + 0.00120, $fallbackCenterLat + 0.00010],
+                            [$fallbackCenterLng + 0.00120, $fallbackCenterLat + 0.00040],
+                        ]],
+                    ],
+                ],
+                [
+                    'type' => 'Feature',
+                    'properties' => [
+                        'lot_number' => '102',
+                        'area' => 600,
+                        'usage' => 'تجاري',
+                        'status' => 'reserved',
+                        'price' => 880000,
+                    ],
+                    'geometry' => [
+                        'type' => 'Polygon',
+                        'coordinates' => [[
+                            [$fallbackCenterLng + 0.00120, $fallbackCenterLat + 0.00005],
+                            [$fallbackCenterLng + 0.00170, $fallbackCenterLat + 0.00005],
+                            [$fallbackCenterLng + 0.00170, $fallbackCenterLat - 0.00025],
+                            [$fallbackCenterLng + 0.00120, $fallbackCenterLat - 0.00025],
+                            [$fallbackCenterLng + 0.00120, $fallbackCenterLat + 0.00005],
+                        ]],
+                    ],
+                ],
+                [
+                    'type' => 'Feature',
+                    'properties' => [
+                        'lot_number' => '103',
+                        'area' => 510,
+                        'usage' => 'سكني',
+                        'status' => 'sold',
+                        'price' => 610000,
+                    ],
+                    'geometry' => [
+                        'type' => 'Polygon',
+                        'coordinates' => [[
+                            [$fallbackCenterLng + 0.00175, $fallbackCenterLat + 0.00040],
+                            [$fallbackCenterLng + 0.00225, $fallbackCenterLat + 0.00040],
+                            [$fallbackCenterLng + 0.00225, $fallbackCenterLat + 0.00010],
+                            [$fallbackCenterLng + 0.00175, $fallbackCenterLat + 0.00010],
+                            [$fallbackCenterLng + 0.00175, $fallbackCenterLat + 0.00040],
+                        ]],
+                    ],
+                ],
+                [
+                    'type' => 'Feature',
+                    'properties' => [
+                        'lot_number' => '104',
+                        'area' => 720,
+                        'usage' => 'خدمات',
+                        'status' => 'available',
+                        'price' => 990000,
+                    ],
+                    'geometry' => [
+                        'type' => 'Polygon',
+                        'coordinates' => [[
+                            [$fallbackCenterLng + 0.00175, $fallbackCenterLat + 0.00005],
+                            [$fallbackCenterLng + 0.00225, $fallbackCenterLat + 0.00005],
+                            [$fallbackCenterLng + 0.00225, $fallbackCenterLat - 0.00025],
+                            [$fallbackCenterLng + 0.00175, $fallbackCenterLat - 0.00025],
+                            [$fallbackCenterLng + 0.00175, $fallbackCenterLat + 0.00005],
+                        ]],
+                    ],
+                ],
+            ];
+        }
+
+        return view('public.plans.ajlan', [
+            'centerLat' => $centerLat,
+            'centerLng' => $centerLng,
+            'planNumber' => $planNumber,
+            'planAreaKm2' => $planAreaKm2,
+            'planShadeRadiusMeters' => $planShadeRadiusMeters,
+            'geoJson' => $geoJson,
+            'whatsappNumber' => $request->string('whatsapp')->toString(),
+        ]);
+    }
+
+    public function ajlanOsmRoads(Request $request)
+    {
+        $south = 24.543627000069844;
+        $west = 46.81368100000787;
+        $north = 24.56727800007028;
+        $east = 46.84426200000871;
+
+        $query = "[out:json][timeout:25];(way[\"highway\"]({$south},{$west},{$north},{$east}););out geom;";
+
+        try {
+            $resp = Http::timeout(30)->asForm()->post('https://overpass-api.de/api/interpreter', [
+                'data' => $query,
+            ]);
+
+            if (!$resp->ok()) {
+                return response()->json([
+                    'ok' => false,
+                    'status' => $resp->status(),
+                ], 502);
+            }
+
+            return response($resp->body(), 200)
+                ->header('Content-Type', 'application/json');
+        } catch (\Throwable $e) {
+            Log::warning('Overpass proxy failed', ['error' => $e->getMessage()]);
+            return response()->json(['ok' => false], 502);
+        }
     }
 
     /**

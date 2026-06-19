@@ -298,7 +298,7 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>العقار</th>
+                        <th>المشروع</th>
                         <th>المنشأة</th>
                         <th>الحالة</th>
                         <th>تاريخ البداية</th>
@@ -329,7 +329,7 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>العقار</th>
+                        <th>المشروع</th>
                         <th>المنشأة</th>
                         <th>الحالة</th>
                         <th>تاريخ البداية</th>
@@ -418,7 +418,7 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>العقار</th>
+                        <th>المشروع</th>
                         <th>المحتوى</th>
                         <th>التقييم</th>
                         <th>تاريخ الإنشاء</th>
@@ -441,7 +441,7 @@
         <!-- Favorites -->
         @if(isset($data['favorite_products']) && count($data['favorite_products']) > 0)
         <div class="section">
-            <h2>العقارات المفضلة</h2>
+            <h2>المشاريع المفضلة</h2>
             <table class="table">
                 <thead>
                     <tr>
@@ -498,7 +498,7 @@
         @endif
 
         <div class="footer">
-            <p>تم إنشاء هذا التقرير تلقائياً من نظام إدارة العقارات</p>
+            <p>تم إنشاء هذا التقرير تلقائياً من نظام إدارة المشاريع</p>
             <p>تاريخ الإنشاء: {{ now()->format('Y-m-d H:i:s') }}</p>
             <p>جميع الحقوق محفوظة © {{ date('Y') }}</p>
         </div>

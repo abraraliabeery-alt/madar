@@ -47,7 +47,7 @@
                     <div class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow">
                         @if($offer->product->image)
                             <img src="{{ asset('storage/' . $offer->product->image) }}" 
-                                 class="w-full h-48 object-cover" alt="صورة العقار">
+                                 class="w-full h-48 object-cover" alt="صورة المشروع">
                         @endif
                         
                         <div class="p-6 flex flex-col h-full">

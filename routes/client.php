@@ -6,6 +6,7 @@ use App\Http\Controllers\Client\ClientBookingController;
 use App\Http\Controllers\Client\ClientOfferController;
 use App\Http\Controllers\Client\ClientContractController;
 use App\Http\Controllers\Client\ClientFinancialController;
+use App\Http\Controllers\Client\ClientProjectController;
 use App\Http\Controllers\AI\LandStudyController;
 
 // Client Routes - جميع routes تحتاج middleware client
@@ -38,6 +39,11 @@ Route::group([], function () {
     Route::post('/loans/requests', [ClientController::class, 'storeLoanRequest'])->name('loans.requests.store');
     Route::get('/loans/requests/{loanRequest}', [ClientController::class, 'showLoanRequest'])->name('loans.requests.show');
     Route::post('/loans/requests/{loanRequest}/offers/{offer}/choose', [ClientController::class, 'chooseLoanOffer'])->name('loans.offers.choose');
+
+    // Projects (Client)
+    Route::get('/projects/create', [ClientProjectController::class, 'create'])->name('projects.create');
+    Route::post('/projects', [ClientProjectController::class, 'store'])->name('projects.store');
+    Route::get('/projects/{project}', [ClientProjectController::class, 'show'])->name('projects.show');
 
     // Notifications
     Route::get('/notifications', [ClientController::class, 'notifications'])->name('notifications');

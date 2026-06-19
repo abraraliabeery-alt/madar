@@ -42,11 +42,11 @@ class BookingCreated extends Notification
         return (new MailMessage)
             ->subject('حجز جديد - ' . $this->booking->product->name)
             ->greeting('مرحباً ' . $notifiable->name)
-            ->line('تم إنشاء حجز جديد للعقار: ' . $this->booking->product->name)
+            ->line('تم إنشاء حجز جديد للمشروع: ' . $this->booking->product->name)
             ->line('تاريخ الحجز: ' . $bookingDate)
                             ->line('المبلغ: ' . $this->booking->total_amount . ' ' . \App\Helpers\LanguageHelper::getSaudiRiyalSymbol())
             ->action('عرض التفاصيل', url('/bookings/' . $this->booking->id))
-            ->line('شكراً لاستخدام منصة عقار!');
+            ->line('شكراً لاستخدام منصة مشاريع!');
     }
 
     /**
@@ -60,11 +60,11 @@ class BookingCreated extends Notification
 
         return [
             'booking_id' => $this->booking->id,
-            'product_name' => $this->booking->product->title ?? 'عقار',
+            'product_name' => $this->booking->product->title ?? 'مشروع',
             'booking_date' => $bookingDate,
             'total_amount' => $this->booking->total_amount ?? 0,
             'type' => 'booking_created',
-            'message' => 'تم إنشاء حجز جديد للعقار: ' . ($this->booking->product->title ?? 'عقار'),
+            'message' => 'تم إنشاء حجز جديد للمشروع: ' . ($this->booking->product->title ?? 'مشروع'),
             'action_url' => route('client.bookings.show', $this->booking->id),
         ];
     }

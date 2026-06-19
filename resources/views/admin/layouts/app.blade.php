@@ -18,10 +18,126 @@
     <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
-    <link href="{{ asset('css/admin.css') }}" rel="stylesheet">
+    <link href="{{ asset('admin-bundle.css') }}" rel="stylesheet">
+    <script src="{{ asset('theme.js') }}" defer></script>
     @stack('styles')
 
     <style>
+        :root {
+            --brand-brown: #0f172a;
+
+            --brand-brown-rgb: 15, 23, 42;
+
+            --bs-body-bg: #ffffff;
+            --bs-primary: var(--brand-brown);
+            --bs-link-color: var(--brand-brown);
+            --bs-link-hover-color: var(--brand-brown);
+
+            --bs-body-color: var(--brand-brown);
+            --bs-emphasis-color: var(--brand-brown);
+            --bs-secondary-color: rgba(var(--brand-brown-rgb), 0.75);
+            --bs-tertiary-color: rgba(var(--brand-brown-rgb), 0.55);
+            --bs-border-color: rgba(var(--brand-brown-rgb), 0.2);
+
+            --bs-box-shadow: 0 0.5rem 1rem rgba(var(--brand-brown-rgb), 0.08);
+            --bs-box-shadow-sm: 0 .125rem .25rem rgba(var(--brand-brown-rgb), 0.08);
+
+            --bs-dark: var(--brand-brown);
+            --bs-dark-rgb: var(--brand-brown-rgb);
+
+            --bs-backdrop-bg: var(--brand-brown);
+            --bs-backdrop-opacity: 0.2;
+
+            --bs-success: var(--brand-brown);
+            --bs-info: var(--brand-brown);
+            --bs-warning: var(--brand-brown);
+            --bs-danger: var(--brand-brown);
+            --bs-secondary: var(--brand-brown);
+        }
+
+        .btn-primary,
+        .btn-success,
+        .btn-info,
+        .btn-warning,
+        .btn-danger {
+            --bs-btn-bg: var(--brand-brown);
+            --bs-btn-border-color: var(--brand-brown);
+            --bs-btn-hover-bg: var(--brand-brown);
+            --bs-btn-hover-border-color: var(--brand-brown);
+            --bs-btn-active-bg: var(--brand-brown);
+            --bs-btn-active-border-color: var(--brand-brown);
+        }
+
+        .btn-outline-primary,
+        .btn-outline-success,
+        .btn-outline-info,
+        .btn-outline-warning,
+        .btn-outline-danger,
+        .btn-outline-secondary {
+            --bs-btn-color: var(--brand-brown);
+            --bs-btn-border-color: var(--brand-brown);
+            --bs-btn-hover-bg: var(--brand-brown);
+            --bs-btn-hover-border-color: var(--brand-brown);
+            --bs-btn-active-bg: var(--brand-brown);
+            --bs-btn-active-border-color: var(--brand-brown);
+        }
+
+        .badge.bg-success,
+        .badge.bg-info,
+        .badge.bg-warning,
+        .badge.bg-danger,
+        .badge.bg-primary,
+        .badge.bg-secondary {
+            background-color: var(--brand-brown) !important;
+        }
+
+        .list-group-item.active,
+        .nav-pills .nav-link.active {
+            background-color: var(--brand-brown);
+            border-color: var(--brand-brown);
+        }
+
+        .text-muted {
+            color: rgba(var(--brand-brown-rgb), 0.7) !important;
+        }
+
+        .border,
+        .border-top,
+        .border-bottom,
+        .border-start,
+        .border-end {
+            border-color: rgba(var(--brand-brown-rgb), 0.2) !important;
+        }
+
+        .card {
+            box-shadow: var(--bs-box-shadow-sm);
+        }
+
+        a,
+        a:hover,
+        a:focus,
+        a:active,
+        a:visited {
+            color: var(--brand-brown) !important;
+        }
+
+        .link-primary,
+        .link-success,
+        .link-info,
+        .link-warning,
+        .link-danger,
+        .link-secondary,
+        .text-primary,
+        .text-success,
+        .text-info,
+        .text-warning,
+        .text-danger,
+        .text-secondary,
+        .text-dark,
+        .text-body {
+            color: var(--brand-brown) !important;
+        }
+
         /* Mobile Responsive Improvements */
         @media (max-width: 768px) {
             .main-header {
@@ -653,7 +769,7 @@
                 </a>
                 <a href="{{ route('admin.products.index') }}" class="nav-link {{ request()->routeIs('admin.products.*') ? 'active' : '' }}">
                     <i class="fas fa-box"></i>
-                    <span>العقارات</span>
+                    <span>المشاريع</span>
                 </a>
                 <a href="{{ route('admin.bookings.index') }}" class="nav-link {{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}">
                     <i class="fas fa-calendar-check"></i>
@@ -697,7 +813,7 @@
             <div class="navbar-tools">
                 <!-- Search -->
                 <div class="search-box position-relative">
-                    <input type="text" class="form-control" id="globalSearch" placeholder="بحث في المستخدمين، المنشآت، العقارات..." autocomplete="off">
+                    <input type="text" class="form-control" id="globalSearch" placeholder="بحث في المستخدمين، المنشآت، المشاريع..." autocomplete="off">
                     <i class="fas fa-search"></i>
                     
                     <!-- Search Results Dropdown -->
@@ -734,7 +850,7 @@
                             <i class="fas fa-question-circle ms-2"></i>سؤال جديد
                         </a>
                         <a href="{{ route('admin.products.create') }}" class="dropdown-item">
-                            <i class="fas fa-box-open ms-2"></i>عقار جديد
+                            <i class="fas fa-box-open ms-2"></i>مشروع جديد
                         </a>
                         <a href="{{ route('admin.bookings.create') }}" class="dropdown-item">
                             <i class="fas fa-calendar-plus ms-2"></i>حجز جديد
@@ -767,7 +883,7 @@
                 </div>
 
                 <!-- Theme Toggle -->
-                <button class="btn btn-light" id="themeToggle">
+                <button class="btn btn-light" id="themeToggle" type="button" data-theme-toggle aria-label="Toggle theme">
                     <i class="fas fa-moon"></i>
                 </button>
             </div>
@@ -1050,30 +1166,7 @@
             }
         });
 
-        // تبديل الوضع الليلي
-        $('#themeToggle').on('click', function() {
-            $('body').toggleClass('dark-mode');
-            let icon = $(this).find('i');
-            let isDarkMode = $('body').hasClass('dark-mode');
-            
-            // حفظ التفضيل في localStorage
-            localStorage.setItem('adminDarkMode', isDarkMode);
-            
-            if (isDarkMode) {
-                icon.removeClass('fa-moon').addClass('fa-sun');
-            } else {
-                icon.removeClass('fa-sun').addClass('fa-moon');
-            }
-        });
-
-        // استعادة تفضيل الوضع الليلي عند تحميل الصفحة
-        function restoreDarkMode() {
-            const savedDarkMode = localStorage.getItem('adminDarkMode');
-            if (savedDarkMode === 'true') {
-                $('body').addClass('dark-mode');
-                $('#themeToggle i').removeClass('fa-moon').addClass('fa-sun');
-            }
-        }
+        // Theme is handled globally by public/theme.js
 
         // استعادة حالة القائمة الجانبية عند تحميل الصفحة
         function restoreSidebarState() {
@@ -1097,8 +1190,6 @@
             }
         }
 
-        // استدعاء الدالة عند تحميل الصفحة
-        restoreDarkMode();
         restoreSidebarState();
 
         // Handle window resize for responsive sidebar

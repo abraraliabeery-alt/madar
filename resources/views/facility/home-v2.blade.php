@@ -284,22 +284,22 @@
                 <div class="border rounded-lg p-3">
                     <div class="text-xs text-gray-500">صور مفقودة</div>
                     <div class="text-xl font-bold text-red-600">{{ number_format($stats['quality']['missing_image'] ?? 0) }}</div>
-                    <a href="{{ route('facility.products.index', ['quality' => 'attention']) }}" class="mt-1 inline-block text-xs text-blue-600 hover:underline">عرض العقارات المتأثرة</a>
+                    <a href="{{ route('facility.products.index', ['quality' => 'attention']) }}" class="mt-1 inline-block text-xs text-blue-600 hover:underline">عرض المشاريع المتأثرة</a>
                 </div>
                 <div class="border rounded-lg p-3">
                     <div class="text-xs text-gray-500">موقع مفقود</div>
                     <div class="text-xl font-bold text-red-600">{{ number_format($stats['quality']['missing_location'] ?? 0) }}</div>
-                    <a href="{{ route('facility.products.index', ['quality' => 'attention']) }}" class="mt-1 inline-block text-xs text-blue-600 hover:underline">عرض العقارات المتأثرة</a>
+                    <a href="{{ route('facility.products.index', ['quality' => 'attention']) }}" class="mt-1 inline-block text-xs text-blue-600 hover:underline">عرض المشاريع المتأثرة</a>
                 </div>
                 <div class="border rounded-lg p-3">
                     <div class="text-xs text-gray-500">سعر مفقود/صفر</div>
                     <div class="text-xl font-bold text-amber-600">{{ number_format($stats['quality']['missing_price'] ?? 0) }}</div>
-                    <a href="{{ route('facility.products.index', ['quality' => 'attention']) }}" class="mt-1 inline-block text-xs text-blue-600 hover:underline">عرض العقارات المتأثرة</a>
+                    <a href="{{ route('facility.products.index', ['quality' => 'attention']) }}" class="mt-1 inline-block text-xs text-blue-600 hover:underline">عرض المشاريع المتأثرة</a>
                 </div>
                 <div class="border rounded-lg p-3">
                     <div class="text-xs text-gray-500">ترجمات مفقودة</div>
                     <div class="text-xl font-bold text-amber-600">{{ number_format($stats['quality']['missing_translations'] ?? 0) }}</div>
-                    <a href="{{ route('facility.products.index', ['quality' => 'attention']) }}" class="mt-1 inline-block text-xs text-blue-600 hover:underline">عرض العقارات المتأثرة</a>
+                    <a href="{{ route('facility.products.index', ['quality' => 'attention']) }}" class="mt-1 inline-block text-xs text-blue-600 hover:underline">عرض المشاريع المتأثرة</a>
                 </div>
             </div>
         </div>

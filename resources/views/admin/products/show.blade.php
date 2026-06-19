@@ -137,7 +137,7 @@
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-header">
-                            <h6 class="mb-0">تفاصيل العقار</h6>
+                            <h6 class="mb-0">تفاصيل المشروع</h6>
                         </div>
                         <div class="card-body">
                             <div class="row">

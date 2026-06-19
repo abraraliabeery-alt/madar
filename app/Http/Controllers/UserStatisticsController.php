@@ -299,7 +299,7 @@ class UserStatisticsController extends Controller
             'notification_read' => 'قراءة إشعار',
             'favorite_added' => 'إضافة للمفضلة',
             'search_performed' => 'إجراء بحث',
-            'view_property' => 'عرض عقار',
+            'view_property' => 'عرض مشروع',
         ];
         
         return $translations[$action] ?? $action;

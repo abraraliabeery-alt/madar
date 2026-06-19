@@ -84,7 +84,7 @@
                                                 <div class="mt-2 text-xs sm:text-sm text-gray-500 space-y-1">
                                                     @if($activity['type'] === 'booking' && $activity['data'])
                                                         <p>
-                                                            <span class="font-medium text-gray-700">العقار:</span>
+                                                            <span class="font-medium text-gray-700">المشروع:</span>
                                                             {{ $activity['data']->product->name ?? 'غير متوفر' }}
                                                         </p>
                                                         <p>
@@ -93,7 +93,7 @@
                                                         </p>
                                                     @elseif($activity['type'] === 'contract' && $activity['data'])
                                                         <p>
-                                                            <span class="font-medium text-gray-700">العقار:</span>
+                                                            <span class="font-medium text-gray-700">المشروع:</span>
                                                             {{ $activity['data']->product->name ?? 'غير متوفر' }}
                                                         </p>
                                                         <p>

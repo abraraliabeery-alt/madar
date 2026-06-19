@@ -18,7 +18,7 @@
 <div class="row">
     <!-- تفاصيل العرض الرئيسية -->
     <div class="col-lg-8 mb-4">
-        <!-- صور العقار -->
+        <!-- صور المشروع -->
         <div class="card mb-4">
             @if($offer->product->gallery && $offer->product->gallery->count() > 0)
             <div id="propertyCarousel" class="carousel slide" data-bs-ride="carousel">
@@ -31,7 +31,7 @@
                 <div class="carousel-inner">
                     @foreach($offer->product->gallery as $index => $image)
                     <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
-                        <img src="{{ $image->image_url }}" class="d-block w-100" alt="صورة العقار"
+                        <img src="{{ $image->image_url }}" class="d-block w-100" alt="صورة المشروع"
                              style="height: 400px; object-fit: cover;">
                     </div>
                     @endforeach
@@ -53,7 +53,7 @@
             @endif
         </div>
 
-        <!-- معلومات العقار -->
+        <!-- معلومات المشروع -->
         <div class="card mb-4">
             <div class="card-header">
                 <h4 class="mb-0">{{ $offer->product->getTranslatedTitle() }}</h4>
@@ -194,7 +194,7 @@
                 @if($existingContract)
                 <div class="alert alert-warning">
                     <i class="fas fa-info-circle ms-2"></i>
-                    لديك عقد سابق لهذا العقار
+                    لديك عقد سابق لهذا المشروع
                     <div class="mt-2">
                         <a href="{{ route('client.financial.contract-details', $existingContract->id) }}" 
                            class="btn btn-sm btn-outline-primary">

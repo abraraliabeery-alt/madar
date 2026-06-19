@@ -1,12 +1,12 @@
 @extends('facility.layouts.app')
 
-@section('title', 'وسيط عقاري ذكي')
+@section('title', 'وسيط مشاريع ذكي')
 
 @section('content')
 <div class="container mx-auto px-4 py-6">
     <div class="flex items-center justify-between mb-6">
         <div>
-            <h1 class="text-2xl font-semibold text-gray-800">وسيط عقاري ذكي</h1>
+            <h1 class="text-2xl font-semibold text-gray-800">وسيط مشاريع ذكي</h1>
             <p class="text-sm text-gray-500 mt-1">أدخل الطلبات والعروض كنصوص (كل سطر عنصر) ثم طابقها باستخدام الذكاء الاصطناعي.</p>
         </div>
         <a href="{{ route('facility.dashboard') }}" class="text-sm text-gray-500 hover:text-gray-700">العودة للوحة التحكم</a>
@@ -18,7 +18,7 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">الطلبات العقارية (كل سطر طلب)</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">الطلبات على المشاريع (كل سطر طلب)</label>
                     <textarea name="requests_text" rows="10" class="w-full text-sm border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500" placeholder="مثال: مطلوب شقة 3 غرف بالرياض حي النرجس بميزانية 900 ألف">{{ old('requests_text', $requests_text ?? '') }}</textarea>
                     @error('requests_text')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -26,7 +26,7 @@
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">العروض العقارية (كل سطر عرض)</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">العروض على المشاريع (كل سطر عرض)</label>
                     <textarea name="offers_text" rows="10" class="w-full text-sm border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500" placeholder="مثال: شقة 3 غرف بالرياض النرجس 880 ألف - قرب الخدمات">{{ old('offers_text', $offers_text ?? '') }}</textarea>
                     @error('offers_text')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>

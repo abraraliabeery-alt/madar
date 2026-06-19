@@ -8,7 +8,7 @@
         <div class="mb-6 flex items-center justify-between">
             <div>
                 <h1 class="text-2xl font-bold text-gray-900">طلبات التمويل</h1>
-                <p class="text-gray-600 text-sm mt-1">قدم طلب تمويل لعقار محدد أو عام، وتابع حالة طلباتك.</p>
+                <p class="text-gray-600 text-sm mt-1">قدم طلب تمويل لمشروع محدد أو عام، وتابع حالة طلباتك.</p>
             </div>
         </div>
 
@@ -17,9 +17,9 @@
             <form action="{{ route('client.loans.requests.store') }}" method="POST" class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
                 @csrf
                 <div>
-                    <label for="product_id" class="block text-xs font-medium text-gray-700 mb-1">رقم العقار (اختياري)</label>
+                    <label for="product_id" class="block text-xs font-medium text-gray-700 mb-1">رقم المشروع (اختياري)</label>
                     <input type="number" name="product_id" id="product_id"
-                           class="w-full border-gray-300 rounded-lg text-sm" placeholder="ID العقار إن وجد"
+                           class="w-full border-gray-300 rounded-lg text-sm" placeholder="ID المشروع إن وجد"
                            value="{{ old('product_id') }}">
                 </div>
                 <div class="md:col-span-2">
@@ -92,9 +92,9 @@
                             </div>
                             <div class="text-sm font-semibold text-gray-900 mb-1">
                                 @if($loan->product)
-                                    {{ $loan->product->title ?? $loan->product->address ?? 'عقار بدون عنوان' }}
+                                    {{ $loan->product->title ?? $loan->product->address ?? 'مشروع بدون عنوان' }}
                                 @else
-                                    <span class="text-gray-500">طلب تمويل بدون عقار محدد</span>
+                                    <span class="text-gray-500">طلب تمويل بدون مشروع محدد</span>
                                 @endif
                             </div>
                             <div class="text-xs text-gray-600 mb-1">

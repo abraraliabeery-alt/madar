@@ -16,7 +16,7 @@
 
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <div class="bg-white shadow-sm rounded-lg p-4 border border-gray-100">
-            <p class="text-xs text-gray-400 mb-1">عدد العقارات في هذا المشروع</p>
+            <p class="text-xs text-gray-400 mb-1">عدد المنتجات في هذا المشروع</p>
             <p class="text-2xl font-semibold text-gray-800">{{ $projectsStats['total_products'] ?? 0 }}</p>
         </div>
         <div class="bg-white shadow-sm rounded-lg p-4 border border-gray-100">

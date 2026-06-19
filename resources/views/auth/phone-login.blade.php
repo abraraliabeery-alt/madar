@@ -18,6 +18,26 @@
                 @csrf
 
                 <div class="mb-6">
+                    <label for="login_intent" class="block text-sm font-medium text-gray-700 mb-2">نوع الحساب</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                            <i class="fas fa-users text-gray-400"></i>
+                        </div>
+                        <select
+                            id="login_intent"
+                            name="login_intent"
+                            class="w-full pr-10 pl-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
+                        >
+                            <option value="client" {{ old('login_intent', session('otp_login_intent', 'client')) === 'client' ? 'selected' : '' }}>مستخدم</option>
+                            <option value="facility" {{ old('login_intent', session('otp_login_intent', 'client')) === 'facility' ? 'selected' : '' }}>منشأة</option>
+                        </select>
+                    </div>
+                    @error('login_intent')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="mb-6">
                     <label for="phone_number" class="block text-sm font-medium text-gray-700 mb-2">رقم الجوال</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
@@ -47,7 +67,7 @@
             </form>
 
             <div class="mt-8 text-center">
-                <a href="{{ route('login') }}" class="text-primary-600 hover:text-primary-700 font-medium">الدخول بالبريد الإلكتروني</a>
+                <span class="text-gray-600">سيتم إرسال رمز تحقق إلى رقم الجوال</span>
             </div>
         </div>
 

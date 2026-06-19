@@ -179,7 +179,7 @@
                                             <div class="mb-4 flex items-center justify-center gap-6">
                                                 <label class="flex items-center gap-2 rtl:flex-row-reverse">
                                                     <input type="radio" name="search_type" value="products" checked onchange="updateInvestmentMapFilters()">
-                                                    <span class="text-sm font-medium text-gray-700">عقارات</span>
+                                                    <span class="text-sm font-medium text-gray-700">مشاريع</span>
                                                 </label>
                                                 <label class="flex items-center gap-2 rtl:flex-row-reverse">
                                                     <input type="radio" name="search_type" value="facilities" onchange="updateInvestmentMapFilters()">

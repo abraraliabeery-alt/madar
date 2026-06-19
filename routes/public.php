@@ -19,6 +19,7 @@ use App\Http\Controllers\Public\NewsletterController;
 use App\Http\Controllers\Public\ErrorController;
 use App\Http\Controllers\Public\BookingController;
 use App\Http\Controllers\FacilitySite\SiteController;
+use App\Http\Controllers\Admin\AdminPlanLotController;
 
 // Public Routes - لا تحتاج تسجيل دخول
 Route::group([], function () {
@@ -44,6 +45,25 @@ Route::group([], function () {
     Route::get('/search/advanced', [SearchController::class, 'advanced'])->name('search.advanced');
     Route::get('/search/map', [SearchController::class, 'map'])->name('search.map');
     Route::get('/search/quick', [SearchController::class, 'quickSearch'])->name('search.quick');
+
+    Route::get('/plans/ajlan', [SearchController::class, 'ajlanPlan'])
+        ->name('plans.ajlan');
+
+    Route::get('/plans/ajlan/osm-roads', [SearchController::class, 'ajlanOsmRoads'])
+        ->name('plans.ajlan.osm_roads');
+
+    Route::get('/plans/ajlan/lots/{lot}', [SearchController::class, 'ajlanLotShow'])
+        ->name('plans.ajlan.lots.show');
+
+    Route::view('/plans/ajlan/auto-detected-parcels', 'public.plans.plans')
+        ->name('plans.ajlan.auto_detected_parcels');
+
+    Route::prefix('/plans/{slug}')->group(function () {
+        Route::get('/lots-manage', [AdminPlanLotController::class, 'publicIndex']);
+        Route::post('/lots-manage/import', [AdminPlanLotController::class, 'import']);
+        Route::post('/lots-manage/import-from-extraction', [AdminPlanLotController::class, 'importFromExtractionView']);
+        Route::post('/lots-manage/{lot}', [AdminPlanLotController::class, 'update']);
+    });
 
     // Contact Routes
     Route::get('/contact', [ContactController::class, 'index'])->name('contact');

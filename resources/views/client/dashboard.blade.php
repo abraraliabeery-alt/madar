@@ -1,304 +1,233 @@
-@extends('layouts.app')
+@extends('layouts.dashboard-bs')
 
 @section('title', __('client.dashboard.title'))
 
 @section('content')
-<div class="bg-gray-50 min-h-screen py-8">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Welcome Header -->
-        <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ __('client.dashboard.welcome', ['name' => auth()->user()->name]) }}</h1>
-            <p class="text-gray-600">{{ __('client.dashboard.subtitle', ['default' => 'Here\'s what\'s happening with your account.']) }}</p>
-        </div>
+<div class="mb-4">
+    <h1 class="h4 fw-bold mb-1">{{ __('client.dashboard.welcome', ['name' => auth()->user()->name]) }}</h1>
+    <p class="text-muted mb-0">{{ __('client.dashboard.subtitle', ['default' => 'Here\'s what\'s happening with your account.']) }}</p>
+</div>
 
-        <!-- Statistics Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <!-- Total Bookings -->
-            <div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="w-8 h-8 bg-blue-100 rounded-md flex items-center justify-center">
-                            <i class="fas fa-calendar-check text-blue-600"></i>
-                        </div>
+<div class="row g-3 mb-4">
+    <div class="col-12 col-md-6 col-lg-3">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <div class="text-muted small">{{ __('client.dashboard.total_bookings') }}</div>
+                        <div class="h4 fw-bold mb-0">{{ $stats['total_bookings'] }}</div>
                     </div>
-                    <div class="mr-4">
-                        <p class="text-sm font-medium text-gray-600">{{ __('client.dashboard.total_bookings') }}</p>
-                        <p class="text-2xl font-bold text-gray-900">{{ $stats['total_bookings'] }}</p>
-                    </div>
+                    <div class="text-primary fs-4"><i class="fas fa-calendar-check"></i></div>
                 </div>
                 <div class="mt-2">
-                    <a href="{{ route('client.bookings.index') }}" class="text-sm text-blue-600 hover:text-blue-700">
-                        عرض التفاصيل <i class="fas fa-arrow-left"></i>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Total Contracts -->
-            <div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="w-8 h-8 bg-green-100 rounded-md flex items-center justify-center">
-                            <i class="fas fa-file-contract text-green-600"></i>
-                        </div>
-                    </div>
-                    <div class="mr-4">
-                        <p class="text-sm font-medium text-gray-600">{{ __('client.dashboard.total_contracts') }}</p>
-                        <p class="text-2xl font-bold text-gray-900">{{ $stats['total_contracts'] }}</p>
-                    </div>
-                </div>
-                <div class="mt-2">
-                    <a href="{{ route('client.contracts.index') }}" class="text-sm text-green-600 hover:text-green-700">
-                        عرض العقود <i class="fas fa-arrow-left"></i>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Total Appointments -->
-            <div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="w-8 h-8 bg-purple-100 rounded-md flex items-center justify-center">
-                            <i class="fas fa-clock text-purple-600"></i>
-                        </div>
-                    </div>
-                    <div class="mr-4">
-                        <p class="text-sm font-medium text-gray-600">{{ __('client.dashboard.total_appointments') }}</p>
-                        <p class="text-2xl font-bold text-gray-900">{{ $stats['total_appointments'] }}</p>
-                    </div>
-                </div>
-                <div class="mt-2">
-                    <a href="{{ route('client.appointments') }}" class="text-sm text-purple-600 hover:text-purple-700">
-                        عرض المواعيد <i class="fas fa-arrow-left"></i>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Favorite Products -->
-            <div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="w-8 h-8 bg-red-100 rounded-md flex items-center justify-center">
-                            <i class="fas fa-heart text-red-600"></i>
-                        </div>
-                    </div>
-                    <div class="mr-4">
-                        <p class="text-sm font-medium text-gray-600">{{ __('client.dashboard.favorite_products') }}</p>
-                        <p class="text-2xl font-bold text-gray-900">{{ $stats['favorite_products'] }}</p>
-                    </div>
-                </div>
-                <div class="mt-2">
-                    <a href="{{ route('client.favorites') }}" class="text-sm text-red-600 hover:text-red-700">
-                        عرض المفضلة <i class="fas fa-arrow-left"></i>
-                    </a>
+                    <a href="{{ route('client.bookings.index') }}" class="small text-decoration-none">عرض التفاصيل</a>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Quick Actions -->
-        <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
-            <h2 class="text-lg font-semibold text-gray-900 mb-4">{{ __('client.dashboard.quick_actions') }}</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <a href="{{ route('client.offers.index') }}" 
-                   class="flex items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                    <i class="fas fa-tags text-green-500 ml-3"></i>
-                    <span class="text-gray-700">العروض المتاحة</span>
-                </a>
-                
-                <a href="{{ route('client.favorites') }}" 
-                   class="flex items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                    <i class="fas fa-heart text-red-500 ml-3"></i>
-                    <span class="text-gray-700">{{ __('client.navigation.favorites') }}</span>
-                </a>
-                
-                <a href="{{ route('client.bookings.index') }}" 
-                   class="flex items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                    <i class="fas fa-calendar-check text-blue-500 ml-3"></i>
-                    <span class="text-gray-700">{{ __('client.navigation.bookings') }}</span>
-                </a>
-                
-                <a href="{{ route('client.financial.dashboard') }}" 
-                   class="flex items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                    <i class="fas fa-chart-line text-indigo-500 ml-3"></i>
-                    <span class="text-gray-700">الإدارة المالية</span>
-                </a>
-            </div>
-        </div>
-
-        <!-- Available Offers Section -->
-        <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-lg font-semibold text-gray-900">العروض المتاحة</h2>
-                <a href="{{ route('client.offers.index') }}" class="text-sm text-primary-600 hover:text-primary-700">
-                    عرض جميع العروض <i class="fas fa-arrow-left"></i>
-                </a>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <!-- Sample offers - replace with actual data -->
-                <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="font-semibold text-gray-900">شقة 3 غرف</h3>
-                        <span class="badge bg-green-100 text-green-800">للبيع</span>
+    <div class="col-12 col-md-6 col-lg-3">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <div class="text-muted small">{{ __('client.dashboard.total_contracts') }}</div>
+                        <div class="h4 fw-bold mb-0">{{ $stats['total_contracts'] }}</div>
                     </div>
-                    <p class="text-sm text-gray-600 mb-2">الرياض، حي النرجس</p>
-                    <p class="text-lg font-bold text-primary-600">450,000 ريال</p>
-                    <button class="w-full mt-3 bg-primary-600 text-white py-2 px-4 rounded-md hover:bg-primary-700 transition-colors">
-                        عرض التفاصيل
-                    </button>
+                    <div class="text-success fs-4"><i class="fas fa-file-contract"></i></div>
                 </div>
-                
-                <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="font-semibold text-gray-900">فيلا 4 غرف</h3>
-                        <span class="badge bg-blue-100 text-blue-800">إيجار شهري</span>
-                    </div>
-                    <p class="text-sm text-gray-600 mb-2">جدة، حي الروضة</p>
-                    <p class="text-lg font-bold text-primary-600">8,000 ريال/شهر</p>
-                    <button class="w-full mt-3 bg-primary-600 text-white py-2 px-4 rounded-md hover:bg-primary-700 transition-colors">
-                        عرض التفاصيل
-                    </button>
-                </div>
-                
-                <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="font-semibold text-gray-900">مكتب تجاري</h3>
-                        <span class="badge bg-purple-100 text-purple-800">إيجار سنوي</span>
-                    </div>
-                    <p class="text-sm text-gray-600 mb-2">الدمام، حي الفيصلية</p>
-                    <p class="text-lg font-bold text-primary-600">120,000 ريال/سنة</p>
-                    <button class="w-full mt-3 bg-primary-600 text-white py-2 px-4 rounded-md hover:bg-primary-700 transition-colors">
-                        عرض التفاصيل
-                    </button>
+                <div class="mt-2">
+                    <a href="{{ route('client.contracts.index') }}" class="small text-decoration-none">عرض العقود</a>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Recent Activities -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div class="col-12 col-md-6 col-lg-3">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <div class="text-muted small">{{ __('client.dashboard.total_appointments') }}</div>
+                        <div class="h4 fw-bold mb-0">{{ $stats['total_appointments'] }}</div>
+                    </div>
+                    <div class="text-secondary fs-4"><i class="fas fa-clock"></i></div>
+                </div>
+                <div class="mt-2">
+                    <a href="{{ route('client.appointments') }}" class="small text-decoration-none">عرض المواعيد</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-3">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <div class="text-muted small">{{ __('client.dashboard.favorite_products') }}</div>
+                        <div class="h4 fw-bold mb-0">{{ $stats['favorite_products'] }}</div>
+                    </div>
+                    <div class="text-danger fs-4"><i class="fas fa-heart"></i></div>
+                </div>
+                <div class="mt-2">
+                    <a href="{{ route('client.favorites') }}" class="small text-decoration-none">عرض المفضلة</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            <h2 class="h6 fw-bold mb-0">{{ __('client.dashboard.quick_actions') }}</h2>
+        </div>
+        <div class="row g-2">
+            <div class="col-12 col-md-6 col-lg">
+                <a href="{{ route('client.projects.create') }}" class="btn btn-outline-primary w-100">
+                    <i class="fas fa-plus-circle ms-2"></i>
+                    إنشاء مشروع
+                </a>
+            </div>
+            <div class="col-12 col-md-6 col-lg">
+                <a href="{{ route('client.offers.index') }}" class="btn btn-outline-success w-100">
+                    <i class="fas fa-tags ms-2"></i>
+                    العروض المتاحة
+                </a>
+            </div>
+            <div class="col-12 col-md-6 col-lg">
+                <a href="{{ route('client.favorites') }}" class="btn btn-outline-danger w-100">
+                    <i class="fas fa-heart ms-2"></i>
+                    {{ __('client.navigation.favorites') }}
+                </a>
+            </div>
+            <div class="col-12 col-md-6 col-lg">
+                <a href="{{ route('client.bookings.index') }}" class="btn btn-outline-primary w-100">
+                    <i class="fas fa-calendar-check ms-2"></i>
+                    {{ __('client.navigation.bookings') }}
+                </a>
+            </div>
+            <div class="col-12 col-md-6 col-lg">
+                <a href="{{ route('client.financial.dashboard') }}" class="btn btn-outline-secondary w-100">
+                    <i class="fas fa-chart-line ms-2"></i>
+                    الإدارة المالية
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            <h2 class="h6 fw-bold mb-0">العروض المتاحة</h2>
+            <a href="{{ route('client.offers.index') }}" class="small text-decoration-none">عرض جميع العروض</a>
+        </div>
+        <div class="row g-3">
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-start justify-content-between">
+                            <div class="fw-bold">شقة 3 غرف</div>
+                            <span class="badge bg-success">للبيع</span>
+                        </div>
+                        <div class="text-muted small mt-1">الرياض، حي النرجس</div>
+                        <div class="fw-bold mt-2">450,000 ريال</div>
+                        <button class="btn btn-primary w-100 mt-3">عرض التفاصيل</button>
+                    </div>
+                </div>
+            </div>
+                
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-start justify-content-between">
+                            <div class="fw-bold">فيلا 4 غرف</div>
+                            <span class="badge bg-primary">إيجار شهري</span>
+                        </div>
+                        <div class="text-muted small mt-1">جدة، حي الروضة</div>
+                        <div class="fw-bold mt-2">8,000 ريال/شهر</div>
+                        <button class="btn btn-primary w-100 mt-3">عرض التفاصيل</button>
+                    </div>
+                </div>
+            </div>
+                
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-start justify-content-between">
+                            <div class="fw-bold">مكتب تجاري</div>
+                            <span class="badge bg-secondary">إيجار سنوي</span>
+                        </div>
+                        <div class="text-muted small mt-1">الدمام، حي الفيصلية</div>
+                        <div class="fw-bold mt-2">120,000 ريال/سنة</div>
+                        <button class="btn btn-primary w-100 mt-3">عرض التفاصيل</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
             <!-- Recent Bookings -->
-            <div class="bg-white rounded-lg shadow-sm">
-                <div class="p-6 border-b border-gray-200">
-                    <h2 class="text-lg font-semibold text-gray-900">{{ __('client.dashboard.my_bookings') }}</h2>
-                    <a href="{{ route('client.bookings.index') }}" class="text-sm text-primary-600 hover:text-primary-700">
-                        {{ __('client.actions.view') }} {{ __('client.actions.all') }}
-                    </a>
+    <div class="col-12 col-lg-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <h2 class="h6 fw-bold mb-0">{{ __('client.dashboard.my_bookings') }}</h2>
+                    <a href="{{ route('client.bookings.index') }}" class="small text-decoration-none">{{ __('client.actions.view') }} {{ __('client.actions.all') }}</a>
                 </div>
-                <div class="p-6">
                     @if($stats['recent_bookings']->count() > 0)
-                        <div class="space-y-4">
+                        <div class="vstack gap-2">
                             @foreach($stats['recent_bookings'] as $booking)
-                                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                                    <div class="flex items-center">
-                                        <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center ml-3">
-                                            <i class="fas fa-home text-blue-600"></i>
-                                        </div>
-                                        <div>
-                                            <p class="font-medium text-gray-900">{{ $booking->product->name ?? 'N/A' }}</p>
-                                            <p class="text-sm text-gray-600">{{ $booking->facility->name ?? 'N/A' }}</p>
-                                        </div>
+                                <div class="d-flex align-items-center justify-content-between border rounded p-3">
+                                    <div>
+                                        <div class="fw-semibold">{{ $booking->product->name ?? 'N/A' }}</div>
+                                        <div class="text-muted small">{{ $booking->facility->name ?? 'N/A' }}</div>
                                     </div>
-                                    <div class="text-right">
-                                        <p class="text-sm text-gray-600">{{ $booking->created_at->format('M d') }}</p>
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
-                                                   @if($booking->status_id == 1) bg-yellow-100 text-yellow-800
-                                                   @elseif($booking->status_id == 2) bg-green-100 text-green-800
-                                                   @else bg-gray-100 text-gray-800 @endif">
-                                            {{ $booking->status->name ?? 'Pending' }}
-                                        </span>
-                                    </div>
+                                    <div class="text-muted small">{{ $booking->created_at->format('M d') }}</div>
                                 </div>
                             @endforeach
                         </div>
                     @else
-                        <div class="text-center py-8">
-                            <i class="fas fa-calendar-times text-gray-400 text-3xl mb-2"></i>
-                            <p class="text-gray-600">{{ __('client.bookings.no_bookings') }}</p>
+                        <div class="text-center py-4 text-muted">
+                            <div class="mb-2"><i class="fas fa-calendar-times fs-3"></i></div>
+                            <div>{{ __('client.bookings.no_bookings') }}</div>
                         </div>
                     @endif
-                </div>
-            </div>
-
-            <!-- Recent Appointments -->
-            <div class="bg-white rounded-lg shadow-sm">
-                <div class="p-6 border-b border-gray-200">
-                    <h2 class="text-lg font-semibold text-gray-900">{{ __('client.dashboard.my_appointments') }}</h2>
-                    <a href="{{ route('client.appointments') }}" class="text-sm text-primary-600 hover:text-primary-700">
-                        {{ __('client.actions.view') }} {{ __('client.actions.all') }}
-                    </a>
-                </div>
-                <div class="p-6">
-                    @if($stats['recent_appointments']->count() > 0)
-                        <div class="space-y-4">
-                            @foreach($stats['recent_appointments'] as $appointment)
-                                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                                    <div class="flex items-center">
-                                        <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center ml-3">
-                                            <i class="fas fa-clock text-purple-600"></i>
-                                        </div>
-                                        <div>
-                                            <p class="font-medium text-gray-900">{{ $appointment->facility->name ?? 'N/A' }}</p>
-                                            <p class="text-sm text-gray-600">{{ $appointment->created_at->format('M d, Y H:i') }}</p>
-                                        </div>
-                                    </div>
-                                    <div class="text-right">
-                                        <p class="text-sm text-gray-600">{{ $appointment->created_at->format('M d') }}</p>
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                            {{ __('client.status.pending') }}
-                                        </span>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    @else
-                        <div class="text-center py-8">
-                            <i class="fas fa-clock text-gray-400 text-3xl mb-2"></i>
-                            <p class="text-gray-600">{{ __('client.appointments.no_appointments') }}</p>
-                        </div>
-                    @endif
-                </div>
             </div>
         </div>
+    </div>
 
-        <!-- Pending Actions -->
-        @if($stats['pending_bookings'] > 0 || $stats['active_contracts'] > 0)
-            <div class="mt-8 bg-white rounded-lg shadow-sm">
-                <div class="p-6 border-b border-gray-200">
-                    <h2 class="text-lg font-semibold text-gray-900">{{ __('client.dashboard.pending_actions', ['default' => 'Pending Actions']) }}</h2>
+    <div class="col-12 col-lg-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <h2 class="h6 fw-bold mb-0">{{ __('client.dashboard.my_appointments') }}</h2>
+                    <a href="{{ route('client.appointments') }}" class="small text-decoration-none">{{ __('client.actions.view') }} {{ __('client.actions.all') }}</a>
                 </div>
-                <div class="p-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        @if($stats['pending_bookings'] > 0)
-                            <div class="flex items-center p-4 bg-yellow-50 rounded-lg">
-                                <div class="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center ml-3">
-                                    <i class="fas fa-exclamation-triangle text-yellow-600"></i>
+                    @if($stats['recent_appointments']->count() > 0)
+                        <div class="vstack gap-2">
+                            @foreach($stats['recent_appointments'] as $appointment)
+                                <div class="d-flex align-items-center justify-content-between border rounded p-3">
+                                    <div>
+                                        <div class="fw-semibold">{{ $appointment->facility->name ?? 'N/A' }}</div>
+                                        <div class="text-muted small">{{ $appointment->created_at->format('M d, Y H:i') }}</div>
+                                    </div>
+                                    <div class="text-muted small">{{ __('client.status.pending') }}</div>
                                 </div>
-                                <div>
-                                    <p class="font-medium text-gray-900">{{ $stats['pending_bookings'] }} {{ __('client.dashboard.pending_bookings_text', ['default' => 'pending bookings']) }}</p>
-                                    <p class="text-sm text-gray-600">{{ __('client.dashboard.pending_bookings_description', ['default' => 'Review and confirm your pending bookings']) }}</p>
-                                </div>
-                                <a href="{{ route('client.bookings.index') }}" class="mr-auto text-yellow-600 hover:text-yellow-700">
-                                    <i class="fas fa-arrow-left"></i>
-                                </a>
-                            </div>
-                        @endif
-
-                        @if($stats['active_contracts'] > 0)
-                            <div class="flex items-center p-4 bg-green-50 rounded-lg">
-                                <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center ml-3">
-                                    <i class="fas fa-file-contract text-green-600"></i>
-                                </div>
-                                <div>
-                                    <p class="font-medium text-gray-900">{{ $stats['active_contracts'] }} {{ __('client.dashboard.active_contracts_text', ['default' => 'active contracts']) }}</p>
-                                    <p class="text-sm text-gray-600">{{ __('client.dashboard.active_contracts_description', ['default' => 'Manage your active contracts']) }}</p>
-                                </div>
-                                <a href="{{ route('client.contracts') }}" class="mr-auto text-green-600 hover:text-green-700">
-                                    <i class="fas fa-arrow-left"></i>
-                                </a>
-                            </div>
-                        @endif
-                    </div>
-                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="text-center py-4 text-muted">
+                            <div class="mb-2"><i class="fas fa-clock fs-3"></i></div>
+                            <div>{{ __('client.appointments.no_appointments') }}</div>
+                        </div>
+                    @endif
             </div>
-        @endif
+        </div>
     </div>
 </div>
 @endsection

@@ -71,7 +71,7 @@ return [
             'facility' => 'المؤسسة',
             'customer' => 'العميل',
             'owner' => 'المالك',
-            'property' => 'العقار',
+            'property' => 'المشروع',
             'offer' => 'العرض',
             'total_amount' => 'المبلغ الإجمالي',
             'status' => 'الحالة',

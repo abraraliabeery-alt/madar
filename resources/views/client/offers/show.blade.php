@@ -12,7 +12,7 @@
                 <div class="bg-white rounded-lg shadow-sm overflow-hidden">
                     @if($offer->product->image)
                         <img src="{{ asset('storage/' . $offer->product->image) }}" 
-                             class="w-full h-96 object-cover" alt="صورة العقار">
+                             class="w-full h-96 object-cover" alt="صورة المشروع">
                     @else
                         <div class="flex items-center justify-center bg-gray-100 h-96">
                             <div class="text-center">
@@ -40,7 +40,7 @@
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div>
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4">تفاصيل العقار</h3>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">تفاصيل المشروع</h3>
                             <div class="space-y-3">
                                 <div class="flex justify-between py-2 border-b border-gray-200">
                                     <span class="font-medium text-gray-700">العنوان:</span>
@@ -116,7 +116,7 @@
                                 <div class="border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
                                     @if($similarOffer->product->image)
                                         <img src="{{ asset('storage/' . $similarOffer->product->image) }}" 
-                                             class="w-full h-32 object-cover" alt="صورة العقار">
+                                             class="w-full h-32 object-cover" alt="صورة المشروع">
                                     @endif
                                     <div class="p-4">
                                         <h4 class="font-semibold text-gray-900 mb-2">{{ $similarOffer->product->getTranslatedTitle() }}</h4>

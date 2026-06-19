@@ -183,34 +183,28 @@
                     @csrf
 
                     @php($locales = config('locales.available'))
-                    <div>
-                        <div class="border-b border-gray-200 mb-3 flex flex-wrap gap-2 text-xs">
-                            @foreach($locales as $code => $locale)
-                                <button type="button" data-locale-tab="quick-{{ $code }}" class="quick-locale-tab px-3 py-1.5 rounded-t-md border-b-2 transition-all
-                                    {{ $loop->first ? 'border-indigo-500 text-indigo-600 bg-indigo-50' : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50' }}">
-                                    {{ $locale['native'] ?? strtoupper($code) }}
-                                </button>
-                            @endforeach
-                        </div>
-
-                        @foreach($locales as $code => $locale)
-                            <div data-locale-panel="quick-{{ $code }}" class="quick-locale-panel {{ $loop->first ? '' : 'hidden' }}">
-                                <input type="hidden" name="translations[{{ $loop->index }}][locale]" value="{{ $code }}">
-                                <div class="mb-3">
-                                    <label class="block text-xs font-medium text-gray-700 mb-1">
-                                        العنوان ({{ $locale['native'] ?? strtoupper($code) }})
-                                    </label>
-                                    <input type="text" name="translations[{{ $loop->index }}][title]" class="w-full border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 text-xs" {{ $loop->first ? 'required' : '' }}>
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-medium text-gray-700 mb-1">
-                                        الوصف ({{ $locale['native'] ?? strtoupper($code) }})
-                                    </label>
-                                    <textarea name="translations[{{ $loop->index }}][description]" rows="3" class="w-full border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 text-xs" placeholder="وصف مختصر لما يجب على المنفِّذ تنفيذه في هذه اللغة"></textarea>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
+                    @include('components.translations-repeater', [
+                        'locales' => $locales,
+                        'namePrefix' => 'translations',
+                        'fields' => [
+                            [
+                                'type' => 'input',
+                                'key' => 'title',
+                                'label' => 'العنوان',
+                                'required' => true,
+                            ],
+                            [
+                                'type' => 'textarea',
+                                'key' => 'description',
+                                'label' => 'الوصف',
+                                'rows' => 3,
+                            ],
+                        ],
+                        'addLabel' => 'إضافة ترجمة',
+                        'removeLabel' => 'حذف',
+                        'minItems' => 1,
+                        'maxItems' => is_array($locales) ? count($locales) : null,
+                    ])
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <div>
@@ -265,28 +259,3 @@
     </div>
 </div>
 @endsection
-
-@push('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const quickTabs = document.querySelectorAll('.quick-locale-tab');
-        const quickPanels = document.querySelectorAll('.quick-locale-panel');
-
-        quickTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                const code = tab.getAttribute('data-locale-tab');
-
-                quickTabs.forEach(t => t.classList.remove('border-indigo-500', 'text-indigo-600', 'bg-indigo-50'));
-                quickTabs.forEach(t => t.classList.add('border-transparent', 'text-gray-500'));
-
-                tab.classList.add('border-indigo-500', 'text-indigo-600', 'bg-indigo-50');
-                tab.classList.remove('border-transparent', 'text-gray-500');
-
-                quickPanels.forEach(panel => {
-                    panel.classList.toggle('hidden', panel.getAttribute('data-locale-panel') !== code);
-                });
-            });
-        });
-    });
-</script>
-@endpush

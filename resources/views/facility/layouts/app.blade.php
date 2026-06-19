@@ -21,16 +21,16 @@
                     },
                     colors: {
                         primary: {
-                            50: '#f0f4ff',
-                            100: '#e0e7ff',
-                            200: '#c7d2fe',
-                            300: '#a5b4fc',
-                            400: '#818cf8',
-                            500: '#6366f1',
-                            600: '#4f46e5',
-                            700: '#4338ca',
-                            800: '#3730a3',
-                            900: '#312e81',
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#000000',
+                            900: '#000000',
                         }
                     }
                 }
@@ -54,19 +54,19 @@
         
         /* Custom styles for components that need specific styling */
         .sidebar-gradient {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #000000 0%, #000000 100%);
         }
         
         .card-gradient {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #000000 0%, #000000 100%);
         }
         
         .btn-gradient {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #000000 0%, #000000 100%);
         }
         
         .btn-gradient:hover {
-            background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+            background: linear-gradient(135deg, #111827 0%, #374151 100%);
         }
         
         /* DataTables customization */
@@ -102,17 +102,17 @@
 
         /* Dark mode (facility) */
         html[data-theme="dark"] body {
-            background-color: #111827;
+            background-color: #000000;
             color: #e5e7eb;
         }
-        html[data-theme="dark"] .bg-white { background-color: #1f2937 !important; }
+        html[data-theme="dark"] .bg-white { background-color: #000000 !important; }
         html[data-theme="dark"] .text-gray-900 { color: #e5e7eb !important; }
         html[data-theme="dark"] .text-gray-700,
         html[data-theme="dark"] .text-gray-600 { color: #d1d5db !important; }
         html[data-theme="dark"] .border-gray-200 { border-color: #374151 !important; }
-        html[data-theme="dark"] .bg-gray-50 { background-color: #0f172a !important; }
+        html[data-theme="dark"] .bg-gray-50 { background-color: #000000 !important; }
         html[data-theme="dark"] .hover\:bg-gray-100:hover { background-color: #374151 !important; }
-        html[data-theme="dark"] .sidebar-gradient { background: linear-gradient(135deg, #1f2937 0%, #111827 100%); }
+        html[data-theme="dark"] .sidebar-gradient { background: linear-gradient(135deg, #000000 0%, #000000 100%); }
 
         /* Global icon spacing */
         i.fa, i.fas, i.far, i.fal, i.fab, i.fad {

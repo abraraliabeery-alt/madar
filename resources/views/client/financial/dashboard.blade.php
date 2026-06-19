@@ -348,7 +348,7 @@
                         <a href="{{ route('client.financial.offers') }}" class="btn btn-outline-primary w-100 h-100 d-flex flex-column justify-content-center align-items-center py-3">
                             <i class="fas fa-search fa-2x mb-2"></i>
                             <strong>تصفح العروض</strong>
-                            <small class="text-muted">اكتشف العقارات المتاحة</small>
+                            <small class="text-muted">اكتشف المشاريع المتاحة</small>
                         </a>
                     </div>
                     

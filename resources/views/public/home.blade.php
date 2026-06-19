@@ -271,17 +271,18 @@
         </div>
     </div>
 
-    <!-- Featured Products -->
-    @if(isset($featuredProducts) && $featuredProducts->count() > 0)
-        <x-multi-view-grid 
-            :items="$featuredProducts" 
-            type="products" 
-            :title="__('general.home.latest_properties')"
-            :viewAllRoute="route('public.products.index')"
-            :viewAllText="__('general.home.view_all_properties')"
+    <!-- Latest Projects (Execution Requests) -->
+    @if(isset($latestExecutionRequests) && $latestExecutionRequests->count() > 0)
+        <x-multi-view-grid
+            :items="$latestExecutionRequests"
+            type="execution_requests"
+            title="المشاريع"
+            :viewAllRoute="route('public.projects.index')"
+            viewAllText="عرض جميع المشاريع"
             :maxItems="6"
             :showViewToggle="false"
-            idPrefix="products"
+            idPrefix="execution-requests"
+            :showPrice="false"
         />
     @endif
 

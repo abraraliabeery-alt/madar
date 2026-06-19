@@ -161,6 +161,11 @@ class Facility extends Model
         return $this->hasMany(Role::class);
     }
 
+    public function documents()
+    {
+        return $this->hasMany(FacilityDocument::class);
+    }
+
     public function gallery()
     {
         // Return an empty collection since facilities don't have image_gallery field
@@ -214,6 +219,27 @@ class Facility extends Model
     {
         if (!$this->facilityCategory) {
             return false;
+        }
+
+        if (config('services.execution.require_qualification_docs', false)) {
+            $hasDoc = false;
+            try {
+                $hasDoc = $this->documents()
+                    ->where('type', 'commercial_register')
+                    ->where('status', 'active')
+                    ->exists();
+            } catch (\Throwable $e) {
+                $hasDoc = false;
+            }
+
+            if (!$hasDoc) {
+                $docs = (array) ($this->customization_settings['qualification_docs'] ?? []);
+                $cr = (array) ($docs['commercial_register'] ?? []);
+                $path = trim((string) ($cr['path'] ?? ''));
+                if ($path === '') {
+                    return false;
+                }
+            }
         }
 
         // Simple rule: only certain categories are considered "executors".

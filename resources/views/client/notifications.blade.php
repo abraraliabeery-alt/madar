@@ -104,7 +104,7 @@
                                         @elseif($notification->data['type'] == 'booking_status_changed')
                                             تم تحديث حالة الحجز
                                         @elseif($notification->data['type'] == 'new_product_added')
-                                            تم إضافة عقار جديد
+                                            تم إضافة مشروع جديد
                                         @else
                                             {{ $notification->data['message'] ?? 'إشعار جديد' }}
                                         @endif
@@ -123,7 +123,7 @@
                                         @elseif(isset($notification->data['product_id']))
                                             <a href="{{ route('public.products.show', $notification->data['product_id']) }}" 
                                                class="inline-flex items-center text-sm text-blue-600 hover:text-blue-700">
-                                                عرض العقار <i class="fas fa-arrow-left mr-1"></i>
+                                                عرض المشروع <i class="fas fa-arrow-left mr-1"></i>
                                             </a>
                                         @elseif(isset($notification->data['action_url']))
                                             <a href="{{ $notification->data['action_url'] }}" 

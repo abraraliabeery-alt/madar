@@ -129,6 +129,11 @@ class User extends Authenticatable
         return $this->hasMany(Product::class, 'owner_user_id');
     }
 
+    public function clientProjects()
+    {
+        return $this->hasMany(Project::class, 'client_user_id');
+    }
+
     public function bank()
     {
         return $this->belongsTo(Bank::class);

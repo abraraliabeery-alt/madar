@@ -5,33 +5,33 @@
 @section('content')
     <div class="mb-6">
         <h1 class="text-2xl font-semibold text-gray-800">لوحة المسوّق</h1>
-        <p class="text-gray-600 mt-1">ملخص عقاراتك وأدائك داخل هذه المنشأة.</p>
+        <p class="text-gray-600 mt-1">ملخص مشاريعك وأدائك داخل هذه المنشأة.</p>
     </div>
 
     {{-- إحصائيات سريعة --}}
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <div class="bg-white rounded-lg shadow border border-gray-200 p-4">
-            <div class="text-xs text-gray-500 mb-1">عدد العقارات المسؤولة عنها</div>
+            <div class="text-xs text-gray-500 mb-1">عدد المشاريع المسؤولة عنها</div>
             <div class="text-2xl font-bold text-gray-800">{{ $stats['total_products'] ?? 0 }}</div>
         </div>
         <div class="bg-white rounded-lg shadow border border-yellow-200 p-4">
-            <div class="text-xs text-gray-500 mb-1">عقارات تحتاج تحسين</div>
+            <div class="text-xs text-gray-500 mb-1">مشاريع تحتاج تحسين</div>
             <div class="text-2xl font-bold text-yellow-700">{{ $stats['needs_attention'] ?? 0 }}</div>
         </div>
         <div class="bg-white rounded-lg shadow border border-blue-200 p-4">
-            <div class="text-xs text-gray-500 mb-1">إجمالي الحجوزات لعقاراتك</div>
+            <div class="text-xs text-gray-500 mb-1">إجمالي الحجوزات لمشاريعك</div>
             <div class="text-2xl font-bold text-blue-700">{{ $stats['total_bookings'] ?? 0 }}</div>
         </div>
         <div class="bg-white rounded-lg shadow border border-green-200 p-4">
-            <div class="text-xs text-gray-500 mb-1">إجمالي المشاهدات لعقاراتك</div>
+            <div class="text-xs text-gray-500 mb-1">إجمالي المشاهدات لمشاريعك</div>
             <div class="text-2xl font-bold text-green-700">{{ $stats['total_views'] ?? 0 }}</div>
         </div>
     </div>
 
-    {{-- قائمة العقارات الخاصة بالموظف --}}
+    {{-- قائمة المشاريع الخاصة بالموظف --}}
     <div class="bg-white rounded-lg shadow border border-gray-200 p-4">
         <div class="flex items-center justify-between mb-4">
-            <h2 class="text-lg font-semibold text-gray-800">عقاراتي</h2>
+            <h2 class="text-lg font-semibold text-gray-800">مشاريعي</h2>
             <a href="{{ route('facility.products.index', ['seller_user_id' => $user->id]) }}" class="text-sm text-blue-600 hover:text-blue-800">مشاهدة في قائمة المنتجات</a>
         </div>
 
@@ -40,7 +40,7 @@
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">العقار</th>
+                            <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">المشروع</th>
                             <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">المالك</th>
                             <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الحالة</th>
                             <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الحجوزات</th>
@@ -96,7 +96,7 @@
                 {{ $products->links() }}
             </div>
         @else
-            <p class="text-sm text-gray-500">لا توجد عقارات مرتبطة بك كمسوّق مسؤول حتى الآن.</p>
+            <p class="text-sm text-gray-500">لا توجد مشاريع مرتبطة بك كمسوّق مسؤول حتى الآن.</p>
         @endif
     </div>
 @endsection

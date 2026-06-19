@@ -194,7 +194,7 @@
             <div class="text-center py-12">
                 <i class="fas fa-gift text-gray-400 text-6xl mb-4"></i>
                 <h5 class="text-lg font-semibold text-gray-500 mb-2">لا توجد خطط إيجار</h5>
-                <p class="text-gray-400 mb-6">ابدأ بإنشاء خطة إيجار جديدة لعقارك</p>
+                <p class="text-gray-400 mb-6">ابدأ بإنشاء خطة إيجار جديدة لمشروعك</p>
                 <a href="{{ route('facility.offers.create') }}" class="bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg transition-colors">
                     <i class="fas fa-plus mr-2"></i>إضافة خطة إيجار
                 </a>

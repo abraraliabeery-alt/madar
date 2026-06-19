@@ -20,17 +20,130 @@
     // الترجمات: عند اختيار لغة جديدة، نُظهر الحقول وننسخ من الترجمة الأساسية
     // =========================================================
     (function(){
-      const c = document.getElementById('translations-repeater'); if (!c) return;
-      c.addEventListener('change',e=>{
+      const c = document.getElementById('translations-repeater');
+      const addBtn = document.getElementById('add-translation');
+      if (!c) return;
+
+      function getLocaleSelects(){
+        return Array.from(c.querySelectorAll('select[name$="[locale]"]'));
+      }
+
+      function getSelectedLocales(){
+        return getLocaleSelects().map(s => (s.value || '').trim()).filter(Boolean);
+      }
+
+      function syncLocaleOptions(){
+        const selected = getSelectedLocales();
+        const selects = getLocaleSelects();
+
+        selects.forEach(sel => {
+          const self = (sel.value || '').trim();
+          Array.from(sel.options).forEach(opt => {
+            if (!opt.value) return;
+            opt.disabled = selected.includes(opt.value) && opt.value !== self;
+          });
+        });
+      }
+
+      function ensureNoDuplicate(changedSelect){
+        const val = (changedSelect.value || '').trim();
+        if (!val) return true;
+
+        const others = getLocaleSelects().filter(s => s !== changedSelect);
+        if (others.some(s => (s.value || '').trim() === val)) {
+          changedSelect.value = '';
+          syncLocaleOptions();
+          toast(t('duplicate_locale', 'هذه اللغة مستخدمة بالفعل، اختر لغة أخرى'), 'error');
+          return false;
+        }
+
+        return true;
+      }
+
+      function refreshRemoveButtons(){
+        const items = Array.from(c.querySelectorAll('.translation-item'));
+        items.forEach((item, idx) => {
+          const btn = item.querySelector('.remove-translation');
+          if (!btn) return;
+          btn.classList.toggle('hidden', idx === 0);
+        });
+      }
+
+      function renumberItems(){
+        const items = Array.from(c.querySelectorAll('.translation-item'));
+        items.forEach((item, idx) => {
+          item.setAttribute('data-index', String(idx));
+          item.querySelectorAll('input, textarea, select').forEach(el => {
+            const name = el.getAttribute('name');
+            if (!name) return;
+            const newName = name.replace(/translations\[\d+\]/g, `translations[${idx}]`);
+            el.setAttribute('name', newName);
+          });
+        });
+      }
+
+      function addTranslation(){
+        const items = Array.from(c.querySelectorAll('.translation-item'));
+        const last = items[items.length - 1];
+        if (!last) return;
+
+        const clone = last.cloneNode(true);
+        c.appendChild(clone);
+
+        renumberItems();
+        refreshRemoveButtons();
+
+        clone.querySelectorAll('input[type="text"], input[type="number"], input[type="url"], textarea').forEach(el => {
+          el.value = '';
+        });
+        clone.querySelectorAll('select').forEach(sel => {
+          sel.value = '';
+        });
+
+        syncLocaleOptions();
+      }
+
+      c.addEventListener('change', e => {
         if (!e.target.matches('select[name$="[locale]"]')) return;
-        const item = e.target.closest('.translation-item'); if (!item) return;
-        item.querySelectorAll('.translation-fields').forEach(x=>x.classList.remove('hidden'));
-        const baseTitle = document.querySelector('input[name="translations[0][title]"]')?.value||'';
-        const baseDesc  = document.querySelector('textarea[name="translations[0][description]"]')?.value||'';
-        const ti=item.querySelector('input[name$="[title]"]'); const di=item.querySelector('textarea[name$="[description]"]');
-        if (ti && !ti.value && baseTitle) ti.value=baseTitle;
-        if (di && !di.value && baseDesc) di.value=baseDesc;
+        const ok = ensureNoDuplicate(e.target);
+        if (!ok) return;
+
+        const item = e.target.closest('.translation-item');
+        if (!item) return;
+
+        const baseTitle = document.querySelector('input[name="translations[0][title]"]')?.value || '';
+        const baseDesc  = document.querySelector('textarea[name="translations[0][description]"]')?.value || '';
+        const ti = item.querySelector('input[name$="[title]"]');
+        const di = item.querySelector('textarea[name$="[description]"]');
+        if (ti && !ti.value && baseTitle) ti.value = baseTitle;
+        if (di && !di.value && baseDesc) di.value = baseDesc;
+
+        syncLocaleOptions();
       });
+
+      c.addEventListener('click', e => {
+        const btn = e.target.closest ? e.target.closest('.remove-translation') : null;
+        if (!btn) return;
+        const item = btn.closest('.translation-item');
+        if (!item) return;
+
+        const items = Array.from(c.querySelectorAll('.translation-item'));
+        if (items.length <= 1) return;
+
+        item.remove();
+        renumberItems();
+        refreshRemoveButtons();
+        syncLocaleOptions();
+      });
+
+      addBtn && addBtn.addEventListener('click', () => {
+        addTranslation();
+      });
+
+      // Initial
+      renumberItems();
+      refreshRemoveButtons();
+      syncLocaleOptions();
     })();
 
     // =========================================================

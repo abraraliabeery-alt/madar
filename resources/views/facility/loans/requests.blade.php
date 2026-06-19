@@ -7,8 +7,8 @@
 
 @section('content')
     <div class="mb-6">
-        <h1 class="text-2xl font-semibold text-gray-800">طلبات التمويل لعقارات المنشأة</h1>
-        <p class="text-gray-600 mt-1 text-sm">عرض الطلبات التي قدّمها العملاء على العقارات التابعة لهذه المنشأة، مع حالة كل طلب وعدد العروض البنكية.</p>
+        <h1 class="text-2xl font-semibold text-gray-800">طلبات التمويل لمشاريع المنشأة</h1>
+        <p class="text-gray-600 mt-1 text-sm">عرض الطلبات التي قدّمها العملاء على المشاريع التابعة لهذه المنشأة، مع حالة كل طلب وعدد العروض البنكية.</p>
     </div>
 
     {{-- إحصائيات سريعة --}}
@@ -87,10 +87,10 @@
                         <div class="text-sm font-semibold text-gray-900 mb-1 flex items-center gap-2">
                             @if($request->product)
                                 <a href="{{ route('facility.products.edit', $request->product) }}" class="text-blue-600 hover:text-blue-800 hover:underline">
-                                    {{ $request->product->title ?? $request->product->address ?? 'عقار بدون عنوان' }}
+                                    {{ $request->product->title ?? $request->product->address ?? 'مشروع بدون عنوان' }}
                                 </a>
                             @else
-                                <span class="text-gray-500">طلب تمويل بدون عقار محدد</span>
+                                <span class="text-gray-500">طلب تمويل بدون مشروع محدد</span>
                             @endif
                         </div>
                         <div class="text-xs text-gray-600 mb-1">
@@ -155,7 +155,7 @@
             </div>
         @else
             <div class="bg-white rounded-lg shadow border border-gray-200 p-6 text-center text-sm text-gray-500">
-                لا توجد طلبات تمويل مرتبطة بعقارات هذه المنشأة حتى الآن.
+                لا توجد طلبات تمويل مرتبطة بمشاريع هذه المنشأة حتى الآن.
             </div>
         @endif
     </div>

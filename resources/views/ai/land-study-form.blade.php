@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>محلل الاستثمار العقاري السعودي (متصل بـ AI)</title>
+    <title>محلل الاستثمار المشاريعي السعودي (متصل بـ AI)</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons CDN -->
@@ -149,7 +149,7 @@
         <!-- 1. Sidebar (New Chat/History) -->
         <aside id="sidebar" class="w-full md:w-64 bg-white p-4 flex-shrink-0 border-l border-gray-200 shadow-xl md:shadow-none transition-transform duration-300 ease-in-out transform -translate-x-full md:translate-x-0 absolute md:relative z-20 h-full">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-xl font-bold text-gray-800">محلل الاستثمار العقاري السعودي</h2>
+                <h2 class="text-xl font-bold text-gray-800">محلل الاستثمار المشاريعي السعودي</h2>
                 <button id="close-sidebar-btn" class="md:hidden p-2 text-gray-600 hover:text-gray-800">
                     <i data-lucide="x"></i>
                 </button>
@@ -199,7 +199,7 @@
                 <!-- Welcome/Initial Prompts -->
                 <div class="flex flex-col items-center justify-center h-full text-center p-4">
                     <i data-lucide="building-2" class="w-12 h-12 text-primary-blue mb-4"></i>
-                    <h2 class="text-2xl font-bold text-gray-800 mb-2">كيف يمكنني مساعدتك في مشروعك العقاري في السعودية؟</h2>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">كيف يمكنني مساعدتك في مشروعك المشاريعي في السعودية؟</h2>
                     <p class="text-gray-500 mb-8">أنا متخصص في دراسات الجدوى، تحليل الأراضي، ومقترحات التطوير وفقاً **للكود السعودي للبناء (SBC)**.</p>
                     
                     <!-- Quick Prompt Suggestions (UX Feature) -->
@@ -248,7 +248,7 @@
                             <div>
                                 <label class="block text-xs font-medium text-gray-600 mb-1">نوع المستخدم</label>
                                 <select id="role-select" class="w-full text-xs rounded-xl border-gray-300 focus:ring-primary-blue focus:border-primary-blue">
-                                    <option value="investor">مستثمر عقاري</option>
+                                    <option value="investor">مستثمر مشاريعي</option>
                                     <option value="builder">شخص يريد البناء</option>
                                     <option value="contractor">مقاول</option>
                                     <option value="architect">مهندس معماري</option>
@@ -550,7 +550,7 @@
                         roleLine = 'أنا مهندس معماري في السعودية وأريد تصور معماري واستثماري لهذه الأرض.';
                         break;
                     default:
-                        roleLine = 'أنا مستثمر عقاري في السعودية.';
+                        roleLine = 'أنا مستثمر مشاريعي في السعودية.';
                 }
 
                 let text = roleLine + '\n';

@@ -67,9 +67,9 @@
                                 </div>
                                 <div class="text-sm font-semibold text-gray-900 mb-1">
                                     @if($loan->product)
-                                        {{ $loan->product->title ?? $loan->product->address ?? 'عقار بدون عنوان' }}
+                                        {{ $loan->product->title ?? $loan->product->address ?? 'مشروع بدون عنوان' }}
                                     @else
-                                        <span class="text-gray-500">طلب تمويل بدون عقار محدد</span>
+                                        <span class="text-gray-500">طلب تمويل بدون مشروع محدد</span>
                                     @endif
                                 </div>
                                 <div class="text-xs text-gray-600 mb-1">

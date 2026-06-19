@@ -26,7 +26,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <!-- Custom CSS -->
-    <link href="{{ asset('css/facility-financial.css') }}" rel="stylesheet">
+    <link href="{{ asset('financial-bundle.css') }}" rel="stylesheet">
     
     @stack('styles')
 </head>

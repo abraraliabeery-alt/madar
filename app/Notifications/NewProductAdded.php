@@ -38,13 +38,13 @@ class NewProductAdded extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('عقار جديد متاح - ' . $this->product->name)
+            ->subject('مشروع جديد متاح - ' . $this->product->name)
             ->greeting('مرحباً ' . $notifiable->name)
-            ->line('تم إضافة عقار جديد: ' . $this->product->name)
+            ->line('تم إضافة مشروع جديد: ' . $this->product->name)
             ->line('الموقع: ' . $this->product->location)
                             ->line('السعر: ' . $this->product->price . ' ' . \App\Helpers\LanguageHelper::getSaudiRiyalSymbol())
-            ->action('عرض العقار', url('/products/' . $this->product->id))
-            ->line('اكتشف العقارات الجديدة على منصة عقار!');
+            ->action('عرض المشروع', url('/products/' . $this->product->id))
+            ->line('اكتشف المشاريع الجديدة على منصة مشاريع!');
     }
 
     /**
@@ -56,11 +56,11 @@ class NewProductAdded extends Notification
     {
         return [
             'product_id' => $this->product->id,
-            'product_name' => $this->product->title ?? 'عقار جديد',
+            'product_name' => $this->product->title ?? 'مشروع جديد',
             'location' => $this->product->address ?? 'غير محدد',
             'price' => $this->product->price ?? 0,
             'type' => 'new_product_added',
-            'message' => 'تم إضافة عقار جديد: ' . ($this->product->title ?? 'عقار جديد'),
+            'message' => 'تم إضافة مشروع جديد: ' . ($this->product->title ?? 'مشروع جديد'),
             'action_url' => route('public.products.show', $this->product->id),
         ];
     }

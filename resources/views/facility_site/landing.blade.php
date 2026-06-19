@@ -919,7 +919,7 @@
           </article>
           <article class="t-card">
             <p class="quote">تنوع كبير في المنتجات وأسعار تنافسية، والتزام عالي بالمواعيد.</p>
-            <div class="author"><span class="avatar"></span><span>شركة تطوير عقاري</span></div>
+            <div class="author"><span class="avatar"></span><span>شركة تطوير مشاريع</span></div>
           </article>
           <article class="t-card">
             <p class="quote">التواصل ممتاز وخيارات التقسيط ساعدتنا في سير المشروع بسلاسة.</p>

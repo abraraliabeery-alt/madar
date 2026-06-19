@@ -1,6 +1,38 @@
 <?php
 
 return [
+    'dashboard' => [
+        'title' => 'لوحة التحكم',
+        'welcome' => 'مرحباً بعودتك، :name!'
+        ,
+        'subtitle' => 'إليك ما يحدث في حسابك.',
+        'my_bookings' => 'حجوزاتي',
+        'my_appointments' => 'مواعيدي',
+        'favorite_facilities' => 'المنشآت المفضلة',
+        'recent_activities' => 'آخر النشاطات',
+        'quick_actions' => 'إجراءات سريعة',
+        'total_bookings' => 'إجمالي الحجوزات',
+        'total_contracts' => 'إجمالي العقود',
+        'total_appointments' => 'إجمالي المواعيد',
+        'favorite_products' => 'المشاريع المفضلة',
+        'pending_actions' => 'إجراءات معلّقة',
+        'pending_bookings_text' => 'حجوزات معلّقة',
+        'pending_bookings_description' => 'راجع و أكد حجوزاتك المعلّقة',
+        'active_contracts_text' => 'عقود نشطة',
+        'active_contracts_description' => 'إدارة العقود النشطة الخاصة بك',
+    ],
+
+    'navigation' => [
+        'dashboard' => 'لوحة التحكم',
+        'profile' => 'حسابي',
+        'bookings' => 'حجوزاتي',
+        'appointments' => 'مواعيدي',
+        'favorites' => 'المفضلة',
+        'notifications' => 'الإشعارات',
+        'settings' => 'الإعدادات',
+        'logout' => 'تسجيل الخروج',
+    ],
+
     'offers' => [
         'title' => 'العروض المتاحة',
         'no_offers' => 'لا توجد عروض متاحة حاليًا',
@@ -26,7 +58,7 @@ return [
         'no_contracts' => 'لا توجد عقود',
         'request_new' => 'طلب عقد جديد',
         'contract_number' => 'رقم العقد',
-        'property' => 'العقار',
+        'property' => 'المشروع',
         'total_amount' => 'المبلغ الإجمالي',
         'paid_amount' => 'المبلغ المدفوع',
         'remaining_amount' => 'المبلغ المتبقي',
@@ -44,7 +76,7 @@ return [
         'cannot_cancel' => 'لا يمكن إلغاء هذا العقد',
         'cancelled_successfully' => 'تم إلغاء العقد بنجاح',
         'request_submitted' => 'تم تقديم طلب العقد بنجاح',
-        'property_not_available' => 'العقار غير متاح حاليًا',
+        'property_not_available' => 'المشروع غير متاح حاليًا',
     ],
 
     'invoices' => [
@@ -159,7 +191,7 @@ return [
         'unknown_product' => 'منتج غير معروف',
         'unknown_facility' => 'منشأة غير معروفة',
         'no_bookings' => 'لا توجد حجوزات',
-        'no_bookings_description' => 'لم تقم بأي حجوزات بعد. ابدأ بحجز عقارك الأول.',
+        'no_bookings_description' => 'لم تقم بأي حجوزات بعد. ابدأ بحجز مشروعك الأول.',
         'create_first_booking' => 'إنشاء أول حجز',
     ],
 

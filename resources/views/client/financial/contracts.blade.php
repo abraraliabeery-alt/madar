@@ -434,7 +434,7 @@
         const url = window.location.origin + `/client/financial/contracts/${contractId}`;
         if (navigator.share) {
             navigator.share({
-                title: 'عقد العقار',
+                title: 'عقد المشروع',
                 url: url
             });
         } else {

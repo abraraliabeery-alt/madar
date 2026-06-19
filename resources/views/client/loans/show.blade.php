@@ -17,9 +17,9 @@
             <div class="flex items-center justify-between mb-2">
                 <div class="text-sm font-semibold text-gray-900">
                     @if($loanRequest->product)
-                        {{ $loanRequest->product->title ?? $loanRequest->product->address ?? 'عقار بدون عنوان' }}
+                        {{ $loanRequest->product->title ?? $loanRequest->product->address ?? 'مشروع بدون عنوان' }}
                     @else
-                        طلب تمويل بدون عقار محدد
+                        طلب تمويل بدون مشروع محدد
                     @endif
                 </div>
                 <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-gray-100 text-gray-700 border border-gray-200 text-[11px]">

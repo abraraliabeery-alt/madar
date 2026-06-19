@@ -1,6 +1,6 @@
 @props([
     'items' => [],
-    'type' => 'products', // 'products', 'cities', 'categories', 'facilities'
+    'type' => 'products', // 'products', 'execution_requests', 'cities', 'categories', 'facilities'
     'title' => '',
     'viewAllRoute' => '',
     'viewAllText' => '',
@@ -130,6 +130,26 @@
                         </a>
                     </div>
                 </div>
+            @elseif($type === 'execution_requests')
+                @php
+                    $translation = $item->translations->firstWhere('locale', app()->getLocale());
+                @endphp
+                <div class="bg-white dark:bg-secondary-900 border border-gray-200 dark:border-secondary-800 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                    <div class="relative h-32 bg-gray-100 dark:bg-secondary-800 flex items-center justify-center">
+                        <i class="fas fa-gavel text-2xl text-gray-400 dark:text-gray-300"></i>
+                    </div>
+                    <div class="p-3">
+                        <h3 class="font-medium text-gray-900 dark:text-white text-sm mb-1 line-clamp-1">
+                            {{ $translation->title ?? ('طلب #' . $item->id) }}
+                        </h3>
+                        <p class="text-xs text-gray-600 dark:text-gray-300 mb-2 line-clamp-2">
+                            {{ $translation->description ?? '' }}
+                        </p>
+                        <a href="{{ route('public.execution.show', $item) }}" class="text-primary-600 hover:text-primary-700 text-xs font-medium">
+                            {{ __('general.actions.view_details') }}
+                        </a>
+                    </div>
+                </div>
             @elseif($type === 'cities')
                 <div class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
                     <div class="relative h-32 bg-gray-100">
@@ -230,7 +250,31 @@
 
     <!-- Large Grid View (Hidden by default) -->
     <div id="{{ $gridId }}-large-grid" class="hidden">
-        @if($type === 'products')
+        @if($type === 'execution_requests')
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                @foreach($items as $item)
+                    @php
+                        $translation = $item->translations->firstWhere('locale', app()->getLocale());
+                    @endphp
+                    <div class="bg-white dark:bg-secondary-900 border border-gray-200 dark:border-secondary-800 rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
+                        <div class="relative h-40 bg-gray-100 dark:bg-secondary-800 flex items-center justify-center">
+                            <i class="fas fa-gavel text-4xl text-gray-400 dark:text-gray-300"></i>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-medium text-gray-900 dark:text-white mb-2 line-clamp-2">
+                                {{ $translation->title ?? ('طلب #' . $item->id) }}
+                            </h3>
+                            <p class="text-sm text-gray-600 dark:text-gray-300 mb-3 line-clamp-2">
+                                {{ $translation->description ?? '' }}
+                            </p>
+                            <a href="{{ route('public.execution.show', $item) }}" class="text-primary-600 hover:text-primary-700 font-medium">
+                                {{ __('general.actions.view_details') }}
+                            </a>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        @elseif($type === 'products')
             <x-product-grid :products="$items" :columns="3" :showPrice="$showPrice" />
         @else
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-{{ $type === 'categories' ? '4' : '3' }} gap-6">
@@ -341,6 +385,8 @@
         @foreach($items as $item)
             @if($type === 'products')
                 <x-product-card-row :product="$item" :showPrice="$showPrice" />
+            @elseif($type === 'execution_requests')
+                <x-execution-request-card-row :request="$item" />
             @else
                 <div class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
                     <div class="flex">

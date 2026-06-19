@@ -159,10 +159,10 @@
                         <th width="40">
                             <input type="checkbox" class="form-check-input" id="selectAllHeader" onchange="toggleSelectAll()">
                         </th>
-                        <th>رقم العقد</th>
+                        <th>عقد المشروع</th>
                         <th>العميل</th>
                         <th>المالك</th>
-                        <th>العقار</th>
+                        <th>المشروع</th>
                         <th>النوع</th>
                         <th>المبلغ</th>
                         <th>الحالة</th>

@@ -31,7 +31,7 @@ return [
         'customers_worldwide' => 'عميل حول العالم',
         'years_experience' => 'سنة من الخبرة',
         'satisfied_clients' => 'عميل راضي',
-        'properties_sold' => 'عقار مُباع',
+        'properties_sold' => 'مشروع مُباع',
         'awards_won' => 'جائزة حاصلين عليها',
     ],
 
@@ -141,7 +141,7 @@ return [
             'years_in_business' => 'سنة في العمل',
             'team_members' => 'عضو في الفريق',
             'countries_served' => 'دولة نخدمها',
-            'properties_managed' => 'عقار ندير',
+            'properties_managed' => 'مشروع ندير',
             'transactions_completed' => 'صفقة مكتملة',
             'customer_satisfaction' => 'رضا العملاء',
         ],

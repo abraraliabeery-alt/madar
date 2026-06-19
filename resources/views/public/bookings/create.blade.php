@@ -12,7 +12,7 @@
                 حجز موعد للمعاينة
             </h1>
             <p class="text-lg text-gray-600">
-                احجز موعدك لمعاينة العقار والتشاور مع فريقنا المتخصص
+                احجز موعدك لمعاينة المشروع والتشاور مع فريقنا المتخصص
             </p>
         </div>
 
@@ -100,8 +100,8 @@
                                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 @error('visit_type') border-red-500 @enderror"
                                         required>
                                     <option value="">اختر نوع الزيارة</option>
-                                    <option value="inspection" {{ old('visit_type') == 'inspection' ? 'selected' : '' }}>معاينة العقار</option>
-                                    <option value="consultation" {{ old('visit_type') == 'consultation' ? 'selected' : '' }}>استشارة عقارية</option>
+                                    <option value="inspection" {{ old('visit_type') == 'inspection' ? 'selected' : '' }}>معاينة المشروع</option>
+                                    <option value="consultation" {{ old('visit_type') == 'consultation' ? 'selected' : '' }}>استشارة مشاريعية</option>
                                     <option value="meeting" {{ old('visit_type') == 'meeting' ? 'selected' : '' }}>اجتماع</option>
                                 </select>
                             </div>
@@ -170,7 +170,7 @@
             <div class="space-y-6">
                 <!-- Product Info -->
                 <div class="bg-white rounded-lg shadow-md p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">معلومات العقار</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">معلومات المشروع</h3>
                     <div class="space-y-4">
                         <div class="flex items-center space-x-3 space-x-reverse">
                             <img src="{{ $product->image_url }}" 

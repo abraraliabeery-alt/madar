@@ -17,12 +17,33 @@ use App\Models\ExecutionRequest;
 use App\Models\ExecutionBid;
 use App\Models\LoanRequest;
 use App\Models\Bank;
+use App\Models\FacilityDocument;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Cache;
 
 class FacilityController extends Controller
 {
+    protected function createFacilityMinimalFromRequest(Request $request): Facility
+    {
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'facility_category_id' => 'required|exists:facility_categories,id',
+        ]);
+
+        $data['owner_user_id'] = Auth::id();
+
+        $facility = Facility::create($data);
+        $facility->users()->syncWithoutDetaching([Auth::id()]);
+
+        $user = Auth::user();
+        if ($user && method_exists($user, 'hasRole') && method_exists($user, 'assignRole') && !$user->hasRole('facility')) {
+            $user->assignRole('facility');
+        }
+
+        return $facility;
+    }
+
     protected function createFacilityFromRequest(Request $request): Facility
     {
         $request->validate([
@@ -337,7 +358,7 @@ class FacilityController extends Controller
      */
     public function store(Request $request)
     {
-        $this->createFacilityFromRequest($request);
+        $this->createFacilityMinimalFromRequest($request);
 
         return redirect()->route('facility.dashboard')
             ->with('success', 'تم إنشاء المنشأة بنجاح');
@@ -355,7 +376,7 @@ class FacilityController extends Controller
             return redirect()->route('facility.dashboard');
         }
 
-        $this->createFacilityFromRequest($request);
+        $this->createFacilityMinimalFromRequest($request);
 
         return redirect()->route('facility.dashboard')
             ->with('success', 'تم إنشاء المنشأة بنجاح');
@@ -520,7 +541,53 @@ class FacilityController extends Controller
             return redirect()->route('facility.create');
         }
 
+        $request->validate([
+            'name' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+            'address' => 'nullable|string|max:255',
+            'phone' => 'nullable|string|max:50',
+            'email' => 'nullable|email|max:255',
+            'website' => 'nullable|url|max:255',
+            'qualification_commercial_register' => 'nullable|file|max:8192|mimes:pdf,jpg,jpeg,png',
+        ]);
+
         $facility->update($request->only(['name','description','address','phone','email','website']));
+
+        $settings = (array) ($facility->customization_settings ?? []);
+        $qdocs = (array) ($settings['qualification_docs'] ?? []);
+
+        if ($request->hasFile('qualification_commercial_register')) {
+            $file = $request->file('qualification_commercial_register');
+            $path = $file->store('facilities/qualification/' . $facility->id, 'public');
+            $qdocs['commercial_register'] = [
+                'disk' => 'public',
+                'path' => $path,
+                'original_name' => $file->getClientOriginalName(),
+                'mime_type' => $file->getClientMimeType(),
+                'size_bytes' => $file->getSize(),
+                'uploaded_at' => now()->toISOString(),
+            ];
+
+            FacilityDocument::updateOrCreate(
+                [
+                    'facility_id' => $facility->id,
+                    'type' => 'commercial_register',
+                    'status' => 'active',
+                ],
+                [
+                    'disk' => 'public',
+                    'path' => $path,
+                    'original_name' => $file->getClientOriginalName(),
+                    'mime_type' => $file->getClientMimeType(),
+                    'size_bytes' => $file->getSize(),
+                ]
+            );
+        }
+
+        $settings['qualification_docs'] = $qdocs;
+        $facility->customization_settings = $settings;
+        $facility->save();
+
         return redirect()->route('facility.profile')->with('success', 'تم تحديث الملف التعريفي');
     }
 

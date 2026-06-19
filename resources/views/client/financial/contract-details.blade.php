@@ -373,10 +373,10 @@
 
     <!-- اللوحة الجانبية -->
     <div class="col-lg-4">
-        <!-- معلومات العقار -->
+        <!-- معلومات المشروع -->
         <div class="card mb-4 sticky-top" style="top: 20px;">
             <div class="card-header">
-                <h6 class="mb-0">معلومات العقار</h6>
+                <h6 class="mb-0">معلومات المشروع</h6>
             </div>
             <div class="card-body">
                 @if($contract->product->gallery && $contract->product->gallery->count() > 0)

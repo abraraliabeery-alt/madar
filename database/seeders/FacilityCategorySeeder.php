@@ -12,86 +12,36 @@ class FacilityCategorySeeder extends Seeder
      */
     public function run(): void
     {
-        $categories = [
-            [
-                'name' => 'شركات سيارات',
-                'display_name' => 'شركات السيارات',
-                'description' => 'شركات بيع وشراء وصيانة السيارات',
-                'icon' => 'fas fa-car',
-                'is_active' => true,
-                'is_featured' => true,
-                'order' => 1,
-            ],
-            [
-                'name' => 'شركات مقاولات',
-                'display_name' => 'شركات المقاولات',
-                'description' => 'شركات المقاولات والتنفيذ والتشطيبات والإشراف',
-                'icon' => 'fas fa-building',
-                'is_active' => true,
-                'is_featured' => true,
-                'order' => 2,
-            ],
-            [
-                'name' => 'شركات مستشفيات',
-                'display_name' => 'شركات المستشفيات',
-                'description' => 'شركات الرعاية الصحية والمستشفيات',
-                'icon' => 'fas fa-hospital',
-                'is_active' => true,
-                'is_featured' => true,
-                'order' => 3,
-            ],
-            [
-                'name' => 'شركات تعليمية',
-                'display_name' => 'شركات التعليم',
-                'description' => 'شركات التعليم والتدريب',
-                'icon' => 'fas fa-graduation-cap',
-                'is_active' => true,
-                'is_featured' => false,
-                'order' => 4,
-            ],
-            [
-                'name' => 'شركات سياحية',
-                'display_name' => 'شركات السياحة',
-                'description' => 'شركات السياحة والسفر',
-                'icon' => 'fas fa-plane',
-                'is_active' => true,
-                'is_featured' => false,
-                'order' => 5,
-            ],
-            [
-                'name' => 'شركات تقنية',
-                'display_name' => 'شركات التقنية',
-                'description' => 'شركات التكنولوجيا والبرمجيات',
-                'icon' => 'fas fa-laptop-code',
-                'is_active' => true,
-                'is_featured' => false,
-                'order' => 6,
-            ],
-            [
-                'name' => 'شركات تجارية',
-                'display_name' => 'شركات تجارية',
-                'description' => 'شركات تجارية عامة',
-                'icon' => 'fas fa-store',
-                'is_active' => true,
-                'is_featured' => false,
-                'order' => 7,
-            ],
-            [
-                'name' => 'شركات خدمات',
-                'display_name' => 'شركات الخدمات',
-                'description' => 'شركات تقديم الخدمات المختلفة',
-                'icon' => 'fas fa-tools',
-                'is_active' => true,
-                'is_featured' => false,
-                'order' => 8,
-            ],
+        $names = [
+            'مقاول تنفيذ',
+            'مكتب هندسي',
+            'استشاري هندسي',
+            'مطور عقاري',
+            'مورد',
+            'تشغيل وصيانة',
+            'تصميم داخلي',
+            'إدارة مشاريع',
+            'إشراف هندسي',
+            'مقاولات عامة',
         ];
 
-        foreach ($categories as $category) {
+        FacilityCategory::query()->whereNotIn('name', $names)->delete();
+
+        $order = 1;
+        foreach ($names as $name) {
             FacilityCategory::updateOrCreate(
-                ['name' => $category['name']],
-                $category
+                ['name' => $name],
+                [
+                    'display_name' => $name,
+                    'description' => null,
+                    'icon' => null,
+                    'is_active' => true,
+                    'is_featured' => $order <= 6,
+                    'order' => $order,
+                    'sort_order' => $order,
+                ]
             );
+            $order++;
         }
     }
 }

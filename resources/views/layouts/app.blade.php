@@ -18,6 +18,9 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
+    <link href="{{ asset('theme.css') }}" rel="stylesheet">
+    <script src="{{ asset('theme.js') }}" defer></script>
+
     <!-- Alpine.js -->
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
@@ -38,16 +41,16 @@
                     },
                     colors: {
                         primary: {
-                            50: '#fbf7f2',
-                            100: '#f3e6d6',
-                            200: '#e7ccb0',
-                            300: '#d6ab84',
-                            400: '#c1885c',
-                            500: '#a86a43',
-                            600: '#8c5235',
-                            700: '#6f3f2b',
-                            800: '#553225',
-                            900: '#3c231b',
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#000000',
+                            900: '#000000',
                         },
                         secondary: {
                             50: '#f7f7f8',
@@ -58,7 +61,7 @@
                             500: '#6b7280',
                             600: '#4b5563',
                             700: '#374151',
-                            800: '#1f2937',
+                            800: '#000000',
                             900: '#111827',
                         }
                     }
@@ -81,8 +84,8 @@
         function toggleTheme() {
             const isDark = document.documentElement.classList.toggle('dark');
             try { localStorage.setItem('theme', isDark ? 'dark' : 'light'); } catch (e) {}
-            const btn = document.getElementById('theme-toggle');
-            if (btn) {
+            const buttons = document.querySelectorAll('[data-theme-toggle]');
+            buttons.forEach((btn) => {
                 btn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
                 btn.setAttribute('title', isDark ? 'Light mode' : 'Dark mode');
                 const sun = btn.querySelector('[data-icon="sun"]');
@@ -91,12 +94,12 @@
                     sun.classList.toggle('hidden', !isDark);
                     moon.classList.toggle('hidden', isDark);
                 }
-            }
+            });
         }
         document.addEventListener('DOMContentLoaded', function () {
             const isDark = document.documentElement.classList.contains('dark');
-            const btn = document.getElementById('theme-toggle');
-            if (btn) {
+            const buttons = document.querySelectorAll('[data-theme-toggle]');
+            buttons.forEach((btn) => {
                 btn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
                 btn.setAttribute('title', isDark ? 'Light mode' : 'Dark mode');
                 const sun = btn.querySelector('[data-icon="sun"]');
@@ -105,7 +108,7 @@
                     sun.classList.toggle('hidden', !isDark);
                     moon.classList.toggle('hidden', isDark);
                 }
-            }
+            });
         });
     </script>
 
@@ -136,11 +139,11 @@
         .dropdown-menu { display: none; }
         .dropdown-menu.show { display: block; }
 
-        .gradient-bg { background: linear-gradient(135deg, #8c5235 0%, #6f3f2b 100%); }
+        .gradient-bg { background: linear-gradient(135deg, #000000 0%, #000000 100%); }
         .card-hover { transition: all 0.3s ease; }
         .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0,0,0,.1), 0 10px 10px -5px rgba(0,0,0,.04); }
-        .btn-primary { background: linear-gradient(135deg, #a86a43 0%, #8c5235 100%); transition: all .3s ease; }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(172, 112, 73, .35); }
+        .btn-primary { background: linear-gradient(135deg, #000000 0%, #000000 100%); transition: all .3s ease; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0, 0, 0, .22); }
     </style>
 
     @stack('styles')
@@ -219,8 +222,11 @@
                     </div>
                 </div>
 
-                <a href="{{ route('public.products.index') }}" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                <a href="{{ route('public.execution.marketplace') }}" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
                     {{ app()->getLocale() == 'ar' ? 'المشاريع' : 'Projects' }}
+                </a>
+                <a href="{{ route('public.products.index') }}" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                    {{ app()->getLocale() == 'ar' ? 'المنتجات' : 'Products' }}
                 </a>
                 @if(\App\Helpers\FacilityHelper::isMultiMode())
                     <a href="{{ route('public.facilities.index') }}" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
@@ -242,7 +248,7 @@
 
             <!-- Desktop User Menu -->
             <div class="hidden md:flex items-center {{ app()->getLocale() == 'ar' ? 'space-x-4 space-x-reverse' : 'space-x-4' }}">
-                <button id="theme-toggle" type="button" onclick="toggleTheme()" class="p-2 rounded-lg border border-gray-200 text-gray-700 hover:text-primary-700 hover:border-primary-300 transition-colors dark:border-secondary-800 dark:text-gray-200 dark:hover:text-white" aria-pressed="false">
+                <button id="theme-toggle" type="button" data-theme-toggle class="p-2 rounded-lg border border-gray-200 text-gray-700 hover:text-primary-700 hover:border-primary-300 transition-colors dark:border-secondary-800 dark:text-gray-200 dark:hover:text-white" aria-pressed="false">
                     <i class="fas fa-moon" data-icon="moon"></i>
                     <i class="fas fa-sun hidden" data-icon="sun"></i>
                 </button>
@@ -269,11 +275,11 @@
                                     <a href="#" class="block px-4 py-3 hover:bg-gray-50 transition-colors {{ $notification->read_at ? 'opacity-75' : '' }}">
                                         <div class="flex items-start">
                                             <div class="flex-shrink-0">
-                                                @if($notification->data['type'] == 'booking_created')
+                                                @if(data_get($notification->data, 'type') === 'booking_created')
                                                     <i class="fas fa-calendar-check text-green-500"></i>
-                                                @elseif($notification->data['type'] == 'new_product_added')
+                                                @elseif(data_get($notification->data, 'type') === 'new_product_added')
                                                     <i class="fas fa-home text-blue-500"></i>
-                                                @elseif($notification->data['type'] == 'booking_status_changed')
+                                                @elseif(data_get($notification->data, 'type') === 'booking_status_changed')
                                                     <i class="fas fa-sync-alt text-yellow-500"></i>
                                                 @else
                                                     <i class="fas fa-bell text-gray-500"></i>
@@ -283,12 +289,12 @@
                                                 <p class="text-sm text-gray-900">
                                                     @if(isset($notification->data['message']))
                                                         {{ $notification->data['message'] }}
-                                                    @elseif(isset($notification->data['type']))
-                                                        @if($notification->data['type'] == 'booking_created')
+                                                    @elseif(data_get($notification->data, 'type') !== null)
+                                                        @if(data_get($notification->data, 'type') === 'booking_created')
                                                             تم إنشاء حجز جديد
-                                                        @elseif($notification->data['type'] == 'booking_status_changed')
+                                                        @elseif(data_get($notification->data, 'type') === 'booking_status_changed')
                                                             تم تحديث حالة الحجز
-                                                        @elseif($notification->data['type'] == 'new_product_added')
+                                                        @elseif(data_get($notification->data, 'type') === 'new_product_added')
                                                             تم إضافة مشروع جديد
                                                         @else
                                                             {{ __('layout.notifications.new_notification') }}
@@ -349,6 +355,12 @@
                             @if(auth()->user()->hasRole('client'))
                                 <a href="{{ route('client.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                     <i class="fas fa-user {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>{{ __('layout.user_menu.my_account') }}
+                                </a>
+                            @endif
+
+                            @if(!auth()->user()->hasRole('facility') && method_exists(auth()->user(), 'facilities') && !auth()->user()->facilities()->exists())
+                                <a href="{{ route('facility.onboarding.create') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-building-user {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>تحويل الحساب إلى منشأة
                                 </a>
                             @endif
 
@@ -472,7 +484,7 @@
              x-transition:leave-start="transform opacity-100 scale-100"
              x-transition:leave-end="transform opacity-0 scale-95"
              class="md:hidden mobile-menu">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white dark:bg-black border-t dark:border-secondary-800">
                 <a href="{{ route('public.home') }}" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
                     {{ __('layout.navigation.home') }}
                 </a>
@@ -496,6 +508,16 @@
                     <x-language-switcher />
                 </div>
 
+                <div class="px-3 py-2">
+                    <button type="button" onclick="toggleTheme()" data-theme-toggle class="w-full flex items-center justify-between p-2 rounded-lg border border-gray-200 text-gray-700 hover:text-primary-700 hover:border-primary-300 transition-colors dark:border-secondary-800 dark:text-gray-200 dark:hover:text-white">
+                        <span class="text-sm font-medium">الوضع الليلي</span>
+                        <span class="flex items-center gap-2">
+                            <i class="fas fa-moon" data-icon="moon"></i>
+                            <i class="fas fa-sun hidden" data-icon="sun"></i>
+                        </span>
+                    </button>
+                </div>
+
                 @auth
                     <hr class="my-2">
                     <div class="px-3 py-2">
@@ -512,11 +534,11 @@
                                 @foreach(auth()->user()->notifications->take(3) as $notification)
                                     <div class="flex items-start p-2 bg-gray-50 rounded">
                                         <div class="flex-shrink-0 {{ app()->getLocale() == 'ar' ? 'mr-2' : 'ml-2' }}">
-                                            @if($notification->data['type'] == 'booking_created')
+                                            @if(data_get($notification->data, 'type') === 'booking_created')
                                                 <i class="fas fa-calendar-check text-green-500"></i>
-                                            @elseif($notification->data['type'] == 'new_product_added')
+                                            @elseif(data_get($notification->data, 'type') === 'new_product_added')
                                                 <i class="fas fa-home text-blue-500"></i>
-                                            @elseif($notification->data['type'] == 'booking_status_changed')
+                                            @elseif(data_get($notification->data, 'type') === 'booking_status_changed')
                                                 <i class="fas fa-sync-alt text-yellow-500"></i>
                                             @else
                                                 <i class="fas fa-bell text-gray-500"></i>
@@ -526,12 +548,12 @@
                                             <p class="text-sm text-gray-900">
                                                 @if(isset($notification->data['message']))
                                                     {{ $notification->data['message'] }}
-                                                @elseif(isset($notification->data['type']))
-                                                    @if($notification->data['type'] == 'booking_created')
+                                                @elseif(data_get($notification->data, 'type') !== null)
+                                                    @if(data_get($notification->data, 'type') === 'booking_created')
                                                         تم إنشاء حجز جديد
-                                                    @elseif($notification->data['type'] == 'booking_status_changed')
+                                                    @elseif(data_get($notification->data, 'type') === 'booking_status_changed')
                                                         تم تحديث حالة الحجز
-                                                    @elseif($notification->data['type'] == 'new_product_added')
+                                                    @elseif(data_get($notification->data, 'type') === 'new_product_added')
                                                         تم إضافة مشروع جديد
                                                     @else
                                                         {{ __('layout.notifications.new_notification') }}
@@ -572,6 +594,12 @@
                     @if(auth()->user()->hasRole('client'))
                         <a href="{{ route('client.dashboard') }}" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
                             <i class="fas fa-user {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>{{ __('layout.user_menu.my_account') }}
+                        </a>
+                    @endif
+
+                    @if(!auth()->user()->hasRole('facility') && method_exists(auth()->user(), 'facilities') && !auth()->user()->facilities()->exists())
+                        <a href="{{ route('facility.onboarding.create') }}" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
+                            <i class="fas fa-building-user {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>تحويل الحساب إلى منشأة
                         </a>
                     @endif
 

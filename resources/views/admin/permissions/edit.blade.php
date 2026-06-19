@@ -73,84 +73,40 @@
                             <!-- الترجمات -->
                             <div class="col-md-6">
                                 <h5 class="mb-3">الترجمات</h5>
-                                
-                                <div id="translations-container">
-                                    @if($permission->translations->count() > 0)
-                                        @foreach($permission->translations as $index => $translation)
-                                            <div class="translation-item mb-3 p-3 border rounded">
-                                                <div class="row">
-                                                    <div class="col-md-3">
-                                                        <label class="form-label">اللغة</label>
-                                                        <select class="form-select" name="translations[{{ $index }}][locale]" required>
-                                                            <option value="ar" {{ $translation->locale == 'ar' ? 'selected' : '' }}>العربية</option>
-                                                            <option value="en" {{ $translation->locale == 'en' ? 'selected' : '' }}>English</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-md-9">
-                                                        <label class="form-label">الاسم</label>
-                                                        <input type="text" class="form-control" name="translations[{{ $index }}][name]" 
-                                                               value="{{ old('translations.' . $index . '.name', $translation->name) }}" 
-                                                               placeholder="اسم الصلاحية" required>
-                                                    </div>
-                                                </div>
-                                                <div class="row mt-2">
-                                                    <div class="col-md-6">
-                                                        <label class="form-label">اسم العرض</label>
-                                                        <input type="text" class="form-control" name="translations[{{ $index }}][display_name]" 
-                                                               value="{{ old('translations.' . $index . '.display_name', $translation->display_name) }}" 
-                                                               placeholder="اسم العرض">
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <label class="form-label">الوصف</label>
-                                                        <input type="text" class="form-control" name="translations[{{ $index }}][description]" 
-                                                               value="{{ old('translations.' . $index . '.description', $translation->description) }}" 
-                                                               placeholder="وصف الصلاحية">
-                                                    </div>
-                                                </div>
-                                                <div class="row mt-2">
-                                                    <div class="col-12 text-end">
-                                                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeTranslation(this)">
-                                                            <i class="fas fa-trash"></i> حذف
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    @else
-                                        <div class="translation-item mb-3 p-3 border rounded">
-                                            <div class="row">
-                                                <div class="col-md-3">
-                                                    <label class="form-label">اللغة</label>
-                                                    <select class="form-select" name="translations[0][locale]" required>
-                                                        <option value="ar" {{ old('translations.0.locale') == 'ar' ? 'selected' : '' }}>العربية</option>
-                                                        <option value="en" {{ old('translations.0.locale') == 'en' ? 'selected' : '' }}>English</option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-md-9">
-                                                    <label class="form-label">الاسم</label>
-                                                    <input type="text" class="form-control" name="translations[0][name]" 
-                                                           value="{{ old('translations.0.name') }}" placeholder="اسم الصلاحية" required>
-                                                </div>
-                                            </div>
-                                            <div class="row mt-2">
-                                                <div class="col-md-6">
-                                                    <label class="form-label">اسم العرض</label>
-                                                    <input type="text" class="form-control" name="translations[0][display_name]" 
-                                                           value="{{ old('translations.0.display_name') }}" placeholder="اسم العرض">
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label class="form-label">الوصف</label>
-                                                    <input type="text" class="form-control" name="translations[0][description]" 
-                                                           value="{{ old('translations.0.description') }}" placeholder="وصف الصلاحية">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endif
-                                </div>
 
-                                <button type="button" class="btn btn-sm btn-outline-primary" onclick="addTranslation()">
-                                    <i class="fas fa-plus"></i> إضافة ترجمة
-                                </button>
+                                @include('components.translations-repeater', [
+                                    'locales' => config('locales.available', []),
+                                    'namePrefix' => 'translations',
+                                    'items' => $permission->translations->map(function ($t) {
+                                        return [
+                                            'locale' => $t->locale,
+                                            'name' => $t->name,
+                                            'display_name' => $t->display_name,
+                                            'description' => $t->description,
+                                        ];
+                                    })->values()->toArray(),
+                                    'fields' => [
+                                        [
+                                            'type' => 'input',
+                                            'key' => 'name',
+                                            'label' => 'الاسم',
+                                            'requiredFirst' => true,
+                                        ],
+                                        [
+                                            'type' => 'input',
+                                            'key' => 'display_name',
+                                            'label' => 'اسم العرض',
+                                        ],
+                                        [
+                                            'type' => 'input',
+                                            'key' => 'description',
+                                            'label' => 'الوصف',
+                                        ],
+                                    ],
+                                    'addLabel' => 'إضافة ترجمة',
+                                    'removeLabel' => 'حذف',
+                                    'minItems' => 1,
+                                ])
                             </div>
                         </div>
                     </div>
@@ -171,67 +127,3 @@
     </div>
 </div>
 @endsection
-
-@push('scripts')
-<script>
-    let translationIndex = {{ $permission->translations->count() }};
-
-    function addTranslation() {
-        const container = document.getElementById('translations-container');
-        const newTranslation = document.createElement('div');
-        newTranslation.className = 'translation-item mb-3 p-3 border rounded';
-        newTranslation.innerHTML = `
-            <div class="row">
-                <div class="col-md-3">
-                    <label class="form-label">اللغة</label>
-                    <select class="form-select" name="translations[${translationIndex}][locale]" required>
-                        <option value="ar">العربية</option>
-                        <option value="en">English</option>
-                    </select>
-                </div>
-                <div class="col-md-9">
-                    <label class="form-label">الاسم</label>
-                    <input type="text" class="form-control" name="translations[${translationIndex}][name]" 
-                           placeholder="اسم الصلاحية" required>
-                </div>
-            </div>
-            <div class="row mt-2">
-                <div class="col-md-6">
-                    <label class="form-label">اسم العرض</label>
-                    <input type="text" class="form-control" name="translations[${translationIndex}][display_name]" 
-                           placeholder="اسم العرض">
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label">الوصف</label>
-                    <input type="text" class="form-control" name="translations[${translationIndex}][description]" 
-                           placeholder="وصف الصلاحية">
-                </div>
-            </div>
-            <div class="row mt-2">
-                <div class="col-12 text-end">
-                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeTranslation(this)">
-                        <i class="fas fa-trash"></i> حذف
-                    </button>
-                </div>
-            </div>
-        `;
-        
-        container.appendChild(newTranslation);
-        translationIndex++;
-    }
-
-    function removeTranslation(button) {
-        button.closest('.translation-item').remove();
-    }
-
-    // Auto-fill display name when name is entered
-    document.addEventListener('input', function(e) {
-        if (e.target.name && e.target.name.includes('[name]')) {
-            const displayNameInput = e.target.closest('.translation-item').querySelector('input[name*="[display_name]"]');
-            if (displayNameInput && !displayNameInput.value) {
-                displayNameInput.value = e.target.value;
-            }
-        }
-    });
-</script>
-@endpush

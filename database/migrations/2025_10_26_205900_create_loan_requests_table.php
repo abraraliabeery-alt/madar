@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('loan_requests', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id'); // طالب التمويل (العميل)
-            $table->unsignedBigInteger('product_id')->nullable(); // العقار المرتبط (اختياري)
+            $table->unsignedBigInteger('product_id')->nullable(); // المشروع المرتبط (اختياري)
             $table->string('status')->default('new'); // new, dispatched, competing, offers_received, selected, advising, completed, cancelled
             $table->unsignedBigInteger('assigned_advisor_id')->nullable();
             $table->unsignedBigInteger('chosen_offer_id')->nullable();

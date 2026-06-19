@@ -77,7 +77,7 @@ class CreateTestNotifications extends Command
             'notifiable_id' => $user->id,
             'data' => [
                 'type' => 'welcome',
-                'message' => 'مرحباً بك في منصة عقار! نتمنى لك تجربة ممتعة.'
+                'message' => 'مرحباً بك في منصة مشاريع! نتمنى لك تجربة ممتعة.'
             ],
             'read_at' => null,
             'created_at' => now(),

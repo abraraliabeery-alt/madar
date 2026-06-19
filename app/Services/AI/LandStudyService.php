@@ -73,7 +73,7 @@ class LandStudyService
                 ->post(rtrim($base, '/').'/v1/chat/completions', [
                     'model' => $model,
                     'messages' => [
-                        ['role' => 'system', 'content' => 'أنت خبير تطوير عقاري. اكتب بالعربية الفصحى وباقتضاب مهني.'],
+                        ['role' => 'system', 'content' => 'أنت خبير تطوير مشاريعي. اكتب بالعربية الفصحى وباقتضاب مهني.'],
                         ['role' => 'user', 'content' => $prompt],
                     ],
                     'temperature' => 0.3,

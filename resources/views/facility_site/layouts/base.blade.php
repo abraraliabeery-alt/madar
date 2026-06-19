@@ -7,9 +7,7 @@
   <link rel="icon" href="{{ asset('favicon.ico') }}">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ asset('styles.css') }}">
-  <link rel="stylesheet" href="{{ asset('admin.css') }}">
-  <link rel="stylesheet" href="{{ asset('tender.css') }}">
+  <link rel="stylesheet" href="{{ asset('site.css') }}">
   @php($site = config('brand.customization', []))
   <style>
     :root{

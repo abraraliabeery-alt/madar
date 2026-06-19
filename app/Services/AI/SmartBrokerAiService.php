@@ -47,7 +47,7 @@ class SmartBrokerAiService
                 ->post(rtrim($base, '/').'/v1/chat/completions', [
                     'model' => $model,
                     'messages' => [
-                        ['role' => 'system', 'content' => 'أنت وسيط عقاري ذكي. مهمتك مطابقة طلبات عقارية مع عروض عقارية. اكتب بالعربية الفصحى، وبأسلوب مختصر ومهني. لا تستخدم JSON.'],
+                        ['role' => 'system', 'content' => 'أنت وسيط مشاريعي ذكي. مهمتك مطابقة طلبات مشاريعية مع عروض مشاريعية. اكتب بالعربية الفصحى، وبأسلوب مختصر ومهني. لا تستخدم JSON.'],
                         ['role' => 'user', 'content' => $payload],
                     ],
                     'temperature' => 0.25,

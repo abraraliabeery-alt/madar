@@ -22,6 +22,7 @@ class PhoneOtpAuthController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'phone_number' => ['required', 'string'],
+            'login_intent' => ['nullable', 'in:client,facility'],
         ]);
 
         if ($validator->fails()) {
@@ -59,6 +60,7 @@ class PhoneOtpAuthController extends Controller
         }
 
         $request->session()->put('otp_phone_number', $phone);
+        $request->session()->put('otp_login_intent', $request->input('login_intent', 'client'));
 
         return redirect()->route('phone.otp.verify.form');
     }
@@ -103,7 +105,13 @@ class PhoneOtpAuthController extends Controller
             ]);
         }
 
-        if ($user->otp_code !== $request->input('otp')) {
+        $masterOtp = (string) env('OTP_MASTER_CODE', '');
+        if (app()->environment('local') && $masterOtp === '') {
+            $masterOtp = '111111';
+        }
+
+        $inputOtp = (string) $request->input('otp');
+        if ($user->otp_code !== $inputOtp && !((app()->environment('local') && $masterOtp !== '') && $inputOtp === $masterOtp)) {
             return back()->withErrors([
                 'otp' => 'رمز التحقق غير صحيح',
             ]);
@@ -125,9 +133,19 @@ class PhoneOtpAuthController extends Controller
         $user->last_login_at = Carbon::now();
         $user->save();
 
+        $loginIntent = (string) $request->session()->get('otp_login_intent', 'client');
         $request->session()->forget('otp_phone_number');
+        $request->session()->forget('otp_login_intent');
 
         Auth::login($user, true);
+
+        if ($loginIntent === 'facility') {
+            if (method_exists($user, 'hasRole') && method_exists($user, 'assignRole') && !$user->hasRole('facility')) {
+                $user->assignRole('facility');
+            }
+
+            return redirect()->route('facility.onboarding.create');
+        }
 
         return redirect()->intended('/dashboard');
     }

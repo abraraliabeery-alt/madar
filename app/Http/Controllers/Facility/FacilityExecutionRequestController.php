@@ -80,11 +80,51 @@ class FacilityExecutionRequestController extends Controller
             'due_date' => 'nullable|date',
             'project_id' => 'nullable|exists:projects,id',
             'product_id' => 'nullable|exists:products,id',
+            'bid_requirements' => 'nullable|array',
+            'bid_requirements.required_attachments_min' => 'nullable|integer|min:0|max:10',
+            'bid_requirements.required_attachments' => 'nullable|array|max:20',
+            'bid_requirements.required_attachments.*.key' => 'nullable|string|max:50',
+            'bid_requirements.required_attachments.*.label' => 'nullable|string|max:100',
+            'bid_requirements.required_attachments.*.required' => 'nullable|boolean',
+            'bid_requirements.required_attachments.*.category' => 'nullable|string|max:30',
+            'bid_requirements.required_fields' => 'nullable|array',
+            'bid_requirements.required_fields.*' => 'nullable|string|in:price_total,message,technical_plan,declaration',
             'translations' => 'required|array',
-            'translations.*.locale' => 'required|string|in:' . implode(',', array_keys(config('locales.available'))),
+            'translations.*.locale' => 'required|string|in:' . implode(',', array_keys(config('locales.available'))) . '|distinct',
             'translations.*.title' => 'required|string|max:255',
             'translations.*.description' => 'nullable|string',
         ]);
+
+        $requiredFields = array_values(array_unique(array_filter((array) data_get($data, 'bid_requirements.required_fields', []))));
+        if (empty($requiredFields)) {
+            $requiredFields = ['price_total', 'message', 'technical_plan', 'declaration'];
+        }
+
+        $requiredAttachmentsMin = (int) data_get($data, 'bid_requirements.required_attachments_min', 1);
+        if ($requiredAttachmentsMin < 0) {
+            $requiredAttachmentsMin = 0;
+        }
+        if ($requiredAttachmentsMin > 10) {
+            $requiredAttachmentsMin = 10;
+        }
+
+        $requiredAttachments = [];
+        $rawRequiredAttachments = (array) data_get($data, 'bid_requirements.required_attachments', []);
+        foreach (array_slice($rawRequiredAttachments, 0, 20) as $row) {
+            if (!is_array($row)) {
+                continue;
+            }
+            $key = trim((string) ($row['key'] ?? ''));
+            if ($key === '') {
+                continue;
+            }
+            $requiredAttachments[] = [
+                'key' => mb_substr($key, 0, 50),
+                'label' => mb_substr(trim((string) ($row['label'] ?? $key)), 0, 100),
+                'required' => (bool) ($row['required'] ?? false),
+                'category' => mb_substr(trim((string) ($row['category'] ?? '')), 0, 30),
+            ];
+        }
 
         $executionRequest = ExecutionRequest::create([
             'facility_id' => $facility->id,
@@ -98,6 +138,11 @@ class FacilityExecutionRequestController extends Controller
             'due_date' => $data['due_date'] ?? null,
             'data' => [
                 'created_by_user_id' => Auth::id(),
+                'bid_requirements' => [
+                    'required_attachments_min' => $requiredAttachmentsMin,
+                    'required_attachments' => $requiredAttachments,
+                    'required_fields' => $requiredFields,
+                ],
             ],
         ]);
 

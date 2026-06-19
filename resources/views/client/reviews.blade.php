@@ -8,7 +8,7 @@
         <!-- Header -->
         <div class="mb-8">
             <h1 class="text-3xl font-bold text-gray-900 mb-2">التقييمات والمراجعات</h1>
-            <p class="text-gray-600">شارك تجربتك مع العقارات والمنشآت</p>
+            <p class="text-gray-600">شارك تجربتك مع المشاريع والمنشآت</p>
         </div>
 
         <!-- Tabs -->
@@ -62,7 +62,7 @@
                                         </span>
                                         <span class="mr-4">
                                             <i class="fas fa-tag ml-1"></i>
-                                            {{ $review->reviewable_type == 'App\Models\Product' ? 'عقار' : 'منشأة' }}
+                                            {{ $review->reviewable_type == 'App\Models\Product' ? 'مشروع' : 'منشأة' }}
                                         </span>
                                         @if($review->is_verified)
                                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
@@ -97,7 +97,7 @@
                         <i class="fas fa-star text-gray-400 text-3xl"></i>
                     </div>
                     <h3 class="text-lg font-medium text-gray-900 mb-2">لا توجد تقييمات</h3>
-                    <p class="text-gray-600 mb-6">ابدأ بتقييم العقارات والمنشآت التي تعاملت معها</p>
+                    <p class="text-gray-600 mb-6">ابدأ بتقييم المشاريع والمنشآت التي تعاملت معها</p>
                     <button onclick="showTab('add-review')" 
                             class="bg-primary-600 text-white px-6 py-3 rounded-md hover:bg-primary-700 transition-colors">
                         إضافة تقييم جديد
@@ -121,7 +121,7 @@
                             <label class="flex items-center">
                                 <input type="radio" name="reviewable_type" value="product" 
                                        class="form-radio text-primary-600" checked>
-                                <span class="mr-2">عقار</span>
+                                <span class="mr-2">مشروع</span>
                             </label>
                             <label class="flex items-center">
                                 <input type="radio" name="reviewable_type" value="facility" 
@@ -136,7 +136,7 @@
                         <label for="reviewable_id" class="block text-sm font-medium text-gray-700 mb-2">اختر العنصر</label>
                         <select id="reviewable_id" name="reviewable_id" 
                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500" required>
-                            <option value="">اختر العقار أو المنشأة</option>
+                            <option value="">اختر المشروع أو المنشأة</option>
                         </select>
                     </div>
 
@@ -169,13 +169,13 @@
                             <label for="pros" class="block text-sm font-medium text-gray-700 mb-2">الإيجابيات</label>
                             <textarea id="pros" name="pros" rows="3" 
                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500" 
-                                      placeholder="ما أعجبك في هذا العقار/المنشأة؟"></textarea>
+                                      placeholder="ما أعجبك في هذا المشروع/المنشأة؟"></textarea>
                         </div>
                         <div>
                             <label for="cons" class="block text-sm font-medium text-gray-700 mb-2">السلبيات</label>
                             <textarea id="cons" name="cons" rows="3" 
                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500" 
-                                      placeholder="ما لم يعجبك في هذا العقار/المنشأة؟"></textarea>
+                                      placeholder="ما لم يعجبك في هذا المشروع/المنشأة؟"></textarea>
                         </div>
                     </div>
 
@@ -277,7 +277,7 @@
             const select = document.getElementById('reviewable_id');
             
             // Clear existing options
-            select.innerHTML = '<option value="">اختر العقار أو المنشأة</option>';
+            select.innerHTML = '<option value="">اختر المشروع أو المنشأة</option>';
             
             // Load items based on type
             fetch(`/client/reviews/items/${type}`)

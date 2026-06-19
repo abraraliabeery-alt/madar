@@ -20,36 +20,82 @@ class AttributeSeeder extends Seeder
             [
                 'type' => 'text',
                 'required' => true,
+                'icon' => 'briefcase',
                 'Symbol' => '',
+                'show_in_card' => true,
                 'name' => 'النشاط',
                 'symbol' => ''
             ],
             [
                 'type' => 'number',
                 'required' => false,
+                'icon' => 'clock',
                 'Symbol' => 'يوم',
+                'show_in_card' => true,
                 'name' => 'مدة التنفيذ',
                 'symbol' => 'يوم'
             ],
             [
                 'type' => 'number',
                 'required' => false,
+                'icon' => 'shield',
                 'Symbol' => 'شهر',
+                'show_in_card' => true,
                 'name' => 'الضمان',
                 'symbol' => 'شهر'
             ],
             [
                 'type' => 'number',
                 'required' => false,
+                'icon' => 'wallet',
                 'Symbol' => 'ر.س',
+                'show_in_card' => true,
                 'name' => 'الميزانية',
                 'symbol' => 'ر.س'
             ],
             [
                 'type' => 'text',
                 'required' => false,
+                'icon' => 'file-text',
                 'Symbol' => '',
+                'show_in_card' => false,
                 'name' => 'نطاق العمل',
+                'symbol' => ''
+            ],
+            [
+                'type' => 'text',
+                'required' => false,
+                'icon' => 'award',
+                'Symbol' => '',
+                'show_in_card' => true,
+                'name' => 'تصنيف المقاول',
+                'symbol' => ''
+            ],
+            [
+                'type' => 'number',
+                'required' => false,
+                'icon' => 'percent',
+                'Symbol' => '%',
+                'show_in_card' => true,
+                'name' => 'التأمين الابتدائي',
+                'symbol' => '%'
+            ],
+            [
+                'type' => 'text',
+                'required' => false,
+                'icon' => 'clipboard-list',
+                'Symbol' => '',
+                'show_in_card' => false,
+                'name' => 'متطلبات المنافسة',
+                'symbol' => ''
+            ],
+            [
+                'type' => 'text',
+                'required' => false,
+                'icon' => 'paperclip',
+                'Symbol' => '',
+                'show_in_card' => false,
+                'name' => 'المرفقات المطلوبة',
                 'symbol' => ''
             ],
         ];

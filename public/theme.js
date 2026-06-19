@@ -1,47 +1,64 @@
 (function(){
-  // Front theme toggle
   var root = document.documentElement;
-  var frontKey = 'site_theme';
-  var frontBtn = document.getElementById('themeToggle');
-  function setFrontTheme(v){
-    root.setAttribute('data-theme', v);
-    if(frontBtn){ frontBtn.innerHTML = v==='dark' ? '<i class="bi bi-sun"></i>' : '<i class="bi bi-moon"></i>'; }
+  var key = 'theme';
+
+  function getStored(){
+    try {
+      var v = localStorage.getItem(key);
+      if(v === 'dark' || v === 'light') return v;
+    } catch(e) {}
+    return null;
   }
-  try {
-    var stored = localStorage.getItem(frontKey);
-    if(stored === 'dark' || stored === 'light') { setFrontTheme(stored); }
-  } catch(e) {}
-  if(frontBtn){
-    frontBtn.addEventListener('click', function(){
-      var cur = root.getAttribute('data-theme')==='dark' ? 'dark' : 'light';
-      var next = cur==='dark' ? 'light' : 'dark';
-      try { localStorage.setItem(frontKey, next); } catch(e) {}
-      setFrontTheme(next);
+
+  function prefersDark(){
+    return !!(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  }
+
+  function setTheme(v){
+    var mode = v === 'dark' ? 'dark' : 'light';
+    root.setAttribute('data-theme', mode);
+    root.classList.toggle('dark', mode === 'dark');
+    try { localStorage.setItem(key, mode); } catch(e) {}
+    updateButtons(mode);
+  }
+
+  function updateButtons(mode){
+    var btns = Array.prototype.slice.call(document.querySelectorAll('[data-theme-toggle], #themeToggle, #admin-theme-toggle, #theme-toggle'));
+    btns.forEach(function(btn){
+      if(!btn) return;
+
+      btn.setAttribute('aria-pressed', mode === 'dark' ? 'true' : 'false');
+
+      var sun = btn.querySelector('[data-icon="sun"]');
+      var moon = btn.querySelector('[data-icon="moon"]');
+      if(sun && moon){
+        sun.classList.toggle('hidden', mode !== 'dark');
+        moon.classList.toggle('hidden', mode === 'dark');
+      } else {
+        btn.innerHTML = mode === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+      }
     });
   }
 
-  // Admin theme toggle
-  var adminKey = 'admin_theme';
-  var adminBtn = document.getElementById('admin-theme-toggle');
-  function applyAdmin(v){
-    root.setAttribute('data-theme', v==='dark' ? 'dark' : 'light');
-    if(adminBtn){
-      // Use icon-only button for admin theme toggle (Font Awesome)
-      adminBtn.innerHTML = v==='dark'
-        ? '<i class="fas fa-sun"></i>'
-        : '<i class="fas fa-moon"></i>';
+  function toggle(){
+    var cur = root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    setTheme(cur === 'dark' ? 'light' : 'dark');
+  }
+
+  var initial = getStored();
+  if(!initial) initial = prefersDark() ? 'dark' : 'light';
+  setTheme(initial);
+
+  document.addEventListener('click', function(e){
+    var el = e.target;
+    if(!el) return;
+    var btn = el.closest ? el.closest('[data-theme-toggle], #themeToggle, #admin-theme-toggle, #theme-toggle') : null;
+    if(btn){
+      e.preventDefault();
+      toggle();
     }
-  }
-  try {
-    var aStored = localStorage.getItem(adminKey) || 'light';
-    applyAdmin(aStored);
-  } catch(e) {}
-  if(adminBtn){
-    adminBtn.addEventListener('click', function(){
-      var cur = root.getAttribute('data-theme')==='dark' ? 'dark' : 'light';
-      var next = cur==='dark' ? 'light' : 'dark';
-      try { localStorage.setItem(adminKey, next); } catch(e) {}
-      applyAdmin(next);
-    });
-  }
+  });
+
+  window.setTheme = setTheme;
+  window.toggleTheme = toggle;
 })();

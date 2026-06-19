@@ -44,11 +44,11 @@ class BookingStatusChanged extends Notification
         return (new MailMessage)
             ->subject('تحديث حالة الحجز - ' . $this->booking->product->name)
             ->greeting('مرحباً ' . $notifiable->name)
-            ->line('تم تحديث حالة حجزك للعقار: ' . $this->booking->product->name)
+            ->line('تم تحديث حالة حجزك للمشروع: ' . $this->booking->product->name)
             ->line('الحالة السابقة: ' . $this->oldStatus)
             ->line('الحالة الجديدة: ' . $this->newStatus)
             ->action('عرض التفاصيل', url('/bookings/' . $this->booking->id))
-            ->line('شكراً لاستخدام منصة عقار!');
+            ->line('شكراً لاستخدام منصة مشاريع!');
     }
 
     /**
@@ -60,11 +60,11 @@ class BookingStatusChanged extends Notification
     {
         return [
             'booking_id' => $this->booking->id,
-            'product_name' => $this->booking->product->title ?? 'عقار',
+            'product_name' => $this->booking->product->title ?? 'مشروع',
             'old_status' => $this->oldStatus,
             'new_status' => $this->newStatus,
             'type' => 'booking_status_changed',
-            'message' => 'تم تحديث حالة حجزك للعقار: ' . ($this->booking->product->title ?? 'عقار') . ' من ' . $this->oldStatus . ' إلى ' . $this->newStatus,
+            'message' => 'تم تحديث حالة حجزك للمشروع: ' . ($this->booking->product->title ?? 'مشروع') . ' من ' . $this->oldStatus . ' إلى ' . $this->newStatus,
             'action_url' => route('client.bookings.show', $this->booking->id),
         ];
     }

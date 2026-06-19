@@ -36,69 +36,28 @@
                                 <h6 class="mb-0">المعلومات الأساسية</h6>
                             </div>
                             <div class="card-body">
-                                <!-- Locale Tabs -->
-                                <div class="mb-3">
-                                    <ul class="nav nav-tabs" id="localeTabs" role="tablist">
-                                        @foreach($locales as $localeCode => $localeData)
-                                        <li class="nav-item" role="presentation">
-                                            <button class="nav-link {{ $loop->first ? 'active' : '' }}" 
-                                                    id="tab-{{ $localeCode }}" 
-                                                    data-bs-toggle="tab" 
-                                                    data-bs-target="#content-{{ $localeCode }}" 
-                                                    type="button" 
-                                                    role="tab" 
-                                                    aria-controls="content-{{ $localeCode }}" 
-                                                    aria-selected="{{ $loop->first ? 'true' : 'false' }}">
-                                                <span class="me-2">{{ $localeData['flag'] }}</span>
-                                                {{ $localeData['name'] }}
-                                            </button>
-                                        </li>
-                                        @endforeach
-                                    </ul>
-                                    
-                                    <div class="tab-content mt-3" id="localeTabContent">
-                                        @foreach($locales as $localeCode => $localeData)
-                                        <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}" 
-                                             id="content-{{ $localeCode }}" 
-                                             role="tabpanel" 
-                                             aria-labelledby="tab-{{ $localeCode }}">
-                                            
-                                            <div class="mb-3">
-                                                <label for="name_{{ $localeCode }}" class="form-label">
-                                                    اسم الفئة <span class="text-danger">*</span>
-                                                    <span class="badge bg-secondary ms-2">{{ $localeData['flag'] }} {{ $localeData['name'] }}</span>
-                                                </label>
-                                                <input type="text" 
-                                                       class="form-control @error('translations.'.$localeCode.'.name') is-invalid @enderror" 
-                                                       id="name_{{ $localeCode }}" 
-                                                       name="translations[{{ $localeCode }}][name]" 
-                                                       value="{{ old('translations.'.$localeCode.'.name') }}" 
-                                                       {{ $loop->first ? 'required' : '' }}
-                                                       placeholder="أدخل اسم الفئة بـ {{ $localeData['name'] }}">
-                                                <input type="hidden" name="translations[{{ $localeCode }}][locale]" value="{{ $localeCode }}">
-                                                @error('translations.'.$localeCode.'.name')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-
-                                            <div class="mb-3">
-                                                <label for="description_{{ $localeCode }}" class="form-label">
-                                                    وصف الفئة
-                                                    <span class="badge bg-secondary ms-2">{{ $localeData['flag'] }} {{ $localeData['name'] }}</span>
-                                                </label>
-                                                <textarea class="form-control summernote @error('translations.'.$localeCode.'.description') is-invalid @enderror" 
-                                                          id="description_{{ $localeCode }}" 
-                                                          name="translations[{{ $localeCode }}][description]" 
-                                                          rows="4" 
-                                                          placeholder="أدخل وصف الفئة بـ {{ $localeData['name'] }}">{{ old('translations.'.$localeCode.'.description') }}</textarea>
-                                                @error('translations.'.$localeCode.'.description')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        @endforeach
-                                    </div>
-                                </div>
+                                @include('components.translations-repeater', [
+                                    'locales' => $locales,
+                                    'namePrefix' => 'translations',
+                                    'fields' => [
+                                        [
+                                            'type' => 'input',
+                                            'key' => 'name',
+                                            'label' => 'اسم الفئة',
+                                            'requiredFirst' => true,
+                                        ],
+                                        [
+                                            'type' => 'textarea',
+                                            'key' => 'description',
+                                            'label' => 'وصف الفئة',
+                                            'rows' => 4,
+                                        ],
+                                    ],
+                                    'addLabel' => 'إضافة ترجمة',
+                                    'removeLabel' => 'حذف',
+                                    'minItems' => 1,
+                                    'maxItems' => is_array($locales) ? count($locales) : null,
+                                ])
 
                                 <div class="mb-3">
                                     <label for="parent_id" class="form-label">الفئة الأب</label>
@@ -319,12 +278,12 @@ small.text-muted .text-success {
 <script>
 $(document).ready(function() {
     // Initialize summernote for all textareas
-    $('.summernote').summernote({
+    $('#categoryForm textarea').summernote({
         height: 150,
         toolbar: [
             ['style', ['bold', 'italic', 'underline', 'clear']],
-            ['font', ['strikethrough']],
-            ['para', ['ul', 'ol']],
+            ['font', ['strikethrough', 'superscript', 'subscript']],
+            ['fontsize', ['fontsize']],
         ]
     });
 

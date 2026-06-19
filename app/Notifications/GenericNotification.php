@@ -44,7 +44,7 @@ class GenericNotification extends Notification
             ->subject('إشعار جديد')
             ->greeting('مرحباً ' . $notifiable->name)
             ->line($this->message)
-            ->line('شكراً لاستخدام منصة عقار!');
+            ->line('شكراً لاستخدام منصة مشاريع!');
     }
 
     /**

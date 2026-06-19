@@ -1,23 +1,23 @@
 @extends('facility.layouts.app')
 
-@section('title', 'دورة حياة العقار #' . $product->id)
+@section('title', 'دورة حياة المشروع #' . $product->id)
 
 @section('content')
 <div class="container mx-auto px-4 my-10">
     <div class="w-full max-w-7xl mx-auto space-y-6">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
             <div>
-                <h1 class="text-2xl font-semibold text-gray-800">دورة حياة العقار</h1>
-                <p class="text-gray-600 mt-1">نظرة شاملة على مسار هذا العقار من الإنشاء حتى العروض والحجوزات والعقود.</p>
+                <h1 class="text-2xl font-semibold text-gray-800">دورة حياة المشروع</h1>
+                <p class="text-gray-600 mt-1">نظرة شاملة على مسار هذا المشروع من الإنشاء حتى العروض والحجوزات والعقود.</p>
             </div>
             <div class="flex flex-wrap gap-2 mt-4 sm:mt-0">
                 <a href="{{ route('facility.products.show', $product) }}" class="bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium py-2 px-4 rounded-lg shadow-sm inline-flex items-center">
                     <i class="fas fa-eye ml-2"></i>
-                    تفاصيل العقار
+                    تفاصيل المشروع
                 </a>
                 <a href="{{ route('facility.products.edit', $product) }}" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg shadow inline-flex items-center">
                     <i class="fas fa-edit ml-2"></i>
-                    تعديل العقار
+                    تعديل المشروع
                 </a>
             </div>
         </div>
@@ -61,7 +61,7 @@
 
             if (empty($steps)) {
                 $steps = [
-                    ['key' => 'created', 'label' => 'إنشاء العقار', 'done' => true],
+                    ['key' => 'created', 'label' => 'إنشاء المشروع', 'done' => true],
                     ['key' => 'offers', 'label' => 'إعداد العروض', 'done' => $hasOffers],
                     ['key' => 'bookings', 'label' => 'الحجوزات', 'done' => $hasBookings],
                     ['key' => 'contracts', 'label' => 'العقود', 'done' => $hasContracts],
@@ -72,7 +72,7 @@
         <div class="bg-white rounded-xl shadow border border-gray-200 px-6 py-5">
             <h2 class="text-sm font-semibold text-gray-700 mb-4 flex items-center">
                 <i class="fas fa-route ml-2 text-indigo-600"></i>
-                مسار دورة حياة هذا العقار
+                مسار دورة حياة هذا المشروع
             </h2>
             <div class="relative">
                 <div class="hidden md:block absolute inset-x-6 top-1/2 -translate-y-1/2 h-[2px] bg-gray-100"></div>
@@ -169,7 +169,7 @@
                 <div class="bg-white rounded-lg shadow border border-gray-200 p-6">
                     <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                         <i class="fas fa-building ml-2 text-blue-600"></i>
-                        ملخص سريع للعقار
+                        ملخص سريع للمشروع
                     </h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                         <div>
@@ -194,7 +194,7 @@
                 <div class="bg-white rounded-lg shadow border border-gray-200 p-6">
                     <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                         <i class="fas fa-tags ml-2 text-green-600"></i>
-                        العروض المرتبطة بالعقار
+                        العروض المرتبطة بالمشروع
                     </h2>
 
                     @if($saleOffers->count() || $rentOffers->count())
@@ -238,7 +238,7 @@
                             @endif
                         </div>
                     @else
-                        <p class="text-gray-500 text-sm">لا توجد عروض مرتبطة بهذا العقار حتى الآن.</p>
+                        <p class="text-gray-500 text-sm">لا توجد عروض مرتبطة بهذا المشروع حتى الآن.</p>
                     @endif
                 </div>
 
@@ -262,7 +262,7 @@
                             @endforeach
                         </div>
                     @else
-                        <p class="text-gray-500 text-sm">لا توجد حجوزات مسجلة لهذا العقار.</p>
+                        <p class="text-gray-500 text-sm">لا توجد حجوزات مسجلة لهذا المشروع.</p>
                     @endif
                 </div>
             </div>
@@ -277,7 +277,7 @@
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-2">
                                 <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                                <span class="text-gray-600">إنشاء العقار</span>
+                                <span class="text-gray-600">إنشاء المشروع</span>
                             </div>
                             <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">منجز</span>
                         </div>
@@ -331,7 +331,7 @@
                             @endforeach
                         </div>
                     @else
-                        <p class="text-gray-500 text-sm">لا توجد عقود مسجلة لهذا العقار حتى الآن.</p>
+                        <p class="text-gray-500 text-sm">لا توجد عقود مسجلة لهذا المشروع حتى الآن.</p>
                     @endif
                 </div>
             </div>
