@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'إضافة صلاحية جديدة')
+@section('title', __('admin.permissions.create'))
 
 @section('content')
 <div class="container-fluid">
@@ -8,10 +8,10 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">إضافة صلاحية جديدة</h3>
+                    <h3 class="card-title">{{ __('admin.permissions.create') }}</h3>
                     <div class="card-tools">
                         <a href="{{ route('admin.permissions.index') }}" class="btn btn-secondary">
-                            <i class="fas fa-arrow-right"></i> العودة للقائمة
+                            <i class="fas fa-arrow-right"></i> {{ __('admin.permissions.back_to_list') }}
                         </a>
                     </div>
                 </div>
@@ -22,34 +22,34 @@
                         <div class="row">
                             <!-- المعلومات الأساسية -->
                             <div class="col-md-6">
-                                <h5 class="mb-3">المعلومات الأساسية</h5>
+                                <h5 class="mb-3">{{ __('admin.permissions.basic_info') }}</h5>
                                 
                                 <div class="mb-3">
-                                    <label for="name" class="form-label">اسم الصلاحية <span class="text-danger">*</span></label>
+                                    <label for="name" class="form-label">{{ __('admin.permissions.name') }} <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control @error('name') is-invalid @enderror" 
                                            id="name" name="name" value="{{ old('name') }}" 
-                                           placeholder="مثال: users.create" required>
+                                           placeholder="{{ __('admin.permissions.name_placeholder') }}" required>
                                     @error('name')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
-                                    <div class="form-text">استخدم تنسيق group.action (مثال: users.create, products.edit)</div>
+                                    <div class="form-text">{{ __('admin.permissions.name_help') }}</div>
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="description" class="form-label">الوصف</label>
+                                    <label for="description" class="form-label">{{ __('admin.permissions.description') }}</label>
                                     <textarea class="form-control @error('description') is-invalid @enderror" 
                                               id="description" name="description" rows="3" 
-                                              placeholder="وصف الصلاحية...">{{ old('description') }}</textarea>
+                                              placeholder="{{ __('admin.permissions.description_placeholder') }}">{{ old('description') }}</textarea>
                                     @error('description')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="guard_name" class="form-label">اسم الحارس</label>
+                                    <label for="guard_name" class="form-label">{{ __('admin.permissions.guard_name') }}</label>
                                     <input type="text" class="form-control @error('guard_name') is-invalid @enderror" 
                                            id="guard_name" name="guard_name" value="{{ old('guard_name', 'web') }}" 
-                                           placeholder="web">
+                                           placeholder="{{ __('admin.permissions.guard_placeholder') }}">
                                     @error('guard_name')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -60,7 +60,7 @@
                                         <input class="form-check-input" type="checkbox" id="is_active" name="is_active" 
                                                value="1" {{ old('is_active', true) ? 'checked' : '' }}>
                                         <label class="form-check-label" for="is_active">
-                                            صلاحية نشطة
+                                            {{ __('admin.permissions.is_active') }}
                                         </label>
                                     </div>
                                 </div>
@@ -68,7 +68,7 @@
 
                             <!-- الترجمات -->
                             <div class="col-md-6">
-                                <h5 class="mb-3">الترجمات</h5>
+                                <h5 class="mb-3">{{ __('admin.permissions.translations') }}</h5>
 
                                 @include('components.translations-repeater', [
                                     'locales' => config('locales.available', []),
@@ -77,22 +77,22 @@
                                         [
                                             'type' => 'input',
                                             'key' => 'name',
-                                            'label' => 'الاسم',
+                                            'label' => __('admin.permissions.name'),
                                             'requiredFirst' => true,
                                         ],
                                         [
                                             'type' => 'input',
                                             'key' => 'display_name',
-                                            'label' => 'اسم العرض',
+                                            'label' => __('admin.permissions.display_name'),
                                         ],
                                         [
                                             'type' => 'input',
                                             'key' => 'description',
-                                            'label' => 'الوصف',
+                                            'label' => __('admin.permissions.description'),
                                         ],
                                     ],
-                                    'addLabel' => 'إضافة ترجمة',
-                                    'removeLabel' => 'حذف',
+                                    'addLabel' => __('admin.ui.layout.add_new'),
+                                    'removeLabel' => __('admin.actions.delete'),
                                     'minItems' => 1,
                                 ])
                             </div>
@@ -102,10 +102,10 @@
                     <div class="card-footer">
                         <div class="d-flex justify-content-between">
                             <a href="{{ route('admin.permissions.index') }}" class="btn btn-secondary">
-                                <i class="fas fa-times"></i> إلغاء
+                                <i class="fas fa-times"></i> {{ __('admin.permissions.cancel') }}
                             </a>
                             <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save"></i> حفظ الصلاحية
+                                <i class="fas fa-save"></i> {{ __('admin.permissions.save') }}
                             </button>
                         </div>
                     </div>

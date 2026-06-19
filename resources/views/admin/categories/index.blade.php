@@ -57,21 +57,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-sm-6 col-lg-3">
-                    <div class="card bg-warning text-white">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h6 class="mb-0">إجمالي المنتجات</h6>
-                                    <h3 class="mb-0">{{ $categories->sum('products_count') }}</h3>
-                                </div>
-                                <div class="fs-1 d-none d-sm-block">
-                                    <i class="fas fa-box"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <!-- Categories Hierarchy View -->

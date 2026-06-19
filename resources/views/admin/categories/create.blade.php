@@ -4,9 +4,9 @@
 <div class="container-fluid">
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">إضافة فئة جديدة</h5>
+            <h5 class="mb-0">{{ __('admin.categories.create') }}</h5>
             <a href="{{ route('admin.categories.index') }}" class="btn btn-secondary">
-                <i class="fas fa-arrow-right me-2"></i>رجوع
+                <i class="fas fa-arrow-right me-2"></i>{{ __('admin.categories.back') }}
             </a>
         </div>
         <div class="card-body">
@@ -21,11 +21,11 @@
                             <div class="d-flex align-items-center">
                                 <i class="fas fa-info-circle fa-lg me-3"></i>
                                 <div>
-                                    <h6 class="mb-1">خيارات إنشاء الفئات</h6>
+                                    <h6 class="mb-1">{{ __('admin.categories.hierarchy_warning_title') }}</h6>
                                     <p class="mb-0">
-                                        <strong>1. فئة رئيسية:</strong> إنشاء فئة جديدة بدون أب (مستوى أول)<br>
-                                        <strong>2. فئة فرعية:</strong> إنشاء فئة فرعية من فئة رئيسية موجودة (مستوى ثاني)<br>
-                                        <em>لا يمكن إنشاء فئات فرعية من فئات فرعية (مستوى ثالث)</em>
+                                        <strong>1. فئة رئيسية:</strong> {{ __('admin.categories.hierarchy_warning_main') }}<br>
+                                        <strong>2. فئة فرعية:</strong> {{ __('admin.categories.hierarchy_warning_sub') }}<br>
+                                        <em>{{ __('admin.categories.hierarchy_warning_note') }}</em>
                                     </p>
                                 </div>
                             </div>
@@ -33,7 +33,7 @@
                         
                         <div class="card">
                             <div class="card-header">
-                                <h6 class="mb-0">المعلومات الأساسية</h6>
+                                <h6 class="mb-0">{{ __('admin.categories.basic_info') }}</h6>
                             </div>
                             <div class="card-body">
                                 @include('components.translations-repeater', [
@@ -43,30 +43,30 @@
                                         [
                                             'type' => 'input',
                                             'key' => 'name',
-                                            'label' => 'اسم الفئة',
+                                            'label' => __('admin.categories.name'),
                                             'requiredFirst' => true,
                                         ],
                                         [
                                             'type' => 'textarea',
                                             'key' => 'description',
-                                            'label' => 'وصف الفئة',
+                                            'label' => __('admin.categories.description'),
                                             'rows' => 4,
                                         ],
                                     ],
-                                    'addLabel' => 'إضافة ترجمة',
-                                    'removeLabel' => 'حذف',
+                                    'addLabel' => __('admin.ui.layout.add_new'),
+                                    'removeLabel' => __('admin.actions.delete'),
                                     'minItems' => 1,
                                     'maxItems' => is_array($locales) ? count($locales) : null,
                                 ])
 
                                 <div class="mb-3">
-                                    <label for="parent_id" class="form-label">الفئة الأب</label>
+                                    <label for="parent_id" class="form-label">{{ __('admin.categories.parent') }}</label>
                                     <select class="form-select @error('parent_id') is-invalid @enderror" id="parent_id" name="parent_id">
                                         <option value="" class="main-category-option">
-                                            <i class="fas fa-folder me-2"></i>فئة رئيسية (بدون أب)
+                                            <i class="fas fa-folder me-2"></i>{{ __('admin.categories.main_category_option') }}
                                         </option>
                                         @if($categories->where('parent_id', null)->count() > 0)
-                                            <optgroup label="الفئات الرئيسية المتاحة">
+                                            <optgroup label="{{ __('admin.categories.available_main_categories') }}">
                                                 @foreach($categories->where('parent_id', null) as $category)
                                                     <option value="{{ $category->id }}" {{ old('parent_id') == $category->id ? 'selected' : '' }}>
                                                         <i class="fas fa-folder-open me-2"></i>{{ $category->name }}
@@ -77,8 +77,8 @@
                                     </select>
                                     <small class="text-muted">
                                         <i class="fas fa-info-circle me-1"></i>
-                                        <strong>فئة رئيسية:</strong> اختر "فئة رئيسية" لإنشاء فئة جديدة بدون أب. 
-                                        <strong>فئة فرعية:</strong> اختر فئة رئيسية موجودة لإنشاء فئة فرعية منها.
+                                        <strong>فئة رئيسية:</strong> {{ __('admin.categories.parent_help_main') }} 
+                                        <strong>فئة فرعية:</strong> {{ __('admin.categories.parent_help_sub') }}
                                     </small>
                                     @error('parent_id')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -86,7 +86,7 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="order" class="form-label">ترتيب الفئة</label>
+                                    <label for="order" class="form-label">{{ __('admin.categories.order') }}</label>
                                     <input type="number" class="form-control @error('order') is-invalid @enderror" id="order" name="order" value="{{ old('order', 0) }}" min="0">
                                     @error('order')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -100,13 +100,13 @@
                     <div class="col-md-4">
                         <div class="card">
                             <div class="card-header">
-                                <h6 class="mb-0">الوسائط</h6>
+                                <h6 class="mb-0">{{ __('admin.categories.media') }}</h6>
                             </div>
                             <div class="card-body">
                                 <div class="mb-3">
-                                    <label for="icon" class="form-label">الأيقونة</label>
+                                    <label for="icon" class="form-label">{{ __('admin.categories.icon') }}</label>
                                     <input type="file" class="form-control @error('icon') is-invalid @enderror" id="icon" name="icon" accept="image/*" data-max-size="2048">
-                                    <small class="text-muted d-block mt-2">الأبعاد المثالية: 32x32 بكسل - الحد الأقصى: 2 ميجابايت</small>
+                                    <small class="text-muted d-block mt-2">{{ __('admin.categories.icon_dimensions') }}</small>
                                     <div class="mt-2" id="icon-preview"></div>
                                     @error('icon')
                                         <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -115,9 +115,9 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="image" class="form-label">صورة الفئة</label>
+                                    <label for="image" class="form-label">{{ __('admin.categories.image') }}</label>
                                     <input type="file" class="form-control @error('image') is-invalid @enderror" id="image" name="image" accept="image/*" data-max-size="2048">
-                                    <small class="text-muted d-block mt-2">الأبعاد المثالية: 800x600 بكسل - الحد الأقصى: 2 ميجابايت</small>
+                                    <small class="text-muted d-block mt-2">{{ __('admin.categories.image_dimensions') }}</small>
                                     <div class="mt-2" id="image-preview"></div>
                                     @error('image')
                                         <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -127,12 +127,12 @@
 
                                 <div class="form-check mb-3">
                                     <input type="checkbox" class="form-check-input" id="is_active" name="is_active" value="1" {{ old('is_active', 1) ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="is_active">نشط</label>
+                                    <label class="form-check-label" for="is_active">{{ __('admin.categories.is_active') }}</label>
                                 </div>
 
                                 <div class="form-check mb-3">
                                     <input type="checkbox" class="form-check-input" id="is_featured" name="is_featured" value="1" {{ old('is_featured') ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="is_featured">مميزة</label>
+                                    <label class="form-check-label" for="is_featured">{{ __('admin.categories.is_featured') }}</label>
                                 </div>
                             </div>
                         </div>
@@ -141,7 +141,7 @@
                     <!-- Submit Button -->
                     <div class="col-12">
                         <button type="submit" class="btn btn-primary" id="submitBtn">
-                            <i class="fas fa-save me-2"></i>حفظ
+                            <i class="fas fa-save me-2"></i>{{ __('admin.categories.save') }}
                         </button>
                     </div>
                 </div>
@@ -298,11 +298,11 @@ $(document).ready(function() {
         const maxSizeBytes = maxSizeMB * 1024 * 1024;
         
         if (file.size > maxSizeBytes) {
-            return `حجم الملف يجب أن يكون أقل من ${maxSizeMB} ميجابايت`;
+            return `{{ __('admin.categories.file_size_error', ['size' => maxSizeMB]) }}`;
         }
         
         if (!allowedTypes.includes(file.type)) {
-            return 'نوع الملف غير مدعوم. يرجى اختيار صورة بصيغة JPEG, PNG, JPG, GIF, أو SVG';
+            return '{{ __('admin.categories.file_type_error') }}';
         }
         
         return null;
@@ -410,7 +410,7 @@ $(document).ready(function() {
             const maxSize = parseInt($('#icon').data('max-size'));
             if (iconFile.size > maxSize * 1024 * 1024) {
                 $('#icon').addClass('is-invalid');
-                $('#icon-error').html(`حجم الملف يجب أن يكون أقل من ${maxSize} ميجابايت`).show();
+                $('#icon-error').html(`{{ __('admin.categories.file_size_error', ['size' => maxSize]) }}`).show();
                 hasErrors = true;
             }
         }
@@ -419,7 +419,7 @@ $(document).ready(function() {
             const maxSize = parseInt($('#image').data('max-size'));
             if (imageFile.size > maxSize * 1024 * 1024) {
                 $('#image').addClass('is-invalid');
-                $('#image-error').html(`حجم الملف يجب أن يكون أقل من ${maxSize} ميجابايت`).show();
+                $('#image-error').html(`{{ __('admin.categories.file_size_error', ['size' => maxSize]) }}`).show();
                 hasErrors = true;
             }
         }
@@ -455,7 +455,7 @@ $(document).ready(function() {
             parentSelect.addClass('is-valid');
             helpText.html(`
                 <i class="fas fa-check-circle text-success me-1"></i>
-                <strong>فئة رئيسية:</strong> ستقوم بإنشاء فئة جديدة بدون أب (مستوى أول)
+                <strong>فئة رئيسية:</strong> {{ __('admin.categories.parent_main_selected') }}
             `);
         } else if (selectedValue) {
             // Subcategory selected - check if parent is valid
@@ -468,30 +468,30 @@ $(document).ready(function() {
                         parentSelect.addClass('is-valid');
                         helpText.html(`
                             <i class="fas fa-check-circle text-success me-1"></i>
-                            <strong>فئة فرعية:</strong> ستقوم بإنشاء فئة فرعية من "${response.name}" (مستوى ثاني)
+                            <strong>فئة فرعية:</strong> {{ __('admin.categories.parent_sub_selected', ['name' => response.name]) }}
                         `);
                     } else {
                         parentSelect.addClass('is-invalid');
-                        parentSelect.next('.invalid-feedback').html('لا يمكن اختيار فئة فرعية كفئة أب').show();
+                        parentSelect.next('.invalid-feedback').html('{{ __('admin.categories.parent_invalid') }}').show();
                         parentSelect.val(''); // Reset selection
                         helpText.html(`
                             <i class="fas fa-info-circle me-1"></i>
-                            <strong>فئة رئيسية:</strong> اختر "فئة رئيسية" لإنشاء فئة جديدة بدون أب. 
-                            <strong>فئة فرعية:</strong> اختر فئة رئيسية موجودة لإنشاء فئة فرعية منها.
+                            <strong>فئة رئيسية:</strong> {{ __('admin.categories.parent_help_main') }} 
+                            <strong>فئة فرعية:</strong> {{ __('admin.categories.parent_help_sub') }}
                         `);
                     }
                 },
                 error: function() {
                     parentSelect.addClass('is-invalid');
-                    parentSelect.next('.invalid-feedback').html('خطأ في التحقق من الفئة').show();
+                    parentSelect.next('.invalid-feedback').html('{{ __('admin.categories.parent_check_error') }}').show();
                 }
             });
         } else {
             // No selection - show default help text
             helpText.html(`
                 <i class="fas fa-info-circle me-1"></i>
-                <strong>فئة رئيسية:</strong> اختر "فئة رئيسية" لإنشاء فئة جديدة بدون أب. 
-                <strong>فئة فرعية:</strong> اختر فئة رئيسية موجودة لإنشاء فئة فرعية منها.
+                <strong>فئة رئيسية:</strong> {{ __('admin.categories.parent_help_main') }} 
+                <strong>فئة فرعية:</strong> {{ __('admin.categories.parent_help_sub') }}
             `);
         }
     });

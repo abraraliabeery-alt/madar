@@ -4,9 +4,9 @@
 <div class="container-fluid">
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">إضافة مميزة جديدة</h5>
+            <h5 class="mb-0">{{ __('admin.features.create') }}</h5>
             <a href="{{ route('admin.features.index') }}" class="btn btn-secondary">
-                <i class="fas fa-arrow-right me-2"></i>رجوع
+                <i class="fas fa-arrow-right me-2"></i>{{ __('admin.features.back') }}
             </a>
         </div>
         <div class="card-body">
@@ -18,49 +18,36 @@
                     <div class="col-md-8">
                         <div class="card">
                             <div class="card-header">
-                                <h6 class="mb-0">المعلومات الأساسية</h6>
+                                <h6 class="mb-0">{{ __('admin.features.basic_info') }}</h6>
                             </div>
                             <div class="card-body">
-                                <!-- Arabic Name -->
-                                <div class="mb-3">
-                                    <label for="name_ar" class="form-label">اسم المميزة (العربية) <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control @error('name_ar') is-invalid @enderror" id="name_ar" name="name_ar" value="{{ old('name_ar') }}" required>
-                                    @error('name_ar')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <!-- English Name -->
-                                <div class="mb-3">
-                                    <label for="name_en" class="form-label">اسم المميزة (الإنجليزية) <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control @error('name_en') is-invalid @enderror" id="name_en" name="name_en" value="{{ old('name_en') }}" required>
-                                    @error('name_en')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <!-- Arabic Description -->
-                                <div class="mb-3">
-                                    <label for="description_ar" class="form-label">الوصف (العربية)</label>
-                                    <textarea class="form-control summernote @error('description_ar') is-invalid @enderror" id="description_ar" name="description_ar" rows="4">{{ old('description_ar') }}</textarea>
-                                    @error('description_ar')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <!-- English Description -->
-                                <div class="mb-3">
-                                    <label for="description_en" class="form-label">الوصف (الإنجليزية)</label>
-                                    <textarea class="form-control summernote @error('description_en') is-invalid @enderror" id="description_en" name="description_en" rows="4">{{ old('description_en') }}</textarea>
-                                    @error('description_en')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
+                                @include('components.translations-repeater', [
+                                    'locales' => $locales ?? config('locales.available', []),
+                                    'namePrefix' => 'translations',
+                                    'fields' => [
+                                        [
+                                            'type' => 'input',
+                                            'key' => 'name',
+                                            'label' => __('admin.features.name'),
+                                            'requiredFirst' => true,
+                                        ],
+                                        [
+                                            'type' => 'textarea',
+                                            'key' => 'description',
+                                            'label' => __('admin.features.description'),
+                                            'rows' => 4,
+                                        ],
+                                    ],
+                                    'addLabel' => __('admin.ui.layout.add_new'),
+                                    'removeLabel' => __('admin.actions.delete'),
+                                    'minItems' => 1,
+                                    'maxItems' => is_array(($locales ?? null)) ? count($locales) : null,
+                                ])
 
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="order" class="form-label">الترتيب</label>
+                                            <label for="order" class="form-label">{{ __('admin.features.order') }}</label>
                                             <input type="number" class="form-control @error('order') is-invalid @enderror" id="order" name="order" value="{{ old('order', 0) }}" min="0">
                                             @error('order')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -71,7 +58,7 @@
 
                                 <div class="form-check mb-3">
                                     <input type="checkbox" class="form-check-input" id="is_active" name="is_active" value="1" {{ old('is_active', 1) ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="is_active">نشط</label>
+                                    <label class="form-check-label" for="is_active">{{ __('admin.features.is_active') }}</label>
                                 </div>
                             </div>
                         </div>
@@ -81,18 +68,18 @@
                     <div class="col-md-4">
                         <div class="card">
                             <div class="card-header">
-                                <h6 class="mb-0">الوسائط</h6>
+                                <h6 class="mb-0">{{ __('admin.features.media') }}</h6>
                             </div>
                             <div class="card-body">
                                 <x-icon-picker
                                     nameIcon="icon_name"
                                     nameImage="icon"
                                     :valueIconName="old('icon_name')"
-                                    labelIcon="أيقونة Font Awesome (اختيارية)"
-                                    labelImage="أيقونة صورة (اختيارية)"
-                                    imageHelpText="الأبعاد المثالية: 100x100 بكسل. في حال رفع صورة سيتم استخدامها بدلاً من أيقونة Font Awesome."
-                                    pickerTitle="اختيار أيقونة للمميزة"
-                                    pickerButtonText="استعراض الأيقونات"
+                                    labelIcon="{{ __('admin.features.icon_fontawesome') }}"
+                                    labelImage="{{ __('admin.features.icon_image') }}"
+                                    imageHelpText="{{ __('admin.features.icon_help') }}"
+                                    pickerTitle="{{ __('admin.features.picker_title') }}"
+                                    pickerButtonText="{{ __('admin.features.picker_button') }}"
                                 />
                             </div>
                         </div>
@@ -101,7 +88,7 @@
                     <!-- Submit Button -->
                     <div class="col-12 mt-4">
                         <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save me-2"></i>حفظ
+                            <i class="fas fa-save me-2"></i>{{ __('admin.features.save') }}
                         </button>
                     </div>
                 </div>

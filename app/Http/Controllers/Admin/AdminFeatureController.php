@@ -24,7 +24,8 @@ class AdminFeatureController extends Controller
      */
     public function create()
     {
-        return view('admin.features.create');
+        $locales = config('locales.available');
+        return view('admin.features.create', compact('locales'));
     }
 
     /**
@@ -32,9 +33,14 @@ class AdminFeatureController extends Controller
      */
     public function store(Request $request)
     {
+        $availableLocales = array_keys(config('locales.available', []));
         $request->validate([
-            'name_ar' => 'required|string|max:255',
-            'name_en' => 'required|string|max:255',
+            'translations' => 'nullable|array',
+            'translations.*.locale' => 'required_with:translations|string|in:' . implode(',', $availableLocales) . '|distinct',
+            'translations.*.name' => 'required_with:translations|string|max:255',
+            'translations.*.description' => 'nullable|string',
+            'name_ar' => 'nullable|string|max:255',
+            'name_en' => 'nullable|string|max:255',
             'description_ar' => 'nullable|string',
             'description_en' => 'nullable|string',
             'icon' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
@@ -43,8 +49,41 @@ class AdminFeatureController extends Controller
             'order' => 'nullable|integer|min:0',
         ]);
 
+        $incomingTranslations = $request->input('translations');
+        if (!is_array($incomingTranslations) || !count($incomingTranslations)) {
+            $incomingTranslations = [];
+            if ($request->filled('name_ar') || $request->filled('description_ar')) {
+                $incomingTranslations[] = [
+                    'locale' => 'ar',
+                    'name' => $request->input('name_ar'),
+                    'description' => $request->input('description_ar'),
+                ];
+            }
+            if ($request->filled('name_en') || $request->filled('description_en')) {
+                $incomingTranslations[] = [
+                    'locale' => 'en',
+                    'name' => $request->input('name_en'),
+                    'description' => $request->input('description_en'),
+                ];
+            }
+        }
+
+        $firstTranslationName = null;
+        foreach ($incomingTranslations as $t) {
+            if (!empty($t['name'])) {
+                $firstTranslationName = $t['name'];
+                break;
+            }
+        }
+
+        if (!$firstTranslationName) {
+            return back()
+                ->withErrors(['translations' => 'يجب إدخال اسم المميزة في ترجمة واحدة على الأقل'])
+                ->withInput();
+        }
+
         $featureData = [
-            'description' => $request->description_ar, // Default description
+            'description' => $request->input('description_ar'),
             'is_active' => $request->boolean('is_active', true),
             'order' => $request->order ?? 0,
         ];
@@ -59,24 +98,16 @@ class AdminFeatureController extends Controller
 
         $feature = Feature::create($featureData);
 
-        // Create translations
-        $translations = [
-            'ar' => [
-                'name' => $request->name_ar,
-                'description' => $request->description_ar,
-            ],
-            'en' => [
-                'name' => $request->name_en,
-                'description' => $request->description_en,
-            ],
-        ];
+        foreach ($incomingTranslations as $translationData) {
+            if (empty($translationData['locale']) || empty($translationData['name'])) {
+                continue;
+            }
 
-        foreach ($translations as $locale => $translationData) {
             FeatureTranslation::create([
                 'feature_id' => $feature->id,
-                'locale' => $locale,
+                'locale' => $translationData['locale'],
                 'name' => $translationData['name'],
-                'description' => $translationData['description'],
+                'description' => $translationData['description'] ?? null,
             ]);
         }
 
@@ -90,7 +121,8 @@ class AdminFeatureController extends Controller
     public function edit(Feature $feature)
     {
         $feature->load('translations');
-        return view('admin.features.edit', compact('feature'));
+        $locales = config('locales.available');
+        return view('admin.features.edit', compact('feature', 'locales'));
     }
 
     /**
@@ -98,9 +130,14 @@ class AdminFeatureController extends Controller
      */
     public function update(Request $request, Feature $feature)
     {
+        $availableLocales = array_keys(config('locales.available', []));
         $request->validate([
-            'name_ar' => 'required|string|max:255',
-            'name_en' => 'required|string|max:255',
+            'translations' => 'nullable|array',
+            'translations.*.locale' => 'required_with:translations|string|in:' . implode(',', $availableLocales) . '|distinct',
+            'translations.*.name' => 'required_with:translations|string|max:255',
+            'translations.*.description' => 'nullable|string',
+            'name_ar' => 'nullable|string|max:255',
+            'name_en' => 'nullable|string|max:255',
             'description_ar' => 'nullable|string',
             'description_en' => 'nullable|string',
             'icon' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
@@ -109,8 +146,41 @@ class AdminFeatureController extends Controller
             'order' => 'nullable|integer|min:0',
         ]);
 
+        $incomingTranslations = $request->input('translations');
+        if (!is_array($incomingTranslations) || !count($incomingTranslations)) {
+            $incomingTranslations = [];
+            if ($request->filled('name_ar') || $request->filled('description_ar')) {
+                $incomingTranslations[] = [
+                    'locale' => 'ar',
+                    'name' => $request->input('name_ar'),
+                    'description' => $request->input('description_ar'),
+                ];
+            }
+            if ($request->filled('name_en') || $request->filled('description_en')) {
+                $incomingTranslations[] = [
+                    'locale' => 'en',
+                    'name' => $request->input('name_en'),
+                    'description' => $request->input('description_en'),
+                ];
+            }
+        }
+
+        $firstTranslationName = null;
+        foreach ($incomingTranslations as $t) {
+            if (!empty($t['name'])) {
+                $firstTranslationName = $t['name'];
+                break;
+            }
+        }
+
+        if (!$firstTranslationName) {
+            return back()
+                ->withErrors(['translations' => 'يجب إدخال اسم المميزة في ترجمة واحدة على الأقل'])
+                ->withInput();
+        }
+
         $featureData = [
-            'description' => $request->description_ar, // Default description
+            'description' => $request->input('description_ar'), // Default description
             'is_active' => $request->boolean('is_active', true),
             'order' => $request->order ?? 0,
         ];
@@ -129,30 +199,29 @@ class AdminFeatureController extends Controller
 
         $feature->update($featureData);
 
-        // Update translations
-        $translations = [
-            'ar' => [
-                'name' => $request->name_ar,
-                'description' => $request->description_ar,
-            ],
-            'en' => [
-                'name' => $request->name_en,
-                'description' => $request->description_en,
-            ],
-        ];
+        $keepLocales = [];
+        foreach ($incomingTranslations as $translationData) {
+            if (empty($translationData['locale']) || empty($translationData['name'])) {
+                continue;
+            }
 
-        foreach ($translations as $locale => $translationData) {
+            $keepLocales[] = $translationData['locale'];
+
             FeatureTranslation::updateOrCreate(
                 [
                     'feature_id' => $feature->id,
-                    'locale' => $locale,
+                    'locale' => $translationData['locale'],
                 ],
                 [
                     'name' => $translationData['name'],
-                    'description' => $translationData['description'],
+                    'description' => $translationData['description'] ?? null,
                 ]
             );
         }
+
+        $feature->translations()
+            ->whereNotIn('locale', array_values(array_unique($keepLocales)))
+            ->delete();
 
         return redirect()->route('admin.features.index')
             ->with('success', 'تم تحديث المميزة بنجاح');

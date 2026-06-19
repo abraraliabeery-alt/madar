@@ -24,6 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
         
         // Add SetLocale middleware to web middleware group
         $middleware->web(append: [
+            \App\Http\Middleware\MaintenanceModeMiddleware::class,
             \App\Http\Middleware\SetLocale::class,
         ]);
     })

@@ -343,7 +343,7 @@
         <div class="h-16 flex items-center justify-between">
             <div class="flex items-center gap-3">
                 <a href="/" class="inline-flex items-center gap-2">
-                    <span class="inline-flex items-center justify-center w-10 h-10 rounded-xl shadow-soft" style="background: linear-gradient(135deg, var(--accent), var(--accent2)); color: white; font-weight: 800;">م</span>
+                    <img src="{{ asset('images/sm-logo-ar.png') }}" alt="مخطط عجلان واخوانه" class="w-10 h-10 rounded-xl shadow-soft object-contain">
                     <div class="leading-tight">
                         <div class="font-bold">مخطط عجلان واخوانه</div>
                         <div class="text-xs" style="color: var(--muted);">لوحة تفاعلية للقطع والحدود</div>

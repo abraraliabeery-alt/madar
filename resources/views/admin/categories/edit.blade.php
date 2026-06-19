@@ -4,9 +4,9 @@
 <div class="container-fluid">
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">تعديل الفئة - {{ $category->name }}</h5>
+            <h5 class="mb-0">{{ __('admin.categories.edit') }} - {{ $category->name }}</h5>
             <a href="{{ route('admin.categories.index') }}" class="btn btn-secondary">
-                <i class="fas fa-arrow-right me-2"></i>رجوع
+                <i class="fas fa-arrow-right me-2"></i>{{ __('admin.categories.back') }}
             </a>
         </div>
         <div class="card-body">
@@ -22,15 +22,15 @@
                             <div class="d-flex align-items-center">
                                 <i class="fas fa-info-circle fa-lg me-3"></i>
                                 <div>
-                                    <h6 class="mb-1">قاعدة التسلسل الهرمي</h6>
-                                    <p class="mb-0">يمكن إنشاء فئات رئيسية أو فئات فرعية من فئات رئيسية فقط. لا يمكن إنشاء فئات فرعية من فئات فرعية.</p>
+                                    <h6 class="mb-1">{{ __('admin.categories.hierarchy_rule') }}</h6>
+                                    <p class="mb-0">{{ __('admin.categories.hierarchy_description') }}</p>
                                 </div>
                             </div>
                         </div>
                         
                         <div class="card">
                             <div class="card-header">
-                                <h6 class="mb-0">المعلومات الأساسية</h6>
+                                <h6 class="mb-0">{{ __('admin.categories.basic_info') }}</h6>
                             </div>
                             <div class="card-body">
                                 @include('components.translations-repeater', [
@@ -47,26 +47,26 @@
                                         [
                                             'type' => 'input',
                                             'key' => 'name',
-                                            'label' => 'اسم الفئة',
+                                            'label' => __('admin.categories.name'),
                                             'requiredFirst' => true,
                                         ],
                                         [
                                             'type' => 'textarea',
                                             'key' => 'description',
-                                            'label' => 'وصف الفئة',
+                                            'label' => __('admin.categories.description'),
                                             'rows' => 4,
                                         ],
                                     ],
-                                    'addLabel' => 'إضافة ترجمة',
-                                    'removeLabel' => 'حذف',
+                                    'addLabel' => __('admin.ui.layout.add_new'),
+                                    'removeLabel' => __('admin.actions.delete'),
                                     'minItems' => 1,
                                     'maxItems' => is_array($locales) ? count($locales) : null,
                                 ])
 
                                 <div class="mb-3">
-                                    <label for="parent_id" class="form-label">الفئة الأب</label>
+                                    <label for="parent_id" class="form-label">{{ __('admin.categories.parent') }}</label>
                                     <select class="form-select @error('parent_id') is-invalid @enderror" id="parent_id" name="parent_id">
-                                        <option value="">فئة رئيسية</option>
+                                        <option value="">{{ __('admin.categories.main_category') }}</option>
                                         @foreach($categories->where('parent_id', null)->where('id', '!=', $category->id) as $parent)
                                             <option value="{{ $parent->id }}" {{ old('parent_id', $category->parent_id) == $parent->id ? 'selected' : '' }}>
                                                 <i class="fas fa-folder-open me-2"></i>{{ $parent->name }}
@@ -75,7 +75,7 @@
                                     </select>
                                     <small class="text-muted">
                                         <i class="fas fa-info-circle me-1"></i>
-                                        يمكنك اختيار فئة رئيسية فقط. لا يمكن إنشاء فئات فرعية من فئات فرعية.
+                                        {{ __('admin.categories.parent_help') }}
                                     </small>
                                     @error('parent_id')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -83,7 +83,7 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="order" class="form-label">ترتيب الفئة</label>
+                                    <label for="order" class="form-label">{{ __('admin.categories.order') }}</label>
                                     <input type="number" class="form-control @error('order') is-invalid @enderror" id="order" name="order" value="{{ old('order', $category->order) }}" min="0">
                                     @error('order')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -97,18 +97,18 @@
                     <div class="col-md-4">
                         <div class="card">
                             <div class="card-header">
-                                <h6 class="mb-0">الوسائط</h6>
+                                <h6 class="mb-0">{{ __('admin.categories.media') }}</h6>
                             </div>
                             <div class="card-body">
                                 <div class="mb-3">
-                                    <label for="icon" class="form-label">الأيقونة</label>
+                                    <label for="icon" class="form-label">{{ __('admin.categories.icon') }}</label>
                                     <input type="file" class="form-control @error('icon') is-invalid @enderror" id="icon" name="icon" accept="image/*" data-max-size="2048">
-                                    <small class="text-muted d-block mt-2">الأبعاد المثالية: 32x32 بكسل - الحد الأقصى: 2 ميجابايت</small>
+                                    <small class="text-muted d-block mt-2">{{ __('admin.categories.icon_dimensions') }}</small>
                                     <div class="mt-2" id="icon-preview">
                                         @if($category->icon)
                                             <div class="position-relative">
                                                 <img src="{{ asset($category->icon) }}" alt="Current Icon" class="img-thumbnail" width="64">
-                                                <small class="d-block text-muted mt-1">الأيقونة الحالية</small>
+                                                <small class="d-block text-muted mt-1">{{ __('admin.categories.current_icon') }}</small>
                                             </div>
                                         @endif
                                     </div>
@@ -119,14 +119,14 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="image" class="form-label">صورة الفئة</label>
+                                    <label for="image" class="form-label">{{ __('admin.categories.image') }}</label>
                                     <input type="file" class="form-control @error('image') is-invalid @enderror" id="image" name="image" accept="image/*" data-max-size="2048">
-                                    <small class="text-muted d-block mt-2">الأبعاد المثالية: 800x600 بكسل - الحد الأقصى: 2 ميجابايت</small>
+                                    <small class="text-muted d-block mt-2">{{ __('admin.categories.image_dimensions') }}</small>
                                     <div class="mt-2" id="image-preview">
                                         @if($category->image)
                                             <div class="position-relative">
                                                 <img src="{{ asset($category->image) }}" alt="Current Image" class="img-thumbnail" width="200">
-                                                <small class="d-block text-muted mt-1">الصورة الحالية</small>
+                                                <small class="d-block text-muted mt-1">{{ __('admin.categories.current_image') }}</small>
                                             </div>
                                         @endif
                                     </div>
@@ -138,12 +138,12 @@
 
                                 <div class="form-check mb-3">
                                     <input type="checkbox" class="form-check-input" id="is_active" name="is_active" value="1" {{ old('is_active', $category->is_active) ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="is_active">نشط</label>
+                                    <label class="form-check-label" for="is_active">{{ __('admin.categories.is_active') }}</label>
                                 </div>
 
                                 <div class="form-check mb-3">
                                     <input type="checkbox" class="form-check-input" id="is_featured" name="is_featured" value="1" {{ old('is_featured', $category->is_featured) ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="is_featured">مميزة</label>
+                                    <label class="form-check-label" for="is_featured">{{ __('admin.categories.is_featured') }}</label>
                                 </div>
                             </div>
                         </div>
@@ -152,7 +152,7 @@
                     <!-- Submit Button -->
                     <div class="col-12">
                         <button type="submit" class="btn btn-primary" id="submitBtn">
-                            <i class="fas fa-save me-2"></i>حفظ التغييرات
+                            <i class="fas fa-save me-2"></i>{{ __('admin.categories.save_changes') }}
                         </button>
                     </div>
                 </div>

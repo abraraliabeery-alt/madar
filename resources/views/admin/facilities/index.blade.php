@@ -71,18 +71,26 @@
                                 </div>
                             </td>
                             <td>
-                                <a href="{{ route('admin.users.show', $facility->owner) }}">
-                                    {{ $facility->owner->name }}
-                                </a>
+                                @if($facility->owner)
+                                    <a href="{{ route('admin.users.show', $facility->owner) }}">
+                                        {{ $facility->owner->name }}
+                                    </a>
+                                @else
+                                    <span class="text-muted">غير محدد</span>
+                                @endif
                             </td>
                             <td>
-                                <span class="badge bg-info">{{ $facility->facilityCategory->name }}</span>
+                                @if($facility->facilityCategory)
+                                    <span class="badge bg-info">{{ $facility->facilityCategory->name }}</span>
+                                @else
+                                    <span class="badge bg-secondary">غير مصنفة</span>
+                                @endif
                             </td>
                             <td>{{ Str::limit($facility->address, 30) }}</td>
                             <td>
                                 @if($facility->status)
                                     <span class="badge bg-{{ $facility->status->color }}">
-                                        {{ $facility->status->name }}
+                                        {{ $facility->status->getTranslatedName() }}
                                     </span>
                                 @else
                                     <span class="badge bg-secondary">لا توجد حالة</span>

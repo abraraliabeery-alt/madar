@@ -132,6 +132,7 @@ class AdminContractController extends Controller
         $offers = Offer::active()->valid()->with('product')->get();
         $users = User::where('primary_role', 'user')->get();
         $owners = User::where('primary_role', 'owner')->get();
+        $locales = config('locales.available');
         
         $contractTypes = [
             'sale' => 'بيع',
@@ -140,7 +141,7 @@ class AdminContractController extends Controller
 
         $contract->load('translations');
         
-        return view('admin.contracts.edit', compact('contract', 'facilities', 'products', 'offers', 'users', 'owners', 'contractTypes'));
+        return view('admin.contracts.edit', compact('contract', 'facilities', 'products', 'offers', 'users', 'owners', 'contractTypes', 'locales'));
     }
 
     /**
@@ -148,6 +149,7 @@ class AdminContractController extends Controller
      */
     public function update(Request $request, Contract $contract)
     {
+        $availableLocales = array_keys(config('locales.available', []));
         $request->validate([
             'product_id' => 'required|exists:products,id',
             'offer_id' => 'required|exists:offers,id',
@@ -163,25 +165,40 @@ class AdminContractController extends Controller
             'status' => 'required|in:draft,active,completed,cancelled',
             'terms_conditions' => 'nullable|string',
             'terms_conditions_ar' => 'nullable|string',
+            'translations' => 'nullable|array',
+            'translations.*.locale' => 'required_with:translations|string|in:' . implode(',', $availableLocales) . '|distinct',
+            'translations.*.title' => 'nullable|string|max:255',
+            'translations.*.content' => 'nullable|string',
         ]);
 
-        $contract->update($request->all());
+        $contract->update($request->except(['translations']));
         
         if ($request->has('commission_rate')) {
             $contract->calculateCommission()->save();
         }
 
-        // تحديث الترجمات
-        $translation = $contract->translations()->where('locale', 'ar')->first();
-        if ($translation) {
-            $translation->update([
-                'terms_conditions' => $request->terms_conditions_ar,
-            ]);
-        } else {
-            $contract->translations()->create([
-                'locale' => 'ar',
-                'terms_conditions' => $request->terms_conditions_ar,
-            ]);
+        $incomingTranslations = $request->input('translations');
+        if (is_array($incomingTranslations) && count($incomingTranslations)) {
+            $incomingLocales = [];
+            foreach ($incomingTranslations as $translationData) {
+                if (empty($translationData['locale'])) {
+                    continue;
+                }
+
+                $incomingLocales[] = $translationData['locale'];
+
+                $contract->translations()->updateOrCreate(
+                    [
+                        'locale' => $translationData['locale'],
+                    ],
+                    [
+                        'title' => $translationData['title'] ?? null,
+                        'content' => $translationData['content'] ?? null,
+                    ]
+                );
+            }
+
+            $contract->translations()->whereNotIn('locale', $incomingLocales)->delete();
         }
 
         return redirect()->route('admin.contracts.index')

@@ -51,8 +51,9 @@ class AdminFacilityController extends Controller
         })->get();
         $facilityCategories = \App\Models\FacilityCategory::all();
         $statuses = Status::all();
+        $locales = config('locales.available');
 
-        return view('admin.facilities.create', compact('owners', 'facilityCategories', 'statuses'));
+        return view('admin.facilities.create', compact('owners', 'facilityCategories', 'statuses', 'locales'));
     }
 
     /**
@@ -60,9 +61,8 @@ class AdminFacilityController extends Controller
      */
     public function store(Request $request)
     {
+        $availableLocales = array_keys(config('locales.available', []));
         $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
             'address' => 'required|string',
             'phone_number' => 'required|string',
             'email' => 'required|email',
@@ -88,9 +88,41 @@ class AdminFacilityController extends Controller
             'working_hours' => 'nullable|string',
             'is_verified' => 'boolean',
             'is_featured' => 'boolean',
+            'translations' => 'nullable|array',
+            'translations.*.locale' => 'required_with:translations|string|in:' . implode(',', $availableLocales) . '|distinct',
+            'translations.*.name' => 'required_with:translations|string|max:255',
+            'translations.*.description' => 'nullable|string',
+            'name' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
         ]);
 
-        $facilityData = $request->except(['logo', 'cover_image']);
+        $incomingTranslations = $request->input('translations');
+        if (!is_array($incomingTranslations) || !count($incomingTranslations)) {
+            $incomingTranslations = [];
+            if ($request->filled('name') || $request->filled('description')) {
+                $incomingTranslations[] = [
+                    'locale' => app()->getLocale(),
+                    'name' => $request->input('name'),
+                    'description' => $request->input('description'),
+                ];
+            }
+        }
+
+        $firstTranslationName = null;
+        foreach ($incomingTranslations as $t) {
+            if (!empty($t['name'])) {
+                $firstTranslationName = $t['name'];
+                break;
+            }
+        }
+
+        if (!$firstTranslationName) {
+            return back()
+                ->withErrors(['translations' => 'يجب إدخال اسم المنشأة في ترجمة واحدة على الأقل'])
+                ->withInput();
+        }
+
+        $facilityData = $request->except(['logo', 'cover_image', 'translations', 'name', 'description']);
 
         // معالجة الشعار
         if ($request->hasFile('logo')) {
@@ -106,6 +138,18 @@ class AdminFacilityController extends Controller
 
         $facility = Facility::create($facilityData);
 
+        foreach ($incomingTranslations as $translationData) {
+            if (empty($translationData['locale']) || empty($translationData['name'])) {
+                continue;
+            }
+
+            $facility->translations()->create([
+                'locale' => $translationData['locale'],
+                'name' => $translationData['name'],
+                'description' => $translationData['description'] ?? null,
+            ]);
+        }
+
         return redirect()->route('admin.facilities.index')
             ->with('success', 'تم إنشاء المنشأة بنجاح');
     }
@@ -115,14 +159,15 @@ class AdminFacilityController extends Controller
      */
     public function edit(Facility $facility)
     {
-        $facility->load(['owner', 'facilityCategory', 'statuses']);
+        $facility->load(['owner', 'facilityCategory', 'statuses', 'translations']);
         $owners = User::whereHas('roles', function ($q) {
             $q->where('name', 'facility_owner');
         })->get();
         $facilityCategories = \App\Models\FacilityCategory::all();
         $statuses = Status::all();
+        $locales = config('locales.available');
 
-        return view('admin.facilities.edit', compact('facility', 'owners', 'facilityCategories', 'statuses'));
+        return view('admin.facilities.edit', compact('facility', 'owners', 'facilityCategories', 'statuses', 'locales'));
     }
 
     /**
@@ -130,9 +175,8 @@ class AdminFacilityController extends Controller
      */
     public function update(Request $request, Facility $facility)
     {
+        $availableLocales = array_keys(config('locales.available', []));
         $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
             'address' => 'required|string',
             'phone_number' => 'required|string',
             'email' => 'required|email',
@@ -158,9 +202,41 @@ class AdminFacilityController extends Controller
             'working_hours' => 'nullable|string',
             'is_verified' => 'boolean',
             'is_featured' => 'boolean',
+            'translations' => 'nullable|array',
+            'translations.*.locale' => 'required_with:translations|string|in:' . implode(',', $availableLocales) . '|distinct',
+            'translations.*.name' => 'required_with:translations|string|max:255',
+            'translations.*.description' => 'nullable|string',
+            'name' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
         ]);
 
-        $facilityData = $request->except(['logo', 'cover_image']);
+        $incomingTranslations = $request->input('translations');
+        if (!is_array($incomingTranslations) || !count($incomingTranslations)) {
+            $incomingTranslations = [];
+            if ($request->filled('name') || $request->filled('description')) {
+                $incomingTranslations[] = [
+                    'locale' => app()->getLocale(),
+                    'name' => $request->input('name'),
+                    'description' => $request->input('description'),
+                ];
+            }
+        }
+
+        $firstTranslationName = null;
+        foreach ($incomingTranslations as $t) {
+            if (!empty($t['name'])) {
+                $firstTranslationName = $t['name'];
+                break;
+            }
+        }
+
+        if (!$firstTranslationName) {
+            return back()
+                ->withErrors(['translations' => 'يجب إدخال اسم المنشأة في ترجمة واحدة على الأقل'])
+                ->withInput();
+        }
+
+        $facilityData = $request->except(['logo', 'cover_image', 'translations', 'name', 'description']);
 
         // معالجة الشعار
         if ($request->hasFile('logo')) {
@@ -183,6 +259,27 @@ class AdminFacilityController extends Controller
         }
 
         $facility->update($facilityData);
+
+        $incomingLocales = [];
+        foreach ($incomingTranslations as $translationData) {
+            if (empty($translationData['locale']) || empty($translationData['name'])) {
+                continue;
+            }
+
+            $incomingLocales[] = $translationData['locale'];
+
+            $facility->translations()->updateOrCreate(
+                [
+                    'locale' => $translationData['locale'],
+                ],
+                [
+                    'name' => $translationData['name'],
+                    'description' => $translationData['description'] ?? null,
+                ]
+            );
+        }
+
+        $facility->translations()->whereNotIn('locale', $incomingLocales)->delete();
 
         return redirect()->route('admin.facilities.index')
             ->with('success', 'تم تحديث بيانات المنشأة بنجاح');

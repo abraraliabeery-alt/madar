@@ -52,7 +52,8 @@ class AdminAttributeController extends Controller
     public function create()
     {
         $categories = Category::all();
-        return view('admin.attributes.create', compact('categories'));
+        $locales = config('locales.available');
+        return view('admin.attributes.create', compact('categories', 'locales'));
     }
 
     /**
@@ -60,6 +61,7 @@ class AdminAttributeController extends Controller
      */
     public function store(Request $request)
     {
+        $availableLocales = array_keys(config('locales.available', []));
         $request->validate([
             'type' => 'required|string|max:255',
             'required' => 'boolean',
@@ -67,11 +69,41 @@ class AdminAttributeController extends Controller
             'icon' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'icon_name' => 'nullable|string|max:255',
             'Symbol' => 'nullable|string|max:255',
-            'name' => 'required|string|max:255',
+            'translations' => 'nullable|array',
+            'translations.*.locale' => 'required_with:translations|string|in:' . implode(',', $availableLocales) . '|distinct',
+            'translations.*.name' => 'required_with:translations|string|max:255',
+            'translations.*.symbol' => 'nullable|string|max:255',
+            'name' => 'nullable|string|max:255',
             'symbol' => 'nullable|string|max:255',
         ]);
 
-        $attributeData = $request->except(['icon', 'icon_name', 'name', 'symbol']);
+        $incomingTranslations = $request->input('translations');
+        if (!is_array($incomingTranslations) || !count($incomingTranslations)) {
+            $incomingTranslations = [];
+            if ($request->filled('name') || $request->filled('symbol')) {
+                $incomingTranslations[] = [
+                    'locale' => app()->getLocale(),
+                    'name' => $request->input('name'),
+                    'symbol' => $request->input('symbol'),
+                ];
+            }
+        }
+
+        $firstTranslationName = null;
+        foreach ($incomingTranslations as $t) {
+            if (!empty($t['name'])) {
+                $firstTranslationName = $t['name'];
+                break;
+            }
+        }
+
+        if (!$firstTranslationName) {
+            return back()
+                ->withErrors(['translations' => 'يجب إدخال اسم الخاصية في ترجمة واحدة على الأقل'])
+                ->withInput();
+        }
+
+        $attributeData = $request->except(['icon', 'icon_name', 'translations', 'name', 'symbol']);
 
         // Handle checkbox fields
         $attributeData['required'] = $request->has('required');
@@ -86,12 +118,17 @@ class AdminAttributeController extends Controller
 
         $attribute = Attribute::create($attributeData);
 
-        // إنشاء الترجمة
-        $attribute->translations()->create([
-            'locale' => app()->getLocale(),
-            'name' => $request->name,
-            'symbol' => $request->symbol,
-        ]);
+        foreach ($incomingTranslations as $translationData) {
+            if (empty($translationData['locale']) || empty($translationData['name'])) {
+                continue;
+            }
+
+            $attribute->translations()->create([
+                'locale' => $translationData['locale'],
+                'name' => $translationData['name'],
+                'symbol' => $translationData['symbol'] ?? null,
+            ]);
+        }
 
         return redirect()->route('admin.attributes.index')
             ->with('success', 'تم إنشاء الخاصية بنجاح');
@@ -104,7 +141,8 @@ class AdminAttributeController extends Controller
     {
         $attribute->load(['category', 'translations']);
         $categories = Category::all();
-        return view('admin.attributes.edit', compact('attribute', 'categories'));
+        $locales = config('locales.available');
+        return view('admin.attributes.edit', compact('attribute', 'categories', 'locales'));
     }
 
     /**
@@ -112,17 +150,48 @@ class AdminAttributeController extends Controller
      */
     public function update(Request $request, Attribute $attribute)
     {
+        $availableLocales = array_keys(config('locales.available', []));
         $request->validate([
             'type' => 'required|string|max:255',
             'required' => 'boolean',
             'category_id' => 'nullable|exists:categories,id',
             'icon' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'Symbol' => 'nullable|string|max:255',
-            'name' => 'required|string|max:255',
+            'translations' => 'nullable|array',
+            'translations.*.locale' => 'required_with:translations|string|in:' . implode(',', $availableLocales) . '|distinct',
+            'translations.*.name' => 'required_with:translations|string|max:255',
+            'translations.*.symbol' => 'nullable|string|max:255',
+            'name' => 'nullable|string|max:255',
             'symbol' => 'nullable|string|max:255',
         ]);
 
-        $attributeData = $request->except(['icon', 'name', 'symbol']);
+        $incomingTranslations = $request->input('translations');
+        if (!is_array($incomingTranslations) || !count($incomingTranslations)) {
+            $incomingTranslations = [];
+            if ($request->filled('name') || $request->filled('symbol')) {
+                $incomingTranslations[] = [
+                    'locale' => app()->getLocale(),
+                    'name' => $request->input('name'),
+                    'symbol' => $request->input('symbol'),
+                ];
+            }
+        }
+
+        $firstTranslationName = null;
+        foreach ($incomingTranslations as $t) {
+            if (!empty($t['name'])) {
+                $firstTranslationName = $t['name'];
+                break;
+            }
+        }
+
+        if (!$firstTranslationName) {
+            return back()
+                ->withErrors(['translations' => 'يجب إدخال اسم الخاصية في ترجمة واحدة على الأقل'])
+                ->withInput();
+        }
+
+        $attributeData = $request->except(['icon', 'translations', 'name', 'symbol']);
 
         // Handle checkbox fields
         $attributeData['required'] = $request->has('required');
@@ -141,20 +210,28 @@ class AdminAttributeController extends Controller
 
         $attribute->update($attributeData);
 
-        // تحديث الترجمة
-        $translation = $attribute->translations()->where('locale', app()->getLocale())->first();
-        if ($translation) {
-            $translation->update([
-                'name' => $request->name,
-                'symbol' => $request->symbol,
-            ]);
-        } else {
-            $attribute->translations()->create([
-                'locale' => app()->getLocale(),
-                'name' => $request->name,
-                'symbol' => $request->symbol,
-            ]);
+        $keepLocales = [];
+        foreach ($incomingTranslations as $translationData) {
+            if (empty($translationData['locale']) || empty($translationData['name'])) {
+                continue;
+            }
+
+            $keepLocales[] = $translationData['locale'];
+
+            $attribute->translations()->updateOrCreate(
+                [
+                    'locale' => $translationData['locale'],
+                ],
+                [
+                    'name' => $translationData['name'],
+                    'symbol' => $translationData['symbol'] ?? null,
+                ]
+            );
         }
+
+        $attribute->translations()
+            ->whereNotIn('locale', array_values(array_unique($keepLocales)))
+            ->delete();
 
         return redirect()->route('admin.attributes.index')
             ->with('success', 'تم تحديث الخاصية بنجاح');

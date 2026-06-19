@@ -4,9 +4,9 @@
 <div class="container-fluid">
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">إضافة عقد جديد</h5>
+            <h5 class="mb-0">{{ __('admin.contracts.create') }}</h5>
             <a href="{{ route('admin.contracts.index') }}" class="btn btn-secondary">
-                <i class="fas fa-arrow-right me-2"></i>رجوع
+                <i class="fas fa-arrow-right me-2"></i>{{ __('admin.contracts.back') }}
             </a>
         </div>
         <div class="card-body">
@@ -18,13 +18,13 @@
                     <div class="col-md-6">
                         <div class="card">
                             <div class="card-header">
-                                <h6 class="mb-0">المعلومات الأساسية</h6>
+                                <h6 class="mb-0">{{ __('admin.contracts.basic_info') }}</h6>
                             </div>
                             <div class="card-body">
                                 <div class="mb-3">
-                                    <label for="user_id" class="form-label">المستخدم <span class="text-danger">*</span></label>
+                                    <label for="user_id" class="form-label">{{ __('admin.contracts.user') }} <span class="text-danger">*</span></label>
                                     <select class="form-select @error('user_id') is-invalid @enderror" id="user_id" name="user_id" required>
-                                        <option value="">اختر المستخدم</option>
+                                        <option value="">{{ __('admin.contracts.select_user') }}</option>
                                         @foreach($users as $user)
                                             <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>
                                                 {{ $user->name }}
@@ -37,9 +37,9 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="product_id" class="form-label">المنتج <span class="text-danger">*</span></label>
+                                    <label for="product_id" class="form-label">{{ __('admin.contracts.product') }} <span class="text-danger">*</span></label>
                                     <select class="form-select @error('product_id') is-invalid @enderror" id="product_id" name="product_id" required>
-                                        <option value="">اختر المنتج</option>
+                                        <option value="">{{ __('admin.contracts.select_product') }}</option>
                                         @foreach($products as $product)
                                             <option value="{{ $product->id }}" data-facility="{{ $product->facility_id }}" data-price="{{ $product->price }}" {{ old('product_id') == $product->id ? 'selected' : '' }}>
                                                 {{ $product->name }} - {{ number_format($product->price, 2) }} {!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}
@@ -54,12 +54,12 @@
                                 <input type="hidden" name="facility_id" id="facility_id" value="{{ old('facility_id') }}">
 
                                 <div class="mb-3">
-                                    <label for="contract_type" class="form-label">نوع العقد <span class="text-danger">*</span></label>
+                                    <label for="contract_type" class="form-label">{{ __('admin.contracts.contract_type') }} <span class="text-danger">*</span></label>
                                     <select class="form-select @error('contract_type') is-invalid @enderror" id="contract_type" name="contract_type" required>
-                                        <option value="">اختر نوع العقد</option>
-                                        <option value="sale" {{ old('contract_type') == 'sale' ? 'selected' : '' }}>بيع</option>
-                                        <option value="rent" {{ old('contract_type') == 'rent' ? 'selected' : '' }}>إيجار</option>
-                                        <option value="lease" {{ old('contract_type') == 'lease' ? 'selected' : '' }}>تأجير</option>
+                                        <option value="">{{ __('admin.contracts.select_contract_type') }}</option>
+                                        <option value="sale" {{ old('contract_type') == 'sale' ? 'selected' : '' }}>{{ __('admin.contracts.type_sale') }}</option>
+                                        <option value="rent" {{ old('contract_type') == 'rent' ? 'selected' : '' }}>{{ __('admin.contracts.type_rent') }}</option>
+                                        <option value="lease" {{ old('contract_type') == 'lease' ? 'selected' : '' }}>{{ __('admin.contracts.type_lease') }}</option>
                                     </select>
                                     @error('contract_type')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -67,9 +67,9 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="status_id" class="form-label">الحالة <span class="text-danger">*</span></label>
+                                    <label for="status_id" class="form-label">{{ __('admin.contracts.status') }} <span class="text-danger">*</span></label>
                                     <select class="form-select @error('status_id') is-invalid @enderror" id="status_id" name="status_id" required>
-                                        <option value="">اختر الحالة</option>
+                                        <option value="">{{ __('admin.contracts.select_status') }}</option>
                                         @foreach($statuses as $status)
                                             <option value="{{ $status->id }}" {{ old('status_id') == $status->id ? 'selected' : '' }}>
                                                 {{ $status->name }}
@@ -88,13 +88,13 @@
                     <div class="col-md-6">
                         <div class="card">
                             <div class="card-header">
-                                <h6 class="mb-0">تفاصيل العقد</h6>
+                                <h6 class="mb-0">{{ __('admin.contracts.contract_details') }}</h6>
                             </div>
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="start_date" class="form-label">تاريخ البداية <span class="text-danger">*</span></label>
+                                            <label for="start_date" class="form-label">{{ __('admin.contracts.start_date') }} <span class="text-danger">*</span></label>
                                             <input type="date" class="form-control @error('start_date') is-invalid @enderror" id="start_date" name="start_date" value="{{ old('start_date') }}" required min="{{ date('Y-m-d') }}">
                                             @error('start_date')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -103,7 +103,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="end_date" class="form-label">تاريخ النهاية <span class="text-danger">*</span></label>
+                                            <label for="end_date" class="form-label">{{ __('admin.contracts.end_date') }} <span class="text-danger">*</span></label>
                                             <input type="date" class="form-control @error('end_date') is-invalid @enderror" id="end_date" name="end_date" value="{{ old('end_date') }}" required>
                                             @error('end_date')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -115,7 +115,7 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="mb-3">
-                                            <label for="total_amount" class="form-label">المبلغ الإجمالي <span class="text-danger">*</span></label>
+                                            <label for="total_amount" class="form-label">{{ __('admin.contracts.total_amount') }} <span class="text-danger">*</span></label>
                                             <div class="input-group">
                                                 <input type="number" class="form-control @error('total_amount') is-invalid @enderror" id="total_amount" name="total_amount" value="{{ old('total_amount') }}" required min="0" step="0.01">
                                                 <span class="input-group-text">{!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}</span>
@@ -127,7 +127,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="mb-3">
-                                            <label for="down_payment" class="form-label">الدفعة المقدمة <span class="text-danger">*</span></label>
+                                            <label for="down_payment" class="form-label">{{ __('admin.contracts.down_payment') }} <span class="text-danger">*</span></label>
                                             <div class="input-group">
                                                 <input type="number" class="form-control @error('down_payment') is-invalid @enderror" id="down_payment" name="down_payment" value="{{ old('down_payment') }}" required min="0" step="0.01">
                                                 <span class="input-group-text">{!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}</span>
@@ -139,7 +139,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="mb-3">
-                                            <label for="monthly_payment" class="form-label">القسط الشهري <span class="text-danger">*</span></label>
+                                            <label for="monthly_payment" class="form-label">{{ __('admin.contracts.monthly_payment') }} <span class="text-danger">*</span></label>
                                             <div class="input-group">
                                                 <input type="number" class="form-control @error('monthly_payment') is-invalid @enderror" id="monthly_payment" name="monthly_payment" value="{{ old('monthly_payment') }}" required min="0" step="0.01">
                                                 <span class="input-group-text">{!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}</span>
@@ -158,13 +158,13 @@
                     <div class="col-md-6">
                         <div class="card">
                             <div class="card-header">
-                                <h6 class="mb-0">تفاصيل القرض البنكي</h6>
+                                <h6 class="mb-0">{{ __('admin.contracts.bank_details') }}</h6>
                             </div>
                             <div class="card-body">
                                 <div class="mb-3">
-                                    <label for="bank_id" class="form-label">البنك</label>
+                                    <label for="bank_id" class="form-label">{{ __('admin.contracts.select_bank') }}</label>
                                     <select class="form-select @error('bank_id') is-invalid @enderror" id="bank_id" name="bank_id">
-                                        <option value="">اختر البنك</option>
+                                        <option value="">{{ __('admin.contracts.select_bank') }}</option>
                                         @foreach($banks as $bank)
                                             <option value="{{ $bank->id }}" {{ old('bank_id') == $bank->id ? 'selected' : '' }}>
                                                 {{ $bank->name }}
@@ -179,7 +179,7 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="mb-3">
-                                            <label for="loan_amount" class="form-label">مبلغ القرض</label>
+                                            <label for="loan_amount" class="form-label">{{ __('admin.contracts.loan_amount') }}</label>
                                             <div class="input-group">
                                                 <input type="number" class="form-control @error('loan_amount') is-invalid @enderror" id="loan_amount" name="loan_amount" value="{{ old('loan_amount') }}" min="0" step="0.01">
                                                 <span class="input-group-text">{!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}</span>
@@ -191,7 +191,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="mb-3">
-                                            <label for="interest_rate" class="form-label">نسبة الفائدة</label>
+                                            <label for="interest_rate" class="form-label">{{ __('admin.contracts.interest_rate') }}</label>
                                             <div class="input-group">
                                                 <input type="number" class="form-control @error('interest_rate') is-invalid @enderror" id="interest_rate" name="interest_rate" value="{{ old('interest_rate') }}" min="0" step="0.01">
                                                 <span class="input-group-text">%</span>
@@ -203,7 +203,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="mb-3">
-                                            <label for="loan_term" class="form-label">مدة القرض (بالشهور)</label>
+                                            <label for="loan_term" class="form-label">{{ __('admin.contracts.loan_term') }}</label>
                                             <input type="number" class="form-control @error('loan_term') is-invalid @enderror" id="loan_term" name="loan_term" value="{{ old('loan_term') }}" min="1">
                                             @error('loan_term')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -219,11 +219,34 @@
                     <div class="col-md-6">
                         <div class="card">
                             <div class="card-header">
-                                <h6 class="mb-0">معلومات إضافية</h6>
+                                <h6 class="mb-0">{{ __('admin.contracts.additional_info') }}</h6>
                             </div>
                             <div class="card-body">
-                                <div class="mb-3">
-                                    <label for="notes" class="form-label">ملاحظات</label>
+                                @include('components.translations-repeater', [
+                                    'locales' => $locales ?? config('locales.available', []),
+                                    'namePrefix' => 'translations',
+                                    'fields' => [
+                                        [
+                                            'type' => 'input',
+                                            'key' => 'title',
+                                            'label' => __('admin.contracts.title'),
+                                            'requiredFirst' => false,
+                                        ],
+                                        [
+                                            'type' => 'textarea',
+                                            'key' => 'content',
+                                            'label' => __('admin.contracts.content'),
+                                            'rows' => 4,
+                                        ],
+                                    ],
+                                    'addLabel' => __('admin.ui.layout.add_new'),
+                                    'removeLabel' => __('admin.actions.delete'),
+                                    'minItems' => 0,
+                                    'maxItems' => is_array($locales ?? null) ? count($locales) : null,
+                                ])
+
+                                <div class="mb-3 mt-3">
+                                    <label for="notes" class="form-label">{{ __('admin.contracts.notes') }}</label>
                                     <textarea class="form-control summernote @error('notes') is-invalid @enderror" id="notes" name="notes" rows="4">{{ old('notes') }}</textarea>
                                     @error('notes')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -234,13 +257,13 @@
                                     <div class="col-md-6">
                                         <div class="form-check mb-3">
                                             <input type="checkbox" class="form-check-input" id="is_active" name="is_active" value="1" {{ old('is_active', 1) ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="is_active">نشط</label>
+                                            <label class="form-check-label" for="is_active">{{ __('admin.contracts.is_active') }}</label>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-check mb-3">
                                             <input type="checkbox" class="form-check-input" id="is_verified" name="is_verified" value="1" {{ old('is_verified') ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="is_verified">تم التحقق</label>
+                                            <label class="form-check-label" for="is_verified">{{ __('admin.contracts.is_verified') }}</label>
                                         </div>
                                     </div>
                                 </div>
@@ -251,7 +274,7 @@
                     <!-- Submit Button -->
                     <div class="col-12">
                         <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save me-2"></i>حفظ
+                            <i class="fas fa-save me-2"></i>{{ __('admin.contracts.save') }}
                         </button>
                     </div>
                 </div>

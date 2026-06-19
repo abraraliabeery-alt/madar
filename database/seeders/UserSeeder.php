@@ -14,12 +14,17 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
+        $adminPhone = (string) env('SEED_ADMIN_PHONE', '0500000000');
+        $facilityPhone = (string) env('SEED_FACILITY_PHONE', '0500000001');
+        $clientPhone = (string) env('SEED_CLIENT_PHONE', '0500000002');
+
         // Create Admin User
         $admin = User::updateOrCreate(
             ['email' => 'admin@aqar.com'],
             [
                 'name' => 'مدير النظام',
                 'email' => 'admin@aqar.com',
+                'phone_number' => $adminPhone,
                 'password' => Hash::make('admin@aqar.com'),
                 'primary_role' => 'admin',
                 'is_active' => true,
@@ -39,6 +44,7 @@ class UserSeeder extends Seeder
             [
                 'name' => 'منشأة تجريبية',
                 'email' => 'facility@aqar.com',
+                'phone_number' => $facilityPhone,
                 'password' => Hash::make('facility@aqar.com'),
                 'primary_role' => 'facility',
                 'is_active' => true,
@@ -58,6 +64,7 @@ class UserSeeder extends Seeder
             [
                 'name' => 'عميل تجريبي',
                 'email' => 'client@aqar.com',
+                'phone_number' => $clientPhone,
                 'password' => Hash::make('client@aqar.com'),
                 'primary_role' => 'client',
                 'is_active' => true,

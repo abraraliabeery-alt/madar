@@ -70,14 +70,15 @@ class AdminPermissionController extends Controller
      */
     public function store(Request $request)
     {
+        $availableLocales = array_keys(config('locales.available', []));
         $request->validate([
             'name' => 'required|string|max:255|unique:permissions,name',
             'description' => 'nullable|string',
             'is_active' => 'boolean',
             'guard_name' => 'nullable|string|max:255',
-            'translations' => 'array',
-            'translations.*.locale' => 'required|string|max:2|distinct',
-            'translations.*.name' => 'required|string|max:255',
+            'translations' => 'nullable|array',
+            'translations.*.locale' => 'required_with:translations|string|in:' . implode(',', $availableLocales) . '|distinct',
+            'translations.*.name' => 'required_with:translations|string|max:255',
             'translations.*.display_name' => 'nullable|string|max:255',
             'translations.*.description' => 'nullable|string',
         ]);
@@ -90,16 +91,30 @@ class AdminPermissionController extends Controller
                 'guard_name' => $request->guard_name ?? 'web',
             ]);
 
-            // حفظ الترجمات
-            if ($request->has('translations')) {
-                foreach ($request->translations as $translation) {
-                    $permission->translations()->create([
-                        'locale' => $translation['locale'],
-                        'name' => $translation['name'],
-                        'display_name' => $translation['display_name'] ?? $translation['name'],
-                        'description' => $translation['description'] ?? '',
-                    ]);
+            $incomingTranslations = $request->input('translations');
+            if (!is_array($incomingTranslations) || !count($incomingTranslations)) {
+                $incomingTranslations = [];
+                if ($request->filled('name') || $request->filled('description')) {
+                    $incomingTranslations[] = [
+                        'locale' => app()->getLocale(),
+                        'name' => $request->input('name'),
+                        'display_name' => $request->input('name'),
+                        'description' => $request->input('description'),
+                    ];
                 }
+            }
+
+            foreach ($incomingTranslations as $translationData) {
+                if (empty($translationData['locale']) || empty($translationData['name'])) {
+                    continue;
+                }
+
+                $permission->translations()->create([
+                    'locale' => $translationData['locale'],
+                    'name' => $translationData['name'],
+                    'display_name' => $translationData['display_name'] ?? $translationData['name'],
+                    'description' => $translationData['description'] ?? null,
+                ]);
             }
         });
 
@@ -139,14 +154,15 @@ class AdminPermissionController extends Controller
      */
     public function update(Request $request, Permission $permission)
     {
+        $availableLocales = array_keys(config('locales.available', []));
         $request->validate([
             'name' => 'required|string|max:255|unique:permissions,name,' . $permission->id,
             'description' => 'nullable|string',
             'is_active' => 'boolean',
             'guard_name' => 'nullable|string|max:255',
-            'translations' => 'array',
-            'translations.*.locale' => 'required|string|max:2|distinct',
-            'translations.*.name' => 'required|string|max:255',
+            'translations' => 'nullable|array',
+            'translations.*.locale' => 'required_with:translations|string|in:' . implode(',', $availableLocales) . '|distinct',
+            'translations.*.name' => 'required_with:translations|string|max:255',
             'translations.*.display_name' => 'nullable|string|max:255',
             'translations.*.description' => 'nullable|string',
         ]);
@@ -159,18 +175,40 @@ class AdminPermissionController extends Controller
                 'guard_name' => $request->guard_name ?? 'web',
             ]);
 
-            // تحديث الترجمات
-            if ($request->has('translations')) {
-                $permission->translations()->delete();
-                foreach ($request->translations as $translation) {
-                    $permission->translations()->create([
-                        'locale' => $translation['locale'],
-                        'name' => $translation['name'],
-                        'display_name' => $translation['display_name'] ?? $translation['name'],
-                        'description' => $translation['description'] ?? '',
-                    ]);
+            $incomingTranslations = $request->input('translations');
+            if (!is_array($incomingTranslations) || !count($incomingTranslations)) {
+                $incomingTranslations = [];
+                if ($request->filled('name') || $request->filled('description')) {
+                    $incomingTranslations[] = [
+                        'locale' => app()->getLocale(),
+                        'name' => $request->input('name'),
+                        'display_name' => $request->input('name'),
+                        'description' => $request->input('description'),
+                    ];
                 }
             }
+
+            $incomingLocales = [];
+            foreach ($incomingTranslations as $translationData) {
+                if (empty($translationData['locale']) || empty($translationData['name'])) {
+                    continue;
+                }
+
+                $incomingLocales[] = $translationData['locale'];
+
+                $permission->translations()->updateOrCreate(
+                    [
+                        'locale' => $translationData['locale'],
+                    ],
+                    [
+                        'name' => $translationData['name'],
+                        'display_name' => $translationData['display_name'] ?? $translationData['name'],
+                        'description' => $translationData['description'] ?? null,
+                    ]
+                );
+            }
+
+            $permission->translations()->whereNotIn('locale', $incomingLocales)->delete();
         });
 
         return redirect()->route('admin.permissions.index')

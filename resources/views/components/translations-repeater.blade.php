@@ -81,6 +81,8 @@
     @once
         @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
             @vite(['resources/js/app.js'])
+        @else
+            <script src="{{ asset('js/components/translations-repeater.js') }}"></script>
         @endif
     @endonce
 @endpush

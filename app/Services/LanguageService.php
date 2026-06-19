@@ -25,6 +25,18 @@ class LanguageService
             'flag' => '🇸🇦',
             'rtl' => true,
         ],
+        'ur' => [
+            'name' => 'Urdu',
+            'native' => 'اردو',
+            'flag' => '🇵🇰',
+            'rtl' => true,
+        ],
+        'zh' => [
+            'name' => 'Chinese',
+            'native' => '中文',
+            'flag' => '🇨🇳',
+            'rtl' => false,
+        ],
     ];
 
     /**

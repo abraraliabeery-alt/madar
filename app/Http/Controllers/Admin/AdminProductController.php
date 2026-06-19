@@ -82,8 +82,9 @@ class AdminProductController extends Controller
         $categories = Category::all();
         $statuses = Status::all();
         $cities = City::where('is_active', true)->orderBy('name')->get();
+        $locales = config('locales.available');
 
-        return view('admin.products.create', compact('facilities', 'categories', 'statuses', 'cities'));
+        return view('admin.products.create', compact('facilities', 'categories', 'statuses', 'cities', 'locales'));
     }
 
     /**
@@ -91,9 +92,8 @@ class AdminProductController extends Controller
      */
     public function store(Request $request)
     {
+        $availableLocales = array_keys(config('locales.available', []));
         $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
             'address' => 'required|string',
             'price' => 'required|numeric|min:0',
             'facility_id' => 'required|exists:facilities,id',
@@ -112,9 +112,41 @@ class AdminProductController extends Controller
             'features.*' => 'exists:features,id',
             'attributes' => 'array',
             'attributes.*.value' => 'nullable|string',
+            'translations' => 'nullable|array',
+            'translations.*.locale' => 'required_with:translations|string|in:' . implode(',', $availableLocales) . '|distinct',
+            'translations.*.name' => 'required_with:translations|string|max:255',
+            'translations.*.description' => 'nullable|string',
+            'title' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
         ]);
 
-        $productData = $request->except(['image', 'features', 'status_id']);
+        $incomingTranslations = $request->input('translations');
+        if (!is_array($incomingTranslations) || !count($incomingTranslations)) {
+            $incomingTranslations = [];
+            if ($request->filled('title') || $request->filled('description')) {
+                $incomingTranslations[] = [
+                    'locale' => app()->getLocale(),
+                    'name' => $request->input('title'),
+                    'description' => $request->input('description'),
+                ];
+            }
+        }
+
+        $firstTranslationName = null;
+        foreach ($incomingTranslations as $t) {
+            if (!empty($t['name'])) {
+                $firstTranslationName = $t['name'];
+                break;
+            }
+        }
+
+        if (!$firstTranslationName) {
+            return back()
+                ->withErrors(['translations' => 'يجب إدخال اسم المنتج في ترجمة واحدة على الأقل'])
+                ->withInput();
+        }
+
+        $productData = $request->except(['image', 'features', 'status_id', 'translations', 'title', 'description']);
 
         // Handle checkbox fields - set to false if not present
         $productData['is_active'] = $request->has('is_active');
@@ -128,6 +160,18 @@ class AdminProductController extends Controller
         }
 
         $product = Product::create($productData);
+
+        foreach ($incomingTranslations as $translationData) {
+            if (empty($translationData['locale']) || empty($translationData['name'])) {
+                continue;
+            }
+
+            $product->translations()->create([
+                'locale' => $translationData['locale'],
+                'name' => $translationData['name'],
+                'description' => $translationData['description'] ?? null,
+            ]);
+        }
 
         // ربط الحالة
         if ($request->has('status_id')) {
@@ -155,8 +199,6 @@ class AdminProductController extends Controller
             }
         }
 
-
-
         return redirect()->route('admin.products.index')
             ->with('success', 'تم إنشاء المنتج بنجاح');
     }
@@ -166,13 +208,14 @@ class AdminProductController extends Controller
      */
     public function edit(Product $product)
     {
-        $product->load(['facility', 'category', 'city', 'statuses', 'features', 'attributes.translations']);
+        $product->load(['facility', 'category', 'city', 'statuses', 'features', 'attributes.translations', 'translations']);
         $facilities = Facility::all();
         $categories = Category::all();
         $statuses = Status::all();
         $cities = City::where('is_active', true)->orderBy('name')->get();
+        $locales = config('locales.available');
 
-        return view('admin.products.edit', compact('product', 'facilities', 'categories', 'statuses', 'cities'));
+        return view('admin.products.edit', compact('product', 'facilities', 'categories', 'statuses', 'cities', 'locales'));
     }
 
     /**
@@ -180,9 +223,8 @@ class AdminProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
+        $availableLocales = array_keys(config('locales.available', []));
         $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
             'address' => 'required|string',
             'price' => 'nullable|numeric|min:0',
             'facility_id' => 'required|exists:facilities,id',
@@ -201,9 +243,41 @@ class AdminProductController extends Controller
             'features.*' => 'exists:features,id',
             'attributes' => 'array',
             'attributes.*.value' => 'nullable|string',
+            'translations' => 'nullable|array',
+            'translations.*.locale' => 'required_with:translations|string|in:' . implode(',', $availableLocales) . '|distinct',
+            'translations.*.name' => 'required_with:translations|string|max:255',
+            'translations.*.description' => 'nullable|string',
+            'title' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
         ]);
 
-        $productData = $request->except(['image', 'features', 'status_id']);
+        $incomingTranslations = $request->input('translations');
+        if (!is_array($incomingTranslations) || !count($incomingTranslations)) {
+            $incomingTranslations = [];
+            if ($request->filled('title') || $request->filled('description')) {
+                $incomingTranslations[] = [
+                    'locale' => app()->getLocale(),
+                    'name' => $request->input('title'),
+                    'description' => $request->input('description'),
+                ];
+            }
+        }
+
+        $firstTranslationName = null;
+        foreach ($incomingTranslations as $t) {
+            if (!empty($t['name'])) {
+                $firstTranslationName = $t['name'];
+                break;
+            }
+        }
+
+        if (!$firstTranslationName) {
+            return back()
+                ->withErrors(['translations' => 'يجب إدخال اسم المنتج في ترجمة واحدة على الأقل'])
+                ->withInput();
+        }
+
+        $productData = $request->except(['image', 'features', 'status_id', 'translations', 'title', 'description']);
 
         // Handle checkbox fields - set to false if not present
         $productData['is_active'] = $request->has('is_active');
@@ -221,6 +295,27 @@ class AdminProductController extends Controller
         }
 
         $product->update($productData);
+
+        $incomingLocales = [];
+        foreach ($incomingTranslations as $translationData) {
+            if (empty($translationData['locale']) || empty($translationData['name'])) {
+                continue;
+            }
+
+            $incomingLocales[] = $translationData['locale'];
+
+            $product->translations()->updateOrCreate(
+                [
+                    'locale' => $translationData['locale'],
+                ],
+                [
+                    'name' => $translationData['name'],
+                    'description' => $translationData['description'] ?? null,
+                ]
+            );
+        }
+
+        $product->translations()->whereNotIn('locale', $incomingLocales)->delete();
 
         // تحديث الحالة
         if ($request->has('status_id')) {
@@ -252,8 +347,6 @@ class AdminProductController extends Controller
                 }
             }
         }
-
-
 
         return redirect()->route('admin.products.index')
             ->with('success', 'تم تحديث المنتج بنجاح');

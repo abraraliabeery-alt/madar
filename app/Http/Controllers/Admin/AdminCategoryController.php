@@ -34,9 +34,8 @@ class AdminCategoryController extends Controller
      */
     public function store(Request $request)
     {
+        $availableLocales = array_keys(config('locales.available', []));
         $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
             'parent_id' => 'nullable|exists:categories,id',
             'icon' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -44,12 +43,40 @@ class AdminCategoryController extends Controller
             'is_featured' => 'boolean',
             'order' => 'nullable|integer|min:0',
             'translations' => 'nullable|array',
-            'translations.*.locale' => 'required|string|in:' . implode(',', array_keys(config('locales.available'))) . '|distinct',
-            'translations.*.name' => 'required|string|max:255',
+            'translations.*.locale' => 'required_with:translations|string|in:' . implode(',', $availableLocales) . '|distinct',
+            'translations.*.name' => 'required_with:translations|string|max:255',
             'translations.*.description' => 'nullable|string',
+            'name' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
         ]);
 
-        $categoryData = $request->except(['icon', 'image', 'translations']);
+        $incomingTranslations = $request->input('translations');
+        if (!is_array($incomingTranslations) || !count($incomingTranslations)) {
+            $incomingTranslations = [];
+            if ($request->filled('name') || $request->filled('description')) {
+                $incomingTranslations[] = [
+                    'locale' => app()->getLocale(),
+                    'name' => $request->input('name'),
+                    'description' => $request->input('description'),
+                ];
+            }
+        }
+
+        $firstTranslationName = null;
+        foreach ($incomingTranslations as $t) {
+            if (!empty($t['name'])) {
+                $firstTranslationName = $t['name'];
+                break;
+            }
+        }
+
+        if (!$firstTranslationName) {
+            return back()
+                ->withErrors(['translations' => 'يجب إدخال اسم الفئة في ترجمة واحدة على الأقل'])
+                ->withInput();
+        }
+
+        $categoryData = $request->except(['icon', 'image', 'translations', 'name', 'description']);
 
         // معالجة الأيقونة
         if ($request->hasFile('icon')) {
@@ -65,18 +92,17 @@ class AdminCategoryController extends Controller
 
         $category = Category::create($categoryData);
 
-        // حفظ الترجمات
-        if ($request->has('translations')) {
-            foreach ($request->translations as $translationData) {
-                if (!empty($translationData['name'])) {
-                    CategoryTranslation::create([
-                        'category_id' => $category->id,
-                        'locale' => $translationData['locale'],
-                        'name' => $translationData['name'],
-                        'description' => $translationData['description'] ?? null,
-                    ]);
-                }
+        foreach ($incomingTranslations as $translationData) {
+            if (empty($translationData['locale']) || empty($translationData['name'])) {
+                continue;
             }
+
+            CategoryTranslation::create([
+                'category_id' => $category->id,
+                'locale' => $translationData['locale'],
+                'name' => $translationData['name'],
+                'description' => $translationData['description'] ?? null,
+            ]);
         }
 
         return redirect()->route('admin.categories.index')
@@ -100,9 +126,8 @@ class AdminCategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
+        $availableLocales = array_keys(config('locales.available', []));
         $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
             'parent_id' => 'nullable|exists:categories,id',
             'icon' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -110,12 +135,40 @@ class AdminCategoryController extends Controller
             'is_featured' => 'boolean',
             'order' => 'nullable|integer|min:0',
             'translations' => 'nullable|array',
-            'translations.*.locale' => 'required|string|in:' . implode(',', array_keys(config('locales.available'))) . '|distinct',
-            'translations.*.name' => 'required|string|max:255',
+            'translations.*.locale' => 'required_with:translations|string|in:' . implode(',', $availableLocales) . '|distinct',
+            'translations.*.name' => 'required_with:translations|string|max:255',
             'translations.*.description' => 'nullable|string',
+            'name' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
         ]);
 
-        $categoryData = $request->except(['icon', 'image', 'translations']);
+        $incomingTranslations = $request->input('translations');
+        if (!is_array($incomingTranslations) || !count($incomingTranslations)) {
+            $incomingTranslations = [];
+            if ($request->filled('name') || $request->filled('description')) {
+                $incomingTranslations[] = [
+                    'locale' => app()->getLocale(),
+                    'name' => $request->input('name'),
+                    'description' => $request->input('description'),
+                ];
+            }
+        }
+
+        $firstTranslationName = null;
+        foreach ($incomingTranslations as $t) {
+            if (!empty($t['name'])) {
+                $firstTranslationName = $t['name'];
+                break;
+            }
+        }
+
+        if (!$firstTranslationName) {
+            return back()
+                ->withErrors(['translations' => 'يجب إدخال اسم الفئة في ترجمة واحدة على الأقل'])
+                ->withInput();
+        }
+
+        $categoryData = $request->except(['icon', 'image', 'translations', 'name', 'description']);
 
         // معالجة الأيقونة
         if ($request->hasFile('icon')) {
@@ -139,23 +192,27 @@ class AdminCategoryController extends Controller
 
         $category->update($categoryData);
 
-        // تحديث الترجمات
-        if ($request->has('translations')) {
-            foreach ($request->translations as $translationData) {
-                if (!empty($translationData['name'])) {
-                    CategoryTranslation::updateOrCreate(
-                        [
-                            'category_id' => $category->id,
-                            'locale' => $translationData['locale'],
-                        ],
-                        [
-                            'name' => $translationData['name'],
-                            'description' => $translationData['description'] ?? null,
-                        ]
-                    );
-                }
+        $incomingLocales = [];
+        foreach ($incomingTranslations as $translationData) {
+            if (empty($translationData['locale']) || empty($translationData['name'])) {
+                continue;
             }
+
+            $incomingLocales[] = $translationData['locale'];
+
+            CategoryTranslation::updateOrCreate(
+                [
+                    'category_id' => $category->id,
+                    'locale' => $translationData['locale'],
+                ],
+                [
+                    'name' => $translationData['name'],
+                    'description' => $translationData['description'] ?? null,
+                ]
+            );
         }
+
+        $category->translations()->whereNotIn('locale', $incomingLocales)->delete();
 
         return redirect()->route('admin.categories.index')
             ->with('success', 'تم تحديث الفئة بنجاح');

@@ -51,7 +51,10 @@
                         </div>
                         <div class="card-body">
                             <div class="row g-3">
-                                @foreach($role->permissions->grouped() as $group => $groupPermissions)
+                                @foreach($role->permissions->groupBy(function ($permission) {
+                                    $name = (string) ($permission->name ?? '');
+                                    return str_contains($name, '.') ? explode('.', $name, 2)[0] : 'عام';
+                                }) as $group => $groupPermissions)
                                     <div class="col-md-6">
                                         <div class="card">
                                             <div class="card-header">

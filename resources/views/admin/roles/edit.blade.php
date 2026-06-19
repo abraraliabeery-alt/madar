@@ -4,9 +4,9 @@
 <div class="container-fluid">
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">تعديل الدور - {{ $role->getTranslatedDisplayName() }}</h5>
+            <h5 class="mb-0">{{ __('admin.roles.edit') }} - {{ $role->getTranslatedDisplayName() }}</h5>
             <a href="{{ route('admin.roles.index') }}" class="btn btn-secondary">
-                <i class="fas fa-arrow-right me-2"></i>رجوع
+                <i class="fas fa-arrow-right me-2"></i>{{ __('admin.roles.back') }}
             </a>
         </div>
         <div class="card-body">
@@ -19,24 +19,44 @@
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header">
-                                <h6 class="mb-0">المعلومات الأساسية</h6>
+                                <h6 class="mb-0">{{ __('admin.roles.basic_info') }}</h6>
                             </div>
                             <div class="card-body">
-                                <div class="mb-3">
-                                    <label for="name" class="form-label">اسم الدور <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name', $role->name) }}" required>
-                                    @error('name')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="description" class="form-label">الوصف</label>
-                                    <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description" rows="3">{{ old('description', $role->description) }}</textarea>
-                                    @error('description')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
+                                @include('components.translations-repeater', [
+                                    'locales' => $locales ?? config('locales.available', []),
+                                    'namePrefix' => 'translations',
+                                    'items' => $role->translations->map(function ($t) {
+                                        return [
+                                            'locale' => $t->locale,
+                                            'name' => $t->name,
+                                            'display_name' => $t->display_name,
+                                            'description' => $t->description,
+                                        ];
+                                    })->values()->toArray(),
+                                    'fields' => [
+                                        [
+                                            'type' => 'input',
+                                            'key' => 'name',
+                                            'label' => __('admin.roles.name'),
+                                            'requiredFirst' => true,
+                                        ],
+                                        [
+                                            'type' => 'input',
+                                            'key' => 'display_name',
+                                            'label' => __('admin.roles.display_name'),
+                                        ],
+                                        [
+                                            'type' => 'textarea',
+                                            'key' => 'description',
+                                            'label' => __('admin.roles.description'),
+                                            'rows' => 3,
+                                        ],
+                                    ],
+                                    'addLabel' => __('admin.ui.layout.add_new'),
+                                    'removeLabel' => __('admin.actions.delete'),
+                                    'minItems' => 1,
+                                    'maxItems' => is_array($locales ?? null) ? count($locales) : null,
+                                ])
                             </div>
                         </div>
                     </div>
@@ -45,15 +65,18 @@
                     <div class="col-md-12 mt-4">
                         <div class="card">
                             <div class="card-header d-flex justify-content-between align-items-center">
-                                <h6 class="mb-0">الصلاحيات</h6>
+                                <h6 class="mb-0">{{ __('admin.roles.permissions') }}</h6>
                                 <div>
-                                    <button type="button" class="btn btn-sm btn-secondary" id="selectAll">تحديد الكل</button>
-                                    <button type="button" class="btn btn-sm btn-secondary" id="deselectAll">إلغاء تحديد الكل</button>
+                                    <button type="button" class="btn btn-sm btn-secondary" id="selectAll">{{ __('admin.roles.select_all') }}</button>
+                                    <button type="button" class="btn btn-sm btn-secondary" id="deselectAll">{{ __('admin.roles.deselect_all') }}</button>
                                 </div>
                             </div>
                             <div class="card-body">
                                 <div class="row g-3">
-                                    @foreach($permissions->grouped() as $group => $groupPermissions)
+                                    @foreach($permissions->groupBy(function ($permission) {
+                                        $name = (string) ($permission->name ?? '');
+                                        return str_contains($name, '.') ? explode('.', $name, 2)[0] : __('admin.roles.general');
+                                    }) as $group => $groupPermissions)
                                         <div class="col-md-6">
                                             <div class="card">
                                                 <div class="card-header">
@@ -83,7 +106,7 @@
                     <!-- Submit Button -->
                     <div class="col-12 mt-4">
                         <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save me-2"></i>حفظ التغييرات
+                            <i class="fas fa-save me-2"></i>{{ __('admin.actions.update') }}
                         </button>
                     </div>
                 </div>

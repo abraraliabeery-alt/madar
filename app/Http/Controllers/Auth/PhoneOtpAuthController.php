@@ -22,7 +22,7 @@ class PhoneOtpAuthController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'phone_number' => ['required', 'string'],
-            'login_intent' => ['nullable', 'in:client,facility'],
+            'login_intent' => ['nullable', 'in:client,facility,admin'],
         ]);
 
         if ($validator->fails()) {
@@ -138,6 +138,10 @@ class PhoneOtpAuthController extends Controller
         $request->session()->forget('otp_login_intent');
 
         Auth::login($user, true);
+
+        if (method_exists($user, 'hasRole') && $user->hasRole('admin')) {
+            return redirect()->route('admin.dashboard');
+        }
 
         if ($loginIntent === 'facility') {
             if (method_exists($user, 'hasRole') && method_exists($user, 'assignRole') && !$user->hasRole('facility')) {

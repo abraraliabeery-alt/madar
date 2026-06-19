@@ -25,7 +25,8 @@ class AdminRoleController extends Controller
     public function create()
     {
         $permissions = Permission::with('translations')->active()->get();
-        return view('admin.roles.create', compact('permissions'));
+        $locales = config('locales.available');
+        return view('admin.roles.create', compact('permissions', 'locales'));
     }
 
     /**
@@ -33,17 +34,60 @@ class AdminRoleController extends Controller
      */
     public function store(Request $request)
     {
+        $availableLocales = array_keys(config('locales.available', []));
         $request->validate([
-            'name' => 'required|string|max:255|unique:roles,name',
-            'description' => 'nullable|string',
             'permissions' => 'array',
             'permissions.*' => 'exists:permissions,id',
+            'translations' => 'nullable|array',
+            'translations.*.locale' => 'required_with:translations|string|in:' . implode(',', $availableLocales) . '|distinct',
+            'translations.*.name' => 'required_with:translations|string|max:255',
+            'translations.*.display_name' => 'nullable|string|max:255',
+            'translations.*.description' => 'nullable|string',
+            'name' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
         ]);
 
-        $role = Role::create([
-            'name' => $request->name,
-            'description' => $request->description,
-        ]);
+        $incomingTranslations = $request->input('translations');
+        if (!is_array($incomingTranslations) || !count($incomingTranslations)) {
+            $incomingTranslations = [];
+            if ($request->filled('name') || $request->filled('description')) {
+                $incomingTranslations[] = [
+                    'locale' => app()->getLocale(),
+                    'name' => $request->input('name'),
+                    'display_name' => $request->input('name'),
+                    'description' => $request->input('description'),
+                ];
+            }
+        }
+
+        $firstTranslationName = null;
+        foreach ($incomingTranslations as $t) {
+            if (!empty($t['name'])) {
+                $firstTranslationName = $t['name'];
+                break;
+            }
+        }
+
+        if (!$firstTranslationName) {
+            return back()
+                ->withErrors(['translations' => 'يجب إدخال اسم الدور في ترجمة واحدة على الأقل'])
+                ->withInput();
+        }
+
+        $role = Role::create([]);
+
+        foreach ($incomingTranslations as $translationData) {
+            if (empty($translationData['locale']) || empty($translationData['name'])) {
+                continue;
+            }
+
+            $role->translations()->create([
+                'locale' => $translationData['locale'],
+                'name' => $translationData['name'],
+                'display_name' => $translationData['display_name'] ?? $translationData['name'],
+                'description' => $translationData['description'] ?? null,
+            ]);
+        }
 
         if ($request->has('permissions')) {
             $role->permissions()->attach($request->permissions);
@@ -58,9 +102,10 @@ class AdminRoleController extends Controller
      */
     public function edit(Role $role)
     {
-        $role->load('permissions.translations');
+        $role->load(['permissions.translations', 'translations']);
         $permissions = Permission::with('translations')->active()->get();
-        return view('admin.roles.edit', compact('role', 'permissions'));
+        $locales = config('locales.available');
+        return view('admin.roles.edit', compact('role', 'permissions', 'locales'));
     }
 
     /**
@@ -68,17 +113,67 @@ class AdminRoleController extends Controller
      */
     public function update(Request $request, Role $role)
     {
+        $availableLocales = array_keys(config('locales.available', []));
         $request->validate([
-            'name' => 'required|string|max:255|unique:roles,name,' . $role->id,
-            'description' => 'nullable|string',
             'permissions' => 'array',
             'permissions.*' => 'exists:permissions,id',
+            'translations' => 'nullable|array',
+            'translations.*.locale' => 'required_with:translations|string|in:' . implode(',', $availableLocales) . '|distinct',
+            'translations.*.name' => 'required_with:translations|string|max:255',
+            'translations.*.display_name' => 'nullable|string|max:255',
+            'translations.*.description' => 'nullable|string',
+            'name' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
         ]);
 
-        $role->update([
-            'name' => $request->name,
-            'description' => $request->description,
-        ]);
+        $incomingTranslations = $request->input('translations');
+        if (!is_array($incomingTranslations) || !count($incomingTranslations)) {
+            $incomingTranslations = [];
+            if ($request->filled('name') || $request->filled('description')) {
+                $incomingTranslations[] = [
+                    'locale' => app()->getLocale(),
+                    'name' => $request->input('name'),
+                    'display_name' => $request->input('name'),
+                    'description' => $request->input('description'),
+                ];
+            }
+        }
+
+        $firstTranslationName = null;
+        foreach ($incomingTranslations as $t) {
+            if (!empty($t['name'])) {
+                $firstTranslationName = $t['name'];
+                break;
+            }
+        }
+
+        if (!$firstTranslationName) {
+            return back()
+                ->withErrors(['translations' => 'يجب إدخال اسم الدور في ترجمة واحدة على الأقل'])
+                ->withInput();
+        }
+
+        $incomingLocales = [];
+        foreach ($incomingTranslations as $translationData) {
+            if (empty($translationData['locale']) || empty($translationData['name'])) {
+                continue;
+            }
+
+            $incomingLocales[] = $translationData['locale'];
+
+            $role->translations()->updateOrCreate(
+                [
+                    'locale' => $translationData['locale'],
+                ],
+                [
+                    'name' => $translationData['name'],
+                    'display_name' => $translationData['display_name'] ?? $translationData['name'],
+                    'description' => $translationData['description'] ?? null,
+                ]
+            );
+        }
+
+        $role->translations()->whereNotIn('locale', $incomingLocales)->delete();
 
         $role->permissions()->sync($request->permissions ?? []);
 

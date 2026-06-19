@@ -4,9 +4,9 @@
 <div class="container-fluid">
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">تعديل المنشأة - {{ $facility->name }}</h5>
+            <h5 class="mb-0">{{ __('admin.facilities.edit') }} - {{ $facility->name }}</h5>
             <a href="{{ route('admin.facilities.index') }}" class="btn btn-secondary">
-                <i class="fas fa-arrow-right me-2"></i>رجوع
+                <i class="fas fa-arrow-right me-2"></i>{{ __('admin.facilities.back') }}
             </a>
         </div>
         <div class="card-body">
@@ -19,24 +19,45 @@
                     <div class="col-md-8">
                         <div class="card">
                             <div class="card-header">
-                                <h6 class="mb-0">المعلومات الأساسية</h6>
+                                <h6 class="mb-0">{{ __('admin.facilities.basic_info') }}</h6>
                             </div>
                             <div class="card-body">
-                                <div class="row">
+                                @include('components.translations-repeater', [
+                                    'locales' => $locales ?? config('locales.available', []),
+                                    'namePrefix' => 'translations',
+                                    'items' => $facility->translations->map(function ($t) {
+                                        return [
+                                            'locale' => $t->locale,
+                                            'name' => $t->name,
+                                            'description' => $t->description,
+                                        ];
+                                    })->values()->toArray(),
+                                    'fields' => [
+                                        [
+                                            'type' => 'input',
+                                            'key' => 'name',
+                                            'label' => __('admin.facilities.name'),
+                                            'requiredFirst' => true,
+                                        ],
+                                        [
+                                            'type' => 'textarea',
+                                            'key' => 'description',
+                                            'label' => __('admin.facilities.description'),
+                                            'rows' => 4,
+                                        ],
+                                    ],
+                                    'addLabel' => __('admin.ui.layout.add_new'),
+                                    'removeLabel' => __('admin.actions.delete'),
+                                    'minItems' => 1,
+                                    'maxItems' => is_array($locales ?? null) ? count($locales) : null,
+                                ])
+
+                                <div class="row mt-3">
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="name" class="form-label">اسم المنشأة <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name', $facility->name) }}" required>
-                                            @error('name')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="owner_user_id" class="form-label">المالك <span class="text-danger">*</span></label>
+                                            <label for="owner_user_id" class="form-label">{{ __('admin.facilities.owner') }} <span class="text-danger">*</span></label>
                                             <select class="form-select @error('owner_user_id') is-invalid @enderror" id="owner_user_id" name="owner_user_id" required>
-                                                <option value="">اختر المالك</option>
+                                                <option value="">{{ __('admin.facilities.select_owner') }}</option>
                                                 @foreach($owners as $owner)
                                                     <option value="{{ $owner->id }}" {{ old('owner_user_id', $facility->owner_user_id) == $owner->id ? 'selected' : '' }}>
                                                         {{ $owner->name }}
@@ -50,9 +71,9 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="facility_category_id" class="form-label">فئة المنشأة <span class="text-danger">*</span></label>
+                                            <label for="facility_category_id" class="form-label">{{ __('admin.facilities.facility_category') }} <span class="text-danger">*</span></label>
                                             <select class="form-select @error('facility_category_id') is-invalid @enderror" id="facility_category_id" name="facility_category_id" required>
-                                                <option value="">اختر فئة المنشأة</option>
+                                                <option value="">{{ __('admin.facilities.select_facility_category') }}</option>
                                                 @foreach($facilityCategories as $category)
                                                     <option value="{{ $category->id }}" {{ old('facility_category_id', $facility->facility_category_id) == $category->id ? 'selected' : '' }}>
                                                         {{ $category->name }}
@@ -66,9 +87,9 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="status_id" class="form-label">الحالة <span class="text-danger">*</span></label>
+                                            <label for="status_id" class="form-label">{{ __('admin.facilities.status') }} <span class="text-danger">*</span></label>
                                             <select class="form-select @error('status_id') is-invalid @enderror" id="status_id" name="status_id" required>
-                                                <option value="">اختر الحالة</option>
+                                                <option value="">{{ __('admin.facilities.select_status') }}</option>
                                                 @foreach($statuses as $status)
                                                     <option value="{{ $status->id }}" {{ old('status_id', $facility->status_id) == $status->id ? 'selected' : '' }}>
                                                         {{ $status->name }}
@@ -76,15 +97,6 @@
                                                 @endforeach
                                             </select>
                                             @error('status_id')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="mb-3">
-                                            <label for="description" class="form-label">الوصف</label>
-                                            <textarea class="form-control summernote @error('description') is-invalid @enderror" id="description" name="description" rows="4">{{ old('description', $facility->description) }}</textarea>
-                                            @error('description')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
@@ -98,17 +110,17 @@
                     <div class="col-md-4">
                         <div class="card">
                             <div class="card-header">
-                                <h6 class="mb-0">الوسائط</h6>
+                                <h6 class="mb-0">{{ __('admin.facilities.media') }}</h6>
                             </div>
                             <div class="card-body">
                                 <div class="mb-3">
-                                    <label for="logo" class="form-label">شعار المنشأة</label>
+                                    <label for="logo" class="form-label">{{ __('admin.facilities.facility_logo') }}</label>
                                     <input type="file" class="form-control @error('logo') is-invalid @enderror" id="logo" name="logo" accept="image/*">
-                                    <small class="text-muted d-block mt-2">الأبعاد المثالية: 200x200 بكسل</small>
+                                    <small class="text-muted d-block mt-2">{{ __('admin.facilities.logo_dimensions') }}</small>
                                     <div class="mt-2" id="logo-preview">
                                         @if($facility->logo)
                                             <img src="{{ asset($facility->logo) }}" alt="Current Logo" class="img-thumbnail" width="100">
-                                            <small class="d-block text-muted mt-1">الشعار الحالي</small>
+                                            <small class="d-block text-muted mt-1">{{ __('admin.facilities.current_logo') }}</small>
                                         @endif
                                     </div>
                                     @error('logo')
@@ -117,13 +129,13 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="cover_image" class="form-label">صورة الغلاف</label>
+                                    <label for="cover_image" class="form-label">{{ __('admin.facilities.cover_image') }}</label>
                                     <input type="file" class="form-control @error('cover_image') is-invalid @enderror" id="cover_image" name="cover_image" accept="image/*">
-                                    <small class="text-muted d-block mt-2">الأبعاد المثالية: 1200x400 بكسل</small>
+                                    <small class="text-muted d-block mt-2">{{ __('admin.facilities.cover_dimensions') }}</small>
                                     <div class="mt-2" id="cover-preview">
                                         @if($facility->cover_image)
                                             <img src="{{ asset($facility->cover_image) }}" alt="Current Cover" class="img-thumbnail" width="200">
-                                            <small class="d-block text-muted mt-1">صورة الغلاف الحالية</small>
+                                            <small class="d-block text-muted mt-1">{{ __('admin.facilities.current_cover') }}</small>
                                         @endif
                                     </div>
                                     @error('cover_image')
@@ -138,13 +150,13 @@
                     <div class="col-md-6">
                         <div class="card">
                             <div class="card-header">
-                                <h6 class="mb-0">معلومات الاتصال</h6>
+                                <h6 class="mb-0">{{ __('admin.facilities.contact_info') }}</h6>
                             </div>
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="email" class="form-label">البريد الإلكتروني <span class="text-danger">*</span></label>
+                                            <label for="email" class="form-label">{{ __('admin.facilities.email') }} <span class="text-danger">*</span></label>
                                             <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email', $facility->email) }}" required>
                                             @error('email')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -153,7 +165,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="phone_number" class="form-label">رقم الهاتف <span class="text-danger">*</span></label>
+                                            <label for="phone_number" class="form-label">{{ __('admin.facilities.phone') }} <span class="text-danger">*</span></label>
                                             <input type="tel" class="form-control @error('phone_number') is-invalid @enderror" id="phone_number" name="phone_number" value="{{ old('phone_number', $facility->phone_number) }}" required>
                                             @error('phone_number')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -162,7 +174,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="website" class="form-label">الموقع الإلكتروني</label>
+                                            <label for="website" class="form-label">{{ __('admin.facilities.website') }}</label>
                                             <input type="url" class="form-control @error('website') is-invalid @enderror" id="website" name="website" value="{{ old('website', $facility->website) }}">
                                             @error('website')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -171,7 +183,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="whatsapp_number" class="form-label">رقم الواتساب</label>
+                                            <label for="whatsapp_number" class="form-label">{{ __('admin.facilities.whatsapp') }}</label>
                                             <input type="tel" class="form-control @error('whatsapp_number') is-invalid @enderror" id="whatsapp_number" name="whatsapp_number" value="{{ old('whatsapp_number', $facility->whatsapp_number) }}">
                                             @error('whatsapp_number')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -180,7 +192,7 @@
                                     </div>
                                     <div class="col-12">
                                         <div class="mb-3">
-                                            <label for="address" class="form-label">العنوان <span class="text-danger">*</span></label>
+                                            <label for="address" class="form-label">{{ __('admin.facilities.address') }} <span class="text-danger">*</span></label>
                                             <textarea class="form-control @error('address') is-invalid @enderror" id="address" name="address" rows="2" required>{{ old('address', $facility->address) }}</textarea>
                                             @error('address')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -189,7 +201,7 @@
                                     </div>
                                     <div class="col-12">
                                         <div class="mb-3">
-                                            <label for="working_hours" class="form-label">ساعات العمل</label>
+                                            <label for="working_hours" class="form-label">{{ __('admin.facilities.working_hours') }}</label>
                                             <textarea class="form-control @error('working_hours') is-invalid @enderror" id="working_hours" name="working_hours" rows="2">{{ old('working_hours', $facility->working_hours) }}</textarea>
                                             @error('working_hours')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -205,13 +217,13 @@
                     <div class="col-md-6">
                         <div class="card">
                             <div class="card-header">
-                                <h6 class="mb-0">الموقع</h6>
+                                <h6 class="mb-0">{{ __('admin.facilities.location') }}</h6>
                             </div>
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="latitude" class="form-label">خط العرض</label>
+                                            <label for="latitude" class="form-label">{{ __('admin.facilities.latitude') }}</label>
                                             <input type="number" step="any" class="form-control @error('latitude') is-invalid @enderror" id="latitude" name="latitude" value="{{ old('latitude', $facility->latitude) }}">
                                             @error('latitude')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -220,7 +232,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="longitude" class="form-label">خط الطول</label>
+                                            <label for="longitude" class="form-label">{{ __('admin.facilities.longitude') }}</label>
                                             <input type="number" step="any" class="form-control @error('longitude') is-invalid @enderror" id="longitude" name="longitude" value="{{ old('longitude', $facility->longitude) }}">
                                             @error('longitude')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -229,7 +241,7 @@
                                     </div>
                                     <div class="col-12">
                                         <div class="mb-3">
-                                            <label for="google_maps_url" class="form-label">رابط خرائط جوجل</label>
+                                            <label for="google_maps_url" class="form-label">{{ __('admin.facilities.google_maps_url') }}</label>
                                             <input type="url" class="form-control @error('google_maps_url') is-invalid @enderror" id="google_maps_url" name="google_maps_url" value="{{ old('google_maps_url', $facility->google_maps_url) }}">
                                             @error('google_maps_url')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -245,13 +257,13 @@
                     <div class="col-md-6">
                         <div class="card">
                             <div class="card-header">
-                                <h6 class="mb-0">وسائل التواصل الاجتماعي</h6>
+                                <h6 class="mb-0">{{ __('admin.facilities.social_media') }}</h6>
                             </div>
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="facebook" class="form-label">فيسبوك</label>
+                                            <label for="facebook" class="form-label">{{ __('admin.facilities.facebook') }}</label>
                                             <div class="input-group">
                                                 <span class="input-group-text"><i class="fab fa-facebook"></i></span>
                                                 <input type="url" class="form-control @error('facebook') is-invalid @enderror" id="facebook" name="facebook" value="{{ old('facebook', $facility->facebook) }}">
@@ -263,7 +275,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="twitter" class="form-label">تويتر</label>
+                                            <label for="twitter" class="form-label">{{ __('admin.facilities.twitter') }}</label>
                                             <div class="input-group">
                                                 <span class="input-group-text"><i class="fab fa-twitter"></i></span>
                                                 <input type="url" class="form-control @error('twitter') is-invalid @enderror" id="twitter" name="twitter" value="{{ old('twitter', $facility->twitter) }}">
@@ -275,7 +287,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="instagram" class="form-label">انستغرام</label>
+                                            <label for="instagram" class="form-label">{{ __('admin.facilities.instagram') }}</label>
                                             <div class="input-group">
                                                 <span class="input-group-text"><i class="fab fa-instagram"></i></span>
                                                 <input type="url" class="form-control @error('instagram') is-invalid @enderror" id="instagram" name="instagram" value="{{ old('facebook', $facility->instagram) }}">
@@ -287,7 +299,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="linkedin" class="form-label">لينكد إن</label>
+                                            <label for="linkedin" class="form-label">{{ __('admin.facilities.linkedin') }}</label>
                                             <div class="input-group">
                                                 <span class="input-group-text"><i class="fab fa-linkedin"></i></span>
                                                 <input type="url" class="form-control @error('linkedin') is-invalid @enderror" id="linkedin" name="linkedin" value="{{ old('linkedin', $facility->linkedin) }}">
@@ -299,7 +311,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="youtube" class="form-label">يوتيوب</label>
+                                            <label for="youtube" class="form-label">{{ __('admin.facilities.youtube') }}</label>
                                             <div class="input-group">
                                                 <span class="input-group-text"><i class="fab fa-youtube"></i></span>
                                                 <input type="url" class="form-control @error('youtube') is-invalid @enderror" id="youtube" name="youtube" value="{{ old('youtube', $facility->youtube) }}">
@@ -311,7 +323,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="snapchat" class="form-label">سناب شات</label>
+                                            <label for="snapchat" class="form-label">{{ __('admin.facilities.snapchat') }}</label>
                                             <div class="input-group">
                                                 <span class="input-group-text"><i class="fab fa-snapchat"></i></span>
                                                 <input type="text" class="form-control @error('snapchat') is-invalid @enderror" id="snapchat" name="snapchat" value="{{ old('snapchat', $facility->snapchat) }}">
@@ -330,26 +342,26 @@
                     <div class="col-md-6">
                         <div class="card">
                             <div class="card-header">
-                                <h6 class="mb-0">الإعدادات</h6>
+                                <h6 class="mb-0">{{ __('admin.facilities.settings') }}</h6>
                             </div>
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-check mb-3">
                                             <input type="checkbox" class="form-check-input" id="is_active" name="is_active" value="1" {{ old('is_active', $facility->is_active) ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="is_active">نشط</label>
+                                            <label class="form-check-label" for="is_active">{{ __('admin.facilities.is_active') }}</label>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-check mb-3">
                                             <input type="checkbox" class="form-check-input" id="is_verified" name="is_verified" value="1" {{ old('is_verified', $facility->is_verified) ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="is_verified">تم التحقق</label>
+                                            <label class="form-check-label" for="is_verified">{{ __('admin.facilities.is_verified') }}</label>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-check mb-3">
                                             <input type="checkbox" class="form-check-input" id="is_featured" name="is_featured" value="1" {{ old('is_featured', $facility->is_featured) ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="is_featured">مميزة</label>
+                                            <label class="form-check-label" for="is_featured">{{ __('admin.facilities.is_featured') }}</label>
                                         </div>
                                     </div>
                                 </div>
@@ -360,7 +372,7 @@
                     <!-- Submit Button -->
                     <div class="col-12">
                         <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save me-2"></i>حفظ التغييرات
+                            <i class="fas fa-save me-2"></i>{{ __('admin.facilities.save_changes') }}
                         </button>
                     </div>
                 </div>

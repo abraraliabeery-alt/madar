@@ -4,9 +4,9 @@
 <div class="container-fluid">
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">تعديل المنتج: {{ $product->title }}</h5>
+            <h5 class="mb-0">{{ __('admin.products.edit') }}: {{ $product->title }}</h5>
             <a href="{{ route('admin.products.index') }}" class="btn btn-secondary">
-                <i class="fas fa-arrow-right me-2"></i>رجوع
+                <i class="fas fa-arrow-right me-2"></i>{{ __('admin.products.back') }}
             </a>
         </div>
         <div class="card-body">
@@ -19,22 +19,43 @@
                     <div class="col-md-8">
                         <div class="card">
                             <div class="card-header">
-                                <h6 class="mb-0">المعلومات الأساسية</h6>
+                                <h6 class="mb-0">{{ __('admin.products.basic_info') }}</h6>
                             </div>
                             <div class="card-body">
-                                <div class="row">
+                                @include('components.translations-repeater', [
+                                    'locales' => $locales ?? config('locales.available', []),
+                                    'namePrefix' => 'translations',
+                                    'items' => $product->translations->map(function ($t) {
+                                        return [
+                                            'locale' => $t->locale,
+                                            'name' => $t->name,
+                                            'description' => $t->description,
+                                        ];
+                                    })->values()->toArray(),
+                                    'fields' => [
+                                        [
+                                            'type' => 'input',
+                                            'key' => 'name',
+                                            'label' => __('admin.products.name'),
+                                            'requiredFirst' => true,
+                                        ],
+                                        [
+                                            'type' => 'textarea',
+                                            'key' => 'description',
+                                            'label' => __('admin.products.description'),
+                                            'rows' => 4,
+                                        ],
+                                    ],
+                                    'addLabel' => __('admin.ui.layout.add_new'),
+                                    'removeLabel' => __('admin.actions.delete'),
+                                    'minItems' => 1,
+                                    'maxItems' => is_array($locales ?? null) ? count($locales) : null,
+                                ])
+
+                                <div class="row mt-3">
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="title" class="form-label">اسم المنتج <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control @error('title') is-invalid @enderror" id="title" name="title" value="{{ old('title', $product->title) }}" required>
-                                            @error('title')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="price" class="form-label">السعر <span class="text-danger">*</span></label>
+                                            <label for="price" class="form-label">{{ __('admin.products.price') }} <span class="text-danger">*</span></label>
                                             <div class="input-group">
                                                 <input type="number" step="0.01" class="form-control @error('price') is-invalid @enderror" id="price" name="price" value="{{ old('price', $product->price) }}" required>
                                                 <span class="input-group-text">{!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}</span>
@@ -46,9 +67,9 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="facility_id" class="form-label">المنشأة <span class="text-danger">*</span></label>
+                                            <label for="facility_id" class="form-label">{{ __('admin.products.facility') }} <span class="text-danger">*</span></label>
                                             <select class="form-select @error('facility_id') is-invalid @enderror" id="facility_id" name="facility_id" required>
-                                                <option value="">اختر المنشأة</option>
+                                                <option value="">{{ __('admin.products.select_facility') }}</option>
                                                 @foreach($facilities as $facility)
                                                     <option value="{{ $facility->id }}" {{ old('facility_id', $product->facility_id) == $facility->id ? 'selected' : '' }}>
                                                         {{ $facility->name }}
@@ -62,9 +83,9 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="category_id" class="form-label">الفئة <span class="text-danger">*</span></label>
+                                            <label for="category_id" class="form-label">{{ __('admin.products.category') }} <span class="text-danger">*</span></label>
                                             <select class="form-select @error('category_id') is-invalid @enderror" id="category_id" name="category_id" required>
-                                                <option value="">اختر الفئة</option>
+                                                <option value="">{{ __('admin.products.select_category') }}</option>
                                                 @foreach($categories as $category)
                                                     <option value="{{ $category->id }}" {{ old('category_id', $product->category_id) == $category->id ? 'selected' : '' }}>
                                                         {{ $category->getTranslatedName('ar') }}
@@ -78,9 +99,9 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="city_id" class="form-label">المدينة <span class="text-danger">*</span></label>
+                                            <label for="city_id" class="form-label">{{ __('admin.products.city') }} <span class="text-danger">*</span></label>
                                             <select class="form-select @error('city_id') is-invalid @enderror" id="city_id" name="city_id" required>
-                                                <option value="">اختر المدينة</option>
+                                                <option value="">{{ __('admin.products.select_city') }}</option>
                                                 @foreach($cities as $city)
                                                     <option value="{{ $city->id }}" {{ old('city_id', $product->city_id) == $city->id ? 'selected' : '' }}>
                                                         {{ $city->localized_name }}
@@ -94,9 +115,9 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="status_id" class="form-label">الحالة <span class="text-danger">*</span></label>
+                                            <label for="status_id" class="form-label">{{ __('admin.products.status') }} <span class="text-danger">*</span></label>
                                             <select class="form-select @error('status_id') is-invalid @enderror" id="status_id" name="status_id" required>
-                                                <option value="">اختر الحالة</option>
+                                                <option value="">{{ __('admin.products.select_status') }}</option>
                                                 @foreach($statuses as $status)
                                                     <option value="{{ $status->id }}" {{ old('status_id', $product->status ? $product->status->id : '') == $status->id ? 'selected' : '' }}>
                                                         {{ $status->name }}
@@ -110,9 +131,9 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="owner_user_id" class="form-label">المالك <span class="text-danger">*</span></label>
+                                            <label for="owner_user_id" class="form-label">{{ __('admin.products.owner') }} <span class="text-danger">*</span></label>
                                             <select class="form-select @error('owner_user_id') is-invalid @enderror" id="owner_user_id" name="owner_user_id" required>
-                                                <option value="">اختر المالك</option>
+                                                <option value="">{{ __('admin.products.select_owner') }}</option>
                                                 @foreach($facilities as $facility)
                                                     <option value="{{ $facility->owner->id }}" {{ old('owner_user_id', $product->owner_user_id) == $facility->owner->id ? 'selected' : '' }}>
                                                         {{ $facility->owner->name }}
@@ -126,16 +147,7 @@
                                     </div>
                                     <div class="col-12">
                                         <div class="mb-3">
-                                            <label for="description" class="form-label">الوصف</label>
-                                            <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description" rows="4">{{ old('description', $product->description) }}</textarea>
-                                            @error('description')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="mb-3">
-                                            <label for="address" class="form-label">العنوان <span class="text-danger">*</span></label>
+                                            <label for="address" class="form-label">{{ __('admin.products.address') }} <span class="text-danger">*</span></label>
                                             <input type="text" class="form-control @error('address') is-invalid @enderror" id="address" name="address" value="{{ old('address', $product->address) }}" required>
                                             @error('address')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -149,13 +161,13 @@
                         <!-- Location -->
                         <div class="card mt-4">
                             <div class="card-header">
-                                <h6 class="mb-0">الموقع</h6>
+                                <h6 class="mb-0">{{ __('admin.products.location') }}</h6>
                             </div>
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="latitude" class="form-label">خط العرض</label>
+                                            <label for="latitude" class="form-label">{{ __('admin.products.latitude') }}</label>
                                             <input type="number" step="any" class="form-control @error('latitude') is-invalid @enderror" id="latitude" name="latitude" value="{{ old('latitude', $product->latitude) }}">
                                             @error('latitude')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -164,7 +176,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="longitude" class="form-label">خط الطول</label>
+                                            <label for="longitude" class="form-label">{{ __('admin.products.longitude') }}</label>
                                             <input type="number" step="any" class="form-control @error('longitude') is-invalid @enderror" id="longitude" name="longitude" value="{{ old('longitude', $product->longitude) }}">
                                             @error('longitude')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -173,15 +185,15 @@
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="google_maps_url" class="form-label">رابط خرائط جوجل</label>
+                                    <label for="google_maps_url" class="form-label">{{ __('admin.products.google_maps_url') }}</label>
                                     <input type="url" class="form-control @error('google_maps_url') is-invalid @enderror" id="google_maps_url" name="google_maps_url" value="{{ old('google_maps_url', $product->google_maps_url) }}">
                                     @error('google_maps_url')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                                 <div class="mb-2 d-flex align-items-center justify-content-between">
-                                    <label class="form-label mb-0">اختر الموقع على الخريطة</label>
-                                    <small class="text-muted">انقر لتثبيت المؤشر أو اسحب المؤشر لتغيير الموقع</small>
+                                    <label class="form-label mb-0">{{ __('admin.products.select_location_on_map') }}</label>
+                                    <small class="text-muted">{{ __('admin.products.map_help') }}</small>
                                 </div>
                                 <div id="mapPicker" class="w-100" style="height: 350px; border-radius: .5rem; overflow: hidden; background: #eef2ff; direction: ltr;"></div>
                             </div>
@@ -192,11 +204,11 @@
                         <!-- Attributes -->
                         <div class="card mt-4">
                             <div class="card-header">
-                                <h6 class="mb-0">الخصائص</h6>
+                                <h6 class="mb-0">{{ __('admin.products.attributes') }}</h6>
                             </div>
                             <div class="card-body">
                                 <div id="attributes-container">
-                                    <p class="text-muted">اختر فئة أولاً لعرض الخصائص المتاحة</p>
+                                    <p class="text-muted">{{ __('admin.products.select_category_first_attributes') }}</p>
                                 </div>
                             </div>
                         </div>
@@ -204,11 +216,11 @@
                         <!-- Features -->
                         <div class="card mt-4">
                             <div class="card-header">
-                                <h6 class="mb-0">المميزات</h6>
+                                <h6 class="mb-0">{{ __('admin.products.features') }}</h6>
                             </div>
                             <div class="card-body">
                                 <div id="features-container">
-                                    <p class="text-muted">اختر فئة أولاً لعرض المميزات المتاحة</p>
+                                    <p class="text-muted">{{ __('admin.products.select_category_first_features') }}</p>
                                 </div>
                             </div>
                         </div>
@@ -219,7 +231,7 @@
                         <!-- Image Upload -->
                         <div class="card">
                             <div class="card-header">
-                                <h6 class="mb-0">الصورة الرئيسية</h6>
+                                <h6 class="mb-0">{{ __('admin.products.main_image') }}</h6>
                             </div>
                             <div class="card-body">
                                 @if($product->image)
@@ -228,7 +240,7 @@
                                     </div>
                                 @endif
                                 <div class="mb-3">
-                                    <label for="image" class="form-label">تغيير الصورة</label>
+                                    <label for="image" class="form-label">{{ __('admin.products.change_image') }}</label>
                                     <input type="file" class="form-control @error('image') is-invalid @enderror" id="image" name="image" accept="image/*">
                                     @error('image')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -240,25 +252,25 @@
                         <!-- Status Toggles -->
                         <div class="card mt-4">
                             <div class="card-header">
-                                <h6 class="mb-0">الحالة</h6>
+                                <h6 class="mb-0">{{ __('admin.products.settings') }}</h6>
                             </div>
                             <div class="card-body">
                                 <div class="mb-3">
                                     <div class="form-check form-switch">
                                         <input class="form-check-input" type="checkbox" id="is_active" name="is_active" value="1" {{ $product->is_active ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="is_active">نشط</label>
+                                        <label class="form-check-label" for="is_active">{{ __('admin.products.is_active') }}</label>
                                     </div>
                                 </div>
                                 <div class="mb-3">
                                     <div class="form-check form-switch">
                                         <input class="form-check-input" type="checkbox" id="is_featured" name="is_featured" value="1" {{ $product->is_featured ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="is_featured">مميز</label>
+                                        <label class="form-check-label" for="is_featured">{{ __('admin.products.is_featured') }}</label>
                                     </div>
                                 </div>
                                 <div class="mb-3">
                                     <div class="form-check form-switch">
                                         <input class="form-check-input" type="checkbox" id="is_verified" name="is_verified" value="1" {{ $product->is_verified ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="is_verified">متحقق منه</label>
+                                        <label class="form-check-label" for="is_verified">{{ __('admin.products.is_verified') }}</label>
                                     </div>
                                 </div>
                             </div>
@@ -267,18 +279,18 @@
                         <!-- Contact Information -->
                         <div class="card mt-4">
                             <div class="card-header">
-                                <h6 class="mb-0">معلومات الاتصال</h6>
+                                <h6 class="mb-0">{{ __('admin.products.contact_info') }}</h6>
                             </div>
                             <div class="card-body">
                                 <div class="mb-3">
-                                    <label for="contact_phone" class="form-label">رقم الهاتف</label>
+                                    <label for="contact_phone" class="form-label">{{ __('admin.products.contact_phone') }}</label>
                                     <input type="text" class="form-control @error('contact_phone') is-invalid @enderror" id="contact_phone" name="contact_phone" value="{{ old('contact_phone', $product->contact_phone) }}">
                                     @error('contact_phone')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                                 <div class="mb-3">
-                                    <label for="contact_email" class="form-label">البريد الإلكتروني</label>
+                                    <label for="contact_email" class="form-label">{{ __('admin.products.contact_email') }}</label>
                                     <input type="email" class="form-control @error('contact_email') is-invalid @enderror" id="contact_email" name="contact_email" value="{{ old('contact_email', $product->contact_email) }}">
                                     @error('contact_email')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -291,7 +303,7 @@
 
                 <div class="text-end mt-4">
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save me-2"></i>حفظ التغييرات
+                        <i class="fas fa-save me-2"></i>{{ __('admin.products.save_changes') }}
                     </button>
                 </div>
             </form>
