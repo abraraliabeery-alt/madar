@@ -84,22 +84,22 @@
     </script>
     <style>
         :root {
-            --bg: #f7f6f3;
-            --fg: #0f172a;
-            --muted: #5b6475;
+            --bg: #ffffff;
+            --fg: #000000;
+            --muted: #666666;
             --card: #ffffff;
-            --border: rgba(15, 23, 42, 0.12);
+            --border: rgba(0, 0, 0, 0.12);
             --ring: rgba(184, 137, 47, 0.35);
             --accent: #b8892f;
             --accent2: #111a3a;
-            --shadow: 0 18px 50px rgba(15, 23, 42, 0.10);
-            --shadowSoft: 0 10px 30px rgba(15, 23, 42, 0.10);
+            --shadow: 0 18px 50px rgba(0, 0, 0, 0.10);
+            --shadowSoft: 0 10px 30px rgba(0, 0, 0, 0.10);
         }
 
         html[data-theme='dark'] {
-            --bg: #070a15;
-            --fg: #eef2ff;
-            --muted: rgba(238, 242, 255, 0.70);
+            --bg: #000000;
+            --fg: #ffffff;
+            --muted: rgba(255, 255, 255, 0.70);
             --card: rgba(255, 255, 255, 0.06);
             --border: rgba(255, 255, 255, 0.12);
             --ring: rgba(184, 137, 47, 0.26);
@@ -343,7 +343,7 @@
         <div class="h-16 flex items-center justify-between">
             <div class="flex items-center gap-3">
                 <a href="/" class="inline-flex items-center gap-2">
-                    <img src="{{ asset('images/sm-logo-ar.png') }}" alt="مخطط عجلان واخوانه" class="w-10 h-10 rounded-xl shadow-soft object-contain">
+                    <img src="{{ asset('images/sm-logo-ar.png') }}" alt="مخطط عجلان واخوانه" class="w-20 h-10 rounded-xl shadow-soft object-contain">
                 </a>
             </div>
 
@@ -477,6 +477,40 @@
             </div>
         </div>
 
+    </section>
+
+    <!-- Contact Form Section -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="card p-8 shadow-soft">
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-semibold">تواصل معنا</h2>
+                <p class="text-sm mt-2" style="color: var(--muted);">نحن هنا لمساعدتك. أرسل لنا استفسارك وسنرد عليك في أقرب وقت.</p>
+            </div>
+            <form action="{{ route('contact.home.store') }}" method="POST" class="max-w-2xl mx-auto">
+                @csrf
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">الاسم</label>
+                        <input type="text" name="name" required class="w-full px-4 py-3 text-sm rounded-2xl border" style="border-color: var(--border); background: color-mix(in oklab, var(--card) 92%, transparent); color: var(--fg);" placeholder="أدخل اسمك">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">رقم الهاتف</label>
+                        <input type="tel" name="phone" required class="w-full px-4 py-3 text-sm rounded-2xl border" style="border-color: var(--border); background: color-mix(in oklab, var(--card) 92%, transparent); color: var(--fg);" placeholder="05xxxxxxxx">
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <label class="block text-sm font-medium mb-2">البريد الإلكتروني</label>
+                    <input type="email" name="email" required class="w-full px-4 py-3 text-sm rounded-2xl border" style="border-color: var(--border); background: color-mix(in oklab, var(--card) 92%, transparent); color: var(--fg);" placeholder="example@email.com">
+                </div>
+                <div class="mt-4">
+                    <label class="block text-sm font-medium mb-2">الرسالة</label>
+                    <textarea name="message" required rows="4" class="w-full px-4 py-3 text-sm rounded-2xl border" style="border-color: var(--border); background: color-mix(in oklab, var(--card) 92%, transparent); color: var(--fg);" placeholder="اكتب رسالتك هنا..."></textarea>
+                </div>
+                <div class="mt-6 text-center">
+                    <button type="submit" class="btn-primary">إرسال الرسالة</button>
+                </div>
+            </form>
+        </div>
     </section>
 </main>
 
