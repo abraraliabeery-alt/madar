@@ -18,7 +18,7 @@
             <div class="bg-white/70 backdrop-blur rounded-2xl border border-gray-200 overflow-hidden">
                 <div class="divide-y divide-gray-200">
                     <button type="button" class="w-full flex items-center justify-between px-5 py-4 text-gray-900 font-semibold" onclick="toggleHomeSection('home-basic')">
-                        <span>بحث سريع</span>
+                        <span>{{ __('public.search.quick_search') }}</span>
                         <i class="fas fa-chevron-down" data-accordion-icon="home-basic"></i>
                     </button>
                     <div id="home-basic" class="px-5 pb-5">
@@ -35,7 +35,7 @@
                     </div>
 
                     <button type="button" class="w-full flex items-center justify-between px-5 py-4 text-gray-900 font-semibold" onclick="toggleHomeSection('home-advanced')">
-                        <span>بحث متقدم</span>
+                        <span>{{ __('public.search.advanced_search_short') }}</span>
                         <i class="fas fa-chevron-down" data-accordion-icon="home-advanced"></i>
                     </button>
                     <div id="home-advanced" class="px-5 pb-5 hidden">
@@ -136,7 +136,7 @@
                     </div>
 
                     <button type="button" class="w-full flex items-center justify-between px-5 py-4 text-gray-900 font-semibold" onclick="toggleHomeSection('home-map')">
-                        <span>بحث على الخريطة</span>
+                        <span>{{ __('public.search.map_search_short') }}</span>
                         <i class="fas fa-chevron-down" data-accordion-icon="home-map"></i>
                     </button>
                     <div id="home-map" class="px-5 pb-5 hidden">
