@@ -168,7 +168,7 @@
                                                 </button>
                                                 <a href="{{ route('public.search.advanced') }}" class="inline-flex items-center gap-2 rtl:flex-row-reverse px-8 py-3 bg-white border border-gray-200 text-gray-800 font-semibold rounded-xl hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors">
                                                     <i class="fas fa-sliders-h"></i>
-                                                    <span>بحث متقدم</span>
+                                                    <span>{{ __('public.search.advanced_search_short') }}</span>
                                                 </a>
                                             </div>
                                         </form>
@@ -210,7 +210,7 @@
                                             <div class="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
                                                 <button type="submit" class="inline-flex items-center gap-2 rtl:flex-row-reverse px-8 py-3 bg-primary-600 text-white font-semibold rounded-xl hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2 transition-colors">
                                                     <i class="fas fa-map"></i>
-                                                    <span>بحث على الخريطة</span>
+                                                    <span>{{ __('public.search.map_search_short') }}</span>
                                                 </button>
                                                 <a href="{{ route('public.search.map') }}" class="inline-flex items-center gap-2 rtl:flex-row-reverse px-8 py-3 bg-white border border-gray-200 text-gray-800 font-semibold rounded-xl hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors">
                                                     <i class="fas fa-external-link-alt"></i>
