@@ -7,11 +7,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
     // إضافة softDeletes إذا كان مطلوبًا
     // use SoftDeletes;
 
@@ -204,6 +205,32 @@ class User extends Authenticatable
 
         // Check roles relationship
         return $this->roles()->where('name', $role)->exists();
+    }
+
+    public function assignRole(string $roleName, ?int $facilityId = null): void
+    {
+        $role = Role::query()->firstOrCreate(
+            ['name' => $roleName],
+            ['is_primary' => in_array($roleName, ['admin', 'facility', 'client'], true)]
+        );
+
+        if ($this->primary_role === null) {
+            $this->forceFill(['primary_role' => $roleName])->save();
+        }
+
+        $roleQuery = $this->roles()->where('roles.id', $role->id);
+        $exists = ($facilityId === null
+            ? $roleQuery->wherePivotNull('facility_id')
+            : $roleQuery->wherePivot('facility_id', $facilityId)
+        )->exists();
+
+        if (!$exists) {
+            $this->roles()->attach($role->id, [
+                'facility_id' => $facilityId,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
     }
 
     /**

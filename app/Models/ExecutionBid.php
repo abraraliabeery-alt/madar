@@ -32,6 +32,11 @@ class ExecutionBid extends Model
         return $this->belongsTo(ExecutionRequest::class, 'execution_request_id');
     }
 
+    public function executionRequest()
+    {
+        return $this->belongsTo(ExecutionRequest::class, 'execution_request_id');
+    }
+
     public function executorFacility()
     {
         return $this->belongsTo(Facility::class, 'executor_facility_id');
