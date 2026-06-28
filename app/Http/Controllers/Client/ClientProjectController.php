@@ -211,6 +211,7 @@ class ClientProjectController extends Controller
         if (($project->status ?? 'draft') === 'open_for_bids') {
             $executionRequest = ExecutionRequest::create([
                 'facility_id' => null,
+                'client_user_id' => Auth::id(),
                 'project_id' => $project->id,
                 'product_id' => null,
                 'type' => $project->request_type ?? $project->project_type,

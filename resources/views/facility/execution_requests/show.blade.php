@@ -39,7 +39,7 @@
                         <div class="border border-gray-100 rounded-lg p-4 flex flex-col md:flex-row md:items-center md:justify-between">
                             <div class="space-y-1 text-sm">
                                 <div class="text-gray-800 font-medium">
-                                    {{ optional($bid->executorUser)->name ?? 'منفِّذ مجهول' }}
+                                    {{ optional($bid->executorFacility)->name ?? optional($bid->executorUser)->name ?? 'منفذ مجهول' }}
                                 </div>
                                 <div class="text-xs text-gray-500">
                                     المبلغ الكلي: {{ $bid->price_total ? number_format($bid->price_total) . ' ' . ($bid->currency ?? 'SAR') : 'غير محدد' }}
@@ -69,8 +69,16 @@
         </div>
 
         <div class="space-y-4">
+            @php
+                $hasSubmittedBid = $executionRequest->bids->contains('executor_facility_id', $facility->id);
+                $canSubmitBid = !$hasSubmittedBid
+                    && $facility->isExecutionEligible()
+                    && $executionRequest->status === 'open'
+                    && (int) $executionRequest->facility_id !== (int) $facility->id;
+            @endphp
             <div class="bg-white shadow-sm rounded-lg p-5">
                 <h2 class="text-sm font-semibold text-gray-700 mb-3">إضافة عرض منفِّذ</h2>
+                @if($canSubmitBid)
                 <form method="POST" action="{{ route('facility.execution-requests.bids.store', $executionRequest) }}" class="space-y-3">
                     @csrf
 
@@ -101,6 +109,9 @@
                         </button>
                     </div>
                 </form>
+                @else
+                    <p class="text-xs text-gray-500">لا يمكن تقديم عرض على هذا الطلب من هذه المنشأة.</p>
+                @endif
                 @error('execution')
                     <p class="mt-3 text-xs text-red-600">{{ $message }}</p>
                 @enderror

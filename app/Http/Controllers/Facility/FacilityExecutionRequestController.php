@@ -15,9 +15,8 @@ class FacilityExecutionRequestController extends Controller
     {
         $facility = Auth::user()->facilities()->firstOrFail();
 
-        $requestsQuery = ExecutionRequest::query()
-            ->where('facility_id', $facility->id)
-            ->withCount('bids');
+        $requestsQuery = $this->visibleRequestsQuery($facility)->withCount('bids');
+        $ownedRequestsQuery = ExecutionRequest::query()->where('facility_id', $facility->id);
 
         $stats = [
             'total_requests' => (clone $requestsQuery)->count(),
@@ -26,10 +25,14 @@ class FacilityExecutionRequestController extends Controller
             'total_bids' => ExecutionBid::whereIn('execution_request_id', function ($q) use ($facility) {
                 $q->select('id')->from('execution_requests')->where('facility_id', $facility->id);
             })->count(),
+            'marketplace_requests' => ExecutionRequest::query()
+                ->whereNull('facility_id')
+                ->where('status', 'open')
+                ->count(),
+            'owned_requests' => (clone $ownedRequestsQuery)->count(),
         ];
 
-        $recentRequests = ExecutionRequest::query()
-            ->where('facility_id', $facility->id)
+        $recentRequests = $this->visibleRequestsQuery($facility)
             ->with(['translations'])
             ->withCount('bids')
             ->latest()
@@ -50,8 +53,7 @@ class FacilityExecutionRequestController extends Controller
     {
         $facility = Auth::user()->facilities()->firstOrFail();
 
-        $requests = ExecutionRequest::query()
-            ->where('facility_id', $facility->id)
+        $requests = $this->visibleRequestsQuery($facility)
             ->with(['translations'])
             ->withCount('bids')
             ->latest()
@@ -164,9 +166,9 @@ class FacilityExecutionRequestController extends Controller
     {
         $facility = Auth::user()->facilities()->firstOrFail();
 
-        abort_unless($executionRequest->facility_id === $facility->id, 404);
+        abort_unless($this->canViewRequest($executionRequest, $facility), 404);
 
-        $executionRequest->load(['translations', 'bids.executorUser']);
+        $executionRequest->load(['translations', 'bids.executorUser', 'bids.executorFacility', 'client']);
 
         return view('facility.execution_requests.show', compact('facility', 'executionRequest'));
     }
@@ -181,7 +183,7 @@ class FacilityExecutionRequestController extends Controller
             ]);
         }
 
-        abort_unless($executionRequest->facility_id === $facility->id, 404);
+        abort_unless($this->canBidOnRequest($executionRequest, $facility), 404);
 
         $data = $request->validate([
             'price_total' => 'nullable|numeric|min:0',
@@ -190,8 +192,19 @@ class FacilityExecutionRequestController extends Controller
             'notes' => 'nullable|string',
         ]);
 
-        $bid = ExecutionBid::create([
+        $existingBid = ExecutionBid::query()
+            ->where('execution_request_id', $executionRequest->id)
+            ->where('executor_facility_id', $facility->id)
+            ->first();
+
+        if ($existingBid) {
+            return redirect()->route('facility.execution-requests.show', $executionRequest)
+                ->withErrors(['execution' => 'لديك عرض مسجل على هذا الطلب بالفعل.']);
+        }
+
+        ExecutionBid::create([
             'execution_request_id' => $executionRequest->id,
+            'executor_facility_id' => $facility->id,
             'executor_user_id' => Auth::id(),
             'price_total' => $data['price_total'] ?? null,
             'currency' => 'SAR',

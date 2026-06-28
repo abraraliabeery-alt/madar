@@ -151,6 +151,10 @@ class PhoneOtpAuthController extends Controller
             return redirect()->route('facility.onboarding.create');
         }
 
-        return redirect()->intended('/dashboard');
+        if (method_exists($user, 'hasRole') && method_exists($user, 'assignRole') && !$user->hasRole('client')) {
+            $user->assignRole('client');
+        }
+
+        return redirect()->intended(route('client.dashboard'));
     }
 }

@@ -72,6 +72,7 @@ class ApiAuthController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'phone_number' => 'required|string',
+            'login_intent' => 'nullable|in:client,facility,admin',
         ]);
 
         if ($validator->fails()) {
@@ -146,6 +147,7 @@ class ApiAuthController extends Controller
             'phone_number' => 'required|string',
             'otp' => 'required|string',
             'device_name' => 'nullable|string',
+            'login_intent' => 'nullable|in:client,facility,admin',
         ]);
 
         if ($validator->fails()) {
@@ -205,6 +207,15 @@ class ApiAuthController extends Controller
         $user->last_login_at = Carbon::now();
         $user->save();
 
+        $loginIntent = (string) $request->input('login_intent', 'client');
+        if (!$user->hasRole('admin')) {
+            if ($loginIntent === 'facility') {
+                $user->assignRole('facility');
+            } else {
+                $user->assignRole('client');
+            }
+        }
+
         $deviceName = $request->device_name ?? $request->ip();
         $token = $user->createToken($deviceName)->plainTextToken;
 
@@ -232,6 +243,7 @@ class ApiAuthController extends Controller
             'phone_number' => 'required|string|unique:users,phone_number',
             'password' => 'required|string|min:8|confirmed',
             'role_id' => 'nullable|exists:roles,id',
+            'primary_role' => 'nullable|string|in:client,facility',
             'device_name' => 'nullable|string',
         ]);
 
@@ -251,6 +263,8 @@ class ApiAuthController extends Controller
         // ربط المستخدم بالدور إذا تم تحديده
         if ($request->role_id) {
             $user->roles()->attach($request->role_id);
+        } else {
+            $user->assignRole($request->input('primary_role', 'client'));
         }
 
         // إنشاء token
