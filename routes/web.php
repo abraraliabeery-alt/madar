@@ -87,8 +87,7 @@ Route::post('/logout', function (\Illuminate\Http\Request $request) {
 Route::middleware('guest')->group(function () {
     Route::get('/login/phone', [PhoneOtpAuthController::class, 'showPhoneForm'])
         ->name('phone.otp.login.form');
-    Route::post('/login/phone', [PhoneOtpAuthController::class, 'sendOtp'])
-        ->middleware('throttle:otp-request')
+    Route::post('/login/phone', [PhoneOtpAuthController::class, 'passwordLogin'])
         ->name('phone.otp.login.send');
     Route::get('/login/phone/verify', [PhoneOtpAuthController::class, 'showVerifyForm'])
         ->name('phone.otp.verify.form');

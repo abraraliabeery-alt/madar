@@ -20,6 +20,8 @@ use App\Http\Controllers\Public\ErrorController;
 use App\Http\Controllers\Public\BookingController;
 use App\Http\Controllers\FacilitySite\SiteController;
 use App\Http\Controllers\Admin\AdminPlanLotController;
+use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\File;
 
 // Public Routes - لا تحتاج تسجيل دخول
 Route::group([], function () {
@@ -52,8 +54,40 @@ Route::group([], function () {
     Route::get('/plans/ajlan/osm-roads', [SearchController::class, 'ajlanOsmRoads'])
         ->name('plans.ajlan.osm_roads');
 
+    Route::get('/plans/ajlan/cad/points', [SearchController::class, 'ajlanCadPoints'])
+        ->name('plans.ajlan.cad.points');
+
+    Route::get('/plans/ajlan/cad/texts', [SearchController::class, 'ajlanCadTexts'])
+        ->name('plans.ajlan.cad.texts');
+
+    Route::get('/plans/ajlan/cad/lines', [SearchController::class, 'ajlanCadLines'])
+        ->name('plans.ajlan.cad.lines');
+
+    Route::get('/plans/ajlan/cad/polylines', [SearchController::class, 'ajlanCadPolylines'])
+        ->name('plans.ajlan.cad.polylines');
+
+    Route::get('/plans/ajlan/cad/manifest', [SearchController::class, 'ajlanCadManifest'])
+        ->name('plans.ajlan.cad.manifest');
+
+    Route::get('/plans/ajlan/cad/file/{file}', [SearchController::class, 'ajlanCadFile'])
+        ->name('plans.ajlan.cad.file');
+
+    Route::get('/plans/ajlan/cad/dxf/{file}', [SearchController::class, 'ajlanCadDxfFile'])
+        ->name('plans.ajlan.cad.dxf');
+
+    Route::get('/plans/ajlan/phase1/{kind}', [SearchController::class, 'ajlanPhase1GeoJson'])
+        ->name('plans.ajlan.phase1');
+
     Route::get('/plans/ajlan/lots/{lot}', [SearchController::class, 'ajlanLotShow'])
         ->name('plans.ajlan.lots.show');
+
+    Route::get('/debug/ajlan-phase1-fixed', function () {
+        $path = base_path('resources/New/ajlan_phase1_fix_package (1)/ajlan_phase1_fixed.blade.php');
+        if (!is_file($path)) {
+            abort(404);
+        }
+        return Blade::render(File::get($path), []);
+    })->name('debug.ajlan_phase1_fixed');
 
     Route::view('/plans/ajlan/auto-detected-parcels', 'public.plans.plans')
         ->name('plans.ajlan.auto_detected_parcels');

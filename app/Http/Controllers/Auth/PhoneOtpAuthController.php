@@ -9,13 +9,126 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class PhoneOtpAuthController extends Controller
 {
+    private function normalizePhone(string $input, string $defaultRegion = 'SA'): string
+    {
+        $s = trim($input);
+        $s = preg_replace('/[^0-9+]/', '', $s) ?? '';
+        if ($s === '') {
+            return '';
+        }
+
+        if (class_exists('\\libphonenumber\\PhoneNumberUtil')) {
+            try {
+                $util = \libphonenumber\PhoneNumberUtil::getInstance();
+                $proto = $util->parse($s, strtoupper($defaultRegion));
+                if (!$util->isValidNumber($proto)) {
+                    return '';
+                }
+                return $util->format($proto, \libphonenumber\PhoneNumberFormat::E164);
+            } catch (\Throwable $e) {
+                Log::warning('Phone normalization failed, falling back', [
+                    'input' => $input,
+                    'defaultRegion' => $defaultRegion,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+        }
+
+        $digits = preg_replace('/\D/', '', $s) ?? '';
+        if ($digits === '') {
+            return '';
+        }
+
+        if ($defaultRegion === 'SA') {
+            if (str_starts_with($digits, '9665') && strlen($digits) === 12) {
+                return '+' . $digits;
+            }
+            if (str_starts_with($digits, '05') && strlen($digits) === 10) {
+                return '+966' . substr($digits, 1);
+            }
+            if (str_starts_with($digits, '5') && strlen($digits) === 9) {
+                return '+966' . $digits;
+            }
+            if (str_starts_with($digits, '966') && strlen($digits) === 12) {
+                return '+' . $digits;
+            }
+        }
+
+        return '';
+    }
+
     public function showPhoneForm()
     {
         return view('auth.phone-login');
+    }
+
+    public function passwordLogin(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'phone_number' => ['required', 'string'],
+            'password' => ['required', 'string'],
+            'login_intent' => ['nullable', 'in:client,facility,admin'],
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+        $phone = $this->normalizePhone((string) $request->input('phone_number'), 'SA');
+        $password = (string) $request->input('password');
+
+        if ($phone === '') {
+            return back()->withErrors([
+                'phone_number' => 'رقم الجوال غير صحيح',
+            ])->withInput();
+        }
+
+        $user = User::where('phone_number', $phone)->first();
+
+        if (!$user) {
+            $user = User::create([
+                'name' => $phone,
+                'email' => $phone . '@example.local',
+                'phone_number' => $phone,
+                'password' => Hash::make($password),
+            ]);
+
+            Log::info('User created via phone+password login', [
+                'phone_number' => $phone,
+            ]);
+        } else {
+            if (!Hash::check($password, (string) $user->password)) {
+                return back()->withErrors([
+                    'password' => 'كلمة المرور غير صحيحة',
+                ])->withInput();
+            }
+        }
+
+        $user->last_login_at = Carbon::now();
+        $user->save();
+
+        Auth::login($user, true);
+
+        $loginIntent = (string) $request->input('login_intent', 'client');
+
+        if (method_exists($user, 'hasRole') && $user->hasRole('admin')) {
+            return redirect()->route('admin.dashboard');
+        }
+
+        if ($loginIntent === 'facility') {
+            if (method_exists($user, 'hasRole') && method_exists($user, 'assignRole') && !$user->hasRole('facility')) {
+                $user->assignRole('facility');
+            }
+
+            return redirect()->route('facility.onboarding.create');
+        }
+
+        return redirect()->intended('/dashboard');
     }
 
     public function sendOtp(Request $request)
@@ -29,7 +142,13 @@ class PhoneOtpAuthController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
-        $phone = (string) $request->input('phone_number');
+        $phone = $this->normalizePhone((string) $request->input('phone_number'), 'SA');
+
+        if ($phone === '') {
+            return back()->withErrors([
+                'phone_number' => 'رقم الجوال غير صحيح',
+            ])->withInput();
+        }
 
         $user = User::where('phone_number', $phone)->first();
 
@@ -67,7 +186,7 @@ class PhoneOtpAuthController extends Controller
 
     public function showVerifyForm(Request $request)
     {
-        $phone = (string) $request->session()->get('otp_phone_number', '');
+        $phone = $this->normalizePhone((string) $request->session()->get('otp_phone_number', ''), 'SA');
         if ($phone === '') {
             return redirect()->route('phone.otp.login.form');
         }
@@ -87,7 +206,7 @@ class PhoneOtpAuthController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
-        $phone = (string) $request->session()->get('otp_phone_number', '');
+        $phone = $this->normalizePhone((string) $request->session()->get('otp_phone_number', ''), 'SA');
         if ($phone === '') {
             return redirect()->route('phone.otp.login.form');
         }

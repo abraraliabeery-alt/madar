@@ -4,7 +4,7 @@
 @endphp
 
 <div class="relative" x-data="{ open: false }">
-    <button @click="open = !open" @click.away="open = false" 
+    <button @click="open = !open" @click.outside="open = false" 
             class="flex items-center {{ app()->getLocale() == 'ar' ? 'space-x-2 space-x-reverse' : 'space-x-2' }} text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
         <i class="fas fa-globe text-lg"></i>
         <span class="font-semibold">{{ strtoupper($currentLocale) }}</span>

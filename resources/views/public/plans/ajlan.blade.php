@@ -211,6 +211,17 @@
             transition: none;
         }
 
+        .cad-label {
+            background: color-mix(in oklab, var(--card) 88%, transparent);
+            border: 1px solid var(--border);
+            color: var(--fg);
+            border-radius: 10px;
+            padding: 2px 6px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
         .card {
             border-radius: 1.5rem;
             border: 1px solid var(--border);
@@ -429,30 +440,9 @@
             <div class="grid grid-cols-1 lg:grid-cols-12" style="min-height: 660px;">
                 <aside id="lots" class="lg:col-span-4 border-b lg:border-b-0 lg:border-l" style="border-color: var(--border); background: var(--card);">
                     <div class="p-4">
-                        <div class="text-sm font-semibold">تصفية القطع</div>
-                        <div class="mt-3">
-                            <label class="block text-xs mb-1" style="color: var(--muted);">بحث برقم القطعة</label>
-                            <input id="lotsSearch" class="w-full px-4 py-3 text-sm rounded-2xl border" style="border-color: var(--border); background: color-mix(in oklab, var(--card) 92%, transparent); color: var(--fg);" placeholder="مثال: 101">
-                        </div>
-                        <div class="mt-3">
-                            <label class="block text-xs mb-1" style="color: var(--muted);">الحالة</label>
-                            <select id="lotsStatus" class="w-full px-4 py-3 text-sm rounded-2xl border" style="border-color: var(--border); background: color-mix(in oklab, var(--card) 92%, transparent); color: var(--fg);">
-                                <option value="">الكل</option>
-                                <option value="available">متاح</option>
-                                <option value="reserved">محجوز</option>
-                                <option value="sold">مباع</option>
-                            </select>
-                        </div>
-                        <div class="mt-4 flex items-center justify-between">
-                            <div class="text-xs" style="color: var(--muted);">عدد النتائج: <span id="lotsCount">0</span></div>
-                            <button type="button" onclick="resetLotsFilters()" class="chip" style="height: 2.25rem; display:inline-flex; align-items:center; gap:.4rem;">
-                                <i data-lucide="rotate-ccw" style="width:16px; height:16px;"></i>
-                                <span>إعادة ضبط</span>
-                            </button>
-                        </div>
                     </div>
 
-                    <div id="lotsList" class="px-4 pb-4" style="max-height: 560px; overflow:auto;"></div>
+                    <div id="lotsList" class="px-4 pb-4" style="max-height: 560px; overflow:auto; display:none;"></div>
                 </aside>
 
                 <section class="lg:col-span-8" style="background: var(--card);">
@@ -466,10 +456,6 @@
                             <button type="button" onclick="zoomOutMap()" class="chip" style="height: 2.25rem; display:inline-flex; align-items:center; gap:.4rem;">
                                 <i data-lucide="zoom-out" style="width:16px; height:16px;"></i>
                                 <span>تصغير</span>
-                            </button>
-                            <button type="button" onclick="fitToLots()" class="chip" style="height: 2.25rem; display:inline-flex; align-items:center; gap:.4rem;">
-                                <i data-lucide="maximize-2" style="width:16px; height:16px;"></i>
-                                <span>عرض الكل</span>
                             </button>
                         </div>
                     </div>
@@ -536,10 +522,12 @@ const centerLng = @json($centerLng);
 const geoJsonData = @json($geoJson);
 const whatsappNumber = @json($whatsappNumber);
 const planShadeRadiusMeters = @json($planShadeRadiusMeters ?? null);
+const legacyOverlaysEnabled = false;
 
 let map;
 let lotsLayer;
 let lotsPointsLayer;
+let lotsLabelsLayer;
 let roadsLayer;
 let lotsIndex = {};
 let lotsPointsIndex = {};
@@ -550,9 +538,38 @@ let pointLotRadiusMeters = 45;
 let initialLotToSelect = null;
 let planOverlay = null;
 let planOverlayEnabled = false;
+
+const cadDxfFileName = 'A';
 let planOverlayClipCleanup = null;
 
+let cadTextLayer;
+let cadPointLayer;
+let cadPolylineLayer;
+let cadLineLayer;
+
+let phase1BoundariesLayer;
+let phase1LabelsLayer;
+let phase1Loaded = false;
+let phase1LabelsFeatures = null;
+let phase1LabelsBuilt = false;
+let phase1LabelsBuildInProgress = false;
+let phase1LabelsCanvasLayer = null;
+
+let utmLandBoundariesLayer;
+let utmLandLabelsCanvasLayer;
+let utmLandLabelsFeatures = null;
+let utmLandLastSig = null;
+let cadCalibration = null;
+let cadPlanLocalBbox = null;
+let cadTextReqId = 0;
+let cadPointReqId = 0;
+let cadPolylineReqId = 0;
+let cadLineReqId = 0;
+let cadLastRefreshSig = null;
+
 const planImageUrl = @json(asset('assets/assets/ajlan_plan_true_vector.svg') . '?v=' . @filemtime(public_path('assets/assets/ajlan_plan_true_vector.svg')));
+
+const UTM38_DEF = '+proj=utm +zone=38 +datum=WGS84 +units=m +no_defs';
 
 function trySelectInitialLot() {
     if (!initialLotToSelect) return;
@@ -627,6 +644,7 @@ function initMap() {
     map = L.map('ajlanPlanMap', {
         zoomControl: true,
         attributionControl: false,
+        maxZoom: 22,
     }).setView(center, 17);
 
     map.createPane('boundaryPane');
@@ -642,13 +660,21 @@ function initMap() {
     map.createPane('lotsPane');
     map.getPane('lotsPane').style.zIndex = 420;
 
+    map.createPane('cadPane');
+    map.getPane('cadPane').style.zIndex = 430;
+
     pointLotRadiusMeters = Number(planShadeRadiusMeters) > 0
         ? Math.max(25, Math.min(70, Number(planShadeRadiusMeters) / 140))
         : 45;
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
+        attribution: '© OpenStreetMap contributors',
+        maxNativeZoom: 19,
+        maxZoom: 22,
     }).addTo(map);
+
+    map.on('moveend zoomend', debounce(refreshUtmLandLayers, 220));
+    refreshUtmLandLayers();
 
     fetch('/geojson/plan-boundary.geojson', { cache: 'no-store' })
         .then((res) => {
@@ -667,7 +693,6 @@ function initMap() {
                 if (Array.isArray(ringLatLngs) && ringLatLngs.length) {
                     const coords = ringLatLngs.map(ll => [Number(ll.lat.toFixed(8)), Number(ll.lng.toFixed(8))]);
                     window.__ajlan_plan_outer_ring_latlng = coords;
-                    console.log('Ajlan plan outer ring (lat,lng):', coords);
                 }
             } catch (e) {}
 
@@ -686,51 +711,1285 @@ function initMap() {
                 [24.56727800007028, 46.84426200000871]
             );
             if (bounds && bounds.isValid()) {
-                if (planOverlay) {
-                    planOverlay.remove();
-                }
-
-                try {
-                    const sw = bounds.getSouthWest();
-                    const ne = bounds.getNorthEast();
-                    console.log('Plan bounds (use these numbers for overlay):', [
-                        [Number(sw.lat.toFixed(8)), Number(sw.lng.toFixed(8))],
-                        [Number(ne.lat.toFixed(8)), Number(ne.lng.toFixed(8))]
-                    ]);
-                } catch (e) {}
-
-                planOverlay = null;
-                planOverlayEnabled = false;
-            }
-
-            if (bounds && bounds.isValid()) {
                 map.fitBounds(bounds.pad(0.15));
+
+                if (legacyOverlaysEnabled) {
+                    if (planOverlay) {
+                        planOverlay.remove();
+                    }
+
+                    try {
+                        const sw = bounds.getSouthWest();
+                        const ne = bounds.getNorthEast();
+                        console.log('Plan bounds (use these numbers for overlay):', [
+                            [Number(sw.lat.toFixed(8)), Number(sw.lng.toFixed(8))],
+                            [Number(ne.lat.toFixed(8)), Number(ne.lng.toFixed(8))]
+                        ]);
+                    } catch (e) {}
+
+                    planOverlay = L.imageOverlay(planImageUrl, bounds, {
+                        pane: 'planImagePane',
+                        opacity: 1,
+                        interactive: false,
+                        className: 'plan-overlay-image'
+                    }).addTo(map);
+
+                    planOverlay.bringToFront();
+                }
             }
 
             if (bounds && bounds.isValid()) {
-                loadOsmRoads(bounds);
+                if (legacyOverlaysEnabled) {
+                    loadOsmRoads(bounds);
+                }
             }
         })
         .catch(() => {});
 
-    fetch('/gis/ajlan-lots-points.json', { cache: 'no-store' })
-        .then((res) => {
-            if (!res.ok) throw new Error('points not found');
-            return res.json();
+    if (legacyOverlaysEnabled) {
+        fetch('/gis/ajlan-lots-points.json', { cache: 'no-store' })
+            .then((res) => {
+                if (!res.ok) throw new Error('points not found');
+                return res.json();
+            })
+            .then((points) => {
+                lotsPointsSource = Array.isArray(points) ? points : [];
+                renderLots();
+                trySelectInitialLot();
+            })
+            .catch(() => {
+                lotsPointsSource = [];
+                renderLots();
+            });
+
+        lotsSource = Array.isArray(geoJsonData?.features) ? geoJsonData.features : [];
+        renderLots();
+        trySelectInitialLot();
+    }
+
+}
+
+function latLngBoundsToUtm38Bbox(bounds) {
+    try {
+        if (!bounds || !bounds.isValid?.()) return null;
+        if (typeof proj4 !== 'function') return null;
+
+        const sw = bounds.getSouthWest();
+        const ne = bounds.getNorthEast();
+        const p1 = proj4('WGS84', UTM38_DEF, [Number(sw.lng), Number(sw.lat)]);
+        const p2 = proj4('WGS84', UTM38_DEF, [Number(ne.lng), Number(ne.lat)]);
+
+        const minX = Math.min(Number(p1?.[0]), Number(p2?.[0]));
+        const maxX = Math.max(Number(p1?.[0]), Number(p2?.[0]));
+        const minY = Math.min(Number(p1?.[1]), Number(p2?.[1]));
+        const maxY = Math.max(Number(p1?.[1]), Number(p2?.[1]));
+        if (![minX, minY, maxX, maxY].every(Number.isFinite)) return null;
+
+        const padX = (maxX - minX) * 0.08;
+        const padY = (maxY - minY) * 0.08;
+
+        return {
+            minX: minX - padX,
+            minY: minY - padY,
+            maxX: maxX + padX,
+            maxY: maxY + padY,
+        };
+    } catch (e) {
+        return null;
+    }
+}
+
+function refreshUtmLandLayers() {
+    try {
+        if (!map) return;
+        const z = Math.round(map.getZoom());
+        if (z < 14) {
+            if (utmLandBoundariesLayer && map.hasLayer(utmLandBoundariesLayer)) utmLandBoundariesLayer.remove();
+            if (utmLandLabelsCanvasLayer && map.hasLayer(utmLandLabelsCanvasLayer)) utmLandLabelsCanvasLayer.remove();
+            return;
+        }
+
+        const bbox = latLngBoundsToUtm38Bbox(map.getBounds());
+        if (!bbox) return;
+        const sig = `${z}|${bbox.minX.toFixed(1)},${bbox.minY.toFixed(1)},${bbox.maxX.toFixed(1)},${bbox.maxY.toFixed(1)}`;
+        if (utmLandLastSig === sig) return;
+        utmLandLastSig = sig;
+
+        loadUtmLandBoundaries(z, bbox);
+        loadUtmLandLabels(z, bbox);
+    } catch (e) {}
+}
+
+function loadUtmLandBoundaries(zoom, bbox) {
+    const url = new URL(`/plans/ajlan/cad/file/polylines`, window.location.origin);
+    url.searchParams.set('utmOnly', '1');
+    url.searchParams.set('minX', String(bbox.minX));
+    url.searchParams.set('minY', String(bbox.minY));
+    url.searchParams.set('maxX', String(bbox.maxX));
+    url.searchParams.set('maxY', String(bbox.maxY));
+
+    const limit = zoom >= 17 ? 4500 : (zoom >= 16 ? 2500 : 1300);
+    url.searchParams.set('limit', String(limit));
+
+    fetch(url.toString(), { cache: 'no-store' })
+        .then((r) => {
+            if (!r.ok) throw new Error(`HTTP ${r.status} ${r.statusText}`);
+            return r.json();
         })
-        .then((points) => {
-            lotsPointsSource = Array.isArray(points) ? points : [];
-            renderLots();
-            trySelectInitialLot();
+        .then((fc) => {
+            if (!fc || fc.type !== 'FeatureCollection') return;
+            const reprojected = reprojectGeoJsonUtmToWgs84(fc);
+
+            if (utmLandBoundariesLayer) {
+                utmLandBoundariesLayer.remove();
+                utmLandBoundariesLayer = null;
+            }
+
+            utmLandBoundariesLayer = L.geoJSON(reprojected, {
+                pane: 'cadPane',
+                style: {
+                    color: '#16A34A',
+                    weight: 2,
+                    opacity: 0.9,
+                },
+            }).addTo(map);
         })
-        .catch(() => {
-            lotsPointsSource = [];
-            renderLots();
+        .catch(() => {});
+}
+
+function loadUtmLandLabels(zoom, bbox) {
+    const url = new URL(`/plans/ajlan/cad/file/texts`, window.location.origin);
+    url.searchParams.set('utmOnly', '1');
+    url.searchParams.set('minX', String(bbox.minX));
+    url.searchParams.set('minY', String(bbox.minY));
+    url.searchParams.set('maxX', String(bbox.maxX));
+    url.searchParams.set('maxY', String(bbox.maxY));
+
+    const limit = zoom >= 18 ? 4000 : (zoom >= 17 ? 2200 : (zoom >= 16 ? 1400 : 800));
+    url.searchParams.set('limit', String(limit));
+
+    fetch(url.toString(), { cache: 'no-store' })
+        .then((r) => {
+            if (!r.ok) throw new Error(`HTTP ${r.status} ${r.statusText}`);
+            return r.json();
+        })
+        .then((fc) => {
+            if (!fc || fc.type !== 'FeatureCollection') return;
+
+            const feats = Array.isArray(fc?.features) ? fc.features : [];
+            const utmPts = feats
+                .map((f) => {
+                    const c = f?.geometry?.coordinates;
+                    const x = Number(c?.[0]);
+                    const y = Number(c?.[1]);
+                    if (!Number.isFinite(x) || !Number.isFinite(y)) return null;
+                    const text = String(f?.properties?.text ?? '').trim();
+                    if (!text) return null;
+                    return { x, y, text };
+                })
+                .filter(Boolean);
+
+            utmLandLabelsFeatures = utmPts;
+            ensureUtmLandLabelsCanvas();
+            if (!map.hasLayer(utmLandLabelsCanvasLayer)) {
+                utmLandLabelsCanvasLayer.addTo(map);
+            }
+        })
+        .catch(() => {});
+}
+
+function ensureUtmLandLabelsCanvas() {
+    try {
+        if (utmLandLabelsCanvasLayer) return;
+
+        const CanvasLabels = L.Layer.extend({
+            onAdd: function (m) {
+                this._map = m;
+                this._canvas = L.DomUtil.create('canvas', 'leaflet-utm-land-labels');
+                this._canvas.style.position = 'absolute';
+                this._canvas.style.pointerEvents = 'none';
+
+                const pane = m.getPane('cadPane') || m.getPane('overlayPane');
+                pane.appendChild(this._canvas);
+
+                this._pending = false;
+                this._redraw = this._redraw.bind(this);
+                this._schedule = this._schedule.bind(this);
+
+                m.on('move zoom resize', this._schedule, this);
+                this._schedule();
+            },
+            onRemove: function (m) {
+                m.off('move zoom resize', this._schedule, this);
+                if (this._canvas && this._canvas.parentNode) {
+                    this._canvas.parentNode.removeChild(this._canvas);
+                }
+                this._canvas = null;
+                this._map = null;
+            },
+            _schedule: function () {
+                if (this._pending) return;
+                this._pending = true;
+                requestAnimationFrame(this._redraw);
+            },
+            _redraw: function () {
+                this._pending = false;
+                const m = this._map;
+                const c = this._canvas;
+                if (!m || !c) return;
+
+                const size = m.getSize();
+                if (!size?.x || !size?.y) return;
+                const dpr = window.devicePixelRatio || 1;
+
+                c.width = Math.round(size.x * dpr);
+                c.height = Math.round(size.y * dpr);
+                c.style.width = `${size.x}px`;
+                c.style.height = `${size.y}px`;
+
+                const ctx = c.getContext('2d');
+                if (!ctx) return;
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                ctx.clearRect(0, 0, size.x, size.y);
+
+                const z = Math.round(m.getZoom());
+                if (z < 15) return;
+                const feats = Array.isArray(utmLandLabelsFeatures) ? utmLandLabelsFeatures : [];
+                if (!feats.length) return;
+                if (typeof proj4 !== 'function') return;
+
+                let maxLabels = 500;
+                if (z >= 18) maxLabels = 2000;
+                else if (z >= 17) maxLabels = 1300;
+                else if (z >= 16) maxLabels = 850;
+
+                let fontSize = 11;
+                if (z >= 18) fontSize = 14;
+                else if (z >= 17) fontSize = 13;
+                else if (z >= 16) fontSize = 12;
+
+                ctx.font = `700 ${fontSize}px system-ui, -apple-system, Segoe UI, Arial`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+
+                const bounds = m.getBounds();
+                if (!bounds || !bounds.isValid()) return;
+
+                const drawn = [];
+                const pad = 3;
+                let shown = 0;
+
+                for (let i = 0; i < feats.length; i++) {
+                    if (shown >= maxLabels) break;
+                    const f = feats[i];
+
+                    const ll = proj4(UTM38_DEF, 'WGS84', [Number(f.x), Number(f.y)]);
+                    const lng = Number(ll?.[0]);
+                    const lat = Number(ll?.[1]);
+                    if (!Number.isFinite(lat) || !Number.isFinite(lng)) continue;
+
+                    const latlng = L.latLng(lat, lng);
+                    if (!bounds.contains(latlng)) continue;
+
+                    const p = m.latLngToContainerPoint(latlng);
+                    if (!p) continue;
+
+                    const text = f.text;
+                    const w = ctx.measureText(text).width;
+                    const h = fontSize;
+                    const x0 = p.x - w / 2 - pad;
+                    const y0 = p.y - h / 2 - pad;
+                    const x1 = p.x + w / 2 + pad;
+                    const y1 = p.y + h / 2 + pad;
+
+                    let collide = false;
+                    for (let j = 0; j < drawn.length; j++) {
+                        const b = drawn[j];
+                        if (!(x1 < b.x0 || x0 > b.x1 || y1 < b.y0 || y0 > b.y1)) {
+                            collide = true;
+                            break;
+                        }
+                    }
+                    if (collide) continue;
+                    drawn.push({ x0, y0, x1, y1 });
+
+                    ctx.lineWidth = 3;
+                    ctx.strokeStyle = 'rgba(255,255,255,0.85)';
+                    ctx.strokeText(text, p.x, p.y);
+                    ctx.fillStyle = 'rgba(17, 24, 39, 0.92)';
+                    ctx.fillText(text, p.x, p.y);
+                    shown++;
+                }
+            },
         });
 
-    lotsSource = Array.isArray(geoJsonData?.features) ? geoJsonData.features : [];
-    renderLots();
-    trySelectInitialLot();
+        utmLandLabelsCanvasLayer = new CanvasLabels();
+    } catch (e) {}
+}
+
+function updatePhase1LabelsVisibility() {
+    try {
+        if (!map) return;
+        const z = Math.round(map.getZoom());
+        if (z >= 15) {
+            if (!phase1LabelsCanvasLayer) {
+                buildPhase1LabelsLayer();
+            }
+            if (!phase1LabelsCanvasLayer) return;
+            if (!map.hasLayer(phase1LabelsCanvasLayer)) {
+                phase1LabelsCanvasLayer.addTo(map);
+            }
+        } else {
+            if (phase1LabelsCanvasLayer && map.hasLayer(phase1LabelsCanvasLayer)) {
+                phase1LabelsCanvasLayer.remove();
+            }
+        }
+    } catch (e) {}
+}
+
+function buildPhase1LabelsLayer() {
+    try {
+        if (!Array.isArray(phase1LabelsFeatures)) return;
+        if (phase1LabelsCanvasLayer) return;
+
+        const feats = phase1LabelsFeatures
+            .map((f) => {
+                const c = f?.geometry?.coordinates;
+                const lon = Number(c?.[0]);
+                const lat = Number(c?.[1]);
+                if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
+                const label = String(f?.properties?.text ?? '').trim();
+                if (!label) return null;
+                return { lat, lon, label };
+            })
+            .filter(Boolean);
+
+        const CanvasLabels = L.Layer.extend({
+            onAdd: function (m) {
+                this._map = m;
+                this._canvas = L.DomUtil.create('canvas', 'leaflet-phase1-labels');
+                this._canvas.style.position = 'absolute';
+                this._canvas.style.pointerEvents = 'none';
+
+                const pane = m.getPane('cadPane') || m.getPane('overlayPane');
+                pane.appendChild(this._canvas);
+
+                this._pending = false;
+                this._redraw = this._redraw.bind(this);
+                this._schedule = this._schedule.bind(this);
+
+                m.on('move zoom resize', this._schedule, this);
+                this._schedule();
+            },
+            onRemove: function (m) {
+                m.off('move zoom resize', this._schedule, this);
+                if (this._canvas && this._canvas.parentNode) {
+                    this._canvas.parentNode.removeChild(this._canvas);
+                }
+                this._canvas = null;
+                this._map = null;
+            },
+            _schedule: function () {
+                if (this._pending) return;
+                this._pending = true;
+                requestAnimationFrame(this._redraw);
+            },
+            _redraw: function () {
+                this._pending = false;
+                const m = this._map;
+                const c = this._canvas;
+                if (!m || !c) return;
+
+                const size = m.getSize();
+                if (!size?.x || !size?.y) return;
+                const dpr = window.devicePixelRatio || 1;
+
+                c.width = Math.round(size.x * dpr);
+                c.height = Math.round(size.y * dpr);
+                c.style.width = `${size.x}px`;
+                c.style.height = `${size.y}px`;
+
+                const ctx = c.getContext('2d');
+                if (!ctx) return;
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                ctx.clearRect(0, 0, size.x, size.y);
+
+                const z = Math.round(m.getZoom());
+                if (z < 15) return;
+
+                const bounds = m.getBounds();
+                if (!bounds || !bounds.isValid()) return;
+
+                let maxLabels = 600;
+                if (z >= 18) maxLabels = 2500;
+                else if (z >= 17) maxLabels = 1600;
+                else if (z >= 16) maxLabels = 1000;
+
+                let fontSize = 11;
+                if (z >= 18) fontSize = 14;
+                else if (z >= 17) fontSize = 13;
+                else if (z >= 16) fontSize = 12;
+
+                ctx.font = `600 ${fontSize}px system-ui, -apple-system, Segoe UI, Arial`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+
+                const drawn = [];
+                const pad = 3;
+
+                let shown = 0;
+                for (let i = 0; i < feats.length; i++) {
+                    if (shown >= maxLabels) break;
+                    const f = feats[i];
+                    const ll = L.latLng(f.lat, f.lon);
+                    if (!bounds.contains(ll)) continue;
+                    const p = m.latLngToContainerPoint(ll);
+                    if (!p) continue;
+
+                    const text = f.label;
+                    const w = ctx.measureText(text).width;
+                    const h = fontSize;
+                    const x0 = p.x - w / 2 - pad;
+                    const y0 = p.y - h / 2 - pad;
+                    const x1 = p.x + w / 2 + pad;
+                    const y1 = p.y + h / 2 + pad;
+
+                    let collide = false;
+                    for (let j = 0; j < drawn.length; j++) {
+                        const b = drawn[j];
+                        if (!(x1 < b.x0 || x0 > b.x1 || y1 < b.y0 || y0 > b.y1)) {
+                            collide = true;
+                            break;
+                        }
+                    }
+                    if (collide) continue;
+                    drawn.push({ x0, y0, x1, y1 });
+
+                    ctx.lineWidth = 3;
+                    ctx.strokeStyle = 'rgba(255,255,255,0.85)';
+                    ctx.strokeText(text, p.x, p.y);
+                    ctx.fillStyle = 'rgba(17, 24, 39, 0.92)';
+                    ctx.fillText(text, p.x, p.y);
+                    shown++;
+                }
+            },
+        });
+
+        phase1LabelsCanvasLayer = new CanvasLabels();
+        phase1LabelsBuilt = true;
+        updatePhase1LabelsVisibility();
+    } catch (e) {
+    }
+}
+
+function loadPhase1FixedLayers() {
+    if (phase1Loaded) return;
+    phase1Loaded = true;
+
+    const labelsUrl = new URL('/plans/ajlan/phase1/labels', window.location.origin);
+    const boundariesUrl = new URL('/plans/ajlan/phase1/boundaries', window.location.origin);
+
+    fetch(boundariesUrl.toString(), { cache: 'no-store' })
+        .then((r) => {
+            if (!r.ok) throw new Error(`HTTP ${r.status} ${r.statusText}`);
+            return r.json();
+        })
+        .then((fc) => {
+            const feats = Array.isArray(fc?.features) ? fc.features : [];
+            phase1BoundariesLayer = L.geoJSON(fc, {
+                pane: 'cadPane',
+                style: {
+                    color: '#2563EB',
+                    weight: 2,
+                    opacity: 0.85,
+                },
+            }).addTo(map);
+        })
+        .catch((e) => {
+            console.warn('Phase1 boundaries failed', boundariesUrl.toString(), e);
+        });
+
+    fetch(labelsUrl.toString(), { cache: 'no-store' })
+        .then((r) => {
+            if (!r.ok) throw new Error(`HTTP ${r.status} ${r.statusText}`);
+            return r.json();
+        })
+        .then((fc) => {
+            phase1LabelsFeatures = Array.isArray(fc?.features) ? fc.features : [];
+            updatePhase1LabelsVisibility();
+        })
+        .catch((e) => {
+            console.warn('Phase1 labels failed', labelsUrl.toString(), e);
+        });
+}
+
+function initCadControls() {
+    const saved = localStorage.getItem('ajlanCadCalibration');
+    if (saved) {
+        try {
+            cadCalibration = JSON.parse(saved);
+        } catch (e) {
+            cadCalibration = null;
+        }
+    }
+
+    if (!cadCalibration) {
+        cadCalibration = { type: 'utm38' };
+        localStorage.setItem('ajlanCadCalibration', JSON.stringify(cadCalibration));
+    }
+
+    setCadStatus(cadCalibration ? 'المعايرة مفعلة' : 'المعايرة غير مفعلة');
+
+    const applyBtn = document.getElementById('applyCadCalibration');
+    const clearBtn = document.getElementById('clearCadCalibration');
+    const toggleTexts = document.getElementById('cadToggleTexts');
+    const togglePoints = document.getElementById('cadTogglePoints');
+    const togglePolylines = document.getElementById('cadTogglePolylines');
+    const toggleLines = document.getElementById('cadToggleLines');
+    const textSearch = document.getElementById('cadTextSearch');
+
+    if (toggleTexts) toggleTexts.checked = true;
+    if (togglePoints) togglePoints.checked = true;
+    if (togglePolylines) togglePolylines.checked = true;
+    if (toggleLines) toggleLines.checked = true;
+
+    applyBtn?.addEventListener('click', function () {
+        const p = readCalibrationInputs();
+        if (!p) return setCadStatus('بيانات المعايرة غير مكتملة');
+        cadCalibration = buildCalibration(p);
+        if (!cadCalibration) return setCadStatus('تعذر بناء المعايرة');
+        localStorage.setItem('ajlanCadCalibration', JSON.stringify(cadCalibration));
+        setCadStatus('تم تفعيل المعايرة');
+        updateCadPlanLocalBbox();
+        refreshCadLayers();
+    });
+
+    clearBtn?.addEventListener('click', function () {
+        cadCalibration = null;
+        localStorage.removeItem('ajlanCadCalibration');
+        setCadStatus('تم مسح المعايرة');
+        clearCadLayers();
+        tryAutoCadCalibration();
+    });
+
+    toggleTexts?.addEventListener('change', refreshCadLayers);
+    togglePoints?.addEventListener('change', refreshCadLayers);
+    togglePolylines?.addEventListener('change', refreshCadLayers);
+    toggleLines?.addEventListener('change', refreshCadLayers);
+    textSearch?.addEventListener('input', debounce(refreshCadLayers, 350));
+
+    map.on('moveend zoomend', debounce(refreshCadLayers, 250));
+    map.on('click', function (e) {
+        const lat = Number(e?.latlng?.lat);
+        const lng = Number(e?.latlng?.lng);
+        if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
+
+        const lat1 = document.getElementById('calLat1');
+        const lng1 = document.getElementById('calLng1');
+        const lat2 = document.getElementById('calLat2');
+        const lng2 = document.getElementById('calLng2');
+
+        if (lat1 && lng1 && (!lat1.value || !lng1.value)) {
+            lat1.value = String(lat);
+            lng1.value = String(lng);
+            return;
+        }
+        if (lat2 && lng2 && (!lat2.value || !lng2.value)) {
+            lat2.value = String(lat);
+            lng2.value = String(lng);
+        }
+    });
+
+    if (cadCalibration) {
+        if (cadCalibration?.type === 'bbox' && cadCalibration?.localBbox) {
+            cadPlanLocalBbox = cadCalibration.localBbox;
+        } else {
+            updateCadPlanLocalBbox();
+        }
+    }
+
+    refreshCadLayers();
+    loadCadMetadata();
+}
+
+function isLikelyUtm38(x, y) {
+    if (!Number.isFinite(x) || !Number.isFinite(y)) return false;
+    return x >= 400000 && x <= 800000 && y >= 2500000 && y <= 3100000;
+}
+
+function cadCoordIsDrawable(x, y) {
+    if (!Number.isFinite(x) || !Number.isFinite(y)) return false;
+    if (Math.abs(x) < 2 && Math.abs(y) < 2) return false;
+
+    if (cadCalibration?.type === 'utm38') {
+        return isLikelyUtm38(x, y);
+    }
+
+    return true;
+}
+
+function planLatLngBbox() {
+    try {
+        const ring = window.__ajlan_plan_outer_ring_latlng;
+        if (Array.isArray(ring) && ring.length) {
+            let minLat = Infinity, minLng = Infinity, maxLat = -Infinity, maxLng = -Infinity;
+            ring.forEach((p) => {
+                const lat = Number(p?.[0]);
+                const lng = Number(p?.[1]);
+                if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
+                minLat = Math.min(minLat, lat);
+                minLng = Math.min(minLng, lng);
+                maxLat = Math.max(maxLat, lat);
+                maxLng = Math.max(maxLng, lng);
+            });
+            if ([minLat, minLng, maxLat, maxLng].every(Number.isFinite)) {
+                return { minLat, minLng, maxLat, maxLng };
+            }
+        }
+    } catch (e) {}
+
+    try {
+        const b = map.getBounds();
+        if (b && b.isValid()) {
+            const sw = b.getSouthWest();
+            const ne = b.getNorthEast();
+            return { minLat: sw.lat, minLng: sw.lng, maxLat: ne.lat, maxLng: ne.lng };
+        }
+    } catch (e) {}
+
+    return {
+        minLat: 24.543627000069844,
+        minLng: 46.81368100000787,
+        maxLat: 24.56727800007028,
+        maxLng: 46.84426200000871,
+    };
+}
+
+function localBboxFromFeatures(fc) {
+    const feats = Array.isArray(fc?.features) ? fc.features : [];
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    let n = 0;
+
+    const push = (x, y) => {
+        if (!cadCoordIsDrawable(x, y)) return;
+        minX = Math.min(minX, x);
+        minY = Math.min(minY, y);
+        maxX = Math.max(maxX, x);
+        maxY = Math.max(maxY, y);
+        n++;
+    };
+
+    feats.forEach((f) => {
+        const g = f?.geometry;
+        const t = String(g?.type || '');
+        const c = g?.coordinates;
+        if (t === 'Point') {
+            push(Number(c?.[0]), Number(c?.[1]));
+        } else if (t === 'LineString') {
+            if (Array.isArray(c)) {
+                for (let i = 0; i < c.length; i++) {
+                    const p = c[i];
+                    push(Number(p?.[0]), Number(p?.[1]));
+                }
+            }
+        }
+    });
+
+    if (!Number.isFinite(minX) || !Number.isFinite(minY) || !Number.isFinite(maxX) || !Number.isFinite(maxY) || n < 20) {
+        return null;
+    }
+    return { minX, minY, maxX, maxY };
+}
+
+function buildBboxCalibration(localBbox, planBbox) {
+    const dx = localBbox.maxX - localBbox.minX;
+    const dy = localBbox.maxY - localBbox.minY;
+    const dLng = planBbox.maxLng - planBbox.minLng;
+    const dLat = planBbox.maxLat - planBbox.minLat;
+    if (![dx, dy, dLng, dLat].every(Number.isFinite)) return null;
+    if (dx === 0 || dy === 0) return null;
+
+    const scaleX = dLng / dx;
+    const scaleY = dLat / dy;
+    const tLng = planBbox.minLng - scaleX * localBbox.minX;
+    const tLat = planBbox.minLat - scaleY * localBbox.minY;
+
+    if (![scaleX, scaleY, tLng, tLat].every(Number.isFinite)) return null;
+
+    return {
+        type: 'bbox',
+        scaleX,
+        scaleY,
+        tLng,
+        tLat,
+        localBbox,
+        planBbox,
+    };
+}
+
+function tryAutoCadCalibration() {
+    const planBbox = planLatLngBbox();
+
+    const url = new URL('/plans/ajlan/cad/file/points', window.location.origin);
+    url.searchParams.set('limit', '6000');
+    url.searchParams.set('utmOnly', '1');
+
+    setCadStatus('جاري معايرة CAD تلقائياً...');
+
+    fetch(url.toString(), { cache: 'no-store' })
+        .then((r) => r.json())
+        .then((fc) => {
+            const feats = Array.isArray(fc?.features) ? fc.features : [];
+            const sampleUtm = feats.find((f) => {
+                const c = f?.geometry?.coordinates;
+                const x = Number(c?.[0]);
+                const y = Number(c?.[1]);
+                return isLikelyUtm38(x, y);
+            });
+
+            if (sampleUtm) {
+                cadCalibration = { type: 'utm38' };
+                localStorage.setItem('ajlanCadCalibration', JSON.stringify(cadCalibration));
+                setCadStatus('تم تفعيل تحويل UTM 38N تلقائياً');
+                try {
+                    const sw = cadLatLngToLocal(planBbox.minLat, planBbox.minLng);
+                    const ne = cadLatLngToLocal(planBbox.maxLat, planBbox.maxLng);
+                    if (sw && ne) {
+                        cadPlanLocalBbox = {
+                            minX: Math.min(sw[0], ne[0]),
+                            minY: Math.min(sw[1], ne[1]),
+                            maxX: Math.max(sw[0], ne[0]),
+                            maxY: Math.max(sw[1], ne[1]),
+                        };
+                    } else {
+                        cadPlanLocalBbox = null;
+                    }
+                } catch (e) {
+                    cadPlanLocalBbox = null;
+                }
+                refreshCadLayers();
+                return;
+            }
+
+            const localBbox = localBboxFromFeatures(fc);
+            if (!localBbox) {
+                setCadStatus('تعذر بناء معايرة تلقائية (نقاط غير كافية)');
+                return;
+            }
+
+            const cal = buildBboxCalibration(localBbox, planBbox);
+            if (!cal) {
+                setCadStatus('تعذر بناء معايرة تلقائية (BBox غير صالح)');
+                return;
+            }
+
+            cadCalibration = cal;
+            cadPlanLocalBbox = localBbox;
+            localStorage.setItem('ajlanCadCalibration', JSON.stringify(cadCalibration));
+            setCadStatus('تم تفعيل معايرة تلقائية (BBox)');
+            refreshCadLayers();
+        })
+        .catch(() => {
+            setCadStatus('فشل تحميل بيانات CAD للمعايرة');
+        });
+}
+
+function loadCadMetadata() {
+    const box = document.getElementById('cadMetaBox');
+    const list = document.getElementById('cadMetaList');
+    if (!box || !list) return;
+
+    fetch('/plans/ajlan/cad/file/inserts?limit=120', { cache: 'no-store' })
+        .then(r => r.json())
+        .then((fc) => {
+            const feats = Array.isArray(fc?.features) ? fc.features : [];
+            const names = feats
+                .map(f => String(f?.properties?.name || '').trim())
+                .filter(Boolean)
+                .slice(0, 40);
+            if (!names.length) return;
+            box.style.display = '';
+            list.innerHTML = names.map(n => `<div>${escapeHtml(n)}</div>`).join('');
+        })
+        .catch(() => {});
+}
+
+function setCadStatus(msg) {
+    const el = document.getElementById('cadCalStatus');
+    if (el) el.textContent = msg;
+}
+
+function readCalibrationInputs() {
+    const lat1 = Number(document.getElementById('calLat1')?.value);
+    const lng1 = Number(document.getElementById('calLng1')?.value);
+    const x1 = Number(document.getElementById('calX1')?.value);
+    const y1 = Number(document.getElementById('calY1')?.value);
+    const lat2 = Number(document.getElementById('calLat2')?.value);
+    const lng2 = Number(document.getElementById('calLng2')?.value);
+    const x2 = Number(document.getElementById('calX2')?.value);
+    const y2 = Number(document.getElementById('calY2')?.value);
+    const nums = [lat1, lng1, x1, y1, lat2, lng2, x2, y2];
+    if (nums.some((n) => !Number.isFinite(n))) return null;
+    return { lat1, lng1, x1, y1, lat2, lng2, x2, y2 };
+}
+
+function buildCalibration(p) {
+    const dx = p.x2 - p.x1;
+    const dy = p.y2 - p.y1;
+    const dLon = p.lng2 - p.lng1;
+    const dLat = p.lat2 - p.lat1;
+    const denom = dx * dx + dy * dy;
+    if (!Number.isFinite(denom) || denom === 0) return null;
+
+    const a = (dLon * dx + dLat * dy) / denom;
+    const b = (dLat * dx - dLon * dy) / denom;
+    const tLon = p.lng1 - (a * p.x1 - b * p.y1);
+    const tLat = p.lat1 - (b * p.x1 + a * p.y1);
+    const invDen = a * a + b * b;
+    if (!Number.isFinite(invDen) || invDen === 0) return null;
+
+    return { a, b, tLon, tLat, invDen };
+}
+
+function cadLocalToLatLng(x, y) {
+    if (!cadCalibration) return null;
+    if (cadCalibration?.type === 'utm38') {
+        try {
+            if (!isLikelyUtm38(x, y)) return null;
+            const utm38 = '+proj=utm +zone=38 +datum=WGS84 +units=m +no_defs';
+            const out = proj4(utm38, 'WGS84', [x, y]);
+            const lon = Number(out?.[0]);
+            const lat = Number(out?.[1]);
+            if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
+            return [lat, lon];
+        } catch (e) {
+            return null;
+        }
+    }
+
+    if (cadCalibration?.type === 'bbox') {
+        const lon = cadCalibration.tLng + cadCalibration.scaleX * x;
+        const lat = cadCalibration.tLat + cadCalibration.scaleY * y;
+        if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
+        return [lat, lon];
+    }
+
+    const lon = cadCalibration.tLon + cadCalibration.a * x - cadCalibration.b * y;
+    const lat = cadCalibration.tLat + cadCalibration.b * x + cadCalibration.a * y;
+    if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
+    return [lat, lon];
+}
+
+function cadLatLngToLocal(lat, lon) {
+    if (!cadCalibration) return null;
+    if (cadCalibration?.type === 'utm38') {
+        try {
+            const utm38 = '+proj=utm +zone=38 +datum=WGS84 +units=m +no_defs';
+            const out = proj4('WGS84', utm38, [lon, lat]);
+            const x = Number(out?.[0]);
+            const y = Number(out?.[1]);
+            if (!Number.isFinite(x) || !Number.isFinite(y)) return null;
+            return [x, y];
+        } catch (e) {
+            return null;
+        }
+    }
+
+    if (cadCalibration?.type === 'bbox') {
+        const x = (lon - cadCalibration.tLng) / cadCalibration.scaleX;
+        const y = (lat - cadCalibration.tLat) / cadCalibration.scaleY;
+        if (!Number.isFinite(x) || !Number.isFinite(y)) return null;
+        return [x, y];
+    }
+
+    const dLon = lon - cadCalibration.tLon;
+    const dLat = lat - cadCalibration.tLat;
+    const x = (cadCalibration.a * dLon + cadCalibration.b * dLat) / cadCalibration.invDen;
+    const y = (-cadCalibration.b * dLon + cadCalibration.a * dLat) / cadCalibration.invDen;
+    if (!Number.isFinite(x) || !Number.isFinite(y)) return null;
+    return [x, y];
+}
+
+function updateCadPlanLocalBbox() {
+    try {
+        if (!cadCalibration) return;
+        const ring = window.__ajlan_plan_outer_ring_latlng;
+        if (!Array.isArray(ring) || !ring.length) return;
+        const pts = ring
+            .map((p) => Array.isArray(p) ? cadLatLngToLocal(Number(p[0]), Number(p[1])) : null)
+            .filter(Boolean);
+        if (!pts.length) return;
+        const xs = pts.map(p => p[0]);
+        const ys = pts.map(p => p[1]);
+        const minX = Math.min(...xs);
+        const maxX = Math.max(...xs);
+        const minY = Math.min(...ys);
+        const maxY = Math.max(...ys);
+        if (![minX, minY, maxX, maxY].every(Number.isFinite)) return;
+        cadPlanLocalBbox = { minX, minY, maxX, maxY };
+    } catch (e) {}
+}
+
+function intersectBbox(a, b) {
+    if (!a || !b) return a || b || null;
+    const minX = Math.max(a.minX, b.minX);
+    const minY = Math.max(a.minY, b.minY);
+    const maxX = Math.min(a.maxX, b.maxX);
+    const maxY = Math.min(a.maxY, b.maxY);
+    if (![minX, minY, maxX, maxY].every(Number.isFinite)) return null;
+    if (minX > maxX || minY > maxY) return null;
+    return { minX, minY, maxX, maxY };
+}
+
+function cadLocalBboxFromMapBounds() {
+    try {
+        const b = map.getBounds();
+        if (!b || !b.isValid()) return null;
+        const sw = b.getSouthWest();
+        const ne = b.getNorthEast();
+        const nw = L.latLng(ne.lat, sw.lng);
+        const se = L.latLng(sw.lat, ne.lng);
+
+        const pts = [sw, ne, nw, se]
+            .map((p) => cadLatLngToLocal(Number(p.lat), Number(p.lng)))
+            .filter(Boolean);
+        if (pts.length < 4) return null;
+
+        const xs = pts.map(p => p[0]);
+        const ys = pts.map(p => p[1]);
+        const minX = Math.min(...xs);
+        const maxX = Math.max(...xs);
+        const minY = Math.min(...ys);
+        const maxY = Math.max(...ys);
+        if (![minX, minY, maxX, maxY].every(Number.isFinite)) return null;
+        return { minX, minY, maxX, maxY };
+    } catch (e) {
+        return null;
+    }
+}
+
+function clearCadLayers() {
+    if (cadTextLayer) {
+        cadTextLayer.remove();
+        cadTextLayer = null;
+    }
+    if (cadPointLayer) {
+        cadPointLayer.remove();
+        cadPointLayer = null;
+    }
+    if (cadPolylineLayer) {
+        cadPolylineLayer.remove();
+        cadPolylineLayer = null;
+    }
+    if (cadLineLayer) {
+        cadLineLayer.remove();
+        cadLineLayer = null;
+    }
+}
+
+function refreshCadLayers() {
+    if (!cadCalibration) return;
+
+    const showTexts = !!document.getElementById('cadToggleTexts')?.checked;
+    const showPoints = !!document.getElementById('cadTogglePoints')?.checked;
+    const showPolylines = !!document.getElementById('cadTogglePolylines')?.checked;
+    const showLines = !!document.getElementById('cadToggleLines')?.checked;
+    const q = String(document.getElementById('cadTextSearch')?.value || '').trim();
+
+    const zoomRaw = map.getZoom();
+    const zoom = Math.round(zoomRaw);
+    if (zoom < 13) return;
+
+    let bbox = null;
+    let bboxSource = 'map';
+    if (cadPlanLocalBbox) {
+        bbox = cadPlanLocalBbox;
+        bboxSource = 'plan';
+    } else {
+        bbox = cadLocalBboxFromMapBounds();
+        if (!bbox) {
+            console.log('CAD: bbox is null', { zoom, zoomRaw, cadCalibration });
+            return;
+        }
+    }
+
+    const bboxSig = bbox
+        ? `${bboxSource}:${Number(bbox.minX).toFixed(1)},${Number(bbox.minY).toFixed(1)},${Number(bbox.maxX).toFixed(1)},${Number(bbox.maxY).toFixed(1)}`
+        : `${bboxSource}:null`;
+
+    const sig = JSON.stringify({
+        zoom,
+        showTexts,
+        showPoints,
+        showPolylines,
+        showLines,
+        q,
+        calType: cadCalibration?.type || null,
+        bboxSig,
+    });
+    if (sig === cadLastRefreshSig) {
+        return;
+    }
+    cadLastRefreshSig = sig;
+
+    if (bboxSource === 'plan') {
+        console.log('CAD: using plan bbox', bbox);
+    } else {
+        console.log('CAD: using map bbox', bbox);
+    }
+    console.log('CAD: loading', { zoom, showTexts, showPoints, showPolylines, showLines, q: q ? q : null });
+
+    if (showTexts && zoom >= 13) loadCadTexts(q, bbox);
+    if (showPoints && zoom >= 13) loadCadPoints(bbox);
+    if (showPolylines && zoom >= 13) loadCadPolylines(bbox);
+    if (showLines && zoom >= 14) loadCadLines(bbox);
+}
+
+function loadCadTexts(q, bbox) {
+    const reqId = ++cadTextReqId;
+    if (cadTextLayer) {
+        cadTextLayer.remove();
+        cadTextLayer = null;
+    }
+    const url = new URL('/plans/ajlan/cad/dxf/' + encodeURIComponent(cadDxfFileName), window.location.origin);
+    url.searchParams.set('kind', 'texts');
+    url.searchParams.set('minX', String(bbox.minX));
+    url.searchParams.set('minY', String(bbox.minY));
+    url.searchParams.set('maxX', String(bbox.maxX));
+    url.searchParams.set('maxY', String(bbox.maxY));
+    const z = map.getZoom();
+    url.searchParams.set('limit', z >= 18 ? '6000' : (z >= 17 ? '3500' : (z >= 15 ? '2000' : '900')));
+    if (q) url.searchParams.set('q', q);
+    
+
+    fetch(url.toString(), { cache: 'no-store' })
+        .then((r) => {
+            if (!r.ok) {
+                throw new Error(`HTTP ${r.status} ${r.statusText}`);
+            }
+            return r.json();
+        })
+        .then((fc) => {
+            if (reqId !== cadTextReqId) return;
+            const feats = Array.isArray(fc?.features) ? fc.features : [];
+            console.log('CAD: texts feats', feats.length);
+
+            cadTextLayer = L.layerGroup([], { pane: 'cadPane' });
+            feats.forEach((f) => {
+                const c = f?.geometry?.coordinates;
+                const x = Number(c?.[0]);
+                const y = Number(c?.[1]);
+                if (!cadCoordIsDrawable(x, y)) return;
+                const latlng = cadLocalToLatLng(x, y);
+                const label = String(f?.properties?.text ?? '').trim();
+                if (!latlng || !label) return;
+
+                const m = L.marker(latlng, { opacity: 0, interactive: false, pane: 'cadPane' });
+                m.bindTooltip(label, {
+                    permanent: true,
+                    direction: 'center',
+                    className: 'cad-label',
+                    opacity: 0.95,
+                });
+                cadTextLayer.addLayer(m);
+            });
+            cadTextLayer.addTo(map);
+        })
+        .catch((e) => {
+            if (reqId !== cadTextReqId) return;
+            console.warn('CAD: texts fetch failed', url.toString(), e);
+        });
+}
+
+function loadCadPoints(bbox) {
+    const reqId = ++cadPointReqId;
+    if (cadPointLayer) {
+        cadPointLayer.remove();
+        cadPointLayer = null;
+    }
+    const url = new URL('/plans/ajlan/cad/file/points', window.location.origin);
+    url.searchParams.set('minX', String(bbox.minX));
+    url.searchParams.set('minY', String(bbox.minY));
+    url.searchParams.set('maxX', String(bbox.maxX));
+    url.searchParams.set('maxY', String(bbox.maxY));
+    url.searchParams.set('limit', map.getZoom() >= 18 ? '3000' : '1600');
+    if (cadCalibration?.type === 'utm38') url.searchParams.set('utmOnly', '1');
+
+    fetch(url.toString(), { cache: 'no-store' })
+        .then((r) => {
+            if (!r.ok) {
+                throw new Error(`HTTP ${r.status} ${r.statusText}`);
+            }
+            return r.json();
+        })
+        .then((fc) => {
+            if (reqId !== cadPointReqId) return;
+            const feats = Array.isArray(fc?.features) ? fc.features : [];
+
+            cadPointLayer = L.layerGroup([], { pane: 'cadPane' });
+            feats.forEach((f) => {
+                const c = f?.geometry?.coordinates;
+                const x = Number(c?.[0]);
+                const y = Number(c?.[1]);
+                if (!cadCoordIsDrawable(x, y)) return;
+                const latlng = cadLocalToLatLng(x, y);
+                if (!latlng) return;
+
+                const layerName = String(f?.properties?.layer || '');
+                const m = L.circleMarker(latlng, {
+                    pane: 'cadPane',
+                    radius: 3,
+                    color: '#2563EB',
+                    weight: 1,
+                    fillColor: '#60A5FA',
+                    fillOpacity: 0.85,
+                });
+                if (layerName) {
+                    m.bindPopup(`<div style="font-size:12px"><div><strong>Layer</strong>: ${escapeHtml(layerName)}</div></div>`);
+                }
+                cadPointLayer.addLayer(m);
+            });
+            cadPointLayer.addTo(map);
+        })
+        .catch((e) => {
+            if (reqId !== cadPointReqId) return;
+            console.warn('CAD: points fetch failed', url.toString(), e);
+        });
+}
+
+function cadStrokeForLayer(layerName) {
+    const n = String(layerName || '').toLowerCase();
+    if (n.includes('road') || n.includes('street') || n.includes('st')) return { color: '#F97316', weight: 3, opacity: 0.95 };
+    if (n.includes('bound') || n.includes('parcel') || n.includes('lot')) return { color: '#22C55E', weight: 2, opacity: 0.85 };
+    if (n.includes('water') || n.includes('drain')) return { color: '#38BDF8', weight: 2, opacity: 0.9 };
+    if (n.includes('elec') || n.includes('power')) return { color: '#A855F7', weight: 2, opacity: 0.9 };
+    return { color: '#111A3A', weight: 2, opacity: 0.8 };
+}
+
+function loadCadPolylines(bbox) {
+    const reqId = ++cadPolylineReqId;
+    if (cadPolylineLayer) {
+        cadPolylineLayer.remove();
+        cadPolylineLayer = null;
+    }
+    const url = new URL('/plans/ajlan/cad/dxf/' + encodeURIComponent(cadDxfFileName), window.location.origin);
+    url.searchParams.set('kind', 'polylines');
+    url.searchParams.set('minX', String(bbox.minX));
+    url.searchParams.set('minY', String(bbox.minY));
+    url.searchParams.set('maxX', String(bbox.maxX));
+    url.searchParams.set('maxY', String(bbox.maxY));
+    const z = map.getZoom();
+    url.searchParams.set('limit', z >= 18 ? '12000' : (z >= 17 ? '8000' : (z >= 15 ? '4500' : '1800')));
+    
+
+    fetch(url.toString(), { cache: 'no-store' })
+        .then((r) => {
+            if (!r.ok) {
+                throw new Error(`HTTP ${r.status} ${r.statusText}`);
+            }
+            return r.json();
+        })
+        .then((fc) => {
+            if (reqId !== cadPolylineReqId) return;
+            const feats = Array.isArray(fc?.features) ? fc.features : [];
+            console.log('CAD: polylines feats', feats.length);
+            cadPolylineLayer = L.featureGroup([], { pane: 'cadPane' }).addTo(map);
+
+            feats.forEach((f) => {
+                const coords = f?.geometry?.coordinates;
+                if (!Array.isArray(coords)) return;
+                const layerName = String(f?.properties?.layer || '');
+                const style = cadStrokeForLayer(layerName);
+
+                const latlngs = coords
+                    .map((c) => {
+                        const x = Number(c?.[0]);
+                        const y = Number(c?.[1]);
+                        if (!cadCoordIsDrawable(x, y)) return null;
+                        const ll = cadLocalToLatLng(x, y);
+                        return ll ? ll : null;
+                    })
+                    .filter(Boolean);
+
+                if (latlngs.length < 2) return;
+                const line = L.polyline(latlngs, { ...style, pane: 'cadPane' });
+                if (layerName) {
+                    line.bindPopup(`<div style="font-size:12px"><div><strong>Layer</strong>: ${escapeHtml(layerName)}</div></div>`);
+                }
+                cadPolylineLayer.addLayer(line);
+            });
+        })
+        .catch((e) => {
+            if (reqId !== cadPolylineReqId) return;
+            console.warn('CAD: polylines fetch failed', url.toString(), e);
+        });
+}
+
+function loadCadLines(bbox) {
+    const reqId = ++cadLineReqId;
+    if (cadLineLayer) {
+        cadLineLayer.remove();
+        cadLineLayer = null;
+    }
+    const url = new URL('/plans/ajlan/cad/dxf/' + encodeURIComponent(cadDxfFileName), window.location.origin);
+    url.searchParams.set('kind', 'lines');
+    url.searchParams.set('minX', String(bbox.minX));
+    url.searchParams.set('minY', String(bbox.minY));
+    url.searchParams.set('maxX', String(bbox.maxX));
+    url.searchParams.set('maxY', String(bbox.maxY));
+    const z = map.getZoom();
+    url.searchParams.set('limit', z >= 18 ? '12000' : (z >= 17 ? '8000' : (z >= 15 ? '4500' : '1800')));
+    
+
+    fetch(url.toString(), { cache: 'no-store' })
+        .then((r) => {
+            if (!r.ok) {
+                throw new Error(`HTTP ${r.status} ${r.statusText}`);
+            }
+            return r.json();
+        })
+        .then((fc) => {
+            if (reqId !== cadLineReqId) return;
+            const feats = Array.isArray(fc?.features) ? fc.features : [];
+            console.log('CAD: lines feats', feats.length);
+            cadLineLayer = L.featureGroup([], { pane: 'cadPane' }).addTo(map);
+
+            feats.forEach((f) => {
+                const coords = f?.geometry?.coordinates;
+                if (!Array.isArray(coords)) return;
+                const layerName = String(f?.properties?.layer || '');
+                const style = cadStrokeForLayer(layerName);
+
+                const latlngs = coords
+                    .map((c) => {
+                        const x = Number(c?.[0]);
+                        const y = Number(c?.[1]);
+                        if (!cadCoordIsDrawable(x, y)) return null;
+                        const ll = cadLocalToLatLng(x, y);
+                        return ll ? ll : null;
+                    })
+                    .filter(Boolean);
+
+                if (latlngs.length < 2) return;
+                const line = L.polyline(latlngs, { ...style, pane: 'cadPane', weight: Math.max(1, style.weight - 1), opacity: Math.min(0.95, style.opacity) });
+                if (layerName) {
+                    line.bindPopup(`<div style="font-size:12px"><div><strong>Layer</strong>: ${escapeHtml(layerName)}</div></div>`);
+                }
+                cadLineLayer.addLayer(line);
+            });
+        })
+        .catch((e) => {
+            if (reqId !== cadLineReqId) return;
+            console.warn('CAD: lines fetch failed', url.toString(), e);
+        });
+}
+
+function debounce(fn, wait) {
+    let t;
+    return function (...args) {
+        clearTimeout(t);
+        t = setTimeout(() => fn.apply(this, args), wait);
+    };
 }
 
 function loadOsmRoads(bounds) {
@@ -1019,6 +2278,9 @@ function renderLots() {
     if (lotsPointsLayer) {
         lotsPointsLayer.remove();
     }
+    if (lotsLabelsLayer) {
+        lotsLabelsLayer.remove();
+    }
     lotsIndex = {};
     lotsPointsIndex = {};
 
@@ -1033,7 +2295,12 @@ function renderLots() {
         return matchesId && matchesStatus;
     });
 
-    const filteredPoints = [];
+    const filteredPoints = lotsPointsSource.filter((p) => {
+        const id = String(p.lot_number || '').toLowerCase();
+        const matchesId = !q || id.includes(q);
+        const matchesStatus = !status || p.status === status;
+        return matchesId && matchesStatus;
+    });
 
     lotsLayer = L.geoJSON(filtered, {
         pane: 'lotsPane',
@@ -1059,7 +2326,70 @@ function renderLots() {
         }
     }).addTo(map);
 
-    document.getElementById('lotsCount').textContent = String(filtered.length);
+    lotsPointsLayer = L.featureGroup([], { pane: 'lotsPane' }).addTo(map);
+
+    lotsLabelsLayer = L.layerGroup([], { pane: 'lotsPane' }).addTo(map);
+
+    const zoom = map.getZoom();
+    const showLabels = zoom >= 15;
+
+    if (showLabels) {
+        lotsLayer.eachLayer((layer) => {
+            try {
+                const p = layer?.feature?.properties || {};
+                const lotNumber = String(p.lot_number || '').trim();
+                if (!lotNumber) return;
+                const center = layer.getBounds?.().getCenter?.();
+                if (!center) return;
+                const m = L.marker(center, { opacity: 0, interactive: false });
+                m.bindTooltip(lotNumber, {
+                    permanent: true,
+                    direction: 'center',
+                    className: 'cad-label',
+                    opacity: 0.95,
+                });
+                lotsLabelsLayer.addLayer(m);
+            } catch (e) {}
+        });
+    }
+
+    filteredPoints.forEach((p) => {
+        const lat = Number(p.lat);
+        const lng = Number(p.lng);
+
+        if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
+
+        const circle = L.circle([lat, lng], {
+            pane: 'lotsPane',
+            radius: pointLotRadiusMeters,
+            color: '#B8892F',
+            fillColor: '#B8892F',
+            fillOpacity: 0.45,
+            weight: 2,
+        }).addTo(lotsPointsLayer);
+
+        lotsPointsIndex[String(p.lot_number)] = circle;
+
+        circle.on('click', function () {
+            selectLot(p.lot_number, true);
+        });
+
+        if (showLabels) {
+            const lotNumber = String(p.lot_number || '').trim();
+            if (lotNumber) {
+                const m = L.marker([lat, lng], { opacity: 0, interactive: false });
+                m.bindTooltip(lotNumber, {
+                    permanent: true,
+                    direction: 'center',
+                    className: 'cad-label',
+                    opacity: 0.95,
+                });
+                lotsLabelsLayer.addLayer(m);
+            }
+        }
+    });
+
+    document.getElementById('lotsCount').textContent = String(filtered.length + filteredPoints.length);
     renderLotsList(filtered, filteredPoints);
 
     if (!selectedLot && (filtered.length > 0 || filteredPoints.length > 0)) {

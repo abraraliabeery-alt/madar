@@ -15,6 +15,8 @@ use App\Models\PlanLot;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
+use JsonMachine\Items;
+use Illuminate\Support\Str;
 
 class SearchController extends Controller
 {
@@ -28,6 +30,871 @@ class SearchController extends Controller
         $statuses = Status::where('is_active', true)->get();
         
         return view('public.search.index', compact('categories', 'features', 'statuses'));
+    }
+
+    public function ajlanCadPoints(Request $request)
+    {
+        return $this->cadGeoJsonSubset(
+            base_path('resources/New/points.geojson'),
+            $request
+        );
+    }
+
+    public function ajlanCadTexts(Request $request)
+    {
+        return $this->cadGeoJsonSubset(
+            base_path('resources/New/texts.geojson'),
+            $request
+        );
+    }
+
+    public function ajlanCadLines(Request $request)
+    {
+        return $this->cadGeoJsonSubset(
+            base_path('resources/New/lines.geojson'),
+            $request,
+            true
+        );
+    }
+
+    public function ajlanCadPolylines(Request $request)
+    {
+        return $this->cadGeoJsonSubset(
+            base_path('resources/New/polylines.geojson'),
+            $request,
+            true
+        );
+    }
+
+    public function ajlanCadFile(Request $request, string $file)
+    {
+        $file = Str::lower(trim($file));
+        $allowed = [
+            'points',
+            'texts',
+            'lines',
+            'polylines',
+            'blocks',
+            'inserts',
+        ];
+        if (!in_array($file, $allowed, true)) {
+            abort(404);
+        }
+
+        $requireBbox = in_array($file, ['polylines', 'lines'], true);
+
+        return $this->cadGeoJsonSubset(
+            base_path('resources/New/' . $file . '.geojson'),
+            $request,
+            $requireBbox
+        );
+    }
+
+    public function ajlanCadManifest(Request $request)
+    {
+        $files = [
+            'points',
+            'texts',
+            'lines',
+            'polylines',
+            'blocks',
+            'inserts',
+        ];
+
+        $out = [];
+        foreach ($files as $f) {
+            $path = base_path('resources/New/' . $f . '.geojson');
+            $out[] = [
+                'name' => $f,
+                'exists' => is_file($path),
+                'size' => is_file($path) ? filesize($path) : null,
+                // known: inserts has geometry null, blocks often 0,0. Keep flags for UI.
+                'hint' => match ($f) {
+                    'inserts' => 'metadata_only',
+                    'blocks' => 'mostly_metadata',
+                    default => 'drawable',
+                },
+            ];
+        }
+
+        return response()->json([
+            'ok' => true,
+            'files' => $out,
+        ]);
+    }
+
+    public function ajlanCadDxfFile(Request $request, string $file)
+    {
+        $file = trim($file);
+        if ($file === '') {
+            abort(404);
+        }
+
+        $known = [
+            'taiba' => 'الموقع العام- طيبه.dxf',
+        ];
+        $key = Str::lower($file);
+        if (array_key_exists($key, $known)) {
+            $file = $known[$key];
+        }
+
+        $file = str_replace(['..', '\\', '/'], '', $file);
+        if (!Str::endsWith(Str::lower($file), '.dxf')) {
+            $file .= '.dxf';
+        }
+
+        $path = base_path('resources/New/' . $file);
+        if (!is_file($path)) {
+            abort(404);
+        }
+
+        $kind = Str::lower((string) $request->query('kind', 'all'));
+        if (!in_array($kind, ['all', 'lines', 'polylines', 'texts'], true)) {
+            $kind = 'all';
+        }
+
+        return $this->cadDxfSubset($path, $request, $kind);
+    }
+
+    public function ajlanPhase1GeoJson(Request $request, string $kind)
+    {
+        $kind = Str::lower(trim($kind));
+        if (!in_array($kind, ['labels', 'boundaries'], true)) {
+            abort(404);
+        }
+
+        $base = base_path('resources/New/ajlan_phase1_fix_package (1)/public/gis/taiba');
+        $file = $kind === 'labels' ? 'phase1_labels.geojson' : 'phase1_boundaries.geojson';
+        $path = $base . DIRECTORY_SEPARATOR . $file;
+        if (!is_file($path)) {
+            return response()->json([
+                'type' => 'FeatureCollection',
+                'features' => [],
+            ]);
+        }
+
+        $raw = @file_get_contents($path);
+        if (!is_string($raw) || $raw === '') {
+            return response()->json([
+                'type' => 'FeatureCollection',
+                'features' => [],
+            ]);
+        }
+
+        $json = json_decode($raw, true);
+        if (!is_array($json) || ($json['type'] ?? null) !== 'FeatureCollection') {
+            return response()->json([
+                'type' => 'FeatureCollection',
+                'features' => [],
+            ]);
+        }
+
+        $json['features'] = array_values(array_filter($json['features'] ?? [], fn ($f) => is_array($f)));
+        return response()->json($json);
+    }
+
+    private function cadGeoJsonSubset(string $path, Request $request, bool $requireBbox = false)
+    {
+        if (!is_file($path)) {
+            return response()->json([
+                'type' => 'FeatureCollection',
+                'features' => [],
+            ]);
+        }
+
+        $minX = $request->has('minX') ? (float) $request->query('minX') : null;
+        $minY = $request->has('minY') ? (float) $request->query('minY') : null;
+        $maxX = $request->has('maxX') ? (float) $request->query('maxX') : null;
+        $maxY = $request->has('maxY') ? (float) $request->query('maxY') : null;
+        $layer = $request->filled('layer') ? (string) $request->query('layer') : null;
+        $q = $request->filled('q') ? mb_strtolower((string) $request->query('q')) : null;
+        $utmOnly = $request->boolean('utmOnly', false);
+        $limit = (int) $request->query('limit', 2000);
+        if ($limit < 1) {
+            $limit = 1;
+        }
+        if ($limit > 20000) {
+            $limit = 20000;
+        }
+
+        $hasBbox = $minX !== null && $minY !== null && $maxX !== null && $maxY !== null;
+
+        if ($requireBbox && !$hasBbox) {
+            return response()->json([
+                'type' => 'FeatureCollection',
+                'features' => [],
+                'error' => 'bbox_required',
+            ], 400);
+        }
+
+        $items = Items::fromFile($path, ['pointer' => '/features']);
+        $features = [];
+
+        foreach ($items as $feature) {
+            if (!is_array($feature)) {
+                continue;
+            }
+
+            $props = is_array($feature['properties'] ?? null) ? $feature['properties'] : [];
+            if ($layer !== null && (string) ($props['layer'] ?? '') !== $layer) {
+                continue;
+            }
+
+            if ($q !== null) {
+                $text = $props['text'] ?? ($props['fid'] ?? null);
+                if (mb_stripos((string) $text, $q) === false) {
+                    continue;
+                }
+            }
+
+            $geom = $feature['geometry'] ?? null;
+            $coords = is_array($geom) ? ($geom['coordinates'] ?? null) : null;
+
+            if ($utmOnly) {
+                if (!$this->geometryHasUtm38Point($coords)) {
+                    continue;
+                }
+            }
+
+            if ($hasBbox) {
+                if (!$this->geometryHasPointInBbox($coords, $minX, $minY, $maxX, $maxY)) {
+                    continue;
+                }
+            }
+
+            $features[] = $feature;
+            if (count($features) >= $limit) {
+                break;
+            }
+        }
+
+        return response()->json([
+            'type' => 'FeatureCollection',
+            'features' => $features,
+        ]);
+    }
+
+    private function cadDxfBlockTextTemplates(string $path): array
+    {
+        $out = [];
+
+        try {
+            $file = new \SplFileObject($path, 'rb');
+            $file->setFlags(\SplFileObject::DROP_NEW_LINE);
+        } catch (\Throwable $e) {
+            return $out;
+        }
+
+        $readPair = function () use ($file): ?array {
+            if ($file->eof()) {
+                return null;
+            }
+            try {
+                $code = $file->fgets();
+            } catch (\RuntimeException $e) {
+                return null;
+            }
+            if ($code === false) {
+                return null;
+            }
+            try {
+                $value = $file->fgets();
+            } catch (\RuntimeException $e) {
+                return null;
+            }
+            if ($value === false) {
+                return null;
+            }
+            return [trim($code), rtrim($value, "\r\n")];
+        };
+
+        $inBlocks = false;
+        $inBlock = false;
+        $blockName = null;
+        $currentType = null;
+        $textX = null;
+        $textY = null;
+        $textValue = '';
+
+        $flushText = function () use (&$out, &$blockName, &$textX, &$textY, &$textValue): void {
+            $name = is_string($blockName) ? trim($blockName) : '';
+            if ($name === '') {
+                return;
+            }
+            if ($textX === null || $textY === null) {
+                return;
+            }
+            $txt = trim((string) $textValue);
+            if ($txt === '') {
+                return;
+            }
+            if (!array_key_exists($name, $out)) {
+                $out[$name] = [];
+            }
+            $out[$name][] = [
+                'x' => (float) $textX,
+                'y' => (float) $textY,
+                'text' => $txt,
+            ];
+        };
+
+        while (!$file->eof()) {
+            $pair = $readPair();
+            if ($pair === null) {
+                break;
+            }
+            [$code, $value] = $pair;
+
+            if ($code === '0') {
+                if ($inBlocks && $inBlock && $currentType !== null) {
+                    if (in_array($currentType, ['TEXT', 'MTEXT', 'ATTRIB', 'ATTDEF'], true)) {
+                        $flushText();
+                    }
+                }
+
+                $currentType = null;
+                $textX = null;
+                $textY = null;
+                $textValue = '';
+
+                if ($value === 'SECTION') {
+                    continue;
+                }
+                if ($value === 'ENDSEC') {
+                    if ($inBlocks) {
+                        break;
+                    }
+                    $inBlocks = false;
+                    $inBlock = false;
+                    $blockName = null;
+                    continue;
+                }
+
+                if ($inBlocks) {
+                    if ($value === 'BLOCK') {
+                        $inBlock = true;
+                        $blockName = null;
+                        continue;
+                    }
+                    if ($value === 'ENDBLK') {
+                        $inBlock = false;
+                        $blockName = null;
+                        continue;
+                    }
+                    if ($inBlock && in_array($value, ['TEXT', 'MTEXT', 'ATTRIB', 'ATTDEF'], true)) {
+                        $currentType = $value;
+                        continue;
+                    }
+                }
+
+                continue;
+            }
+
+            if (!$inBlocks) {
+                if ($code === '2' && $value === 'BLOCKS') {
+                    $inBlocks = true;
+                }
+                continue;
+            }
+
+            if ($inBlocks && $inBlock && $blockName === null) {
+                if ($code === '2') {
+                    $blockName = $value;
+                }
+            }
+
+            if ($inBlocks && $inBlock && $currentType !== null) {
+                if ($code === '10') {
+                    $textX = (float) $value;
+                } elseif ($code === '20') {
+                    $textY = (float) $value;
+                } elseif ($code === '1' || $code === '3') {
+                    $textValue .= (string) $value;
+                }
+            }
+        }
+
+        return $out;
+    }
+
+    private function cadDxfSubset(string $path, Request $request, string $kind)
+    {
+        $minX = $request->has('minX') ? (float) $request->query('minX') : null;
+        $minY = $request->has('minY') ? (float) $request->query('minY') : null;
+        $maxX = $request->has('maxX') ? (float) $request->query('maxX') : null;
+        $maxY = $request->has('maxY') ? (float) $request->query('maxY') : null;
+        $layer = $request->filled('layer') ? (string) $request->query('layer') : null;
+        $q = $request->filled('q') ? mb_strtolower((string) $request->query('q')) : null;
+        $limit = (int) $request->query('limit', 2000);
+        if ($limit < 1) {
+            $limit = 1;
+        }
+        if ($limit > 20000) {
+            $limit = 20000;
+        }
+
+        $hasBbox = $minX !== null && $minY !== null && $maxX !== null && $maxY !== null;
+
+        $file = new \SplFileObject($path, 'rb');
+        $file->setFlags(\SplFileObject::DROP_NEW_LINE);
+
+        $features = [];
+        $inEntities = false;
+
+        $readPair = function () use ($file): ?array {
+            if ($file->eof()) {
+                return null;
+            }
+
+            try {
+                $code = $file->fgets();
+            } catch (\RuntimeException $e) {
+                return null;
+            }
+            if ($code === false) {
+                return null;
+            }
+
+            try {
+                $value = $file->fgets();
+            } catch (\RuntimeException $e) {
+                return null;
+            }
+            if ($value === false) {
+                return null;
+            }
+
+            return [trim($code), rtrim($value, "\r\n")];
+        };
+
+        $acceptPointInBbox = function (float $x, float $y) use ($hasBbox, $minX, $minY, $maxX, $maxY): bool {
+            if (!$hasBbox) {
+                return true;
+            }
+            return !($x < $minX || $x > $maxX || $y < $minY || $y > $maxY);
+        };
+
+        $geometryHasPointInBboxFast = function (array $coords) use ($acceptPointInBbox): bool {
+            $stack = [$coords];
+            $checks = 0;
+            while ($stack) {
+                $node = array_pop($stack);
+                if (!is_array($node)) {
+                    continue;
+                }
+                if (count($node) >= 2 && is_numeric($node[0]) && is_numeric($node[1])) {
+                    $checks++;
+                    if ($acceptPointInBbox((float) $node[0], (float) $node[1])) {
+                        return true;
+                    }
+                    if ($checks >= 2000) {
+                        return false;
+                    }
+                    continue;
+                }
+                foreach ($node as $child) {
+                    if (is_array($child)) {
+                        $stack[] = $child;
+                    }
+                }
+            }
+            return false;
+        };
+
+        $shouldKeepByLayer = function (?string $entityLayer) use ($layer): bool {
+            if ($layer === null) {
+                return true;
+            }
+            return (string) $entityLayer === $layer;
+        };
+
+        $shouldKeepTextByQ = function (?string $text) use ($q): bool {
+            if ($q === null) {
+                return true;
+            }
+            return mb_stripos((string) $text, $q) !== false;
+        };
+
+        $flushEntity = function (?string $type, array $props, array $geom) use (&$features, $limit, $kind, $shouldKeepByLayer, $shouldKeepTextByQ, $geometryHasPointInBboxFast): void {
+            if ($type === null) {
+                return;
+            }
+
+            $entityLayer = $props['layer'] ?? null;
+            if (!$shouldKeepByLayer($entityLayer)) {
+                return;
+            }
+
+            if ($kind === 'texts' && !in_array($type, ['TEXT', 'MTEXT', 'ATTRIB', 'ATTDEF'], true)) {
+                return;
+            }
+            if ($kind === 'lines' && $type !== 'LINE') {
+                return;
+            }
+            if ($kind === 'polylines' && !in_array($type, ['LWPOLYLINE', 'POLYLINE'], true)) {
+                return;
+            }
+
+            $geoType = $geom['type'] ?? null;
+            $coords = $geom['coordinates'] ?? null;
+            if (!is_string($geoType) || !is_array($coords)) {
+                return;
+            }
+
+            if (!$geometryHasPointInBboxFast($coords)) {
+                return;
+            }
+
+            if (in_array($type, ['TEXT', 'MTEXT', 'ATTRIB', 'ATTDEF'], true)) {
+                if (!$shouldKeepTextByQ($props['text'] ?? null)) {
+                    return;
+                }
+            }
+
+            $features[] = [
+                'type' => 'Feature',
+                'properties' => $props,
+                'geometry' => $geom,
+            ];
+        };
+
+        $currentType = null;
+        $currentLayer = null;
+        $lineX1 = null;
+        $lineY1 = null;
+        $lineX2 = null;
+        $lineY2 = null;
+        $polyPoints = [];
+        $textX = null;
+        $textY = null;
+        $textValue = '';
+
+        $insertName = null;
+        $insertX = null;
+        $insertY = null;
+        $insertRotDeg = 0.0;
+        $insertScaleX = 1.0;
+        $insertScaleY = 1.0;
+
+        while (!$file->eof()) {
+            $pair = $readPair();
+            if ($pair === null) {
+                break;
+            }
+            [$code, $value] = $pair;
+
+            if ($code === '0') {
+                if ($inEntities && $currentType !== null) {
+                    if ($currentType === 'LINE') {
+                        $flushEntity('LINE', [
+                            'layer' => $currentLayer,
+                        ], [
+                            'type' => 'LineString',
+                            'coordinates' => (
+                                $lineX1 !== null && $lineY1 !== null && $lineX2 !== null && $lineY2 !== null
+                            ) ? [[(float) $lineX1, (float) $lineY1], [(float) $lineX2, (float) $lineY2]] : [],
+                        ]);
+                    } elseif (in_array($currentType, ['LWPOLYLINE', 'POLYLINE'], true)) {
+                        $flushEntity($currentType, [
+                            'layer' => $currentLayer,
+                        ], [
+                            'type' => 'LineString',
+                            'coordinates' => $polyPoints,
+                        ]);
+                    } elseif (in_array($currentType, ['TEXT', 'MTEXT', 'ATTRIB', 'ATTDEF'], true)) {
+                        $flushEntity($currentType, [
+                            'layer' => $currentLayer,
+                            'text' => $textValue,
+                        ], [
+                            'type' => 'Point',
+                            'coordinates' => (
+                                $textX !== null && $textY !== null
+                            ) ? [(float) $textX, (float) $textY] : [],
+                        ]);
+                    } elseif ($currentType === 'INSERT') {
+                        $name = is_string($insertName) ? trim($insertName) : '';
+                        if ($name !== '' && $insertX !== null && $insertY !== null) {
+                            $tpls = $blockTextTemplates[$name] ?? null;
+                            if (is_array($tpls) && $tpls) {
+                                $rad = deg2rad((float) $insertRotDeg);
+                                $cos = cos($rad);
+                                $sin = sin($rad);
+                                $sx = (float) $insertScaleX;
+                                $sy = (float) $insertScaleY;
+                                $tx = (float) $insertX;
+                                $ty = (float) $insertY;
+
+                                foreach ($tpls as $t) {
+                                    if (!is_array($t)) {
+                                        continue;
+                                    }
+                                    $lx = isset($t['x']) ? (float) $t['x'] : null;
+                                    $ly = isset($t['y']) ? (float) $t['y'] : null;
+                                    $txt = isset($t['text']) ? (string) $t['text'] : '';
+                                    if ($lx === null || $ly === null || $txt === '') {
+                                        continue;
+                                    }
+
+                                    $px = $lx * $sx;
+                                    $py = $ly * $sy;
+                                    $wx = $tx + ($cos * $px - $sin * $py);
+                                    $wy = $ty + ($sin * $px + $cos * $py);
+
+                                    $flushEntity('ATTRIB', [
+                                        'layer' => $currentLayer,
+                                        'text' => $txt,
+                                        'block' => $name,
+                                    ], [
+                                        'type' => 'Point',
+                                        'coordinates' => [(float) $wx, (float) $wy],
+                                    ]);
+
+                                    if (count($features) >= $limit) {
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                $currentType = null;
+                $currentLayer = null;
+                $lineX1 = null;
+                $lineY1 = null;
+                $lineX2 = null;
+                $lineY2 = null;
+                $polyPoints = [];
+                $textX = null;
+                $textY = null;
+                $textValue = '';
+
+                $insertName = null;
+                $insertX = null;
+                $insertY = null;
+                $insertRotDeg = 0.0;
+                $insertScaleX = 1.0;
+                $insertScaleY = 1.0;
+
+                if ($inEntities && count($features) >= $limit) {
+                    break;
+                }
+
+                if ($value === 'SECTION') {
+                    continue;
+                }
+                if ($value === 'ENDSEC') {
+                    $inEntities = false;
+                    continue;
+                }
+                if ($value === 'EOF') {
+                    break;
+                }
+                if ($value === 'LINE' || $value === 'LWPOLYLINE' || $value === 'POLYLINE' || $value === 'TEXT' || $value === 'MTEXT' || $value === 'ATTRIB' || $value === 'ATTDEF' || $value === 'INSERT') {
+                    if ($inEntities) {
+                        $currentType = $value;
+                    }
+                    continue;
+                }
+            }
+
+            if (!$inEntities) {
+                if ($code === '2' && $value === 'ENTITIES') {
+                    $inEntities = true;
+                }
+                continue;
+            }
+
+            if ($currentType === null) {
+                continue;
+            }
+
+            if ($code === '8') {
+                $currentLayer = $value;
+                continue;
+            }
+
+            if ($currentType === 'LINE') {
+                if ($code === '10') {
+                    $lineX1 = (float) $value;
+                } elseif ($code === '20') {
+                    $lineY1 = (float) $value;
+                } elseif ($code === '11') {
+                    $lineX2 = (float) $value;
+                } elseif ($code === '21') {
+                    $lineY2 = (float) $value;
+                }
+                continue;
+            }
+
+            if (in_array($currentType, ['LWPOLYLINE', 'POLYLINE'], true)) {
+                if ($code === '10') {
+                    $polyPoints[] = [(float) $value, null];
+                } elseif ($code === '20') {
+                    $idx = count($polyPoints) - 1;
+                    if ($idx >= 0) {
+                        $polyPoints[$idx][1] = (float) $value;
+                    }
+                }
+                continue;
+            }
+
+            if (in_array($currentType, ['TEXT', 'MTEXT', 'ATTRIB', 'ATTDEF'], true)) {
+                if ($code === '10') {
+                    $textX = (float) $value;
+                } elseif ($code === '20') {
+                    $textY = (float) $value;
+                } elseif ($code === '1' || $code === '3') {
+                    $textValue .= (string) $value;
+                }
+                continue;
+            }
+
+            if ($currentType === 'INSERT') {
+                if ($code === '2') {
+                    $insertName = $value;
+                } elseif ($code === '8') {
+                    $currentLayer = $value;
+                } elseif ($code === '10') {
+                    $insertX = (float) $value;
+                } elseif ($code === '20') {
+                    $insertY = (float) $value;
+                } elseif ($code === '41') {
+                    $insertScaleX = (float) $value;
+                } elseif ($code === '42') {
+                    $insertScaleY = (float) $value;
+                } elseif ($code === '50') {
+                    $insertRotDeg = (float) $value;
+                }
+                continue;
+            }
+        }
+
+        $features = array_values(array_filter($features, function ($f) {
+            $coords = $f['geometry']['coordinates'] ?? null;
+            if (!is_array($coords) || count($coords) === 0) {
+                return false;
+            }
+            if (($f['geometry']['type'] ?? null) === 'LineString') {
+                foreach ($coords as $pt) {
+                    if (!is_array($pt) || count($pt) < 2 || $pt[0] === null || $pt[1] === null) {
+                        return false;
+                    }
+                }
+            }
+            if (($f['geometry']['type'] ?? null) === 'Point') {
+                if (count($coords) < 2) {
+                    return false;
+                }
+            }
+            return true;
+        }));
+
+        return response()->json([
+            'type' => 'FeatureCollection',
+            'features' => $features,
+        ]);
+    }
+
+    private function geometryHasUtm38Point($coords, int $maxChecks = 1600): bool
+    {
+        if (!is_array($coords)) {
+            return false;
+        }
+
+        $checks = 0;
+        $minX = 400000.0;
+        $maxX = 800000.0;
+        $minY = 2500000.0;
+        $maxY = 3100000.0;
+
+        $walk = function ($node) use (&$walk, $minX, $minY, $maxX, $maxY, &$checks, $maxChecks): bool {
+            if ($checks >= $maxChecks) {
+                return false;
+            }
+            if (!is_array($node)) {
+                return false;
+            }
+
+            if (count($node) >= 2 && is_numeric($node[0]) && is_numeric($node[1])) {
+                $checks++;
+                $x = (float) $node[0];
+                $y = (float) $node[1];
+                return !($x < $minX || $x > $maxX || $y < $minY || $y > $maxY);
+            }
+
+            foreach ($node as $child) {
+                if ($walk($child)) {
+                    return true;
+                }
+                if ($checks >= $maxChecks) {
+                    break;
+                }
+            }
+            return false;
+        };
+
+        return $walk($coords);
+    }
+
+    private function extractFirstXY($coords): ?array
+    {
+        if (!is_array($coords)) {
+            return null;
+        }
+
+        $current = $coords;
+        while (is_array($current) && isset($current[0]) && is_array($current[0])) {
+            $current = $current[0];
+        }
+
+        if (!is_array($current) || count($current) < 2) {
+            return null;
+        }
+
+        $x = (float) ($current[0] ?? 0.0);
+        $y = (float) ($current[1] ?? 0.0);
+        return [$x, $y];
+    }
+
+    private function geometryHasPointInBbox($coords, float $minX, float $minY, float $maxX, float $maxY, int $maxChecks = 1200): bool
+    {
+        if (!is_array($coords)) {
+            return false;
+        }
+
+        $checks = 0;
+
+        $walk = function ($node) use (&$walk, $minX, $minY, $maxX, $maxY, &$checks, $maxChecks): bool {
+            if ($checks >= $maxChecks) {
+                return false;
+            }
+
+            if (!is_array($node)) {
+                return false;
+            }
+
+            // Leaf point: [x,y] (GeoJSON coordinates)
+            if (count($node) >= 2 && is_numeric($node[0]) && is_numeric($node[1])) {
+                $checks++;
+                $x = (float) $node[0];
+                $y = (float) $node[1];
+                return !($x < $minX || $x > $maxX || $y < $minY || $y > $maxY);
+            }
+
+            foreach ($node as $child) {
+                if ($walk($child)) {
+                    return true;
+                }
+                if ($checks >= $maxChecks) {
+                    break;
+                }
+            }
+
+            return false;
+        };
+
+        return $walk($coords);
     }
 
     public function ajlanLotShow(Request $request, PlanLot $lot)

@@ -10,7 +10,7 @@
                 <i class="fas fa-mobile-screen text-white text-3xl"></i>
             </div>
             <h2 class="text-3xl font-bold text-gray-900">تسجيل الدخول</h2>
-            <p class="text-gray-600 mt-2">أدخل رقم الجوال لإرسال رمز التحقق</p>
+            <p class="text-gray-600 mt-2">أدخل رقم الجوال وكلمة المرور</p>
         </div>
 
         <div class="bg-white rounded-2xl shadow-xl p-8">
@@ -60,14 +60,35 @@
                     @enderror
                 </div>
 
+                <div class="mb-6">
+                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">كلمة المرور</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                            <i class="fas fa-lock text-gray-400"></i>
+                        </div>
+                        <input
+                            id="password"
+                            type="password"
+                            name="password"
+                            required
+                            autocomplete="current-password"
+                            class="w-full pr-10 pl-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
+                            placeholder="********"
+                        >
+                    </div>
+                    @error('password')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
                 <button type="submit" class="w-full btn-primary text-white py-3 rounded-lg font-medium text-lg hover:shadow-lg transition-all duration-300">
-                    <i class="fas fa-paper-plane ml-2"></i>
-                    إرسال الكود
+                    <i class="fas fa-right-to-bracket ml-2"></i>
+                    دخول
                 </button>
             </form>
 
             <div class="mt-8 text-center">
-                <span class="text-gray-600">سيتم إرسال رمز تحقق إلى رقم الجوال</span>
+                <span class="text-gray-600">إذا لم يكن لديك حساب، سيتم إنشاء حساب تلقائياً</span>
             </div>
         </div>
 
