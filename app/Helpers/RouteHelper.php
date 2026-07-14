@@ -33,7 +33,7 @@ class RouteHelper
      */
     public static function registerClientRoutes(callable $callback): void
     {
-        Route::middleware(['web', 'auth', 'role:client'])
+        Route::middleware(['web', 'auth'])
             ->prefix('client')
             ->name('client.')
             ->group($callback);

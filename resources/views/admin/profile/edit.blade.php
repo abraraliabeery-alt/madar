@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
+                <div class="card-header d-flex justify-content-between align-items-center" data-intro="{{ __('admin.tour.profile_header_desc') }}" data-step="52">
                     <h5 class="mb-0">تعديل الملف الشخصي</h5>
                 </div>
                 <div class="card-body">

@@ -204,9 +204,9 @@
 }
 
 .nav-tabs .nav-link.active {
-    color: #007bff;
+    color: var(--brand-brown);
     background-color: transparent;
-    border-bottom-color: #007bff;
+    border-bottom-color: var(--brand-brown);
     font-weight: 600;
 }
 

@@ -3,7 +3,7 @@
 @section('content')
 <div class="container-fluid">
     <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
+        <div class="card-header d-flex justify-content-between align-items-center" data-intro="{{ __('admin.tour.reports_header_desc') }}" data-step="53">
             <h5 class="mb-0">التقارير</h5>
             <div>
                 <a href="{{ route('admin.statistics') }}" class="btn btn-info">

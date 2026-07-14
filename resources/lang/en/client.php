@@ -30,6 +30,13 @@ return [
         'pending_bookings_description' => 'Review and confirm your pending bookings',
         'active_contracts_text' => 'active contracts',
         'active_contracts_description' => 'Manage your active contracts',
+        'view_details' => 'View details',
+        'view_contracts' => 'View contracts',
+        'view_appointments' => 'View appointments',
+        'view_favorites' => 'View favorites',
+        'offers_title' => 'Available offers',
+        'view_all_offers' => 'View all offers',
+        'financial_management' => 'Financial management',
     ],
 
     'navigation' => [
@@ -37,6 +44,8 @@ return [
         'profile' => 'My Profile',
         'bookings' => 'My Bookings',
         'appointments' => 'My Appointments',
+        'create_project' => 'Create Project',
+        'contracts' => 'Contracts',
         'favorites' => 'Favorites',
         'notifications' => 'Notifications',
         'settings' => 'Settings',

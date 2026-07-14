@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>لوحة التحكم</title>
+    <title>{{ __('admin.dashboard.title') }}</title>
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -18,13 +18,14 @@
     <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/intro.js@7.2.0/introjs.min.css" rel="stylesheet">
     <link href="{{ asset('admin-bundle.css') }}" rel="stylesheet">
     <script src="{{ asset('theme.js') }}" defer></script>
     @stack('styles')
 
     <style>
         :root {
-            --brand-brown: #0f172a;
+            --brand-brown: #000000;
 
             --brand-brown-rgb: 15, 23, 42;
 
@@ -62,10 +63,13 @@
         .btn-danger {
             --bs-btn-bg: var(--brand-brown);
             --bs-btn-border-color: var(--brand-brown);
+            --bs-btn-color: #ffffff;
             --bs-btn-hover-bg: var(--brand-brown);
             --bs-btn-hover-border-color: var(--brand-brown);
+            --bs-btn-hover-color: #ffffff;
             --bs-btn-active-bg: var(--brand-brown);
             --bs-btn-active-border-color: var(--brand-brown);
+            --bs-btn-active-color: #ffffff;
         }
 
         .btn-outline-primary,
@@ -97,6 +101,21 @@
             border-color: var(--brand-brown);
         }
 
+        a.list-group-item.active,
+        a.list-group-item.active:hover,
+        a.list-group-item.active:focus,
+        a.list-group-item.active:active,
+        a.list-group-item.active:visited,
+        .list-group-item.active i,
+        .list-group-item.active span {
+            color: #ffffff !important;
+        }
+
+        .sidebar .nav-link.active,
+        .sidebar .nav-link:hover {
+            background-color: var(--brand-brown);
+        }
+
         .text-muted {
             color: rgba(var(--brand-brown-rgb), 0.7) !important;
         }
@@ -113,12 +132,87 @@
             box-shadow: var(--bs-box-shadow-sm);
         }
 
-        a,
-        a:hover,
-        a:focus,
-        a:active,
-        a:visited {
+        a:not(.btn):not(.btn-primary):not(.btn-success):not(.btn-info):not(.btn-warning):not(.btn-danger):not(.btn-secondary):not(.btn-outline-primary):not(.btn-outline-success):not(.btn-outline-info):not(.btn-outline-warning):not(.btn-outline-danger):not(.btn-outline-secondary),
+        a:not(.btn):not(.btn-primary):not(.btn-success):not(.btn-info):not(.btn-warning):not(.btn-danger):not(.btn-secondary):not(.btn-outline-primary):not(.btn-outline-success):not(.btn-outline-info):not(.btn-outline-warning):not(.btn-outline-danger):not(.btn-outline-secondary):hover,
+        a:not(.btn):not(.btn-primary):not(.btn-success):not(.btn-info):not(.btn-warning):not(.btn-danger):not(.btn-secondary):not(.btn-outline-primary):not(.btn-outline-success):not(.btn-outline-info):not(.btn-outline-warning):not(.btn-outline-danger):not(.btn-outline-secondary):focus,
+        a:not(.btn):not(.btn-primary):not(.btn-success):not(.btn-info):not(.btn-warning):not(.btn-danger):not(.btn-secondary):not(.btn-outline-primary):not(.btn-outline-success):not(.btn-outline-info):not(.btn-outline-warning):not(.btn-outline-danger):not(.btn-outline-secondary):active,
+        a:not(.btn):not(.btn-primary):not(.btn-success):not(.btn-info):not(.btn-warning):not(.btn-danger):not(.btn-secondary):not(.btn-outline-primary):not(.btn-outline-success):not(.btn-outline-info):not(.btn-outline-warning):not(.btn-outline-danger):not(.btn-outline-secondary):visited {
             color: var(--brand-brown) !important;
+        }
+
+        .btn-primary,
+        .btn-success,
+        .btn-info,
+        .btn-warning,
+        .btn-danger,
+        a.btn-primary,
+        a.btn-success,
+        a.btn-info,
+        a.btn-warning,
+        a.btn-danger,
+        .btn-primary:hover,
+        .btn-success:hover,
+        .btn-info:hover,
+        .btn-warning:hover,
+        .btn-danger:hover,
+        a.btn-primary:hover,
+        a.btn-success:hover,
+        a.btn-info:hover,
+        a.btn-warning:hover,
+        a.btn-danger:hover,
+        .btn-primary:focus,
+        .btn-success:focus,
+        .btn-info:focus,
+        .btn-warning:focus,
+        .btn-danger:focus,
+        a.btn-primary:focus,
+        a.btn-success:focus,
+        a.btn-info:focus,
+        a.btn-warning:focus,
+        a.btn-danger:focus,
+        .btn-primary:active,
+        .btn-success:active,
+        .btn-info:active,
+        .btn-warning:active,
+        .btn-danger:active,
+        a.btn-primary:active,
+        a.btn-success:active,
+        a.btn-info:active,
+        a.btn-warning:active,
+        a.btn-danger:active {
+            color: #ffffff !important;
+        }
+
+        /* Light mode button styles - ensure proper contrast */
+        .btn-primary,
+        .btn-success,
+        .btn-info,
+        .btn-warning,
+        .btn-danger,
+        a.btn-primary,
+        a.btn-success,
+        a.btn-info,
+        a.btn-warning,
+        a.btn-danger {
+            background-color: var(--brand-brown) !important;
+            border-color: var(--brand-brown) !important;
+            color: #ffffff !important;
+        }
+
+        .btn-primary:hover,
+        .btn-success:hover,
+        .btn-info:hover,
+        .btn-warning:hover,
+        .btn-danger:hover,
+        a.btn-primary:hover,
+        a.btn-success:hover,
+        a.btn-info:hover,
+        a.btn-warning:hover,
+        a.btn-danger:hover {
+            background-color: var(--brand-brown) !important;
+            border-color: var(--brand-brown) !important;
+            color: #ffffff !important;
+            opacity: 0.9;
         }
 
         .link-primary,
@@ -136,6 +230,18 @@
         .text-dark,
         .text-body {
             color: var(--brand-brown) !important;
+        }
+
+        .sidebar .nav-link.active,
+        .sidebar .nav-link:hover {
+            color: #ffffff !important;
+        }
+
+        .sidebar .nav-link.active i,
+        .sidebar .nav-link:hover i,
+        .sidebar .nav-link.active span,
+        .sidebar .nav-link:hover span {
+            color: #ffffff !important;
         }
 
         /* Mobile Responsive Improvements */
@@ -317,18 +423,34 @@
         
         /* Dark Mode Styles */
         body.dark-mode {
-            background-color: #1a1a1a;
+            background-color: #1a1a1a !important;
             color: #e0e0e0;
         }
 
+        body.dark-mode.bg-light {
+            background-color: #1a1a1a !important;
+        }
+
+        body.dark-mode .bg-light {
+            background-color: #1a1a1a !important;
+        }
+
+        body.dark-mode .bg-white {
+            background-color: #2d2d2d !important;
+        }
+
+        body.dark-mode .main-content {
+            background-color: #1a1a1a !important;
+        }
+
         body.dark-mode .sidebar {
-            background-color: #2d2d2d;
-            border-right-color: #404040;
+            background-color: #2d2d2d !important;
+            border-right-color: #404040 !important;
         }
 
         body.dark-mode .sidebar-header {
-            background-color: #1f1f1f;
-            border-bottom-color: #404040;
+            background-color: #1f1f1f !important;
+            border-bottom-color: #404040 !important;
         }
 
         body.dark-mode .sidebar .nav-link {
@@ -364,7 +486,7 @@
 
         body.dark-mode .form-control:focus {
             background-color: #404040;
-            border-color: #007bff;
+            border-color: var(--brand-brown);
             color: #e0e0e0;
         }
 
@@ -378,6 +500,164 @@
             background-color: #555555;
             border-color: #666666;
             color: #ffffff;
+        }
+
+        body.dark-mode .btn-primary,
+        body.dark-mode .btn-success,
+        body.dark-mode .btn-info,
+        body.dark-mode .btn-warning,
+        body.dark-mode .btn-danger,
+        body.dark-mode a.btn-primary,
+        body.dark-mode a.btn-success,
+        body.dark-mode a.btn-info,
+        body.dark-mode a.btn-warning,
+        body.dark-mode a.btn-danger,
+        html[data-theme="dark"] .btn-primary,
+        html[data-theme="dark"] .btn-success,
+        html[data-theme="dark"] .btn-info,
+        html[data-theme="dark"] .btn-warning,
+        html[data-theme="dark"] .btn-danger,
+        html[data-theme="dark"] a.btn-primary,
+        html[data-theme="dark"] a.btn-success,
+        html[data-theme="dark"] a.btn-info,
+        html[data-theme="dark"] a.btn-warning,
+        html[data-theme="dark"] a.btn-danger {
+            background-color: #2d2d2d !important;
+            border-color: #2d2d2d !important;
+            color: #ffffff !important;
+            --bs-btn-bg: #2d2d2d !important;
+            --bs-btn-border-color: #2d2d2d !important;
+            --bs-btn-color: #ffffff !important;
+        }
+
+        /* Specific override for btn-info to ensure dark background */
+        body.dark-mode .btn-info,
+        body.dark-mode a.btn-info,
+        html[data-theme="dark"] .btn-info,
+        html[data-theme="dark"] a.btn-info {
+            background-color: #2d2d2d !important;
+            border-color: #2d2d2d !important;
+            color: #ffffff !important;
+        }
+
+        body.dark-mode .btn-info:hover,
+        body.dark-mode a.btn-info:hover,
+        html[data-theme="dark"] .btn-info:hover,
+        html[data-theme="dark"] a.btn-info:hover {
+            background-color: #2d2d2d !important;
+            border-color: #2d2d2d !important;
+            color: #ffffff !important;
+        }
+
+        body.dark-mode .btn-primary:hover,
+        body.dark-mode .btn-success:hover,
+        body.dark-mode .btn-info:hover,
+        body.dark-mode .btn-warning:hover,
+        body.dark-mode .btn-danger:hover,
+        body.dark-mode a.btn-primary:hover,
+        body.dark-mode a.btn-success:hover,
+        body.dark-mode a.btn-info:hover,
+        body.dark-mode a.btn-warning:hover,
+        body.dark-mode a.btn-danger:hover,
+        html[data-theme="dark"] .btn-primary:hover,
+        html[data-theme="dark"] .btn-success:hover,
+        html[data-theme="dark"] .btn-info:hover,
+        html[data-theme="dark"] .btn-warning:hover,
+        html[data-theme="dark"] .btn-danger:hover,
+        html[data-theme="dark"] a.btn-primary:hover,
+        html[data-theme="dark"] a.btn-success:hover,
+        html[data-theme="dark"] a.btn-info:hover,
+        html[data-theme="dark"] a.btn-warning:hover,
+        html[data-theme="dark"] a.btn-danger:hover {
+            background-color: #2d2d2d !important;
+            border-color: #2d2d2d !important;
+            color: #ffffff !important;
+            --bs-btn-hover-bg: #2d2d2d !important;
+            --bs-btn-hover-border-color: #2d2d2d !important;
+            --bs-btn-hover-color: #ffffff !important;
+        }
+
+        body.dark-mode .btn-primary:focus,
+        body.dark-mode .btn-success:focus,
+        body.dark-mode .btn-info:focus,
+        body.dark-mode .btn-warning:focus,
+        body.dark-mode .btn-danger:focus,
+        body.dark-mode a.btn-primary:focus,
+        body.dark-mode a.btn-success:focus,
+        body.dark-mode a.btn-info:focus,
+        body.dark-mode a.btn-warning:focus,
+        body.dark-mode a.btn-danger:focus,
+        html[data-theme="dark"] .btn-primary:focus,
+        html[data-theme="dark"] .btn-success:focus,
+        html[data-theme="dark"] .btn-info:focus,
+        html[data-theme="dark"] .btn-warning:focus,
+        html[data-theme="dark"] .btn-danger:focus,
+        html[data-theme="dark"] a.btn-primary:focus,
+        html[data-theme="dark"] a.btn-success:focus,
+        html[data-theme="dark"] a.btn-info:focus,
+        html[data-theme="dark"] a.btn-warning:focus,
+        html[data-theme="dark"] a.btn-danger:focus {
+            background-color: var(--brand-brown) !important;
+            border-color: var(--brand-brown) !important;
+            color: #ffffff !important;
+            --bs-btn-active-bg: var(--brand-brown) !important;
+            --bs-btn-active-border-color: var(--brand-brown) !important;
+            --bs-btn-active-color: #ffffff !important;
+        }
+
+        body.dark-mode .btn-outline-primary,
+        body.dark-mode .btn-outline-success,
+        body.dark-mode .btn-outline-info,
+        body.dark-mode .btn-outline-warning,
+        body.dark-mode .btn-outline-danger,
+        body.dark-mode a.btn-outline-primary,
+        body.dark-mode a.btn-outline-success,
+        body.dark-mode a.btn-outline-info,
+        body.dark-mode a.btn-outline-warning,
+        body.dark-mode a.btn-outline-danger,
+        html[data-theme="dark"] .btn-outline-primary,
+        html[data-theme="dark"] .btn-outline-success,
+        html[data-theme="dark"] .btn-outline-info,
+        html[data-theme="dark"] .btn-outline-warning,
+        html[data-theme="dark"] .btn-outline-danger,
+        html[data-theme="dark"] a.btn-outline-primary,
+        html[data-theme="dark"] a.btn-outline-success,
+        html[data-theme="dark"] a.btn-outline-info,
+        html[data-theme="dark"] a.btn-outline-warning,
+        html[data-theme="dark"] a.btn-outline-danger {
+            background-color: transparent !important;
+            border-color: var(--brand-brown) !important;
+            color: var(--brand-brown) !important;
+            --bs-btn-color: var(--brand-brown) !important;
+            --bs-btn-border-color: var(--brand-brown) !important;
+        }
+
+        body.dark-mode .btn-outline-primary:hover,
+        body.dark-mode .btn-outline-success:hover,
+        body.dark-mode .btn-outline-info:hover,
+        body.dark-mode .btn-outline-warning:hover,
+        body.dark-mode .btn-outline-danger:hover,
+        body.dark-mode a.btn-outline-primary:hover,
+        body.dark-mode a.btn-outline-success:hover,
+        body.dark-mode a.btn-outline-info:hover,
+        body.dark-mode a.btn-outline-warning:hover,
+        body.dark-mode a.btn-outline-danger:hover,
+        html[data-theme="dark"] .btn-outline-primary:hover,
+        html[data-theme="dark"] .btn-outline-success:hover,
+        html[data-theme="dark"] .btn-outline-info:hover,
+        html[data-theme="dark"] .btn-outline-warning:hover,
+        html[data-theme="dark"] .btn-outline-danger:hover,
+        html[data-theme="dark"] a.btn-outline-primary:hover,
+        html[data-theme="dark"] a.btn-outline-success:hover,
+        html[data-theme="dark"] a.btn-outline-info:hover,
+        html[data-theme="dark"] a.btn-outline-warning:hover,
+        html[data-theme="dark"] a.btn-outline-danger:hover {
+            background-color: var(--brand-brown) !important;
+            border-color: var(--brand-brown) !important;
+            color: #ffffff !important;
+            --bs-btn-hover-bg: var(--brand-brown) !important;
+            --bs-btn-hover-border-color: var(--brand-brown) !important;
+            --bs-btn-hover-color: #ffffff !important;
         }
 
         body.dark-mode .dropdown-menu {
@@ -493,8 +773,8 @@
         }
 
         .search-box .form-control:focus {
-            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(var(--brand-brown-rgb), 0.25);
+            border-color: var(--brand-brown);
         }
 
         .search-box .fas.fa-search {
@@ -679,13 +959,8 @@
     </style>
 </head>
 <body>
-    <!-- Preloader -->
-    <div class="preloader">
-        <div class="preloader-spinner"></div>
-    </div>
-
     <!-- Sidebar -->
-    <aside class="sidebar">
+    <aside class="sidebar" data-intro="{{ __('admin.tour.sidebar_desc') }}" data-step="1">
         <div class="sidebar-header">
             <h4 class="mb-0">{{ config('app.name') }}</h4>
             <button class="btn btn-light d-lg-none" id="sidebarClose">
@@ -694,7 +969,7 @@
         </div>
 
         <!-- User Profile -->
-        <div class="p-3">
+        <div class="p-3" data-intro="{{ __('admin.tour.user_profile_desc') }}" data-step="2">
             <div class="d-flex align-items-center">
                 <div class="avatar ms-2">
                     @if(auth()->user()->avatar)
@@ -713,75 +988,75 @@
         </div>
 
         <!-- Navigation -->
-        <div class="nav-scroll">
+        <div class="nav-scroll" data-intro="{{ __('admin.tour.navigation_desc') }}" data-step="3">
             <div class="nav flex-column">
                 <a href="{{ route('admin.dashboard') }}" class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                     <i class="fas fa-home"></i>
-                    <span>لوحة التحكم</span>
+                    <span>{{ __('admin.dashboard.title') }}</span>
                 </a>
                 <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle {{ request()->routeIs('admin.users.*') ? 'active' : '' }}" data-bs-toggle="dropdown">
                         <i class="fas fa-users"></i>
-                        <span>المستخدمين</span>
+                        <span>{{ __('admin.users.title') }}</span>
                     </a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="{{ route('admin.users.index') }}">
-                            <i class="fas fa-list me-2"></i>قائمة المستخدمين
+                            <i class="fas fa-list me-2"></i>{{ __('admin.users.title') }}
                         </a></li>
                         <li><a class="dropdown-item" href="{{ route('admin.users.statistics') }}">
-                            <i class="fas fa-chart-line me-2"></i>إحصائيات المستخدمين
+                            <i class="fas fa-chart-line me-2"></i>{{ __('admin.actions.view_statistics') }}
                         </a></li>
                         <li><a class="dropdown-item" href="{{ route('admin.users.export') }}">
-                            <i class="fas fa-download me-2"></i>تصدير البيانات
+                            <i class="fas fa-download me-2"></i>{{ __('admin.actions.export') }}
                         </a></li>
                         <li><a class="dropdown-item" href="{{ route('admin.users.activity-logs') }}">
-                            <i class="fas fa-history me-2"></i>سجل النشاط
+                            <i class="fas fa-history me-2"></i>{{ __('admin.actions.view_activity_logs') }}
                         </a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="{{ route('admin.permissions.index') }}">
-                            <i class="fas fa-user-cog me-2"></i>إدارة الصلاحيات
+                            <i class="fas fa-user-cog me-2"></i>{{ __('admin.permissions.title') }}
                         </a></li>
                     </ul>
                 </div>
                 <a href="{{ route('admin.roles.index') }}" class="nav-link {{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">
                     <i class="fas fa-user-shield"></i>
-                    <span>الأدوار</span>
+                    <span>{{ __('admin.roles.title') }}</span>
                 </a>
                 <a href="{{ route('admin.facilities.index') }}" class="nav-link {{ request()->routeIs('admin.facilities.*') ? 'active' : '' }}">
                     <i class="fas fa-building"></i>
-                    <span>المنشآت</span>
+                    <span>{{ __('admin.facilities.title') }}</span>
                 </a>
                 <a href="{{ route('admin.categories.index') }}" class="nav-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
                     <i class="fas fa-th-large"></i>
-                    <span>التصنيفات</span>
+                    <span>{{ __('admin.categories.title') }}</span>
                 </a>
                 <a href="{{ route('admin.features.index') }}" class="nav-link {{ request()->routeIs('admin.features.*') ? 'active' : '' }}">
                     <i class="fas fa-star"></i>
-                    <span>المميزات</span>
+                    <span>{{ __('admin.features.title') }}</span>
                 </a>
                 <a href="{{ route('admin.attributes.index') }}" class="nav-link {{ request()->routeIs('admin.attributes.*') ? 'active' : '' }}">
                     <i class="fas fa-tags"></i>
-                    <span>الخصائص</span>
+                    <span>{{ __('admin.attributes.title') }}</span>
                 </a>
                 <a href="{{ route('admin.faqs.index') }}" class="nav-link {{ request()->routeIs('admin.faqs.*') ? 'active' : '' }}">
                     <i class="fas fa-question-circle"></i>
-                    <span>الأسئلة الشائعة</span>
+                    <span>{{ __('admin.faqs.title') }}</span>
                 </a>
                 <a href="{{ route('admin.products.index') }}" class="nav-link {{ request()->routeIs('admin.products.*') ? 'active' : '' }}">
                     <i class="fas fa-box"></i>
-                    <span>المشاريع</span>
+                    <span>{{ __('admin.products.title') }}</span>
                 </a>
                 <a href="{{ route('admin.bookings.index') }}" class="nav-link {{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}">
                     <i class="fas fa-calendar-check"></i>
-                    <span>الحجوزات</span>
+                    <span>{{ __('admin.bookings.title') }}</span>
                 </a>
                 <a href="{{ route('admin.contracts.index') }}" class="nav-link {{ request()->routeIs('admin.contracts.*') ? 'active' : '' }}">
                     <i class="fas fa-file-contract"></i>
-                    <span>العقود</span>
+                    <span>{{ __('admin.contracts.title') }}</span>
                 </a>
                 <a href="{{ route('admin.notifications') }}" class="nav-link {{ request()->routeIs('admin.notifications.*') ? 'active' : '' }}">
                     <i class="fas fa-bell"></i>
-                    <span>الإشعارات</span>
+                    <span>{{ __('layout.notifications.title') }}</span>
                 </a>
             </div>
         </div>
@@ -790,12 +1065,12 @@
         <div class="p-3 border-top">
             <div class="d-flex flex-column gap-2">
                 <a href="{{ route('admin.settings') }}" class="btn btn-light w-100 text-start">
-                    <i class="fas fa-cog ms-2"></i>الإعدادات
+                    <i class="fas fa-cog ms-2"></i>{{ __('admin.settings.title') }}
                 </a>
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf
                     <button type="submit" class="btn btn-light w-100 text-start text-danger">
-                        <i class="fas fa-sign-out-alt ms-2"></i>تسجيل الخروج
+                        <i class="fas fa-sign-out-alt ms-2"></i>{{ __('layout.user_menu.logout') }}
                     </button>
                 </form>
             </div>
@@ -805,21 +1080,21 @@
     <!-- Main Content -->
     <main class="main-content">
         <!-- Header -->
-        <header class="main-header">
+        <header class="main-header" data-intro="{{ __('admin.tour.header_desc') }}" data-step="4">
             <button class="btn btn-light d-lg-none" id="sidebarToggle">
                 <i class="fas fa-bars"></i>
             </button>
 
             <div class="navbar-tools">
                 <!-- Search -->
-                <div class="search-box position-relative">
-                    <input type="text" class="form-control" id="globalSearch" placeholder="بحث في المستخدمين، المنشآت، المشاريع..." autocomplete="off">
+                <div class="search-box position-relative" data-intro="{{ __('admin.tour.search_desc') }}" data-step="5">
+                    <input type="text" class="form-control" id="globalSearch" placeholder="{{ __('admin.ui.search.searching') }}" autocomplete="off">
                     <i class="fas fa-search"></i>
                     
                     <!-- Search Results Dropdown -->
                     <div class="search-results" id="searchResults" style="display: none;">
                         <div class="search-results-header">
-                            <h6 class="mb-0">نتائج البحث</h6>
+                            <h6 class="mb-0">{{ __('admin.messages.search_results') }}</h6>
                             <small class="text-muted" id="searchResultsCount">0 نتيجة</small>
                         </div>
                         <div class="search-results-body" id="searchResultsBody">
@@ -827,7 +1102,7 @@
                         </div>
                         <div class="search-results-footer">
                             <a href="#" id="viewAllResults" class="text-decoration-none">
-                                <i class="fas fa-search ms-1"></i>عرض كل النتائج
+                                <i class="fas fa-search ms-1"></i>{{ __('admin.messages.view_all') }}
                             </a>
                         </div>
                     </div>
@@ -839,27 +1114,27 @@
                         <i class="fas fa-plus"></i>
                     </button>
                     <div class="dropdown-menu dropdown-menu-end">
-                        <h6 class="dropdown-header">إضافة جديد</h6>
+                        <h6 class="dropdown-header">{{ __('admin.messages.add_new') }}</h6>
                         <a href="{{ route('admin.users.create') }}" class="dropdown-item">
-                            <i class="fas fa-user-plus ms-2"></i>مستخدم جديد
+                            <i class="fas fa-user-plus ms-2"></i>{{ __('admin.users.create') }}
                         </a>
                         <a href="{{ route('admin.attributes.create') }}" class="dropdown-item">
-                            <i class="fas fa-tag ms-2"></i>خاصية جديدة
+                            <i class="fas fa-tag ms-2"></i>{{ __('admin.attributes.create') }}
                         </a>
                         <a href="{{ route('admin.faqs.create') }}" class="dropdown-item">
-                            <i class="fas fa-question-circle ms-2"></i>سؤال جديد
+                            <i class="fas fa-question-circle ms-2"></i>{{ __('admin.faqs.create') }}
                         </a>
                         <a href="{{ route('admin.products.create') }}" class="dropdown-item">
-                            <i class="fas fa-box-open ms-2"></i>مشروع جديد
+                            <i class="fas fa-box-open ms-2"></i>{{ __('admin.products.create') }}
                         </a>
                         <a href="{{ route('admin.bookings.create') }}" class="dropdown-item">
-                            <i class="fas fa-calendar-plus ms-2"></i>حجز جديد
+                            <i class="fas fa-calendar-plus ms-2"></i>{{ __('admin.bookings.create') }}
                         </a>
                     </div>
                 </div>
 
                 <!-- Notifications -->
-                <div class="dropdown">
+                <div class="dropdown" data-intro="{{ __('admin.tour.notifications_desc') }}" data-step="6">
                     <button class="btn btn-light position-relative" data-bs-toggle="dropdown" id="notificationDropdown">
                         <i class="fas fa-bell"></i>
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="notificationCount">
@@ -868,24 +1143,56 @@
                     </button>
                     <div class="dropdown-menu dropdown-menu-end" style="width: 350px;">
                         <h6 class="dropdown-header d-flex justify-content-between align-items-center">
-                            الإشعارات
-                            <a href="{{ route('admin.notifications') }}" class="text-decoration-none small">عرض الكل</a>
+                            {{ __('layout.notifications.title') }}
+                            <a href="{{ route('admin.notifications') }}" class="text-decoration-none small">{{ __('admin.messages.view_all') }}</a>
                         </h6>
                         <div id="notificationsList">
                             <div class="text-center py-3">
                                 <i class="fas fa-spinner fa-spin"></i>
-                                <p class="mb-0 mt-2">جاري التحميل...</p>
+                                <p class="mb-0 mt-2">{{ __('admin.messages.loading') }}</p>
                             </div>
                         </div>
                         <div class="dropdown-divider"></div>
-                        <a href="{{ route('admin.notifications') }}" class="dropdown-item text-center">عرض كل الإشعارات</a>
+                        <a href="{{ route('admin.notifications') }}" class="dropdown-item text-center">{{ __('layout.notifications.view_all_notifications') }}</a>
                     </div>
                 </div>
 
                 <!-- Theme Toggle -->
-                <button class="btn btn-light" id="themeToggle" type="button" data-theme-toggle aria-label="Toggle theme">
+                <button class="btn btn-light" id="themeToggle" type="button" data-theme-toggle aria-label="Toggle theme" data-intro="{{ __('admin.tour.theme_desc') }}" data-step="7">
                     <i class="fas fa-moon"></i>
                 </button>
+
+                <!-- Tour Start Button -->
+                <button class="btn btn-light" onclick="startTour()" type="button" aria-label="Start tour" title="{{ __('admin.tour.start_tour') }}">
+                    <i class="fas fa-play-circle"></i>
+                </button>
+
+                <!-- Auto Tour Button -->
+                <button class="btn btn-primary" onclick="startAutoTour()" type="button" aria-label="Start auto tour" title="{{ __('admin.tour.start_auto_tour') }}">
+                    <i class="fas fa-forward"></i>
+                </button>
+
+                <!-- Language Switcher -->
+                <div class="dropdown" data-intro="{{ __('admin.tour.language_desc') }}" data-step="8">
+                    <button class="btn btn-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-globe"></i>
+                        <span class="ms-1">{{ strtoupper(app()->getLocale()) }}</span>
+                    </button>
+                    <div class="dropdown-menu {{ app()->getLocale() === 'ar' ? 'dropdown-menu-start' : 'dropdown-menu-end' }}">
+                        <a class="dropdown-item" href="{{ route('public.language.change', 'ar') }}">
+                            {{ __('layout.navigation.arabic') }}
+                        </a>
+                        <a class="dropdown-item" href="{{ route('public.language.change', 'en') }}">
+                            {{ __('layout.navigation.english') }}
+                        </a>
+                        <a class="dropdown-item" href="{{ route('public.language.change', 'ur') }}">
+                            {{ __('layout.navigation.urdu') }}
+                        </a>
+                        <a class="dropdown-item" href="{{ route('public.language.change', 'zh') }}">
+                            {{ __('layout.navigation.chinese') }}
+                        </a>
+                    </div>
+                </div>
             </div>
         </header>
 
@@ -905,7 +1212,7 @@
         @endif
 
         <!-- Content -->
-        <div class="fade-in">
+        <div class="fade-in" data-intro="{{ __('admin.tour.content_desc') }}" data-step="9">
             @yield('content')
         </div>
     </main>
@@ -932,6 +1239,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/locale/ar.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/intro.js@7.2.0/intro.min.js"></script>
 
     @stack('scripts')
 
@@ -939,11 +1247,6 @@
     $(document).ready(function() {
         // تعيين اللغة العربية لـ moment.js
         moment.locale('ar');
-
-        // إخفاء Preloader
-        setTimeout(function() {
-            $('.preloader').fadeOut(300);
-        }, 500);
 
         // تهيئة Select2
         if ($('.form-select').length) {
@@ -1269,7 +1572,7 @@
         
         // Initialize mobile enhancements
         initMobileEnhancements();
-        
+
         // Re-initialize on window resize
         $(window).on('resize', function() {
             setTimeout(initMobileEnhancements, 100);
@@ -1607,6 +1910,62 @@
             }
         });
     });
+
+    // دالة بدء الجولة التعليمية (خارج document.ready لتكون متاحة globally)
+    function startTour() {
+        console.log('startTour called');
+        console.log('introJs type:', typeof introJs);
+        if (typeof introJs !== 'undefined') {
+            console.log('Starting tour...');
+            introJs()
+                .setOptions({
+                    nextLabel: '{{ __("admin.tour.next") }}',
+                    prevLabel: '{{ __("admin.tour.previous") }}',
+                    skipLabel: '{{ __("admin.tour.skip") }}',
+                    doneLabel: '{{ __("admin.tour.done") }}',
+                    rtl: true,
+                    showProgress: true,
+                    showBullets: true,
+                    exitOnOverlayClick: true,
+                    exitOnEsc: true
+                })
+                .start();
+        } else {
+            console.error('introJs is not defined');
+        }
+    }
+
+    // دالة بدء الجولة التعليمية بالتلقائي (auto-play)
+    function startAutoTour() {
+        console.log('startAutoTour called');
+        console.log('introJs type:', typeof introJs);
+        if (typeof introJs !== 'undefined') {
+            console.log('Starting auto tour...');
+            introJs()
+                .setOptions({
+                    nextLabel: '{{ __("admin.tour.next") }}',
+                    prevLabel: '{{ __("admin.tour.previous") }}',
+                    skipLabel: '{{ __("admin.tour.skip") }}',
+                    doneLabel: '{{ __("admin.tour.done") }}',
+                    rtl: true,
+                    showProgress: true,
+                    showBullets: true,
+                    exitOnOverlayClick: true,
+                    exitOnEsc: true,
+                    tooltipPosition: 'auto',
+                    showStepNumbers: false
+                })
+                .onbeforechange(function(targetElement) {
+                    // الانتقال السريع تلقائياً
+                    setTimeout(function() {
+                        introJs().nextStep();
+                    }, 1500); // 1.5 ثانية لكل خطوة
+                })
+                .start();
+        } else {
+            console.error('introJs is not defined');
+        }
+    }
     </script>
 </body>
 </html>

@@ -42,12 +42,10 @@ class LoginController extends Controller
             return redirect()->route('admin.dashboard');
         } elseif ($user->hasRole('facility')) {
             return redirect()->route('facility.dashboard');
-        } elseif ($user->hasRole('client')) {
-            return redirect()->route('client.dashboard');
         }
 
-        // Default redirect
-        return redirect()->route('home');
+        // Default redirect for any other authenticated user
+        return redirect()->route('client.dashboard');
     }
 
     /**

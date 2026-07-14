@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header" data-intro="{{ __('admin.tour.attributes_create_header_desc') }}" data-step="68">
                     <h4 class="mb-0">{{ __('admin.attributes.create') }}</h4>
                 </div>
                 <div class="card-body">

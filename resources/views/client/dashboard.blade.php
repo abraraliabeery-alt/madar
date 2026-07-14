@@ -20,7 +20,7 @@
                     <div class="text-primary fs-4"><i class="fas fa-calendar-check"></i></div>
                 </div>
                 <div class="mt-2">
-                    <a href="{{ route('client.bookings.index') }}" class="small text-decoration-none">عرض التفاصيل</a>
+                    <a href="{{ route('client.bookings.index') }}" class="small text-decoration-none">{{ __('client.dashboard.view_details') }}</a>
                 </div>
             </div>
         </div>
@@ -37,7 +37,7 @@
                     <div class="text-success fs-4"><i class="fas fa-file-contract"></i></div>
                 </div>
                 <div class="mt-2">
-                    <a href="{{ route('client.contracts.index') }}" class="small text-decoration-none">عرض العقود</a>
+                    <a href="{{ route('client.contracts.index') }}" class="small text-decoration-none">{{ __('client.dashboard.view_contracts') }}</a>
                 </div>
             </div>
         </div>
@@ -54,7 +54,7 @@
                     <div class="text-secondary fs-4"><i class="fas fa-clock"></i></div>
                 </div>
                 <div class="mt-2">
-                    <a href="{{ route('client.appointments') }}" class="small text-decoration-none">عرض المواعيد</a>
+                    <a href="{{ route('client.appointments') }}" class="small text-decoration-none">{{ __('client.dashboard.view_appointments') }}</a>
                 </div>
             </div>
         </div>
@@ -71,7 +71,7 @@
                     <div class="text-danger fs-4"><i class="fas fa-heart"></i></div>
                 </div>
                 <div class="mt-2">
-                    <a href="{{ route('client.favorites') }}" class="small text-decoration-none">عرض المفضلة</a>
+                    <a href="{{ route('client.favorites') }}" class="small text-decoration-none">{{ __('client.dashboard.view_favorites') }}</a>
                 </div>
             </div>
         </div>
@@ -87,13 +87,13 @@
             <div class="col-12 col-md-6 col-lg">
                 <a href="{{ route('client.projects.create') }}" class="btn btn-outline-primary w-100">
                     <i class="fas fa-plus-circle ms-2"></i>
-                    إنشاء مشروع
+                    {{ __('client.navigation.create_project') }}
                 </a>
             </div>
             <div class="col-12 col-md-6 col-lg">
                 <a href="{{ route('client.offers.index') }}" class="btn btn-outline-success w-100">
                     <i class="fas fa-tags ms-2"></i>
-                    العروض المتاحة
+                    {{ __('client.dashboard.offers_title') }}
                 </a>
             </div>
             <div class="col-12 col-md-6 col-lg">
@@ -111,60 +111,8 @@
             <div class="col-12 col-md-6 col-lg">
                 <a href="{{ route('client.financial.dashboard') }}" class="btn btn-outline-secondary w-100">
                     <i class="fas fa-chart-line ms-2"></i>
-                    الإدارة المالية
+                    {{ __('client.dashboard.financial_management') }}
                 </a>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="card shadow-sm mb-4">
-    <div class="card-body">
-        <div class="d-flex align-items-center justify-content-between mb-3">
-            <h2 class="h6 fw-bold mb-0">العروض المتاحة</h2>
-            <a href="{{ route('client.offers.index') }}" class="small text-decoration-none">عرض جميع العروض</a>
-        </div>
-        <div class="row g-3">
-            <div class="col-12 col-md-6 col-lg-4">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <div class="d-flex align-items-start justify-content-between">
-                            <div class="fw-bold">شقة 3 غرف</div>
-                            <span class="badge bg-success">للبيع</span>
-                        </div>
-                        <div class="text-muted small mt-1">الرياض، حي النرجس</div>
-                        <div class="fw-bold mt-2">450,000 ريال</div>
-                        <button class="btn btn-primary w-100 mt-3">عرض التفاصيل</button>
-                    </div>
-                </div>
-            </div>
-                
-            <div class="col-12 col-md-6 col-lg-4">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <div class="d-flex align-items-start justify-content-between">
-                            <div class="fw-bold">فيلا 4 غرف</div>
-                            <span class="badge bg-primary">إيجار شهري</span>
-                        </div>
-                        <div class="text-muted small mt-1">جدة، حي الروضة</div>
-                        <div class="fw-bold mt-2">8,000 ريال/شهر</div>
-                        <button class="btn btn-primary w-100 mt-3">عرض التفاصيل</button>
-                    </div>
-                </div>
-            </div>
-                
-            <div class="col-12 col-md-6 col-lg-4">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <div class="d-flex align-items-start justify-content-between">
-                            <div class="fw-bold">مكتب تجاري</div>
-                            <span class="badge bg-secondary">إيجار سنوي</span>
-                        </div>
-                        <div class="text-muted small mt-1">الدمام، حي الفيصلية</div>
-                        <div class="fw-bold mt-2">120,000 ريال/سنة</div>
-                        <button class="btn btn-primary w-100 mt-3">عرض التفاصيل</button>
-                    </div>
-                </div>
             </div>
         </div>
     </div>

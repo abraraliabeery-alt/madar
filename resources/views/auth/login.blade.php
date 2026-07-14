@@ -7,9 +7,7 @@
     <div class="max-w-md mx-auto">
         <!-- Logo -->
         <div class="text-center mb-8">
-            <div class="w-20 h-20 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i class="fas fa-home text-white text-3xl"></i>
-            </div>
+            <img src="{{ asset('images/madar-negotiation-icon.svg') }}" alt="مدار التفاوض" class="w-28 h-28 mx-auto mb-4 brand-logo">
             <h2 class="text-3xl font-bold text-gray-900">{{ __('auth.login.welcome_back') }}</h2>
             <p class="text-gray-600 mt-2">{{ __('auth.login.login_to_account') }}</p>
         </div>

@@ -28,11 +28,10 @@ class RedirectIfAuthenticated
                     return redirect()->route('admin.dashboard');
                 } elseif ($user->hasRole('facility')) {
                     return redirect()->route('facility.dashboard');
-                } elseif ($user->hasRole('client')) {
-                    return redirect()->route('client.dashboard');
                 }
 
-                return redirect(RouteServiceProvider::HOME);
+                // Any other authenticated user goes to the client dashboard
+                return redirect()->route('client.dashboard');
             }
         }
 

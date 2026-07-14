@@ -121,11 +121,16 @@ class PhoneOtpAuthController extends Controller
         }
 
         if ($loginIntent === 'facility') {
-            if (method_exists($user, 'hasRole') && method_exists($user, 'assignRole') && !$user->hasRole('facility')) {
+            if (method_exists($user, 'assignRole')) {
                 $user->assignRole('facility');
             }
 
             return redirect()->route('facility.onboarding.create');
+        }
+
+        // Default client intent: ensure the user has the client role
+        if (method_exists($user, 'assignRole')) {
+            $user->assignRole('client');
         }
 
         return redirect()->intended('/dashboard');
@@ -263,11 +268,16 @@ class PhoneOtpAuthController extends Controller
         }
 
         if ($loginIntent === 'facility') {
-            if (method_exists($user, 'hasRole') && method_exists($user, 'assignRole') && !$user->hasRole('facility')) {
+            if (method_exists($user, 'assignRole')) {
                 $user->assignRole('facility');
             }
 
             return redirect()->route('facility.onboarding.create');
+        }
+
+        // Default client intent: ensure the user has the client role
+        if (method_exists($user, 'assignRole')) {
+            $user->assignRole('client');
         }
 
         return redirect()->intended('/dashboard');

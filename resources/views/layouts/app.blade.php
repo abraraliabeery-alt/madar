@@ -5,7 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', 'الرئيسية')</title>
+    <title>@yield('title', __('layout.navigation.home'))</title>
+
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
+    <link rel="alternate icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -155,8 +158,8 @@
         <div class="flex items-center justify-between h-16">
             <!-- Logo and Brand -->
             <div class="flex-shrink-0">
-                <a href="{{ route('public.home') }}" class="text-2xl font-bold text-primary-600">
-                    <span class="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-primary-600 text-white font-extrabold text-xl leading-none {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}">م</span>
+                <a href="{{ route('public.home') }}" class="inline-flex items-center p-1">
+                    <img src="{{ asset('images/madar-negotiation-icon.svg') }}" alt="مدار التفاوض" class="w-14 h-14 brand-logo">
                 </a>
             </div>
             <div class="hidden md:flex items-center {{ app()->getLocale() == 'ar' ? 'space-x-8 space-x-reverse' : 'space-x-8' }}">
@@ -223,10 +226,10 @@
                 </div>
 
                 <a href="{{ route('public.execution.marketplace') }}" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                    {{ app()->getLocale() == 'ar' ? 'المشاريع' : 'Projects' }}
+                    {{ __('public.navigation.products') }}
                 </a>
                 <a href="{{ route('public.products.index') }}" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                    {{ app()->getLocale() == 'ar' ? 'المنتجات' : 'Products' }}
+                    {{ __('public.navigation.products') }}
                 </a>
                 @if(\App\Helpers\FacilityHelper::isMultiMode())
                     <a href="{{ route('public.facilities.index') }}" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
@@ -291,11 +294,11 @@
                                                         {{ $notification->data['message'] }}
                                                     @elseif(data_get($notification->data, 'type') !== null)
                                                         @if(data_get($notification->data, 'type') === 'booking_created')
-                                                            تم إنشاء حجز جديد
+                                                            {{ __('layout.notifications.types.booking_created') }}
                                                         @elseif(data_get($notification->data, 'type') === 'booking_status_changed')
-                                                            تم تحديث حالة الحجز
+                                                            {{ __('layout.notifications.types.booking_status_changed') }}
                                                         @elseif(data_get($notification->data, 'type') === 'new_product_added')
-                                                            تم إضافة مشروع جديد
+                                                            {{ __('layout.notifications.types.new_product_added') }}
                                                         @else
                                                             {{ __('layout.notifications.new_notification') }}
                                                         @endif
@@ -360,7 +363,7 @@
 
                             @if(!auth()->user()->hasRole('facility') && method_exists(auth()->user(), 'facilities') && !auth()->user()->facilities()->exists())
                                 <a href="{{ route('facility.onboarding.create') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    <i class="fas fa-building-user {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>تحويل الحساب إلى منشأة
+                                    <i class="fas fa-building-user {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>{{ __('layout.user_menu.convert_to_facility') }}
                                 </a>
                             @endif
 
@@ -369,6 +372,10 @@
                             </a>
 
                             <hr class="my-1">
+
+                            <a href="{{ url('/dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-gauge {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>{{ __('layout.user_menu.dashboard') }}
+                            </a>
 
                             <!-- Language Switcher in Profile Menu -->
                             <div class="px-4 py-2 border-t border-gray-200">
@@ -510,7 +517,7 @@
 
                 <div class="px-3 py-2">
                     <button type="button" onclick="toggleTheme()" data-theme-toggle class="w-full flex items-center justify-between p-2 rounded-lg border border-gray-200 text-gray-700 hover:text-primary-700 hover:border-primary-300 transition-colors dark:border-secondary-800 dark:text-gray-200 dark:hover:text-white">
-                        <span class="text-sm font-medium">الوضع الليلي</span>
+                        <span class="text-sm font-medium">{{ __('layout.user_menu.dark_mode') }}</span>
                         <span class="flex items-center gap-2">
                             <i class="fas fa-moon" data-icon="moon"></i>
                             <i class="fas fa-sun hidden" data-icon="sun"></i>
@@ -550,11 +557,11 @@
                                                     {{ $notification->data['message'] }}
                                                 @elseif(data_get($notification->data, 'type') !== null)
                                                     @if(data_get($notification->data, 'type') === 'booking_created')
-                                                        تم إنشاء حجز جديد
+                                                        {{ __('layout.notifications.types.booking_created') }}
                                                     @elseif(data_get($notification->data, 'type') === 'booking_status_changed')
-                                                        تم تحديث حالة الحجز
+                                                        {{ __('layout.notifications.types.booking_status_changed') }}
                                                     @elseif(data_get($notification->data, 'type') === 'new_product_added')
-                                                        تم إضافة مشروع جديد
+                                                        {{ __('layout.notifications.types.new_product_added') }}
                                                     @else
                                                         {{ __('layout.notifications.new_notification') }}
                                                     @endif
@@ -599,7 +606,7 @@
 
                     @if(!auth()->user()->hasRole('facility') && method_exists(auth()->user(), 'facilities') && !auth()->user()->facilities()->exists())
                         <a href="{{ route('facility.onboarding.create') }}" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
-                            <i class="fas fa-building-user {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>تحويل الحساب إلى منشأة
+                            <i class="fas fa-building-user {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>{{ __('layout.user_menu.convert_to_facility') }}
                         </a>
                     @endif
 
@@ -685,6 +692,12 @@
 
                     <hr class="my-2">
 
+                    <a href="{{ url('/dashboard') }}" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
+                        <i class="fas fa-gauge {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>{{ __('layout.user_menu.dashboard') }}
+                    </a>
+
+                    <hr class="my-2">
+
                     <form method="POST" action="{{ route('logout') }}" class="block">
                         @csrf
                         <button type="submit" class="w-full {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }} px-3 py-2 text-red-600 hover:text-red-700 text-base font-medium">
@@ -757,7 +770,7 @@
         </div>
 
         <div class="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-400">
-            <p>&copy; {{ date('Y') }}. {{ app()->getLocale() == 'ar' ? 'جميع الحقوق محفوظة.' : 'All rights reserved.' }}</p>
+            <p>&copy; {{ date('Y') }}. {{ __('layout.footer.all_rights_reserved') }}</p>
         </div>
     </div>
 </footer>

@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header" data-intro="{{ __('admin.tour.notification_settings_header_desc') }}" data-step="47">
                     <h5 class="mb-0">
                         <i class="fas fa-cog ms-2"></i>إعدادات الإشعارات
                     </h5>
@@ -14,7 +14,7 @@
                     <form action="{{ route('admin.notifications.settings.update') }}" method="POST">
                         @csrf
                         
-                        <div class="row">
+                        <div class="row" data-intro="{{ __('admin.tour.notification_settings_form_desc') }}" data-step="48">
                             <div class="col-md-6">
                                 <h6 class="mb-3">أنواع الإشعارات</h6>
                                 
@@ -168,13 +168,13 @@
 }
 
 .form-check-input:checked {
-    background-color: #007bff;
-    border-color: #007bff;
+    background-color: var(--brand-brown);
+    border-color: var(--brand-brown);
 }
 
 .form-check-input:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    border-color: var(--brand-brown);
+    box-shadow: 0 0 0 0.2rem rgba(var(--brand-brown-rgb), 0.25);
 }
 </style>
 @endsection

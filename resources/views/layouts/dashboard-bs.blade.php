@@ -7,6 +7,9 @@
 
     <title>@yield('title', config('app.name', ''))</title>
 
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
+    <link rel="alternate icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
 
@@ -73,6 +76,8 @@
 
             --brand-brown-rgb: 0, 0, 0;
 
+            --brand-bg: #ffffff;
+
             --bs-body-bg: #ffffff;
             --bs-body-color: var(--brand-brown);
             --bs-emphasis-color: var(--brand-brown);
@@ -100,6 +105,19 @@
             --bs-secondary: var(--brand-brown);
         }
 
+        body.dark-mode {
+            --brand-brown: #ffffff;
+            --brand-brown-rgb: 255, 255, 255;
+            --brand-bg: #000000;
+            --bs-body-bg: #000000;
+            --bs-body-color: var(--brand-brown);
+            --bs-emphasis-color: var(--brand-brown);
+            --bs-primary: var(--brand-brown);
+            --bs-link-color: var(--brand-brown);
+            --bs-link-hover-color: var(--brand-brown);
+            --bs-border-color: rgba(var(--brand-brown-rgb), 0.25);
+        }
+
         .btn-primary,
         .btn-success,
         .btn-info,
@@ -107,10 +125,66 @@
         .btn-danger {
             --bs-btn-bg: var(--brand-brown);
             --bs-btn-border-color: var(--brand-brown);
+            --bs-btn-color: var(--brand-bg);
             --bs-btn-hover-bg: var(--brand-brown);
             --bs-btn-hover-border-color: var(--brand-brown);
+            --bs-btn-hover-color: var(--brand-bg);
             --bs-btn-active-bg: var(--brand-brown);
             --bs-btn-active-border-color: var(--brand-brown);
+            --bs-btn-active-color: var(--brand-bg);
+        }
+
+        .btn-primary,
+        .btn-success,
+        .btn-info,
+        .btn-warning,
+        .btn-danger,
+        a.btn-primary,
+        a.btn-success,
+        a.btn-info,
+        a.btn-warning,
+        a.btn-danger,
+        a.btn-primary:visited,
+        a.btn-success:visited,
+        a.btn-info:visited,
+        a.btn-warning:visited,
+        a.btn-danger:visited,
+        .btn-primary:hover,
+        .btn-success:hover,
+        .btn-info:hover,
+        .btn-warning:hover,
+        .btn-danger:hover,
+        a.btn-primary:hover,
+        a.btn-success:hover,
+        a.btn-info:hover,
+        a.btn-warning:hover,
+        a.btn-danger:hover,
+        .btn-primary:focus,
+        .btn-success:focus,
+        .btn-info:focus,
+        .btn-warning:focus,
+        .btn-danger:focus,
+        a.btn-primary:focus,
+        a.btn-success:focus,
+        a.btn-info:focus,
+        a.btn-warning:focus,
+        a.btn-danger:focus,
+        a.btn-primary:focus-visible,
+        a.btn-success:focus-visible,
+        a.btn-info:focus-visible,
+        a.btn-warning:focus-visible,
+        a.btn-danger:focus-visible,
+        .btn-primary:active,
+        .btn-success:active,
+        .btn-info:active,
+        .btn-warning:active,
+        .btn-danger:active,
+        a.btn-primary:active,
+        a.btn-success:active,
+        a.btn-info:active,
+        a.btn-warning:active,
+        a.btn-danger:active {
+            color: var(--brand-bg) !important;
         }
 
         .btn-outline-primary,
@@ -123,8 +197,119 @@
             --bs-btn-border-color: var(--brand-brown);
             --bs-btn-hover-bg: var(--brand-brown);
             --bs-btn-hover-border-color: var(--brand-brown);
+            --bs-btn-hover-color: var(--brand-bg);
             --bs-btn-active-bg: var(--brand-brown);
             --bs-btn-active-border-color: var(--brand-brown);
+            --bs-btn-active-color: var(--brand-bg);
+        }
+
+        .btn-outline-primary,
+        .btn-outline-success,
+        .btn-outline-info,
+        .btn-outline-warning,
+        .btn-outline-danger,
+        .btn-outline-secondary,
+        a.btn-outline-primary,
+        a.btn-outline-success,
+        a.btn-outline-info,
+        a.btn-outline-warning,
+        a.btn-outline-danger,
+        a.btn-outline-secondary,
+        a.btn-outline-primary:visited,
+        a.btn-outline-success:visited,
+        a.btn-outline-info:visited,
+        a.btn-outline-warning:visited,
+        a.btn-outline-danger:visited,
+        a.btn-outline-secondary:visited {
+            color: var(--brand-brown) !important;
+        }
+
+        .btn-outline-primary:hover,
+        .btn-outline-success:hover,
+        .btn-outline-info:hover,
+        .btn-outline-warning:hover,
+        .btn-outline-danger:hover,
+        .btn-outline-secondary:hover,
+        a.btn-outline-primary:hover,
+        a.btn-outline-success:hover,
+        a.btn-outline-info:hover,
+        a.btn-outline-warning:hover,
+        a.btn-outline-danger:hover,
+        a.btn-outline-secondary:hover,
+        .btn-outline-primary:active,
+        .btn-outline-success:active,
+        .btn-outline-info:active,
+        .btn-outline-warning:active,
+        .btn-outline-danger:active,
+        .btn-outline-secondary:active,
+        a.btn-outline-primary:active,
+        a.btn-outline-success:active,
+        a.btn-outline-info:active,
+        a.btn-outline-warning:active,
+        a.btn-outline-danger:active,
+        a.btn-outline-secondary:active {
+            color: var(--brand-bg) !important;
+        }
+
+        /* Dark mode button styles */
+        body.dark-mode .btn-primary,
+        body.dark-mode .btn-success,
+        body.dark-mode .btn-info,
+        body.dark-mode .btn-warning,
+        body.dark-mode .btn-danger,
+        body.dark-mode a.btn-primary,
+        body.dark-mode a.btn-success,
+        body.dark-mode a.btn-info,
+        body.dark-mode a.btn-warning,
+        body.dark-mode a.btn-danger {
+            background-color: var(--brand-brown) !important;
+            border-color: var(--brand-brown) !important;
+            color: var(--brand-bg) !important;
+        }
+
+        body.dark-mode .btn-primary:hover,
+        body.dark-mode .btn-success:hover,
+        body.dark-mode .btn-info:hover,
+        body.dark-mode .btn-warning:hover,
+        body.dark-mode .btn-danger:hover,
+        body.dark-mode a.btn-primary:hover,
+        body.dark-mode a.btn-success:hover,
+        body.dark-mode a.btn-info:hover,
+        body.dark-mode a.btn-warning:hover,
+        body.dark-mode a.btn-danger:hover {
+            background-color: var(--brand-brown) !important;
+            border-color: var(--brand-brown) !important;
+            color: var(--brand-bg) !important;
+        }
+
+        body.dark-mode .btn-outline-primary,
+        body.dark-mode .btn-outline-success,
+        body.dark-mode .btn-outline-info,
+        body.dark-mode .btn-outline-warning,
+        body.dark-mode .btn-outline-danger,
+        body.dark-mode a.btn-outline-primary,
+        body.dark-mode a.btn-outline-success,
+        body.dark-mode a.btn-outline-info,
+        body.dark-mode a.btn-outline-warning,
+        body.dark-mode a.btn-outline-danger {
+            background-color: transparent !important;
+            border-color: var(--brand-brown) !important;
+            color: var(--brand-brown) !important;
+        }
+
+        body.dark-mode .btn-outline-primary:hover,
+        body.dark-mode .btn-outline-success:hover,
+        body.dark-mode .btn-outline-info:hover,
+        body.dark-mode .btn-outline-warning:hover,
+        body.dark-mode .btn-outline-danger:hover,
+        body.dark-mode a.btn-outline-primary:hover,
+        body.dark-mode a.btn-outline-success:hover,
+        body.dark-mode a.btn-outline-info:hover,
+        body.dark-mode a.btn-outline-warning:hover,
+        body.dark-mode a.btn-outline-danger:hover {
+            background-color: var(--brand-brown) !important;
+            border-color: var(--brand-brown) !important;
+            color: var(--brand-bg) !important;
         }
 
         .badge.bg-success,
@@ -139,6 +324,16 @@
         .list-group-item.active {
             background-color: var(--brand-brown);
             border-color: var(--brand-brown);
+        }
+
+        a.list-group-item.active,
+        a.list-group-item.active:hover,
+        a.list-group-item.active:focus,
+        a.list-group-item.active:active,
+        a.list-group-item.active:visited,
+        .list-group-item.active i,
+        .list-group-item.active span {
+            color: var(--brand-bg) !important;
         }
 
         .text-muted {
@@ -161,11 +356,11 @@
             box-shadow: var(--bs-box-shadow-sm);
         }
 
-        a,
-        a:hover,
-        a:focus,
-        a:active,
-        a:visited {
+        a:not(.btn),
+        a:not(.btn):hover,
+        a:not(.btn):focus,
+        a:not(.btn):active,
+        a:not(.btn):visited {
             color: var(--brand-brown) !important;
         }
 
@@ -229,14 +424,37 @@
             <i class="fas fa-bars"></i>
         </button>
 
-        <a class="navbar-brand fw-bold" href="{{ \Illuminate\Support\Facades\Route::has('public.home') ? route('public.home') : '#' }}">{{ config('app.name', 'المنصة') }}</a>
+        <a class="navbar-brand fw-bold d-inline-flex align-items-center p-1" href="{{ \Illuminate\Support\Facades\Route::has('public.home') ? route('public.home') : '#' }}">
+            <img src="{{ asset('images/madar-negotiation-icon.svg') }}" alt="مدار التفاوض" class="brand-logo" style="width:52px;height:52px">
+        </a>
 
         <div class="ms-auto d-flex align-items-center gap-2">
             @if(\Illuminate\Support\Facades\Route::has('public.home'))
                 <a href="{{ route('public.home') }}" class="btn btn-sm btn-outline-light d-none d-md-inline-flex">
                     <i class="fas fa-globe me-2"></i>
-                    <span class="d-none d-lg-inline">زيارة الموقع</span>
+                    <span class="d-none d-lg-inline">{{ __('layout.dashboard_nav.visit_site') }}</span>
                 </a>
+            @endif
+
+            @if(\Illuminate\Support\Facades\Route::has('language.switch'))
+                @php
+                    $languageSwitcher = \App\Helpers\LanguageHelper::getLanguageSwitcherData();
+                    $currentLanguage = \App\Helpers\LanguageHelper::getCurrentLanguage();
+                @endphp
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-language me-2"></i>
+                        <span class="d-none d-md-inline">{{ strtoupper($currentLanguage) }}</span>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        @foreach($languageSwitcher as $lang)
+                            <a class="dropdown-item {{ $lang['code'] === $currentLanguage ? 'active' : '' }}" href="{{ route('language.switch', ['language' => $lang['code']]) }}">
+                                <span class="me-2">{{ $lang['flag'] ?? '' }}</span>
+                                <span>{{ $lang['native'] ?? strtoupper($lang['code']) }}</span>
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
             @endif
 
             <button class="btn btn-sm btn-outline-light" type="button" data-theme-toggle aria-label="Toggle theme">
@@ -246,7 +464,7 @@
             @if($helpRoute)
                 <a href="{{ $helpRoute }}" class="btn btn-sm btn-outline-light d-none d-md-inline-flex">
                     <i class="fas fa-circle-question me-2"></i>
-                    <span class="d-none d-lg-inline">المساعدة</span>
+                    <span class="d-none d-lg-inline">{{ __('layout.dashboard_nav.help') }}</span>
                 </a>
             @endif
 
@@ -261,19 +479,19 @@
                         @endif
                     </button>
                     <div class="dropdown-menu dropdown-menu-end p-0" style="min-width: 320px;">
-                        <div class="px-3 py-2 border-bottom fw-bold">الإشعارات</div>
+                        <div class="px-3 py-2 border-bottom fw-bold">{{ __('layout.dashboard_nav.notifications') }}</div>
                         @if($latestNotifications->count() > 0)
                             @foreach($latestNotifications as $n)
                                 <a class="dropdown-item py-2" href="{{ $notificationsRoute }}">
-                                    <div class="small fw-semibold">{{ data_get($n->data, 'title', 'إشعار') }}</div>
+                                    <div class="small fw-semibold">{{ data_get($n->data, 'title', __('layout.notifications.new_notification')) }}</div>
                                     <div class="small text-muted">{{ data_get($n->data, 'message', '') }}</div>
                                 </a>
                             @endforeach
                         @else
-                            <div class="px-3 py-3 text-muted">لا توجد إشعارات جديدة</div>
+                            <div class="px-3 py-3 text-muted">{{ __('layout.notifications.no_new_notifications') }}</div>
                         @endif
                         <div class="border-top">
-                            <a class="dropdown-item text-center py-2" href="{{ $notificationsRoute }}">عرض الكل</a>
+                            <a class="dropdown-item text-center py-2" href="{{ $notificationsRoute }}">{{ __('layout.dashboard_nav.view_all') }}</a>
                         </div>
                     </div>
                 </div>
@@ -288,19 +506,38 @@
                     @if($profileRoute)
                         <a class="dropdown-item" href="{{ $profileRoute }}">
                             <i class="fas fa-id-card me-2"></i>
-                            الملف الشخصي
+                            {{ __('layout.dashboard_nav.profile') }}
                         </a>
                     @endif
                     @if($settingsRoute)
                         <a class="dropdown-item" href="{{ $settingsRoute }}">
                             <i class="fas fa-gear me-2"></i>
-                            الإعدادات
+                            {{ __('layout.dashboard_nav.settings') }}
                         </a>
+                    @endif
+                    @if($u)
+                        <div class="dropdown-divider"></div>
+                        @if($u->hasRole('admin'))
+                            <a class="dropdown-item" href="{{ route('admin.dashboard') }}">
+                                <i class="fas fa-gauge me-2"></i>
+                                {{ __('layout.dashboard_nav.control_panel') }}
+                            </a>
+                        @elseif($u->hasRole('facility'))
+                            <a class="dropdown-item" href="{{ route('facility.dashboard') }}">
+                                <i class="fas fa-gauge me-2"></i>
+                                {{ __('layout.dashboard_nav.control_panel') }}
+                            </a>
+                        @elseif($u->hasRole('client'))
+                            <a class="dropdown-item" href="{{ route('client.dashboard') }}">
+                                <i class="fas fa-gauge me-2"></i>
+                                {{ __('layout.dashboard_nav.control_panel') }}
+                            </a>
+                        @endif
                     @endif
                     <div class="dropdown-divider"></div>
                     <form method="POST" action="{{ route('logout') }}" class="px-3 py-1">
                         @csrf
-                        <button type="submit" class="btn btn-sm btn-outline-secondary w-100">تسجيل الخروج</button>
+                        <button type="submit" class="btn btn-sm btn-outline-secondary w-100">{{ __('client.navigation.logout') }}</button>
                     </form>
                 </div>
             </div>
@@ -313,7 +550,7 @@
         <div class="col-lg-auto p-0 d-none d-lg-block {{ $isRtl ? 'order-lg-2' : 'order-lg-1' }}">
             <div class="bg-white {{ $isRtl ? 'border-start' : 'border-end' }} dash-sidebar dash-sidebar-inner">
                 <div class="p-3 border-bottom">
-                    <div class="d-flex align-items-center justify-content-center">
+                    <div class="d-flex align-items-center {{ $isRtl ? 'justify-content-end' : 'justify-content-start' }}">
                         <button class="btn btn-outline-secondary btn-sm d-none d-lg-inline-flex align-items-center" type="button" id="sidebarCollapseToggle" aria-label="Toggle sidebar">
                             <i class="fas fa-bars" id="sidebarCollapseIcon"></i>
                         </button>
@@ -326,23 +563,23 @@
                         @if($u && $u->hasRole('client'))
                             <a href="{{ route('client.dashboard') }}" class="list-group-item list-group-item-action dash-link {{ request()->routeIs('client.dashboard') ? 'active' : '' }}">
                                 <i class="fas fa-home me-2"></i>
-                                <span class="dash-label">لوحة العميل</span>
+                                <span class="dash-label">{{ __('client.navigation.dashboard') }}</span>
                             </a>
                             <a href="{{ route('client.projects.create') }}" class="list-group-item list-group-item-action dash-link {{ request()->routeIs('client.projects.*') ? 'active' : '' }}">
                                 <i class="fas fa-plus-circle me-2"></i>
-                                <span class="dash-label">إنشاء مشروع</span>
+                                <span class="dash-label">{{ __('client.navigation.create_project') }}</span>
                             </a>
                             <a href="{{ route('client.bookings.index') }}" class="list-group-item list-group-item-action dash-link {{ request()->routeIs('client.bookings.*') ? 'active' : '' }}">
                                 <i class="fas fa-calendar-check me-2"></i>
-                                <span class="dash-label">الحجوزات</span>
+                                <span class="dash-label">{{ __('client.navigation.bookings') }}</span>
                             </a>
                             <a href="{{ route('client.contracts.index') }}" class="list-group-item list-group-item-action dash-link {{ request()->routeIs('client.contracts.*') ? 'active' : '' }}">
                                 <i class="fas fa-file-contract me-2"></i>
-                                <span class="dash-label">العقود</span>
+                                <span class="dash-label">{{ __('client.navigation.contracts') }}</span>
                             </a>
                             <a href="{{ route('client.favorites') }}" class="list-group-item list-group-item-action dash-link {{ request()->routeIs('client.favorites') ? 'active' : '' }}">
                                 <i class="fas fa-heart me-2"></i>
-                                <span class="dash-label">المفضلة</span>
+                                <span class="dash-label">{{ __('client.navigation.favorites') }}</span>
                             </a>
                         @endif
 
@@ -420,7 +657,7 @@
 
 <div class="offcanvas {{ $isRtl ? 'offcanvas-end' : 'offcanvas-start' }}" tabindex="-1" id="dashSidebar" aria-labelledby="dashSidebarLabel">
     <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="dashSidebarLabel">@yield('sidebar_title', 'القائمة')</h5>
+        <h5 class="offcanvas-title" id="dashSidebarLabel">@yield('sidebar_title', __('client.navigation.dashboard'))</h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body p-0">
@@ -428,23 +665,23 @@
             @if($u && $u->hasRole('client'))
                 <a href="{{ route('client.dashboard') }}" class="list-group-item list-group-item-action {{ request()->routeIs('client.dashboard') ? 'active' : '' }}">
                     <i class="fas fa-home me-2"></i>
-                    لوحة العميل
+                    {{ __('client.navigation.dashboard') }}
                 </a>
                 <a href="{{ route('client.projects.create') }}" class="list-group-item list-group-item-action {{ request()->routeIs('client.projects.*') ? 'active' : '' }}">
                     <i class="fas fa-plus-circle me-2"></i>
-                    إنشاء مشروع
+                    {{ __('client.navigation.create_project') }}
                 </a>
                 <a href="{{ route('client.bookings.index') }}" class="list-group-item list-group-item-action {{ request()->routeIs('client.bookings.*') ? 'active' : '' }}">
                     <i class="fas fa-calendar-check me-2"></i>
-                    الحجوزات
+                    {{ __('client.navigation.bookings') }}
                 </a>
                 <a href="{{ route('client.contracts.index') }}" class="list-group-item list-group-item-action {{ request()->routeIs('client.contracts.*') ? 'active' : '' }}">
                     <i class="fas fa-file-contract me-2"></i>
-                    العقود
+                    {{ __('client.navigation.contracts') }}
                 </a>
                 <a href="{{ route('client.favorites') }}" class="list-group-item list-group-item-action {{ request()->routeIs('client.favorites') ? 'active' : '' }}">
                     <i class="fas fa-heart me-2"></i>
-                    المفضلة
+                    {{ __('client.navigation.favorites') }}
                 </a>
             @endif
 

@@ -70,8 +70,8 @@ class RouteServiceProvider extends ServiceProvider
                 ->name('facility.')
                 ->group(base_path('routes/facility.php'));
 
-            // Client Routes - Client dashboard routes
-            Route::middleware(['web', 'auth', 'role:client'])
+            // Client Routes - Client dashboard routes (accessible to any authenticated user)
+            Route::middleware(['web', 'auth'])
                 ->prefix('client')
                 ->name('client.')
                 ->group(base_path('routes/client.php'));

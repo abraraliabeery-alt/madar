@@ -14,7 +14,27 @@
                         </div>
                     @endif
 
-                    {{ __('You are logged in!') }}
+                    <p class="mb-4">{{ __('You are logged in!') }}</p>
+
+                    <div class="d-flex flex-wrap gap-3">
+                        @if (auth()->check() && auth()->user()->hasRole('admin'))
+                            <a href="{{ route('admin.dashboard') }}" class="btn btn-primary">
+                                <i class="fas fa-tachometer-alt me-2"></i>{{ __('Go to Admin Dashboard') }}
+                            </a>
+                        @endif
+
+                        @if (auth()->check() && auth()->user()->hasRole('client'))
+                            <a href="{{ route('client.dashboard') }}" class="btn btn-success">
+                                <i class="fas fa-user me-2"></i>{{ __('Go to Client Dashboard') }}
+                            </a>
+                        @endif
+
+                        @if (auth()->check() && auth()->user()->hasRole('facility'))
+                            <a href="{{ route('facility.dashboard') }}" class="btn btn-info">
+                                <i class="fas fa-building me-2"></i>{{ __('Go to Facility Dashboard') }}
+                            </a>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>

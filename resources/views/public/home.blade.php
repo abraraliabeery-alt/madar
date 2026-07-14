@@ -129,7 +129,7 @@
                                     <i class="fas fa-search mr-2"></i> {{ __('public.search.title') }}
                                 </button>
                                 <a href="{{ route('public.search.advanced') }}" class="inline-flex items-center px-8 py-3 bg-gray-200 text-gray-800 font-medium rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors">
-                                    <i class="fas fa-sliders-h mr-2"></i> فتح صفحة البحث المتقدم
+                                    <i class="fas fa-sliders-h mr-2"></i> {{ __('general.home.open_advanced_search') }}
                                 </a>
                             </div>
                         </form>
@@ -179,7 +179,7 @@
                                 </button>
                                 <a href="{{ route('public.search.map') }}" class="inline-flex items-center gap-2 rtl:flex-row-reverse px-8 py-3 bg-white border border-cyan-600 text-cyan-700 font-medium rounded-md hover:bg-cyan-50 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 transition-colors">
                                     <i class="fas fa-external-link-alt"></i>
-                                    <span>فتح الخريطة</span>
+                                    <span>{{ __('general.home.open_map') }}</span>
                                 </a>
                             </div>
                         </form>
@@ -191,36 +191,36 @@
 
     <section class="mb-12">
         <div class="flex items-center justify-between mb-4">
-            <h2 class="text-xl md:text-2xl font-bold text-gray-900">خدماتنا</h2>
+            <h2 class="text-xl md:text-2xl font-bold text-gray-900">{{ __('general.home.our_services_title') }}</h2>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <a href="{{ route('public.execution.marketplace') }}" class="bg-white rounded-2xl border border-gray-200 p-5 card-hover">
                 <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center mb-3">
                     <i class="fas fa-gavel"></i>
                 </div>
-                <div class="font-semibold text-gray-900 mb-1">منصة المشاريع</div>
-                <div class="text-sm text-gray-600">اعرض مشروعك أو استعرض المشاريع وقدم عروض التنفيذ.</div>
+                <div class="font-semibold text-gray-900 mb-1">{{ __('general.home.services.project_platform.title') }}</div>
+                <div class="text-sm text-gray-600">{{ __('general.home.services.project_platform.description') }}</div>
             </a>
             <a href="{{ route('public.facilities.index') }}" class="bg-white rounded-2xl border border-gray-200 p-5 card-hover">
                 <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center mb-3">
                     <i class="fas fa-building"></i>
                 </div>
-                <div class="font-semibold text-gray-900 mb-1">دليل المقاولين والشركات</div>
-                <div class="text-sm text-gray-600">استعرض المنشآت وتواصل مع الجهة المناسبة لتنفيذ مشروعك.</div>
+                <div class="font-semibold text-gray-900 mb-1">{{ __('general.home.services.contractors_directory.title') }}</div>
+                <div class="text-sm text-gray-600">{{ __('general.home.services.contractors_directory.description') }}</div>
             </a>
             <a href="{{ route('public.products.index') }}" class="bg-white rounded-2xl border border-gray-200 p-5 card-hover">
                 <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-700 flex items-center justify-center mb-3">
                     <i class="fas fa-list"></i>
                 </div>
-                <div class="font-semibold text-gray-900 mb-1">استعراض المشاريع</div>
-                <div class="text-sm text-gray-600">تصفّح المشاريع حسب الفئة والمدينة وخصائص الموقع.</div>
+                <div class="font-semibold text-gray-900 mb-1">{{ __('general.home.services.browse_projects.title') }}</div>
+                <div class="text-sm text-gray-600">{{ __('general.home.services.browse_projects.description') }}</div>
             </a>
             <a href="{{ url('/investment-studies') }}" class="bg-white rounded-2xl border border-gray-200 p-5 card-hover">
                 <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center mb-3">
                     <i class="fas fa-chart-line"></i>
                 </div>
-                <div class="font-semibold text-gray-900 mb-1">مركز التحليل</div>
-                <div class="text-sm text-gray-600">تحليل جدوى ومقترحات تطوير وفق الكود السعودي.</div>
+                <div class="font-semibold text-gray-900 mb-1">{{ __('general.home.services.analysis_center.title') }}</div>
+                <div class="text-sm text-gray-600">{{ __('general.home.services.analysis_center.description') }}</div>
             </a>
         </div>
     </section>
@@ -228,19 +228,19 @@
     <section class="mb-12 bg-white rounded-2xl border border-gray-200 p-6">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
             <div class="rounded-xl bg-gray-50 border border-gray-200 p-4">
-                <div class="text-xs text-gray-500 mb-1">إجمالي المشاريع</div>
+                <div class="text-xs text-gray-500 mb-1">{{ __('general.home.stats.total_projects') }}</div>
                 <div class="text-2xl font-extrabold text-gray-900">{{ number_format($stats['total_products'] ?? 0) }}</div>
             </div>
             <div class="rounded-xl bg-gray-50 border border-gray-200 p-4">
-                <div class="text-xs text-gray-500 mb-1">الشركات والمنشآت</div>
+                <div class="text-xs text-gray-500 mb-1">{{ __('general.home.stats.companies_and_facilities') }}</div>
                 <div class="text-2xl font-extrabold text-gray-900">{{ number_format($stats['total_facilities'] ?? 0) }}</div>
             </div>
             <div class="rounded-xl bg-gray-50 border border-gray-200 p-4">
-                <div class="text-xs text-gray-500 mb-1">الفئات</div>
+                <div class="text-xs text-gray-500 mb-1">{{ __('general.home.stats.categories') }}</div>
                 <div class="text-2xl font-extrabold text-gray-900">{{ number_format($stats['total_categories'] ?? 0) }}</div>
             </div>
             <div class="rounded-xl bg-gray-50 border border-gray-200 p-4">
-                <div class="text-xs text-gray-500 mb-1">مشاريع مميزة</div>
+                <div class="text-xs text-gray-500 mb-1">{{ __('general.home.stats.featured_projects') }}</div>
                 <div class="text-2xl font-extrabold text-gray-900">{{ number_format($stats['featured_products'] ?? 0) }}</div>
             </div>
         </div>

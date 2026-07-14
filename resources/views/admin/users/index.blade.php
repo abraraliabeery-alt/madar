@@ -3,18 +3,18 @@
 @section('content')
 <div class="container-fluid">
     <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">إدارة المستخدمين</h5>
+        <div class="card-header d-flex justify-content-between align-items-center" data-intro="{{ __('admin.tour.users_header_desc') }}" data-step="14">
+            <h5 class="mb-0">{{ __('admin.users.title') }}</h5>
             <a href="{{ route('admin.users.create') }}" class="btn btn-primary">
-                <i class="fas fa-plus me-2"></i>إضافة مستخدم جديد
+                <i class="fas fa-plus me-2"></i>{{ __('admin.users.add_new') }}
             </a>
         </div>
         <div class="card-body">
             <!-- Filters -->
-            <div class="row g-3 mb-4">
+            <div class="row g-3 mb-4" data-intro="{{ __('admin.tour.users_filters_desc') }}" data-step="15">
                 <div class="col-12 col-md-6 col-lg-4">
                     <select class="form-select" id="roleFilter" name="role_id">
-                        <option value="">كل الأدوار</option>
+                        <option value="">{{ __('admin.users.all_roles') }}</option>
                         @foreach($roles as $role)
                             <option value="{{ $role->id }}" {{ request('role_id') == $role->id ? 'selected' : '' }}>
                                 {{ $role->getTranslatedDisplayName() }}
@@ -24,7 +24,7 @@
                 </div>
                 <div class="col-12 col-md-6 col-lg-4">
                     <select class="form-select" id="facilityFilter" name="facility_id">
-                        <option value="">كل المنشآت</option>
+                        <option value="">{{ __('admin.users.all_facilities') }}</option>
                         @foreach($facilities as $facility)
                             <option value="{{ $facility->id }}" {{ request('facility_id') == $facility->id ? 'selected' : '' }}>
                                 {{ $facility->name }}
@@ -34,7 +34,7 @@
                 </div>
                 <div class="col-12 col-md-12 col-lg-4">
                     <div class="input-group">
-                        <input type="text" class="form-control" id="searchInput" name="search" value="{{ request('search') }}" placeholder="بحث...">
+                        <input type="text" class="form-control" id="searchInput" name="search" value="{{ request('search') }}" placeholder="{{ __('admin.users.search_placeholder') }}">
                         <button class="btn btn-primary" id="searchBtn">
                             <i class="fas fa-search"></i>
                         </button>
@@ -46,18 +46,18 @@
             </div>
 
             <!-- Users Table -->
-            <div class="table-responsive">
+            <div class="table-responsive" data-intro="{{ __('admin.tour.users_table_desc') }}" data-step="16">
                 <table class="table table-hover datatable">
                     <thead>
                         <tr>
-                            <th class="d-none d-md-table-cell">الصورة</th>
-                            <th>الاسم</th>
-                            <th class="d-none d-lg-table-cell">البريد الإلكتروني</th>
-                            <th class="d-none d-md-table-cell">رقم الهاتف</th>
-                            <th class="d-none d-lg-table-cell">الدور</th>
-                            <th class="d-none d-lg-table-cell">المنشأة</th>
-                            <th class="d-none d-md-table-cell">الحالة</th>
-                            <th>الإجراءات</th>
+                            <th class="d-none d-md-table-cell">{{ __('admin.users.avatar') }}</th>
+                            <th>{{ __('admin.users.name') }}</th>
+                            <th class="d-none d-lg-table-cell">{{ __('admin.users.email') }}</th>
+                            <th class="d-none d-md-table-cell">{{ __('admin.users.phone') }}</th>
+                            <th class="d-none d-lg-table-cell">{{ __('admin.users.role') }}</th>
+                            <th class="d-none d-lg-table-cell">{{ __('admin.users.facility') }}</th>
+                            <th class="d-none d-md-table-cell">{{ __('admin.users.status') }}</th>
+                            <th>{{ __('admin.users.actions') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -95,21 +95,21 @@
                             <td class="d-none d-md-table-cell">{{ $user->phone_number }}</td>
                             <td class="d-none d-lg-table-cell">
                                 @foreach($user->roles as $role)
-                                    <span class="badge bg-primary">{{ $role->getTranslatedDisplayName() }}</span>
+                                    <span class="badge" style="background-color: transparent !important; color: var(--brand-brown) !important;">{{ $role->getTranslatedDisplayName() }}</span>
                                 @endforeach
                             </td>
                             <td class="d-none d-lg-table-cell">
                                 @foreach($user->facilities as $facility)
-                                    <a href="{{ route('admin.facilities.show', $facility) }}" class="badge bg-info text-decoration-none">
+                                    <a href="{{ route('admin.facilities.show', $facility) }}" class="badge text-decoration-none" style="background-color: var(--brand-brown) !important; color: #ffffff !important;">
                                         {{ $facility->name }}
                                     </a>
                                 @endforeach
                             </td>
                             <td class="d-none d-md-table-cell">
                                 @if($user->is_active)
-                                    <span class="badge bg-success">نشط</span>
+                                    <span class="badge" style="background-color: var(--brand-brown) !important; color: #ffffff !important;">{{ __('admin.status.active') }}</span>
                                 @else
-                                    <span class="badge bg-danger">غير نشط</span>
+                                    <span class="badge" style="background-color: var(--brand-brown) !important; color: #ffffff !important;">{{ __('admin.status.inactive') }}</span>
                                 @endif
                             </td>
                             <td>
@@ -119,19 +119,19 @@
                                         <a href="{{ route('admin.users.show', $user) }}"
                                            class="btn btn-sm btn-outline-info"
                                            data-bs-toggle="tooltip"
-                                           title="عرض التفاصيل">
+                                           title="{{ __('admin.actions.view_details') }}">
                                             <i class="fas fa-eye"></i>
                                         </a>
                                         <a href="{{ route('admin.users.edit', $user) }}"
                                            class="btn btn-sm btn-outline-warning"
                                            data-bs-toggle="tooltip"
-                                           title="تعديل المستخدم">
+                                           title="{{ __('admin.users.edit_user') }}">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <button type="button"
                                                 class="btn btn-sm btn-outline-danger delete-confirm"
                                                 data-bs-toggle="tooltip"
-                                                title="حذف المستخدم"
+                                                title="{{ __('admin.users.delete_user') }}"
                                                 data-user-id="{{ $user->id }}"
                                                 data-user-name="{{ $user->name }}">
                                             <i class="fas fa-trash"></i>
@@ -145,7 +145,7 @@
                                             <button type="submit"
                                                     class="btn btn-sm {{ $user->is_active ? 'btn-outline-danger' : 'btn-outline-success' }}"
                                                     data-bs-toggle="tooltip"
-                                                    title="{{ $user->is_active ? 'إلغاء التفعيل' : 'تفعيل المستخدم' }}">
+                                                    title="{{ $user->is_active ? __('admin.users.deactivate') : __('admin.users.activate_user') }}">
                                                 <i class="fas {{ $user->is_active ? 'fa-ban' : 'fa-check' }}"></i>
                                             </button>
                                         </form>
@@ -196,27 +196,27 @@
 
 /* Primary Actions Row */
 .action-buttons .btn-outline-info:hover {
-    background-color: #0dcaf0;
-    border-color: #0dcaf0;
+    background-color: var(--brand-brown);
+    border-color: var(--brand-brown);
     color: white;
 }
 
 .action-buttons .btn-outline-warning:hover {
-    background-color: #ffc107;
-    border-color: #ffc107;
-    color: black;
+    background-color: var(--brand-brown);
+    border-color: var(--brand-brown);
+    color: white;
 }
 
 .action-buttons .btn-outline-danger:hover {
-    background-color: #dc3545;
-    border-color: #dc3545;
+    background-color: var(--brand-brown);
+    border-color: var(--brand-brown);
     color: white;
 }
 
 /* Status Toggle Row */
 .action-buttons .btn-outline-success:hover {
-    background-color: #198754;
-    border-color: #198754;
+    background-color: var(--brand-brown);
+    border-color: var(--brand-brown);
     color: white;
 }
 
@@ -241,7 +241,7 @@
 
 /* Avatar placeholder styling */
 .avatar-placeholder {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, var(--brand-brown) 0%, rgba(var(--brand-brown-rgb), 0.7) 100%);
     color: white;
     display: flex;
     align-items: center;
@@ -252,6 +252,51 @@
 
 .avatar-placeholder i {
     font-size: 16px;
+}
+
+/* Badge colors override to use brand-brown */
+.badge.bg-primary,
+.badge.bg-info,
+.badge.bg-success,
+.badge.bg-danger,
+.badge.bg-warning {
+    background-color: var(--brand-brown) !important;
+    color: #ffffff !important;
+}
+
+/* DataTables export buttons override to use brand-brown */
+.dt-buttons .btn-secondary {
+    background-color: var(--brand-brown) !important;
+    border-color: var(--brand-brown) !important;
+    color: #ffffff !important;
+}
+
+.dt-buttons .btn-secondary:hover {
+    background-color: var(--brand-brown) !important;
+    border-color: var(--brand-brown) !important;
+    color: #ffffff !important;
+    opacity: 0.9;
+}
+
+/* DataTables export buttons in dark mode */
+body.dark-mode .dt-buttons .btn-secondary,
+html[data-theme="dark"] .dt-buttons .btn-secondary {
+    background-color: #2d2d2d !important;
+    border-color: #2d2d2d !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode .dt-buttons .btn-secondary:hover,
+html[data-theme="dark"] .dt-buttons .btn-secondary:hover {
+    background-color: #2d2d2d !important;
+    border-color: #2d2d2d !important;
+    color: #ffffff !important;
+    opacity: 0.9;
+}
+
+/* DataTables wrapper background removal */
+.dataTables_wrapper.dt-bootstrap5.no-footer {
+    background-color: transparent !important;
 }
 
 /* Mobile-friendly table */
@@ -359,8 +404,8 @@ $(document).ready(function() {
             text: `سيتم حذف المستخدم "${userName}" نهائياً. لا يمكن التراجع عن هذا الإجراء!`,
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
+            confirmButtonColor: '#0f172a',
+            cancelButtonColor: '#0f172a',
             confirmButtonText: 'نعم، احذف المستخدم',
             cancelButtonText: 'إلغاء',
             reverseButtons: true

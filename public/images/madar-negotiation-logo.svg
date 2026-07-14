@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="220" viewBox="0 0 760 220" role="img" aria-label="مدار التفاوض">
+  <defs>
+    <style>
+      .navy{fill:#0B2A4A}
+      .stroke{stroke:#0B2A4A;stroke-width:10;fill:none;stroke-linecap:round;stroke-linejoin:round}
+      .stroke2{stroke:#0B2A4A;stroke-width:8;fill:none;stroke-linecap:round;stroke-linejoin:round}
+      .text{fill:#0B2A4A;font-family:"Tahoma","Arial",sans-serif;font-weight:800}
+      .sub{fill:#0B2A4A;opacity:.85;font-family:"Tahoma","Arial",sans-serif;font-weight:600}
+    </style>
+  </defs>
+
+  <g transform="translate(40,35)">
+    <ellipse cx="70" cy="70" rx="72" ry="52" class="stroke" opacity=".95"/>
+    <circle cx="35" cy="108" r="7" class="navy"/>
+
+    <path d="M30 92 l22-18 c8-6 18-6 26 0 l12 9" class="stroke2"/>
+    <path d="M110 92 l-22-18 c-8-6-18-6-26 0 l-12 9" class="stroke2"/>
+    <path d="M55 96 l15 12 l15-12" class="stroke2"/>
+    <path d="M60 110 h20" class="stroke2" opacity=".75"/>
+  </g>
+
+  <g transform="translate(200,70)">
+    <text x="520" y="35" class="text" font-size="48" direction="rtl" unicode-bidi="bidi-override">مدار التفاوض</text>
+    <text x="520" y="78" class="sub" font-size="20" direction="rtl" unicode-bidi="bidi-override">إطار موحد للتفاوض وإتمام الاتفاقات</text>
+  </g>
+</svg>

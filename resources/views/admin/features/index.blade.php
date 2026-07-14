@@ -3,7 +3,7 @@
 @section('content')
 <div class="container-fluid">
     <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
+        <div class="card-header d-flex justify-content-between align-items-center" data-intro="{{ __('admin.tour.features_header_desc') }}" data-step="30">
             <h5 class="mb-0">إدارة المميزات</h5>
             <a href="{{ route('admin.features.create') }}" class="btn btn-primary">
                 <i class="fas fa-plus me-2"></i>إضافة مميزة جديدة
@@ -11,7 +11,7 @@
         </div>
         <div class="card-body">
             <!-- Features Table -->
-            <div class="table-responsive">
+            <div class="table-responsive" data-intro="{{ __('admin.tour.features_table_desc') }}" data-step="31">
                 <table class="table table-hover datatable">
                     <thead>
                         <tr>
@@ -189,8 +189,8 @@
 
 /* Primary Actions Row */
 .action-buttons .btn-outline-info:hover {
-    background-color: #0dcaf0;
-    border-color: #0dcaf0;
+    background-color: var(--brand-brown);
+    border-color: var(--brand-brown);
     color: white;
 }
 

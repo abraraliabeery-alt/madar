@@ -22,6 +22,9 @@ return [
         'quick_search' => 'بحث سريع',
         'advanced_search' => 'بحث متقدم',
         'map_search' => 'بحث على الخريطة',
+        'open_advanced_search' => 'فتح صفحة البحث المتقدم',
+        'open_map' => 'فتح الخريطة',
+        'our_services_title' => 'خدماتنا',
         'featured_categories' => 'الفئات المميزة',
         'latest_properties' => 'أحدث المشاريع',
         'featured_cities' => 'المدن المميزة',
@@ -31,6 +34,32 @@ return [
         'cta_subtitle' => 'ابدأ بإنشاء منافستك واستقبل عروض المقاولين بسهولة',
         'register_now' => 'سجل الآن',
         'contact_us' => 'تواصل معنا',
+
+        'services' => [
+            'project_platform' => [
+                'title' => 'منصة المشاريع',
+                'description' => 'اعرض مشروعك أو استعرض المشاريع وقدم عروض التنفيذ.',
+            ],
+            'contractors_directory' => [
+                'title' => 'دليل المقاولين والشركات',
+                'description' => 'استعرض المنشآت وتواصل مع الجهة المناسبة لتنفيذ مشروعك.',
+            ],
+            'browse_projects' => [
+                'title' => 'استعراض المشاريع',
+                'description' => 'تصفّح المشاريع حسب الفئة والمدينة وخصائص الموقع.',
+            ],
+            'analysis_center' => [
+                'title' => 'مركز التحليل',
+                'description' => 'تحليل جدوى ومقترحات تطوير وفق الكود السعودي.',
+            ],
+        ],
+
+        'stats' => [
+            'total_projects' => 'إجمالي المشاريع',
+            'companies_and_facilities' => 'الشركات والمنشآت',
+            'categories' => 'الفئات',
+            'featured_projects' => 'مشاريع مميزة',
+        ],
     ],
     
     'view_toggle' => [

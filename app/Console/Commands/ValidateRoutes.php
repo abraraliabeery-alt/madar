@@ -59,9 +59,9 @@ class ValidateRoutes extends Command
                 $issues[] = "Facility route '{$uri}' missing 'role:facility' middleware";
             }
             
-            // Check if client routes have proper middleware
-            if (str_starts_with($uri, 'client/') && !in_array('role:client', $middleware)) {
-                $issues[] = "Client route '{$uri}' missing 'role:client' middleware";
+            // Check if client routes have proper auth middleware
+            if (str_starts_with($uri, 'client/') && !in_array('auth', $middleware)) {
+                $issues[] = "Client route '{$uri}' missing 'auth' middleware";
             }
         }
 

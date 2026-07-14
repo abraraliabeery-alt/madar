@@ -3,7 +3,7 @@
 @section('content')
 <div class="container-fluid">
     <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
+        <div class="card-header d-flex justify-content-between align-items-center" data-intro="{{ __('admin.tour.users_create_header_desc') }}" data-step="60">
             <h5 class="mb-0">إضافة مستخدم جديد</h5>
             <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">
                 <i class="fas fa-arrow-right me-2"></i>رجوع

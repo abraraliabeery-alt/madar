@@ -18,11 +18,26 @@ return [
         'chinese' => '中文',
     ],
 
+    'dashboard_nav' => [
+        'visit_site' => '访问网站',
+        'help' => '帮助',
+        'notifications' => '通知',
+        'view_all' => '查看全部',
+        'profile' => '个人资料',
+        'settings' => '设置',
+        'control_panel' => '控制面板',
+    ],
+
     'notifications' => [
         'title' => '通知',
         'view_all_notifications' => '查看所有通知',
         'no_new_notifications' => '暂无新通知',
         'new_notification' => '新通知',
+        'types' => [
+            'booking_created' => '已创建新的预订',
+            'booking_status_changed' => '预订状态已更新',
+            'new_product_added' => '已添加新的项目',
+        ],
     ],
 
     'user_menu' => [
@@ -30,6 +45,8 @@ return [
         'facility_management' => '承包商管理',
         'my_account' => '我的账户',
         'edit_profile' => '编辑资料',
+        'convert_to_facility' => '将账户转换为承包商',
+        'dark_mode' => '夜间模式',
         'logout' => '退出登录',
         'login' => '登录',
         'create_account' => '创建账户',

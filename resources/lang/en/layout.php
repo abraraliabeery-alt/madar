@@ -19,12 +19,27 @@ return [
         'suppliers' => 'Suppliers',
         'factories' => 'Factories',
     ],
+
+    'dashboard_nav' => [
+        'visit_site' => 'Visit Site',
+        'help' => 'Help',
+        'notifications' => 'Notifications',
+        'view_all' => 'View All',
+        'profile' => 'Profile',
+        'settings' => 'Settings',
+        'control_panel' => 'Control Panel',
+    ],
     
     'notifications' => [
         'title' => 'Notifications',
         'view_all_notifications' => 'View All Notifications',
         'no_new_notifications' => 'No new notifications',
         'new_notification' => 'New notification',
+        'types' => [
+            'booking_created' => 'A new booking was created',
+            'booking_status_changed' => 'Booking status was updated',
+            'new_product_added' => 'A new project was added',
+        ],
     ],
     
     'user_menu' => [
@@ -32,6 +47,8 @@ return [
         'facility_management' => 'Facility Management',
         'my_account' => 'My Account',
         'edit_profile' => 'Edit Profile',
+        'convert_to_facility' => 'Convert account to facility',
+        'dark_mode' => 'Dark mode',
         'logout' => 'Logout',
         'login' => 'Login',
         'create_account' => 'Create Account',

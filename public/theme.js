@@ -18,6 +18,9 @@
     var mode = v === 'dark' ? 'dark' : 'light';
     root.setAttribute('data-theme', mode);
     root.classList.toggle('dark', mode === 'dark');
+    if (document.body) {
+      document.body.classList.toggle('dark-mode', mode === 'dark');
+    }
     try { localStorage.setItem(key, mode); } catch(e) {}
     updateButtons(mode);
   }

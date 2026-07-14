@@ -3,7 +3,7 @@
 @section('content')
 <div class="container-fluid">
     <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
+        <div class="card-header d-flex justify-content-between align-items-center" data-intro="{{ __('admin.tour.products_header_desc') }}" data-step="17">
             <h5 class="mb-0">إدارة المنتجات</h5>
             <a href="{{ route('admin.products.create') }}" class="btn btn-primary">
                 <i class="fas fa-plus me-2"></i>إضافة منتج جديد
@@ -11,7 +11,7 @@
         </div>
         <div class="card-body">
             <!-- Filters -->
-            <div class="row g-3 mb-4">
+            <div class="row g-3 mb-4" data-intro="{{ __('admin.tour.products_filters_desc') }}" data-step="18">
                 <div class="col-md-3">
                     <select class="form-select" id="statusFilter" name="status">
                         <option value="">كل الحالات</option>
@@ -55,7 +55,7 @@
             </div>
 
             <!-- Products Table -->
-            <div class="table-responsive">
+            <div class="table-responsive" data-intro="{{ __('admin.tour.products_table_desc') }}" data-step="19">
                 <table class="table table-hover datatable">
                     <thead>
                         <tr>
@@ -287,8 +287,8 @@
 
 /* Primary Actions Row */
 .action-buttons .btn-outline-info:hover {
-    background-color: #0dcaf0;
-    border-color: #0dcaf0;
+    background-color: var(--brand-brown);
+    border-color: var(--brand-brown);
     color: white;
 }
 

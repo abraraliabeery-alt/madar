@@ -3,7 +3,7 @@
 @section('content')
 <div class="container-fluid">
     <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
+        <div class="card-header d-flex justify-content-between align-items-center" data-intro="{{ __('admin.tour.contracts_header_desc') }}" data-step="35">
             <h5 class="mb-0">إدارة العقود</h5>
             <div>
                 <a href="{{ route('admin.contracts.create') }}" class="btn btn-primary">
@@ -19,7 +19,7 @@
         </div>
         <div class="card-body">
             <!-- Filters -->
-            <div class="row g-3 mb-4">
+            <div class="row g-3 mb-4" data-intro="{{ __('admin.tour.contracts_filters_desc') }}" data-step="36">
                 <div class="col-12 col-md-6 col-lg-3">
                     <select class="form-select" id="statusFilter" name="status_id">
                         <option value="">كل الحالات</option>
@@ -78,7 +78,7 @@
             </div>
 
             <!-- Statistics Cards -->
-            <div class="row g-3 mb-4 statistics-cards">
+            <div class="row g-3 mb-4 statistics-cards" data-intro="{{ __('admin.tour.contracts_stats_desc') }}" data-step="37">
                 <div class="col-12 col-sm-6 col-lg-3">
                     <div class="card bg-primary text-white">
                         <div class="card-body">
@@ -142,7 +142,7 @@
             </div>
 
             <!-- Contracts Table -->
-            <div class="table-responsive">
+            <div class="table-responsive" data-intro="{{ __('admin.tour.contracts_table_desc') }}" data-step="38">
                 <table class="table table-hover datatable">
                     <thead>
                         <tr>
@@ -359,8 +359,8 @@
 
 /* Primary Actions Row */
 .action-buttons .btn-outline-info:hover {
-    background-color: #0dcaf0;
-    border-color: #0dcaf0;
+    background-color: var(--brand-brown);
+    border-color: var(--brand-brown);
     color: white;
 }
 

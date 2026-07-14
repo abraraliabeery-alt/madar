@@ -41,14 +41,13 @@ class RegisterController extends Controller
     {
         if (auth()->check()) {
             $user = auth()->user();
-            if ($user->primary_role === 'client') {
-                return '/client';
-            } elseif ($user->primary_role === 'facility') {
+            if ($user->primary_role === 'facility') {
                 return '/facility';
             }
         }
         
-        return $this->redirectTo;
+        // Any registered user lands on the client dashboard
+        return '/client';
     }
 
     /**

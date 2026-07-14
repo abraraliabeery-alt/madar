@@ -3,7 +3,7 @@
 @section('title', 'لوحة المعلومات المالية - النظام المالي للأدمن')
 
 @section('content')
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="d-flex justify-content-between align-items-center mb-4" data-intro="{{ __('admin.tour.financial_header_desc') }}" data-step="41">
     <h2><i class="fas fa-tachometer-alt ms-2"></i>لوحة المعلومات المالية</h2>
     <div class="btn-group">
         <button type="button" class="btn btn-outline-primary" onclick="refreshDashboard()">
@@ -26,7 +26,7 @@
 </div>
 
 <!-- الإحصائيات الرئيسية -->
-<div class="row mb-4">
+<div class="row mb-4" data-intro="{{ __('admin.tour.financial_stats_desc') }}" data-step="42">
     <div class="col-lg-3 col-md-6 mb-3">
         <div class="stats-card success">
             <div class="d-flex justify-content-between align-items-center">

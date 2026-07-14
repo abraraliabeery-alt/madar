@@ -3,7 +3,7 @@
 @section('content')
 <div class="container-fluid">
     <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
+        <div class="card-header d-flex justify-content-between align-items-center" data-intro="{{ __('admin.tour.categories_header_desc') }}" data-step="27">
             <h5 class="mb-0">إدارة الفئات</h5>
             <a href="{{ route('admin.categories.create') }}" class="btn btn-primary">
                 <i class="fas fa-plus me-2"></i>إضافة فئة جديدة
@@ -11,7 +11,7 @@
         </div>
         <div class="card-body">
             <!-- Statistics Cards -->
-            <div class="row g-4 mb-4 statistics-cards">
+            <div class="row g-4 mb-4 statistics-cards" data-intro="{{ __('admin.tour.categories_stats_desc') }}" data-step="28">
                 <div class="col-12 col-sm-6 col-lg-3">
                     <div class="card bg-primary text-white">
                         <div class="card-body">
@@ -67,7 +67,7 @@
                         <i class="fas fa-folder-open text-primary me-2"></i>
                         الفئات الرئيسية
                     </h5>
-                    <div class="row g-3">
+                    <div class="row g-3" data-intro="{{ __('admin.tour.categories_grid_desc') }}" data-step="29">
                         @foreach($categories->where('parent_id', null) as $mainCategory)
                         <div class="col-md-6 col-lg-4">
                             <div class="card h-100 category-card">
@@ -278,7 +278,7 @@
 .category-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    border-color: #007bff;
+    border-color: var(--brand-brown);
 }
 
 .category-card .card-body {

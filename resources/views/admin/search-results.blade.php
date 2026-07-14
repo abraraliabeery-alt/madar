@@ -3,7 +3,7 @@
 @section('content')
 <div class="container-fluid">
     <!-- Page Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-4" data-intro="{{ __('admin.tour.search_results_header_desc') }}" data-step="58">
         <div>
             <h4 class="mb-1">نتائج البحث</h4>
             <nav aria-label="breadcrumb">
@@ -27,7 +27,7 @@
     </div>
 
     <!-- Search Results Tabs -->
-    <div class="card">
+    <div class="card" data-intro="{{ __('admin.tour.search_results_tabs_desc') }}" data-step="59">
         <div class="card-header">
             <ul class="nav nav-tabs card-header-tabs" id="searchTabs" role="tablist">
                 <li class="nav-item" role="presentation">
@@ -394,7 +394,7 @@
 .avatar-placeholder {
     width: 40px;
     height: 40px;
-    background-color: #007bff;
+    background-color: var(--brand-brown);
     color: white;
     display: flex;
     align-items: center;
@@ -410,14 +410,14 @@
 }
 
 .nav-tabs .nav-link.active {
-    color: #007bff;
-    border-bottom-color: #007bff;
+    color: var(--brand-brown);
+    border-bottom-color: var(--brand-brown);
     background-color: transparent;
 }
 
 .nav-tabs .nav-link:hover {
     border-color: transparent;
-    color: #007bff;
+    color: var(--brand-brown);
 }
 
 .table th {

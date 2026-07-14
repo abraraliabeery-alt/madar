@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="container-fluid">
-  <div class="d-flex align-items-center justify-content-between mb-3">
+  <div class="d-flex align-items-center justify-content-between mb-3" data-intro="{{ __('admin.tour.facility_site_settings_header_desc') }}" data-step="57">
     <h1 class="h4 m-0">إعدادات موقع المنشأة: {{ $facility->name }}</h1>
     <a href="{{ route('facility.site.home', $facility->slug ?? $facility->id) }}" class="btn btn-outline-secondary btn-sm">رجوع</a>
   </div>

@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
+                <div class="card-header d-flex justify-content-between align-items-center" data-intro="{{ __('admin.tour.attributes_header_desc') }}" data-step="32">
                     <h4 class="mb-0">إدارة الخصائص</h4>
                     <a href="{{ route('admin.attributes.create') }}" class="btn btn-primary">
                         <i class="fas fa-plus"></i> إضافة خاصية جديدة
@@ -15,7 +15,7 @@
                 </div>
                 <div class="card-body">
                     <!-- Filters -->
-                    <div class="row mb-3">
+                    <div class="row mb-3" data-intro="{{ __('admin.tour.attributes_filters_desc') }}" data-step="33">
                         <div class="col-md-12">
                             <form method="GET" action="{{ route('admin.attributes.index') }}" class="row g-3">
                                 <div class="col-md-3">
@@ -60,7 +60,7 @@
                     </div>
 
                     <!-- Attributes Table -->
-                    <div class="table-responsive">
+                    <div class="table-responsive" data-intro="{{ __('admin.tour.attributes_table_desc') }}" data-step="34">
                         <table class="table table-striped">
                             <thead>
                                 <tr>
@@ -241,8 +241,8 @@
 
 /* Primary Actions Row */
 .action-buttons .btn-outline-info:hover {
-    background-color: #0dcaf0;
-    border-color: #0dcaf0;
+    background-color: var(--brand-brown);
+    border-color: var(--brand-brown);
     color: white;
 }
 

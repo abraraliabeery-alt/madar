@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container-fluid">
-        <div class="d-flex align-items-center justify-content-between mb-3">
+        <div class="d-flex align-items-center justify-content-between mb-3" data-intro="{{ __('admin.tour.plans_header_desc') }}" data-step="51">
             <div>
                 <h4 class="mb-1">إدارة قطع المخطط</h4>
                 <div class="text-muted">المخطط: <span class="fw-semibold">{{ $slug }}</span></div>

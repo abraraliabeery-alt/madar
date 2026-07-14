@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header" data-intro="{{ __('admin.tour.permissions_create_header_desc') }}" data-step="70">
                     <h3 class="card-title">{{ __('admin.permissions.create') }}</h3>
                     <div class="card-tools">
                         <a href="{{ route('admin.permissions.index') }}" class="btn btn-secondary">

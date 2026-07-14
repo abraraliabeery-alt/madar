@@ -20,6 +20,13 @@ return [
         'pending_bookings_description' => 'راجع و أكد حجوزاتك المعلّقة',
         'active_contracts_text' => 'عقود نشطة',
         'active_contracts_description' => 'إدارة العقود النشطة الخاصة بك',
+        'view_details' => 'عرض التفاصيل',
+        'view_contracts' => 'عرض العقود',
+        'view_appointments' => 'عرض المواعيد',
+        'view_favorites' => 'عرض المفضلة',
+        'offers_title' => 'العروض المتاحة',
+        'view_all_offers' => 'عرض جميع العروض',
+        'financial_management' => 'الإدارة المالية',
     ],
 
     'navigation' => [
@@ -27,6 +34,8 @@ return [
         'profile' => 'حسابي',
         'bookings' => 'حجوزاتي',
         'appointments' => 'مواعيدي',
+        'create_project' => 'إنشاء مشروع',
+        'contracts' => 'العقود',
         'favorites' => 'المفضلة',
         'notifications' => 'الإشعارات',
         'settings' => 'الإعدادات',

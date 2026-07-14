@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
+                <div class="card-header d-flex justify-content-between align-items-center" data-intro="{{ __('admin.tour.notifications_header_desc') }}" data-step="49">
                     <h5 class="mb-0">
                         <i class="fas fa-bell ms-2"></i>الإشعارات
                     </h5>
@@ -23,7 +23,7 @@
                 </div>
                 <div class="card-body">
                     @if($notifications->count() > 0)
-                        <div class="notifications-list">
+                        <div class="notifications-list" data-intro="{{ __('admin.tour.notifications_list_desc') }}" data-step="50">
                             @foreach($notifications as $notification)
                                 <div class="notification-item p-3 border-bottom {{ $notification->read_at ? 'read' : 'unread' }}">
                                     <div class="d-flex align-items-start">
@@ -109,7 +109,7 @@
 
 .notification-item.unread {
     background-color: #f0f8ff;
-    border-left: 4px solid #007bff;
+    border-left: 4px solid var(--brand-brown);
 }
 
 .notification-item.read {

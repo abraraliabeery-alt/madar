@@ -245,6 +245,49 @@ class User extends Authenticatable
     }
 
     /**
+     * Assign a role to the user
+     *
+     * @param string $roleName
+     * @return bool
+     */
+    public function assignRole($roleName)
+    {
+        $role = Role::where('name', $roleName)->first();
+
+        if (!$role) {
+            return false;
+        }
+
+        $this->roles()->syncWithoutDetaching([$role->id => ['facility_id' => null]]);
+
+        if (is_null($this->primary_role)) {
+            $this->primary_role = $roleName;
+            $this->save();
+        }
+
+        return true;
+    }
+
+    /**
+     * Remove a role from the user
+     *
+     * @param string $roleName
+     * @return bool
+     */
+    public function removeRole($roleName)
+    {
+        $role = Role::where('name', $roleName)->first();
+
+        if (!$role) {
+            return false;
+        }
+
+        $this->roles()->detach($role->id);
+
+        return true;
+    }
+
+    /**
      * Check if user has a specific permission
      *
      * @param string $permission

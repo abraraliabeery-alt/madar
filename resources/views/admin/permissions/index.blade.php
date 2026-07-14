@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header" data-intro="{{ __('admin.tour.permissions_header_desc') }}" data-step="43">
                     <h3 class="card-title">إدارة الصلاحيات</h3>
                     <div class="card-tools">
                         <a href="{{ route('admin.permissions.create') }}" class="btn btn-primary">
@@ -21,7 +21,7 @@
 
                 <!-- فلاتر البحث -->
                 <div class="card-body">
-                    <form method="GET" class="row g-3 mb-4">
+                    <form method="GET" class="row g-3 mb-4" data-intro="{{ __('admin.tour.permissions_filters_desc') }}" data-step="44">
                         <div class="col-md-3">
                             <select name="is_active" class="form-select">
                                 <option value="">جميع الحالات</option>

@@ -1204,13 +1204,94 @@ table.dataTable tbody tr:hover td {
     width: 40px;
     height: 40px;
     border: 3px solid var(--border-color);
-    border-top-color: var(--primary);
+    border-top-color: var(--brand-brown);
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
 }
 
 @keyframes spin {
     100% { transform: rotate(360deg); }
+}
+
+/* DataTables wrapper background removal */
+.dataTables_wrapper {
+    background-color: transparent !important;
+}
+
+/* Badge text color in dark mode */
+body.dark-mode .badge.bg-success,
+html[data-theme="dark"] .badge.bg-success,
+body.dark-mode .badge.bg-info,
+html[data-theme="dark"] .badge.bg-info,
+body.dark-mode .badge.bg-warning,
+html[data-theme="dark"] .badge.bg-warning,
+body.dark-mode .badge.bg-danger,
+html[data-theme="dark"] .badge.bg-danger,
+body.dark-mode .badge.bg-primary,
+html[data-theme="dark"] .badge.bg-primary,
+body.dark-mode .badge.bg-secondary,
+html[data-theme="dark"] .badge.bg-secondary {
+    color: #ffffff !important;
+    background-color: #2d2d2d !important;
+}
+
+/* Intro.js custom styling to use brand-brown colors */
+.introjs-helperLayer {
+    background-color: rgba(var(--brand-brown-rgb), 0.5) !important;
+    border: 1px solid var(--brand-brown) !important;
+}
+
+.introjs-tooltip {
+    background-color: var(--brand-brown) !important;
+    color: #ffffff !important;
+}
+
+.introjs-tooltip-title {
+    color: #ffffff !important;
+}
+
+.introjs-button {
+    background-color: #ffffff !important;
+    color: var(--brand-brown) !important;
+    border: none !important;
+    text-shadow: none !important;
+}
+
+.introjs-button:hover {
+    background-color: #f0f0f0 !important;
+    color: var(--brand-brown) !important;
+}
+
+.introjs-button.introjs-prevbutton {
+    background-color: #ffffff !important;
+    color: var(--brand-brown) !important;
+    border: none !important;
+    text-shadow: none !important;
+}
+
+.introjs-button.introjs-prevbutton:hover {
+    background-color: #f0f0f0 !important;
+    color: var(--brand-brown) !important;
+}
+
+.introjs-bullets ul li a {
+    background: rgba(255, 255, 255, 0.3) !important;
+}
+
+.introjs-bullets ul li a.active {
+    background: #ffffff !important;
+}
+
+.introjs-progressbar {
+    background-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.introjs-progress {
+    background-color: #ffffff !important;
+}
+
+.introjs-tooltipReferenceLayer {
+    background-color: transparent !important;
 }
 
 /* طھط£ط«ظٹط±ط§طھ ط¥ط¶ط§ظپظٹط© */

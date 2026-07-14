@@ -22,6 +22,9 @@ return [
         'quick_search' => 'Quick Search',
         'advanced_search' => 'Advanced Search',
         'map_search' => 'Search on Map',
+        'open_advanced_search' => 'Open Advanced Search',
+        'open_map' => 'Open Map',
+        'our_services_title' => 'Our Services',
         'featured_categories' => 'Featured Categories',
         'latest_properties' => 'Latest Properties',
         'featured_cities' => 'Featured Cities',
@@ -31,6 +34,32 @@ return [
         'cta_subtitle' => 'Join us and get the best real estate services',
         'register_now' => 'Register Now',
         'contact_us' => 'Contact Us',
+
+        'services' => [
+            'project_platform' => [
+                'title' => 'Projects Platform',
+                'description' => 'Publish your project or browse projects and submit execution bids.',
+            ],
+            'contractors_directory' => [
+                'title' => 'Contractors & Companies Directory',
+                'description' => 'Browse facilities and contact the right party to execute your project.',
+            ],
+            'browse_projects' => [
+                'title' => 'Browse Projects',
+                'description' => 'Browse projects by category, city, and location features.',
+            ],
+            'analysis_center' => [
+                'title' => 'Analysis Center',
+                'description' => 'Feasibility analysis and development suggestions aligned with Saudi code.',
+            ],
+        ],
+
+        'stats' => [
+            'total_projects' => 'Total Projects',
+            'companies_and_facilities' => 'Companies & Facilities',
+            'categories' => 'Categories',
+            'featured_projects' => 'Featured Projects',
+        ],
     ],
     
     'view_toggle' => [

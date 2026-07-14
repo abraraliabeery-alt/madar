@@ -21,11 +21,14 @@ html[data-theme="dark"]{
 /* Global primitives */
 html,body{background:var(--brand-bg) !important;color:var(--brand-fg) !important;}
 
+img.brand-logo{filter:none;}
+html[data-theme="dark"] img.brand-logo{filter:invert(1) grayscale(1) brightness(1.1);}
+
 .bg-light,.bg-white{background-color:var(--brand-bg) !important;}
 
 html[data-theme="dark"] .bg-dark{background-color:var(--brand-bg) !important;}
 
-a,a:hover,a:focus,a:active,a:visited{color:var(--brand-brown) !important;}
+a:not(.btn),a:not(.btn):hover,a:not(.btn):focus,a:not(.btn):active,a:not(.btn):visited{color:var(--brand-brown) !important;}
 
 .text-muted{color:var(--brand-muted) !important;}
 
@@ -57,10 +60,13 @@ a,a:hover,a:focus,a:active,a:visited{color:var(--brand-brown) !important;}
 .btn-primary,.btn-success,.btn-info,.btn-warning,.btn-danger{
   --bs-btn-bg:var(--brand-brown);
   --bs-btn-border-color:var(--brand-brown);
+  --bs-btn-color:var(--brand-bg);
   --bs-btn-hover-bg:var(--brand-brown);
   --bs-btn-hover-border-color:var(--brand-brown);
+  --bs-btn-hover-color:var(--brand-bg);
   --bs-btn-active-bg:var(--brand-brown);
   --bs-btn-active-border-color:var(--brand-brown);
+  --bs-btn-active-color:var(--brand-bg);
 }
 
 .btn-outline-primary,.btn-outline-success,.btn-outline-info,.btn-outline-warning,.btn-outline-danger,.btn-outline-secondary{
@@ -68,8 +74,10 @@ a,a:hover,a:focus,a:active,a:visited{color:var(--brand-brown) !important;}
   --bs-btn-border-color:var(--brand-brown);
   --bs-btn-hover-bg:var(--brand-brown);
   --bs-btn-hover-border-color:var(--brand-brown);
+  --bs-btn-hover-color:var(--brand-bg);
   --bs-btn-active-bg:var(--brand-brown);
   --bs-btn-active-border-color:var(--brand-brown);
+  --bs-btn-active-color:var(--brand-bg);
 }
 
 .badge.bg-success,.badge.bg-info,.badge.bg-warning,.badge.bg-danger,.badge.bg-primary,.badge.bg-secondary{background-color:var(--brand-brown) !important;}
@@ -85,6 +93,16 @@ a,a:hover,a:focus,a:active,a:visited{color:var(--brand-brown) !important;}
 .navbar.bg-dark,
 .navbar.bg-dark *{
   color:#ffffff !important;
+}
+
+.navbar.bg-dark .dropdown-menu,
+.navbar.bg-dark .dropdown-menu *{
+  color: var(--brand-brown) !important;
+}
+
+.navbar.bg-dark .dropdown-item.active,
+.navbar.bg-dark .dropdown-item:active{
+  color: #ffffff !important;
 }
 
 .navbar.bg-dark a,
@@ -106,6 +124,24 @@ a,a:hover,a:focus,a:active,a:visited{color:var(--brand-brown) !important;}
   --bs-btn-active-color:var(--brand-brown);
 }
 
+.navbar.bg-dark .btn-outline-light:hover,
+.navbar.bg-dark .btn-outline-light:focus,
+.navbar.bg-dark .btn-outline-light:active,
+.navbar.bg-dark .btn-outline-light:hover *,
+.navbar.bg-dark .btn-outline-light:focus *,
+.navbar.bg-dark .btn-outline-light:active *{
+  color: var(--brand-brown) !important;
+}
+
+html[data-theme="dark"] .navbar.bg-dark .btn-outline-light:hover,
+html[data-theme="dark"] .navbar.bg-dark .btn-outline-light:focus,
+html[data-theme="dark"] .navbar.bg-dark .btn-outline-light:active,
+html[data-theme="dark"] .navbar.bg-dark .btn-outline-light:hover *,
+html[data-theme="dark"] .navbar.bg-dark .btn-outline-light:focus *,
+html[data-theme="dark"] .navbar.bg-dark .btn-outline-light:active *{
+  color: var(--brand-bg) !important;
+}
+
 html[data-theme="dark"] .navbar.bg-dark,
 html[data-theme="dark"] .navbar.navbar-dark,
 html[data-theme="dark"] .navbar.navbar-light{
@@ -123,8 +159,16 @@ html[data-theme="dark"] .navbar .btn-outline-light{
   --bs-btn-border-color: var(--brand-brown);
   --bs-btn-hover-bg: var(--brand-brown);
   --bs-btn-hover-border-color: var(--brand-brown);
+  --bs-btn-hover-color: var(--brand-bg);
   --bs-btn-active-bg: var(--brand-brown);
   --bs-btn-active-border-color: var(--brand-brown);
+  --bs-btn-active-color: var(--brand-bg);
+}
+
+html[data-theme="dark"] .navbar .btn-outline-light:hover,
+html[data-theme="dark"] .navbar .btn-outline-light:focus,
+html[data-theme="dark"] .navbar .btn-outline-light:active{
+  color: var(--brand-bg) !important;
 }
 
 /* Bootstrap surfaces in dark mode */

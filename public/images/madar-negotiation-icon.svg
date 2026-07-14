@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="220" height="220" viewBox="0 0 220 220" role="img" aria-label="مدار التفاوض">
+  <defs>
+    <style>
+      .fg{fill:#000000}
+      .stroke{stroke:#000000;stroke-width:14;fill:none;stroke-linecap:round;stroke-linejoin:round}
+    </style>
+  </defs>
+
+  <g>
+    <circle cx="110" cy="110" r="72" class="stroke" opacity=".95"/>
+    <circle cx="158" cy="82" r="9" class="fg"/>
+    <circle cx="62" cy="138" r="9" class="fg"/>
+  </g>
+</svg>

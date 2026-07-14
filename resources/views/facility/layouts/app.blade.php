@@ -9,6 +9,10 @@
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;600;700;800;900&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+    <link href="{{ asset('admin-bundle.css') }}" rel="stylesheet">
+    <script src="{{ asset('theme.js') }}" defer></script>
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -112,11 +116,56 @@
         html[data-theme="dark"] .border-gray-200 { border-color: #374151 !important; }
         html[data-theme="dark"] .bg-gray-50 { background-color: #000000 !important; }
         html[data-theme="dark"] .hover\:bg-gray-100:hover { background-color: #374151 !important; }
-        html[data-theme="dark"] .sidebar-gradient { background: linear-gradient(135deg, #000000 0%, #000000 100%); }
 
         /* Global icon spacing */
         i.fa, i.fas, i.far, i.fal, i.fab, i.fad {
             margin-inline: 0.25rem;
+        }
+
+        .sidebar-gradient {
+            background: #ffffff !important;
+            border-left: 1px solid rgba(15, 23, 42, 0.12);
+        }
+
+        .sidebar-gradient .brand-text,
+        .sidebar-gradient a,
+        .sidebar-gradient .text-white,
+        .sidebar-gradient .text-gray-900,
+        .sidebar-gradient .text-gray-800 {
+            color: #0f172a !important;
+        }
+
+        .sidebar-gradient .text-white.text-opacity-70,
+        .sidebar-gradient .text-white.text-opacity-80 {
+            color: rgba(15, 23, 42, 0.75) !important;
+            opacity: 1 !important;
+        }
+
+        .sidebar-gradient .border-white {
+            border-color: rgba(15, 23, 42, 0.12) !important;
+        }
+
+        .sidebar-gradient .bg-white.bg-opacity-20 {
+            background-color: rgba(15, 23, 42, 0.06) !important;
+        }
+
+        .sidebar-gradient .border-l-4.border-white {
+            border-left-color: #0f172a !important;
+        }
+
+        .sidebar-gradient .hover\:bg-white:hover {
+            background-color: rgba(15, 23, 42, 0.06) !important;
+        }
+
+        html[data-theme="dark"] .sidebar-gradient {
+            background: #2d2d2d !important;
+            border-left-color: #404040 !important;
+        }
+
+        html[data-theme="dark"] .sidebar-gradient a,
+        html[data-theme="dark"] .sidebar-gradient .brand-text,
+        html[data-theme="dark"] .sidebar-gradient .text-white {
+            color: #e5e7eb !important;
         }
     </style>
 </head>
@@ -453,6 +502,13 @@
                 @endif
 
                 @yield('content')
+
+                <footer class="mt-10 pt-4 border-t border-gray-200 text-sm text-gray-500">
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-2">
+                        <div>{{ config('app.name') }}</div>
+                        <div>© {{ date('Y') }}</div>
+                    </div>
+                </footer>
             </main>
         </div>
     </div>

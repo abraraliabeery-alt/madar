@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Facility;
 use App\Models\Product;
+use App\Models\Project;
 use App\Models\Booking;
 use App\Models\Contract;
 use App\Models\Setting;
@@ -14,6 +15,7 @@ use App\Models\Category;
 use App\Models\Feature;
 use App\Models\Attribute;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Schema;
 
 class AdminController extends Controller
 {
@@ -61,6 +63,9 @@ class AdminController extends Controller
             'bookings' => Booking::whereYear('created_at', $currentYear)
                                  ->whereMonth('created_at', $currentMonth)
                                  ->count(),
+            'projects' => Project::whereYear('created_at', $currentYear)
+                                 ->whereMonth('created_at', $currentMonth)
+                                 ->count(),
         ];
 
         // إحصائيات الشهر السابق للمقارنة
@@ -76,6 +81,9 @@ class AdminController extends Controller
                                  ->whereMonth('created_at', $lastMonth->month)
                                  ->count(),
             'bookings' => Booking::whereYear('created_at', $lastMonth->year)
+                                 ->whereMonth('created_at', $lastMonth->month)
+                                 ->count(),
+            'projects' => Project::whereYear('created_at', $lastMonth->year)
                                  ->whereMonth('created_at', $lastMonth->month)
                                  ->count(),
         ];
@@ -327,6 +335,8 @@ class AdminController extends Controller
      */
     private function getProductStats()
     {
+        $hasPriceColumn = Schema::hasColumn('products', 'price');
+
         return [
             'total_products' => Product::count(),
             'active_products' => Product::where('is_active', true)->count(),
@@ -334,8 +344,8 @@ class AdminController extends Controller
             'featured_products' => Product::where('is_featured', true)->count(),
             'products_this_week' => Product::whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->count(),
             'products_this_month' => Product::whereMonth('created_at', now()->month)->count(),
-            'average_price' => Product::avg('price') ?? 0,
-            'total_value' => Product::sum('price') ?? 0,
+            'average_price' => $hasPriceColumn ? (Product::avg('price') ?? 0) : 0,
+            'total_value' => $hasPriceColumn ? (Product::sum('price') ?? 0) : 0,
         ];
     }
 

@@ -3,7 +3,7 @@
 @section('content')
 <div class="container-fluid">
     <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
+        <div class="card-header d-flex justify-content-between align-items-center" data-intro="{{ __('admin.tour.bookings_header_desc') }}" data-step="20">
             <h5 class="mb-0">إدارة الحجوزات</h5>
             <a href="{{ route('admin.bookings.create') }}" class="btn btn-primary">
                 <i class="fas fa-plus me-2"></i>إضافة حجز جديد
@@ -11,7 +11,7 @@
         </div>
         <div class="card-body">
             <!-- Filters -->
-            <div class="row g-3 mb-4">
+            <div class="row g-3 mb-4" data-intro="{{ __('admin.tour.bookings_filters_desc') }}" data-step="21">
                 <div class="col-12 col-md-6 col-lg-3">
                     <select class="form-select" id="statusFilter">
                         <option value="">كل الحالات</option>
@@ -64,7 +64,7 @@
             </div>
 
             <!-- Statistics Cards -->
-            <div class="row g-3 mb-4 statistics-cards">
+            <div class="row g-3 mb-4 statistics-cards" data-intro="{{ __('admin.tour.bookings_stats_desc') }}" data-step="22">
                 <div class="col-12 col-sm-6 col-lg-3">
                     <div class="card bg-primary text-white">
                         <div class="card-body">
@@ -128,7 +128,7 @@
             </div>
 
             <!-- Bookings Table -->
-            <div class="table-responsive">
+            <div class="table-responsive" data-intro="{{ __('admin.tour.bookings_table_desc') }}" data-step="23">
                 <table class="table table-hover datatable">
                     <thead>
                         <tr>
@@ -482,8 +482,8 @@ $(document).ready(function() {
 
 /* Primary Actions Row */
 .action-buttons .btn-outline-info:hover {
-    background-color: #0dcaf0;
-    border-color: #0dcaf0;
+    background-color: var(--brand-brown);
+    border-color: var(--brand-brown);
     color: white;
 }
 
