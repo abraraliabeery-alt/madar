@@ -21,8 +21,8 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <link href="{{ asset('theme.css') }}" rel="stylesheet">
-    <script src="{{ asset('theme.js') }}" defer></script>
+    <link href="{{ asset('theme.css') }}?v={{ @filemtime(public_path('theme.css')) }}" rel="stylesheet">
+    <script src="{{ asset('theme.js') }}?v={{ @filemtime(public_path('theme.js')) }}" defer></script>
 
     <!-- Alpine.js -->
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -71,48 +71,6 @@
                 }
             }
         }
-    </script>
-
-    <script>
-        (function () {
-            try {
-                const stored = localStorage.getItem('theme');
-                const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-                const shouldUseDark = stored ? stored === 'dark' : prefersDark;
-                document.documentElement.classList.toggle('dark', shouldUseDark);
-            } catch (e) {
-                document.documentElement.classList.remove('dark');
-            }
-        })();
-        function toggleTheme() {
-            const isDark = document.documentElement.classList.toggle('dark');
-            try { localStorage.setItem('theme', isDark ? 'dark' : 'light'); } catch (e) {}
-            const buttons = document.querySelectorAll('[data-theme-toggle]');
-            buttons.forEach((btn) => {
-                btn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
-                btn.setAttribute('title', isDark ? 'Light mode' : 'Dark mode');
-                const sun = btn.querySelector('[data-icon="sun"]');
-                const moon = btn.querySelector('[data-icon="moon"]');
-                if (sun && moon) {
-                    sun.classList.toggle('hidden', !isDark);
-                    moon.classList.toggle('hidden', isDark);
-                }
-            });
-        }
-        document.addEventListener('DOMContentLoaded', function () {
-            const isDark = document.documentElement.classList.contains('dark');
-            const buttons = document.querySelectorAll('[data-theme-toggle]');
-            buttons.forEach((btn) => {
-                btn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
-                btn.setAttribute('title', isDark ? 'Light mode' : 'Dark mode');
-                const sun = btn.querySelector('[data-icon="sun"]');
-                const moon = btn.querySelector('[data-icon="moon"]');
-                if (sun && moon) {
-                    sun.classList.toggle('hidden', !isDark);
-                    moon.classList.toggle('hidden', isDark);
-                }
-            });
-        });
     </script>
 
     <style>
@@ -516,7 +474,7 @@
                 </div>
 
                 <div class="px-3 py-2">
-                    <button type="button" onclick="toggleTheme()" data-theme-toggle class="w-full flex items-center justify-between p-2 rounded-lg border border-gray-200 text-gray-700 hover:text-primary-700 hover:border-primary-300 transition-colors dark:border-secondary-800 dark:text-gray-200 dark:hover:text-white">
+                    <button type="button" data-theme-toggle class="w-full flex items-center justify-between p-2 rounded-lg border border-gray-200 text-gray-700 hover:text-primary-700 hover:border-primary-300 transition-colors dark:border-secondary-800 dark:text-gray-200 dark:hover:text-white">
                         <span class="text-sm font-medium">{{ __('layout.user_menu.dark_mode') }}</span>
                         <span class="flex items-center gap-2">
                             <i class="fas fa-moon" data-icon="moon"></i>

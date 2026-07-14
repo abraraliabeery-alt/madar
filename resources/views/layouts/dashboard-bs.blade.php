@@ -19,8 +19,8 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     @endif
 
-    <link href="{{ asset('theme.css') }}" rel="stylesheet">
-    <script src="{{ asset('theme.js') }}" defer></script>
+    <link href="{{ asset('theme.css') }}?v={{ @filemtime(public_path('theme.css')) }}" rel="stylesheet">
+    <script src="{{ asset('theme.js') }}?v={{ @filemtime(public_path('theme.js')) }}" defer></script>
 
     @stack('styles')
 

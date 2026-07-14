@@ -16,8 +16,8 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     @endif
 
-    <link href="{{ asset('theme.css') }}" rel="stylesheet">
-    <script src="{{ asset('theme.js') }}" defer></script>
+    <link href="{{ asset('theme.css') }}?v={{ @filemtime(public_path('theme.css')) }}" rel="stylesheet">
+    <script src="{{ asset('theme.js') }}?v={{ @filemtime(public_path('theme.js')) }}" defer></script>
 
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet">
