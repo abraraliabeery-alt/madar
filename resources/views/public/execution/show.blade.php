@@ -3,20 +3,20 @@
 @section('title', 'تفاصيل طلب التنفيذ #' . $executionRequest->id)
 
 @section('content')
-    <header class="bg-slate-900 text-white py-3 shadow-md">
+    <header class="bg-primary-900 text-white py-3 shadow-md dark:bg-secondary-900">
         <div class="max-w-5xl mx-auto px-4 flex items-center justify-between">
-            <a href="{{ route('public.execution.marketplace') }}" class="flex items-center gap-2 text-xs text-slate-200 hover:text-white">
+            <a href="{{ route('public.execution.marketplace') }}" class="flex items-center gap-2 text-xs text-white/80 hover:text-white">
                 <i class="fas fa-arrow-right"></i>
                 العودة لسوق التنفيذ
             </a>
             <div class="flex items-center gap-2 text-xs">
                 @auth
-                    <span class="inline-flex items-center px-2.5 py-1 rounded-full bg-slate-800 text-[11px]">
+                    <span class="inline-flex items-center px-2.5 py-1 rounded-full bg-white/10 text-[11px]">
                         <i class="fas fa-user ml-1 text-[9px]"></i>
                         {{ auth()->user()->name ?? 'حساب مستخدم' }}
                     </span>
                 @else
-                    <a href="{{ route('login') }}" class="inline-flex items-center px-3 py-1.5 rounded-full bg-slate-900 text-white text-[11px] font-semibold hover:bg-slate-800">
+                    <a href="{{ route('login') }}" class="inline-flex items-center px-3 py-1.5 rounded-full bg-white/10 text-white text-[11px] font-semibold hover:bg-white/15">
                         <i class="fas fa-sign-in-alt ml-1 text-[9px]"></i>
                         تسجيل الدخول لتقديم عرض
                     </a>
@@ -59,64 +59,64 @@
         $isFinalSubmitted = $myBid && !empty($myBid->data['submitted_at']);
     @endphp
 
-    <main class="flex-1 bg-slate-50">
+    <main class="flex-1 bg-gray-50 dark:bg-secondary-900/60">
         <section class="max-w-5xl mx-auto px-4 py-6 space-y-5">
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
+            <div class="bg-white/70 backdrop-blur rounded-2xl shadow-sm border border-gray-200 dark:bg-secondary-900/60 dark:border-secondary-800 p-5">
                 <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-3">
                     <div class="space-y-2">
-                        <div class="inline-flex items-center px-2.5 py-1 rounded-full bg-slate-50 text-slate-800 text-[11px] border border-slate-200">
+                        <div class="inline-flex items-center px-2.5 py-1 rounded-full bg-primary-50 dark:bg-secondary-800 text-primary-700 dark:text-primary-200 text-[11px] border border-primary-100 dark:border-secondary-700">
                             <i class="fas fa-circle text-[7px] ml-1"></i>
                             طلب تنفيذ مفتوح
                         </div>
-                        <h1 class="text-xl md:text-2xl font-bold text-slate-900">
+                        <h1 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">
                             {{ $t->title ?? ('طلب تنفيذ #' . $executionRequest->id) }}
                         </h1>
-                        <p class="text-xs text-slate-500 flex flex-wrap gap-3">
-                            <span><i class="fas fa-clock ml-1 text-amber-500"></i> {{ $executionRequest->created_at->diffForHumans() }}</span>
+                        <p class="text-xs text-gray-600 dark:text-gray-300 flex flex-wrap gap-3">
+                            <span><i class="fas fa-clock ml-1 text-primary-600"></i> {{ $executionRequest->created_at->diffForHumans() }}</span>
                             @if($executionRequest->due_date)
-                                <span><i class="fas fa-calendar ml-1 text-indigo-500"></i> حتى {{ $executionRequest->due_date->format('Y-m-d') }}</span>
+                                <span><i class="fas fa-calendar ml-1 text-primary-600"></i> حتى {{ $executionRequest->due_date->format('Y-m-d') }}</span>
                             @endif
                             @if($executionRequest->type)
-                                <span><i class="fas fa-tag ml-1 text-slate-500"></i> {{ $executionRequest->type }}</span>
+                                <span><i class="fas fa-tag ml-1 text-gray-500 dark:text-gray-300"></i> {{ $executionRequest->type }}</span>
                             @endif
                         </p>
                     </div>
-                    <div class="text-xs text-slate-600 bg-slate-50 rounded-xl p-3 min-w-[180px]">
+                    <div class="text-xs text-gray-700 dark:text-gray-200 bg-white/70 dark:bg-secondary-800/60 border border-gray-200 dark:border-secondary-800 rounded-xl p-3 min-w-[180px]">
                         <div class="flex items-center justify-between mb-1">
                             <span>العروض المستلمة</span>
-                            <span class="font-semibold text-slate-900"><i class="fas fa-gavel ml-1 text-amber-500"></i> {{ $executionRequest->bids->count() }}</span>
+                            <span class="font-semibold text-gray-900 dark:text-white"><i class="fas fa-gavel ml-1 text-primary-600"></i> {{ $executionRequest->bids->count() }}</span>
                         </div>
                         <div class="flex flex-col gap-1">
                             @if($budgetRange)
-                                <span><i class="fas fa-wallet ml-1 text-slate-700"></i> {{ $budgetRange }} ريال</span>
+                                <span><i class="fas fa-wallet ml-1 text-gray-700 dark:text-gray-200"></i> {{ $budgetRange }} ريال</span>
                             @else
-                                <span><i class="fas fa-wallet ml-1 text-slate-400"></i> الميزانية غير محددة</span>
+                                <span class="text-gray-500 dark:text-gray-300"><i class="fas fa-wallet ml-1 text-gray-400"></i> الميزانية غير محددة</span>
                             @endif
-                            <span><i class="fas fa-signal ml-1 text-slate-400"></i> الحالة: {{ $executionRequest->status }}</span>
+                            <span class="text-gray-600 dark:text-gray-300"><i class="fas fa-signal ml-1 text-gray-400"></i> الحالة: {{ $executionRequest->status }}</span>
                         </div>
                     </div>
                 </div>
 
                 @if($t && $t->description)
-                    <div class="border-t border-slate-100 pt-3 mt-2">
-                        <h2 class="text-sm font-semibold text-slate-800 mb-1">وصف الطلب</h2>
-                        <p class="text-sm text-slate-700 whitespace-pre-line leading-relaxed">{{ $t->description }}</p>
+                    <div class="border-t border-gray-200 dark:border-secondary-800 pt-3 mt-2">
+                        <h2 class="text-sm font-semibold text-gray-900 dark:text-white mb-1">وصف الطلب</h2>
+                        <p class="text-sm text-gray-700 dark:text-gray-200 whitespace-pre-line leading-relaxed">{{ $t->description }}</p>
                     </div>
                 @endif
 
-                <div class="border-t border-slate-100 pt-3 mt-3">
-                    <h2 class="text-sm font-semibold text-slate-800 mb-2 flex items-center gap-2">
-                        <i class="fas fa-timeline text-indigo-500"></i>
+                <div class="border-t border-gray-200 dark:border-secondary-800 pt-3 mt-3">
+                    <h2 class="text-sm font-semibold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+                        <i class="fas fa-timeline text-primary-600"></i>
                         الخط الزمني للطلب
                     </h2>
-                    <div class="flex items-center gap-3 text-[11px] text-slate-600 flex-wrap">
+                    <div class="flex items-center gap-3 text-[11px] text-gray-600 dark:text-gray-300 flex-wrap">
                         <div class="flex items-center gap-1">
-                            <span class="w-2 h-2 rounded-full bg-slate-900"></span>
+                            <span class="w-2 h-2 rounded-full bg-primary-900"></span>
                             <span>تم إنشاء الطلب {{ $executionRequest->created_at->format('Y-m-d H:i') }}</span>
                         </div>
-                        <span class="h-px w-6 bg-slate-200"></span>
+                        <span class="h-px w-6 bg-gray-200 dark:bg-secondary-800"></span>
                         <div class="flex items-center gap-1">
-                            <span class="w-2 h-2 rounded-full {{ $executionRequest->bids->count() ? 'bg-slate-900' : 'bg-slate-300' }}"></span>
+                            <span class="w-2 h-2 rounded-full {{ $executionRequest->bids->count() ? 'bg-primary-900' : 'bg-gray-300 dark:bg-secondary-800' }}"></span>
                             <span>
                                 @if($executionRequest->bids->count())
                                     استلام {{ $executionRequest->bids->count() }} عرض/عروض
@@ -125,12 +125,12 @@
                                 @endif
                             </span>
                         </div>
-                        <span class="h-px w-6 bg-slate-200"></span>
+                        <span class="h-px w-6 bg-gray-200 dark:bg-secondary-800"></span>
                         <div class="flex items-center gap-1">
                             @php
                                 $isClosed = in_array($executionRequest->status, ['completed','closed','cancelled']);
                             @endphp
-                            <span class="w-2 h-2 rounded-full {{ $isClosed ? 'bg-slate-900' : 'bg-slate-300' }}"></span>
+                            <span class="w-2 h-2 rounded-full {{ $isClosed ? 'bg-primary-900' : 'bg-gray-300 dark:bg-secondary-800' }}"></span>
                             <span>
                                 @if($isClosed)
                                     الطلب منتهٍ بالحالة: {{ $executionRequest->status }}
@@ -145,48 +145,48 @@
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-5 items-start">
                 <div class="md:col-span-2 space-y-4">
-                    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-4">
-                        <h2 class="text-sm font-semibold text-slate-800 mb-3 flex items-center gap-2">
-                            <i class="fas fa-gavel text-amber-500"></i>
+                    <div class="bg-white/70 backdrop-blur rounded-2xl shadow-sm border border-gray-200 dark:bg-secondary-900/60 dark:border-secondary-800 p-4">
+                        <h2 class="text-sm font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+                            <i class="fas fa-gavel text-primary-600"></i>
                             العروض المقدَّمة
                         </h2>
                         <div class="space-y-3 text-xs">
                             @forelse($executionRequest->bids as $bid)
-                                <div class="border border-slate-100 rounded-xl p-3 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                                <div class="border border-gray-200 dark:border-secondary-800 rounded-xl bg-white/60 dark:bg-secondary-900/40 p-3 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                                     <div class="space-y-1">
-                                        <div class="text-slate-800 font-semibold">
+                                        <div class="text-gray-900 dark:text-white font-semibold">
                                             {{ optional($bid->executorUser)->name ?? 'منفِّذ غير معرّف' }}
                                         </div>
-                                        <div class="text-slate-600 flex flex-wrap gap-3">
-                                            <span><i class="fas fa-wallet ml-1 text-slate-700"></i> {{ $bid->price_total ? number_format($bid->price_total) . ' ' . ($bid->currency ?? 'SAR') : 'لم يحدد السعر' }}</span>
-                                            <span><i class="fas fa-calendar-day ml-1 text-indigo-500"></i> {{ $bid->duration_days ? $bid->duration_days . ' يوم' : 'مدة غير محددة' }}</span>
-                                            <span><i class="fas fa-shield-halved ml-1 text-slate-500"></i> {{ $bid->warranty_months ? $bid->warranty_months . ' شهر ضمان' : 'بدون ضمان معلَن' }}</span>
+                                        <div class="text-gray-700 dark:text-gray-200 flex flex-wrap gap-3">
+                                            <span><i class="fas fa-wallet ml-1 text-gray-700 dark:text-gray-200"></i> {{ $bid->price_total ? number_format($bid->price_total) . ' ' . ($bid->currency ?? 'SAR') : 'لم يحدد السعر' }}</span>
+                                            <span><i class="fas fa-calendar-day ml-1 text-primary-600"></i> {{ $bid->duration_days ? $bid->duration_days . ' يوم' : 'مدة غير محددة' }}</span>
+                                            <span><i class="fas fa-shield-halved ml-1 text-gray-500 dark:text-gray-300"></i> {{ $bid->warranty_months ? $bid->warranty_months . ' شهر ضمان' : 'بدون ضمان معلَن' }}</span>
                                         </div>
                                         @if(isset($bid->data['notes']) && $bid->data['notes'])
-                                            <p class="text-slate-600 mt-1 whitespace-pre-line">{{ $bid->data['notes'] }}</p>
+                                            <p class="text-gray-700 dark:text-gray-200 mt-1 whitespace-pre-line">{{ $bid->data['notes'] }}</p>
                                         @endif
                                     </div>
                                     <div class="flex flex-col items-end gap-1 text-[11px]">
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full
-                                            @if($bid->status === 'accepted') bg-slate-200 text-slate-800
-                                            @elseif($bid->status === 'rejected') bg-red-100 text-red-700
-                                            @else bg-slate-100 text-slate-700 @endif">
+                                            @if($bid->status === 'accepted') bg-primary-50 dark:bg-secondary-800 text-primary-700 dark:text-primary-200
+                                            @elseif($bid->status === 'rejected') bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-200
+                                            @else bg-gray-100 dark:bg-secondary-800 text-gray-700 dark:text-gray-200 @endif">
                                             {{ $bid->status }}
                                         </span>
-                                        <span class="text-slate-400">{{ $bid->created_at->diffForHumans() }}</span>
+                                        <span class="text-gray-400">{{ $bid->created_at->diffForHumans() }}</span>
                                     </div>
                                 </div>
                             @empty
-                                <p class="text-slate-500 text-xs">لا توجد عروض حتى الآن على هذا الطلب.</p>
+                                <p class="text-gray-500 dark:text-gray-300 text-xs">لا توجد عروض حتى الآن على هذا الطلب.</p>
                             @endforelse
                         </div>
                     </div>
                 </div>
 
                 <div class="space-y-4">
-                    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-4">
-                        <h2 class="text-sm font-semibold text-slate-800 mb-3 flex items-center gap-2">
-                            <i class="fas fa-handshake text-slate-700"></i>
+                    <div class="bg-white/70 backdrop-blur rounded-2xl shadow-sm border border-gray-200 dark:bg-secondary-900/60 dark:border-secondary-800 p-4">
+                        <h2 class="text-sm font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+                            <i class="fas fa-handshake text-gray-700 dark:text-gray-200"></i>
                             قدّم عرضك على هذا الطلب
                         </h2>
 
@@ -196,11 +196,11 @@
                             @enderror
 
                             @if($isPastDue)
-                                <p class="text-xs text-slate-600">انتهى وقت التقديم على هذا الطلب.</p>
+                                <p class="text-xs text-gray-600 dark:text-gray-200">انتهى وقت التقديم على هذا الطلب.</p>
                             @elseif($isLockedBid)
-                                <p class="text-xs text-slate-600">تم اتخاذ قرار بشأن عرضك، ولا يمكن تعديله.</p>
+                                <p class="text-xs text-gray-600 dark:text-gray-200">تم اتخاذ قرار بشأن عرضك، ولا يمكن تعديله.</p>
                             @elseif($isFinalSubmitted)
-                                <p class="text-xs text-slate-600">تم إرسال العرض بشكل نهائي ولا يمكن تعديله.</p>
+                                <p class="text-xs text-gray-600 dark:text-gray-200">تم إرسال العرض بشكل نهائي ولا يمكن تعديله.</p>
                             @endif
 
                             @php
@@ -234,11 +234,11 @@
                                 }
                             @endphp
 
-                            <a href="{{ route('public.execution.bids.form', $executionRequest) }}" class="w-full inline-flex items-center justify-center px-4 py-2 rounded-lg bg-slate-900 text-white text-xs font-semibold hover:bg-slate-800">
+                            <a href="{{ route('public.execution.bids.form', $executionRequest) }}" class="w-full inline-flex items-center justify-center px-4 py-2 rounded-lg bg-primary-600 text-white text-xs font-semibold hover:bg-primary-700">
                                 <i class="fas fa-file-signature ml-1 text-[10px]"></i>
                                 فتح نموذج تقديم العرض (صفحة كاملة)
                             </a>
-                            <p class="mt-2 text-[11px] text-slate-500">تم نقل نموذج التقديم إلى صفحة مستقلة لأن النموذج هنا كان ضيق.</p>
+                            <p class="mt-2 text-[11px] text-gray-500 dark:text-gray-300">تم نقل نموذج التقديم إلى صفحة مستقلة لأن النموذج هنا كان ضيق.</p>
 
                             <form
                                 method="POST"
@@ -840,8 +840,8 @@
                                 </div>
                             </form>
                         @else
-                            <p class="text-xs text-slate-600 mb-3">لتقديم عرض على هذا الطلب، تحتاج لتسجيل الدخول بحسابك.</p>
-                            <a href="{{ route('login') }}" class="w-full inline-flex items-center justify-center px-4 py-2 rounded-lg bg-slate-900 text-white text-xs font-semibold hover:bg-slate-800">
+                            <p class="text-xs text-gray-600 dark:text-gray-200 mb-3">لتقديم عرض على هذا الطلب، تحتاج لتسجيل الدخول بحسابك.</p>
+                            <a href="{{ route('login') }}" class="w-full inline-flex items-center justify-center px-4 py-2 rounded-lg bg-primary-600 text-white text-xs font-semibold hover:bg-primary-700">
                                 <i class="fas fa-sign-in-alt ml-1 text-[10px]"></i>
                                 تسجيل الدخول وتقديم عرض
                             </a>
