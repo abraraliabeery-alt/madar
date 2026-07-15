@@ -18,6 +18,7 @@ class Project extends Model
         'seller_user_id',
         'client_user_id',
         'project_type',
+        'project_category_id',
         'city_id',
         'neighborhood_id',
         'street_id',
@@ -86,6 +87,11 @@ class Project extends Model
     public function street()
     {
         return $this->belongsTo(Street::class);
+    }
+
+    public function projectCategory()
+    {
+        return $this->belongsTo(ProjectCategory::class, 'project_category_id');
     }
 
     public function translations()

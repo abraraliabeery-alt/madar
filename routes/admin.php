@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\AdminContractController;
 use App\Http\Controllers\Admin\AdminOfferController;
 use App\Http\Controllers\Admin\AdminFinancialReportController;
 use App\Http\Controllers\Admin\AdminCategoryController;
+use App\Http\Controllers\Admin\AdminProjectCategoryController;
 use App\Http\Controllers\Admin\AdminFeatureController;
 use App\Http\Controllers\Admin\AdminAttributeController;
 use App\Http\Controllers\Admin\AdminFaqController;
@@ -154,6 +155,14 @@ Route::group([], function () {
     Route::post('categories/reorder', [AdminCategoryController::class, 'reorder'])->name('categories.reorder');
     Route::get('categories/check-parent', [AdminCategoryController::class, 'checkParent'])->name('categories.check-parent');
     Route::get('categories/statistics', [AdminCategoryController::class, 'statistics'])->name('categories.statistics');
+
+    // Project Categories Management
+    Route::resource('project-categories', AdminProjectCategoryController::class);
+    Route::post('project-categories/{project_category}/toggle-status', [AdminProjectCategoryController::class, 'toggleStatus'])->name('project-categories.toggle-status');
+    Route::post('project-categories/{project_category}/toggle-featured', [AdminProjectCategoryController::class, 'toggleFeatured'])->name('project-categories.toggle-featured');
+    Route::post('project-categories/reorder', [AdminProjectCategoryController::class, 'reorder'])->name('project-categories.reorder');
+    Route::get('project-categories/check-parent', [AdminProjectCategoryController::class, 'checkParent'])->name('project-categories.check-parent');
+    Route::get('project-categories/statistics', [AdminProjectCategoryController::class, 'statistics'])->name('project-categories.statistics');
 
     // Features Management
     Route::resource('features', AdminFeatureController::class);

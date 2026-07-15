@@ -22,7 +22,7 @@
                         <i class="fas fa-chevron-down" data-accordion-icon="home-basic"></i>
                     </button>
                     <div id="home-basic" class="px-5 pb-5">
-                        <form action="{{ route('public.search') }}" method="GET" class="flex search-form" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
+                        <form action="{{ route('public.execution.marketplace') }}" method="GET" class="flex search-form" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
                             <input type="text" 
                                    class="flex-1 px-4 py-3 text-gray-900 border border-gray-300 search-input focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" 
                                    name="q" 
@@ -68,11 +68,11 @@
 
                                 <div>
                                     <label for="home_min_price" class="block text-sm font-medium text-gray-700 mb-2">{{ __('public.search.minimum_price') }}</label>
-                                    <input type="number" id="home_min_price" name="min_price" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="{{ __('public.search.minimum_price') }}">
+                                    <input type="number" id="home_min_price" name="min_budget" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="{{ __('public.search.minimum_price') }}">
                                 </div>
                                 <div>
                                     <label for="home_max_price" class="block text-sm font-medium text-gray-700 mb-2">{{ __('public.search.maximum_price') }}</label>
-                                    <input type="number" id="home_max_price" name="max_price" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="{{ __('public.search.maximum_price') }}">
+                                    <input type="number" id="home_max_price" name="max_budget" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="{{ __('public.search.maximum_price') }}">
                                 </div>
                             </div>
 
@@ -143,8 +143,8 @@
                         <form action="{{ route('public.search.map') }}" method="GET" id="homeMapSearchForm">
                             <div class="mb-4 flex items-center justify-center gap-6">
                                 <label class="flex items-center gap-2 rtl:flex-row-reverse">
-                                    <input type="radio" name="search_type" value="products" checked onchange="updateHomeMapFilters()">
-                                    <span class="text-sm font-medium text-gray-700">{{ __('public.navigation.products') }}</span>
+                                    <input type="radio" name="search_type" value="projects" checked onchange="updateHomeMapFilters()">
+                                    <span class="text-sm font-medium text-gray-700">المشاريع</span>
                                 </label>
                                 <label class="flex items-center gap-2 rtl:flex-row-reverse">
                                     <input type="radio" name="search_type" value="facilities" onchange="updateHomeMapFilters()">
@@ -164,11 +164,11 @@
                                 </div>
                                 <div id="homeMapMinPrice">
                                     <label for="home_map_min_price" class="block text-sm font-medium text-gray-700 mb-2">{{ __('public.search.minimum_price') }}</label>
-                                    <input type="number" id="home_map_min_price" name="min_price" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="{{ __('public.search.minimum_price') }}">
+                                    <input type="number" id="home_map_min_price" name="min_budget" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="{{ __('public.search.minimum_price') }}">
                                 </div>
                                 <div id="homeMapMaxPrice">
                                     <label for="home_map_max_price" class="block text-sm font-medium text-gray-700 mb-2">{{ __('public.search.maximum_price') }}</label>
-                                    <input type="number" id="home_map_max_price" name="max_price" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="{{ __('public.search.maximum_price') }}">
+                                    <input type="number" id="home_map_max_price" name="max_budget" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="{{ __('public.search.maximum_price') }}">
                                 </div>
                             </div>
 
@@ -485,7 +485,7 @@ function updateHomeAdvancedAction() {
     const details = document.getElementById('homePropertyDetails');
 
     if (type === 'products') {
-        form.action = '{{ route("public.search.products") }}';
+        form.action = '{{ route("public.execution.marketplace") }}';
         if (details) {
             details.classList.remove('hidden');
         }
@@ -499,11 +499,11 @@ function updateHomeAdvancedAction() {
 
 function updateHomeMapFilters() {
     const selected = document.querySelector('#homeMapSearchForm input[name="search_type"]:checked');
-    const type = selected ? selected.value : 'products';
+    const type = selected ? selected.value : 'projects';
     const minPrice = document.getElementById('homeMapMinPrice');
     const maxPrice = document.getElementById('homeMapMaxPrice');
 
-    const showPrice = type === 'products';
+    const showPrice = type === 'projects';
     if (minPrice) {
         minPrice.style.display = showPrice ? 'block' : 'none';
     }

@@ -11,6 +11,7 @@ use App\Models\ProjectAttachment;
 use App\Models\ProjectTranslation;
 use App\Models\ExecutionRequest;
 use App\Models\ExecutionRequestTranslation;
+use App\Models\ProjectCategory;
 use App\Models\StageAttribute;
 use App\Models\Street;
 use Illuminate\Http\Request;
@@ -38,7 +39,9 @@ class ClientProjectController extends Controller
             ->orderBy('id')
             ->get();
 
-        return view('client.projects.create', compact('locales', 'cities', 'neighborhoods', 'streets', 'ideaStageAttributes', 'projectAttributes'));
+        $projectCategories = ProjectCategory::query()->active()->ordered()->get();
+
+        return view('client.projects.create', compact('locales', 'cities', 'neighborhoods', 'streets', 'ideaStageAttributes', 'projectAttributes', 'projectCategories'));
     }
 
     public function show(Project $project)
@@ -71,6 +74,7 @@ class ClientProjectController extends Controller
             'qa_deadline' => 'nullable|date|before_or_equal:bid_deadline',
             'site_visit_date' => 'nullable|date',
             'project_type' => 'nullable|in:residential,commercial,industrial,government,other',
+            'project_category_id' => 'nullable|exists:project_categories,id',
             'request_type' => 'nullable|string|max:255',
             'scope_of_work' => 'nullable|string|max:255',
             'finishing_level' => 'nullable|string|max:255',
@@ -150,6 +154,7 @@ class ClientProjectController extends Controller
         $project = Project::create([
             'client_user_id' => Auth::id(),
             'project_type' => $data['project_type'] ?? null,
+            'project_category_id' => $data['project_category_id'] ?? null,
             'request_type' => $data['request_type'] ?? null,
             'scope_of_work' => $data['scope_of_work'] ?? null,
             'finishing_level' => $data['finishing_level'] ?? null,

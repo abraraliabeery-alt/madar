@@ -246,40 +246,5 @@
             })();
         </script>
     @endpush
-
-    <!-- FAQ Section -->
-    <div class="bg-gray-50 py-16">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-gray-900 mb-4">{{ __('general.contact.faq_title') }}</h2>
-                <p class="text-lg text-gray-600">{{ __('general.contact.faq_subtitle') }}</p>
-            </div>
-            <div class="space-y-6">
-                @php
-                    $faqs = \App\Models\Faq::getActiveFaqs(app()->getLocale());
-                @endphp
-                
-                @forelse($faqs as $faq)
-                    <div class="bg-white rounded-lg shadow-md p-6">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-3">{{ $faq->question }}</h3>
-                        <p class="text-gray-600">{{ $faq->answer }}</p>
-                    </div>
-                @empty
-                    <div class="bg-white rounded-lg shadow-md p-6">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-3">{{ __('general.contact.faq_1_q') }}</h3>
-                        <p class="text-gray-600">{{ __('general.contact.faq_1_a') }}</p>
-                    </div>
-                    <div class="bg-white rounded-lg shadow-md p-6">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-3">{{ __('general.contact.faq_2_q') }}</h3>
-                        <p class="text-gray-600">{{ __('general.contact.faq_2_a') }}</p>
-                    </div>
-                    <div class="bg-white rounded-lg shadow-md p-6">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-3">{{ __('general.contact.faq_3_q') }}</h3>
-                        <p class="text-gray-600">{{ __('general.contact.faq_3_a') }}</p>
-                    </div>
-                @endforelse
-            </div>
-        </div>
-    </div>
 </div>
 @endsection

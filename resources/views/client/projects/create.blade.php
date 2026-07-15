@@ -220,6 +220,17 @@
                     </div>
                     <div class="col-12 col-md-6">
                         <x-bs.select
+                            name="project_category_id"
+                            label="تصنيف المشروع"
+                            :options="($projectCategories ?? [])"
+                            option-value="id"
+                            option-label="translated_name"
+                            placeholder="اختر"
+                        />
+                        <div class="form-text">الحفظ في جدول المشاريع (حقل تصنيف المشروع)</div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <x-bs.select
                             name="request_type"
                             label="نوع الطلب"
                             :options="[

@@ -12,6 +12,7 @@ use App\Models\Feature;
 use App\Models\Attribute;
 use App\Models\Plan;
 use App\Models\PlanLot;
+use App\Models\ExecutionRequest;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
@@ -939,126 +940,14 @@ class SearchController extends Controller
      */
     public function products(Request $request)
     {
-        $query = Product::with(['facility', 'category', 'statuses', 'features', 'offers'])
-            ->where('is_active', true)
-            ->withActiveOffers();
+        $params = array_filter([
+            'status' => 'open',
+            'q' => $request->query('q'),
+            'min_budget' => $request->query('min_price'),
+            'max_budget' => $request->query('max_price'),
+        ], static fn ($v) => $v !== null && $v !== '');
 
-        // البحث النصي
-        if ($request->has('q') && $request->q) {
-            $searchTerm = $request->q;
-            $locale = app()->getLocale();
-            $query->where(function ($q) use ($searchTerm, $locale) {
-                $q->whereHas('translations', function($translationQuery) use ($searchTerm, $locale) {
-                    $translationQuery->where('locale', $locale)
-                        ->where(function($tq) use ($searchTerm) {
-                            $tq->where('title', 'like', '%' . $searchTerm . '%')
-                               ->orWhere('description', 'like', '%' . $searchTerm . '%');
-                        });
-                })
-                ->orWhere('address', 'like', '%' . $searchTerm . '%')
-                ->orWhereHas('facility', function ($facilityQuery) use ($searchTerm) {
-                    $facilityQuery->where('name', 'like', '%' . $searchTerm . '%');
-                });
-            });
-        }
-
-        // فلترة حسب الفئة
-        // المنتجات تستخدم category_id. نحافظ على التوافق: إذا تم إرسال facility_category_id نستخدمه أيضًا.
-        if ($request->filled('category_id')) {
-            $query->where('category_id', $request->category_id);
-        } elseif ($request->filled('facility_category_id')) {
-            $query->where('facility_category_id', $request->facility_category_id);
-        }
-
-        // فلترة حسب العنوان/الحي (موجود في صفحة البحث المتقدم)
-        if ($request->filled('address')) {
-            $query->where('address', 'like', '%' . $request->address . '%');
-        }
-
-        // فلترة حسب السعر
-        if ($request->has('min_price') && $request->min_price) {
-            $query->where('price', '>=', $request->min_price);
-        }
-        if ($request->has('max_price') && $request->max_price) {
-            $query->where('price', '<=', $request->max_price);
-        }
-
-        // فلترة حسب عدد الغرف
-        if ($request->has('bedrooms') && $request->bedrooms) {
-            $query->where('bedrooms', '>=', $request->bedrooms);
-        }
-
-        // فلترة حسب عدد الحمامات
-        if ($request->has('bathrooms') && $request->bathrooms) {
-            $query->where('bathrooms', '>=', $request->bathrooms);
-        }
-
-        // فلترة حسب المساحة
-        if ($request->has('min_area') && $request->min_area) {
-            $query->where('area', '>=', $request->min_area);
-        }
-        if ($request->has('max_area') && $request->max_area) {
-            $query->where('area', '<=', $request->max_area);
-        }
-
-        // فلترة حسب نوع العقار
-        if ($request->has('property_type')) {
-            switch ($request->property_type) {
-                case 'sale':
-                    $query->where('available_for_sale', true);
-                    break;
-                case 'rent':
-                    $query->where('available_for_rent', true);
-                    break;
-            }
-        }
-
-        // فلترة حسب المميزات
-        if ($request->has('features') && is_array($request->features)) {
-            $query->whereHas('features', function ($featureQuery) use ($request) {
-                $featureQuery->whereIn('features.id', $request->features);
-            });
-        }
-
-        // فلترة حسب الموقع
-        if ($request->has('latitude') && $request->has('longitude') && $request->has('radius')) {
-            $lat = $request->latitude;
-            $lng = $request->longitude;
-            $radius = $request->radius; // بالكيلومترات
-
-            $query->whereRaw("
-                (6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) <= ?
-            ", [$lat, $lng, $lat, $radius]);
-        }
-
-        // الترتيب
-        $sortBy = $request->get('sort', 'latest');
-        switch ($sortBy) {
-            case 'price_low':
-                $query->orderBy('price', 'asc');
-                break;
-            case 'price_high':
-                $query->orderBy('price', 'desc');
-                break;
-            case 'area_low':
-                $query->orderBy('area', 'asc');
-                break;
-            case 'area_high':
-                $query->orderBy('area', 'desc');
-                break;
-            case 'oldest':
-                $query->orderBy('created_at', 'asc');
-                break;
-            default:
-                $query->latest();
-                break;
-        }
-
-        $products = $query->paginate(12);
-        $categories = Category::all();
-        $features = Feature::all();
-
-        return view('public.search.products', compact('products', 'categories', 'features'));
+        return redirect()->route('public.execution.marketplace', $params);
     }
 
     /**
@@ -1376,7 +1265,7 @@ class SearchController extends Controller
      */
     public function map(Request $request)
     {
-        $searchType = $request->get('search_type', 'products');
+        $searchType = $request->get('search_type', 'projects');
         
         if ($searchType === 'facilities') {
             $query = Facility::with(['facilityCategory'])
@@ -1408,44 +1297,62 @@ class SearchController extends Controller
                 ];
             });
         } else {
-            $query = Product::with(['facility', 'category', 'translations'])
-                ->where('is_active', true)
-                ->whereNotNull('latitude')
-                ->whereNotNull('longitude');
+            $query = ExecutionRequest::query()
+                ->with(['translations', 'project'])
+                ->where('status', 'open')
+                ->whereHas('project', function ($q) {
+                    $q->whereNotNull('latitude')
+                      ->whereNotNull('longitude');
+                });
 
-            // فلترة حسب الفئة
-            if ($request->has('category_id') && $request->category_id) {
-                $query->where('category_id', $request->category_id);
+            if ($search = $request->get('q')) {
+                $query->whereHas('translations', function ($q) use ($search) {
+                    $q->where(function ($tq) use ($search) {
+                        $tq->where('title', 'like', "%{$search}%")
+                           ->orWhere('description', 'like', "%{$search}%");
+                    });
+                });
             }
 
-            // فلترة حسب السعر
-            if ($request->has('min_price') && $request->min_price) {
-                $query->where('price', '>=', $request->min_price);
+            $minBudget = $request->get('min_budget');
+            $maxBudget = $request->get('max_budget');
+            if ($minBudget !== null && $minBudget !== '') {
+                $query->where(function ($q) use ($minBudget) {
+                    $q->whereNull('budget_max')
+                      ->orWhere('budget_max', '>=', $minBudget);
+                });
             }
-            if ($request->has('max_price') && $request->max_price) {
-                $query->where('price', '<=', $request->max_price);
+            if ($maxBudget !== null && $maxBudget !== '') {
+                $query->where(function ($q) use ($maxBudget) {
+                    $q->whereNull('budget_min')
+                      ->orWhere('budget_min', '<=', $maxBudget);
+                });
             }
 
-            $products = $query->get();
+            $requests = $query->get();
 
-            $mapData = $products->map(function ($product) {
+            $mapData = $requests->map(function (ExecutionRequest $executionRequest) {
+                $project = $executionRequest->project;
+                $translation = $executionRequest->translations->firstWhere('locale', app()->getLocale())
+                    ?? $executionRequest->translations->first();
+
                 return [
-                    'id' => $product->id,
-                    'name' => $product->translations->where('locale', app()->getLocale())->first()->title ?? $product->translations->first()->title ?? 'No Title',
-                    'price' => $product->price,
-                    'address' => $product->address,
-                    'latitude' => $product->latitude,
-                    'longitude' => $product->longitude,
-                    'category' => $product->category->name ?? 'No Category',
-                    'facility' => $product->facility->name ?? 'No Facility',
-                    'image' => $product->image,
-                    'url' => route('public.products.show', $product->id),
-                    'type' => 'product'
+                    'id' => $executionRequest->id,
+                    'name' => $translation->title ?? ('طلب #' . $executionRequest->id),
+                    'price' => $executionRequest->budget_min,
+                    'address' => $project->address ?? '',
+                    'latitude' => $project->latitude,
+                    'longitude' => $project->longitude,
+                    'category' => 'مشروع',
+                    'facility' => $executionRequest->facility_id ? ('منشأة #' . $executionRequest->facility_id) : '',
+                    'image' => null,
+                    'url' => route('public.execution.show', $executionRequest->id),
+                    'type' => 'project'
                 ];
             });
         }
 
-        $categories = Category::all();
+        $categories = $searchType === 'facilities' ? Category::all() : collect();
 
         return view('public.search.map', compact('mapData', 'categories'));
     }

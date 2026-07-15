@@ -23,11 +23,11 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start mb-8">
                 <div class="lg:col-span-2 space-y-4">
                     <h2 id="execution-hero-title" class="text-2xl md:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">سوق المقاولات والمشاريع في المملكة</h2>
-                    <p id="execution-hero-desc" class="text-sm md:text-base text-gray-600 dark:text-gray-300 leading-relaxed max-w-xl">اربط مشروعك بالمقاولين المناسبين، واطّلع على المشاريع المتاحة بحسب النوع والميزانية والمدة.</p>
+                    <p id="execution-hero-desc" class="text-sm md:text-base text-gray-600 dark:text-gray-300 leading-relaxed max-w-xl">اربط مشروعك بالمقاولين المناسبين، واطلع على المشاريع المتاحة بحسب النوع والميزانية والمدة.</p>
                     <div class="flex flex-wrap gap-3 text-[11px] text-gray-600 dark:text-gray-300">
                         <span class="inline-flex items-center px-2.5 py-1 rounded-full bg-primary-50 dark:bg-secondary-800 text-primary-700 dark:text-primary-200 border border-primary-100 dark:border-secondary-700">
                             <i class="fas fa-shield-check ml-1 text-[10px]"></i>
-                            نظام موحّد لطلبات التنفيذ
+                            نظام موحد لطلبات التنفيذ
                         </span>
                         <span class="inline-flex items-center px-2.5 py-1 rounded-full bg-primary-50 dark:bg-secondary-800 text-primary-700 dark:text-primary-200 border border-primary-100 dark:border-secondary-700">
                             <i class="fas fa-language ml-1 text-[10px]"></i>
@@ -72,31 +72,6 @@
                             <div class="text-gray-700 dark:text-gray-200 line-clamp-2">{{ $t->title ?? ('طلب #' . $highlightRequest->id) }}</div>
                         </div>
                     @endif
-                </div>
-            </div>
-
-            <div id="new-request" class="glass card-shadow rounded-2xl p-5 md:p-7 mb-10 border border-white/70 dark:border-secondary-800">
-                <h3 id="execution-new-title" class="text-lg md:text-xl font-semibold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
-                    <i class="fas fa-plus-circle text-primary-600"></i>
-                    أضف مشروعك
-                </h3>
-                <p id="execution-new-desc" class="text-xs text-gray-500 dark:text-gray-300 mb-4">هذه الواجهة للعرض العام فقط. إنشاء المشاريع الفعلية يتم من خلال لوحة المنشأة.</p>
-                <div class="bg-gray-50 dark:bg-secondary-800/60 rounded-xl p-4 text-xs text-gray-600 dark:text-gray-200 border border-dashed border-gray-200 dark:border-secondary-800">
-                    <p class="mb-2 flex items-center gap-2">
-                        <i class="fas fa-circle-info text-primary-600"></i>
-                        لإنشاء طلب تنفيذ حقيقي وإدارته بالكامل:
-                    </p>
-                    <ul class="space-y-1 mr-5 list-disc">
-                        <li>قم بتسجيل الدخول أو إنشاء حساب.</li>
-                        <li>أنشئ منشأتك ثم ادخل إلى لوحة المنشأة.</li>
-                        <li>اذهب إلى قسم "طلبات التنفيذ" واستخدم مساحة العمل الكاملة لإنشاء الطلب ومتابعة العروض.</li>
-                    </ul>
-                    <div class="mt-3 flex flex-wrap gap-2">
-                        <a id="execution-cta" href="{{ route('login') }}" class="inline-flex items-center px-4 py-1.5 rounded-full bg-primary-900 text-white text-xs font-semibold hover:bg-primary-800">
-                            <i class="fas fa-arrow-left ml-1 text-[10px]"></i>
-                            سجّل للدخول وإضافة مشروع
-                        </a>
-                    </div>
                 </div>
             </div>
 
@@ -243,7 +218,7 @@
                             </div>
                         </div>
                     @empty
-                        <p class="text-xs text-gray-500">لم تُسجَّل مشاريع منتهية بعد.</p>
+                        <p class="text-xs text-gray-500">لم تسجل مشاريع منتهية بعد.</p>
                     @endforelse
                 </div>
             </div>
@@ -258,46 +233,31 @@
                 topTitle: 'منصة المشاريع',
                 topSubtitle: 'سوق المقاولات والمشاريع في المملكة',
                 heroTitle: 'مشاريع جاهزة للتنفيذ',
-                heroDesc: 'استعرض المشاريع المفتوحة، وقدّم عرضك كمقاول بناءً على النوع والميزانية والمدة.',
-                newTitle: 'اعرض مشروعك على المقاولين',
-                newDesc: 'هذه الواجهة للعرض العام فقط. إنشاء المشاريع الفعلية يتم من خلال لوحة المنشأة.',
-                cta: 'سجّل للدخول وإضافة مشروع'
+                heroDesc: 'استعرض المشاريع المفتوحة، وقدم عرضك كمقاول بناء على النوع والميزانية والمدة.'
             },
             owner_individual: {
                 topTitle: 'منصة المشاريع',
                 topSubtitle: 'اعرض مشروعك واستقبل عروض المقاولين',
                 heroTitle: 'اطرح مشروعك بثقة',
-                heroDesc: 'حدّد احتياجك وميزانيتك وموعدك، ثم استقبل عروضاً من مقاولين مناسبين.',
-                newTitle: 'أضف مشروعك',
-                newDesc: 'هذه الواجهة للعرض العام فقط. إنشاء المشاريع الفعلية يتم من خلال لوحة المنشأة.',
-                cta: 'سجّل للدخول وإضافة مشروع'
+                heroDesc: 'حدد احتياجك وميزانيتك وموعدك، ثم استقبل عروضا من مقاولين مناسبين.'
             },
             owner_company: {
                 topTitle: 'منصة المشاريع',
                 topSubtitle: 'منصة موحدة لطرح مشاريع الشركات واستقبال العروض',
                 heroTitle: 'اطرح مشاريع شركتك',
-                heroDesc: 'اعرض نطاق العمل والمتطلبات والميزانية، واحصل على عروض تنفيذ قابلة للمقارنة.',
-                newTitle: 'أضف مشروع شركتك',
-                newDesc: 'هذه الواجهة للعرض العام فقط. إنشاء المشاريع الفعلية يتم من خلال لوحة المنشأة.',
-                cta: 'سجّل للدخول وإضافة مشروع'
+                heroDesc: 'اعرض نطاق العمل والمتطلبات والميزانية، واحصل على عروض تنفيذ قابلة للمقارنة.'
             },
             owner_government: {
                 topTitle: 'منصة المشاريع',
                 topSubtitle: 'مساحة لعرض المشاريع واستقبال عروض التنفيذ',
                 heroTitle: 'اطرح مشاريعك واستقبل عروضاً مؤهلة',
-                heroDesc: 'اعرض تفاصيل المشروع والمتطلبات، ثم قارن العروض وفق الميزانية والمدة.',
-                newTitle: 'أضف مشروعك',
-                newDesc: 'هذه الواجهة للعرض العام فقط. إنشاء المشاريع الفعلية يتم من خلال لوحة المنشأة.',
-                cta: 'سجّل للدخول وإضافة مشروع'
+                heroDesc: 'اعرض تفاصيل المشروع والمتطلبات، ثم قارن العروض وفق الميزانية والمدة.'
             },
             interested: {
                 topTitle: 'منصة المشاريع',
                 topSubtitle: 'استكشف المشاريع واتجاهات سوق المقاولات',
                 heroTitle: 'استكشف المشاريع المتاحة',
-                heroDesc: 'تصفّح المشاريع المفتوحة وتعرّف على الأنواع والميزانيات والجدول الزمني.',
-                newTitle: 'ابدأ من لوحة المنشأة',
-                newDesc: 'هذه الواجهة للعرض العام فقط. إنشاء المشاريع الفعلية يتم من خلال لوحة المنشأة.',
-                cta: 'تسجيل الدخول للبدء'
+                heroDesc: 'تصفح المشاريع المفتوحة وتعرف على الأنواع والميزانيات والجدول الزمني.'
             }
         };
 
@@ -315,9 +275,6 @@
             setText('execution-top-subtitle', data.topSubtitle);
             setText('execution-hero-title', data.heroTitle);
             setText('execution-hero-desc', data.heroDesc);
-            setText('execution-new-title', data.newTitle);
-            setText('execution-new-desc', data.newDesc);
-            setText('execution-cta', data.cta);
         }
 
         const initial = document.documentElement.dataset.browseAs || (document.body ? document.body.dataset.browseAs : null) || 'contractor';

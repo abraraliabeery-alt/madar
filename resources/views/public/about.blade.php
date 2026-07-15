@@ -29,11 +29,11 @@
                 </p>
                 <div class="grid grid-cols-2 gap-6 mt-8">
                     <div class="text-center">
-                        <div class="text-3xl font-bold text-primary-600 mb-2">1000+</div>
+                        <div class="text-3xl font-bold text-primary-600 mb-2">—</div>
                         <div class="text-gray-600">{{ __('general.about.properties_available') }}</div>
                     </div>
                     <div class="text-center">
-                        <div class="text-3xl font-bold text-primary-600 mb-2">500+</div>
+                        <div class="text-3xl font-bold text-primary-600 mb-2">—</div>
                         <div class="text-gray-600">{{ __('general.about.satisfied_clients') }}</div>
                     </div>
                 </div>
@@ -106,47 +106,6 @@
                     <h3 class="text-xl font-semibold text-gray-600 mb-3">{{ __('general.about.innovation') }}</h3>
                     <p class="text-gray-600">
                         {{ __('general.about.innovation_desc') }}
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Team Section -->
-    <div class="bg-white py-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-gray-900 mb-4">{{ __('general.about.team') }}</h2>
-                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                    {{ __('general.about.team_subtitle') }}
-                </p>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="text-center">
-                    <img src="https://ui-avatars.com/api/?name=أحمد+محمد&size=120&background=667eea&color=fff"
-                         alt="أحمد محمد" class="w-32 h-32 rounded-full mx-auto mb-4">
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2">أحمد محمد</h3>
-                    <p class="text-primary-600 mb-3">{{ __('general.about.ceo') }}</p>
-                    <p class="text-gray-600 text-sm">
-                        {{ __('general.about.ceo_desc') }}
-                    </p>
-                </div>
-                <div class="text-center">
-                    <img src="https://ui-avatars.com/api/?name=فاطمة+علي&size=120&background=667eea&color=fff"
-                         alt="فاطمة علي" class="w-32 h-32 rounded-full mx-auto mb-4">
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2">فاطمة علي</h3>
-                    <p class="text-primary-600 mb-3">{{ __('general.about.dev_manager') }}</p>
-                    <p class="text-gray-600 text-sm">
-                        {{ __('general.about.dev_manager_desc') }}
-                    </p>
-                </div>
-                <div class="text-center">
-                    <img src="https://ui-avatars.com/api/?name=محمد+عبدالله&size=120&background=667eea&color=fff"
-                         alt="محمد عبدالله" class="w-32 h-32 rounded-full mx-auto mb-4">
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2">محمد عبدالله</h3>
-                    <p class="text-primary-600 mb-3">{{ __('general.about.sales_manager') }}</p>
-                    <p class="text-gray-600 text-sm">
-                        {{ __('general.about.sales_manager_desc') }}
                     </p>
                 </div>
             </div>

@@ -15,10 +15,10 @@
                     <label class="block text-sm font-medium text-gray-700 mb-3">{{ __('public.search.search_type') }}</label>
                     <div class="flex space-x-4">
                         <label class="flex items-center">
-                            <input type="radio" name="search_type" value="products" 
-                                   {{ request('search_type', 'products') == 'products' ? 'checked' : '' }}
+                            <input type="radio" name="search_type" value="projects" 
+                                   {{ request('search_type', 'projects') == 'projects' ? 'checked' : '' }}
                                    onchange="updateMapForm()" class="mr-2">
-                            <span class="text-sm text-gray-700">{{ __('public.navigation.products') }}</span>
+                            <span class="text-sm text-gray-700">المشاريع</span>
                         </label>
                         <label class="flex items-center">
                             <input type="radio" name="search_type" value="facilities" 
@@ -30,7 +30,7 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                    <div>
+                    <div id="categoryFilterBlock">
                         <label for="category_id" class="block text-sm font-medium text-gray-700 mb-2">{{ __('public.common.category') }}</label>
                         <select class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
                                 id="category_id" name="category_id" onchange="filterMap()">
@@ -46,12 +46,12 @@
                     <div id="priceFilters" style="display: block;">
                         <label for="min_price" class="block text-sm font-medium text-gray-700 mb-2">{{ __('public.search.min_price') }}</label>
                         <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
-                               id="min_price" name="min_price" value="{{ request('min_price') }}" placeholder="{{ __('public.search.minimum_price') }}" onchange="filterMap()">
+                               id="min_price" name="min_budget" value="{{ request('min_budget') }}" placeholder="{{ __('public.search.minimum_price') }}" onchange="filterMap()">
                     </div>
                     <div id="maxPriceFilter" style="display: block;">
                         <label for="max_price" class="block text-sm font-medium text-gray-700 mb-2">{{ __('public.search.max_price') }}</label>
                         <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
-                               id="max_price" name="max_price" value="{{ request('max_price') }}" placeholder="{{ __('public.search.maximum_price') }}" onchange="filterMap()">
+                               id="max_price" name="max_budget" value="{{ request('max_budget') }}" placeholder="{{ __('public.search.maximum_price') }}" onchange="filterMap()">
                     </div>
                     <div class="flex items-end">
                         <button type="button" onclick="filterMap()" class="w-full px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
@@ -95,7 +95,7 @@
             <a href="{{ \App\Helpers\SearchHelper::buildSearchRoute('public.search.advanced') }}" class="inline-flex items-center px-6 py-3 bg-gray-200 text-gray-800 font-medium rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors">
                 <i class="fas fa-cog mr-2"></i> {{ __('public.search.advanced_search') }}
             </a>
-            <a href="{{ \App\Helpers\SearchHelper::buildSearchRoute('public.search.products') }}" class="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+            <a href="{{ route('public.execution.marketplace') }}" class="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
                 <i class="fas fa-list mr-2"></i> {{ __('public.map_search.list_view') }}
             </a>
         </div>
@@ -212,18 +212,16 @@ function formatPrice(price) {
 function updateMapForm() {
     const form = document.getElementById('mapSearchForm');
     const searchType = document.querySelector('input[name="search_type"]:checked').value;
+    const categoryFilterBlock = document.getElementById('categoryFilterBlock');
     const priceFilters = document.getElementById('priceFilters');
     const maxPriceFilter = document.getElementById('maxPriceFilter');
     
-    if (searchType === 'products') {
-        form.action = '{{ route("public.search.map") }}';
-        priceFilters.style.display = 'block';
-        maxPriceFilter.style.display = 'block';
-    } else {
-        form.action = '{{ route("public.search.map") }}';
-        priceFilters.style.display = 'none';
-        maxPriceFilter.style.display = 'none';
-    }
+    form.action = '{{ route("public.search.map") }}';
+
+    const showBudget = searchType === 'projects';
+    if (priceFilters) priceFilters.style.display = showBudget ? 'block' : 'none';
+    if (maxPriceFilter) maxPriceFilter.style.display = showBudget ? 'block' : 'none';
+    if (categoryFilterBlock) categoryFilterBlock.style.display = searchType === 'facilities' ? 'block' : 'none';
 }
 
 // Filter map based on form inputs
