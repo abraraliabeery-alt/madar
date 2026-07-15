@@ -186,9 +186,6 @@
                 <a href="{{ route('public.execution.marketplace') }}" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
                     {{ __('public.navigation.products') }}
                 </a>
-                <a href="{{ route('public.products.index') }}" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                    {{ __('public.navigation.products') }}
-                </a>
                 @if(\App\Helpers\FacilityHelper::isMultiMode())
                     <a href="{{ route('public.facilities.index') }}" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
                         {{ __('layout.navigation.facilities') }}
@@ -452,9 +449,6 @@
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white dark:bg-black border-t dark:border-secondary-800">
                 <a href="{{ route('public.home') }}" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
                     {{ __('layout.navigation.home') }}
-                </a>
-                <a href="{{ route('public.products.index') }}" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
-                    {{ __('layout.navigation.properties') }}
                 </a>
                 @if(\App\Helpers\FacilityHelper::isMultiMode())
                     <a href="{{ route('public.facilities.index') }}" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">

@@ -5,7 +5,7 @@
 
 <div class="relative" x-data="{ open: false }">
     <button @click="open = !open" @click.outside="open = false" 
-            class="flex items-center {{ app()->getLocale() == 'ar' ? 'space-x-2 space-x-reverse' : 'space-x-2' }} text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+            class="flex items-center {{ app()->getLocale() == 'ar' ? 'space-x-2 space-x-reverse' : 'space-x-2' }} text-gray-700 hover:text-primary-600 dark:text-gray-200 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">
         <i class="fas fa-globe text-lg"></i>
         <span class="font-semibold">{{ strtoupper($currentLocale) }}</span>
         <i class="fas fa-chevron-down text-xs"></i>
@@ -19,10 +19,10 @@
          x-transition:leave="transition ease-in duration-75"
          x-transition:leave-start="transform opacity-100 scale-100"
          x-transition:leave-end="transform opacity-0 scale-95"
-         class="absolute {{ app()->getLocale() == 'ar' ? 'left-0' : 'right-0' }} mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
+         class="absolute {{ app()->getLocale() == 'ar' ? 'left-0' : 'right-0' }} mt-2 w-48 bg-white dark:bg-black rounded-md shadow-lg py-1 z-50 border border-gray-200 dark:border-secondary-800">
         
         <a href="{{ route('public.language.change', 'ar') }}" 
-           class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ $currentLocale === 'ar' ? 'bg-primary-50 text-primary-700' : '' }}">
+           class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-secondary-900 {{ $currentLocale === 'ar' ? 'bg-primary-50 text-primary-700 dark:bg-secondary-900 dark:text-primary-300' : '' }}">
             <div class="flex items-center">
                 <span class="{{ app()->getLocale() == 'ar' ? 'ml-3' : 'mr-3' }} leading-none flex-shrink-0" aria-hidden="true">
                     <svg width="18" height="12" viewBox="0 0 18 12" xmlns="http://www.w3.org/2000/svg" class="block rounded-sm">
@@ -39,7 +39,7 @@
         </a>
         
         <a href="{{ route('public.language.change', 'en') }}" 
-           class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ $currentLocale === 'en' ? 'bg-primary-50 text-primary-700' : '' }}">
+           class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-secondary-900 {{ $currentLocale === 'en' ? 'bg-primary-50 text-primary-700 dark:bg-secondary-900 dark:text-primary-300' : '' }}">
             <div class="flex items-center">
                 <span class="{{ app()->getLocale() == 'ar' ? 'ml-3' : 'mr-3' }} leading-none flex-shrink-0" aria-hidden="true">
                     <svg width="18" height="12" viewBox="0 0 18 12" xmlns="http://www.w3.org/2000/svg" class="block rounded-sm">
@@ -67,7 +67,7 @@
         </a>
 
         <a href="{{ route('public.language.change', 'ur') }}" 
-           class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ $currentLocale === 'ur' ? 'bg-primary-50 text-primary-700' : '' }}">
+           class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-secondary-900 {{ $currentLocale === 'ur' ? 'bg-primary-50 text-primary-700 dark:bg-secondary-900 dark:text-primary-300' : '' }}">
             <div class="flex items-center">
                 <span class="{{ app()->getLocale() == 'ar' ? 'ml-3' : 'mr-3' }} leading-none flex-shrink-0" aria-hidden="true">
                     <svg width="18" height="12" viewBox="0 0 18 12" xmlns="http://www.w3.org/2000/svg" class="block rounded-sm">
@@ -85,7 +85,7 @@
         </a>
 
         <a href="{{ route('public.language.change', 'zh') }}" 
-           class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 {{ $currentLocale === 'zh' ? 'bg-primary-50 text-primary-700' : '' }}">
+           class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-secondary-900 {{ $currentLocale === 'zh' ? 'bg-primary-50 text-primary-700 dark:bg-secondary-900 dark:text-primary-300' : '' }}">
             <div class="flex items-center">
                 <span class="{{ app()->getLocale() == 'ar' ? 'ml-3' : 'mr-3' }} leading-none flex-shrink-0" aria-hidden="true">
                     <svg width="18" height="12" viewBox="0 0 18 12" xmlns="http://www.w3.org/2000/svg" class="block rounded-sm">

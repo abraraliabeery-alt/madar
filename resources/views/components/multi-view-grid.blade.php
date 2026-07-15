@@ -234,7 +234,7 @@
 
                          <div class="flex items-center justify-between">
                              <a href="{{ route('public.facility.site.home', $item->slug ?? $item->id) }}"
-                                class="btn-primary text-white px-3 py-1 rounded text-xs font-medium">
+                               class="btn btn-primary text-white px-3 py-1 rounded text-xs font-medium">
                                  {{ __('facilities.facility_card.view_facility') }}
                              </a>
                              <a href="{{ route('public.products.by-facility', $item) }}"
@@ -364,7 +364,7 @@
 
                                  <div class="flex items-center justify-between">
                                      <a href="{{ route('public.facility.site.home', $item->slug ?? $item->id) }}"
-                                        class="btn-primary text-white px-4 py-2 rounded-lg text-sm font-medium">
+                                       class="btn btn-primary text-white px-4 py-2 rounded-lg text-sm font-medium">
                                          {{ __('facilities.facility_card.view_facility') }}
                                      </a>
                                      <a href="{{ route('public.products.by-facility', $item) }}"
@@ -474,7 +474,7 @@
 
                              <div class="flex items-center justify-between">
                                  <a href="{{ route('public.facility.site.home', $item->slug ?? $item->id) }}"
-                                    class="btn-primary text-white px-4 py-2 rounded-lg text-sm font-medium">
+                                   class="btn btn-primary text-white px-4 py-2 rounded-lg text-sm font-medium">
                                      {{ __('facilities.facility_card.view_facility') }}
                                  </a>
                                  <a href="{{ route('public.products.by-facility', $item) }}"
