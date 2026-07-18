@@ -112,21 +112,23 @@
                         <i class="fas fa-list text-primary-600"></i>
                         الطلبات المفتوحة للعروض
                     </h3>
-                    <form method="GET" action="{{ route('public.execution.marketplace') }}" class="w-full md:w-auto flex flex-wrap items-center gap-2 text-[11px] bg-white/70 dark:bg-secondary-900/60 border border-gray-200 dark:border-secondary-800 rounded-full px-2 py-1.5">
-                        <input type="text" name="q" value="{{ request('q') }}" placeholder="عنوان الطلب" class="flex-1 min-w-[120px] border-0 focus:ring-0 focus:outline-none bg-transparent px-2" />
-                        <input type="text" name="type" value="{{ request('type') }}" placeholder="نوع (مقاولات، صيانة...)" class="w-32 border-0 focus:ring-0 focus:outline-none bg-transparent px-2 border-r border-gray-200 dark:border-secondary-800" />
-                        <input type="number" name="min_budget" value="{{ request('min_budget') }}" placeholder="ميزانية من" class="w-24 border-0 focus:ring-0 focus:outline-none bg-transparent px-2 border-r border-gray-200 dark:border-secondary-800" />
-                        <input type="number" name="max_budget" value="{{ request('max_budget') }}" placeholder="ميزانية إلى" class="w-24 border-0 focus:ring-0 focus:outline-none bg-transparent px-2 border-r border-gray-200 dark:border-secondary-800" />
-                        <select name="status" class="border-0 bg-transparent focus:ring-0 focus:outline-none text-gray-600 dark:text-gray-200 px-1 border-r border-gray-200 dark:border-secondary-800">
-                            <option value="open" {{ request('status','open') === 'open' ? 'selected' : '' }}>مفتوحة</option>
-                            <option value="closed" {{ request('status') === 'closed' ? 'selected' : '' }}>منتهية</option>
-                            <option value="all" {{ request('status') === 'all' ? 'selected' : '' }}>الكل</option>
-                        </select>
-                        <button type="submit" class="inline-flex items-center px-3 py-1.5 rounded-full bg-primary-600 text-white font-semibold hover:bg-primary-700">
-                            <i class="fas fa-filter ml-1 text-[10px]"></i>
-                            تصفية
-                        </button>
-                    </form>
+                    <div id="execution-filters" class="w-full md:w-auto hidden md:block">
+                        <form method="GET" action="{{ route('public.execution.marketplace') }}" class="w-full md:w-auto flex flex-wrap items-center gap-2 text-[11px] bg-white/70 dark:bg-secondary-900/60 border border-gray-200 dark:border-secondary-800 rounded-full px-2 py-1.5">
+                            <input type="text" name="q" value="{{ request('q') }}" placeholder="عنوان الطلب" class="flex-1 min-w-[120px] border-0 focus:ring-0 focus:outline-none bg-transparent px-2" />
+                            <input type="text" name="type" value="{{ request('type') }}" placeholder="نوع (مقاولات، صيانة...)" class="w-32 border-0 focus:ring-0 focus:outline-none bg-transparent px-2 border-r border-gray-200 dark:border-secondary-800" />
+                            <input type="number" name="min_budget" value="{{ request('min_budget') }}" placeholder="ميزانية من" class="w-24 border-0 focus:ring-0 focus:outline-none bg-transparent px-2 border-r border-gray-200 dark:border-secondary-800" />
+                            <input type="number" name="max_budget" value="{{ request('max_budget') }}" placeholder="ميزانية إلى" class="w-24 border-0 focus:ring-0 focus:outline-none bg-transparent px-2 border-r border-gray-200 dark:border-secondary-800" />
+                            <select name="status" class="border-0 bg-transparent focus:ring-0 focus:outline-none text-gray-600 dark:text-gray-200 px-1 border-r border-gray-200 dark:border-secondary-800">
+                                <option value="open" {{ request('status','open') === 'open' ? 'selected' : '' }}>مفتوحة</option>
+                                <option value="closed" {{ request('status') === 'closed' ? 'selected' : '' }}>منتهية</option>
+                                <option value="all" {{ request('status') === 'all' ? 'selected' : '' }}>الكل</option>
+                            </select>
+                            <button type="submit" class="inline-flex items-center px-3 py-1.5 rounded-full bg-primary-600 text-white font-semibold hover:bg-primary-700">
+                                <i class="fas fa-filter ml-1 text-[10px]"></i>
+                                تصفية
+                            </button>
+                        </form>
+                    </div>
                 </div>
 
                 <div class="flex justify-between items-center mb-6">
@@ -222,12 +224,53 @@
                     @endforelse
                 </div>
             </div>
+
+            <div class="fixed bottom-4 left-4 right-4 z-40 md:hidden">
+                <div class="glass card-shadow border border-white/60 dark:border-secondary-800 rounded-2xl px-4 py-3">
+                    <div class="flex items-center justify-between gap-2">
+                        <button type="button" id="execution-toggle-filters" class="inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700">
+                            <i class="fas fa-sliders-h text-[12px]"></i>
+                            <span>فلترة</span>
+                        </button>
+
+                        <div class="text-xs text-gray-600 dark:text-gray-200">
+                            {{ method_exists($openRequests, 'total') ? ($openRequests->total() ?? 0) : ($openRequests->count() ?? 0) }} نتيجة
+                        </div>
+
+                        <button type="button" id="execution-scroll-top" class="inline-flex items-center justify-center px-3 py-2 rounded-xl border border-gray-200 dark:border-secondary-700 text-gray-700 dark:text-gray-200 bg-white/60 dark:bg-secondary-900/40">
+                            <i class="fas fa-arrow-up text-[12px]"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </section>
     </div>
 
 @push('scripts')
 <script>
     (function () {
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggleBtn = document.getElementById('execution-toggle-filters');
+            const filtersEl = document.getElementById('execution-filters');
+            const scrollTopBtn = document.getElementById('execution-scroll-top');
+
+            if (toggleBtn && filtersEl) {
+                toggleBtn.addEventListener('click', function () {
+                    filtersEl.classList.toggle('hidden');
+                    const form = filtersEl.querySelector('form');
+                    if (form && !filtersEl.classList.contains('hidden')) {
+                        form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+            }
+
+            if (scrollTopBtn) {
+                scrollTopBtn.addEventListener('click', function () {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            }
+        });
+
         const copy = {
             contractor: {
                 topTitle: 'منصة المشاريع',
