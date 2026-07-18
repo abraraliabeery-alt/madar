@@ -1,9 +1,17 @@
 @extends('layouts.app')
 
+@section('title', 'منصة مدار التفاوض')
+
 @section('meta')
 <meta name="language" content="{{ app()->getLocale() }}">
 <meta name="language-alternate" content="{{ app()->getLocale() === 'ar' ? 'en' : 'ar' }}">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta property="og:title" content="منصة مدار التفاوض">
+<meta property="og:site_name" content="منصة مدار التفاوض">
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ url()->current() }}">
+<meta property="twitter:title" content="منصة مدار التفاوض">
 @endsection
 
 @section('content')
