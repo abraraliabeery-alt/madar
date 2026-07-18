@@ -18,7 +18,7 @@
 <div class="max-w-7xl mx-auto px-4 py-8">
     <!-- Hero Section -->
     <div class="text-center py-16 mb-16 hero">
-        <h1 class="text-4xl font-bold text-red-600 mb-4 hero-title">{{ __('general.home.title') }}</h1>
+        <h1 class="text-4xl font-bold text-primary-600 mb-4 hero-title">{{ __('general.home.title') }}</h1>
         <p class="text-lg text-gray-600 mb-8">{{ __('general.home.subtitle') }}</p>
         
         <!-- Search Form -->
