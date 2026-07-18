@@ -648,22 +648,48 @@
 <!-- Footer (كما هو) -->
 <footer class="bg-gray-900 text-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <!-- محتوى الفوتر كما هو في كودك الأصلي -->
-        @php /* إبقيه كما أرسلته لتقليل طول الرد */ @endphp
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-10">
+            <div>
+                <a href="{{ route('public.home') }}" class="inline-flex items-center gap-3">
+                    <img src="{{ asset('images/madar-negotiation-icon.svg') }}" alt="مدار التفاوض" class="w-12 h-12">
+                    <div class="text-base font-semibold">منصة مدار التفاوض</div>
+                </a>
+                <p class="mt-4 text-sm text-gray-300 leading-6">{{ __('layout.footer.description') }}</p>
+            </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+            <div>
+                <div class="text-sm font-semibold text-white mb-3">{{ __('layout.footer.our_services') }}</div>
+                <div class="space-y-2">
+                    <div class="text-sm text-gray-300">{{ __('layout.footer.property_sales') }}</div>
+                    <div class="text-sm text-gray-300">{{ __('layout.footer.property_rental') }}</div>
+                    <div class="text-sm text-gray-300">{{ __('layout.footer.property_management') }}</div>
+                    <div class="text-sm text-gray-300">{{ __('layout.footer.real_estate_consulting') }}</div>
+                </div>
+            </div>
+
             <div>
                 <div class="text-sm font-semibold text-white mb-3">{{ __('layout.footer.quick_links') }}</div>
                 <div class="space-y-2">
-                    <a href="{{ route('public.contact') }}" class="block text-sm text-gray-300 hover:text-white">
-                        {{ __('layout.navigation.contact_us') }}
-                    </a>
+                    <a href="{{ route('public.home') }}" class="block text-sm text-gray-300 hover:text-white">{{ __('layout.navigation.home') }}</a>
+                    <a href="{{ route('public.execution.marketplace') }}" class="block text-sm text-gray-300 hover:text-white">{{ __('layout.navigation.properties') }}</a>
+                    <a href="{{ route('public.facilities.index') }}" class="block text-sm text-gray-300 hover:text-white">{{ __('layout.navigation.facilities') }}</a>
+                    <a href="{{ route('public.suppliers') }}" class="block text-sm text-gray-300 hover:text-white">{{ __('layout.navigation.suppliers') }}</a>
+                    <a href="{{ route('public.factories') }}" class="block text-sm text-gray-300 hover:text-white">{{ __('layout.navigation.factories') }}</a>
+                </div>
+            </div>
+
+            <div>
+                <div class="text-sm font-semibold text-white mb-3">{{ __('layout.navigation.contact_us') }}</div>
+                <div class="space-y-2">
+                    <a href="{{ route('public.contact') }}" class="block text-sm text-gray-300 hover:text-white">{{ __('layout.footer.contact_us') }}</a>
+                    <a href="{{ route('public.terms') }}" class="block text-sm text-gray-300 hover:text-white">Terms</a>
+                    <a href="{{ route('public.privacy') }}" class="block text-sm text-gray-300 hover:text-white">Privacy</a>
                 </div>
             </div>
         </div>
 
         <div class="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-400">
-            <p>&copy; {{ date('Y') }}. {{ __('layout.footer.all_rights_reserved') }}</p>
+            <p>&copy; {{ date('Y') }} منصة مدار التفاوض. {{ __('layout.footer.all_rights_reserved') }}</p>
         </div>
     </div>
 </footer>
