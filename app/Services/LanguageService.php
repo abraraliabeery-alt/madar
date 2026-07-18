@@ -42,7 +42,7 @@ class LanguageService
     /**
      * Default language
      */
-    protected $defaultLanguage = 'en';
+    protected $defaultLanguage = 'ar';
 
     /**
      * Get available languages
