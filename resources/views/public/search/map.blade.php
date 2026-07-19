@@ -63,7 +63,10 @@
         </div>
 
         <!-- Map Container -->
-        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div id="map-wrapper" class="bg-white rounded-lg shadow-md overflow-hidden relative">
+            <button type="button" id="map-fullscreen-btn" class="absolute top-3 right-3 z-[1000] inline-flex items-center justify-center w-10 h-10 rounded-md bg-white/90 border border-gray-200 text-gray-800 hover:bg-white shadow">
+                <i class="fas fa-expand"></i>
+            </button>
             <div id="map" class="w-full h-96"></div>
         </div>
 
@@ -111,6 +114,7 @@
 const mapData = @json($mapData);
 let map;
 let markers = [];
+let isMapFullscreen = false;
 
 // Initialize map
 function initMap() {
@@ -126,6 +130,22 @@ function initMap() {
     
     // Add markers
     addMarkersToMap();
+}
+
+function setMapFullscreen(next) {
+    isMapFullscreen = !!next;
+    document.body.classList.toggle('map-fullscreen', isMapFullscreen);
+
+    const btn = document.getElementById('map-fullscreen-btn');
+    if (btn) {
+        btn.innerHTML = isMapFullscreen ? '<i class="fas fa-compress"></i>' : '<i class="fas fa-expand"></i>';
+    }
+
+    if (map) {
+        setTimeout(() => {
+            map.invalidateSize();
+        }, 150);
+    }
 }
 
 // Add markers to map
@@ -238,6 +258,19 @@ function filterMap() {
 document.addEventListener('DOMContentLoaded', function() {
     updateMapForm();
     initMap();
+
+    const btn = document.getElementById('map-fullscreen-btn');
+    if (btn) {
+        btn.addEventListener('click', function () {
+            setMapFullscreen(!isMapFullscreen);
+        });
+    }
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && isMapFullscreen) {
+            setMapFullscreen(false);
+        }
+    });
 });
 
 // Handle map resize
@@ -262,6 +295,21 @@ window.addEventListener('resize', function() {
 
 .leaflet-popup-content-wrapper {
     border-radius: 8px;
+}
+
+.map-fullscreen {
+    overflow: hidden;
+}
+
+.map-fullscreen #map-wrapper {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    border-radius: 0;
+}
+
+.map-fullscreen #map {
+    height: 100vh;
 }
 </style>
 @endsection
