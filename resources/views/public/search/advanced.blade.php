@@ -54,60 +54,6 @@
                     </div>
                 </div>
 
-                <!-- Price Range -->
-                <div class="mb-8">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-4">{{ __('public.advanced_search.price_range') }}</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label for="min_price" class="block text-sm font-medium text-gray-700 mb-2">{{ __('public.search.minimum_price') }}</label>
-                            <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
-                                   id="min_price" name="min_price" value="{{ request('min_price') }}" placeholder="{{ __('public.search.minimum_price') }}">
-                        </div>
-                        <div>
-                            <label for="max_price" class="block text-sm font-medium text-gray-700 mb-2">{{ __('public.search.maximum_price') }}</label>
-                            <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
-                                   id="max_price" name="max_price" value="{{ request('max_price') }}" placeholder="{{ __('public.search.maximum_price') }}">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Property Details (Only for Products) -->
-                <div class="mb-8" id="propertyDetails" style="display: {{ request('search_type', 'products') == 'products' ? 'block' : 'none' }};">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-4">{{ __('public.advanced_search.property_details') }}</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <div>
-                            <label for="bedrooms" class="block text-sm font-medium text-gray-700 mb-2">{{ __('public.advanced_search.bedrooms') }}</label>
-                            <select class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
-                                    id="bedrooms" name="bedrooms">
-                                <option value="">{{ __('public.advanced_search.any') }}</option>
-                                @for($i = 1; $i <= 10; $i++)
-                                    <option value="{{ $i }}" {{ request('bedrooms') == $i ? 'selected' : '' }}>{{ $i }}</option>
-                                @endfor
-                            </select>
-                        </div>
-                        <div>
-                            <label for="bathrooms" class="block text-sm font-medium text-gray-700 mb-2">{{ __('public.advanced_search.bathrooms') }}</label>
-                            <select class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
-                                    id="bathrooms" name="bathrooms">
-                                <option value="">{{ __('public.advanced_search.any') }}</option>
-                                @for($i = 1; $i <= 10; $i++)
-                                    <option value="{{ $i }}" {{ request('bathrooms') == $i ? 'selected' : '' }}>{{ $i }}</option>
-                                @endfor
-                            </select>
-                        </div>
-                        <div>
-                            <label for="min_area" class="block text-sm font-medium text-gray-700 mb-2">{{ __('public.advanced_search.min_area') }}</label>
-                            <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
-                                   id="min_area" name="min_area" value="{{ request('min_area') }}" placeholder="{{ __('public.advanced_search.min_area_placeholder') }}">
-                        </div>
-                        <div>
-                            <label for="max_area" class="block text-sm font-medium text-gray-700 mb-2">{{ __('public.advanced_search.max_area') }}</label>
-                            <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
-                                   id="max_area" name="max_area" value="{{ request('max_area') }}" placeholder="{{ __('public.advanced_search.max_area_placeholder') }}">
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Property Type (Only for Products) -->
                 <div class="mb-8" id="propertyType" style="display: {{ request('search_type', 'products') == 'products' ? 'block' : 'none' }};">
                     <h3 class="text-xl font-semibold text-gray-800 mb-4">{{ __('public.advanced_search.property_type') }}</h3>
@@ -196,8 +142,6 @@
                                 <option value="latest" {{ request('sort') == 'latest' ? 'selected' : '' }}>{{ __('public.advanced_search.latest') }}</option>
                                 <option value="price_low" {{ request('sort') == 'price_low' ? 'selected' : '' }}>{{ __('public.advanced_search.price_low_high') }}</option>
                                 <option value="price_high" {{ request('sort') == 'price_high' ? 'selected' : '' }}>{{ __('public.advanced_search.price_high_low') }}</option>
-                                <option value="area_low" {{ request('sort') == 'area_low' ? 'selected' : '' }}>{{ __('public.advanced_search.area_small_large') }}</option>
-                                <option value="area_high" {{ request('sort') == 'area_high' ? 'selected' : '' }}>{{ __('public.advanced_search.area_large_small') }}</option>
                                 <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>{{ __('public.advanced_search.oldest') }}</option>
                             </select>
                         </div>
