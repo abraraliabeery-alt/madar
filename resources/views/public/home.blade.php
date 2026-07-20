@@ -73,62 +73,22 @@
                                         @endforeach
                                     </select>
                                 </div>
-
-                                <div>
-                                    <label for="home_min_price" class="block text-sm font-medium text-gray-700 mb-2">{{ __('public.search.minimum_price') }}</label>
-                                    <input type="number" id="home_min_price" name="min_budget" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="{{ __('public.search.minimum_price') }}">
-                                </div>
-                                <div>
-                                    <label for="home_max_price" class="block text-sm font-medium text-gray-700 mb-2">{{ __('public.search.maximum_price') }}</label>
-                                    <input type="number" id="home_max_price" name="max_budget" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="{{ __('public.search.maximum_price') }}">
-                                </div>
                             </div>
 
-                            <div id="homePropertyDetails" class="mt-4">
-                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                                    <div>
-                                        <label for="home_bedrooms" class="block text-sm font-medium text-gray-700 mb-2">{{ __('public.advanced_search.bedrooms') }}</label>
-                                        <select id="home_bedrooms" name="bedrooms" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                                            <option value="">{{ __('public.advanced_search.any') }}</option>
-                                            @for($i = 1; $i <= 10; $i++)
-                                                <option value="{{ $i }}">{{ $i }}</option>
-                                            @endfor
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label for="home_bathrooms" class="block text-sm font-medium text-gray-700 mb-2">{{ __('public.advanced_search.bathrooms') }}</label>
-                                        <select id="home_bathrooms" name="bathrooms" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                                            <option value="">{{ __('public.advanced_search.any') }}</option>
-                                            @for($i = 1; $i <= 10; $i++)
-                                                <option value="{{ $i }}">{{ $i }}</option>
-                                            @endfor
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label for="home_min_area" class="block text-sm font-medium text-gray-700 mb-2">{{ __('public.advanced_search.min_area') }}</label>
-                                        <input type="number" id="home_min_area" name="min_area" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="{{ __('public.advanced_search.min_area_placeholder') }}">
-                                    </div>
-                                    <div>
-                                        <label for="home_max_area" class="block text-sm font-medium text-gray-700 mb-2">{{ __('public.advanced_search.max_area') }}</label>
-                                        <input type="number" id="home_max_area" name="max_area" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="{{ __('public.advanced_search.max_area_placeholder') }}">
-                                    </div>
-                                </div>
-
-                                <div class="mt-4">
-                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                        <label class="flex items-center gap-2 rtl:flex-row-reverse">
-                                            <input type="radio" name="property_type" value="sale" class="text-blue-600 focus:ring-blue-500">
-                                            <span class="text-sm font-medium text-gray-700">{{ __('public.advanced_search.for_sale') }}</span>
-                                        </label>
-                                        <label class="flex items-center gap-2 rtl:flex-row-reverse">
-                                            <input type="radio" name="property_type" value="rent" class="text-blue-600 focus:ring-blue-500">
-                                            <span class="text-sm font-medium text-gray-700">{{ __('public.advanced_search.for_rent') }}</span>
-                                        </label>
-                                        <label class="flex items-center gap-2 rtl:flex-row-reverse">
-                                            <input type="radio" name="property_type" value="" checked class="text-blue-600 focus:ring-blue-500">
-                                            <span class="text-sm font-medium text-gray-700">{{ __('public.advanced_search.both') }}</span>
-                                        </label>
-                                    </div>
+                            <div class="mt-4">
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <label class="flex items-center gap-2 rtl:flex-row-reverse">
+                                        <input type="radio" name="property_type" value="sale" class="text-blue-600 focus:ring-blue-500">
+                                        <span class="text-sm font-medium text-gray-700">{{ __('public.advanced_search.for_sale') }}</span>
+                                    </label>
+                                    <label class="flex items-center gap-2 rtl:flex-row-reverse">
+                                        <input type="radio" name="property_type" value="rent" class="text-blue-600 focus:ring-blue-500">
+                                        <span class="text-sm font-medium text-gray-700">{{ __('public.advanced_search.for_rent') }}</span>
+                                    </label>
+                                    <label class="flex items-center gap-2 rtl:flex-row-reverse">
+                                        <input type="radio" name="property_type" value="" checked class="text-blue-600 focus:ring-blue-500">
+                                        <span class="text-sm font-medium text-gray-700">{{ __('public.advanced_search.both') }}</span>
+                                    </label>
                                 </div>
                             </div>
 
@@ -169,14 +129,6 @@
                                             <option value="{{ $category->id }}">{{ $category->getTranslatedName() }}</option>
                                         @endforeach
                                     </select>
-                                </div>
-                                <div id="homeMapMinPrice">
-                                    <label for="home_map_min_price" class="block text-sm font-medium text-gray-700 mb-2">{{ __('public.search.minimum_price') }}</label>
-                                    <input type="number" id="home_map_min_price" name="min_budget" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="{{ __('public.search.minimum_price') }}">
-                                </div>
-                                <div id="homeMapMaxPrice">
-                                    <label for="home_map_max_price" class="block text-sm font-medium text-gray-700 mb-2">{{ __('public.search.maximum_price') }}</label>
-                                    <input type="number" id="home_map_max_price" name="max_budget" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="{{ __('public.search.maximum_price') }}">
                                 </div>
                             </div>
 
