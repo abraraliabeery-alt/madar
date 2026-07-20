@@ -38,5 +38,8 @@ return [
         'www.bayut.sa',
         'aqar.fm',
         'www.aqar.fm',
+        'sa.aqar.fm',
+        'dealapp.sa',
+        'www.dealapp.sa',
     ],
 ];

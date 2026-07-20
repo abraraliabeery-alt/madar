@@ -20,6 +20,7 @@ use App\Http\Controllers\Public\ErrorController;
 use App\Http\Controllers\Public\BookingController;
 use App\Http\Controllers\FacilitySite\SiteController;
 use App\Http\Controllers\Admin\AdminPlanLotController;
+use App\Http\Controllers\Public\AggregatedAdsController;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\File;
 
@@ -47,6 +48,8 @@ Route::group([], function () {
     Route::get('/search/advanced', [SearchController::class, 'advanced'])->name('search.advanced');
     Route::get('/search/map', [SearchController::class, 'map'])->name('search.map');
     Route::get('/search/quick', [SearchController::class, 'quickSearch'])->name('search.quick');
+
+    Route::get('/ads', [AggregatedAdsController::class, 'index'])->name('ads.index');
 
     Route::get('/plans/ajlan', [SearchController::class, 'ajlanPlan'])
         ->name('plans.ajlan');
