@@ -15,6 +15,7 @@ class AggregatedAdsController extends Controller
     public function index(Request $request)
     {
         $filters = [
+            'q' => trim((string) $request->query('q', '')),
             'city' => trim((string) $request->query('city', '')),
             'district' => trim((string) $request->query('district', '')),
             'property_type' => trim((string) $request->query('property_type', 'apartment')),
@@ -23,21 +24,16 @@ class AggregatedAdsController extends Controller
             'max_price' => $request->filled('max_price') ? (int) $request->query('max_price') : null,
         ];
 
-        $hasSearch = $filters['city'] !== '' || $filters['district'] !== '' || $request->hasAny(['property_type', 'purpose', 'min_price', 'max_price']);
-
-        $results = [];
-        $sources = [];
-
-        if ($hasSearch) {
-            [$results, $sources] = $this->adsService->search($filters);
-        } else {
-            $sources = $this->adsService->sources();
-        }
+        // Always run a "general" search on load.
+        // Provider(s) can apply their own fallback when city/district is empty.
+        [$results, $sources] = $this->adsService->search($filters);
+        $hasKeywordSearch = $this->adsService->hasKeywordSearch();
 
         return view('public.ads.index', [
             'filters' => $filters,
             'results' => $results,
             'sources' => $sources,
+            'hasKeywordSearch' => $hasKeywordSearch,
         ]);
     }
 }

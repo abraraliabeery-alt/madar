@@ -14,44 +14,9 @@
 
         <div class="bg-white dark:bg-secondary-900 rounded-2xl border border-gray-200 dark:border-secondary-800 shadow-sm p-5 mb-6">
             <form method="GET" action="{{ route('public.ads.index') }}" class="grid grid-cols-1 md:grid-cols-6 gap-4">
-                <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">المدينة</label>
-                    <input type="text" name="city" value="{{ $filters['city'] ?? '' }}" class="w-full px-3 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500" placeholder="مثال: الرياض">
-                </div>
-
-                <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">الحي</label>
-                    <input type="text" name="district" value="{{ $filters['district'] ?? '' }}" class="w-full px-3 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500" placeholder="مثال: الربوة">
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">نوع العقار</label>
-                    <select name="property_type" class="w-full px-3 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
-                        <option value="apartment" {{ ($filters['property_type'] ?? '') === 'apartment' ? 'selected' : '' }}>شقة</option>
-                        <option value="villa" {{ ($filters['property_type'] ?? '') === 'villa' ? 'selected' : '' }}>فيلا</option>
-                        <option value="land" {{ ($filters['property_type'] ?? '') === 'land' ? 'selected' : '' }}>أرض</option>
-                        <option value="building" {{ ($filters['property_type'] ?? '') === 'building' ? 'selected' : '' }}>عمارة</option>
-                        <option value="office" {{ ($filters['property_type'] ?? '') === 'office' ? 'selected' : '' }}>مكتب</option>
-                        <option value="shop" {{ ($filters['property_type'] ?? '') === 'shop' ? 'selected' : '' }}>محل</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">الهدف</label>
-                    <select name="purpose" class="w-full px-3 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
-                        <option value="rent" {{ ($filters['purpose'] ?? '') === 'rent' ? 'selected' : '' }}>إيجار</option>
-                        <option value="sale" {{ ($filters['purpose'] ?? '') === 'sale' ? 'selected' : '' }}>بيع</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">سعر من</label>
-                    <input type="number" name="min_price" value="{{ $filters['min_price'] ?? '' }}" class="w-full px-3 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500" placeholder="0">
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">سعر إلى</label>
-                    <input type="number" name="max_price" value="{{ $filters['max_price'] ?? '' }}" class="w-full px-3 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500" placeholder="0">
+                <div class="md:col-span-6">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">بحث عام</label>
+                    <input type="text" name="q" value="{{ $filters['q'] ?? '' }}" class="w-full px-3 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500" placeholder="اكتب أي شيء... مثال: شقة في الربوة أو فيلا للبيع">
                 </div>
 
                 <div class="md:col-span-6 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mt-2">
@@ -98,7 +63,15 @@
                 <div class="md:col-span-2 lg:col-span-3">
                     <div class="bg-white dark:bg-secondary-900 rounded-2xl border border-gray-200 dark:border-secondary-800 shadow-sm p-8 text-center">
                         <div class="text-gray-900 dark:text-white font-semibold">ابدأ بالبحث</div>
-                        <div class="mt-2 text-sm text-gray-600 dark:text-gray-300">اختر المدينة والحي ثم اضغط بحث لعرض النتائج.</div>
+                        @if(!empty($filters['q']))
+                            @if(empty($hasKeywordSearch))
+                                <div class="mt-2 text-sm text-gray-600 dark:text-gray-300">بحث عام يحتاج تفعيل مزود البحث في .env (SERPAPI_KEY أو GOOGLE_CSE_KEY + GOOGLE_CSE_CX).</div>
+                            @else
+                                <div class="mt-2 text-sm text-gray-600 dark:text-gray-300">لا توجد نتائج حالياً، جرّب كلمة مختلفة.</div>
+                            @endif
+                        @else
+                            <div class="mt-2 text-sm text-gray-600 dark:text-gray-300">اكتب كلمة في "بحث عام" أو استخدم الفلاتر ثم اضغط بحث.</div>
+                        @endif
                     </div>
                 </div>
             @endforelse

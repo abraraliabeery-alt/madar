@@ -23,6 +23,11 @@ return [
         'hl' => env('GOOGLE_CSE_HL', 'ar'),
     ],
 
+    'duckduckgo' => [
+        'base_url' => env('DUCKDUCKGO_BASE_URL', 'https://duckduckgo.com'),
+        'timeout_seconds' => env('WEB_SEARCH_TIMEOUT_SECONDS', 25),
+    ],
+
     // Allowed sources (domains) - keep this conservative
     'sources' => [
         'haraj' => [
@@ -33,10 +38,13 @@ return [
             'label' => 'بيوت',
             'domain' => 'bayut.sa',
         ],
-        // Add exact domains here when confirmed
         'aqar' => [
-            'label' => 'مشروع',
-            'domain' => 'aqar.fm',
+            'label' => 'عقار',
+            'domain' => 'sa.aqar.fm',
+        ],
+        'dealapp' => [
+            'label' => 'ديل',
+            'domain' => 'dealapp.sa',
         ],
     ],
 ];

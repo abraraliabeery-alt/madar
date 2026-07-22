@@ -235,7 +235,7 @@ class AdminUserManagementController extends Controller
                 foreach ($userIds as $userId) {
                     $user = User::find($userId);
                     if ($user && !$user->hasRole($role->name)) {
-                        $user->roles()->attach($role->id);
+                        $user->roles()->attach($role->id, ['facility_id' => null]);
                     }
                 }
                 $message = 'تم تعيين الدور للمستخدمين المحددين';

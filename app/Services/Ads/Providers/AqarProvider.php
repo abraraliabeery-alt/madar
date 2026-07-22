@@ -2,10 +2,15 @@
 
 namespace App\Services\Ads\Providers;
 
+use App\Services\WebFetchService;
 use Illuminate\Support\Str;
 
 class AqarProvider extends BaseProvider
 {
+    public function __construct(private readonly WebFetchService $webFetch)
+    {
+    }
+
     public function key(): string
     {
         return 'aqar';
@@ -60,8 +65,9 @@ class AqarProvider extends BaseProvider
 
         $base = rtrim($this->baseUrl(), '/');
 
+        // "بحث عام" fallback: if user leaves it empty, still show results.
         if ($city === '' && $district === '') {
-            return $base;
+            $city = 'الرياض';
         }
 
         if ($city === '') {
@@ -83,68 +89,44 @@ class AqarProvider extends BaseProvider
 
     private function parseList(string $html, array $filters): array
     {
-        $dom = new \DOMDocument();
-        \libxml_use_internal_errors(true);
-        $dom->loadHTML('<?xml encoding="utf-8" ?>' . $html);
-        \libxml_clear_errors();
+        // Step 1: collect listing URLs from the results HTML.
+        preg_match_all('/https?:\\/\\/(?:sa\\.)?aqar\\.fm\\/[^\"\'\s>]+-\d{5,}(?:\/?)/u', $html, $m);
+        $urls = $m[0] ?? [];
 
-        $xpath = new \DOMXPath($dom);
-
-        $links = $xpath->query('//a[@href]');
-        if (!$links) return [];
-
-        $items = [];
-        $seen = [];
-
-        foreach ($links as $a) {
-            $href = $a->getAttribute('href');
-            $abs = $this->absUrl($this->baseUrl(), $href);
-            if (!$abs) continue;
-
-            // Aqar listings often contain a numeric id at the end.
-            if (!preg_match('/-([0-9]{5,})\/?$/', $abs)) {
-                continue;
-            }
-
-            if (isset($seen[$abs])) continue;
-            $seen[$abs] = true;
-
-            $title = $this->cleanText($a->textContent);
-            if (!$title || mb_strlen($title) < 5) {
-                continue;
-            }
-
-            // Try to find a nearby price text.
-            $priceText = null;
-            $node = $a;
-            for ($i = 0; $i < 4; $i++) {
-                $node = $node->parentNode;
-                if (!$node) break;
-                $text = $this->cleanText($node->textContent);
-                if ($text && (Str::contains($text, ['ر.س', 'ريال', 'SAR']) || preg_match('/\d{2,}/', $text))) {
-                    $priceText = $text;
-                    break;
+        if (!is_array($urls) || count($urls) === 0) {
+            // Fallback: collect hrefs and turn them into absolute URLs.
+            preg_match_all('/href=[\"\']([^\"\']+)[\"\']/i', $html, $m2);
+            $hrefs = $m2[1] ?? [];
+            $urls = [];
+            foreach ($hrefs as $h) {
+                $abs = $this->absUrl($this->baseUrl(), $h);
+                if ($abs && preg_match('/-([0-9]{5,})\/?$/', $abs)) {
+                    $urls[] = $abs;
                 }
             }
+        }
 
-            $price = $this->toIntPrice($priceText);
+        $urls = array_values(array_unique($urls));
+        $urls = array_slice($urls, 0, 12);
 
-            if (($filters['min_price'] ?? null) !== null && $price !== null && $price < (int) $filters['min_price']) {
+        // Step 2: fetch each listing page meta for a reliable title.
+        $items = [];
+        foreach ($urls as $u) {
+            $meta = $this->webFetch->fetchOne($u);
+            if (!($meta['ok'] ?? false)) {
                 continue;
             }
-            if (($filters['max_price'] ?? null) !== null && $price !== null && $price > (int) $filters['max_price']) {
+
+            $title = $this->cleanText($meta['title'] ?? null);
+            if (!$title) {
                 continue;
             }
 
             $items[] = [
                 'title' => $title,
-                'price' => $price,
-                'url' => $abs,
+                'price' => null,
+                'url' => $u,
             ];
-
-            if (count($items) >= 20) {
-                break;
-            }
         }
 
         return $items;

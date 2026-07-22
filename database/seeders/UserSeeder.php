@@ -35,7 +35,7 @@ class UserSeeder extends Seeder
         // Assign admin role
         $adminRole = Role::where('name', 'admin')->first();
         if ($adminRole) {
-            $admin->roles()->sync([$adminRole->id]);
+            $admin->roles()->sync([$adminRole->id => ['facility_id' => null]]);
         }
 
         // Create Facility User
@@ -55,7 +55,7 @@ class UserSeeder extends Seeder
         // Assign facility role
         $facilityRole = Role::where('name', 'facility')->first();
         if ($facilityRole) {
-            $facility->roles()->sync([$facilityRole->id]);
+            $facility->roles()->sync([$facilityRole->id => ['facility_id' => null]]);
         }
 
         // Create Client User
@@ -75,7 +75,7 @@ class UserSeeder extends Seeder
         // Assign client role
         $clientRole = Role::where('name', 'client')->first();
         if ($clientRole) {
-            $client->roles()->sync([$clientRole->id]);
+            $client->roles()->sync([$clientRole->id => ['facility_id' => null]]);
         }
 
         // Create additional test users
@@ -118,7 +118,7 @@ class UserSeeder extends Seeder
             // Assign role
             $role = Role::where('name', $userData['primary_role'])->first();
             if ($role) {
-                $user->roles()->sync([$role->id]);
+                $user->roles()->sync([$role->id => ['facility_id' => null]]);
             }
         }
     }
