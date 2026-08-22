@@ -18,7 +18,7 @@
                             <input type="radio" name="search_type" value="projects" 
                                    {{ request('search_type', 'projects') == 'projects' ? 'checked' : '' }}
                                    onchange="updateMapForm()" class="mr-2">
-                            <span class="text-sm text-gray-700">المشاريع</span>
+                            <span class="text-sm text-gray-700">العقارات</span>
                         </label>
                         <label class="flex items-center">
                             <input type="radio" name="search_type" value="facilities" 

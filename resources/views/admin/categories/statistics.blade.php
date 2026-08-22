@@ -62,7 +62,7 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
-                                    <h6 class="mb-0">الفئات مع منتجات</h6>
+                                    <h6 class="mb-0">الفئات مع عقارات</h6>
                                     <h3 class="mb-0">{{ $stats['categories_with_products'] }}</h3>
                                 </div>
                                 <div class="fs-1">
@@ -114,7 +114,7 @@
                                         <tr>
                                             <th>#</th>
                                             <th>الفئة</th>
-                                            <th>عدد المنتجات</th>
+                                            <th>عدد العقارات</th>
                                             <th>الحالة</th>
                                             <th>الإجراءات</th>
                                         </tr>
@@ -203,7 +203,7 @@ $(document).ready(function() {
     new Chart(statusCtx, {
         type: 'doughnut',
         data: {
-            labels: ['نشط', 'غير نشط', 'مميزة', 'مع منتجات'],
+            labels: ['نشط', 'غير نشط', 'مميزة', 'مع عقارات'],
             datasets: [{
                 data: [
                     {{ $stats['active_categories'] }},

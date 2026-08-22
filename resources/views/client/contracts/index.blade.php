@@ -1,6 +1,6 @@
-@extends('layouts.app')
+﻿@extends('client.layouts.app')
 
-@section('title', 'عقودي')
+@section('title', 'ط¹ظ‚ظˆط¯ظٹ')
 
 @section('content')
 <div class="bg-gray-50 min-h-screen py-8">
@@ -8,11 +8,11 @@
         <!-- Header -->
         <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
             <div class="flex justify-between items-center">
-                <h1 class="text-2xl font-bold text-gray-900">عقودي</h1>
+                <h1 class="text-2xl font-bold text-gray-900">ط¹ظ‚ظˆط¯ظٹ</h1>
                 <a href="{{ route('client.contracts.statistics') }}" 
                    class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
                     <i class="fas fa-chart-bar ml-2"></i>
-                    الإحصائيات
+                    ط§ظ„ط¥ط­طµط§ط¦ظٹط§طھ
                 </a>
             </div>
         </div>
@@ -22,28 +22,28 @@
             <form method="GET" class="grid grid-cols-1 md:grid-cols-5 gap-4">
                 <div>
                     <select name="type" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">جميع الأنواع</option>
-                        <option value="sale" {{ request('type') == 'sale' ? 'selected' : '' }}>بيع</option>
-                        <option value="rent" {{ request('type') == 'rent' ? 'selected' : '' }}>إيجار</option>
+                        <option value="">ط¬ظ…ظٹط¹ ط§ظ„ط£ظ†ظˆط§ط¹</option>
+                        <option value="sale" {{ request('type') == 'sale' ? 'selected' : '' }}>ط¨ظٹط¹</option>
+                        <option value="rent" {{ request('type') == 'rent' ? 'selected' : '' }}>ط¥ظٹط¬ط§ط±</option>
                     </select>
                 </div>
                 <div>
                     <select name="status" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">جميع الحالات</option>
-                        <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>مسودة</option>
-                        <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>نشط</option>
-                        <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>مكتمل</option>
-                        <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>ملغي</option>
+                        <option value="">ط¬ظ…ظٹط¹ ط§ظ„ط­ط§ظ„ط§طھ</option>
+                        <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>ظ…ط³ظˆط¯ط©</option>
+                        <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>ظ†ط´ط·</option>
+                        <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>ظ…ظƒطھظ…ظ„</option>
+                        <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>ظ…ظ„ط؛ظٹ</option>
                     </select>
                 </div>
                 <div class="md:col-span-2">
                     <input type="text" name="search" 
                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
-                           placeholder="البحث في العقود..." value="{{ request('search') }}">
+                           placeholder="ط§ظ„ط¨ط­ط« ظپظٹ ط§ظ„ط¹ظ‚ظˆط¯..." value="{{ request('search') }}">
                 </div>
                 <div>
                     <button type="submit" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                        بحث
+                        ط¨ط­ط«
                     </button>
                 </div>
             </form>
@@ -57,15 +57,15 @@
                         <thead class="bg-gray-50">
                             <tr>
                                 <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
-                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">رقم العقد</th>
-                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">المنتج</th>
-                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">المالك</th>
-                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">النوع</th>
-                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">المبلغ</th>
-                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">المدفوع</th>
-                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">المتبقي</th>
-                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الحالة</th>
-                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الإجراءات</th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">ط±ظ‚ظ… ط§ظ„ط¹ظ‚ط¯</th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">ط§ظ„ظ…ظ†طھط¬</th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">ط§ظ„ظ…ط§ظ„ظƒ</th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">ط§ظ„ظ†ظˆط¹</th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">ط§ظ„ظ…ط¨ظ„ط؛</th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">ط§ظ„ظ…ط¯ظپظˆط¹</th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">ط§ظ„ظ…طھط¨ظ‚ظٹ</th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">ط§ظ„ط­ط§ظ„ط©</th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">ط§ظ„ط¥ط¬ط±ط§ط،ط§طھ</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
@@ -74,14 +74,14 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $contract->id }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm font-medium text-gray-900">
-                                            {{ $contract->contract_number ?? 'غير محدد' }}
+                                            {{ $contract->contract_number ?? 'ط؛ظٹط± ظ…ط­ط¯ط¯' }}
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex items-center">
                                             @if($contract->product->image)
                                                 <img src="{{ asset('storage/' . $contract->product->image) }}" 
-                                                     class="h-10 w-10 rounded-lg object-cover ml-3" alt="صورة المنتج">
+                                                     class="h-10 w-10 rounded-lg object-cover ml-3" alt="طµظˆط±ط© ط§ظ„ظ…ظ†طھط¬">
                                             @endif
                                             <div>
                                                 <div class="text-sm font-medium text-gray-900">
@@ -102,7 +102,7 @@
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full
                                             {{ $contract->contract_type == 'sale' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' }}">
-                                            {{ $contract->contract_type == 'sale' ? 'بيع' : 'إيجار' }}
+                                            {{ $contract->contract_type == 'sale' ? 'ط¨ظٹط¹' : 'ط¥ظٹط¬ط§ط±' }}
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
@@ -132,16 +132,16 @@
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         @switch($contract->status)
                                             @case('draft')
-                                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">مسودة</span>
+                                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">ظ…ط³ظˆط¯ط©</span>
                                                 @break
                                             @case('active')
-                                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">نشط</span>
+                                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">ظ†ط´ط·</span>
                                                 @break
                                             @case('completed')
-                                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">مكتمل</span>
+                                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">ظ…ظƒطھظ…ظ„</span>
                                                 @break
                                             @case('cancelled')
-                                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">ملغي</span>
+                                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">ظ…ظ„ط؛ظٹ</span>
                                                 @break
                                         @endswitch
                                     </td>
@@ -149,12 +149,12 @@
                                         <div class="flex items-center space-x-2 space-x-reverse">
                                             <a href="{{ route('client.contracts.show', $contract) }}" 
                                                class="inline-flex items-center p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-colors" 
-                                               title="عرض">
+                                               title="ط¹ط±ط¶">
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                             <a href="{{ route('client.contracts.financial-report', $contract) }}" 
                                                class="inline-flex items-center p-2 text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50 rounded-lg transition-colors" 
-                                               title="التقرير المالي">
+                                               title="ط§ظ„طھظ‚ط±ظٹط± ط§ظ„ظ…ط§ظ„ظٹ">
                                                 <i class="fas fa-chart-line"></i>
                                             </a>
                                             <div class="relative" x-data="{ open: false }">
@@ -168,29 +168,29 @@
                                                         <a href="{{ route('client.contracts.invoices', $contract) }}" 
                                                            class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                                             <i class="fas fa-file-invoice ml-3"></i>
-                                                            الفواتير
+                                                            ط§ظ„ظپظˆط§طھظٹط±
                                                         </a>
                                                         <a href="{{ route('client.contracts.payments', $contract) }}" 
                                                            class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                                             <i class="fas fa-credit-card ml-3"></i>
-                                                            المدفوعات
+                                                            ط§ظ„ظ…ط¯ظپظˆط¹ط§طھ
                                                         </a>
                                                         <a href="{{ route('client.contracts.payment-page', $contract) }}" 
                                                            class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                                             <i class="fas fa-credit-card ml-3"></i>
-                                                            دفع فاتورة
+                                                            ط¯ظپط¹ ظپط§طھظˆط±ط©
                                                         </a>
                                                         @if($contract->status === 'draft')
                                                             <div class="border-t border-gray-200"></div>
                                                             <button class="flex items-center w-full px-4 py-2 text-sm text-green-700 hover:bg-gray-100 confirm-contract" 
                                                                     data-contract-id="{{ $contract->id }}">
                                                                 <i class="fas fa-check ml-3"></i>
-                                                                تأكيد العقد
+                                                                طھط£ظƒظٹط¯ ط§ظ„ط¹ظ‚ط¯
                                                             </button>
                                                             <button class="flex items-center w-full px-4 py-2 text-sm text-red-700 hover:bg-gray-100 cancel-contract" 
                                                                     data-contract-id="{{ $contract->id }}">
                                                                 <i class="fas fa-times ml-3"></i>
-                                                                إلغاء العقد
+                                                                ط¥ظ„ط؛ط§ط، ط§ظ„ط¹ظ‚ط¯
                                                             </button>
                                                         @endif
                                                     </div>
@@ -213,19 +213,19 @@
             <!-- Empty State -->
             <div class="bg-white rounded-lg shadow-sm p-12 text-center">
                 <i class="fas fa-file-contract text-6xl text-gray-300 mb-4"></i>
-                <h3 class="text-lg font-medium text-gray-900 mb-2">لا توجد عقود</h3>
-                <p class="text-gray-500 mb-6">ابدأ بطلب عقد جديد</p>
+                <h3 class="text-lg font-medium text-gray-900 mb-2">ظ„ط§ طھظˆط¬ط¯ ط¹ظ‚ظˆط¯</h3>
+                <p class="text-gray-500 mb-6">ط§ط¨ط¯ط£ ط¨ط·ظ„ط¨ ط¹ظ‚ط¯ ط¬ط¯ظٹط¯</p>
                 <a href="{{ route('client.offers.index') }}" 
                    class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
                     <i class="fas fa-search ml-2"></i>
-                    تصفح العروض
+                    طھطµظپط­ ط§ظ„ط¹ط±ظˆط¶
                 </a>
             </div>
         @endif
     </div>
 </div>
 
-<!-- Modal تأكيد العقد -->
+<!-- Modal طھط£ظƒظٹط¯ ط§ظ„ط¹ظ‚ط¯ -->
 <div x-data="{ show: false }" x-show="show" class="fixed inset-0 z-50 overflow-y-auto" style="display: none;">
     <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" @click="show = false"></div>
@@ -236,9 +236,9 @@
                         <i class="fas fa-check text-green-600"></i>
                     </div>
                     <div class="mt-3 text-center sm:mt-0 sm:mr-4 sm:text-right">
-                        <h3 class="text-lg leading-6 font-medium text-gray-900">تأكيد العقد</h3>
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">طھط£ظƒظٹط¯ ط§ظ„ط¹ظ‚ط¯</h3>
                         <div class="mt-2">
-                            <p class="text-sm text-gray-500">هل أنت متأكد من تأكيد هذا العقد؟</p>
+                            <p class="text-sm text-gray-500">ظ‡ظ„ ط£ظ†طھ ظ…طھط£ظƒط¯ ظ…ظ† طھط£ظƒظٹط¯ ظ‡ط°ط§ ط§ظ„ط¹ظ‚ط¯طں</p>
                         </div>
                     </div>
                 </div>
@@ -246,18 +246,18 @@
             <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                 <button type="button" @click="show = false; confirmContract()" 
                         class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm">
-                    تأكيد
+                    طھط£ظƒظٹط¯
                 </button>
                 <button type="button" @click="show = false" 
                         class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                    إلغاء
+                    ط¥ظ„ط؛ط§ط،
                 </button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Modal إلغاء العقد -->
+<!-- Modal ط¥ظ„ط؛ط§ط، ط§ظ„ط¹ظ‚ط¯ -->
 <div x-data="{ show: false }" x-show="show" class="fixed inset-0 z-50 overflow-y-auto" style="display: none;">
     <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" @click="show = false"></div>
@@ -268,11 +268,11 @@
                         <i class="fas fa-times text-red-600"></i>
                     </div>
                     <div class="mt-3 text-center sm:mt-0 sm:mr-4 sm:text-right">
-                        <h3 class="text-lg leading-6 font-medium text-gray-900">إلغاء العقد</h3>
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">ط¥ظ„ط؛ط§ط، ط§ظ„ط¹ظ‚ط¯</h3>
                         <div class="mt-2">
                             <form id="cancelContractForm">
                                 <div>
-                                    <label for="cancelReason" class="block text-sm font-medium text-gray-700">سبب الإلغاء <span class="text-red-500">*</span></label>
+                                    <label for="cancelReason" class="block text-sm font-medium text-gray-700">ط³ط¨ط¨ ط§ظ„ط¥ظ„ط؛ط§ط، <span class="text-red-500">*</span></label>
                                     <textarea name="reason" id="cancelReason" rows="3" required
                                               class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
                                 </div>
@@ -284,11 +284,11 @@
             <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                 <button type="button" @click="show = false; cancelContract()" 
                         class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
-                    إلغاء العقد
+                    ط¥ظ„ط؛ط§ط، ط§ظ„ط¹ظ‚ط¯
                 </button>
                 <button type="button" @click="show = false" 
                         class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                    إلغاء
+                    ط¥ظ„ط؛ط§ط،
                 </button>
             </div>
         </div>
@@ -300,7 +300,7 @@
 <script>
     let currentContractId = null;
 
-    // تأكيد العقد
+    // طھط£ظƒظٹط¯ ط§ظ„ط¹ظ‚ط¯
     document.querySelectorAll('.confirm-contract').forEach(button => {
         button.addEventListener('click', function() {
             currentContractId = this.dataset.contractId;
@@ -335,7 +335,7 @@
         }
     }
 
-    // إلغاء العقد
+    // ط¥ظ„ط؛ط§ط، ط§ظ„ط¹ظ‚ط¯
     document.querySelectorAll('.cancel-contract').forEach(button => {
         button.addEventListener('click', function() {
             currentContractId = this.dataset.contractId;

@@ -21,18 +21,6 @@ return new class extends Migration
             $table->unsignedBigInteger('project_id')->nullable()->after('building_id');
             $table->unsignedBigInteger('package_id')->nullable()->after('project_id');
             
-            // Property details
-            $table->integer('bedrooms')->nullable()->after('additional_info');
-            $table->integer('bathrooms')->nullable()->after('bedrooms');
-            $table->decimal('area', 10, 2)->nullable()->after('bathrooms');
-            $table->integer('floor_number')->nullable()->after('area');
-            $table->integer('total_floors')->nullable()->after('floor_number');
-            $table->integer('parking_spaces')->nullable()->after('total_floors');
-            
-            // Property features
-            $table->boolean('furnished')->default(false)->after('parking_spaces');
-            $table->boolean('available_for_rent')->default(false)->after('furnished');
-            $table->boolean('available_for_sale')->default(false)->after('available_for_rent');
             
             // Rename image to main_image for consistency with controller
             $table->renameColumn('image', 'main_image');
@@ -64,16 +52,7 @@ return new class extends Migration
                 'status_id', 
                 'building_id',
                 'project_id',
-                'package_id',
-                'bedrooms',
-                'bathrooms',
-                'area',
-                'floor_number',
-                'total_floors',
-                'parking_spaces',
-                'furnished',
-                'available_for_rent',
-                'available_for_sale'
+                'package_id'
             ]);
             
             // Rename main_image back to image

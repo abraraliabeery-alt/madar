@@ -8,6 +8,7 @@ use App\Models\Booking;
 use App\Models\Contract;
 use App\Models\Appointment;
 use App\Models\Product;
+use App\Models\Project;
 use App\Models\LoanRequest;
 use App\Models\LoanOffer;
 use Illuminate\Support\Facades\Auth;
@@ -32,6 +33,9 @@ class ClientController extends Controller
             'recent_appointments' => $user->appointments()->with(['facility'])->latest()->take(5)->get(),
             'pending_bookings' => $user->bookings()->where('status', 'reserved')->count(), // pending status
             'active_contracts' => $user->contracts()->where('status', 'active')->count(), // active status
+            'total_projects' => Project::where('client_user_id', $user->id)->count(),
+            'open_projects' => Project::where('client_user_id', $user->id)->whereIn('status', ['draft', 'open_for_bids'])->count(),
+            'recent_projects' => Project::where('client_user_id', $user->id)->with(['translations'])->latest()->take(5)->get(),
         ];
 
         return view('client.dashboard', compact('stats'));

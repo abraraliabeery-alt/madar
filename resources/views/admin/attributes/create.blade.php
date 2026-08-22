@@ -36,6 +36,7 @@
                                                         <option value="date" {{ old('type') == 'date' ? 'selected' : '' }}>{{ __('admin.attributes.type_date') }}</option>
                                                         <option value="time" {{ old('type') == 'time' ? 'selected' : '' }}>{{ __('admin.attributes.type_time') }}</option>
                                                         <option value="datetime" {{ old('type') == 'datetime' ? 'selected' : '' }}>{{ __('admin.attributes.type_datetime') }}</option>
+                                                        <option value="file" {{ old('type') == 'file' ? 'selected' : '' }}>ملف</option>
                                                     </select>
                                                     @error('type')
                                                         <div class="invalid-feedback">{{ $message }}</div>

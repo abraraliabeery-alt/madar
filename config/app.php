@@ -16,7 +16,7 @@ return [
     'name' => (function () {
         $name = env('APP_NAME');
         if (empty($name) || in_array(trim((string) $name), ['Aqar', 'مشروع'], true)) {
-            return 'ميم';
+            return 'مدار التفاوض';
         }
         return $name;
     })(),

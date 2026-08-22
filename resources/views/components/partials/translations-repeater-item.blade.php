@@ -33,7 +33,7 @@
                         $localeName = $namePrefix.'['.$index.'][locale]';
                         $localeErrorName = $namePrefix.'.'.$index.'.locale';
                         $localeHasError = $errors->has($localeErrorName, $errorBag);
-                        $localeCurrent = data_get($item, 'locale') ?? old($localeName);
+                        $localeCurrent = data_get($item, 'locale') ?? old($localeName) ?? ((int) $index === 0 ? 'ar' : '');
                     @endphp
                     <div class="">
                         <label class="form-label" for="{{ $localeName }}">اللغة</label>

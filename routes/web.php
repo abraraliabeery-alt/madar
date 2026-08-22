@@ -5,7 +5,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Bank\BankLoanController;
 use App\Http\Controllers\AI\LandStudyController;
 use App\Http\Controllers\Public\SmartBrokerController;
+use App\Http\Controllers\Public\ReferralController;
 use App\Http\Controllers\Auth\PhoneOtpAuthController;
+use App\Http\Controllers\VoiceProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +39,8 @@ Route::get('/migration', function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/facility/rentals', [App\Http\Controllers\Facility\FacilityRentalController::class, 'index'])
         ->name('facility.rentals.index');
+    Route::get('/referrals', [ReferralController::class, 'index'])
+        ->name('referrals.index');
 });
 
 
@@ -192,24 +196,31 @@ Route::get('/welcome', function () {
 
 // Public projects listing (alias to execution marketplace)
 Route::get('/projects', [App\Http\Controllers\Public\ExecutionMarketplaceController::class, 'index'])
+    ->middleware('platform.mode:contracting')
     ->name('public.projects.index');
 
 // Public execution marketplace (requests & bids)
 Route::get('/execution', [App\Http\Controllers\Public\ExecutionMarketplaceController::class, 'index'])
+    ->middleware('platform.mode:contracting')
     ->name('public.execution.marketplace');
 Route::get('/execution/requests/{executionRequest}', [App\Http\Controllers\Public\ExecutionMarketplaceController::class, 'show'])
+    ->middleware('platform.mode:contracting')
     ->name('public.execution.show');
 Route::get('/execution/requests/{executionRequest}/bids/form', [App\Http\Controllers\Public\ExecutionMarketplaceController::class, 'bidForm'])
     ->middleware('auth')
+    ->middleware('platform.mode:contracting')
     ->name('public.execution.bids.form');
 Route::post('/execution/requests/{executionRequest}/bids', [App\Http\Controllers\Public\ExecutionMarketplaceController::class, 'storeBid'])
     ->middleware('auth')
+    ->middleware('platform.mode:contracting')
     ->name('public.execution.bids.store');
 Route::get('/execution/requests/{executionRequest}/bids/pdf/preview', [App\Http\Controllers\Public\ExecutionMarketplaceController::class, 'previewMyBidPdf'])
     ->middleware('auth')
+    ->middleware('platform.mode:contracting')
     ->name('public.execution.bids.pdf.preview');
 Route::get('/execution/requests/{executionRequest}/bids/pdf/download', [App\Http\Controllers\Public\ExecutionMarketplaceController::class, 'downloadMyBidPdf'])
     ->middleware('auth')
+    ->middleware('platform.mode:contracting')
     ->name('public.execution.bids.pdf.download');
 
 // Public investment studies (no auth required)
@@ -230,8 +241,13 @@ Route::post('/ai/investment-chat', [App\Http\Controllers\AI\InvestmentChatContro
 Route::get('/site/{facility}', [App\Http\Controllers\FacilitySite\SiteController::class, 'home'])
     ->name('facility.site.home');
 
-Route::get('/site/{facility}', [App\Http\Controllers\FacilitySite\SiteController::class, 'home'])
-    ->name('public.facility.site.home');
+// Voice-to-product analyze endpoint (used by product create voice assistant)
+Route::post('/voice/products/analyze', [VoiceProductController::class, 'analyze'])
+    ->middleware(['auth', 'throttle:20,1'])
+    ->name('voice.products.analyze');
+Route::post('/voice/products/analyze-document', [VoiceProductController::class, 'analyzeDocument'])
+    ->middleware(['auth', 'throttle:10,1'])
+    ->name('voice.products.analyze-document');
 
 // Fallback route for 404 errors with enhanced handling
 Route::fallback(function (Illuminate\Http\Request $request) {

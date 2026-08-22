@@ -23,7 +23,7 @@
                             <div class="mb-3">
                                 @if($booking->status)
                                     <span class="badge bg-{{ $booking->status->color }} fs-5 px-4 py-2">
-                                        {{ $booking->status->name }}
+                                        {{ $booking->status->getTranslatedName('ar') }}
                                     </span>
                                 @else
                                     <span class="badge bg-secondary fs-5 px-4 py-2">
@@ -155,12 +155,12 @@
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-header">
-                            <h6 class="mb-0">معلومات المنتج</h6>
+                            <h6 class="mb-0">معلومات العقار</h6>
                         </div>
                         <div class="card-body">
                             <div class="d-flex align-items-center mb-3">
                                 @if($booking->product->main_image)
-                                    <img src="{{ asset($booking->product->main_image) }}" alt="product" class="rounded me-3" width="80">
+                                    <img src="{{ asset($booking->product->main_image) }}" alt="عقار" class="rounded me-3" width="80">
                                 @else
                                     <div class="rounded bg-light d-flex align-items-center justify-content-center me-3" style="width: 80px; height: 80px;">
                                         <i class="fas fa-box fa-2x text-muted"></i>
@@ -179,7 +179,7 @@
                                 <div class="col-12">
                                     <div class="btn-group">
                                         <a href="{{ route('admin.products.show', $booking->product) }}" class="btn btn-sm btn-primary">
-                                            <i class="fas fa-box me-2"></i>عرض المنتج
+                                            <i class="fas fa-box me-2"></i>عرض العقار
                                         </a>
                                         @if($booking->facility)
                                             <a href="{{ route('admin.facilities.show', $booking->facility) }}" class="btn btn-sm btn-info">

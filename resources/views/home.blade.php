@@ -5,16 +5,16 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('Dashboard') }}</div>
+                <div class="card-header">{{ __('dashboard.title') }}</div>
 
                 <div class="card-body">
                     @if (session('status'))
                         <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
+                            {{ is_array(session('status')) ? json_encode(session('status'), JSON_UNESCAPED_UNICODE) : session('status') }}
                         </div>
                     @endif
 
-                    <p class="mb-4">{{ __('You are logged in!') }}</p>
+                    <p class="mb-4">{{ __('dashboard.logged_in_message') }}</p>
 
                     <div class="d-flex flex-wrap gap-3">
                         @if (auth()->check() && auth()->user()->hasRole('admin'))

@@ -26,6 +26,7 @@ use App\Http\Controllers\Facility\FacilitySmartBrokerController;
 use App\Http\Controllers\Facility\HR\DepartmentController as FacilityHrDepartmentController;
 use App\Http\Controllers\Facility\HR\PositionController as FacilityHrPositionController;
 use App\Http\Controllers\Facility\ProductLifecycleController;
+use App\Http\Controllers\Facility\FacilityBuildingController;
 use App\Http\Controllers\Facility\FacilityExecutionRequestController;
 
 Route::group([], function () {
@@ -51,18 +52,21 @@ Route::group([], function () {
     Route::post('/toggle-featured', [FacilityController::class, 'toggleFeatured'])->name('toggle-featured');
 
     // Products Management
-    Route::resource('products', FacilityProductController::class);
-    Route::get('categories/{category}/products', [FacilityProductController::class, 'categoryProducts'])->name('categories.products');
-    Route::get('products/{product}/lifecycle', [FacilityProductController::class, 'lifecycle'])->name('products.lifecycle');
-    Route::post('products/{product}/toggle-status', [FacilityProductController::class, 'toggleStatus'])->name('products.toggle-status');
-    Route::post('products/{product}/toggle-verification', [FacilityProductController::class, 'toggleVerification'])->name('products.toggle-verification');
-    Route::post('products/{product}/toggle-featured', [FacilityProductController::class, 'toggleFeatured'])->name('products.toggle-featured');
-    Route::get('products/{product}/gallery', [FacilityProductController::class, 'gallery'])->name('products.gallery');
-    Route::post('products/{product}/gallery', [FacilityProductController::class, 'storeGallery'])->name('products.gallery.store');
-    Route::delete('products/{product}/gallery/{image}', [FacilityProductController::class, 'deleteGallery'])->name('products.gallery.delete');
-    Route::get('products/{product}/comments', [FacilityProductController::class, 'comments'])->name('products.comments');
-    Route::post('products/{product}/comments/{comment}/reply', [FacilityProductController::class, 'replyComment'])->name('products.comments.reply');
-    Route::delete('products/{product}/comments/{comment}', [FacilityProductController::class, 'deleteComment'])->name('products.comments.delete');
+    Route::resource('products', FacilityProductController::class)->middleware('platform.mode:real_estate');
+
+    // Buildings Management
+    Route::resource('buildings', FacilityBuildingController::class);
+    Route::get('categories/{category}/products', [FacilityProductController::class, 'categoryProducts'])->middleware('platform.mode:real_estate')->name('categories.products');
+    Route::get('products/{product}/lifecycle', [FacilityProductController::class, 'lifecycle'])->middleware('platform.mode:real_estate')->name('products.lifecycle');
+    Route::post('products/{product}/toggle-status', [FacilityProductController::class, 'toggleStatus'])->middleware('platform.mode:real_estate')->name('products.toggle-status');
+    Route::post('products/{product}/toggle-verification', [FacilityProductController::class, 'toggleVerification'])->middleware('platform.mode:real_estate')->name('products.toggle-verification');
+    Route::post('products/{product}/toggle-featured', [FacilityProductController::class, 'toggleFeatured'])->middleware('platform.mode:real_estate')->name('products.toggle-featured');
+    Route::get('products/{product}/gallery', [FacilityProductController::class, 'gallery'])->middleware('platform.mode:real_estate')->name('products.gallery');
+    Route::post('products/{product}/gallery', [FacilityProductController::class, 'storeGallery'])->middleware('platform.mode:real_estate')->name('products.gallery.store');
+    Route::delete('products/{product}/gallery/{image}', [FacilityProductController::class, 'deleteGallery'])->middleware('platform.mode:real_estate')->name('products.gallery.delete');
+    Route::get('products/{product}/comments', [FacilityProductController::class, 'comments'])->middleware('platform.mode:real_estate')->name('products.comments');
+    Route::post('products/{product}/comments/{comment}/reply', [FacilityProductController::class, 'replyComment'])->middleware('platform.mode:real_estate')->name('products.comments.reply');
+    Route::delete('products/{product}/comments/{comment}', [FacilityProductController::class, 'deleteComment'])->middleware('platform.mode:real_estate')->name('products.comments.delete');
 
     // Bookings Management
     Route::get('bookings/statistics', [FacilityBookingController::class, 'statistics'])->name('bookings.statistics');
@@ -88,12 +92,12 @@ Route::group([], function () {
     Route::post('smart-broker/match', [FacilitySmartBrokerController::class, 'match'])->middleware('throttle:10,1')->name('smart-broker.match');
 
     // Execution Requests (generic executors / offers system)
-    Route::get('execution-requests/workspace', [FacilityExecutionRequestController::class, 'workspace'])->name('execution-requests.workspace');
-    Route::get('execution-requests', [FacilityExecutionRequestController::class, 'index'])->name('execution-requests.index');
-    Route::get('execution-requests/create', [FacilityExecutionRequestController::class, 'create'])->name('execution-requests.create');
-    Route::post('execution-requests', [FacilityExecutionRequestController::class, 'store'])->name('execution-requests.store');
-    Route::get('execution-requests/{executionRequest}', [FacilityExecutionRequestController::class, 'show'])->name('execution-requests.show');
-    Route::post('execution-requests/{executionRequest}/bids', [FacilityExecutionRequestController::class, 'storeBid'])->name('execution-requests.bids.store');
+    Route::get('execution-requests/workspace', [FacilityExecutionRequestController::class, 'workspace'])->middleware('platform.mode:contracting')->name('execution-requests.workspace');
+    Route::get('execution-requests', [FacilityExecutionRequestController::class, 'index'])->middleware('platform.mode:contracting')->name('execution-requests.index');
+    Route::get('execution-requests/create', [FacilityExecutionRequestController::class, 'create'])->middleware('platform.mode:contracting')->name('execution-requests.create');
+    Route::post('execution-requests', [FacilityExecutionRequestController::class, 'store'])->middleware('platform.mode:contracting')->name('execution-requests.store');
+    Route::get('execution-requests/{executionRequest}', [FacilityExecutionRequestController::class, 'show'])->middleware('platform.mode:contracting')->name('execution-requests.show');
+    Route::post('execution-requests/{executionRequest}/bids', [FacilityExecutionRequestController::class, 'storeBid'])->middleware('platform.mode:contracting')->name('execution-requests.bids.store');
 
     // Appointments Management
     Route::get('appointments', [FacilityAppointmentController::class, 'index'])->name('appointments.index');

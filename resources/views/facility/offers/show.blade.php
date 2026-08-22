@@ -41,7 +41,7 @@
                             </span>
                         </div>
                         <div class="flex justify-between">
-                            <span class="text-gray-600">المنتج:</span>
+                            <span class="text-gray-600">العقار:</span>
                             <a href="{{ route('facility.products.show', $offer->product) }}" class="text-blue-600 hover:text-blue-800 font-medium">
                                 {{ $offer->product->getTranslatedTitle() }}
                             </a>

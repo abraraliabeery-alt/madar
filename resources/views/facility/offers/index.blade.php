@@ -58,7 +58,7 @@
                     <thead class="bg-gray-50">
                         <tr>
                             <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">الخطة</th>
-                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">المنتج</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">العقار</th>
                             <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">النوع</th>
                             <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">السعر</th>
                             <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">العمولة</th>
@@ -153,7 +153,7 @@
                                         <form method="POST" action="{{ route('facility.offers.copy', $offer) }}" class="inline flex items-center gap-1">
                                             @csrf
                                             <select name="product_id" class="border rounded px-2 py-1 text-xs">
-                                                <option value="">نسخ إلى منتج</option>
+                                                <option value="">نسخ إلى عقار</option>
                                                 @foreach($productsList as $p)
                                                     @if($p->id !== $offer->product_id)
                                                         <option value="{{ $p->id }}">#{{ $p->id }}</option>

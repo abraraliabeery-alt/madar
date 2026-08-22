@@ -4,7 +4,7 @@
 <div class="container-fluid">
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">تفاصيل المنتج - {{ $product->name }}</h5>
+            <h5 class="mb-0">تفاصيل العقار - {{ $product->name }}</h5>
             <div>
                 <a href="{{ route('admin.products.edit', $product) }}" class="btn btn-warning">
                     <i class="fas fa-edit me-2"></i>تعديل
@@ -21,7 +21,7 @@
                     <div class="card">
                         <div class="card-body text-center">
                             @if($product->image)
-                                <img src="{{ asset($product->image) }}" alt="product" class="img-fluid rounded mb-3" style="max-height: 200px;">
+                                <img src="{{ asset($product->image) }}" alt="عقار" class="img-fluid rounded mb-3" style="max-height: 200px;">
                             @else
                                 <div class="rounded bg-light d-flex align-items-center justify-content-center mb-3" style="height: 200px;">
                                     <i class="fas fa-box text-muted fa-3x"></i>
@@ -31,7 +31,7 @@
                             <div class="mb-3">
                                 <h4 class="mb-2">{{ number_format($product->price, 2) }} {!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}</h4>
                                 @if($product->status)
-    <span class="badge bg-{{ $product->status->color }} fs-6">{{ $product->status->name }}</span>
+    <span class="badge bg-{{ $product->status->color }} fs-6">{{ $product->status->getTranslatedName('ar') }}</span>
 @else
     <span class="badge bg-secondary fs-6">لا توجد حالة</span>
 @endif
@@ -60,7 +60,7 @@
                                     @csrf
                                     <button type="submit" class="btn {{ $product->is_active ? 'btn-danger' : 'btn-success' }} w-100">
                                         <i class="fas {{ $product->is_active ? 'fa-ban me-2' : 'fa-check me-2' }}"></i>
-                                        {{ $product->is_active ? 'إلغاء تفعيل المنتج' : 'تفعيل المنتج' }}
+                                        {{ $product->is_active ? 'إلغاء تفعيل العقار' : 'تفعيل العقار' }}
                                     </button>
                                 </form>
 
@@ -68,7 +68,7 @@
                                     @csrf
                                     <button type="submit" class="btn {{ $product->is_verified ? 'btn-warning' : 'btn-info' }} w-100">
                                         <i class="fas {{ $product->is_verified ? 'fa-times me-2' : 'fa-shield-alt me-2' }}"></i>
-                                        {{ $product->is_verified ? 'إلغاء التحقق من المنتج' : 'التحقق من المنتج' }}
+                                        {{ $product->is_verified ? 'إلغاء التحقق من العقار' : 'التحقق من العقار' }}
                                     </button>
                                 </form>
 
@@ -84,7 +84,7 @@
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger w-100 delete-confirm">
-                                        <i class="fas fa-trash me-2"></i>حذف المنتج
+                                        <i class="fas fa-trash me-2"></i>حذف العقار
                                     </button>
                                 </form>
                             </div>
@@ -96,7 +96,7 @@
                 <div class="col-md-8">
                     <div class="card">
                         <div class="card-header">
-                            <h6 class="mb-0">معلومات المنتج</h6>
+                            <h6 class="mb-0">معلومات العقار</h6>
                         </div>
                         <div class="card-body">
                             <div class="row">
@@ -324,7 +324,7 @@
                                             <td>
                                                 @if($booking->status)
                                                     <span class="badge bg-{{ $booking->status->color }}">
-                                                        {{ $booking->status->name }}
+                                                        {{ $booking->status->getTranslatedName('ar') }}
                                                     </span>
                                                 @else
                                                     <span class="badge bg-secondary">لا توجد حالة</span>
@@ -340,7 +340,7 @@
                                         <tr>
                                             <td colspan="6" class="text-center py-4">
                                                 <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
-                                                <p class="mb-0">لا توجد حجوزات لهذا المنتج</p>
+                                                <p class="mb-0">لا توجد حجوزات لهذا العقار</p>
                                             </td>
                                         </tr>
                                         @endforelse
@@ -373,7 +373,7 @@ $(document).ready(function() {
             showCancelButton: true,
             confirmButtonColor: '#d33',
             cancelButtonColor: '#3085d6',
-            confirmButtonText: 'نعم، احذف المنتج',
+            confirmButtonText: 'نعم، احذف العقار',
             cancelButtonText: 'إلغاء'
         }).then((result) => {
             if (result.isConfirmed) {

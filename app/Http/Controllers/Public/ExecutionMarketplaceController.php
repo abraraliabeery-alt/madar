@@ -74,8 +74,7 @@ class ExecutionMarketplaceController extends Controller
 
         $requestsQuery = ExecutionRequest::query()
             ->with(['translations'])
-            ->withCount('bids')
-            ->latest();
+            ->withCount('bids');
 
         $status = $request->get('status', 'open');
         if ($status === 'open') {
@@ -115,6 +114,27 @@ class ExecutionMarketplaceController extends Controller
                 $q->whereNull('budget_min')
                   ->orWhere('budget_min', '<=', $maxBudget);
             });
+        }
+
+        // الترتيب
+        $sort = $request->get('sort', 'latest');
+        switch ($sort) {
+            case 'due_date':
+                $requestsQuery->orderBy('due_date', 'asc');
+                break;
+            case 'budget_low':
+                $requestsQuery->orderBy('budget_min', 'asc');
+                break;
+            case 'budget_high':
+                $requestsQuery->orderBy('budget_max', 'desc');
+                break;
+            case 'bids':
+                $requestsQuery->orderBy('bids_count', 'desc');
+                break;
+            case 'latest':
+            default:
+                $requestsQuery->latest();
+                break;
         }
 
         $openRequests = $requestsQuery->paginate(9)->appends($request->query());

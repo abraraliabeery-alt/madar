@@ -11,7 +11,9 @@ class Attribute extends Model
 
     protected $fillable = [
         'type',
+        'key',
         'required',
+        'is_active',
         'category_id',
         'icon',
         'Symbol',
@@ -21,6 +23,7 @@ class Attribute extends Model
 
     protected $casts = [
         'required' => 'boolean',
+        'is_active' => 'boolean',
         'show_in_card' => 'boolean',
         'for_projects' => 'boolean',
     ];

@@ -27,6 +27,11 @@ return [
         'offers_title' => 'العروض المتاحة',
         'view_all_offers' => 'عرض جميع العروض',
         'financial_management' => 'الإدارة المالية',
+        'total_projects' => 'إجمالي المشاريع',
+        'open_projects' => 'المشاريع المفتوحة',
+        'view_projects' => 'عرض المشاريع',
+        'my_projects' => 'مشاريعي',
+        'no_projects' => 'لا توجد مشاريع',
     ],
 
     'navigation' => [
@@ -197,7 +202,7 @@ return [
         'confirmed' => 'مؤكد',
         'pending_confirmation' => 'في انتظار التأكيد',
         'pending' => 'في الانتظار',
-        'unknown_product' => 'منتج غير معروف',
+        'unknown_product' => 'عقار غير معروف',
         'unknown_facility' => 'منشأة غير معروفة',
         'no_bookings' => 'لا توجد حجوزات',
         'no_bookings_description' => 'لم تقم بأي حجوزات بعد. ابدأ بحجز مشروعك الأول.',

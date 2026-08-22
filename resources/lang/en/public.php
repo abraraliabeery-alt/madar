@@ -28,7 +28,7 @@ return [
     'navigation' => [
         'home' => 'Home',
         'facilities' => 'Contractors',
-        'products' => 'Projects',
+        'products' => 'Properties',
         'categories' => 'Categories',
         'about' => 'About Us',
         'contact' => 'Contact',

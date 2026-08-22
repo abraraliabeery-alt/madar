@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->dropColumn(['available_for_rent', 'available_for_sale']);
-        });
+        if (Schema::hasColumn('products', 'available_for_rent')) {
+            Schema::table('products', function (Blueprint $table) {
+                $table->dropColumn(['available_for_rent', 'available_for_sale']);
+            });
+        }
     }
 
     /**

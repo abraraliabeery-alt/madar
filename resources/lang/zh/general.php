@@ -81,6 +81,7 @@ return [
     ],
 
     'actions' => [
+        'load_more' => '加载更多',
         'view_details' => '查看详情',
         'browse_category' => '浏览分类',
         'browse_properties' => '浏览项目',

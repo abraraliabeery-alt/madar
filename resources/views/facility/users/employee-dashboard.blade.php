@@ -32,7 +32,7 @@
     <div class="bg-white rounded-lg shadow border border-gray-200 p-4">
         <div class="flex items-center justify-between mb-4">
             <h2 class="text-lg font-semibold text-gray-800">مشاريعي</h2>
-            <a href="{{ route('facility.products.index', ['seller_user_id' => $user->id]) }}" class="text-sm text-blue-600 hover:text-blue-800">مشاهدة في قائمة المنتجات</a>
+            <a href="{{ route('facility.products.index', ['seller_user_id' => $user->id]) }}" class="text-sm text-blue-600 hover:text-blue-800">مشاهدة في قائمة العقارات</a>
         </div>
 
         @if($products->count())
@@ -64,7 +64,7 @@
                                     {{ $product->owner ? $product->owner->name : 'غير محدد' }}
                                 </td>
                                 <td class="px-4 py-2 whitespace-nowrap">
-                                    {{ $product->status ? $product->status->name : 'غير محدد' }}
+                                    {{ $product->status ? $product->status->getTranslatedName('ar') : 'غير محدد' }}
                                 </td>
                                 <td class="px-4 py-2 whitespace-nowrap text-center">
                                     {{ (int) $product->bookings_count }}

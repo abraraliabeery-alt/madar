@@ -14,6 +14,7 @@ use App\Models\Setting;
 use App\Models\Category;
 use App\Models\Feature;
 use App\Models\Attribute;
+use App\Services\AI\AdminAiAssistantService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
 
@@ -39,6 +40,27 @@ class AdminController extends Controller
         ];
 
         return view('admin.dashboard', compact('stats'));
+    }
+
+    public function aiAssistant(Request $request, AdminAiAssistantService $assistant)
+    {
+        $validated = $request->validate([
+            'question' => 'required|string|min:3|max:1000',
+        ]);
+
+        try {
+            return response()->json([
+                'success' => true,
+                'data' => $assistant->answer($validated['question']),
+            ]);
+        } catch (\Throwable $e) {
+            report($e);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'تعذر تشغيل مساعد الإدارة. تحقق من إعداد مزود الذكاء الاصطناعي.',
+            ], 422);
+        }
     }
 
     /**
@@ -151,6 +173,7 @@ class AdminController extends Controller
             'instagram_url' => 'nullable|url',
             'linkedin_url' => 'nullable|url',
             'whatsapp_number' => 'nullable|string|regex:/^\+[1-9]\d{1,14}$/',
+            'platform_mode' => 'required|in:real_estate,contracting,lifecycle',
         ]);
 
         // حفظ الإعدادات في جدول settings
@@ -158,7 +181,8 @@ class AdminController extends Controller
             'site_name', 'site_url', 'site_description',
             'contact_email', 'contact_phone', 'contact_address', 'working_hours',
             'facebook_url', 'twitter_url', 'instagram_url', 'linkedin_url', 'whatsapp_number',
-            'maintenance_mode', 'allow_registration', 'email_verification', 'auto_approve_facilities'
+            'maintenance_mode', 'allow_registration', 'email_verification', 'auto_approve_facilities',
+            'platform_mode'
         ];
 
         foreach ($keys as $key) {

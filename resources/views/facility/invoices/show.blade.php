@@ -111,7 +111,7 @@
                             </div>
                             
                             <div class="flex justify-between">
-                                <span class="text-gray-600">المنتج:</span>
+                                <span class="text-gray-600">العقار:</span>
                                 <span class="font-semibold">{{ $invoice->contract->product->getTranslatedTitle() }}</span>
                             </div>
                             

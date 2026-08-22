@@ -38,7 +38,7 @@ return [
     'partially_paid' => 'مدفوع جزئياً',
     'unpaid' => 'غير مدفوع',
     'contract_validation' => [
-        'product_id_required' => 'المنتج مطلوب',
+        'product_id_required' => 'العقار مطلوب',
         'offer_id_required' => 'العرض مطلوب',
         'user_id_required' => 'العميل مطلوب',
         'owner_id_required' => 'المالك مطلوب',

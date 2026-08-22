@@ -146,7 +146,7 @@
                 <thead>
                     <tr>
                         <th>المعرف</th>
-                        <th>المنتج</th>
+                        <th>العقار</th>
                         <th>المؤسسة</th>
                         <th>النوع</th>
                         <th>السعر</th>
@@ -234,7 +234,7 @@
                                     <ul class="dropdown-menu">
                                         <li>
                                             <a class="dropdown-item" href="{{ route('admin.products.show', $offer->product_id) }}">
-                                                <i class="fas fa-home ms-2"></i>عرض المنتج
+                                                <i class="fas fa-home ms-2"></i>عرض العقار
                                             </a>
                                         </li>
                                         <li>
@@ -400,7 +400,7 @@
                 <div class="col-md-6">
                     <h6>معلومات إضافية</h6>
                     <table class="table table-sm">
-                        <tr><td><strong>المنتج:</strong></td><td>${offer.product.title || 'غير متوفر'}</td></tr>
+                        <tr><td><strong>العقار:</strong></td><td>${offer.product.title || 'غير متوفر'}</td></tr>
                         <tr><td><strong>المؤسسة:</strong></td><td>${offer.facility.name}</td></tr>
                         <tr><td><strong>نشط:</strong></td><td>${offer.is_active ? 'نعم' : 'لا'}</td></tr>
                         <tr><td><strong>مميز:</strong></td><td>${offer.is_featured ? 'نعم' : 'لا'}</td></tr>

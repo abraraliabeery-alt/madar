@@ -44,6 +44,7 @@ return [
         'dashboard' => '控制面板',
         'facility_management' => '承包商管理',
         'my_account' => '我的账户',
+        'profile' => '个人资料',
         'edit_profile' => '编辑资料',
         'convert_to_facility' => '将账户转换为承包商',
         'dark_mode' => '夜间模式',

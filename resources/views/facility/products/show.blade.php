@@ -510,7 +510,7 @@
                     <!-- Contextual quick task create (no DB link, descriptive type carries context) -->
                     <form method="POST" action="{{ route('facility.tasks.quick') }}" class="w-full">
                         @csrf
-                        <input type="hidden" name="type" value="متابعة منتج #{{ $product->id }}">
+                        <input type="hidden" name="type" value="متابعة عقار #{{ $product->id }}">
                         <input type="hidden" name="status" value="open">
                         <input type="hidden" name="priority" value="medium">
                         <input type="hidden" name="deadline" value="{{ now()->addDay()->toDateString() }}">

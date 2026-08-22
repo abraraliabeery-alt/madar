@@ -2,13 +2,13 @@
 
 return [
     'page_titles' => [
-        'products' => 'المشاريع',
+        'products' => 'العقارات',
         'product_details' => 'تفاصيل المشروع',
     ],
     
     'headers' => [
-        'products' => 'المشاريع',
-        'browse_products' => 'تصفح جميع المشاريع المتاحة',
+        'products' => 'العقارات',
+        'browse_products' => 'تصفح جميع العقارات المتاحة',
         'product_details' => 'تفاصيل المشروع',
         'product_information' => 'معلومات المشروع',
         'product_features' => 'المميزات',
@@ -23,7 +23,7 @@ return [
     
     'filters' => [
         'search' => 'البحث',
-        'search_placeholder' => 'ابحث في المشاريع...',
+        'search_placeholder' => 'ابحث في العقارات...',
         'category' => 'الفئة',
         'all_categories' => 'جميع الفئات',
         'status' => 'الحالة',
@@ -66,7 +66,7 @@ return [
         'add_to_favorites' => 'إضافة للمفضلة',
         'contact_publisher' => 'تواصل مع الناشر',
         'book_now' => 'احجز الآن',
-        'login_to_interact' => 'سجل دخولك للتفاعل مع المنتج',
+        'login_to_interact' => 'سجل دخولك للتفاعل مع العقار',
         'login' => 'تسجيل الدخول',
         'add_to_cart' => 'أضف إلى السلة',
         'buy_now' => 'اشتري الآن',
@@ -82,8 +82,8 @@ return [
     ],
     
     'empty_state' => [
-        'no_products' => 'لا توجد مشاريع',
-        'no_products_message' => 'لم يتم العثور على مشاريع تطابق معايير البحث.',
+        'no_products' => 'لا توجد عقارات',
+        'no_products_message' => 'لم يتم العثور على عقارات تطابق معايير البحث.',
         'add_new_product' => 'إضافة مشروع جديد',
     ],
     
@@ -94,7 +94,7 @@ return [
     
     'breadcrumb' => [
         'home' => 'الرئيسية',
-        'products' => 'المشاريع',
+        'products' => 'العقارات',
         'product' => 'المشروع',
     ],
     
@@ -157,8 +157,8 @@ return [
     ],
     
     'search' => [
-        'title' => 'البحث في المشاريع',
-        'placeholder' => 'ابحث عن مشاريع...',
+        'title' => 'البحث في العقارات',
+        'placeholder' => 'ابحث عن عقارات...',
         'category' => 'الفئة',
         'all_categories' => 'جميع الفئات',
         'city' => 'المدينة',
@@ -186,26 +186,26 @@ return [
         'title' => 'نتائج البحث',
         'properties_available' => 'مشروع متاح',
         'no_results' => 'لم يتم العثور على نتائج',
-        'no_results_message' => 'لم نتمكن من العثور على مشاريع تطابق معايير البحث الخاصة بك.',
-        'view_all_properties' => 'عرض جميع المشاريع',
+        'no_results_message' => 'لم نتمكن من العثور على عقارات تطابق معايير البحث الخاصة بك.',
+        'view_all_properties' => 'عرض جميع العقارات',
     ],
     
     'categories' => [
-        'title' => 'فئات المشاريع',
-        'subtitle' => 'تصفح المشاريع حسب الفئة',
+        'title' => 'فئات العقارات',
+        'subtitle' => 'تصفح العقارات حسب الفئة',
         'properties_count' => 'مشروع',
     ],
     
     'by_category' => [
-        'title' => 'مشاريع :category',
-        'subtitle' => 'اكتشف أفضل مشاريع :category في منطقتك',
+        'title' => 'عقارات :category',
+        'subtitle' => 'اكتشف أفضل عقارات :category في منطقتك',
         'properties_available' => 'مشروع متاح',
-        'view_all_properties' => 'عرض جميع المشاريع',
-        'no_properties' => 'لم يتم العثور على مشاريع',
-        'no_properties_message' => 'لا توجد مشاريع :category متاحة حالياً.',
+        'view_all_properties' => 'عرض جميع العقارات',
+        'no_properties' => 'لم يتم العثور على عقارات',
+        'no_properties_message' => 'لا توجد عقارات :category متاحة حالياً.',
         'other_categories' => 'فئات أخرى',
-        'browse_other_categories' => 'تصفح المشاريع في فئات أخرى',
-        'category_description' => 'حول مشاريع :category',
+        'browse_other_categories' => 'تصفح العقارات في فئات أخرى',
+        'category_description' => 'حول عقارات :category',
     ],
     
     'property_card' => [
@@ -235,13 +235,13 @@ return [
     'by_facility' => [
         'properties_available' => 'مشروع متاح',
         'view_facility' => 'عرض المنشأة',
-        'view_all_properties' => 'عرض جميع المشاريع',
-        'no_properties' => 'لم يتم العثور على مشاريع',
+        'view_all_properties' => 'عرض جميع العقارات',
+        'no_properties' => 'لم يتم العثور على عقارات',
         'facility_description' => 'وصف المنشأة',
     ],
     
     'hero' => [
         'title' => 'اعثر على مشروعك المثالي',
-        'subtitle' => 'اكتشف أفضل المشاريع في منطقتك',
+        'subtitle' => 'اكتشف أفضل العقارات في منطقتك',
     ],
 ];

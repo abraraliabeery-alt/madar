@@ -81,6 +81,7 @@ return [
     ],
 
     'actions' => [
+        'load_more' => 'مزید دیکھیں',
         'view_details' => 'تفصیلات دیکھیں',
         'browse_category' => 'زمرہ دیکھیں',
         'browse_properties' => 'پروجیکٹس دیکھیں',

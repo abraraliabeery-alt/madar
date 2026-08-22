@@ -39,9 +39,9 @@ return [
     'rent_offers' => 'عروض الإيجار',
     'total_value' => 'القيمة الإجمالية',
     'copy_offer' => 'نسخ العرض',
-    'select_product' => 'اختر المنتج',
+    'select_product' => 'اختر العقار',
     'offer_validation' => [
-        'product_id_required' => 'المنتج مطلوب',
+        'product_id_required' => 'العقار مطلوب',
         'offer_type_required' => 'نوع العرض مطلوب',
         'price_required' => 'السعر مطلوب',
         'price_numeric' => 'السعر يجب أن يكون رقماً',

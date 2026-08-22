@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('client.layouts.app')
 
 @section('title', __('client.appointments.create_title'))
 
@@ -100,6 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 @endsection
+
 
 
 

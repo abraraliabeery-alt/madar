@@ -21,6 +21,8 @@ use App\Http\Controllers\Public\BookingController;
 use App\Http\Controllers\FacilitySite\SiteController;
 use App\Http\Controllers\Admin\AdminPlanLotController;
 use App\Http\Controllers\Public\AggregatedAdsController;
+use App\Http\Controllers\Public\ProductRequestController;
+use App\Http\Controllers\Public\MarketingProductRequestController;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\File;
 
@@ -42,12 +44,12 @@ Route::group([], function () {
     }
 
     // Search Routes
-    Route::get('/search', [SearchController::class, 'index'])->name('search');
-    Route::get('/search/products', [SearchController::class, 'products'])->name('search.products');
-    Route::get('/search/facilities', [SearchController::class, 'facilities'])->name('search.facilities');
-    Route::get('/search/advanced', [SearchController::class, 'advanced'])->name('search.advanced');
-    Route::get('/search/map', [SearchController::class, 'map'])->name('search.map');
-    Route::get('/search/quick', [SearchController::class, 'quickSearch'])->name('search.quick');
+    Route::get('/search', [SearchController::class, 'index'])->middleware('platform.mode:real_estate')->name('search');
+    Route::get('/search/products', [SearchController::class, 'products'])->middleware('platform.mode:real_estate')->name('search.products');
+    Route::get('/search/facilities', [SearchController::class, 'facilities'])->middleware('platform.mode:real_estate')->name('search.facilities');
+    Route::get('/search/advanced', [SearchController::class, 'advanced'])->middleware('platform.mode:real_estate')->name('search.advanced');
+    Route::get('/search/map', [SearchController::class, 'map'])->middleware('platform.mode:real_estate')->name('search.map');
+    Route::get('/search/quick', [SearchController::class, 'quickSearch'])->middleware('platform.mode:real_estate')->name('search.quick');
 
     Route::get('/ads', [AggregatedAdsController::class, 'index'])->name('ads.index');
 
@@ -115,31 +117,34 @@ Route::group([], function () {
     Route::get('/contact/location', [ContactController::class, 'location'])->name('contact.location');
 
     // Product Routes
-    Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-    Route::get('/products/featured', [ProductController::class, 'featured'])->name('products.featured');
-    Route::get('/products/latest', [ProductController::class, 'latest'])->name('products.latest');
-    Route::get('/products/search', [ProductController::class, 'search'])->name('products.search');
-    Route::get('/products/map', [ProductController::class, 'map'])->name('products.map');
-    Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
-    Route::get('/categories/{category}/products', [ProductController::class, 'byCategory'])->name('products.by-category');
-    Route::get('/facilities/{facility}/products', [ProductController::class, 'byFacility'])->name('products.by-facility');
+    Route::get('/products', [ProductController::class, 'index'])->middleware('platform.mode:real_estate')->name('products.index');
+    Route::get('/products/featured', [ProductController::class, 'featured'])->middleware('platform.mode:real_estate')->name('products.featured');
+    Route::get('/products/latest', [ProductController::class, 'latest'])->middleware('platform.mode:real_estate')->name('products.latest');
+    Route::get('/products/search', [ProductController::class, 'search'])->middleware('platform.mode:real_estate')->name('products.search');
+    Route::get('/products/map', [ProductController::class, 'map'])->middleware('platform.mode:real_estate')->name('products.map');
+    Route::get('/products/{product}/pdf', [ProductController::class, 'pdf'])->middleware('platform.mode:real_estate')->name('products.pdf');
+    Route::get('/products/{product}/pdf/html', [ProductController::class, 'pdfHtml'])->middleware('platform.mode:real_estate')->name('products.pdf.html');
+    Route::get('/products/{product}/gallery', [ProductController::class, 'gallery'])->middleware('platform.mode:real_estate')->name('products.gallery');
+    Route::get('/products/{product}', [ProductController::class, 'show'])->middleware('platform.mode:real_estate')->name('products.show');
+    Route::get('/categories/{category}/products', [ProductController::class, 'byCategory'])->middleware('platform.mode:real_estate')->name('products.by-category');
+    Route::get('/facilities/{facility}/products', [ProductController::class, 'byFacility'])->middleware('platform.mode:real_estate')->name('products.by-facility');
 
     // Facility Routes
-    Route::middleware(['facility.mode'])->group(function () {
+    Route::middleware(['facility.mode', 'platform.mode:real_estate'])->group(function () {
         Route::get('/facilities', [FacilityController::class, 'index'])->name('facilities.index');
         Route::get('/facilities/featured', [FacilityController::class, 'featured'])->name('facilities.featured');
         Route::get('/facilities/search', [FacilityController::class, 'search'])->name('facilities.search');
         Route::get('/facilities/map', [FacilityController::class, 'map'])->name('facilities.map');
         // Single public facility page: redirect legacy public facility profile to the Facility Site
         Route::get('/facilities/{facility}', function ($facility) {
-            return redirect()->route('public.facility.site.home', $facility);
+            return redirect()->route('facility.site.home', $facility);
         })->name('facilities.show');
         // Legacy public forms for appointment and quote => redirect to site contact section
         Route::get('/facilities/{facility}/appointment', function ($facility) {
-            return redirect()->to(route('public.facility.site.home', $facility) . '#contact');
+            return redirect()->to(route('facility.site.home', $facility) . '#contact');
         })->name('facilities.appointment.form');
         Route::get('/facilities/{facility}/quote', function ($facility) {
-            return redirect()->to(route('public.facility.site.home', $facility) . '#contact');
+            return redirect()->to(route('facility.site.home', $facility) . '#contact');
         })->name('facilities.quote.form');
         Route::get('/facility-categories/{category}/facilities', [FacilityController::class, 'byCategory'])->name('facilities.by-category');
     });
@@ -230,13 +235,22 @@ Route::group([], function () {
     Route::get('/investment-studies', [LandStudyController::class, 'form'])->name('public.investment-studies.form');
     Route::post('/investment-studies', [LandStudyController::class, 'submit'])->name('public.investment-studies.submit');
 
+    // Public product request (with voice + AI matching)
+    Route::get('/request-product', [ProductRequestController::class, 'form'])->name('product-requests.form');
+    Route::post('/request-product/analyze', [ProductRequestController::class, 'analyze'])->name('product-requests.analyze');
+    Route::post('/request-product', [ProductRequestController::class, 'store'])->name('product-requests.store');
+
+    // Public marketing product request (with voice + AI matching)
+    Route::get('/request-marketing-product', [MarketingProductRequestController::class, 'form'])->name('marketing-product-requests.form');
+    Route::post('/request-marketing-product/analyze', [MarketingProductRequestController::class, 'analyze'])->name('marketing-product-requests.analyze');
+    Route::post('/request-marketing-product', [MarketingProductRequestController::class, 'store'])->name('marketing-product-requests.store');
+
     // Error Pages
     Route::get('/404', [ErrorController::class, 'notFound'])->name('404');
     Route::get('/500', [ErrorController::class, 'serverError'])->name('500');
     Route::get('/maintenance', [ErrorController::class, 'maintenance'])->name('maintenance');
 
     // Facility public site (initial integration)
-    Route::get('/site/{facility}', [SiteController::class, 'home'])->name('facility.site.home');
     Route::prefix('/site/{facility}')
         ->name('facility.site.')
         ->group(function(){

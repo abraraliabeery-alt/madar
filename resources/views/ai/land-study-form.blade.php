@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>محلل الاستثمار المشاريعي السعودي (متصل بـ AI)</title>
+    <title>مدار الذكي</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons CDN -->
@@ -31,6 +31,10 @@
         /* Import a clean Arabic font */
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;600;700&display=swap');
         
+        html {
+            font-size: clamp(12px, 1.6vw, 14px);
+        }
+
         body {
             font-family: 'Noto Sans Arabic', sans-serif;
             background-color: #f7f8f9; /* Off-white background */
@@ -149,7 +153,7 @@
         <!-- 1. Sidebar (New Chat/History) -->
         <aside id="sidebar" class="w-full md:w-64 bg-white p-4 flex-shrink-0 border-l border-gray-200 shadow-xl md:shadow-none transition-transform duration-300 ease-in-out transform -translate-x-full md:translate-x-0 absolute md:relative z-20 h-full">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-xl font-bold text-gray-800">محلل الاستثمار المشاريعي السعودي</h2>
+                <h2 class="text-xl font-bold text-gray-800">مدار الذكي</h2>
                 <button id="close-sidebar-btn" class="md:hidden p-2 text-gray-600 hover:text-gray-800">
                     <i data-lucide="x"></i>
                 </button>
@@ -158,7 +162,7 @@
             <!-- New Chat Button -->
             <button class="w-full flex items-center justify-center p-3 mb-4 rounded-xl bg-primary-blue text-white font-semibold hover:bg-emerald-600 transition duration-150 shadow-md">
                 <i data-lucide="plus" class="w-5 h-5 ml-2"></i>
-                دراسة جديدة
+                استشارة جديدة
             </button>
 
             <!-- Recent Chats (Mock) -->
@@ -171,16 +175,6 @@
                     مقترحات تطوير أرض سكنية
                 </a>
             </div>
-            
-            <div class="absolute bottom-4 left-4 right-4">
-                <div class="flex items-center p-3 bg-gray-50 rounded-xl">
-                    <div class="w-8 h-8 rounded-full bg-primary-blue flex items-center justify-center text-white font-bold text-sm">أ.ك</div>
-                    <div class="mr-3">
-                        <p class="font-semibold text-sm text-gray-800">أحمد الكودر</p>
-                        <p class="text-xs text-gray-500">الحساب الأساسي</p>
-                    </div>
-                </div>
-            </div>
         </aside>
 
         <!-- 2. Chat Window -->
@@ -191,37 +185,11 @@
                 <button id="open-sidebar-btn" class="p-2 text-gray-600 hover:text-gray-800">
                     <i data-lucide="menu"></i>
                 </button>
-                <h1 class="text-lg font-semibold text-gray-800 mx-auto">محلل الاستثمار السعودي</h1>
+                <h1 class="text-lg font-semibold text-gray-800 mx-auto">مدار الذكي</h1>
             </header>
 
             <!-- Chat Messages Area -->
             <div id="chat-area" class="chat-area flex-1 overflow-y-auto p-4 md:p-8 space-y-6">
-                <!-- Welcome/Initial Prompts -->
-                <div class="flex flex-col items-center justify-center h-full text-center p-4">
-                    <i data-lucide="building-2" class="w-12 h-12 text-primary-blue mb-4"></i>
-                    <h2 class="text-2xl font-bold text-gray-800 mb-2">كيف يمكنني مساعدتك في مشروعك المشاريعي في السعودية؟</h2>
-                    <p class="text-gray-500 mb-8">أنا متخصص في دراسات الجدوى، تحليل الأراضي، ومقترحات التطوير وفقاً **للكود السعودي للبناء (SBC)**.</p>
-                    
-                    <!-- Quick Prompt Suggestions (UX Feature) -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-2xl">
-                        <button class="quick-prompt p-4 rounded-xl bg-white border border-gray-200 text-gray-700 hover:bg-gray-100 transition duration-150 shadow-sm text-right" data-prompt="تحليل جدوى أرض تجارية بمساحة 1000م في الرياض.">
-                            <i data-lucide="bar-chart-3" class="w-5 h-5 mb-2 text-primary-blue"></i>
-                            <p class="font-semibold">تحليل جدوى أرض تجارية بمساحة 1000م في الرياض.</p>
-                        </button>
-                        <button class="quick-prompt p-4 rounded-xl bg-white border border-gray-200 text-gray-700 hover:bg-gray-100 transition duration-150 shadow-sm text-right" data-prompt="مقترحات استثمارية لأرض سكنية في جدة مع التركيز على وحدات الإيجار.">
-                            <i data-lucide="map-pin" class="w-5 h-5 mb-2 text-primary-blue"></i>
-                            <p class="font-semibold">مقترحات استثمارية لأرض سكنية في جدة مع التركيز على وحدات الإيجار.</p>
-                        </button>
-                        <button class="quick-prompt p-4 rounded-xl bg-white border border-gray-200 text-gray-700 hover:bg-gray-100 transition duration-150 shadow-sm text-right" data-prompt="مقارنة بين تطوير فيلا فاخرة وبناء وحدات صغيرة في الخبر.">
-                            <i data-lucide="home" class="w-5 h-5 mb-2 text-primary-blue"></i>
-                            <p class="font-semibold">مقارنة بين تطوير فيلا فاخرة وبناء وحدات صغيرة في الخبر.</p>
-                        </button>
-                        <button class="quick-prompt p-4 rounded-xl bg-white border border-gray-200 text-gray-700 hover:bg-gray-100 transition duration-150 shadow-sm text-right" data-prompt="ما هي المتطلبات التنظيمية للبناء الصناعي وفقاً للكود السعودي؟">
-                            <i data-lucide="scroll-text" class="w-5 h-5 mb-2 text-primary-blue"></i>
-                            <p class="font-semibold">ما هي المتطلبات التنظيمية للبناء الصناعي وفقاً للكود السعودي؟</p>
-                        </button>
-                    </div>
-                </div>
 
                 <!-- Messages will be injected here -->
 
@@ -241,40 +209,10 @@
 
             <!-- Input Footer -->
             <footer class="p-4 md:p-6 border-t border-gray-200 bg-white space-y-3">
-                <!-- Structured Prompt Helper -->
-                <div class="max-w-4xl mx-auto mb-1 bg-gray-50 rounded-2xl border border-dashed border-gray-300 p-3 md:p-4">
-                    <div class="flex flex-col md:flex-row md:items-end gap-3">
-                        <div class="flex-1 grid grid-cols-1 md:grid-cols-3 gap-3">
-                            <div>
-                                <label class="block text-xs font-medium text-gray-600 mb-1">نوع المستخدم</label>
-                                <select id="role-select" class="w-full text-xs rounded-xl border-gray-300 focus:ring-primary-blue focus:border-primary-blue">
-                                    <option value="investor">مستثمر مشاريعي</option>
-                                    <option value="builder">شخص يريد البناء</option>
-                                    <option value="contractor">مقاول</option>
-                                    <option value="architect">مهندس معماري</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-medium text-gray-600 mb-1">رابط الأرض (Google Maps)</label>
-                                <input id="gmaps-url" type="text" class="w-full text-xs rounded-xl border-gray-300 focus:ring-primary-blue focus:border-primary-blue" placeholder="مثال: https://maps.app.goo.gl/...">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-medium text-gray-600 mb-1">المساحة م²</label>
-                                <input id="land-area" type="number" min="1" class="w-full text-xs rounded-xl border-gray-300 focus:ring-primary-blue focus:border-primary-blue" placeholder="مثال: 1500">
-                            </div>
-                        </div>
-                        <div class="flex-shrink-0 flex flex-col items-stretch gap-2 md:w-40">
-                            <button id="build-prompt-btn" type="button" class="inline-flex items-center justify-center px-3 py-2 rounded-xl bg-primary-blue text-white text-xs font-semibold hover:bg-emerald-600 shadow">
-                                <i data-lucide="sparkles" class="w-4 h-4 ml-1"></i>
-                                توليد أفضل صياغة
-                            </button>
-                            <span class="text-[10px] text-gray-400 text-center">اختر النوع وأضف الرابط والمساحة ثم اضغط التوليد، بعدها عدّل النص وأرسله.</span>
-                        </div>
-                    </div>
-                </div>
+                <!-- Chat input only -->
 
                 <div class="max-w-4xl mx-auto flex items-end bg-gray-50 rounded-3xl shadow-lg border border-gray-200">
-                    <textarea id="user-input" rows="1" class="flex-1 w-full p-4 resize-none bg-transparent focus:outline-none placeholder-gray-400 text-gray-800" placeholder="أدخل معطيات الأرض (المساحة، الموقع، الاستخدام)... (اضغط Enter للإرسال)" oninput="adjustTextareaHeight(this)"></textarea>
+                    <textarea id="user-input" rows="1" class="flex-1 w-full p-4 resize-none bg-transparent focus:outline-none placeholder-gray-400 text-gray-800" placeholder="...اكتب رسالتك" oninput="adjustTextareaHeight(this)"></textarea>
                     
                     <!-- Send Button -->
                     <button id="send-btn" class="flex-shrink-0 p-3 m-2 rounded-full bg-primary-blue text-white disabled:bg-gray-400 hover:bg-emerald-600 transition duration-150 shadow-lg" disabled>
@@ -288,8 +226,11 @@
     </div>
 
     <script>
-        // Initialize Lucide icons
-        lucide.createIcons();
+        // Initialize Lucide icons (safe: CDN may fail)
+        function safeCreateIcons() {
+            try { if (window.lucide) window.lucide.createIcons(); } catch (e) { console.warn('lucide failed', e); }
+        }
+        safeCreateIcons();
 
         const chatArea = document.getElementById('chat-area');
         const userInput = document.getElementById('user-input');
@@ -364,7 +305,7 @@
             messageContainer.appendChild(contentDiv);
             
             // Re-render Lucide icons for the copy button
-            setTimeout(() => lucide.createIcons(), 0); 
+            setTimeout(safeCreateIcons, 0);
             
             return messageContainer;
         }
@@ -468,7 +409,7 @@
                 sendBtn.disabled = userInput.value.trim() === '';
                 userInput.focus();
                 scrollToBottom();
-                lucide.createIcons(); // Re-render icons after content update
+                safeCreateIcons(); // Re-render icons after content update
                 
                 // Save the final AI message (simulated)
                 // window.saveMessageToFirestore({ role: 'ai', text: aiContentDiv.innerHTML });
@@ -635,7 +576,14 @@
 
         // Ensure icons are created after the DOM loads
         window.onload = function() {
-            lucide.createIcons();
+            safeCreateIcons();
+            const params = new URLSearchParams(window.location.search);
+            const prompt = params.get('prompt');
+            if (prompt && userInput) {
+                userInput.value = prompt;
+                userInput.dispatchEvent(new Event('input'));
+                userInput.focus();
+            }
             // initializeFirebase(); // Uncomment this line if you want to initialize Firebase on load
         }
     </script>

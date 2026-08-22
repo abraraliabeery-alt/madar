@@ -48,7 +48,7 @@
         {{-- Filters --}}
         <div class="bg-white rounded-lg shadow border border-gray-200 p-6 mb-6">
             @php
-                // إذا كنا في صفحة تصنيف نستخدم راوت التصنيف، وإلا صفحة المنتجات العامة
+                // إذا كنا في صفحة تصنيف نستخدم راوت التصنيف، وإلا صفحة العقارات العامة
                 $filtersAction = isset($currentCategory)
                     ? route('facility.categories.products', $currentCategory)
                     : route('facility.products.index');
@@ -162,7 +162,7 @@
                             <input type="checkbox" id="featured" name="featured" value="1"
                                    class="h-4 w-4 text-blue-600 border-gray-300 rounded ml-2"
                                    {{ request('featured') ? 'checked' : '' }}>
-                            <label for="featured" class="text-sm text-gray-700">إظهار المنتجات المميزة فقط</label>
+                            <label for="featured" class="text-sm text-gray-700">إظهار العقارات المميزة فقط</label>
                         </div>
                     </div>
 
@@ -173,7 +173,7 @@
                             <input type="checkbox" id="verified" name="verified" value="1"
                                    class="h-4 w-4 text-blue-600 border-gray-300 rounded ml-2"
                                    {{ request('verified') ? 'checked' : '' }}>
-                            <label for="verified" class="text-sm text-gray-700">إظهار المنتجات الموثقة فقط</label>
+                            <label for="verified" class="text-sm text-gray-700">إظهار العقارات الموثقة فقط</label>
                         </div>
                     </div>
                     
@@ -542,7 +542,7 @@
                                                 {{ $product->category ? $product->category->getTranslatedName('ar') : __('facility.products.unspecified') }}
                                             </span>
                                             <span>
-                                                {{ $product->status ? $product->status->name : __('facility.products.unspecified') }}
+                                                {{ $product->status ? $product->status->getTranslatedName('ar') : __('facility.products.unspecified') }}
                                             </span>
                                         </div>
                                         <div class="flex items-center justify-between mt-2">
@@ -763,7 +763,7 @@
                     .concat(mobileChecks().filter(cb => cb.checked));
 
                 if (selected.length === 0) {
-                    alert('لم يتم تحديد أي منتجات');
+                    alert('لم يتم تحديد أي عقارات');
                     return;
                 }
 

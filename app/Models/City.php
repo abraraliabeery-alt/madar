@@ -90,6 +90,21 @@ class City extends Model
     }
 
     /**
+     * Get the city image URL with fallback.
+     */
+    public function getImageUrlAttribute()
+    {
+        if ($this->image) {
+            if (strpos($this->image, '://') !== false) {
+                return $this->image;
+            }
+            return asset('storage/' . $this->image);
+        }
+
+        return 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80';
+    }
+
+    /**
      * Get the active cities
      */
     public function scopeActive($query)

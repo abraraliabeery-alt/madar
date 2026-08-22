@@ -160,7 +160,7 @@
                                 <i class="fas fa-sitemap text-info me-2"></i>
                                 الفئات الفرعية ({{ $category->children->count() }})
                             </h6>
-                            <span class="badge bg-info">{{ $category->children->sum('products_count') }} منتج إجمالي</span>
+                            <span class="badge bg-info">{{ $category->children->sum('products_count') }} عقار إجمالي</span>
                         </div>
                         <div class="card-body">
                             <div class="row g-3">
@@ -200,7 +200,7 @@
                                             <div class="d-flex justify-content-between align-items-center mb-3">
                                                 <span class="text-muted">
                                                     <i class="fas fa-box me-1"></i>
-                                                    {{ $child->products_count }} منتج
+                                                    {{ $child->products_count }} عقار
                                                 </span>
                                                 <span class="text-muted">
                                                     <i class="fas fa-calendar me-1"></i>
@@ -241,7 +241,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h6 class="mb-0">المنتجات</h6>
+                            <h6 class="mb-0">العقارات</h6>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -261,7 +261,7 @@
                                         <tr>
                                             <td>
                                                 @if($product->main_image)
-                                                    <img src="{{ asset($product->main_image) }}" alt="product" width="50" class="rounded">
+                                                    <img src="{{ asset($product->main_image) }}" alt="عقار" width="50" class="rounded">
                                                 @else
                                                     <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
                                                         <i class="fas fa-box text-muted"></i>

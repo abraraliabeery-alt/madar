@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('client.layouts.app')
 
 @section('title', __('client.favorites.title'))
 
@@ -288,3 +288,4 @@ document.addEventListener('DOMContentLoaded', function() {
 </style>
 @endpush
 @endsection
+

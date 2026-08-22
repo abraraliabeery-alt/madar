@@ -79,6 +79,29 @@ class LanguageService
     }
 
     /**
+     * Locale codes that render right-to-left.
+     *
+     * Static so that stateless renderers (e.g. PDF views) can resolve direction
+     * for an arbitrary locale rather than only the active one.
+     *
+     * @return array<int, string>
+     */
+    public static function rtlLocales(): array
+    {
+        $languages = (new static())->getAvailableLanguages();
+
+        return array_keys(array_filter($languages, fn ($language) => ! empty($language['rtl'])));
+    }
+
+    /**
+     * Whether the given locale renders right-to-left.
+     */
+    public static function localeIsRtl(?string $locale): bool
+    {
+        return in_array((string) $locale, static::rtlLocales(), true);
+    }
+
+    /**
      * Set language
      */
     public function setLanguage($language)

@@ -109,7 +109,7 @@
                                     <div class="d-flex justify-content-between align-items-center mb-3">
                                         <span class="text-muted">
                                             <i class="fas fa-box me-1"></i>
-                                            {{ $mainCategory->products_count }} منتج
+                                            {{ $mainCategory->products_count }} عقار
                                         </span>
                                         <span class="text-muted">
                                             <i class="fas fa-sitemap me-1"></i>
@@ -141,6 +141,12 @@
                                            class="btn btn-sm btn-outline-warning">
                                             <i class="fas fa-edit"></i>
                                         </a>
+                                        <form method="POST" action="{{ route('admin.categories.toggle-status', $mainCategory) }}" class="d-inline">
+                                            @csrf
+                                            <button type="submit" class="btn btn-sm {{ $mainCategory->is_active ? 'btn-outline-danger' : 'btn-outline-success' }}">
+                                                <i class="fas {{ $mainCategory->is_active ? 'fa-ban' : 'fa-check' }} me-1"></i>{{ $mainCategory->is_active ? 'تعطيل' : 'تفعيل' }}
+                                            </button>
+                                        </form>
                                         @if($mainCategory->products_count == 0 && $mainCategory->children->count() == 0)
                                             <button type="button" 
                                                     class="btn btn-sm btn-outline-danger delete-confirm"
@@ -170,8 +176,8 @@
                                 <tr>
                                     <th>الأيقونة</th>
                                     <th>الاسم</th>
-                                    <th>الفئة الأب</th>
-                                    <th>عدد المنتجات</th>
+                                    <th>{{ __('admin.categories.parent') }}</th>
+                                    <th>عدد العقارات</th>
                                     <th>الحالة</th>
                                     <th>الترجمات</th>
                                     <th>الإجراءات</th>
@@ -206,7 +212,8 @@
                                     </td>
                                     <td>
                                         <a href="{{ route('admin.categories.show', $subCategory->parent) }}" 
-                                           class="badge bg-info text-decoration-none">
+                                           class="badge bg-primary text-decoration-none"
+                                           style="color: #ffffff !important;">
                                             {{ $subCategory->parent->name }}
                                         </a>
                                     </td>
@@ -362,6 +369,14 @@
     .statistics-cards .card {
         margin-bottom: 1rem;
     }
+}
+
+/* Main category card buttons text color on hover/active in light mode */
+.category-card .btn-outline-info:hover,
+.category-card .btn-outline-info:focus,
+.category-card .btn-outline-info:active,
+.category-card .btn-outline-info.active {
+    color: #ffffff !important;
 }
 </style>
 @endpush

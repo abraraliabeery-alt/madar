@@ -163,22 +163,26 @@ class ApiFacilityController extends Controller
             $query->where('category_id', $request->category_id);
         }
 
-        // فلترة حسب السعر
+        // فلترة حسب السعر (العروض النشطة)
         if ($request->has('min_price') && $request->min_price) {
-            $query->where('price', '>=', $request->min_price);
+            $query->whereHas('activeOffers', function ($q) use ($request) {
+                $q->where('price', '>=', $request->min_price);
+            });
         }
         if ($request->has('max_price') && $request->max_price) {
-            $query->where('price', '<=', $request->max_price);
+            $query->whereHas('activeOffers', function ($q) use ($request) {
+                $q->where('price', '<=', $request->max_price);
+            });
         }
 
         // فلترة حسب نوع العقار
         if ($request->has('property_type')) {
             switch ($request->property_type) {
                 case 'sale':
-                    $query->where('available_for_sale', true);
+                    $query->whereHas('saleOffers');
                     break;
                 case 'rent':
-                    $query->where('available_for_rent', true);
+                    $query->whereHas('rentOffers');
                     break;
             }
         }
@@ -187,10 +191,10 @@ class ApiFacilityController extends Controller
         $sortBy = $request->get('sort', 'latest');
         switch ($sortBy) {
             case 'price_low':
-                $query->orderBy('price', 'asc');
+                $query->orderByRaw('(SELECT MIN(price) FROM offers WHERE offers.product_id = products.id) asc');
                 break;
             case 'price_high':
-                $query->orderBy('price', 'desc');
+                $query->orderByRaw('(SELECT MIN(price) FROM offers WHERE offers.product_id = products.id) desc');
                 break;
             case 'featured':
                 $query->orderBy('is_featured', 'desc');

@@ -1,6 +1,6 @@
-@extends('layouts.app')
+﻿@extends('client.layouts.app')
 
-@section('title', 'تفاصيل الحجز #' . $booking->id)
+@section('title', 'طھظپط§طµظٹظ„ ط§ظ„ط­ط¬ط² #' . $booking->id)
 
 @section('content')
 <div class="min-h-screen bg-gray-50 py-8">
@@ -9,7 +9,7 @@
         <div class="flex items-center justify-between mb-8">
             <div>
                 <h1 class="text-3xl font-bold text-gray-900">
-                    تفاصيل الحجز #{{ $booking->id }}
+                    طھظپط§طµظٹظ„ ط§ظ„ط­ط¬ط² #{{ $booking->id }}
                 </h1>
                 <p class="text-lg text-gray-600 mt-2">
                     {{ $booking->created_at->format('Y/m/d H:i') }}
@@ -19,7 +19,7 @@
                 <a href="{{ route('client.bookings.index') }}" 
                    class="inline-flex items-center px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition duration-200">
                     <i class="fas fa-arrow-right ml-2"></i>
-                    العودة للقائمة
+                    ط§ظ„ط¹ظˆط¯ط© ظ„ظ„ظ‚ط§ط¦ظ…ط©
                 </a>
             </div>
         </div>
@@ -30,7 +30,7 @@
                 <!-- Booking Status -->
                 <div class="bg-white rounded-lg shadow-md p-6 mb-6">
                     <div class="flex items-center justify-between">
-                        <h2 class="text-xl font-semibold text-gray-900">حالة الحجز</h2>
+                        <h2 class="text-xl font-semibold text-gray-900">ط­ط§ظ„ط© ط§ظ„ط­ط¬ط²</h2>
                         <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
                             @if($booking->status == 'confirmed') bg-green-100 text-green-800
                             @elseif($booking->status == 'cancelled') bg-red-100 text-red-800
@@ -38,16 +38,16 @@
                             @else bg-yellow-100 text-yellow-800 @endif">
                             @if($booking->status == 'confirmed')
                                 <i class="fas fa-check-circle ml-1"></i>
-                                مؤكد
+                                ظ…ط¤ظƒط¯
                             @elseif($booking->status == 'cancelled')
                                 <i class="fas fa-times-circle ml-1"></i>
-                                ملغي
+                                ظ…ظ„ط؛ظٹ
                             @elseif($booking->status == 'rescheduled')
                                 <i class="fas fa-calendar-alt ml-1"></i>
-                                تم إعادة الجدولة
+                                طھظ… ط¥ط¹ط§ط¯ط© ط§ظ„ط¬ط¯ظˆظ„ط©
                             @else
                                 <i class="fas fa-clock ml-1"></i>
-                                في انتظار التأكيد
+                                ظپظٹ ط§ظ†طھط¸ط§ط± ط§ظ„طھط£ظƒظٹط¯
                             @endif
                         </span>
                     </div>
@@ -55,33 +55,33 @@
 
                 <!-- Booking Details -->
                 <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-                    <h2 class="text-xl font-semibold text-gray-900 mb-6">تفاصيل الحجز</h2>
+                    <h2 class="text-xl font-semibold text-gray-900 mb-6">طھظپط§طµظٹظ„ ط§ظ„ط­ط¬ط²</h2>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <h3 class="text-sm font-medium text-gray-500 mb-2">الاسم</h3>
+                            <h3 class="text-sm font-medium text-gray-500 mb-2">ط§ظ„ط§ط³ظ…</h3>
                             <p class="text-gray-900">{{ $booking->name }}</p>
                         </div>
                         
                         <div>
-                            <h3 class="text-sm font-medium text-gray-500 mb-2">البريد الإلكتروني</h3>
+                            <h3 class="text-sm font-medium text-gray-500 mb-2">ط§ظ„ط¨ط±ظٹط¯ ط§ظ„ط¥ظ„ظƒطھط±ظˆظ†ظٹ</h3>
                             <p class="text-gray-900">{{ $booking->email }}</p>
                         </div>
                         
                         <div>
-                            <h3 class="text-sm font-medium text-gray-500 mb-2">رقم الهاتف</h3>
+                            <h3 class="text-sm font-medium text-gray-500 mb-2">ط±ظ‚ظ… ط§ظ„ظ‡ط§طھظپ</h3>
                             <p class="text-gray-900">{{ $booking->phone }}</p>
                         </div>
                         
                         <div>
-                            <h3 class="text-sm font-medium text-gray-500 mb-2">نوع الزيارة</h3>
+                            <h3 class="text-sm font-medium text-gray-500 mb-2">ظ†ظˆط¹ ط§ظ„ط²ظٹط§ط±ط©</h3>
                             <p class="text-gray-900">
                                 @if($booking->visit_type == 'inspection')
-                                    معاينة المشروع
+                                    ظ…ط¹ط§ظٹظ†ط© ط§ظ„ظ…ط´ط±ظˆط¹
                                 @elseif($booking->visit_type == 'consultation')
-                                    استشارة مشاريعية
+                                    ط§ط³طھط´ط§ط±ط© ظ…ط´ط§ط±ظٹط¹ظٹط©
                                 @elseif($booking->visit_type == 'meeting')
-                                    اجتماع
+                                    ط§ط¬طھظ…ط§ط¹
                                 @else
                                     {{ $booking->visit_type }}
                                 @endif
@@ -89,25 +89,25 @@
                         </div>
                         
                         <div>
-                            <h3 class="text-sm font-medium text-gray-500 mb-2">التاريخ المفضل</h3>
+                            <h3 class="text-sm font-medium text-gray-500 mb-2">ط§ظ„طھط§ط±ظٹط® ط§ظ„ظ…ظپط¶ظ„</h3>
                             <p class="text-gray-900">
                                 @if($booking->preferred_date)
                                     {{ $booking->preferred_date->format('Y/m/d') }}
                                 @else
-                                    غير محدد
+                                    ط؛ظٹط± ظ…ط­ط¯ط¯
                                 @endif
                             </p>
                         </div>
                         
                         <div>
-                            <h3 class="text-sm font-medium text-gray-500 mb-2">الوقت المفضل</h3>
+                            <h3 class="text-sm font-medium text-gray-500 mb-2">ط§ظ„ظˆظ‚طھ ط§ظ„ظ…ظپط¶ظ„</h3>
                             <p class="text-gray-900">
                                 @if($booking->preferred_time == 'morning')
-                                    صباحاً (9:00 - 12:00)
+                                    طµط¨ط§ط­ط§ظ‹ (9:00 - 12:00)
                                 @elseif($booking->preferred_time == 'afternoon')
-                                    بعد الظهر (12:00 - 17:00)
+                                    ط¨ط¹ط¯ ط§ظ„ط¸ظ‡ط± (12:00 - 17:00)
                                 @elseif($booking->preferred_time == 'evening')
-                                    مساءً (17:00 - 20:00)
+                                    ظ…ط³ط§ط،ظ‹ (17:00 - 20:00)
                                 @else
                                     {{ $booking->preferred_time }}
                                 @endif
@@ -117,21 +117,21 @@
                     
                     @if($booking->message)
                         <div class="mt-6">
-                            <h3 class="text-sm font-medium text-gray-500 mb-2">الرسالة</h3>
+                            <h3 class="text-sm font-medium text-gray-500 mb-2">ط§ظ„ط±ط³ط§ظ„ط©</h3>
                             <p class="text-gray-900 bg-gray-50 p-4 rounded-lg">{{ $booking->message }}</p>
                         </div>
                     @endif
 
                     @if($booking->reschedule_reason)
                         <div class="mt-6">
-                            <h3 class="text-sm font-medium text-gray-500 mb-2">سبب إعادة الجدولة</h3>
+                            <h3 class="text-sm font-medium text-gray-500 mb-2">ط³ط¨ط¨ ط¥ط¹ط§ط¯ط© ط§ظ„ط¬ط¯ظˆظ„ط©</h3>
                             <p class="text-gray-900 bg-yellow-50 p-4 rounded-lg">{{ $booking->reschedule_reason }}</p>
                         </div>
                     @endif
 
                     @if($booking->cancellation_reason)
                         <div class="mt-6">
-                            <h3 class="text-sm font-medium text-gray-500 mb-2">سبب الإلغاء</h3>
+                            <h3 class="text-sm font-medium text-gray-500 mb-2">ط³ط¨ط¨ ط§ظ„ط¥ظ„ط؛ط§ط،</h3>
                             <p class="text-gray-900 bg-red-50 p-4 rounded-lg">{{ $booking->cancellation_reason }}</p>
                         </div>
                     @endif
@@ -140,20 +140,20 @@
                 <!-- Actions -->
                 @if(in_array($booking->status, ['pending', 'confirmed']))
                     <div class="bg-white rounded-lg shadow-md p-6">
-                        <h2 class="text-xl font-semibold text-gray-900 mb-4">الإجراءات المتاحة</h2>
+                        <h2 class="text-xl font-semibold text-gray-900 mb-4">ط§ظ„ط¥ط¬ط±ط§ط،ط§طھ ط§ظ„ظ…طھط§ط­ط©</h2>
                         <div class="flex flex-wrap gap-4">
                             @if($booking->status == 'pending')
                                 <button onclick="rescheduleBooking({{ $booking->id }})" 
                                         class="inline-flex items-center px-4 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 transition duration-200">
                                     <i class="fas fa-calendar-alt ml-2"></i>
-                                    إعادة جدولة
+                                    ط¥ط¹ط§ط¯ط© ط¬ط¯ظˆظ„ط©
                                 </button>
                             @endif
                             
                             <button onclick="cancelBooking({{ $booking->id }})" 
                                     class="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition duration-200">
                                 <i class="fas fa-times ml-2"></i>
-                                إلغاء الحجز
+                                ط¥ظ„ط؛ط§ط، ط§ظ„ط­ط¬ط²
                             </button>
                         </div>
                     </div>
@@ -164,7 +164,7 @@
             <div class="space-y-6">
                 <!-- Product Info -->
                 <div class="bg-white rounded-lg shadow-md p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">معلومات المشروع</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">ظ…ط¹ظ„ظˆظ…ط§طھ ط§ظ„ظ…ط´ط±ظˆط¹</h3>
                     <div class="space-y-4">
                         <div class="flex items-center space-x-3 space-x-reverse">
                             <img src="{{ $booking->product->image_url }}" 
@@ -175,7 +175,7 @@
                                 <p class="text-sm text-gray-600">{{ $booking->product->address }}</p>
                                 @if($booking->product->price)
                                     <p class="text-sm font-semibold text-primary-600">
-                                        {{ number_format($booking->product->price) }} ريال
+                                        {{ number_format($booking->product->price) }} ط±ظٹط§ظ„
                                     </p>
                                 @endif
                             </div>
@@ -184,7 +184,7 @@
                         <a href="{{ route('public.products.show', $booking->product) }}" 
                            class="inline-flex items-center text-primary-600 hover:text-primary-700 text-sm font-medium">
                             <i class="fas fa-external-link-alt ml-2"></i>
-                            عرض المشروع
+                            ط¹ط±ط¶ ط§ظ„ظ…ط´ط±ظˆط¹
                         </a>
                     </div>
                 </div>
@@ -192,22 +192,22 @@
                 <!-- Offer Info -->
                 @if($booking->offer)
                     <div class="bg-white rounded-lg shadow-md p-6">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-4">تفاصيل العرض</h3>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">طھظپط§طµظٹظ„ ط§ظ„ط¹ط±ط¶</h3>
                         <div class="space-y-2">
                             <p class="text-sm text-gray-600">
-                                <strong>السعر:</strong> {{ number_format($booking->offer->price) }} ريال
+                                <strong>ط§ظ„ط³ط¹ط±:</strong> {{ number_format($booking->offer->price) }} ط±ظٹط§ظ„
                             </p>
                             @if($booking->offer->deposit_amount)
                                 <p class="text-sm text-gray-600">
-                                    <strong>العربون:</strong> {{ number_format($booking->offer->deposit_amount) }} ريال
+                                    <strong>ط§ظ„ط¹ط±ط¨ظˆظ†:</strong> {{ number_format($booking->offer->deposit_amount) }} ط±ظٹط§ظ„
                                 </p>
                             @endif
                             <p class="text-sm text-gray-600">
-                                <strong>نوع العرض:</strong> 
+                                <strong>ظ†ظˆط¹ ط§ظ„ط¹ط±ط¶:</strong>
                                 @if($booking->offer->offer_type == 'sale')
-                                    بيع
+                                    ط¨ظٹط¹
                                 @elseif(str_starts_with($booking->offer->offer_type, 'rent_'))
-                                    إيجار
+                                    ط¥ظٹط¬ط§ط±
                                 @else
                                     {{ $booking->offer->offer_type }}
                                 @endif
@@ -219,7 +219,7 @@
                 <!-- Facility Info -->
                 @if($booking->facility)
                     <div class="bg-white rounded-lg shadow-md p-6">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-4">معلومات المؤسسة</h3>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">ظ…ط¹ظ„ظˆظ…ط§طھ ط§ظ„ظ…ط¤ط³ط³ط©</h3>
                         <div class="flex items-center space-x-3 space-x-reverse mb-4">
                             <img src="{{ $booking->facility->logo ?? 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80' }}" 
                                  alt="{{ $booking->facility->name }}" 
@@ -240,7 +240,7 @@
 
                 <!-- Timeline -->
                 <div class="bg-white rounded-lg shadow-md p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">سجل الحجز</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">ط³ط¬ظ„ ط§ظ„ط­ط¬ط²</h3>
                     <div class="space-y-4">
                         <div class="flex items-start space-x-3 space-x-reverse">
                             <div class="flex-shrink-0">
@@ -249,7 +249,7 @@
                                 </div>
                             </div>
                             <div>
-                                <p class="text-sm font-medium text-gray-900">تم إنشاء الحجز</p>
+                                <p class="text-sm font-medium text-gray-900">طھظ… ط¥ظ†ط´ط§ط، ط§ظ„ط­ط¬ط²</p>
                                 <p class="text-xs text-gray-500">{{ $booking->created_at->format('Y/m/d H:i') }}</p>
                             </div>
                         </div>
@@ -262,7 +262,7 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <p class="text-sm font-medium text-gray-900">تم إعادة الجدولة</p>
+                                    <p class="text-sm font-medium text-gray-900">طھظ… ط¥ط¹ط§ط¯ط© ط§ظ„ط¬ط¯ظˆظ„ط©</p>
                                     <p class="text-xs text-gray-500">{{ $booking->rescheduled_at->format('Y/m/d H:i') }}</p>
                                 </div>
                             </div>
@@ -276,7 +276,7 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <p class="text-sm font-medium text-gray-900">تم الإلغاء</p>
+                                    <p class="text-sm font-medium text-gray-900">طھظ… ط§ظ„ط¥ظ„ط؛ط§ط،</p>
                                     <p class="text-xs text-gray-500">{{ $booking->cancelled_at->format('Y/m/d H:i') }}</p>
                                 </div>
                             </div>
@@ -293,7 +293,7 @@
     <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-1/2 shadow-lg rounded-md bg-white">
         <div class="mt-3">
             <div class="flex items-center justify-between pb-4 border-b border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-900">إعادة جدولة الحجز</h3>
+                <h3 class="text-lg font-semibold text-gray-900">ط¥ط¹ط§ط¯ط© ط¬ط¯ظˆظ„ط© ط§ظ„ط­ط¬ط²</h3>
                 <button onclick="closeRescheduleModal()" class="text-gray-400 hover:text-gray-600">
                     <i class="fas fa-times text-xl"></i>
                 </button>
@@ -302,38 +302,38 @@
             <form id="rescheduleForm" class="mt-4">
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">التاريخ الجديد</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">ط§ظ„طھط§ط±ظٹط® ط§ظ„ط¬ط¯ظٹط¯</label>
                         <input type="date" name="preferred_date" required 
                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500">
                     </div>
                     
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">الوقت الجديد</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">ط§ظ„ظˆظ‚طھ ط§ظ„ط¬ط¯ظٹط¯</label>
                         <select name="preferred_time" required 
                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500">
-                            <option value="">اختر الوقت</option>
-                            <option value="morning">صباحاً (9:00 - 12:00)</option>
-                            <option value="afternoon">بعد الظهر (12:00 - 17:00)</option>
-                            <option value="evening">مساءً (17:00 - 20:00)</option>
+                            <option value="">ط§ط®طھط± ط§ظ„ظˆظ‚طھ</option>
+                            <option value="morning">طµط¨ط§ط­ط§ظ‹ (9:00 - 12:00)</option>
+                            <option value="afternoon">ط¨ط¹ط¯ ط§ظ„ط¸ظ‡ط± (12:00 - 17:00)</option>
+                            <option value="evening">ظ…ط³ط§ط،ظ‹ (17:00 - 20:00)</option>
                         </select>
                     </div>
                     
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">سبب إعادة الجدولة</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">ط³ط¨ط¨ ط¥ط¹ط§ط¯ط© ط§ظ„ط¬ط¯ظˆظ„ط©</label>
                         <textarea name="reason" rows="3" 
                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-                                  placeholder="اكتب سبب إعادة الجدولة..."></textarea>
+                                  placeholder="ط§ظƒطھط¨ ط³ط¨ط¨ ط¥ط¹ط§ط¯ط© ط§ظ„ط¬ط¯ظˆظ„ط©..."></textarea>
                     </div>
                 </div>
                 
                 <div class="flex justify-end space-x-3 space-x-reverse pt-4 border-t border-gray-200 mt-6">
                     <button type="button" onclick="closeRescheduleModal()" 
                             class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition duration-200">
-                        إلغاء
+                        ط¥ظ„ط؛ط§ط،
                     </button>
                     <button type="submit" 
                             class="px-4 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 transition duration-200">
-                        إرسال طلب إعادة الجدولة
+                        ط¥ط±ط³ط§ظ„ ط·ظ„ط¨ ط¥ط¹ط§ط¯ط© ط§ظ„ط¬ط¯ظˆظ„ط©
                     </button>
                 </div>
             </form>
@@ -377,21 +377,21 @@ function submitReschedule(bookingId, form) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert('تم إرسال طلب إعادة الجدولة بنجاح');
+            alert('طھظ… ط¥ط±ط³ط§ظ„ ط·ظ„ط¨ ط¥ط¹ط§ط¯ط© ط§ظ„ط¬ط¯ظˆظ„ط© ط¨ظ†ط¬ط§ط­');
             closeRescheduleModal();
             location.reload();
         } else {
-            alert('حدث خطأ في إرسال الطلب');
+            alert('ط­ط¯ط« ط®ط·ط£ ظپظٹ ط¥ط±ط³ط§ظ„ ط§ظ„ط·ظ„ط¨');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('حدث خطأ في إرسال الطلب');
+        alert('ط­ط¯ط« ط®ط·ط£ ظپظٹ ط¥ط±ط³ط§ظ„ ط§ظ„ط·ظ„ط¨');
     });
 }
 
 function cancelBooking(bookingId) {
-    if (confirm('هل أنت متأكد من إلغاء هذا الحجز؟')) {
+    if (confirm('ظ‡ظ„ ط£ظ†طھ ظ…طھط£ظƒط¯ ظ…ظ† ط¥ظ„ط؛ط§ط، ظ‡ط°ط§ ط§ظ„ط­ط¬ط²طں')) {
         fetch(`/client/bookings/${bookingId}/cancel`, {
             method: 'POST',
             headers: {
@@ -402,17 +402,18 @@ function cancelBooking(bookingId) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                alert('تم إلغاء الحجز بنجاح');
+                alert('طھظ… ط¥ظ„ط؛ط§ط، ط§ظ„ط­ط¬ط² ط¨ظ†ط¬ط§ط­');
                 location.reload();
             } else {
-                alert('حدث خطأ في إلغاء الحجز');
+                alert('ط­ط¯ط« ط®ط·ط£ ظپظٹ ط¥ظ„ط؛ط§ط، ط§ظ„ط­ط¬ط²');
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('حدث خطأ في إلغاء الحجز');
+            alert('ط­ط¯ط« ط®ط·ط£ ظپظٹ ط¥ظ„ط؛ط§ط، ط§ظ„ط­ط¬ط²');
         });
     }
 }
 </script>
 @endpush
+

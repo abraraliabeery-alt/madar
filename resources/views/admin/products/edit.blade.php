@@ -5,9 +5,14 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center" data-intro="{{ __('admin.tour.products_edit_header_desc') }}" data-step="63">
             <h5 class="mb-0">{{ __('admin.products.edit') }}: {{ $product->title }}</h5>
-            <a href="{{ route('admin.products.index') }}" class="btn btn-secondary">
-                <i class="fas fa-arrow-right me-2"></i>{{ __('admin.products.back') }}
-            </a>
+            <div class="d-flex gap-2">
+                <a href="{{ route('public.products.pdf', $product) }}" class="btn btn-danger" target="_blank">
+                    <i class="fas fa-file-pdf me-2"></i>معاينة PDF
+                </a>
+                <a href="{{ route('admin.products.index') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-right me-2"></i>{{ __('admin.products.back') }}
+                </a>
+            </div>
         </div>
         <div class="card-body">
             <form action="{{ route('admin.products.update', $product) }}" method="POST" enctype="multipart/form-data">
@@ -356,22 +361,41 @@ $(document).ready(function() {
                         let requiredMark = attribute.required ? ' <span class="text-danger">*</span>' : '';
                         let iconHtml = attribute.icon ? `<img src="${attribute.icon}" alt="icon" width="20" class="me-1">` : '';
                         let currentValue = getCurrentAttributeValue(attribute.id);
-                        
-                        attributesHtml += `
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="attribute_${attribute.id}" class="form-label">
-                                        ${iconHtml}${attribute.name}${requiredMark}
-                                    </label>
-                                    <input type="text" class="form-control" 
-                                           id="attribute_${attribute.id}" 
-                                           name="attributes[${attribute.id}][value]" 
-                                           value="${currentValue}"
-                                           ${attribute.required ? 'required' : ''}>
-                                    <input type="hidden" name="attributes[${attribute.id}][attribute_id]" value="${attribute.id}">
+
+                        if (attribute.type === 'file') {
+                            let fileLink = currentValue ? `<p class="small mt-1 mb-0"><a href="/storage/${currentValue}" target="_blank"><i class="fas fa-file"></i> الملف الحالي</a></p>` : '';
+                            attributesHtml += `
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="attribute_${attribute.id}" class="form-label">
+                                            ${iconHtml}${attribute.name}${requiredMark}
+                                        </label>
+                                        <input type="file" class="form-control"
+                                               id="attribute_${attribute.id}"
+                                               name="attributes[${attribute.id}][value]"
+                                               ${attribute.required ? 'required' : ''}>
+                                        ${fileLink}
+                                        <input type="hidden" name="attributes[${attribute.id}][attribute_id]" value="${attribute.id}">
+                                    </div>
                                 </div>
-                            </div>
-                        `;
+                            `;
+                        } else {
+                            attributesHtml += `
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="attribute_${attribute.id}" class="form-label">
+                                            ${iconHtml}${attribute.name}${requiredMark}
+                                        </label>
+                                        <input type="text" class="form-control"
+                                               id="attribute_${attribute.id}"
+                                               name="attributes[${attribute.id}][value]"
+                                               value="${currentValue}"
+                                               ${attribute.required ? 'required' : ''}>
+                                        <input type="hidden" name="attributes[${attribute.id}][attribute_id]" value="${attribute.id}">
+                                    </div>
+                                </div>
+                            `;
+                        }
                     });
                     attributesHtml += '</div>';
                     $('#attributes-container').html(attributesHtml);

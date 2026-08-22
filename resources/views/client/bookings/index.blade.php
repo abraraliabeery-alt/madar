@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('client.layouts.app')
 
 @section('title', __('client.bookings.title'))
 
@@ -303,3 +303,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 @endpush
+

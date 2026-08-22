@@ -56,28 +56,49 @@
                         </div>
                     @endif
 
-                    @if($product->card_attributes && $product->card_attributes->count() > 0)
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            @foreach($product->card_attributes as $attribute)
-                            <div class="text-center">
-                                <div class="bg-primary-100 p-4 rounded-lg mb-3">
-                                    @if($attribute->icon)
-                                        <i class="{{ $attribute->icon }} text-2xl text-primary-600"></i>
-                                    @else
-                                        <i class="fas fa-info-circle text-2xl text-primary-600"></i>
+                    @php
+                        $hasAttributes = false;
+                        foreach ($attributeSections as $section) {
+                            if ($section['attributes']->count() > 0) {
+                                $hasAttributes = true;
+                                break;
+                            }
+                        }
+                    @endphp
+                    @if($hasAttributes)
+                        @foreach($attributeSections as $section)
+                            @if($section['attributes']->count() > 0)
+                                <div class="mb-8">
+                                    @if($section['name'] !== '')
+                                        <h3 class="text-xl font-bold text-gray-900 mb-4">{{ $section['name'] }}</h3>
                                     @endif
+                                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                                        @foreach($section['attributes'] as $attribute)
+                                            <div class="text-center">
+                                                <div class="p-4 rounded-lg mb-3">
+                                                    @if($attribute->icon)
+                                                        <i class="{{ $attribute->icon }} text-2xl text-primary-600"></i>
+                                                    @else
+                                                        <i class="fas fa-info-circle text-2xl text-primary-600"></i>
+                                                    @endif
+                                                </div>
+                                                <h3 class="font-semibold text-gray-900">
+                                                    {{ $attribute->pivot->value ?? '-' }}
+                                                    @if($attribute->Symbol)
+                                                        {{ $attribute->Symbol }}
+                                                    @elseif($attribute->translations->first() && $attribute->translations->first()->symbol)
+                                                        {{ $attribute->translations->first()->symbol }}
+                                                    @endif
+                                                </h3>
+                                                <p class="text-gray-600 text-sm">
+                                                    {{ $attribute->getTranslatedName() ?? ucfirst($attribute->type) }}
+                                                </p>
+                                            </div>
+                                        @endforeach
+                                    </div>
                                 </div>
-                                <h3 class="font-semibold text-gray-900">{{ $attribute->pivot->value }}</h3>
-                                <p class="text-gray-600 text-sm">
-                                    @if($attribute->Symbol)
-                                        {{ $attribute->Symbol }}
-                                    @else
-                                        {{ $attribute->getTranslatedName() ?? ucfirst($attribute->type) }}
-                                    @endif
-                                </p>
-                            </div>
-                            @endforeach
-                        </div>
+                            @endif
+                        @endforeach
                     @else
                         <p class="text-gray-500 text-center py-8">{{ __('products.show.no_attributes') }}</p>
                     @endif
@@ -90,36 +111,8 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             @foreach($product->gallery as $image)
                                 <div class="aspect-w-16 aspect-h-9">
-                                    <img src="{{ $image }}" alt="{{ $product->title }}"
+                                    <img src="{{ asset($image) }}" alt="{{ $product->title }}"
                                          class="w-full h-48 object-cover rounded-lg hover:opacity-75 transition-opacity cursor-pointer">
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
-                @endif
-
-                <!-- All Attributes Section -->
-                @if($product->attributes && $product->attributes->count() > 0)
-                    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-                        <h2 class="text-2xl font-bold text-gray-900 mb-4">{{ __('products.show.all_attributes') }}</h2>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            @foreach($product->attributes as $attribute)
-                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                                    <span class="text-gray-600 font-medium">
-                                        @if($attribute->getTranslatedName())
-                                            {{ $attribute->getTranslatedName() }}
-                                        @else
-                                            {{ ucfirst($attribute->type) }}
-                                        @endif
-                                    </span>
-                                    <span class="font-semibold text-gray-900">
-                                        {{ $attribute->pivot->value ?? '-' }}
-                                        @if($attribute->Symbol)
-                                            {{ $attribute->Symbol }}
-                                        @elseif($attribute->translations->first() && $attribute->translations->first()->symbol)
-                                            {{ $attribute->translations->first()->symbol }}
-                                        @endif
-                                    </span>
                                 </div>
                             @endforeach
                         </div>
@@ -141,70 +134,6 @@
                     </div>
                 @endif
 
-                <!-- Comments Section -->
-                <div class="bg-white rounded-lg shadow-md p-6">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-4">{{ __('products.show.comments') }}</h2>
-                    @auth
-                        <form action="{{ route('public.products.comment', $product) }}" method="POST" class="mb-6">
-                            @csrf
-                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-start">
-                                <div class="md:col-span-3">
-                                    <label for="comment" class="block text-sm font-medium text-gray-700 mb-2">{{ __('products.show.add_comment') }}</label>
-                                    <textarea name="comment" id="comment" rows="3"
-                                              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-                                              placeholder="{{ __('products.show.comment_placeholder') }}" required></textarea>
-                                </div>
-                                <div>
-                                    <label for="rating" class="block text-sm font-medium text-gray-700 mb-2">{{ __('products.show.rating') }}</label>
-                                    <select id="rating" name="rating" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500" required>
-                                        <option value="">{{ __('products.show.select_rating') }}</option>
-                                        @for($i=5;$i>=1;$i--)
-                                            <option value="{{ $i }}">{{ $i }}</option>
-                                        @endfor
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="mt-4">
-                                <button type="submit" class="btn-primary text-white px-4 py-2 rounded-lg font-medium">
-                                    {{ __('products.show.submit_comment') }}
-                                </button>
-                            </div>
-                        </form>
-                    @else
-                        <div class="bg-gray-50 p-4 rounded-lg mb-6">
-                            <p class="text-gray-600">{{ __('products.show.login_to_comment') }} <a href="{{ route('login') }}" class="text-primary-600 hover:text-primary-700">{{ __('products.show.login') }}</a> {{ __('products.show.to_add_comment') }}</p>
-                        </div>
-                    @endauth
-
-                    @php
-                        $comments = $product->comments()->latest()->take(10)->get();
-                    @endphp
-                    @if($comments->count())
-                        <div class="space-y-4">
-                            @foreach($comments as $comment)
-                                <div class="border border-gray-100 rounded-lg p-4">
-                                    <div class="flex items-center justify-between mb-2">
-                                        <div class="flex items-center space-x-2 space-x-reverse">
-                                            <img src="{{ $comment->user->avatar ?? 'https://ui-avatars.com/api/?name=' . urlencode($comment->user->name) }}" class="w-8 h-8 rounded-full" alt="{{ $comment->user->name }}">
-                                            <span class="text-sm font-medium text-gray-900">{{ $comment->user->name }}</span>
-                                        </div>
-                                        @if($comment->rating)
-                                            <div class="text-yellow-500 text-sm">
-                                                @for($i=1;$i<=5;$i++)
-                                                    <i class="fa{{ $i <= $comment->rating ? 's' : 'r' }} fa-star"></i>
-                                                @endfor
-                                            </div>
-                                        @endif
-                                    </div>
-                                    <p class="text-gray-700 text-sm leading-relaxed">{{ $comment->comment }}</p>
-                                    <p class="text-xs text-gray-400 mt-2">{{ $comment->created_at->diffForHumans() }}</p>
-                                </div>
-                            @endforeach
-                        </div>
-                    @else
-                        <p class="text-sm text-gray-500">{{ __('products.show.no_comments') }}</p>
-                    @endif
-                </div>
             </div>
 
             <!-- Sidebar -->
@@ -290,6 +219,11 @@
                                     <i class="fas fa-quote-left ml-2"></i>
                                     {{ __('products.show.request_quote') }}
                                 </a>
+                                <a href="{{ route('public.products.pdf', $product) }}" target="_blank"
+                                   class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200 flex items-center justify-center">
+                                    <i class="fas fa-file-pdf ml-2"></i>
+                                    معاينة PDF
+                                </a>
                             @else
                                 <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200 flex items-center justify-center">
                                     <i class="fas fa-calendar-check ml-2"></i>
@@ -299,6 +233,11 @@
                                     <i class="fas fa-handshake ml-2"></i>
                                     {{ __('products.show.request_quote') }}
                                 </button>
+                                <a href="{{ route('public.products.pdf', $product) }}" target="_blank"
+                                   class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200 flex items-center justify-center">
+                                    <i class="fas fa-file-pdf ml-2"></i>
+                                    معاينة PDF
+                                </a>
                             @endif
                         </div>
 
@@ -377,11 +316,21 @@
                                         <i class="fas fa-quote-left ml-2"></i>
                                         {{ __('products.show.request_quote') }}
                                     </a>
+                                    <a href="{{ route('public.products.pdf', $product) }}" target="_blank"
+                                       class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200 flex items-center justify-center">
+                                        <i class="fas fa-file-pdf ml-2"></i>
+                                        معاينة PDF
+                                    </a>
                                 @else
                                     <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200 flex items-center justify-center">
                                         <i class="fas fa-handshake ml-2"></i>
                                         {{ __('products.show.request_quote') }}
                                     </button>
+                                    <a href="{{ route('public.products.pdf', $product) }}" target="_blank"
+                                       class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200 flex items-center justify-center">
+                                        <i class="fas fa-file-pdf ml-2"></i>
+                                        معاينة PDF
+                                    </a>
                                 @endif
                             </div>
                         </div>
@@ -411,47 +360,6 @@
                                 <i class="fas fa-heart ml-2"></i>{{ __('products.show.add_to_favorites') }}
                             </a>
                         @endauth
-                    </div>
-                </div>
-
-                <!-- Property Details -->
-                <div class="bg-white rounded-lg shadow-md p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ __('products.show.property_details') }}</h3>
-                    <div class="space-y-4">
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-600">{{ __('products.show.type') }}</span>
-                            <span class="font-semibold text-gray-900">{{ $product->category ? $product->category->getTranslatedName() : __('products.show.not_specified') }}</span>
-                        </div>
-                        
-                        <!-- Dynamic Attributes -->
-                        @foreach($product->attributes as $attribute)
-                            <div class="flex justify-between items-center">
-                                <span class="text-gray-600">
-                                    @if($attribute->getTranslatedName())
-                                        {{ $attribute->getTranslatedName() }}
-                                    @else
-                                        {{ ucfirst($attribute->type) }}
-                                    @endif
-                                </span>
-                                <span class="font-semibold text-gray-900">
-                                    {{ $attribute->pivot->value ?? __('products.show.not_specified') }}
-                                    @if($attribute->Symbol)
-                                        {{ $attribute->Symbol }}
-                                    @endif
-                                </span>
-                            </div>
-                        @endforeach
-                        
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-600">{{ __('products.show.available_from') }}</span>
-                            <span class="font-semibold text-gray-900">{{ $product->available_from ? $product->available_from->format('Y/m/d') : __('products.show.not_specified') }}</span>
-                        </div>
-                        @if($product->available_to)
-                            <div class="flex justify-between items-center">
-                                <span class="text-gray-600">{{ __('products.show.available_until') }}</span>
-                                <span class="font-semibold text-gray-900">{{ $product->available_to->format('Y/m/d') }}</span>
-                            </div>
-                        @endif
                     </div>
                 </div>
 

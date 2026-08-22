@@ -42,7 +42,7 @@
                 </div>
                 <div class="col-12 col-md-6 col-lg-3">
                     <select class="form-select" id="productFilter" name="product_id">
-                        <option value="">كل المنتجات</option>
+                        <option value="">كل العقارات</option>
                         @foreach($products as $product)
                             <option value="{{ $product->id }}" {{ request('product_id') == $product->id ? 'selected' : '' }}>
                                 {{ $product->name }}
@@ -148,7 +148,7 @@
                         <tr>
                             <th class="d-none d-md-table-cell">رقم العقد</th>
                             <th>المستخدم</th>
-                            <th class="d-none d-lg-table-cell">المنتج</th>
+                            <th class="d-none d-lg-table-cell">العقار</th>
                             <th class="d-none d-lg-table-cell">المنشأة</th>
                             <th class="d-none d-md-table-cell">نوع العقد</th>
                             <th class="d-none d-md-table-cell">تاريخ البداية</th>
@@ -180,20 +180,28 @@
                                             {{ $contract->user->name }}
                                         </a>
                                         <div class="small text-muted d-md-none">
-                                            {{ $contract->product->name ?? 'منتج' }}
+                                            {{ $contract->product->name ?? 'عقار' }}
                                         </div>
                                     </div>
                                 </div>
                             </td>
                             <td class="d-none d-lg-table-cell">
-                                <a href="{{ route('admin.products.show', $contract->product) }}">
-                                    {{ $contract->product->name }}
-                                </a>
+                                @if($contract->product)
+                                    <a href="{{ route('admin.products.show', $contract->product) }}">
+                                        {{ $contract->product->name }}
+                                    </a>
+                                @else
+                                    <span class="text-muted">—</span>
+                                @endif
                             </td>
                             <td class="d-none d-lg-table-cell">
-                                <a href="{{ route('admin.facilities.show', $contract->facility) }}">
-                                    {{ $contract->facility->name }}
-                                </a>
+                                @if($contract->facility)
+                                    <a href="{{ route('admin.facilities.show', $contract->facility) }}">
+                                        {{ $contract->facility->name }}
+                                    </a>
+                                @else
+                                    <span class="text-muted">—</span>
+                                @endif
                             </td>
                             <td class="d-none d-md-table-cell">
                                 @switch($contract->contract_type)

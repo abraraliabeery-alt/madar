@@ -29,9 +29,9 @@
                         <h5 class="text-lg font-semibold text-gray-800 mb-4">المعلومات الأساسية</h5>
                         
                         <div class="mb-4">
-                            <label for="product_id" class="block text-sm font-medium text-gray-700 mb-2">المنتج <span class="text-red-500">*</span></label>
+                            <label for="product_id" class="block text-sm font-medium text-gray-700 mb-2">العقار <span class="text-red-500">*</span></label>
                             <select name="product_id" id="product_id" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 @error('product_id') border-red-500 @enderror" required>
-                                <option value="">اختر المنتج</option>
+                                <option value="">اختر العقار</option>
                                 @foreach($products as $product)
                                     <option value="{{ $product->id }}" {{ old('product_id', $contract->product_id) == $product->id ? 'selected' : '' }}>
                                         {{ $product->getTranslatedTitle() }}

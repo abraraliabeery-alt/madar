@@ -19,7 +19,7 @@ class HomeController extends Controller
     /**
      * عرض الصفحة الرئيسية
      */
-    public function index()
+    public function index(Request $request)
     {
         $featuredProducts = Product::with(['facility', 'category'])
             ->where('is_featured', true)
@@ -35,20 +35,38 @@ class HomeController extends Controller
             ->take(6)
             ->get();
 
-        $categories = Category::withCount(['products' => function ($query) {
-            $query->where('is_active', true);
-        }])->take(8)->get();
+        $categories = Category::where('is_active', true)
+            ->whereNotNull('parent_id')
+            ->withCount(['products' => function ($query) {
+                $query->where('is_active', true);
+            }])
+            ->take(8)
+            ->get();
 
-        $searchCategories = Category::where('is_active', true)->get();
+        $searchCategories = Category::where('is_active', true)
+            ->with('translations')
+            ->get();
         $searchFeatures = Feature::where('is_active', true)
             ->with('translations')
             ->get();
 
-        $latestProducts = Product::with(['facility', 'category'])
+        $selectedCategoryId = $request->input('category_id');
+        $latestProductsQuery = Product::with(['facility', 'category'])
             ->where('is_active', true)
-            ->latest()
-            ->take(12)
-            ->get();
+            ->latest();
+
+        if ($selectedCategoryId) {
+            $selectedCategory = Category::find($selectedCategoryId);
+            if ($selectedCategory) {
+                if ($selectedCategory->parent_id === null && $selectedCategory->children()->exists()) {
+                    $latestProductsQuery->whereIn('category_id', $selectedCategory->children()->pluck('id'));
+                } else {
+                    $latestProductsQuery->where('category_id', $selectedCategoryId);
+                }
+            }
+        }
+
+        $latestProducts = $latestProductsQuery->take(12)->get();
 
         $latestExecutionRequests = ExecutionRequest::query()
             ->with(['translations'])
@@ -72,14 +90,12 @@ class HomeController extends Controller
             'featured_products' => Product::where('is_featured', true)->where('is_active', true)->count(),
         ];
 
-        // Get featured cities with products count
+        // Get all active cities with products count
         $featuredCities = City::withCount(['products' => function ($query) {
             $query->where('is_active', true);
         }])
-        ->where('is_featured', true)
         ->where('is_active', true)
         ->ordered()
-        ->take(6)
         ->get();
 
         // Get footer links
@@ -101,6 +117,7 @@ class HomeController extends Controller
             'searchCategories',
             'searchFeatures',
             'latestProducts',
+            'selectedCategoryId',
             'latestExecutionRequests',
             'stats',
             'comingSoonProducts',
@@ -340,7 +357,9 @@ class HomeController extends Controller
 
     public function investmentProperties(Request $request)
     {
-        $searchCategories = Category::where('is_active', true)->get();
+        $searchCategories = Category::where('is_active', true)
+            ->with('translations')
+            ->get();
         $searchFeatures = Feature::where('is_active', true)
             ->with('translations')
             ->get();

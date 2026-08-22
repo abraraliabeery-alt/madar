@@ -180,19 +180,9 @@
                                 <i class="fab fa-linkedin-in text-lg"></i>
                             </a>
                         @endif
-
-                        @if($whatsappNumber)
-                            <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $whatsappNumber) }}" 
-                               target="_blank" 
-                               rel="noopener noreferrer"
-                               aria-label="{{ __('general.contact.contact_us_on') }} WhatsApp"
-                               class="bg-green-500 text-white w-12 h-12 rounded-full hover:bg-green-600 transition-colors duration-200 transform hover:scale-105 flex items-center justify-center">
-                                <i class="fab fa-whatsapp text-lg"></i>
-                            </a>
-                        @endif
                     </div>
 
-                    @if(!$facebookUrl && !$twitterUrl && !$instagramUrl && !$linkedinUrl && !$whatsappNumber)
+                    @if(!$facebookUrl && !$twitterUrl && !$instagramUrl && !$linkedinUrl)
                         <p class="text-gray-500 text-sm mt-4 text-center">{{ __('general.contact.no_social_media') }}</p>
                     @endif
                 </div>

@@ -10,17 +10,57 @@
             </a>
         </div>
         <div class="card-body">
+
+            <!-- Progress Stepper -->
+            <div class="card mb-4 sticky-top" style="top: 10px; z-index: 1020;">
+                <div class="card-body">
+                    <div class="d-flex flex-wrap gap-2" id="form-stepper">
+                        <button type="button" class="btn btn-sm btn-primary step-btn" data-target="section-basic">
+                            <span class="badge bg-white text-primary rounded-pill me-1 step-number">1</span>
+                            {{ __('admin.products.basic_info') }}
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-primary step-btn" data-target="section-media">
+                            <span class="badge bg-light text-primary rounded-pill me-1 step-number">2</span>
+                            {{ __('admin.products.media') }}
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-primary step-btn" data-target="section-features">
+                            <span class="badge bg-light text-primary rounded-pill me-1 step-number">3</span>
+                            {{ __('admin.products.features') }}
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-primary step-btn" data-target="section-attributes">
+                            <span class="badge bg-light text-primary rounded-pill me-1 step-number">4</span>
+                            {{ __('admin.products.attributes') }}
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-primary step-btn" data-target="section-location">
+                            <span class="badge bg-light text-primary rounded-pill me-1 step-number">5</span>
+                            {{ __('admin.products.location') }}
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-primary step-btn" data-target="section-settings">
+                            <span class="badge bg-light text-primary rounded-pill me-1 step-number">6</span>
+                            {{ __('admin.products.settings') }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
                 <div class="row g-4">
                     <!-- Basic Information -->
-                    <div class="col-md-8">
+                    <div class="col-md-8" id="section-basic">
                         <div class="card">
                             <div class="card-header">
                                 <h6 class="mb-0">{{ __('admin.products.basic_info') }}</h6>
                             </div>
                             <div class="card-body">
+                                <div class="mb-3">
+                                    <button type="button" id="ai-generate-description" class="btn btn-sm btn-info">
+                                        <i class="fas fa-magic me-2"></i>توليد الوصف بالذكاء الاصطناعي
+                                    </button>
+                                    <small class="text-muted d-block mt-1">املأ الاسم والفئة والموقع أولاً للحصول على وصف أفضل.</small>
+                                </div>
+
                                 @include('components.translations-repeater', [
                                     'locales' => $locales ?? config('locales.available', []),
                                     'namePrefix' => 'translations',
@@ -143,7 +183,7 @@
                     </div>
 
                     <!-- Media -->
-                    <div class="col-md-4">
+                    <div class="col-md-4" id="section-media">
                         <div class="card">
                             <div class="card-header">
                                 <h6 class="mb-0">{{ __('admin.products.media') }}</h6>
@@ -163,7 +203,7 @@
                     </div>
 
                     <!-- Features -->
-                    <div class="col-md-6">
+                    <div class="col-md-6" id="section-features">
                         <div class="card">
                             <div class="card-header">
                                 <h6 class="mb-0">{{ __('admin.products.features') }}</h6>
@@ -177,7 +217,7 @@
                     </div>
 
                     <!-- Attributes -->
-                    <div class="col-md-6">
+                    <div class="col-md-6" id="section-attributes">
                         <div class="card">
                             <div class="card-header">
                                 <h6 class="mb-0">{{ __('admin.products.attributes') }}</h6>
@@ -193,7 +233,7 @@
 
 
                     <!-- Location -->
-                    <div class="col-md-6">
+                    <div class="col-md-6" id="section-location">
                         <div class="card">
                             <div class="card-header">
                                 <h6 class="mb-0">{{ __('admin.products.location') }}</h6>
@@ -243,7 +283,7 @@
                     </div>
 
                     <!-- Settings -->
-                    <div class="col-md-6">
+                    <div class="col-md-6" id="section-settings">
                         <div class="card">
                             <div class="card-header">
                                 <h6 class="mb-0">{{ __('admin.products.settings') }}</h6>
@@ -370,22 +410,40 @@ $(document).ready(function() {
                     response.data.forEach(function(attribute) {
                         let requiredMark = attribute.required ? ' <span class="text-danger">*</span>' : '';
                         let iconHtml = attribute.icon ? `<img src="${attribute.icon}" alt="icon" width="20" class="me-1">` : '';
-                        
-                        attributesHtml += `
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="attribute_${attribute.id}" class="form-label">
-                                        ${iconHtml}${attribute.name}${requiredMark}
-                                    </label>
-                                    <input type="text" class="form-control" 
-                                           id="attribute_${attribute.id}" 
-                                           name="attributes[${attribute.id}][value]" 
-                                           value="${getOldAttributeValue(attribute.id)}"
-                                           ${attribute.required ? 'required' : ''}>
-                                    <input type="hidden" name="attributes[${attribute.id}][attribute_id]" value="${attribute.id}">
+                        let currentValue = getOldAttributeValue(attribute.id);
+
+                        if (attribute.type === 'file') {
+                            attributesHtml += `
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="attribute_${attribute.id}" class="form-label">
+                                            ${iconHtml}${attribute.name}${requiredMark}
+                                        </label>
+                                        <input type="file" class="form-control"
+                                               id="attribute_${attribute.id}"
+                                               name="attributes[${attribute.id}][value]"
+                                               ${attribute.required ? 'required' : ''}>
+                                        <input type="hidden" name="attributes[${attribute.id}][attribute_id]" value="${attribute.id}">
+                                    </div>
                                 </div>
-                            </div>
-                        `;
+                            `;
+                        } else {
+                            attributesHtml += `
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="attribute_${attribute.id}" class="form-label">
+                                            ${iconHtml}${attribute.name}${requiredMark}
+                                        </label>
+                                        <input type="text" class="form-control"
+                                               id="attribute_${attribute.id}"
+                                               name="attributes[${attribute.id}][value]"
+                                               value="${currentValue}"
+                                               ${attribute.required ? 'required' : ''}>
+                                        <input type="hidden" name="attributes[${attribute.id}][attribute_id]" value="${attribute.id}">
+                                    </div>
+                                </div>
+                            `;
+                        }
                     });
                     attributesHtml += '</div>';
                     $('#attributes-container').html(attributesHtml);
@@ -506,6 +564,109 @@ $(document).ready(function() {
                 marker.setLatLng([lat, lng]);
                 map.setView([lat, lng], map.getZoom());
             }
+        });
+    })();
+
+    // AI description assistant
+    (function initAiDescription() {
+        const aiBtn = document.getElementById('ai-generate-description');
+        const descriptionTextarea = document.querySelector('textarea[name^="translations"][name$="[description]"]');
+        if (!aiBtn || !descriptionTextarea) return;
+
+        aiBtn.addEventListener('click', async function() {
+            const titleInput = document.querySelector('input[name^="translations"][name$="[name]"]');
+            const title = titleInput ? titleInput.value : '';
+            const categorySelect = document.getElementById('category_id');
+            const category = categorySelect?.options[categorySelect.selectedIndex]?.textContent?.trim() || '';
+            const citySelect = document.getElementById('city_id');
+            const city = citySelect?.options[citySelect.selectedIndex]?.textContent?.trim() || '';
+            const address = document.getElementById('address')?.value || '';
+
+            const attributes = [];
+            document.querySelectorAll('#attributes-container input, #attributes-container select, #attributes-container textarea').forEach(input => {
+                if (input.type === 'hidden' || input.type === 'file') return;
+                if (input.type === 'checkbox' && !input.checked) return;
+                const label = input.parentElement?.querySelector('label')?.textContent?.trim() || input.name;
+                attributes.push({ name: label, value: input.value });
+            });
+
+            const features = [];
+            document.querySelectorAll('#features-container input[type="checkbox"]:checked').forEach(cb => {
+                const label = cb.parentElement?.querySelector('label')?.textContent?.trim() || cb.value;
+                features.push(label);
+            });
+
+            aiBtn.disabled = true;
+            const originalText = aiBtn.innerHTML;
+            aiBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>جاري التوليد...';
+
+            try {
+                const response = await fetch('/api/v1/products/generate-description', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+                    },
+                    body: JSON.stringify({ title, category, city, address, attributes, features })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    descriptionTextarea.value = data.description;
+                } else {
+                    alert(data.message || 'حدث خطأ أثناء توليد الوصف.');
+                }
+            } catch (e) {
+                alert('حدث خطأ في الاتصال بالذكاء الاصطناعي.');
+            } finally {
+                aiBtn.disabled = false;
+                aiBtn.innerHTML = originalText;
+            }
+        });
+    })();
+
+    // Section stepper navigation
+    (function initStepper() {
+        const stepper = document.getElementById('form-stepper');
+        if (!stepper) return;
+
+        const stepButtons = stepper.querySelectorAll('.step-btn');
+        const sectionIds = ['section-basic', 'section-media', 'section-features', 'section-attributes', 'section-location', 'section-settings'];
+
+        stepButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const target = document.getElementById(this.dataset.target);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        const setActiveStep = (activeTarget) => {
+            stepButtons.forEach(btn => {
+                const isActive = btn.dataset.target === activeTarget;
+                const badge = btn.querySelector('.step-number');
+                btn.classList.toggle('btn-primary', isActive);
+                btn.classList.toggle('btn-outline-primary', !isActive);
+                if (badge) {
+                    badge.classList.toggle('bg-white', isActive);
+                    badge.classList.toggle('text-primary', isActive);
+                    badge.classList.toggle('bg-light', !isActive);
+                }
+            });
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    setActiveStep(entry.target.id);
+                }
+            });
+        }, { threshold: 0.15 });
+
+        sectionIds.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) observer.observe(el);
         });
     })();
 });

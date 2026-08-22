@@ -100,7 +100,7 @@
                                     <thead>
                                         <tr>
                                             <th>المنشأة</th>
-                                            <th>المنتجات</th>
+                                            <th>العقارات</th>
                                             <th>الحجوزات</th>
                                         </tr>
                                     </thead>
@@ -195,7 +195,7 @@ $(document).ready(function() {
         data: {
             labels: {!! json_encode($reports['facility_performance']->pluck('name')) !!},
             datasets: [{
-                label: 'المنتجات',
+                label: 'العقارات',
                 data: {!! json_encode($reports['facility_performance']->pluck('products_count')) !!},
                 backgroundColor: 'rgba(40, 167, 69, 0.5)',
                 borderColor: 'rgb(40, 167, 69)',

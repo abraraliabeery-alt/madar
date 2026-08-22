@@ -107,9 +107,9 @@
                             </td>
                             <td class="d-none d-md-table-cell">
                                 @if($user->is_active)
-                                    <span class="badge" style="background-color: var(--brand-brown) !important; color: #ffffff !important;">{{ __('admin.status.active') }}</span>
+                                    <span class="badge bg-success text-white">{{ __('admin.status.active') }}</span>
                                 @else
-                                    <span class="badge" style="background-color: var(--brand-brown) !important; color: #ffffff !important;">{{ __('admin.status.inactive') }}</span>
+                                    <span class="badge bg-danger text-white">{{ __('admin.status.inactive') }}</span>
                                 @endif
                             </td>
                             <td>

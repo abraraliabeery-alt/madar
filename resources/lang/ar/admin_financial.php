@@ -44,7 +44,7 @@ return [
         'search_offers' => 'البحث في العروض',
         'offer_details' => 'تفاصيل العرض',
         'facility' => 'المؤسسة',
-        'product' => 'المنتج',
+        'product' => 'العقار',
         'type' => 'النوع',
         'price' => 'السعر',
         'status' => 'الحالة',

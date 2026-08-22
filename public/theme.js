@@ -49,7 +49,11 @@
   }
 
   var initial = getStored();
-  if(!initial) initial = prefersDark() ? 'dark' : 'light';
+  if(!initial) {
+    var def = root.getAttribute('data-theme-default');
+    if(def === 'dark' || def === 'light') initial = def;
+    else initial = prefersDark() ? 'dark' : 'light';
+  }
   setTheme(initial);
 
   document.addEventListener('click', function(e){

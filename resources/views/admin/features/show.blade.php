@@ -94,7 +94,7 @@
                                     </p>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label text-muted">عدد المنتجات</label>
+                                    <label class="form-label text-muted">عدد العقارات</label>
                                     <p class="fs-5">
                                         <span class="badge bg-info">{{ $feature->products->count() }}</span>
                                     </p>
@@ -114,7 +114,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h6 class="mb-0">المنتجات المرتبطة</h6>
+                            <h6 class="mb-0">العقارات المرتبطة</h6>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -134,7 +134,7 @@
                                         <tr>
                                             <td>
                                                 @if($product->main_image)
-                                                    <img src="{{ asset($product->main_image) }}" alt="product" width="50" class="rounded">
+                                                    <img src="{{ asset($product->main_image) }}" alt="عقار" width="50" class="rounded">
                                                 @else
                                                     <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
                                                         <i class="fas fa-box text-muted"></i>
@@ -165,7 +165,7 @@
                                         <tr>
                                             <td colspan="6" class="text-center py-4">
                                                 <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
-                                                <p class="mb-0">لا توجد منتجات مرتبطة بهذه المميزة</p>
+                                                <p class="mb-0">لا توجد عقارات مرتبطة بهذه المميزة</p>
                                             </td>
                                         </tr>
                                         @endforelse

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('client.layouts.app')
 
 @section('title', __('client.appointments.appointment_details'))
 
@@ -199,6 +199,7 @@ function closeRescheduleModal() {
 }
 </script>
 @endsection
+
 
 
 

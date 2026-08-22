@@ -20,7 +20,7 @@
                             <th>الاسم</th>
                             <th class="d-none d-lg-table-cell">الوصف</th>
                             <th class="d-none d-md-table-cell">اللون</th>
-                            <th class="d-none d-lg-table-cell">عدد المنتجات</th>
+                            <th class="d-none d-lg-table-cell">عدد العقارات</th>
                             <th class="d-none d-md-table-cell">الترتيب</th>
                             <th class="d-none d-md-table-cell">الحالة</th>
                             <th>الإجراءات</th>
@@ -70,7 +70,7 @@
                                             {{ Str::limit($feature->getTranslatedDescription('ar'), 30) }}
                                         </div>
                                         <div class="small text-muted d-md-none">
-                                            <span class="badge bg-info me-1">{{ $feature->products_count }} منتج</span>
+                                            <span class="badge bg-info me-1">{{ $feature->products_count }} عقار</span>
                                             @if($feature->is_active)
                                                 <span class="badge bg-success">نشط</span>
                                             @else

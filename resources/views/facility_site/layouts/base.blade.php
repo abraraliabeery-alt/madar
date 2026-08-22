@@ -50,7 +50,7 @@
       </a>
       <nav class="site-nav" aria-label="روابط الموقع">
         <a href="#services">الخدمات</a>
-        <a href="#products-carousel">المنتجات</a>
+        <a href="#products-carousel">العقارات</a>
         <a href="#contact">تواصل</a>
       </nav>
     </div>

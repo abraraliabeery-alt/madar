@@ -1,6 +1,6 @@
-@extends('layouts.app')
+﻿@extends('client.layouts.app')
 
-@section('title', 'الإشعارات')
+@section('title', 'ط§ظ„ط¥ط´ط¹ط§ط±ط§طھ')
 
 @section('content')
 <div class="bg-gray-50 min-h-screen py-8">
@@ -9,17 +9,17 @@
         <div class="mb-8">
             <div class="flex justify-between items-center">
                 <div>
-                    <h1 class="text-3xl font-bold text-gray-900 mb-2">الإشعارات</h1>
-                    <p class="text-gray-600">إدارة إشعاراتك ورسائلك</p>
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">ط§ظ„ط¥ط´ط¹ط§ط±ط§طھ</h1>
+                    <p class="text-gray-600">ط¥ط¯ط§ط±ط© ط¥ط´ط¹ط§ط±ط§طھظƒ ظˆط±ط³ط§ط¦ظ„ظƒ</p>
                 </div>
                 <div class="flex space-x-3 space-x-reverse">
                     <button onclick="markAllAsRead()" 
                             class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">
-                        <i class="fas fa-check-double ml-2"></i> تعيين الكل كمقروء
+                        <i class="fas fa-check-double ml-2"></i> طھط¹ظٹظٹظ† ط§ظ„ظƒظ„ ظƒظ…ظ‚ط±ظˆط،
                     </button>
                     <a href="{{ route('client.notifications.settings') }}" 
                        class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition-colors">
-                        <i class="fas fa-cog ml-2"></i> الإعدادات
+                        <i class="fas fa-cog ml-2"></i> ط§ظ„ط¥ط¹ط¯ط§ط¯ط§طھ
                     </a>
                 </div>
             </div>
@@ -31,22 +31,22 @@
                 <nav class="-mb-px flex space-x-8 space-x-reverse" aria-label="Tabs">
                     <button onclick="filterNotifications('all')" 
                             class="filter-tab active py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap">
-                        جميع الإشعارات
+                        ط¬ظ…ظٹط¹ ط§ظ„ط¥ط´ط¹ط§ط±ط§طھ
                         <span class="ml-2 bg-gray-100 text-gray-900 py-0.5 px-2.5 rounded-full text-xs">{{ $notifications->count() }}</span>
                     </button>
                     <button onclick="filterNotifications('unread')" 
                             class="filter-tab py-4 px-1 border-b-2 border-transparent font-medium text-sm whitespace-nowrap text-gray-500 hover:text-gray-700 hover:border-gray-300">
-                        غير المقروءة
+                        ط؛ظٹط± ط§ظ„ظ…ظ‚ط±ظˆط،ط©
                         <span class="ml-2 bg-red-100 text-red-900 py-0.5 px-2.5 rounded-full text-xs">{{ $notifications->where('read_at', null)->count() }}</span>
                     </button>
                     <button onclick="filterNotifications('bookings')" 
                             class="filter-tab py-4 px-1 border-b-2 border-transparent font-medium text-sm whitespace-nowrap text-gray-500 hover:text-gray-700 hover:border-gray-300">
-                        الحجوزات
+                        ط§ظ„ط­ط¬ظˆط²ط§طھ
                         <span class="ml-2 bg-blue-100 text-blue-900 py-0.5 px-2.5 rounded-full text-xs">{{ $notifications->where('type', 'booking')->count() }}</span>
                     </button>
                     <button onclick="filterNotifications('contracts')" 
                             class="filter-tab py-4 px-1 border-b-2 border-transparent font-medium text-sm whitespace-nowrap text-gray-500 hover:text-gray-700 hover:border-gray-300">
-                        العقود
+                        ط§ظ„ط¹ظ‚ظˆط¯
                         <span class="ml-2 bg-green-100 text-green-900 py-0.5 px-2.5 rounded-full text-xs">{{ $notifications->where('type', 'contract')->count() }}</span>
                     </button>
                 </nav>
@@ -86,11 +86,11 @@
                             <!-- Content -->
                             <div class="flex-1 mr-4">
                                 <div class="flex items-center justify-between">
-                                    <h3 class="text-lg font-semibold text-gray-900">{{ $notification->data['message'] ?? 'إشعار جديد' }}</h3>
+                                    <h3 class="text-lg font-semibold text-gray-900">{{ $notification->data['message'] ?? 'ط¥ط´ط¹ط§ط± ط¬ط¯ظٹط¯' }}</h3>
                                     <div class="flex items-center space-x-2 space-x-reverse">
                                         @if(!$notification->read_at)
                                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                                                جديد
+                                                ط¬ط¯ظٹط¯
                                             </span>
                                         @endif
                                         <span class="text-sm text-gray-500">{{ $notification->created_at->diffForHumans() }}</span>
@@ -100,16 +100,16 @@
                                 <p class="text-gray-600 mt-1">
                                     @if(isset($notification->data['type']))
                                         @if($notification->data['type'] == 'booking_created')
-                                            تم إنشاء حجز جديد
+                                            طھظ… ط¥ظ†ط´ط§ط، ط­ط¬ط² ط¬ط¯ظٹط¯
                                         @elseif($notification->data['type'] == 'booking_status_changed')
-                                            تم تحديث حالة الحجز
+                                            طھظ… طھط­ط¯ظٹط« ط­ط§ظ„ط© ط§ظ„ط­ط¬ط²
                                         @elseif($notification->data['type'] == 'new_product_added')
-                                            تم إضافة مشروع جديد
+                                            طھظ… ط¥ط¶ط§ظپط© ظ…ط´ط±ظˆط¹ ط¬ط¯ظٹط¯
                                         @else
-                                            {{ $notification->data['message'] ?? 'إشعار جديد' }}
+                                            {{ $notification->data['message'] ?? 'ط¥ط´ط¹ط§ط± ط¬ط¯ظٹط¯' }}
                                         @endif
                                     @else
-                                        {{ $notification->data['message'] ?? 'إشعار جديد' }}
+                                        {{ $notification->data['message'] ?? 'ط¥ط´ط¹ط§ط± ط¬ط¯ظٹط¯' }}
                                     @endif
                                 </p>
                                 
@@ -118,17 +118,17 @@
                                         @if(isset($notification->data['booking_id']))
                                             <a href="{{ route('client.bookings.show', $notification->data['booking_id']) }}" 
                                                class="inline-flex items-center text-sm text-blue-600 hover:text-blue-700">
-                                                عرض تفاصيل الحجز <i class="fas fa-arrow-left mr-1"></i>
+                                                ط¹ط±ط¶ طھظپط§طµظٹظ„ ط§ظ„ط­ط¬ط² <i class="fas fa-arrow-left mr-1"></i>
                                             </a>
                                         @elseif(isset($notification->data['product_id']))
                                             <a href="{{ route('public.products.show', $notification->data['product_id']) }}" 
                                                class="inline-flex items-center text-sm text-blue-600 hover:text-blue-700">
-                                                عرض المشروع <i class="fas fa-arrow-left mr-1"></i>
+                                                ط¹ط±ط¶ ط§ظ„ظ…ط´ط±ظˆط¹ <i class="fas fa-arrow-left mr-1"></i>
                                             </a>
                                         @elseif(isset($notification->data['action_url']))
                                             <a href="{{ $notification->data['action_url'] }}" 
                                                class="inline-flex items-center text-sm text-blue-600 hover:text-blue-700">
-                                                عرض التفاصيل <i class="fas fa-arrow-left mr-1"></i>
+                                                ط¹ط±ط¶ ط§ظ„طھظپط§طµظٹظ„ <i class="fas fa-arrow-left mr-1"></i>
                                             </a>
                                         @endif
                                     </div>
@@ -141,13 +141,13 @@
                                     @if(!$notification->read_at)
                                         <button onclick="markAsRead('{{ $notification->id }}')" 
                                                 class="text-gray-400 hover:text-gray-600" 
-                                                title="تعيين كمقروء">
+                                                title="طھط¹ظٹظٹظ† ظƒظ…ظ‚ط±ظˆط،">
                                             <i class="fas fa-check"></i>
                                         </button>
                                     @endif
                                     <button onclick="deleteNotification('{{ $notification->id }}')" 
                                             class="text-red-400 hover:text-red-600" 
-                                            title="حذف">
+                                            title="ط­ط°ظپ">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </div>
@@ -165,11 +165,11 @@
                     <div class="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
                         <i class="fas fa-bell text-gray-400 text-3xl"></i>
                     </div>
-                    <h3 class="text-lg font-medium text-gray-900 mb-2">لا توجد إشعارات</h3>
-                    <p class="text-gray-600 mb-6">ستظهر إشعاراتك هنا عند توفرها</p>
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">ظ„ط§ طھظˆط¬ط¯ ط¥ط´ط¹ط§ط±ط§طھ</h3>
+                    <p class="text-gray-600 mb-6">ط³طھط¸ظ‡ط± ط¥ط´ط¹ط§ط±ط§طھظƒ ظ‡ظ†ط§ ط¹ظ†ط¯ طھظˆظپط±ظ‡ط§</p>
                     <a href="{{ route('client.offers.index') }}" 
                        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700">
-                        تصفح العروض المتاحة
+                        طھطµظپط­ ط§ظ„ط¹ط±ظˆط¶ ط§ظ„ظ…طھط§ط­ط©
                     </a>
                 </div>
             @endif
@@ -235,7 +235,7 @@
     }
 
     function markAllAsRead() {
-        if (confirm('هل أنت متأكد من تعيين جميع الإشعارات كمقروءة؟')) {
+        if (confirm('ظ‡ظ„ ط£ظ†طھ ظ…طھط£ظƒط¯ ظ…ظ† طھط¹ظٹظٹظ† ط¬ظ…ظٹط¹ ط§ظ„ط¥ط´ط¹ط§ط±ط§طھ ظƒظ…ظ‚ط±ظˆط،ط©طں')) {
             fetch(`{{ route('client.notifications.mark-all-read') }}`, {
                 method: 'POST',
                 headers: {
@@ -256,7 +256,7 @@
     }
 
     function deleteNotification(notificationId) {
-        if (confirm('هل أنت متأكد من حذف هذا الإشعار؟')) {
+        if (confirm('ظ‡ظ„ ط£ظ†طھ ظ…طھط£ظƒط¯ ظ…ظ† ط­ط°ظپ ظ‡ط°ط§ ط§ظ„ط¥ط´ط¹ط§ط±طں')) {
             fetch(`/client/notifications/${notificationId}`, {
                 method: 'DELETE',
                 headers: {

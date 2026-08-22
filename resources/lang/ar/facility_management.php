@@ -15,7 +15,7 @@ return [
         'offer_copied' => 'تم نسخ العرض بنجاح',
         'prices_updated' => 'تم تحديث الأسعار بنجاح',
         
-        'product' => 'المنتج',
+        'product' => 'العقار',
         'type' => 'نوع العرض',
         'price' => 'السعر',
         'currency' => 'العملة',

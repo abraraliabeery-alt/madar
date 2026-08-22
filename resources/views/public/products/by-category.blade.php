@@ -179,7 +179,7 @@
                                             <div class="mb-4 flex items-center justify-center gap-6">
                                                 <label class="flex items-center gap-2 rtl:flex-row-reverse">
                                                     <input type="radio" name="search_type" value="products" checked onchange="updateInvestmentMapFilters()">
-                                                    <span class="text-sm font-medium text-gray-700">مشاريع</span>
+                                                    <span class="text-sm font-medium text-gray-700">عقارات</span>
                                                 </label>
                                                 <label class="flex items-center gap-2 rtl:flex-row-reverse">
                                                     <input type="radio" name="search_type" value="facilities" onchange="updateInvestmentMapFilters()">
@@ -292,7 +292,7 @@
                                         <div class="font-bold text-gray-900">مقارنة المطورين</div>
                                         <div class="w-9 h-9 rounded-xl bg-white border border-gray-200 grid place-items-center font-extrabold text-gray-900">3</div>
                                     </div>
-                                    <div class="mt-2 text-sm text-gray-600">الخبرة، المشاريع السابقة، والتقييمات.</div>
+                                    <div class="mt-2 text-sm text-gray-600">الخبرة، العقارات السابقة، والتقييمات.</div>
                                 </div>
                                 <div class="rounded-2xl border border-gray-200 p-5 bg-white">
                                     <div class="flex items-center justify-between rtl:flex-row-reverse">
@@ -412,19 +412,6 @@
         @endif
 
         <div class="mb-6">
-            <nav class="text-sm text-gray-500" aria-label="Breadcrumb">
-                <ol class="flex items-center gap-2 rtl:flex-row-reverse flex-wrap">
-                    <li>
-                        <a href="{{ route('home') }}" class="hover:text-gray-700">{{ __('general.nav.home') }}</a>
-                    </li>
-                    <li class="text-gray-400">/</li>
-                    <li>
-                        <a href="{{ route('public.products.index') }}" class="hover:text-gray-700">{{ __('general.nav.properties') }}</a>
-                    </li>
-                    <li class="text-gray-400">/</li>
-                    <li class="text-gray-900 font-semibold">{{ $categoryName }}</li>
-                </ol>
-            </nav>
 
             <div class="mt-4 sticky top-4 z-30">
                 <div class="bg-white/90 backdrop-blur border border-gray-200 rounded-2xl px-4 py-3 shadow-sm">

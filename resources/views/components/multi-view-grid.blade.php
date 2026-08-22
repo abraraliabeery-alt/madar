@@ -8,22 +8,33 @@
     'idPrefix' => 'items',
     'showPagination' => false,
     'showViewToggle' => false,
-    'showPrice' => true
+    'showPrice' => true,
+    'loadMore' => false,
 ])
 
 @php
-    // Only apply maxItems limit if pagination is not enabled
-    if (!$showPagination) {
+    $gridId = $idPrefix;
+    // When loadMore is enabled, keep all items to reveal later; otherwise apply maxItems
+    if (!$showPagination && !$loadMore) {
         $items = $items->take($maxItems);
     }
-    $gridId = $idPrefix;
 @endphp
 
 @if($items->count() > 0)
-<section class="mb-16">
+<section class="mb-12 sm:mb-16">
     @if($title)
-    <div class="flex justify-between items-center mb-8">
-        <h2 class="text-2xl font-semibold text-gray-900">{{ $title }}</h2>
+    <div class="flex justify-between items-center gap-3 mb-5 sm:mb-8">
+        <h2 class="text-xl sm:text-2xl font-bold">{{ $title }}</h2>
+        @if($type === 'cities' || $type === 'categories')
+            <div class="flex gap-2 flex-shrink-0">
+                <button type="button" onclick="document.getElementById('{{ $gridId }}-small-grid').scrollBy({ left: -200, behavior: 'smooth' })" class="bg-primary-600 text-white w-8 h-8 rounded-full hover:bg-primary-700 flex items-center justify-center">
+                    ‹
+                </button>
+                <button type="button" onclick="document.getElementById('{{ $gridId }}-small-grid').scrollBy({ left: 200, behavior: 'smooth' })" class="bg-primary-600 text-white w-8 h-8 rounded-full hover:bg-primary-700 flex items-center justify-center">
+                    ›
+                </button>
+            </div>
+        @endif
     </div>
     @endif
 
@@ -55,15 +66,17 @@
     @endif
 
     <!-- Small Grid View -->
-    <div id="{{ $gridId }}-small-grid" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+    <div id="{{ $gridId }}-small-grid" class="{{ ($type === 'cities' || $type === 'categories') ? 'flex flex-nowrap overflow-x-auto scroll-smooth snap-x snap-mandatory no-scrollbar gap-2 sm:gap-3 pb-2' : 'grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3 sm:gap-4' }}">
         @foreach($items as $item)
             @if($type === 'products')
-                <div class="bg-white dark:bg-secondary-900 border border-gray-200 dark:border-secondary-800 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                <div class="bg-white dark:bg-secondary-900 border border-gray-200 dark:border-secondary-800 rounded-lg overflow-hidden hover:shadow-md transition-shadow {{ ($loadMore && $loop->index >= $maxItems) ? 'extra-' . $gridId . ' hidden' : '' }}">
                     <div class="relative h-32 bg-gray-100 dark:bg-secondary-800">
                         @if($item->image)
-                            <img src="{{ asset('storage/' . $item->image) }}" 
-                                 alt="{{ $item->title }}" 
-                                 class="w-full h-full object-cover">
+                            <img src="{{ asset('storage/' . $item->image) }}"
+                                 alt="{{ $item->title }}"
+                                 loading="lazy"
+                                 class="w-full h-full object-cover"
+                                 onerror="this.onerror=null; this.src='{{ asset('images/default-product.svg') }}'; this.classList.replace('object-cover','object-contain');">
                         @else
                             <div class="w-full h-full flex items-center justify-center">
                                 <i class="fas fa-home text-2xl text-gray-400 dark:text-gray-300"></i>
@@ -151,45 +164,33 @@
                     </div>
                 </div>
             @elseif($type === 'cities')
-                <div class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
-                    <div class="relative h-32 bg-gray-100">
-                        @if($item->image)
-                            <img src="{{ asset('storage/' . $item->image) }}" 
-                                 alt="{{ $item->name }}" 
-                                 class="w-full h-full object-cover">
-                        @else
-                            <div class="w-full h-full flex items-center justify-center">
-                                <i class="fas fa-city text-2xl text-gray-400"></i>
-                            </div>
-                        @endif
-                        <div class="absolute top-2 right-2 bg-white text-primary-600 px-2 py-1 rounded text-xs">
-                            {{ $item->products_count }} {{ __('general.status.property') }}
+                <a href="{{ route('public.products.index', ['city' => $item->id]) }}" class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow block w-28 sm:w-36 flex-shrink-0 snap-start">
+                    <div class="relative h-20 sm:h-24 bg-gray-100">
+                        <img src="{{ $item->image_url }}" alt="{{ $item->name }}" class="w-full h-full object-cover">
+                        <div class="absolute top-1 right-1 bg-white text-primary-600 px-1 py-0.5 rounded text-[10px]">
+                            {{ $item->products_count }}
                         </div>
                     </div>
-                    <div class="p-3">
-                        <h3 class="font-medium text-gray-900 text-sm mb-1 line-clamp-1">@cityName($item)</h3>
-                        <p class="text-xs text-gray-600 mb-2 line-clamp-2">@cityDescription($item)</p>
-                        <a href="{{ route('public.products.index', ['city' => $item->id]) }}" 
-                           class="text-primary-600 hover:text-primary-700 text-xs font-medium">
-                            {{ __('general.actions.browse_properties') }}
-                        </a>
+                    <div class="p-2 text-center">
+                        <h3 class="font-medium text-gray-900 text-[11px] line-clamp-1">@cityName($item)</h3>
                     </div>
-                </div>
+                </a>
                          @elseif($type === 'categories')
-                 <div class="bg-white border border-gray-200 rounded-lg p-4 text-center hover:shadow-md transition-shadow">
-                     @if($item->icon)
-                         <i class="{{ $item->icon }} text-2xl text-primary-600 mb-3"></i>
-                     @else
-                         <i class="fas fa-building text-2xl text-primary-600 mb-3"></i>
-                     @endif
-                     <h3 class="font-medium text-gray-900 text-sm mb-1 line-clamp-1">{{ $item->display_name ?? App\Helpers\LanguageHelper::getCategoryName($item) }}</h3>
-                     <p class="text-xs text-gray-600 mb-2 line-clamp-2">@categoryDescription($item)</p>
-                     <div class="text-xs text-gray-500 mb-3">{{ $item->products_count }} {{ __('general.status.property') }}</div>
-                     <a href="{{ route('public.products.by-category', $item->id) }}" 
-                        class="text-primary-600 hover:text-primary-700 text-xs font-medium">
-                         {{ __('general.actions.browse_category') }}
-                     </a>
-                 </div>
+                <a href="{{ route('public.products.by-category', $item->id) }}" class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow block w-28 sm:w-36 flex-shrink-0 snap-start">
+                    <div class="relative h-20 sm:h-24 bg-gray-100 flex items-center justify-center">
+                        @if($item->icon)
+                            <i class="{{ $item->icon }} text-2xl text-primary-600"></i>
+                        @else
+                            <i class="fas fa-building text-2xl text-primary-600"></i>
+                        @endif
+                        <div class="absolute top-1 right-1 bg-white text-primary-600 px-1 py-0.5 rounded text-[10px]">
+                            {{ $item->products_count }}
+                        </div>
+                    </div>
+                    <div class="p-2 text-center">
+                        <h3 class="font-medium text-gray-900 text-[11px] line-clamp-1">{{ $item->display_name ?? App\Helpers\LanguageHelper::getCategoryName($item) }}</h3>
+                    </div>
+                </a>
              @elseif($type === 'facilities')
                  <div class="bg-white rounded-lg shadow-md overflow-hidden card-hover">
                      <div class="relative">
@@ -209,7 +210,7 @@
                      <div class="p-3">
                          <div class="flex items-start justify-between mb-2">
                              <h3 class="text-sm font-semibold text-gray-900 line-clamp-1">
-                                 <a href="{{ route('public.facility.site.home', $item->slug ?? $item->id) }}" class="hover:text-primary-600 transition-colors">
+                                 <a href="{{ route('facility.site.home', $item->slug ?? $item->id) }}" class="hover:text-primary-600 transition-colors">
                                      {{ $item->name }}
                                  </a>
                              </h3>
@@ -233,7 +234,7 @@
                          </div>
 
                          <div class="flex items-center justify-between">
-                             <a href="{{ route('public.facility.site.home', $item->slug ?? $item->id) }}"
+                             <a href="{{ route('facility.site.home', $item->slug ?? $item->id) }}"
                                class="btn btn-primary text-white px-3 py-1 rounded text-xs font-medium">
                                  {{ __('facilities.facility_card.view_facility') }}
                              </a>
@@ -280,17 +281,9 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-{{ $type === 'categories' ? '4' : '3' }} gap-6">
                 @foreach($items as $item)
                     @if($type === 'cities')
-                        <div class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                        <a href="{{ route('public.products.index', ['city' => $item->id]) }}" class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow block">
                             <div class="relative h-40 bg-gray-100">
-                                @if($item->image)
-                                    <img src="{{ asset('storage/' . $item->image) }}" 
-                                         alt="{{ $item->name }}" 
-                                         class="w-full h-full object-cover">
-                                @else
-                                    <div class="w-full h-full flex items-center justify-center">
-                                        <i class="fas fa-city text-4xl text-gray-400"></i>
-                                    </div>
-                                @endif
+                                <img src="{{ $item->image_url }}" alt="{{ $item->name }}" class="w-full h-full object-cover">
                                 <div class="absolute top-2 right-2 bg-white text-primary-600 px-2 py-1 rounded text-sm">
                                     {{ $item->products_count }} {{ __('general.status.property') }}
                                 </div>
@@ -298,14 +291,10 @@
                             <div class="p-4">
                                 <h3 class="font-medium text-gray-900 mb-2">@cityName($item)</h3>
                                 <p class="text-sm text-gray-600 mb-3 line-clamp-2">@cityDescription($item)</p>
-                                <a href="{{ route('public.products.index', ['city' => $item->id]) }}" 
-                                   class="text-primary-600 hover:text-primary-700 font-medium">
-                                    {{ __('general.actions.browse_properties') }}
-                                </a>
                             </div>
-                        </div>
+                        </a>
                                          @elseif($type === 'categories')
-                         <div class="bg-white border border-gray-200 rounded-lg p-6 text-center hover:shadow-md transition-shadow">
+                         <a href="{{ route('public.products.by-category', $item->id) }}" class="bg-white border border-gray-200 rounded-lg p-6 text-center hover:shadow-md transition-shadow block">
                              @if($item->icon)
                                  <i class="{{ $item->icon }} text-4xl text-primary-600 mb-4"></i>
                              @else
@@ -314,11 +303,7 @@
                              <h3 class="font-medium text-gray-900 mb-2">{{ $item->display_name ?? App\Helpers\LanguageHelper::getCategoryName($item) }}</h3>
                              <p class="text-sm text-gray-600 mb-3 line-clamp-2">@categoryDescription($item)</p>
                              <div class="text-sm text-gray-500 mb-4">{{ $item->products_count }} {{ __('general.status.property') }}</div>
-                             <a href="{{ route('public.products.by-category', $item->id) }}" 
-                                class="text-primary-600 hover:text-primary-700 font-medium">
-                                 {{ __('general.actions.browse_category') }}
-                             </a>
-                         </div>
+                         </a>
                      @elseif($type === 'facilities')
                          <div class="bg-white rounded-lg shadow-md overflow-hidden card-hover">
                              <div class="relative">
@@ -338,7 +323,7 @@
                              <div class="p-6">
                                  <div class="flex items-start justify-between mb-4">
                                      <h3 class="text-xl font-semibold text-gray-900">
-                                         <a href="{{ route('public.facility.site.home', $item->slug ?? $item->id) }}" class="hover:text-primary-600 transition-colors">
+                                         <a href="{{ route('facility.site.home', $item->slug ?? $item->id) }}" class="hover:text-primary-600 transition-colors">
                                              {{ $item->name }}
                                          </a>
                                      </h3>
@@ -363,7 +348,7 @@
                                  </div>
 
                                  <div class="flex items-center justify-between">
-                                     <a href="{{ route('public.facility.site.home', $item->slug ?? $item->id) }}"
+                                     <a href="{{ route('facility.site.home', $item->slug ?? $item->id) }}"
                                        class="btn btn-primary text-white px-4 py-2 rounded-lg text-sm font-medium">
                                          {{ __('facilities.facility_card.view_facility') }}
                                      </a>
@@ -389,18 +374,13 @@
                 <x-execution-request-card-row :request="$item" />
             @else
                 <div class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
-                    <div class="flex">
+                    <div class="flex flex-col sm:flex-row {{ $type === 'cities' || $type === 'categories' ? 'cursor-pointer' : '' }}"
+                         @if($type === 'cities' || $type === 'categories')
+                         onclick="window.location.href='{{ $type === 'cities' ? route('public.products.index', ['city' => $item->id]) : route('public.products.by-category', $item->id) }}'"
+                         @endif>
                         @if($type === 'cities')
-                        <div class="relative w-48 h-32 bg-gray-100 flex-shrink-0">
-                            @if($item->image)
-                                <img src="{{ asset('storage/' . $item->image) }}" 
-                                     alt="{{ $item->name }}" 
-                                     class="w-full h-full object-cover">
-                            @else
-                                <div class="w-full h-full flex items-center justify-center">
-                                    <i class="fas fa-city text-2xl text-gray-400"></i>
-                                </div>
-                            @endif
+                        <div class="relative w-full sm:w-48 h-40 sm:h-32 bg-gray-100 flex-shrink-0">
+                            <img src="{{ $item->image_url }}" alt="{{ $item->name }}" class="w-full h-full object-cover">
                             <div class="absolute top-2 right-2 bg-white text-primary-600 px-2 py-1 rounded text-sm">
                                 {{ $item->products_count }} {{ __('general.status.property') }}
                             </div>
@@ -408,13 +388,9 @@
                         <div class="flex-1 p-4">
                             <h3 class="font-medium text-gray-900 text-lg mb-2">@cityName($item)</h3>
                             <p class="text-sm text-gray-600 mb-3">@cityDescription($item)</p>
-                            <a href="{{ route('public.products.index', ['city' => $item->id]) }}" 
-                               class="text-primary-600 hover:text-primary-700 font-medium">
-                                {{ __('general.actions.browse_properties') }}
-                            </a>
                         </div>
                                          @elseif($type === 'categories')
-                         <div class="w-48 h-32 bg-gray-100 flex-shrink-0 flex items-center justify-center">
+                         <div class="w-full sm:w-48 h-32 bg-gray-100 flex-shrink-0 flex items-center justify-center">
                              @if($item->icon)
                                  <i class="{{ $item->icon }} text-4xl text-primary-600"></i>
                              @else
@@ -425,13 +401,9 @@
                              <h3 class="font-medium text-gray-900 text-lg mb-2">{{ $item->display_name ?? App\Helpers\LanguageHelper::getCategoryName($item) }}</h3>
                              <p class="text-sm text-gray-600 mb-3">@categoryDescription($item)</p>
                              <div class="text-sm text-gray-500 mb-4">{{ $item->products_count }} {{ __('general.status.property') }}</div>
-                             <a href="{{ route('public.products.by-category', $item->id) }}" 
-                                class="text-primary-600 hover:text-primary-700 font-medium">
-                                 {{ __('general.actions.browse_category') }}
-                             </a>
                          </div>
                      @elseif($type === 'facilities')
-                         <div class="relative w-48 h-32 bg-gray-100 flex-shrink-0">
+                         <div class="relative w-full sm:w-48 h-40 sm:h-32 bg-gray-100 flex-shrink-0">
                              <img src="{{ $item->logo ?? 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80' }}"
                                   alt="{{ $item->name }}" class="w-full h-full object-cover">
                              @if($item->is_featured)
@@ -448,7 +420,7 @@
                          <div class="flex-1 p-6">
                              <div class="flex justify-between items-start mb-3">
                                  <h3 class="text-xl font-semibold text-gray-900">
-                                     <a href="{{ route('public.facility.site.home', $item->slug ?? $item->id) }}" class="hover:text-primary-600 transition-colors">
+                                     <a href="{{ route('facility.site.home', $item->slug ?? $item->id) }}" class="hover:text-primary-600 transition-colors">
                                          {{ $item->name }}
                                      </a>
                                  </h3>
@@ -473,7 +445,7 @@
                              </div>
 
                              <div class="flex items-center justify-between">
-                                 <a href="{{ route('public.facility.site.home', $item->slug ?? $item->id) }}"
+                                 <a href="{{ route('facility.site.home', $item->slug ?? $item->id) }}"
                                    class="btn btn-primary text-white px-4 py-2 rounded-lg text-sm font-medium">
                                      {{ __('facilities.facility_card.view_facility') }}
                                  </a>
@@ -490,14 +462,21 @@
         @endforeach
     </div>
     
-         @if($viewAllRoute && $viewAllText)
-     <div class="text-center mt-8">
-         <a href="{{ $viewAllRoute }}" 
-            class="inline-block bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition-colors">
-             {{ $viewAllText }}
-         </a>
-     </div>
-     @endif
+    @if($viewAllText)
+        @if($loadMore && $items->count() > $maxItems)
+            <div class="text-center mt-8">
+                <button type="button" onclick="document.querySelectorAll('.extra-{{ $gridId }}').forEach(el => el.classList.remove('hidden')); this.parentElement.style.display='none';" class="inline-block bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition-colors">
+                    {{ $viewAllText }}
+                </button>
+            </div>
+        @elseif($viewAllRoute)
+            <div class="text-center mt-8">
+                <a href="{{ $viewAllRoute }}" class="inline-block bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition-colors">
+                    {{ $viewAllText }}
+                </a>
+            </div>
+        @endif
+    @endif
      
      @if($showPagination && method_exists($items, 'hasPages') && $items->hasPages())
      <div class="mt-12">
@@ -557,8 +536,8 @@
   * @param {string} viewType - The view type to switch to
   */
  function switchView(viewType) {
-     // Get all grid containers dynamically
-     const gridContainers = document.querySelectorAll('[id$="-small-grid"], [id$="-large-grid"], [id$="-list"]');
+     // Get all grid containers dynamically (skip city/category sliders which are always small)
+     const gridContainers = document.querySelectorAll('[id$="-small-grid"]:not([id^="cities-"]):not([id^="categories-"]), [id$="-large-grid"]:not([id^="cities-"]):not([id^="categories-"]), [id$="-list"]:not([id^="cities-"]):not([id^="categories-"])');
      
      // Toggle buttons
      const smallGridBtn = document.getElementById('small-grid-view');
@@ -591,7 +570,7 @@
      const targetSuffix = viewType === 'small-grid' ? '-small-grid' : 
                          viewType === 'large-grid' ? '-large-grid' : '-list';
      
-     const targetContainers = document.querySelectorAll(`[id$="${targetSuffix}"]`);
+     const targetContainers = document.querySelectorAll(`[id$="${targetSuffix}"]:not([id^="cities-"]):not([id^="categories-"])`);
      targetContainers.forEach(container => {
          container.classList.remove('hidden');
      });

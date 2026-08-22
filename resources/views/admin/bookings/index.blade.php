@@ -30,7 +30,7 @@
                 </div>
                 <div class="col-12 col-md-6 col-lg-3">
                     <select class="form-select" id="productFilter">
-                        <option value="">كل المنتجات</option>
+                        <option value="">كل العقارات</option>
                         @foreach($products as $product)
                             <option value="{{ $product->id }}">{{ $product->name }}</option>
                         @endforeach
@@ -134,7 +134,7 @@
                         <tr>
                             <th class="d-none d-md-table-cell">رقم الحجز</th>
                             <th>المستخدم</th>
-                            <th class="d-none d-lg-table-cell">المنتج</th>
+                            <th class="d-none d-lg-table-cell">العقار</th>
                             <th class="d-none d-lg-table-cell">المنشأة</th>
                             <th class="d-none d-md-table-cell">التاريخ</th>
                             <th class="d-none d-md-table-cell">الوقت</th>
@@ -166,7 +166,7 @@
                                             {{ $booking->user->name }}
                                         </a>
                                         <div class="small text-muted d-md-none">
-                                            {{ $booking->product->name ?? 'منتج' }}
+                                            {{ $booking->product->name ?? 'عقار' }}
                                         </div>
                                     </div>
                                 </div>
@@ -192,7 +192,7 @@
                             <td class="d-none d-md-table-cell">
                                 @if($booking->status)
                                     <span class="badge bg-{{ $booking->status->color }}">
-                                        {{ $booking->status->name }}
+                                        {{ $booking->status->getTranslatedName('ar') }}
                                     </span>
                                 @else
                                     <span class="badge bg-secondary">لا توجد حالة</span>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Referral;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -105,6 +106,20 @@ class RegisterController extends Controller
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
+            }
+
+            $referralCode = request('ref') ?? request()->query('ref');
+            if ($referralCode) {
+                $referrer = User::where('referral_code', $referralCode)->first();
+                if ($referrer && $referrer->id !== $user->id) {
+                    $user->referred_by_user_id = $referrer->id;
+                    $user->save();
+
+                    Referral::firstOrCreate(
+                        ['referrer_id' => $referrer->id, 'referred_user_id' => $user->id],
+                        ['status' => 'converted', 'converted_at' => now()]
+                    );
+                }
             }
 
             return $user;

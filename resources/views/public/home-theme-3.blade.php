@@ -18,7 +18,7 @@
                 <p class="text-slate-600 mb-6 text-sm md:text-base max-w-xl">
                     {{ __('general.home.subtitle') }}
                 </p>
-                <form action="{{ route('public.search') }}" method="GET" class="flex search-form mb-4" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
+                <form action="{{ \App\Helpers\PlatformModeHelper::allowsRealEstate() ? route('public.search') : route('public.execution.marketplace') }}" method="GET" class="flex search-form mb-4" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
                     <input type="text"
                            class="flex-1 px-4 py-3 text-slate-900 border border-slate-300 bg-white search-input focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent rounded-lg shadow-sm"
                            name="q"
@@ -112,20 +112,6 @@
                 />
             @endif
 
-            <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 text-center">
-                <h2 class="text-2xl font-semibold text-slate-900 mb-3">{{ __('general.home.cta_title') }}</h2>
-                <p class="text-slate-600 mb-6">{{ __('general.home.cta_subtitle') }}</p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <a href="{{ route('register') }}" 
-                       class="bg-slate-900 text-white px-6 py-3 rounded-lg hover:bg-slate-700 transition-colors text-sm font-semibold">
-                        {{ __('general.home.register_now') }}
-                    </a>
-                    <a href="{{ route('public.contact') }}" 
-                       class="border border-slate-300 text-slate-800 px-6 py-3 rounded-lg hover:bg-slate-50 transition-colors text-sm">
-                        {{ __('general.home.contact_us') }}
-                    </a>
-                </div>
-            </section>
         </div>
     </div>
 </div>

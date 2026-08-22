@@ -4,9 +4,9 @@
 <div class="container-fluid">
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center" data-intro="{{ __('admin.tour.products_header_desc') }}" data-step="17">
-            <h5 class="mb-0">إدارة المنتجات</h5>
+            <h5 class="mb-0">إدارة العقارات</h5>
             <a href="{{ route('admin.products.create') }}" class="btn btn-primary">
-                <i class="fas fa-plus me-2"></i>إضافة منتج جديد
+                <i class="fas fa-plus me-2"></i>إضافة عقار جديد
             </a>
         </div>
         <div class="card-body">
@@ -77,7 +77,7 @@
                         <tr>
                             <td>
                                 @if($product->main_image)
-                                    <img src="{{ asset($product->main_image) }}" alt="product" width="50" class="rounded">
+                                    <img src="{{ asset($product->main_image) }}" alt="عقار" width="50" class="rounded">
                                 @else
                                     <div class="avatar-placeholder rounded" style="width: 50px; height: 50px;">
                                         <i class="fas fa-box"></i>
@@ -86,19 +86,27 @@
                             </td>
                             <td>{{ $product->name }}</td>
                             <td>
-                                <a href="{{ route('admin.facilities.show', $product->facility) }}">
-                                    {{ $product->facility->name }}
-                                </a>
+                                @if($product->facility)
+                                    <a href="{{ route('admin.facilities.show', $product->facility) }}">
+                                        {{ $product->facility->name }}
+                                    </a>
+                                @else
+                                    <span class="text-muted">-</span>
+                                @endif
                             </td>
                             <td>
-                                <span class="badge bg-info">{{ $product->category->getTranslatedName('ar') }}</span>
+                                @if($product->category)
+                                    <span class="badge bg-info">{{ $product->category->getTranslatedName('ar') }}</span>
+                                @else
+                                    <span class="text-muted">-</span>
+                                @endif
                             </td>
                                                             <td>{{ number_format($product->price, 2) }} {!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}</td>
                             <td>{{ Str::limit($product->address, 30) }}</td>
                             <td>
                                 @if($product->status)
                                     <span class="badge bg-{{ $product->status->color }}">
-                                        {{ $product->status->name }}
+                                        {{ $product->status->getTranslatedName('ar') }}
                                     </span>
                                 @else
                                     <span class="badge bg-secondary">لا توجد حالة</span>
@@ -134,6 +142,13 @@
                                            data-bs-toggle="tooltip"
                                            title="عرض">
                                             <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{{ route('public.products.pdf', $product) }}"
+                                           class="btn btn-sm btn-outline-dark action-btn-mobile"
+                                           data-bs-toggle="tooltip"
+                                           title="PDF"
+                                           target="_blank">
+                                            <i class="fas fa-file-pdf"></i>
                                         </a>
                                         <a href="{{ route('admin.products.edit', $product) }}"
                                            class="btn btn-sm btn-outline-warning action-btn-mobile"
@@ -195,13 +210,13 @@
                                             <a href="{{ route('admin.products.edit', $product) }}"
                                                class="btn btn-sm btn-outline-warning"
                                                data-bs-toggle="tooltip"
-                                               title="تعديل المنتج">
+                                               title="تعديل العقار">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             <button type="button"
                                                     class="btn btn-sm btn-outline-danger delete-confirm"
                                                     data-bs-toggle="tooltip"
-                                                    title="حذف المنتج"
+                                                    title="حذف العقار"
                                                     data-product-id="{{ $product->id }}"
                                                     data-product-name="{{ $product->name }}">
                                                 <i class="fas fa-trash"></i>
@@ -215,7 +230,7 @@
                                                 <button type="submit"
                                                         class="btn btn-sm {{ $product->is_active ? 'btn-outline-danger' : 'btn-outline-success' }}"
                                                         data-bs-toggle="tooltip"
-                                                        title="{{ $product->is_active ? 'إلغاء التفعيل' : 'تفعيل المنتج' }}">
+                                                        title="{{ $product->is_active ? 'إلغاء التفعيل' : 'تفعيل العقار' }}">
                                                     <i class="fas {{ $product->is_active ? 'fa-ban' : 'fa-check' }}"></i>
                                                 </button>
                                             </form>
@@ -225,7 +240,7 @@
                                                 <button type="submit"
                                                         class="btn btn-sm {{ $product->is_verified ? 'btn-outline-warning' : 'btn-outline-info' }}"
                                                         data-bs-toggle="tooltip"
-                                                        title="{{ $product->is_verified ? 'إلغاء التحقق' : 'التحقق من المنتج' }}">
+                                                        title="{{ $product->is_verified ? 'إلغاء التحقق' : 'التحقق من العقار' }}">
                                                     <i class="fas {{ $product->is_verified ? 'fa-times' : 'fa-shield-alt' }}"></i>
                                                 </button>
                                             </form>
@@ -235,7 +250,7 @@
                                                 <button type="submit"
                                                         class="btn btn-sm {{ $product->is_featured ? 'btn-outline-secondary' : 'btn-outline-warning' }}"
                                                         data-bs-toggle="tooltip"
-                                                        title="{{ $product->is_featured ? 'إلغاء التمييز' : 'تمييز المنتج' }}">
+                                                        title="{{ $product->is_featured ? 'إلغاء التمييز' : 'تمييز العقار' }}">
                                                     <i class="fas fa-star {{ $product->is_featured ? 'text-warning' : '' }}"></i>
                                                 </button>
                                             </form>
@@ -462,12 +477,12 @@ $(document).ready(function() {
 
         Swal.fire({
             title: 'هل أنت متأكد؟',
-            text: `سيتم حذف المنتج "${productName}" نهائياً. لا يمكن التراجع عن هذا الإجراء!`,
+            text: `سيتم حذف العقار "${productName}" نهائياً. لا يمكن التراجع عن هذا الإجراء!`,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#d33',
             cancelButtonColor: '#3085d6',
-            confirmButtonText: 'نعم، احذف المنتج',
+            confirmButtonText: 'نعم، احذف العقار',
             cancelButtonText: 'إلغاء',
             reverseButtons: true
         }).then((result) => {

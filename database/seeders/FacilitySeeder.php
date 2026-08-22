@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use App\Models\Facility;
 use App\Models\User;
 use App\Models\FacilityCategory;
+use App\Models\Role;
 
 class FacilitySeeder extends Seeder
 {
@@ -16,8 +17,45 @@ class FacilitySeeder extends Seeder
     {
         $facilityCategories = FacilityCategory::all();
         $facilityUsers = User::where('primary_role', 'facility')->get();
+        $admin = User::where('email', 'admin@aqar.com')->first();
 
-        // Check if there are facility users available
+        // Create the primary facility owned by the admin
+        $mainCategory = $facilityCategories->first();
+        if ($admin && $mainCategory) {
+            $mainFacility = Facility::updateOrCreate(
+                ['name' => 'المنشأة الرئيسية'],
+                [
+                    'name' => 'المنشأة الرئيسية',
+                    'description' => 'المنشأة الرئيسية المملوكة لمدير النظام',
+                    'address' => 'الرياض، المملكة العربية السعودية',
+                    'phone' => $admin->phone_number,
+                    'email' => $admin->email,
+                    'website' => null,
+                    'license_number' => 'ADMIN-MAIN',
+                    'license_expiry' => now()->addYears(10),
+                    'is_active' => true,
+                    'is_verified' => true,
+                    'is_featured' => true,
+                    'is_primary' => true,
+                    'rating' => 5.0,
+                    'rating_count' => 0,
+                    'products_count' => 0,
+                    'facility_category_id' => $mainCategory->id,
+                    'owner_user_id' => $admin->id,
+                ]
+            );
+
+            $mainFacility->users()->syncWithoutDetaching([$admin->id]);
+
+            $facilityRole = Role::where('name', 'facility')->first();
+            if ($facilityRole) {
+                $admin->roles()->syncWithoutDetaching([$facilityRole->id => ['facility_id' => $mainFacility->id]]);
+            }
+
+            $this->command->info("Created primary facility '{$mainFacility->name}' and linked to admin '{$admin->name}'");
+        }
+
+        // Check if there are facility users available for the other seed facilities
         if ($facilityUsers->isEmpty()) {
             $this->command->warn('No facility users found. Please run UserSeeder first to create facility users.');
             return;

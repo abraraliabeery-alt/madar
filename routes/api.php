@@ -71,6 +71,9 @@ Route::prefix('v1')->group(function () {
     Route::get('/products/search', [ApiProductController::class, 'search']);
     Route::get('/products/statistics', [ApiProductController::class, 'statistics']);
     Route::get('/products/{product}', [ApiProductController::class, 'show']);
+    Route::post('/products/generate-description', [ApiProductController::class, 'generateDescription'])->middleware('throttle:10,1');
+    Route::post('/products/generate-marketing-content', [ApiProductController::class, 'generateMarketingContent'])->middleware('throttle:10,1');
+    Route::post('/products/generate-from-image', [ApiProductController::class, 'generateFromImage'])->middleware('throttle:10,1');
     Route::get('/categories/{category}/products', [ApiProductController::class, 'byCategory']);
     Route::get('/facilities/{facility}/products', [ApiProductController::class, 'byFacility']);
 

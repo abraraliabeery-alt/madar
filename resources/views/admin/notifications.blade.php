@@ -48,7 +48,7 @@
                                                     <h6 class="mb-1">{{ $notification->data['message'] ?? 'إشعار جديد' }}</h6>
                                                     <p class="text-muted mb-1">
                                                         @if(isset($notification->data['product_name']))
-                                                            المنتج: {{ $notification->data['product_name'] }}
+                                                            العقار: {{ $notification->data['product_name'] }}
                                                         @endif
                                                         @if(isset($notification->data['booking_date']))
                                                             تاريخ الحجز: {{ $notification->data['booking_date'] }}

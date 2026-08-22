@@ -1021,7 +1021,7 @@ class SearchController extends Controller
         }
 
         $facilities = $query->paginate(12);
-        $categories = Category::all();
+        $categories = Category::where('is_active', true)->get();
         $statuses = Status::all();
 
         return view('public.search.facilities', compact('facilities', 'categories', 'statuses'));
@@ -1252,7 +1252,7 @@ class SearchController extends Controller
      */
     public function advanced(Request $request)
     {
-        $categories = Category::all();
+        $categories = Category::where('is_active', true)->get();
         $features = Feature::all();
         $attributes = Attribute::all();
         $statuses = Status::all();
@@ -1352,7 +1352,7 @@ class SearchController extends Controller
             });
         }
 
-        $categories = $searchType === 'facilities' ? Category::all() : collect();
+        $categories = $searchType === 'facilities' ? Category::where('is_active', true)->get() : collect();
 
         return view('public.search.map', compact('mapData', 'categories'));
     }
@@ -1399,14 +1399,14 @@ class SearchController extends Controller
                     ->orWhere('address', 'like', '%' . $query . '%');
                 })
                 ->take(5)
-                ->get(['id', 'address', 'price', 'image'])
+                ->get(['id', 'address', 'main_image'])
                 ->map(function ($product) use ($locale) {
                     $title = $product->translations->where('locale', $locale)->first()->title ?? $product->translations->first()->title ?? 'No Title';
                     return [
                         'id' => $product->id,
                         'name' => $title,
                         'address' => $product->address,
-                        'price' => $product->price,
+                        'price' => $product->getFormattedPrice(),
                         'image' => $product->image,
                         'url' => route('public.products.show', $product->id),
                         'type' => 'product'
@@ -1429,10 +1429,14 @@ class SearchController extends Controller
 
         // تطبيق الفلاتر الإضافية
         if ($request->has('min_price') && $request->min_price) {
-            $query->where('price', '>=', $request->min_price);
+            $query->whereHas('activeOffers', function ($q) use ($request) {
+                $q->where('price', '>=', $request->min_price);
+            });
         }
         if ($request->has('max_price') && $request->max_price) {
-            $query->where('price', '<=', $request->max_price);
+            $query->whereHas('activeOffers', function ($q) use ($request) {
+                $q->where('price', '<=', $request->max_price);
+            });
         }
 
         $products = $query->paginate(12);

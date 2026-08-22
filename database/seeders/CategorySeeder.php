@@ -13,125 +13,87 @@ class CategorySeeder extends Seeder
      */
     public function run(): void
     {
-        $categories = [
-            [
-                'icon' => 'fas fa-helmet-safety',
-                'is_active' => true,
-                'is_featured' => true,
-                'order' => 1,
-                'translations' => [
-                    'ar' => [
-                        'name' => 'تشييد وبناء',
-                        'description' => 'أعمال الهيكل الإنشائي وبناء المباني',
-                    ],
-                    'en' => [
-                        'name' => 'Construction',
-                        'description' => 'Structural and building construction works',
-                    ],
-                ],
-            ],
-            [
-                'icon' => 'fas fa-paint-roller',
-                'is_active' => true,
-                'is_featured' => true,
-                'order' => 2,
-                'translations' => [
-                    'ar' => [
-                        'name' => 'تشطيبات',
-                        'description' => 'دهانات، أرضيات، أسقف، أبواب ونوافذ',
-                    ],
-                    'en' => [
-                        'name' => 'Finishing',
-                        'description' => 'Paint, flooring, ceilings, doors & windows',
-                    ],
-                ],
-            ],
-            [
-                'icon' => 'fas fa-bolt',
-                'is_active' => true,
-                'is_featured' => false,
-                'order' => 3,
-                'translations' => [
-                    'ar' => [
-                        'name' => 'أعمال كهرباء',
-                        'description' => 'تمديدات، لوحات، إنارة، أنظمة ضعيفة',
-                    ],
-                    'en' => [
-                        'name' => 'Electrical',
-                        'description' => 'Wiring, panels, lighting, low-current systems',
-                    ],
-                ],
-            ],
-            [
-                'icon' => 'fas fa-fan',
-                'is_active' => true,
-                'is_featured' => false,
-                'order' => 4,
-                'translations' => [
-                    'ar' => [
-                        'name' => 'ميكانيكا (HVAC)',
-                        'description' => 'تكييف وتهوية ومجاري هواء وتشغيل',
-                    ],
-                    'en' => [
-                        'name' => 'Mechanical (HVAC)',
-                        'description' => 'Air-conditioning, ventilation, ducts & commissioning',
-                    ],
-                ],
-            ],
-            [
-                'icon' => 'fas fa-road',
-                'is_active' => true,
-                'is_featured' => false,
-                'order' => 5,
-                'translations' => [
-                    'ar' => [
-                        'name' => 'بنية تحتية',
-                        'description' => 'طرق، أرصفة، إنارة، شبكات',
-                    ],
-                    'en' => [
-                        'name' => 'Infrastructure',
-                        'description' => 'Roads, sidewalks, lighting, utilities networks',
-                    ],
-                ],
-            ],
-            [
-                'icon' => 'fas fa-truck-fast',
-                'is_active' => true,
-                'is_featured' => false,
-                'order' => 6,
-                'translations' => [
-                    'ar' => [
-                        'name' => 'توريد وتركيب',
-                        'description' => 'توريد مواد/معدات مع التركيب والاختبارات',
-                    ],
-                    'en' => [
-                        'name' => 'Supply & Installation',
-                        'description' => 'Supply materials/equipment with installation and testing',
-                    ],
-                ],
-            ],
+        // Delete existing categories (children first to avoid self-referencing issues)
+        Category::whereNotNull('parent_id')->delete();
+        Category::whereNull('parent_id')->delete();
+
+        // Clear category references where no foreign key exists
+        \App\Models\Attribute::whereNotNull('category_id')->update(['category_id' => null]);
+
+        // Main categories
+        $realEstate = Category::create([
+            'icon' => 'fas fa-building',
+            'is_active' => true,
+            'is_featured' => true,
+            'order' => 1,
+            'sort_order' => 1,
+        ]);
+
+        $contracting = Category::create([
+            'icon' => 'fas fa-helmet-safety',
+            'is_active' => true,
+            'is_featured' => true,
+            'order' => 2,
+            'sort_order' => 2,
+        ]);
+
+        // Main category translations
+        CategoryTranslation::create(['category_id' => $realEstate->id, 'locale' => 'ar', 'name' => 'عقارات', 'description' => 'فئة العقارات والأملاك']);
+        CategoryTranslation::create(['category_id' => $realEstate->id, 'locale' => 'en', 'name' => 'Real Estate', 'description' => 'Real estate and properties']);
+        CategoryTranslation::create(['category_id' => $contracting->id, 'locale' => 'ar', 'name' => 'مقاولات', 'description' => 'فئة أعمال المقاولات والتنفيذ']);
+        CategoryTranslation::create(['category_id' => $contracting->id, 'locale' => 'en', 'name' => 'Contracting', 'description' => 'Contracting and execution works']);
+
+        // Real estate subcategories
+        $realEstateSubs = [
+            ['icon' => 'fas fa-map', 'order' => 1, 'ar' => 'أرض', 'en' => 'Land'],
+            ['icon' => 'fas fa-house-chimney', 'order' => 2, 'ar' => 'فيلا', 'en' => 'Villa'],
+            ['icon' => 'fas fa-building', 'order' => 3, 'ar' => 'شقة', 'en' => 'Apartment'],
+            ['icon' => 'fas fa-city', 'order' => 4, 'ar' => 'عمارة', 'en' => 'Building'],
+            ['icon' => 'fas fa-store', 'order' => 5, 'ar' => 'محل تجاري', 'en' => 'Shop'],
+            ['icon' => 'fas fa-warehouse', 'order' => 6, 'ar' => 'مستودع', 'en' => 'Warehouse'],
+            ['icon' => 'fas fa-umbrella-beach', 'order' => 7, 'ar' => 'استراحة', 'en' => 'Rest House'],
+            ['icon' => 'fas fa-tractor', 'order' => 8, 'ar' => 'مزرعة', 'en' => 'Farm'],
+            ['icon' => 'fas fa-briefcase', 'order' => 9, 'ar' => 'مكتب', 'en' => 'Office'],
+            ['icon' => 'fas fa-water', 'order' => 10, 'ar' => 'شاليه', 'en' => 'Chalet'],
+            ['icon' => 'fas fa-layer-group', 'order' => 11, 'ar' => 'دوبلكس', 'en' => 'Duplex'],
+            ['icon' => 'fas fa-compress', 'order' => 12, 'ar' => 'ستوديو', 'en' => 'Studio'],
+            ['icon' => 'fas fa-gem', 'order' => 13, 'ar' => 'قصر', 'en' => 'Palace'],
         ];
 
-        foreach ($categories as $categoryData) {
-            $translations = $categoryData['translations'];
-            unset($categoryData['translations']);
-            
-            // Create or update the category
-            $category = Category::updateOrCreate(
-                ['icon' => $categoryData['icon']],
-                $categoryData
-            );
-            
-            // Create translations
-            foreach ($translations as $locale => $translationData) {
-                CategoryTranslation::updateOrCreate(
-                    [
-                        'category_id' => $category->id,
-                        'locale' => $locale,
-                    ],
-                    $translationData
-                );
-            }
+        foreach ($realEstateSubs as $data) {
+            $sub = Category::create([
+                'parent_id' => $realEstate->id,
+                'icon' => $data['icon'],
+                'is_active' => true,
+                'is_featured' => false,
+                'order' => $data['order'],
+                'sort_order' => $data['order'],
+            ]);
+            CategoryTranslation::create(['category_id' => $sub->id, 'locale' => 'ar', 'name' => $data['ar'], 'description' => null]);
+            CategoryTranslation::create(['category_id' => $sub->id, 'locale' => 'en', 'name' => $data['en'], 'description' => null]);
+        }
+
+        // Contracting subcategories
+        $contractingSubs = [
+            ['icon' => 'fas fa-helmet-safety', 'order' => 1, 'ar' => 'تشييد وبناء', 'en' => 'Construction'],
+            ['icon' => 'fas fa-paint-roller', 'order' => 2, 'ar' => 'تشطيبات', 'en' => 'Finishing'],
+            ['icon' => 'fas fa-bolt', 'order' => 3, 'ar' => 'أعمال كهرباء', 'en' => 'Electrical'],
+            ['icon' => 'fas fa-fan', 'order' => 4, 'ar' => 'ميكانيكا (HVAC)', 'en' => 'Mechanical (HVAC)'],
+            ['icon' => 'fas fa-faucet', 'order' => 5, 'ar' => 'سباكة', 'en' => 'Plumbing'],
+            ['icon' => 'fas fa-road', 'order' => 6, 'ar' => 'بنية تحتية', 'en' => 'Infrastructure'],
+        ];
+
+        foreach ($contractingSubs as $data) {
+            $sub = Category::create([
+                'parent_id' => $contracting->id,
+                'icon' => $data['icon'],
+                'is_active' => true,
+                'is_featured' => false,
+                'order' => $data['order'],
+                'sort_order' => $data['order'],
+            ]);
+            CategoryTranslation::create(['category_id' => $sub->id, 'locale' => 'ar', 'name' => $data['ar'], 'description' => null]);
+            CategoryTranslation::create(['category_id' => $sub->id, 'locale' => 'en', 'name' => $data['en'], 'description' => null]);
         }
     }
 }

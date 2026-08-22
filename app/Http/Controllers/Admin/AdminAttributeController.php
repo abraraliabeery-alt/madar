@@ -16,34 +16,101 @@ class AdminAttributeController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Attribute::with(['category', 'translations'])->withCount('products');
+        $query = Attribute::with(['category.parent', 'translations'])->withCount('products');
 
-        // Filter by category
-        if ($request->has('category_id') && $request->category_id) {
-            $query->where('category_id', $request->category_id);
+        // Filter by main category (sector)
+        if ($request->filled('main_category_id')) {
+            $query->whereHas('category', function ($q) use ($request) {
+                $q->where('parent_id', $request->main_category_id);
+            });
+        }
+
+        // Filter by subcategory
+        if ($request->filled('subcategory_id')) {
+            $query->where('category_id', $request->subcategory_id);
         }
 
         // Filter by type
-        if ($request->has('type') && $request->type) {
+        if ($request->filled('type')) {
             $query->where('type', $request->type);
         }
 
         // Filter by required status
-        if ($request->has('required')) {
+        if ($request->filled('required')) {
             $query->where('required', $request->required);
         }
 
         // Search by name
-        if ($request->has('q') && $request->q) {
+        if ($request->filled('q')) {
             $query->whereHas('translations', function($q) use ($request) {
                 $q->where('name', 'like', "%{$request->q}%");
             });
         }
 
-        $attributes = $query->latest()->paginate(15);
-        $categories = Category::all();
+        // Hide attributes linked to an inactive main category or inactive subcategory
+        $query->where(function ($q) {
+            $q->whereNull('category_id')
+              ->orWhereHas('category', function ($categoryQuery) {
+                  $categoryQuery->where('is_active', true)
+                                ->whereHas('parent', function ($parentQuery) {
+                                    $parentQuery->where('is_active', true);
+                                });
+              });
+        });
 
-        return view('admin.attributes.index', compact('attributes', 'categories'));
+        // Sorting
+        $sort = $request->input('sort', 'created_at');
+        $direction = in_array($request->input('direction', 'desc'), ['asc', 'desc'])
+            ? $request->input('direction', 'desc')
+            : 'desc';
+
+        switch ($sort) {
+            case 'name':
+                $query->orderBy(
+                    AttributeTranslation::select('name')
+                        ->whereColumn('attribute_translations.attribute_id', 'attributes.id')
+                        ->where('attribute_translations.locale', app()->getLocale()),
+                    $direction
+                );
+                break;
+            case 'products_count':
+                $query->orderBy('products_count', $direction);
+                break;
+            case 'is_active':
+                $query->orderBy('is_active', $direction);
+                break;
+            case 'required':
+                $query->orderBy('required', $direction);
+                break;
+            case 'type':
+                $query->orderBy('type', $direction);
+                break;
+            case 'id':
+                $query->orderBy('id', $direction);
+                break;
+            case 'created_at':
+            default:
+                $query->orderBy('created_at', $direction);
+                break;
+        }
+
+        $attributes = $query->paginate(15)->withQueryString();
+
+        $mainCategories = Category::whereNull('parent_id')
+            ->where('is_active', true)
+            ->with(['children.translations'])
+            ->get();
+
+        $subCategories = Category::whereNotNull('parent_id')
+            ->where('is_active', true)
+            ->with('translations')
+            ->get();
+
+        $view = ($request->ajax() || $request->input('partial'))
+            ? 'admin.attributes._table'
+            : 'admin.attributes.index';
+
+        return view($view, compact('attributes', 'mainCategories', 'subCategories'));
     }
 
     /**
@@ -261,6 +328,17 @@ class AdminAttributeController extends Controller
         $attribute->update(['required' => !$attribute->required]);
 
         $status = $attribute->required ? 'إلزامية' : 'اختيارية';
+        return redirect()->back()->with('success', "تم جعل الخاصية {$status} بنجاح");
+    }
+
+    /**
+     * تفعيل/تعطيل الخاصية
+     */
+    public function toggleStatus(Attribute $attribute)
+    {
+        $attribute->update(['is_active' => !$attribute->is_active]);
+
+        $status = $attribute->is_active ? 'مفعلة' : 'معطلة';
         return redirect()->back()->with('success', "تم جعل الخاصية {$status} بنجاح");
     }
 

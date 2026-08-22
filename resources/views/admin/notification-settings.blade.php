@@ -91,8 +91,8 @@
                                         <div class="card border-info">
                                             <div class="card-body text-center">
                                                 <i class="fas fa-box fa-2x text-info mb-2"></i>
-                                                <h6>منتجات جديدة</h6>
-                                                <small class="text-muted">إشعارات عند إضافة منتجات جديدة</small>
+                                                <h6>عقارات جديدة</h6>
+                                                <small class="text-muted">إشعارات عند إضافة عقارات جديدة</small>
                                             </div>
                                         </div>
                                     </div>

@@ -1,6 +1,6 @@
-@extends('layouts.app')
+﻿@extends('client.layouts.app')
 
-@section('title', 'مواعيدي - منطقة العميل')
+@section('title', 'ظ…ظˆط§ط¹ظٹط¯ظٹ - ظ…ظ†ط·ظ‚ط© ط§ظ„ط¹ظ…ظٹظ„')
 
 @section('content')
 <div class="min-h-screen bg-gray-50">
@@ -9,13 +9,13 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div class="flex items-center justify-between">
                 <div>
-                    <h1 class="text-3xl md:text-4xl font-bold">مواعيدي</h1>
-                    <p class="text-primary-100 mt-2">إدارة مواعيدك مع المؤسسات المشاريعية</p>
+                    <h1 class="text-3xl md:text-4xl font-bold">ظ…ظˆط§ط¹ظٹط¯ظٹ</h1>
+                    <p class="text-primary-100 mt-2">ط¥ط¯ط§ط±ط© ظ…ظˆط§ط¹ظٹط¯ظƒ ظ…ط¹ ط§ظ„ظ…ط¤ط³ط³ط§طھ ط§ظ„ظ…ط´ط§ط±ظٹط¹ظٹط©</p>
                 </div>
                 <a href="{{ route('client.appointments.create') }}" 
                    class="bg-white text-primary-600 px-6 py-3 rounded-lg font-medium hover:bg-gray-100 transition duration-200">
                     <i class="fas fa-plus ml-2"></i>
-                    حجز موعد جديد
+                    ط­ط¬ط² ظ…ظˆط¹ط¯ ط¬ط¯ظٹط¯
                 </a>
             </div>
         </div>
@@ -32,7 +32,7 @@
                         </div>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-500">إجمالي المواعيد</p>
+                        <p class="text-sm font-medium text-gray-500">ط¥ط¬ظ…ط§ظ„ظٹ ط§ظ„ظ…ظˆط§ط¹ظٹط¯</p>
                         <p class="text-2xl font-semibold text-gray-900">{{ $appointments->total() }}</p>
                     </div>
                 </div>
@@ -46,7 +46,7 @@
                         </div>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-500">مكتملة</p>
+                        <p class="text-sm font-medium text-gray-500">ظ…ظƒطھظ…ظ„ط©</p>
                         <p class="text-2xl font-semibold text-gray-900">{{ $appointments->where('status', 'completed')->count() }}</p>
                     </div>
                 </div>
@@ -60,7 +60,7 @@
                         </div>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-500">مجدولة</p>
+                        <p class="text-sm font-medium text-gray-500">ظ…ط¬ط¯ظˆظ„ط©</p>
                         <p class="text-2xl font-semibold text-gray-900">{{ $appointments->where('status', 'scheduled')->count() }}</p>
                     </div>
                 </div>
@@ -74,7 +74,7 @@
                         </div>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-500">ملغية</p>
+                        <p class="text-sm font-medium text-gray-500">ظ…ظ„ط؛ظٹط©</p>
                         <p class="text-2xl font-semibold text-gray-900">{{ $appointments->where('status', 'cancelled')->count() }}</p>
                     </div>
                 </div>
@@ -86,15 +86,15 @@
             <div class="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
                 <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4">
                     <select class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500">
-                        <option value="">جميع الحالات</option>
-                        <option value="scheduled">مجدولة</option>
-                        <option value="completed">مكتملة</option>
-                        <option value="cancelled">ملغية</option>
-                        <option value="rescheduled">معدلة</option>
+                        <option value="">ط¬ظ…ظٹط¹ ط§ظ„ط­ط§ظ„ط§طھ</option>
+                        <option value="scheduled">ظ…ط¬ط¯ظˆظ„ط©</option>
+                        <option value="completed">ظ…ظƒطھظ…ظ„ط©</option>
+                        <option value="cancelled">ظ…ظ„ط؛ظٹط©</option>
+                        <option value="rescheduled">ظ…ط¹ط¯ظ„ط©</option>
                     </select>
                     
                     <select class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500">
-                        <option value="">جميع المؤسسات</option>
+                        <option value="">ط¬ظ…ظٹط¹ ط§ظ„ظ…ط¤ط³ط³ط§طھ</option>
                         <!-- Dynamic options will be loaded here -->
                     </select>
                 </div>
@@ -102,11 +102,11 @@
                 <div class="flex space-x-2 space-x-reverse">
                     <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition duration-200">
                         <i class="fas fa-filter ml-2"></i>
-                        فلتر
+                        ظپظ„طھط±
                     </button>
                     <button class="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition duration-200">
                         <i class="fas fa-download ml-2"></i>
-                        تصدير
+                        طھطµط¯ظٹط±
                     </button>
                 </div>
             </div>
@@ -148,7 +148,7 @@
                                         <div class="flex items-center space-x-2 space-x-reverse">
                                             <i class="fas fa-calendar text-primary-600"></i>
                                             <div>
-                                                <p class="text-sm font-medium text-gray-500">التاريخ</p>
+                                                <p class="text-sm font-medium text-gray-500">ط§ظ„طھط§ط±ظٹط®</p>
                                                 <p class="text-lg font-semibold text-gray-900">
                                                     {{ $appointment->appointment_time->format('Y/m/d') }}
                                                 </p>
@@ -160,7 +160,7 @@
                                         <div class="flex items-center space-x-2 space-x-reverse">
                                             <i class="fas fa-clock text-primary-600"></i>
                                             <div>
-                                                <p class="text-sm font-medium text-gray-500">الوقت</p>
+                                                <p class="text-sm font-medium text-gray-500">ط§ظ„ظˆظ‚طھ</p>
                                                 <p class="text-lg font-semibold text-gray-900">
                                                     {{ $appointment->appointment_time->format('H:i') }}
                                                 </p>
@@ -172,7 +172,7 @@
                                         <div class="flex items-center space-x-2 space-x-reverse">
                                             <i class="fas fa-info-circle text-primary-600"></i>
                                             <div>
-                                                <p class="text-sm font-medium text-gray-500">الحالة</p>
+                                                <p class="text-sm font-medium text-gray-500">ط§ظ„ط­ط§ظ„ط©</p>
                                                 <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
                                                     @if($appointment->status === 'scheduled') bg-blue-100 text-blue-800
                                                     @elseif($appointment->status === 'completed') bg-green-100 text-green-800
@@ -181,16 +181,16 @@
                                                     @else bg-gray-100 text-gray-800 @endif">
                                                     @if($appointment->status === 'scheduled')
                                                         <i class="fas fa-clock ml-1"></i>
-                                                        مجدولة
+                                                        ظ…ط¬ط¯ظˆظ„ط©
                                                     @elseif($appointment->status === 'completed')
                                                         <i class="fas fa-check-circle ml-1"></i>
-                                                        مكتملة
+                                                        ظ…ظƒطھظ…ظ„ط©
                                                     @elseif($appointment->status === 'cancelled')
                                                         <i class="fas fa-times-circle ml-1"></i>
-                                                        ملغية
+                                                        ظ…ظ„ط؛ظٹط©
                                                     @elseif($appointment->status === 'rescheduled')
                                                         <i class="fas fa-calendar-alt ml-1"></i>
-                                                        معدلة
+                                                        ظ…ط¹ط¯ظ„ط©
                                                     @else
                                                         {{ $appointment->status }}
                                                     @endif
@@ -202,7 +202,7 @@
 
                                 @if($appointment->notes)
                                     <div class="mt-4 p-4 bg-blue-50 rounded-lg">
-                                        <p class="text-sm font-medium text-blue-900 mb-1">ملاحظات:</p>
+                                        <p class="text-sm font-medium text-blue-900 mb-1">ظ…ظ„ط§ط­ط¸ط§طھ:</p>
                                         <p class="text-sm text-blue-800">{{ $appointment->notes }}</p>
                                     </div>
                                 @endif
@@ -213,7 +213,7 @@
                                 <a href="{{ route('client.appointments.show', $appointment) }}" 
                                    class="inline-flex items-center justify-center px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition duration-200">
                                     <i class="fas fa-eye ml-2"></i>
-                                    عرض التفاصيل
+                                    ط¹ط±ط¶ ط§ظ„طھظپط§طµظٹظ„
                                 </a>
                                 
                                 @if($appointment->status === 'scheduled')
@@ -221,16 +221,16 @@
                                         <button onclick="rescheduleAppointment({{ $appointment->id }})" 
                                                 class="flex-1 inline-flex items-center justify-center px-3 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 transition duration-200 text-sm">
                                             <i class="fas fa-calendar-alt ml-1"></i>
-                                            إعادة جدولة
+                                            ط¥ط¹ط§ط¯ط© ط¬ط¯ظˆظ„ط©
                                         </button>
                                         
                                         <form action="{{ route('client.appointments.cancel', $appointment) }}" method="POST" class="flex-1">
                                             @csrf
                                             <button type="submit" 
                                                     class="w-full inline-flex items-center justify-center px-3 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition duration-200 text-sm"
-                                                    onclick="return confirm('هل أنت متأكد من إلغاء هذا الموعد؟')">
+                                                    onclick="return confirm('ظ‡ظ„ ط£ظ†طھ ظ…طھط£ظƒط¯ ظ…ظ† ط¥ظ„ط؛ط§ط، ظ‡ط°ط§ ط§ظ„ظ…ظˆط¹ط¯طں')">
                                                 <i class="fas fa-times ml-1"></i>
-                                                إلغاء
+                                                ط¥ظ„ط؛ط§ط،
                                             </button>
                                         </form>
                                     </div>
@@ -251,13 +251,13 @@
                 <div class="mx-auto h-24 w-24 text-gray-400">
                     <i class="fas fa-calendar-alt text-6xl"></i>
                 </div>
-                <h3 class="mt-4 text-lg font-medium text-gray-900">لا توجد مواعيد</h3>
-                <p class="mt-2 text-gray-500">لم تحجز أي مواعيد بعد. ابدأ بحجز موعد مع إحدى المؤسسات المشاريعية.</p>
+                <h3 class="mt-4 text-lg font-medium text-gray-900">ظ„ط§ طھظˆط¬ط¯ ظ…ظˆط§ط¹ظٹط¯</h3>
+                <p class="mt-2 text-gray-500">ظ„ظ… طھط­ط¬ط² ط£ظٹ ظ…ظˆط§ط¹ظٹط¯ ط¨ط¹ط¯. ط§ط¨ط¯ط£ ط¨ط­ط¬ط² ظ…ظˆط¹ط¯ ظ…ط¹ ط¥ط­ط¯ظ‰ ط§ظ„ظ…ط¤ط³ط³ط§طھ ط§ظ„ظ…ط´ط§ط±ظٹط¹ظٹط©.</p>
                 <div class="mt-6">
                     <a href="{{ route('client.appointments.create') }}" 
                        class="inline-flex items-center px-6 py-3 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition duration-200">
                         <i class="fas fa-plus ml-2"></i>
-                        حجز أول موعد
+                        ط­ط¬ط² ط£ظˆظ„ ظ…ظˆط¹ط¯
                     </a>
                 </div>
             </div>
@@ -270,7 +270,7 @@
     <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-1/2 shadow-lg rounded-md bg-white">
         <div class="mt-3">
             <div class="flex items-center justify-between pb-4 border-b border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-900">إعادة جدولة الموعد</h3>
+                <h3 class="text-lg font-semibold text-gray-900">ط¥ط¹ط§ط¯ط© ط¬ط¯ظˆظ„ط© ط§ظ„ظ…ظˆط¹ط¯</h3>
                 <button onclick="closeRescheduleModal()" class="text-gray-400 hover:text-gray-600">
                     <i class="fas fa-times text-xl"></i>
                 </button>
@@ -279,27 +279,27 @@
             <form id="rescheduleForm" class="mt-4">
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">التاريخ الجديد</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">ط§ظ„طھط§ط±ظٹط® ط§ظ„ط¬ط¯ظٹط¯</label>
                         <input type="datetime-local" name="appointment_time" required 
                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500">
                     </div>
                     
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">سبب إعادة الجدولة</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">ط³ط¨ط¨ ط¥ط¹ط§ط¯ط© ط§ظ„ط¬ط¯ظˆظ„ط©</label>
                         <textarea name="reason" rows="3" 
                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-                                  placeholder="اكتب سبب إعادة الجدولة..."></textarea>
+                                  placeholder="ط§ظƒطھط¨ ط³ط¨ط¨ ط¥ط¹ط§ط¯ط© ط§ظ„ط¬ط¯ظˆظ„ط©..."></textarea>
                     </div>
                 </div>
                 
                 <div class="flex justify-end space-x-3 space-x-reverse pt-4 border-t border-gray-200 mt-6">
                     <button type="button" onclick="closeRescheduleModal()" 
                             class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition duration-200">
-                        إلغاء
+                        ط¥ظ„ط؛ط§ط،
                     </button>
                     <button type="submit" 
                             class="px-4 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 transition duration-200">
-                        إرسال طلب إعادة الجدولة
+                        ط¥ط±ط³ط§ظ„ ط·ظ„ط¨ ط¥ط¹ط§ط¯ط© ط§ظ„ط¬ط¯ظˆظ„ط©
                     </button>
                 </div>
             </form>
@@ -343,17 +343,18 @@ function submitReschedule(appointmentId, form) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert('تم إرسال طلب إعادة الجدولة بنجاح');
+            alert('طھظ… ط¥ط±ط³ط§ظ„ ط·ظ„ط¨ ط¥ط¹ط§ط¯ط© ط§ظ„ط¬ط¯ظˆظ„ط© ط¨ظ†ط¬ط§ط­');
             closeRescheduleModal();
             location.reload();
         } else {
-            alert('حدث خطأ في إرسال الطلب');
+            alert('ط­ط¯ط« ط®ط·ط£ ظپظٹ ط¥ط±ط³ط§ظ„ ط§ظ„ط·ظ„ط¨');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('حدث خطأ في إرسال الطلب');
+        alert('ط­ط¯ط« ط®ط·ط£ ظپظٹ ط¥ط±ط³ط§ظ„ ط§ظ„ط·ظ„ط¨');
     });
 }
 </script>
 @endpush
+

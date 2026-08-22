@@ -133,7 +133,7 @@
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <h6 class="mb-0">المنتجات التي تستخدم هذه الخاصية ({{ $attribute->products->count() }})</h6>
+                                    <h6 class="mb-0">العقارات التي تستخدم هذه الخاصية ({{ $attribute->products->count() }})</h6>
                                 </div>
                                 <div class="card-body">
                                     @if($attribute->products->count() > 0)
@@ -142,7 +142,7 @@
                                                 <thead>
                                                     <tr>
                                                         <th>#</th>
-                                                        <th>اسم المنتج</th>
+                                                        <th>اسم العقار</th>
                                                         <th>القيمة</th>
                                                         <th>الفئة</th>
                                                         <th>الحالة</th>
@@ -191,7 +191,7 @@
                                     @else
                                         <div class="text-center text-muted">
                                             <i class="fas fa-box-open fa-3x mb-3"></i>
-                                            <p>لا توجد منتجات تستخدم هذه الخاصية حالياً</p>
+                                            <p>لا توجد عقارات تستخدم هذه الخاصية حالياً</p>
                                         </div>
                                     @endif
                                 </div>

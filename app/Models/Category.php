@@ -15,6 +15,7 @@ class Category extends Model
         'image',
         'is_active',
         'is_featured',
+        'requires_building',
         'order',
         'sort_order',
     ];
@@ -84,12 +85,48 @@ class Category extends Model
     }
 
     /**
+     * Alias name attribute for views that use $category->name
+     */
+    public function getNameAttribute()
+    {
+        return $this->getTranslatedName();
+    }
+
+    /**
+     * Alias description attribute for views that use $category->description
+     */
+    public function getDescriptionAttribute()
+    {
+        return $this->getTranslatedDescription();
+    }
+
+    /**
      * Get description for specific locale
      */
     public function getTranslatedDescription($locale = null)
     {
         $translation = $this->getTranslation($locale);
         return $translation ? $translation->description : '';
+    }
+
+    /**
+     * Cascade deactivation to subcategories and related products
+     */
+    protected static function booted(): void
+    {
+        static::updated(function (Category $category) {
+            if ($category->wasChanged('is_active') && ! $category->is_active) {
+                static::where('parent_id', $category->id)
+                    ->get()
+                    ->each(fn (Category $child) => $child->update(['is_active' => false]));
+
+                \App\Models\Product::where('category_id', $category->id)
+                    ->update(['is_active' => false]);
+
+                \App\Models\Attribute::where('category_id', $category->id)
+                    ->update(['is_active' => false]);
+            }
+        });
     }
 
     /**

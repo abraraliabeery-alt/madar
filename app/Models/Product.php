@@ -31,15 +31,6 @@ class Product extends Model
         'building_id',
         'project_id',
         'package_id',
-        'price',
-        'bedrooms',
-        'bathrooms',
-        'area',
-        'floor_number',
-        'total_floors',
-        'parking_spaces',
-        'available_for_rent',
-        'available_for_sale',
         'views_count',
         'rating',
         'rating_count',
@@ -54,12 +45,8 @@ class Product extends Model
     protected $casts = [
         'is_featured' => 'boolean',
         'is_verified' => 'boolean',
-        'available_for_rent' => 'boolean',
-        'available_for_sale' => 'boolean',
         'latitude' => 'float',
         'longitude' => 'float',
-        'area' => 'float',
-        'price' => 'float',
         'image_gallery' => 'array',
         'rating' => 'float',
         'available_from' => 'date',
@@ -395,11 +382,6 @@ class Product extends Model
         return $query->where('facility_id', $facilityId);
     }
 
-    public function scopeByPriceRange($query, $minPrice, $maxPrice)
-    {
-        return $query->whereBetween('price', [$minPrice, $maxPrice]);
-    }
-
 
 
     // Accessors - Updated to use offers-based pricing
@@ -428,7 +410,7 @@ class Product extends Model
     {
         $image = $this->image; // uses accessor above
         if ($image) {
-            return asset('storage/' . $image);
+            return asset($image);
         }
 
         $categoryName = (string) optional($this->category)->name;
@@ -436,9 +418,7 @@ class Product extends Model
             || str_contains($categoryName, 'أراضي')
             || str_contains($categoryName, 'اراضي');
 
-        return $isLand
-            ? 'https://www.abujudom.com/App_File/RealEstate/37914032023015208.PNG'
-            : asset('images/default-product.svg');
+        return asset($isLand ? 'images/default-land.svg' : 'images/default-product.svg');
     }
 
     // Mutators
@@ -464,5 +444,91 @@ class Product extends Model
                       ->orWhereNull('category_id');
             })
             ->get();
+    }
+
+    /**
+     * Get the value of an attribute by its key.
+     */
+    public function getAttributeValueByKey($key)
+    {
+        $attributes = $this->relationLoaded('attributes') ? $this->getRelation('attributes') : $this->attributes()->get();
+        $attribute = $attributes->firstWhere('key', $key);
+        return $attribute ? $attribute->pivot->value : null;
+    }
+
+    public function getPriceAttribute()
+    {
+        return $this->getLowestPrice() ?? 0;
+    }
+
+    public function getBedroomsAttribute()
+    {
+        return (int) $this->getAttributeValueByKey('bedrooms');
+    }
+
+    public function getBathroomsAttribute()
+    {
+        return (int) $this->getAttributeValueByKey('bathrooms');
+    }
+
+    public function getAreaAttribute()
+    {
+        return (float) $this->getAttributeValueByKey('area');
+    }
+
+    public function getFloorNumberAttribute()
+    {
+        return (int) $this->getAttributeValueByKey('floor_number');
+    }
+
+    public function getTotalFloorsAttribute()
+    {
+        return (int) $this->getAttributeValueByKey('total_floors');
+    }
+
+    public function getParkingSpacesAttribute()
+    {
+        return (int) $this->getAttributeValueByKey('parking_spaces');
+    }
+
+    public function getFurnishedAttribute()
+    {
+        return (bool) $this->getAttributeValueByKey('furnished');
+    }
+
+    public function getAvailableForRentAttribute()
+    {
+        return $this->rentOffers()->exists();
+    }
+
+    public function getAvailableForSaleAttribute()
+    {
+        return $this->saleOffers()->exists();
+    }
+
+    public function getListingTypeAttribute()
+    {
+        $hasSale = $this->saleOffers()->exists();
+        $hasRent = $this->rentOffers()->exists();
+
+        if ($hasSale && $hasRent) {
+            return 'both';
+        }
+
+        if ($hasSale) {
+            return 'sale';
+        }
+
+        if ($hasRent) {
+            return 'rent';
+        }
+
+        return null;
+    }
+
+    public function getRentPeriodAttribute()
+    {
+        $offer = $this->rentOffers()->first();
+        return $offer ? $offer->offer_type : null;
     }
 }

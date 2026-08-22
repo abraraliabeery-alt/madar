@@ -25,7 +25,7 @@
                             @endif
                             <div class="mb-3">
                                 @if($facility->status)
-                                    <span class="badge bg-{{ $facility->status->color }} fs-5 px-4 py-2">{{ $facility->status->name }}</span>
+                                    <span class="badge bg-{{ $facility->status->color }} fs-5 px-4 py-2">{{ $facility->status->getTranslatedName('ar') }}</span>
                                 @else
                                     <span class="badge bg-secondary fs-5 px-4 py-2">لا توجد حالة</span>
                                 @endif
@@ -244,7 +244,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h6 class="mb-0">المنتجات</h6>
+                            <h6 class="mb-0">العقارات</h6>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -263,7 +263,7 @@
                                         <tr>
                                             <td>
                                                 @if($product->main_image)
-                                                    <img src="{{ asset($product->main_image) }}" alt="product" width="50" class="rounded">
+                                                    <img src="{{ asset($product->main_image) }}" alt="عقار" width="50" class="rounded">
                                                 @else
                                                     <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
                                                         <i class="fas fa-box text-muted"></i>
@@ -306,7 +306,7 @@
                                         <tr>
                                             <th>رقم الحجز</th>
                                             <th>المستخدم</th>
-                                            <th>المنتج</th>
+                                            <th>العقار</th>
                                             <th>التاريخ</th>
                                             <th>المبلغ</th>
                                             <th>الحالة</th>
@@ -332,7 +332,7 @@
                                             <td>
                                                 @if($booking->status)
                                                     <span class="badge bg-{{ $booking->status->color }}">
-                                                        {{ $booking->status->name }}
+                                                        {{ $booking->status->getTranslatedName('ar') }}
                                                     </span>
                                                 @else
                                                     <span class="badge bg-secondary">لا توجد حالة</span>

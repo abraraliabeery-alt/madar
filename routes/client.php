@@ -14,19 +14,21 @@ Route::group([], function () {
 
     // Dashboard
     Route::get('/', [ClientController::class, 'dashboard'])->name('dashboard');
-    Route::get('/profile', [ClientController::class, 'profile'])->name('client.profile');
+    Route::get('/profile', [ClientController::class, 'profile'])->name('profile');
     Route::post('/profile', [ClientController::class, 'updateProfile'])->name('profile.update');
     Route::get('/change-password', [ClientController::class, 'changePassword'])->name('change-password');
     Route::post('/change-password', [ClientController::class, 'updatePassword'])->name('change-password.update');
 
     // Favorites
-    Route::get('/favorites', [ClientController::class, 'favorites'])->name('favorites');
-    Route::get('/favorites/products', [ClientController::class, 'favoriteProducts'])->name('favorites.products');
-    Route::get('/favorites/facilities', [ClientController::class, 'favoriteFacilities'])->name('favorites.facilities');
-    Route::post('/favorites/products/{product}', [ClientController::class, 'addToFavorites'])->name('favorites.add-product');
-    Route::delete('/favorites/products/{product}', [ClientController::class, 'removeFromFavorites'])->name('favorites.remove-product');
-    Route::post('/favorites/facilities/{facility}', [ClientController::class, 'addFacilityToFavorites'])->name('favorites.add-facility');
-    Route::delete('/favorites/facilities/{facility}', [ClientController::class, 'removeFacilityFromFavorites'])->name('favorites.remove-facility');
+    Route::middleware('platform.mode:real_estate')->group(function () {
+        Route::get('/favorites', [ClientController::class, 'favorites'])->name('favorites');
+        Route::get('/favorites/products', [ClientController::class, 'favoriteProducts'])->name('favorites.products');
+        Route::get('/favorites/facilities', [ClientController::class, 'favoriteFacilities'])->name('favorites.facilities');
+        Route::post('/favorites/products/{product}', [ClientController::class, 'addToFavorites'])->name('favorites.add-product');
+        Route::delete('/favorites/products/{product}', [ClientController::class, 'removeFromFavorites'])->name('favorites.remove-product');
+        Route::post('/favorites/facilities/{facility}', [ClientController::class, 'addFacilityToFavorites'])->name('favorites.add-facility');
+        Route::delete('/favorites/facilities/{facility}', [ClientController::class, 'removeFacilityFromFavorites'])->name('favorites.remove-facility');
+    });
 
     // Activity Log
     Route::get('/activity', [ClientController::class, 'activity'])->name('activity');
@@ -41,9 +43,9 @@ Route::group([], function () {
     Route::post('/loans/requests/{loanRequest}/offers/{offer}/choose', [ClientController::class, 'chooseLoanOffer'])->name('loans.offers.choose');
 
     // Projects (Client)
-    Route::get('/projects/create', [ClientProjectController::class, 'create'])->name('projects.create');
-    Route::post('/projects', [ClientProjectController::class, 'store'])->name('projects.store');
-    Route::get('/projects/{project}', [ClientProjectController::class, 'show'])->name('projects.show');
+    Route::get('/projects/create', [ClientProjectController::class, 'create'])->middleware('platform.mode:contracting')->name('projects.create');
+    Route::post('/projects', [ClientProjectController::class, 'store'])->middleware('platform.mode:contracting')->name('projects.store');
+    Route::get('/projects/{project}', [ClientProjectController::class, 'show'])->middleware('platform.mode:contracting')->name('projects.show');
 
     // Notifications
     Route::get('/notifications', [ClientController::class, 'notifications'])->name('notifications');
@@ -53,45 +55,53 @@ Route::group([], function () {
     Route::post('/notifications/settings', [ClientController::class, 'updateNotificationSettings'])->name('notifications.settings.update');
 
     // Bookings Management
-    Route::resource('bookings', ClientBookingController::class);
-    Route::post('bookings/{booking}/cancel', [ClientBookingController::class, 'cancel'])->name('bookings.cancel');
-    Route::post('bookings/{booking}/reschedule', [ClientBookingController::class, 'reschedule'])->name('bookings.reschedule');
-    Route::post('bookings/{booking}/review', [ClientBookingController::class, 'review'])->name('bookings.review');
-    Route::get('bookings/statistics', [ClientBookingController::class, 'statistics'])->name('bookings.statistics');
+    Route::middleware('platform.mode:real_estate')->group(function () {
+        Route::resource('bookings', ClientBookingController::class);
+        Route::post('bookings/{booking}/cancel', [ClientBookingController::class, 'cancel'])->name('bookings.cancel');
+        Route::post('bookings/{booking}/reschedule', [ClientBookingController::class, 'reschedule'])->name('bookings.reschedule');
+        Route::post('bookings/{booking}/review', [ClientBookingController::class, 'review'])->name('bookings.review');
+        Route::get('bookings/statistics', [ClientBookingController::class, 'statistics'])->name('bookings.statistics');
+    });
 
     // Offers
-    Route::get('/offers', [ClientOfferController::class, 'index'])->name('offers.index');
-    Route::get('/offers/{offer}', [ClientOfferController::class, 'show'])->name('offers.show');
-    Route::get('/offers/type/{type}', [ClientOfferController::class, 'byType'])->name('offers.by-type');
-    Route::get('/offers/product/{product}', [ClientOfferController::class, 'byProduct'])->name('offers.by-product');
-    Route::get('/offers/search', [ClientOfferController::class, 'search'])->name('offers.search');
-    Route::post('/offers/{offer}/add-to-favorites', [ClientOfferController::class, 'addToFavorites'])->name('offers.add-to-favorites');
-    Route::delete('/offers/{offer}/remove-from-favorites', [ClientOfferController::class, 'removeFromFavorites'])->name('offers.remove-from-favorites');
-    Route::post('/offers/{offer}/request-info', [ClientOfferController::class, 'requestInfo'])->name('offers.request-info');
-    Route::post('/offers/{offer}/book-visit', [ClientOfferController::class, 'bookVisit'])->name('offers.book-visit');
-    Route::get('/offers/compare', [ClientOfferController::class, 'compare'])->name('offers.compare');
-    Route::get('/offers/statistics', [ClientOfferController::class, 'statistics'])->name('offers.statistics');
+    Route::middleware('platform.mode:real_estate')->group(function () {
+        Route::get('/offers', [ClientOfferController::class, 'index'])->name('offers.index');
+        Route::get('/offers/{offer}', [ClientOfferController::class, 'show'])->name('offers.show');
+        Route::get('/offers/type/{type}', [ClientOfferController::class, 'byType'])->name('offers.by-type');
+        Route::get('/offers/product/{product}', [ClientOfferController::class, 'byProduct'])->name('offers.by-product');
+        Route::get('/offers/search', [ClientOfferController::class, 'search'])->name('offers.search');
+        Route::post('/offers/{offer}/add-to-favorites', [ClientOfferController::class, 'addToFavorites'])->name('offers.add-to-favorites');
+        Route::delete('/offers/{offer}/remove-from-favorites', [ClientOfferController::class, 'removeFromFavorites'])->name('offers.remove-from-favorites');
+        Route::post('/offers/{offer}/request-info', [ClientOfferController::class, 'requestInfo'])->name('offers.request-info');
+        Route::post('/offers/{offer}/book-visit', [ClientOfferController::class, 'bookVisit'])->name('offers.book-visit');
+        Route::get('/offers/compare', [ClientOfferController::class, 'compare'])->name('offers.compare');
+        Route::get('/offers/statistics', [ClientOfferController::class, 'statistics'])->name('offers.statistics');
+    });
 
     // Contracts
-    Route::resource('contracts', ClientContractController::class);
-    Route::get('contracts/{contract}/invoices', [ClientContractController::class, 'invoices'])->name('contracts.invoices');
-    Route::get('contracts/{contract}/payments', [ClientContractController::class, 'payments'])->name('contracts.payments');
-    Route::get('contracts/{contract}/financial-report', [ClientContractController::class, 'financialReport'])->name('contracts.financial-report');
-    Route::post('contracts/request/{offer}', [ClientContractController::class, 'requestContract'])->name('contracts.request');
-    Route::post('contracts/{contract}/confirm', [ClientContractController::class, 'confirmContract'])->name('contracts.confirm');
-    Route::post('contracts/{contract}/cancel', [ClientContractController::class, 'cancelContract'])->name('contracts.cancel');
-    Route::get('contracts/{contract}/download', [ClientContractController::class, 'download'])->name('contracts.download');
-    Route::get('contracts/{contract}/payment', [ClientContractController::class, 'paymentPage'])->name('contracts.payment-page');
-    Route::post('contracts/{contract}/pay-invoice', [ClientContractController::class, 'payInvoice'])->name('contracts.pay-invoice');
-    Route::get('contracts/statistics', [ClientContractController::class, 'statistics'])->name('contracts.statistics');
+    Route::middleware('platform.mode:contracting')->group(function () {
+        Route::resource('contracts', ClientContractController::class);
+        Route::get('contracts/{contract}/invoices', [ClientContractController::class, 'invoices'])->name('contracts.invoices');
+        Route::get('contracts/{contract}/payments', [ClientContractController::class, 'payments'])->name('contracts.payments');
+        Route::get('contracts/{contract}/financial-report', [ClientContractController::class, 'financialReport'])->name('contracts.financial-report');
+        Route::post('contracts/request/{offer}', [ClientContractController::class, 'requestContract'])->name('contracts.request');
+        Route::post('contracts/{contract}/confirm', [ClientContractController::class, 'confirmContract'])->name('contracts.confirm');
+        Route::post('contracts/{contract}/cancel', [ClientContractController::class, 'cancelContract'])->name('contracts.cancel');
+        Route::get('contracts/{contract}/download', [ClientContractController::class, 'download'])->name('contracts.download');
+        Route::get('contracts/{contract}/payment', [ClientContractController::class, 'paymentPage'])->name('contracts.payment-page');
+        Route::post('contracts/{contract}/pay-invoice', [ClientContractController::class, 'payInvoice'])->name('contracts.pay-invoice');
+        Route::get('contracts/statistics', [ClientContractController::class, 'statistics'])->name('contracts.statistics');
+    });
 
     // Appointments
-    Route::get('/appointments', [ClientController::class, 'appointments'])->name('appointments');
-    Route::get('/appointments/create', [ClientController::class, 'createAppointment'])->name('appointments.create');
-    Route::post('/appointments', [ClientController::class, 'storeAppointment'])->name('appointments.store');
-    Route::get('/appointments/{appointment}', [ClientController::class, 'showAppointment'])->name('appointments.show');
-    Route::post('/appointments/{appointment}/cancel', [ClientController::class, 'cancelAppointment'])->name('appointments.cancel');
-    Route::post('/appointments/{appointment}/reschedule', [ClientController::class, 'rescheduleAppointment'])->name('appointments.reschedule');
+    Route::middleware('platform.mode:real_estate')->group(function () {
+        Route::get('/appointments', [ClientController::class, 'appointments'])->name('appointments');
+        Route::get('/appointments/create', [ClientController::class, 'createAppointment'])->name('appointments.create');
+        Route::post('/appointments', [ClientController::class, 'storeAppointment'])->name('appointments.store');
+        Route::get('/appointments/{appointment}', [ClientController::class, 'showAppointment'])->name('appointments.show');
+        Route::post('/appointments/{appointment}/cancel', [ClientController::class, 'cancelAppointment'])->name('appointments.cancel');
+        Route::post('/appointments/{appointment}/reschedule', [ClientController::class, 'rescheduleAppointment'])->name('appointments.reschedule');
+    });
 
     // Comments & Reviews
     Route::get('/comments', [ClientController::class, 'comments'])->name('comments');
@@ -133,7 +143,7 @@ Route::group([], function () {
     Route::post('/help/tickets/{ticket}/reply', [ClientController::class, 'replyTicket'])->name('help.tickets.reply');
 
     // Enhanced Financial Management System for Clients
-    Route::prefix('financial')->name('financial.')->group(function () {
+    Route::middleware('platform.mode:contracting')->prefix('financial')->name('financial.')->group(function () {
         // Main Dashboard
         Route::get('/dashboard', [ClientFinancialController::class, 'dashboard'])->name('dashboard');
         

@@ -44,6 +44,7 @@ return [
         'dashboard' => 'ڈیش بورڈ',
         'facility_management' => 'ٹھیکیدار مینجمنٹ',
         'my_account' => 'میرا اکاؤنٹ',
+        'profile' => 'پروفائل',
         'edit_profile' => 'پروفائل میں ترمیم',
         'convert_to_facility' => 'اکاؤنٹ کو ٹھیکیدار میں تبدیل کریں',
         'dark_mode' => 'ڈارک موڈ',

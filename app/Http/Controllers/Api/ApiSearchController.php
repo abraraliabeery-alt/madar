@@ -72,11 +72,15 @@ class ApiSearchController extends Controller
         }
 
         if ($request->has('min_price')) {
-            $query->where('price', '>=', $request->min_price);
+            $query->whereHas('activeOffers', function ($q) use ($request) {
+                $q->where('price', '>=', $request->min_price);
+            });
         }
 
         if ($request->has('max_price')) {
-            $query->where('price', '<=', $request->max_price);
+            $query->whereHas('activeOffers', function ($q) use ($request) {
+                $q->where('price', '<=', $request->max_price);
+            });
         }
 
         $products = $query->with(['facility', 'category', 'features'])
@@ -134,23 +138,33 @@ class ApiSearchController extends Controller
         }
 
         if ($request->has('min_price')) {
-            $query->where('price', '>=', $request->min_price);
+            $query->whereHas('activeOffers', function ($q) use ($request) {
+                $q->where('price', '>=', $request->min_price);
+            });
         }
 
         if ($request->has('max_price')) {
-            $query->where('price', '<=', $request->max_price);
+            $query->whereHas('activeOffers', function ($q) use ($request) {
+                $q->where('price', '<=', $request->max_price);
+            });
         }
 
         if ($request->has('rooms')) {
-            $query->where('rooms', $request->rooms);
+            $query->whereHas('attributes', function ($q) use ($request) {
+                $q->where('key', 'bedrooms')->where('product_attribute_values.value', $request->rooms);
+            });
         }
 
         if ($request->has('min_area')) {
-            $query->where('area', '>=', $request->min_area);
+            $query->whereHas('attributes', function ($q) use ($request) {
+                $q->where('key', 'area')->whereRaw('CAST(product_attribute_values.value AS DECIMAL(10,2)) >= ?', [$request->min_area]);
+            });
         }
 
         if ($request->has('max_area')) {
-            $query->where('area', '<=', $request->max_area);
+            $query->whereHas('attributes', function ($q) use ($request) {
+                $q->where('key', 'area')->whereRaw('CAST(product_attribute_values.value AS DECIMAL(10,2)) <= ?', [$request->max_area]);
+            });
         }
 
         // Location search

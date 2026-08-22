@@ -22,16 +22,41 @@ use App\Http\Controllers\Admin\AdminPermissionController;
 use App\Http\Controllers\Admin\AdminUserManagementController;
 use App\Http\Controllers\Admin\IconPickerController;
 use App\Http\Controllers\Admin\AdminPlanLotController;
+use App\Http\Controllers\Admin\MenuAdminController;
+use App\Http\Controllers\Admin\ProductRequestController as AdminProductRequestController;
+use App\Http\Controllers\Admin\MarketingProductRequestController as AdminMarketingProductRequestController;
+use App\Http\Controllers\Admin\AdminPdfSettingsController;
 
 Route::group([], function () {
 
     // Dashboard
     Route::get('/index', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::post('/ai-assistant', [AdminController::class, 'aiAssistant'])->name('ai-assistant');
     Route::get('/statistics', [AdminController::class, 'statistics'])->name('statistics');
     Route::get('/settings', [AdminController::class, 'settings'])->name('settings');
     Route::post('/settings', [AdminController::class, 'updateSettings'])->name('settings.update');
+    Route::get('/pdf-settings', [AdminPdfSettingsController::class, 'edit'])->name('pdf.settings.edit');
+    Route::post('/pdf-settings', [AdminPdfSettingsController::class, 'update'])->name('pdf.settings.update');
+    Route::post('/pdf-settings/ai/suggest-slides', [AdminPdfSettingsController::class, 'suggestCategorySlides'])->name('pdf.settings.ai.suggest-slides');
+    Route::post('/pdf-settings/ai/audit-product', [AdminPdfSettingsController::class, 'auditProduct'])->name('pdf.settings.ai.audit-product');
+    Route::post('/pdf-settings/ai/suggest-palette', [AdminPdfSettingsController::class, 'suggestPalette'])->name('pdf.settings.ai.suggest-palette');
     Route::get('/logs', [AdminController::class, 'logs'])->name('logs');
     Route::get('/reports', [AdminController::class, 'reports'])->name('reports');
+    Route::post('product-requests/bulk-action', [AdminProductRequestController::class, 'bulkAction'])->name('product-requests.bulk-action');
+    Route::post('product-requests/{product_request}/status', [AdminProductRequestController::class, 'updateStatus'])->name('product-requests.status');
+    Route::post('product-requests/{product_request}/ai-matches', [AdminProductRequestController::class, 'aiMatches'])->name('product-requests.ai-matches');
+    Route::post('product-requests/analyze-text', [AdminProductRequestController::class, 'analyzeText'])->name('product-requests.analyze-text');
+    Route::post('product-requests/analyze-image', [AdminProductRequestController::class, 'analyzeImage'])->name('product-requests.analyze-image');
+    Route::post('product-requests/import-whatsapp', [AdminProductRequestController::class, 'importWhatsApp'])->name('product-requests.import-whatsapp');
+    Route::resource('product-requests', AdminProductRequestController::class)->only(['index', 'create', 'store', 'show', 'update', 'destroy']);
+
+    Route::post('marketing-product-requests/bulk-action', [AdminMarketingProductRequestController::class, 'bulkAction'])->name('marketing-product-requests.bulk-action');
+    Route::post('marketing-product-requests/{marketing_product_request}/status', [AdminMarketingProductRequestController::class, 'updateStatus'])->name('marketing-product-requests.status');
+    Route::resource('marketing-product-requests', AdminMarketingProductRequestController::class)->only(['index', 'show', 'update', 'destroy']);
+
+    // Menus Management
+    Route::get('/menus', [MenuAdminController::class, 'index'])->name('menus.index');
+    Route::post('/menus', [MenuAdminController::class, 'update'])->name('menus.update');
 
     // Users Management
     Route::resource('users', AdminUserController::class);
@@ -76,6 +101,7 @@ Route::group([], function () {
     });
 
     // Products Management
+    Route::get('products/suggest-price', [AdminProductController::class, 'suggestPrice'])->name('products.suggest-price');
     Route::resource('products', AdminProductController::class);
     Route::post('products/{product}/toggle-status', [AdminProductController::class, 'toggleStatus'])->name('products.toggle-status');
     Route::post('products/{product}/toggle-verification', [AdminProductController::class, 'toggleVerification'])->name('products.toggle-verification');
@@ -173,6 +199,7 @@ Route::group([], function () {
     // Attributes Management
     Route::resource('attributes', AdminAttributeController::class);
     Route::post('attributes/{attribute}/toggle-required', [AdminAttributeController::class, 'toggleRequired'])->name('attributes.toggle-required');
+    Route::post('attributes/{attribute}/toggle-status', [AdminAttributeController::class, 'toggleStatus'])->name('attributes.toggle-status');
     Route::get('attributes/statistics', [AdminAttributeController::class, 'statistics'])->name('attributes.statistics');
 
     // FAQ Management
@@ -192,14 +219,13 @@ Route::group([], function () {
     // Search Routes
     Route::get('search/global', [AdminController::class, 'globalSearch'])->name('search.global');
     Route::get('search/results', [AdminController::class, 'searchResults'])->name('search.results');
-    Route::get('profile', [AdminController::class, 'profile'])->name('admin.profile');
-    Route::post('profile', [AdminController::class, 'updateProfile'])->name('profile.update');
     Route::get('change-password', [AdminController::class, 'changePassword'])->name('change-password');
     Route::post('change-password', [AdminController::class, 'updatePassword'])->name('change-password.update');
 
     // Profile Routes
+    Route::get('profile', [AdminProfileController::class, 'edit'])->name('profile');
+    Route::put('profile', [AdminProfileController::class, 'update'])->name('profile.update');
     Route::get('profile/edit', [AdminProfileController::class, 'edit'])->name('profile.edit');
-    Route::put('profile/update', [AdminProfileController::class, 'update'])->name('profile.update');
 
     // Upload Routes
     Route::post('upload/image', [AdminUploadController::class, 'uploadImage'])->name('upload.image');

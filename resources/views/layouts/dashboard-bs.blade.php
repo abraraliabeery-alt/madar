@@ -424,11 +424,8 @@
             <i class="fas fa-bars"></i>
         </button>
 
-        <a class="navbar-brand fw-bold d-inline-flex align-items-center p-1" href="{{ \Illuminate\Support\Facades\Route::has('public.home') ? route('public.home') : '#' }}">
-            <img src="{{ asset('images/madar-negotiation-icon.svg') }}" alt="مدار التفاوض" class="brand-logo" style="width:52px;height:52px">
-        </a>
+        <div class="d-flex align-items-center gap-2">
 
-        <div class="ms-auto d-flex align-items-center gap-2">
             @if(\Illuminate\Support\Facades\Route::has('public.home'))
                 <a href="{{ route('public.home') }}" class="btn btn-sm btn-outline-light d-none d-md-inline-flex">
                     <i class="fas fa-globe me-2"></i>
@@ -478,61 +475,48 @@
                             </span>
                         @endif
                     </button>
-                    <div class="dropdown-menu dropdown-menu-end p-0" style="min-width: 320px;">
-                        <div class="px-3 py-2 border-bottom fw-bold">{{ __('layout.dashboard_nav.notifications') }}</div>
-                        @if($latestNotifications->count() > 0)
-                            @foreach($latestNotifications as $n)
-                                <a class="dropdown-item py-2" href="{{ $notificationsRoute }}">
-                                    <div class="small fw-semibold">{{ data_get($n->data, 'title', __('layout.notifications.new_notification')) }}</div>
-                                    <div class="small text-muted">{{ data_get($n->data, 'message', '') }}</div>
+                    <div class="dropdown-menu dropdown-menu-end" style="min-width: 340px;">
+                        <div class="px-3 py-2 border-bottom d-flex justify-content-between align-items-center">
+                            <strong>{{ __('layout.dashboard_nav.notifications') }}</strong>
+                            @if($unreadCount > 0)
+                                <form method="POST" action="{{ $notificationsRoute }}/mark-all-read" class="m-0">
+                                    @csrf
+                                    <button class="btn btn-sm btn-link p-0" type="submit">{{ __('layout.dashboard_nav.mark_all_read') }}</button>
+                                </form>
+                            @endif
+                        </div>
+                        <div class="list-group list-group-flush" style="max-height: 320px; overflow:auto;">
+                            @forelse($latestNotifications as $n)
+                                <a class="list-group-item list-group-item-action" href="#">
+                                    <div class="small text-muted">{{ $n->created_at?->diffForHumans() }}</div>
+                                    <div>{{ data_get($n->data, 'message', __('layout.dashboard_nav.new_notification')) }}</div>
                                 </a>
-                            @endforeach
-                        @else
-                            <div class="px-3 py-3 text-muted">{{ __('layout.notifications.no_new_notifications') }}</div>
-                        @endif
-                        <div class="border-top">
-                            <a class="dropdown-item text-center py-2" href="{{ $notificationsRoute }}">{{ __('layout.dashboard_nav.view_all') }}</a>
+                            @empty
+                                <div class="px-3 py-3 text-muted">{{ __('layout.dashboard_nav.no_notifications') }}</div>
+                            @endforelse
+                        </div>
+                        <div class="px-3 py-2 border-top">
+                            <a href="{{ $notificationsRoute }}" class="btn btn-sm btn-outline-secondary w-100">{{ __('layout.dashboard_nav.view_all') }}</a>
                         </div>
                     </div>
                 </div>
             @endif
 
             <div class="dropdown">
-                <button class="btn btn-sm btn-outline-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fas fa-user me-2"></i>
-                    <span class="d-none d-md-inline">{{ $u->name ?? '' }}</span>
+                <button class="btn btn-sm btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-user-circle me-2"></i>
+                    <span class="d-none d-md-inline">{{ $u?->name ?? __('layout.dashboard_nav.account') }}</span>
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">
                     @if($profileRoute)
                         <a class="dropdown-item" href="{{ $profileRoute }}">
-                            <i class="fas fa-id-card me-2"></i>
-                            {{ __('layout.dashboard_nav.profile') }}
+                            <i class="fas fa-user me-2"></i>{{ __('layout.user_menu.profile') }}
                         </a>
                     @endif
                     @if($settingsRoute)
                         <a class="dropdown-item" href="{{ $settingsRoute }}">
-                            <i class="fas fa-gear me-2"></i>
-                            {{ __('layout.dashboard_nav.settings') }}
+                            <i class="fas fa-gear me-2"></i>{{ __('layout.user_menu.settings') }}
                         </a>
-                    @endif
-                    @if($u)
-                        <div class="dropdown-divider"></div>
-                        @if($u->hasRole('admin'))
-                            <a class="dropdown-item" href="{{ route('admin.dashboard') }}">
-                                <i class="fas fa-gauge me-2"></i>
-                                {{ __('layout.dashboard_nav.control_panel') }}
-                            </a>
-                        @elseif($u->hasRole('facility'))
-                            <a class="dropdown-item" href="{{ route('facility.dashboard') }}">
-                                <i class="fas fa-gauge me-2"></i>
-                                {{ __('layout.dashboard_nav.control_panel') }}
-                            </a>
-                        @elseif($u->hasRole('client'))
-                            <a class="dropdown-item" href="{{ route('client.dashboard') }}">
-                                <i class="fas fa-gauge me-2"></i>
-                                {{ __('layout.dashboard_nav.control_panel') }}
-                            </a>
-                        @endif
                     @endif
                     <div class="dropdown-divider"></div>
                     <form method="POST" action="{{ route('logout') }}" class="px-3 py-1">
@@ -542,6 +526,10 @@
                 </div>
             </div>
         </div>
+
+        <a class="navbar-brand fw-bold d-inline-flex align-items-center p-1" href="{{ \Illuminate\Support\Facades\Route::has('public.home') ? route('public.home') : '#' }}">
+            <img src="{{ asset('images/madar-negotiation-icon.svg') }}" alt="مدار التفاوض" class="brand-logo" style="width:72px;height:72px">
+        </a>
     </div>
 </nav>
 

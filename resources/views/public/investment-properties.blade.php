@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'مشاريع للاستثمار')
+@section('title', 'عقارات للاستثمار')
 
 @section('content')
 <div class="bg-gradient-to-b from-slate-50 via-white to-white">
@@ -202,7 +202,7 @@
                                     <div class="mb-4 flex items-center justify-center gap-6">
                                         <label class="flex items-center gap-2 rtl:flex-row-reverse">
                                             <input type="radio" name="search_type" value="products" checked onchange="updateInvestmentMapFilters()">
-                                            <span class="text-sm font-medium text-gray-700">مشاريع</span>
+                                            <span class="text-sm font-medium text-gray-700">عقارات</span>
                                         </label>
                                         <label class="flex items-center gap-2 rtl:flex-row-reverse">
                                             <input type="radio" name="search_type" value="facilities" onchange="updateInvestmentMapFilters()">
@@ -328,7 +328,7 @@
                         <div class="font-bold text-gray-900">مقارنة المطورين</div>
                         <div class="w-9 h-9 rounded-xl bg-white border border-gray-200 grid place-items-center font-extrabold text-gray-900">3</div>
                     </div>
-                    <div class="mt-2 text-sm text-gray-600">الخبرة، المشاريع السابقة، والتقييمات.</div>
+                    <div class="mt-2 text-sm text-gray-600">الخبرة، العقارات السابقة، والتقييمات.</div>
                 </div>
                 <div class="rounded-2xl border border-gray-200 p-5 bg-gray-50">
                     <div class="flex items-center justify-between rtl:flex-row-reverse">

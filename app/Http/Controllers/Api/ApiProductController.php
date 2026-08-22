@@ -34,27 +34,37 @@ class ApiProductController extends Controller
             $query->where('facility_id', $request->facility_id);
         }
 
-        // Filter by price range
+        // Filter by price range (active offers)
         if ($request->has('min_price')) {
-            $query->where('price', '>=', $request->min_price);
+            $query->whereHas('activeOffers', function ($q) use ($request) {
+                $q->where('price', '>=', $request->min_price);
+            });
         }
 
         if ($request->has('max_price')) {
-            $query->where('price', '<=', $request->max_price);
+            $query->whereHas('activeOffers', function ($q) use ($request) {
+                $q->where('price', '<=', $request->max_price);
+            });
         }
 
-        // Filter by rooms
+        // Filter by rooms (bedrooms attribute)
         if ($request->has('rooms')) {
-            $query->where('rooms', $request->rooms);
+            $query->whereHas('attributes', function ($q) use ($request) {
+                $q->where('key', 'bedrooms')->where('product_attribute_values.value', $request->rooms);
+            });
         }
 
-        // Filter by area range
+        // Filter by area range (area attribute)
         if ($request->has('min_area')) {
-            $query->where('area', '>=', $request->min_area);
+            $query->whereHas('attributes', function ($q) use ($request) {
+                $q->where('key', 'area')->whereRaw('CAST(product_attribute_values.value AS DECIMAL(10,2)) >= ?', [$request->min_area]);
+            });
         }
 
         if ($request->has('max_area')) {
-            $query->where('area', '<=', $request->max_area);
+            $query->whereHas('attributes', function ($q) use ($request) {
+                $q->where('key', 'area')->whereRaw('CAST(product_attribute_values.value AS DECIMAL(10,2)) <= ?', [$request->max_area]);
+            });
         }
 
         // Search by keyword
@@ -219,16 +229,20 @@ class ApiProductController extends Controller
             $query->where('category_id', $request->category_id);
         }
         if ($request->min_price) {
-            $query->where('price', '>=', $request->min_price);
+            $query->whereHas('activeOffers', function ($q) use ($request) {
+                $q->where('price', '>=', $request->min_price);
+            });
         }
         if ($request->max_price) {
-            $query->where('price', '<=', $request->max_price);
+            $query->whereHas('activeOffers', function ($q) use ($request) {
+                $q->where('price', '<=', $request->max_price);
+            });
         }
         if ($request->property_type) {
             if ($request->property_type === 'sale') {
-                $query->where('available_for_sale', true);
+                $query->whereHas('saleOffers');
             } else {
-                $query->where('available_for_rent', true);
+                $query->whereHas('rentOffers');
             }
         }
 
@@ -314,5 +328,95 @@ class ApiProductController extends Controller
             'data' => $stats,
             'message' => 'تم جلب الإحصائيات بنجاح'
         ]);
+    }
+
+    /**
+     * Generate a product description using AI.
+     */
+    public function generateDescription(Request $request)
+    {
+        $data = $request->validate([
+            'title' => 'nullable|string|max:200',
+            'category' => 'nullable|string|max:200',
+            'city' => 'nullable|string|max:200',
+            'neighborhood' => 'nullable|string|max:200',
+            'street' => 'nullable|string|max:200',
+            'address' => 'nullable|string|max:500',
+            'price' => 'nullable|numeric',
+            'offer_type' => 'nullable|string|max:100',
+            'attributes' => 'nullable|array|max:100',
+            'features' => 'nullable|array|max:100',
+        ]);
+
+        try {
+            $description = app(\App\Services\AI\ProductAiService::class)->generateDescription($data);
+
+            return response()->json([
+                'success' => true,
+                'description' => $description,
+            ]);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function generateMarketingContent(Request $request)
+    {
+        $data = $request->validate([
+            'title' => 'nullable|string|max:200',
+            'category' => 'nullable|string|max:200',
+            'city' => 'nullable|string|max:200',
+            'neighborhood' => 'nullable|string|max:200',
+            'street' => 'nullable|string|max:200',
+            'address' => 'nullable|string|max:500',
+            'price' => 'nullable|numeric|min:0',
+            'offer_type' => 'nullable|string|max:50',
+            'attributes' => 'nullable|array|max:100',
+            'features' => 'nullable|array|max:100',
+        ]);
+
+        try {
+            return response()->json([
+                'success' => true,
+                'content' => app(\App\Services\AI\ProductAiService::class)->generateMarketingContent($data),
+            ]);
+        } catch (\Throwable $e) {
+            report($e);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'تعذر توليد المحتوى. تحقق من إعداد مزود الذكاء الاصطناعي.',
+            ], 422);
+        }
+    }
+
+    /**
+     * Generate title and description from a property image.
+     */
+    public function generateFromImage(Request $request)
+    {
+        $data = $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,webp|max:5120',
+        ]);
+
+        try {
+            $result = app(\App\Services\AI\ProductAiService::class)->generateFromImage($data['image']);
+
+            return response()->json([
+                'success' => true,
+                'title' => $result['title'],
+                'description' => $result['description'],
+            ]);
+        } catch (\Throwable $e) {
+            report($e);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'تعذر تحليل الصورة. تأكد من جودتها أو تحقق من إعداد الذكاء الاصطناعي.',
+            ], 422);
+        }
     }
 }

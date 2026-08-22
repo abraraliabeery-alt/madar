@@ -37,6 +37,11 @@ return [
         'offers_title' => 'Available offers',
         'view_all_offers' => 'View all offers',
         'financial_management' => 'Financial management',
+        'total_projects' => 'Total projects',
+        'open_projects' => 'Open projects',
+        'view_projects' => 'View projects',
+        'my_projects' => 'My projects',
+        'no_projects' => 'No projects',
     ],
 
     'navigation' => [

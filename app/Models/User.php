@@ -50,6 +50,8 @@ class User extends Authenticatable
         'longitude',
         'google_maps_url',
         'primary_role',
+        'referral_code',
+        'referred_by_user_id',
         'facebook',
         'twitter',
         'instagram',
@@ -103,10 +105,59 @@ class User extends Authenticatable
         ];
     }
 
+    protected static function booted()
+    {
+        static::creating(function ($user) {
+            if (empty($user->referral_code)) {
+                do {
+                    $code = strtoupper(\Illuminate\Support\Str::random(8));
+                } while (self::where('referral_code', $code)->exists());
+                $user->referral_code = $code;
+            }
+        });
+    }
+
     // العلاقات
     public function facilities()
     {
         return $this->belongsToMany(Facility::class, 'facility_user');
+    }
+
+    /**
+     * Return the main facility for the user; for admins, create one if missing.
+     */
+    public function mainFacility()
+    {
+        $facility = $this->facilities()->first();
+
+        if ($facility) {
+            return $facility;
+        }
+
+        if ($this->hasRole('admin')) {
+            return $this->createMainFacility();
+        }
+
+        return null;
+    }
+
+    private function createMainFacility()
+    {
+        $facility = Facility::firstOrCreate(
+            ['owner_user_id' => $this->id],
+            [
+                'name' => $this->name . ' (Main)',
+                'slug' => \Illuminate\Support\Str::slug($this->name . '-main-' . $this->id),
+                'is_active' => true,
+                'is_verified' => true,
+                'is_primary' => true,
+                'owner_user_id' => $this->id,
+            ]
+        );
+
+        $this->facilities()->syncWithoutDetaching($facility->id);
+
+        return $facility;
     }
 
     public function roles()
@@ -343,6 +394,34 @@ class User extends Authenticatable
         }
 
         return true;
+    }
+
+    public function referrals()
+    {
+        return $this->hasMany(Referral::class, 'referrer_id');
+    }
+
+    public function referredBy()
+    {
+        return $this->belongsTo(User::class, 'referred_by_user_id');
+    }
+
+    public function referredUsers()
+    {
+        return $this->hasMany(User::class, 'referred_by_user_id');
+    }
+
+    public function referralLink()
+    {
+        if (empty($this->referral_code)) {
+            do {
+                $code = strtoupper(\Illuminate\Support\Str::random(8));
+            } while (self::where('referral_code', $code)->exists());
+            $this->referral_code = $code;
+            $this->save();
+        }
+
+        return url('/register?ref=' . $this->referral_code);
     }
 
     // علاقات إضافية حسب الحاجة...

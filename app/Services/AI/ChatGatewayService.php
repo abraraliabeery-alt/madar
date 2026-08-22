@@ -123,7 +123,7 @@ PROMPT;
             throw new RuntimeException('OpenAI configuration is missing.');
         }
 
-        $client = Http::withToken($apiKey);
+        $client = Http::withToken($apiKey)->timeout(180);
 
         // في بيئة التطوير المحلية قد يكون إعداد شهادات SSL على ويندوز غير مكتمل
         // لذلك نعطّل التحقق من الشهادة فقط على local لتفادي cURL error 77

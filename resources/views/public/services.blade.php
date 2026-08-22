@@ -10,7 +10,7 @@
             <div class="text-center">
                 <h1 class="text-4xl md:text-5xl font-bold mb-6">خدماتنا</h1>
                 <p class="text-xl text-primary-100 max-w-3xl mx-auto">
-                    نقدم مجموعة شاملة من خدمات المشاريع والمنافسات لتلبية احتياجات الجهات والمقاولين
+                    نقدم مجموعة شاملة من خدمات العقارات والمنافسات لتلبية احتياجات الجهات والمقاولين
                 </p>
             </div>
         </div>
@@ -21,7 +21,7 @@
         <div class="text-center mb-12">
             <h2 class="text-3xl font-bold text-gray-900 mb-4">خدماتنا المتكاملة</h2>
             <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                منصة موحّدة لطرح المشاريع وإدارة المنافسات واستقبال العروض والتأهيل والترسية والعقود
+                منصة موحّدة لطرح العقارات وإدارة المنافسات واستقبال العروض والتأهيل والترسية والعقود
             </p>
         </div>
 
@@ -57,14 +57,14 @@
             <!-- Service 1: Projects & Tenders -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
                 <div>
-                    <h3 class="text-2xl font-bold text-gray-900 mb-6">طرح المشاريع والمنافسات</h3>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-6">طرح العقارات والمنافسات</h3>
                     <p class="text-lg text-gray-600 mb-6 leading-relaxed">
                         أنشئ منافستك وحدد نطاق الأعمال والميزانية والمدة، ثم استقبل عروض المقاولين وقارنها بوضوح لاتخاذ قرار سريع.
                     </p>
                     <ul class="space-y-3 text-gray-600">
                         <li class="flex items-start">
                             <i class="fas fa-search text-primary-600 mt-1 ml-3"></i>
-                            <span>بحث وتصفية للمشاريع والمنافسات</span>
+                            <span>بحث وتصفية للعقارات والمنافسات</span>
                         </li>
                         <li class="flex items-start">
                             <i class="fas fa-map text-primary-600 mt-1 ml-3"></i>
@@ -82,7 +82,7 @@
                 </div>
                 <div class="relative">
                     <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                         alt="طرح المشاريع والمنافسات" class="rounded-lg shadow-xl">
+                         alt="طرح العقارات والمنافسات" class="rounded-lg shadow-xl">
                 </div>
             </div>
 
@@ -201,7 +201,7 @@
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
                 <a href="{{ route('public.products.index') }}" class="bg-white text-primary-600 px-8 py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors">
-                    تصفح المشاريع
+                    تصفح العقارات
                 </a>
                 <a href="{{ route('public.contact') }}" class="border-2 border-white text-white px-8 py-3 rounded-lg font-medium hover:bg-white hover:text-primary-600 transition-colors">
                     تواصل معنا

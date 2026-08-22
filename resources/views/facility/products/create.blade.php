@@ -66,7 +66,7 @@
                         </div>
                     </div>
                 </div>
-                <form method="POST" action="{{ route('facility.products.store') }}" enctype="multipart/form-data">
+                <form method="POST" action="{{ $storeRoute }}" enctype="multipart/form-data">
                     @csrf
                         
                         <!-- Basic Information -->
@@ -126,20 +126,6 @@
                                         step="0.01"
                                         name="rent_offer[deposit]"
                                         :label="__('facility.products.create.deposit') ?? 'التأمين (اختياري)'"
-                                    />
-                                </div>
-                                <div>
-                                    <x-form-input 
-                                        type="date"
-                                        name="rent_offer[valid_from]"
-                                        :label="__('facility.products.create.valid_from') ?? 'ساري من'"
-                                    />
-                                </div>
-                                <div>
-                                    <x-form-input 
-                                        type="date"
-                                        name="rent_offer[valid_to]"
-                                        :label="__('facility.products.create.valid_to') ?? 'ساري إلى'"
                                     />
                                 </div>
                             </div>
@@ -456,10 +442,10 @@
 
                     <!-- Internal Notes (moved to end) -->
                     <div class="mb-8 bg-white rounded-md border border-gray-200 p-5">
-                        <h5 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">معلومات داخلية عن المنتج</h5>
+                        <h5 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">معلومات داخلية عن العقار</h5>
                         <x-form-textarea 
                             name="additional_info"
-                            :label="'معلومات داخلية عن المنتج'"
+                            :label="'معلومات داخلية عن العقار'"
                             rows="4"
                         />
                     </div>

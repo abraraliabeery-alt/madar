@@ -44,7 +44,10 @@ class ProductLifecycleController extends Controller
             })->count();
             $missingLocation = (int) $facility->products()->whereNull('latitude')->orWhereNull('longitude')->count();
             $missingPrice = (int) $facility->products()->where(function($q){
-                $q->whereNull('price')->orWhere('price','<=',0);
+                $q->whereDoesntHave('offers')
+                  ->orWhereHas('offers', function($o) {
+                      $o->where('price', '<=', 0);
+                  });
             })->count();
 
             // Customer stages (best-effort)

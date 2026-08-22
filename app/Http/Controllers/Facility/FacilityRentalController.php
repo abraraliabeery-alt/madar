@@ -28,7 +28,7 @@ class FacilityRentalController extends Controller
             }
         ])
         ->where('facility_id', $facility->id)
-        ->where('available_for_rent', true);
+        ->whereHas('rentOffers');
 
         if ($request->filled('category_id')) {
             $query->where('category_id', $request->category_id);

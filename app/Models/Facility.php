@@ -114,6 +114,11 @@ class Facility extends Model
         return $this->hasMany(Product::class);
     }
 
+    public function buildings()
+    {
+        return $this->hasMany(Building::class);
+    }
+
     public function bookings()
     {
         return $this->hasManyThrough(Booking::class, Product::class);

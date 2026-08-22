@@ -1,30 +1,153 @@
 :root{
-  --brand-brown:#000000;
-  --brand-brown-rgb:0,0,0;
-  --brand-bg:#ffffff;
-  --brand-fg:var(--brand-brown);
-  --brand-border:rgba(var(--brand-brown-rgb),.2);
-  --brand-muted:rgba(var(--brand-brown-rgb),.7);
-  --brand-shadow:0 .125rem .25rem rgba(var(--brand-brown-rgb),.08);
+  --brand-brown:#126b61;
+  --brand-brown-rgb:18,107,97;
+  --brand-bg:#f6f8f8;
+  --brand-fg:#172524;
+  --brand-border:rgba(18,107,97,.18);
+  --brand-muted:#647472;
+  --brand-shadow:0 .25rem 1rem rgba(18,107,97,.09);
 }
 
 html[data-theme="dark"]{
-  --brand-brown:#ffffff;
-  --brand-brown-rgb:255,255,255;
-  --brand-bg:#000000;
-  --brand-fg:var(--brand-brown);
-  --brand-border:rgba(var(--brand-brown-rgb),.25);
-  --brand-muted:rgba(var(--brand-brown-rgb),.7);
-  --brand-shadow:0 .125rem .25rem rgba(0,0,0,.5);
+  --brand-brown:#55c8b8;
+  --brand-brown-rgb:85,200,184;
+  --brand-bg:#0d1717;
+  --brand-fg:#edf7f5;
+  --brand-border:rgba(85,200,184,.22);
+  --brand-muted:#9bb0ad;
+  --brand-shadow:0 .25rem 1rem rgba(0,0,0,.35);
 }
 
 /* Global primitives */
 html,body{background:var(--brand-bg) !important;color:var(--brand-fg) !important;}
 
+/* Unified button feel: consistent radius + soft depth (no press/translate) */
+:where(.btn){
+  border-radius:0.65rem;
+  border-width:1px;
+  box-shadow:0 .22rem .65rem rgba(var(--brand-brown-rgb), .14);
+  transition:box-shadow .14s ease, background-color .14s ease, color .14s ease, border-color .14s ease, filter .14s ease;
+}
+
+:where(.btn):not(:disabled):not(.disabled):not(.btn-link):hover{
+  box-shadow:0 .45rem 1.15rem rgba(var(--brand-brown-rgb), .22);
+  filter:saturate(1.02);
+}
+
+:where(.btn):focus-visible{
+  outline:0;
+  box-shadow:0 0 0 .22rem rgba(var(--brand-brown-rgb), .28), 0 .45rem 1.15rem rgba(var(--brand-brown-rgb), .16);
+}
+
+/* Base text color in dark mode */
+html[data-theme="dark"] body,
+html.dark body,
+body.dark-mode{color:var(--brand-fg) !important;}
+
+/* Dashboard layout */
+.dash-sidebar{width:280px;}
+.dash-link i{width:20px;text-align:center;}
+@media (max-width: 992px){.dash-sidebar{width:100%;}}
+.dash-shell{min-height:100vh;}
+.dash-main{min-height:calc(100vh - 56px);}
+.dash-sidebar-inner{height:calc(100vh - 56px);position:sticky;top:56px;overflow-y:auto;scrollbar-width:thin;}
+.nav-scroll{scrollbar-width:thin;}
+.nav-scroll::-webkit-scrollbar{width:6px;}
+.dash-sidebar-inner::-webkit-scrollbar{width:6px;}
+.nav-scroll::-webkit-scrollbar-thumb,.dash-sidebar-inner::-webkit-scrollbar-thumb{background:rgba(var(--brand-brown-rgb),.22);border-radius:6px;}
+.dash-shell[data-sidebar-collapsed="1"] .dash-sidebar{width:80px;}
+.dash-shell[data-sidebar-collapsed="1"] .dash-sidebar .dash-label{display:none;}
+
+/* Admin/legacy sidebars: labels are plain spans inside .nav-link */
+.dash-shell[data-sidebar-collapsed="1"] .dash-sidebar .nav-link span{display:none;}
+.dash-shell[data-sidebar-collapsed="1"] .dash-sidebar .sidebar-header h4{display:none;}
+
+.dash-shell[data-sidebar-collapsed="1"] .dash-sidebar .dash-link{text-align:center;}
+.dash-shell[data-sidebar-collapsed="1"] .dash-sidebar .dash-link i{margin-inline-end:0 !important;}
+
+.dash-shell[data-sidebar-collapsed="1"] .dash-sidebar .nav-link{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.dash-shell[data-sidebar-collapsed="1"] .dash-sidebar .nav-link i{
+  margin:0 !important;
+}
+
+.dash-shell[data-sidebar-collapsed="1"] .dash-sidebar .p-2{padding:0.25rem !important;}
+.dash-shell[data-sidebar-collapsed="1"] .dash-sidebar .list-group-item{padding-inline:0.75rem;}
+
+/* Sidebar footer actions (e.g. settings/pdf/logout) should look like the rest of the sidebar links */
+.dash-sidebar .border-top .btn{
+  width:100%;
+  background:transparent !important;
+  border:0 !important;
+  color:inherit !important;
+  text-align:start;
+  padding:0.5rem 1rem;
+  border-radius:0.5rem;
+}
+.dash-sidebar .border-top .btn:hover,
+.dash-sidebar .border-top .btn:focus{
+  background:rgba(var(--brand-brown-rgb),.08) !important;
+}
+
+.dash-shell[data-sidebar-collapsed="1"] .dash-sidebar .border-top .btn{
+  justify-content:center;
+  text-align:center;
+}
+.dash-shell[data-sidebar-collapsed="1"] .dash-sidebar .border-top .btn i{margin:0 !important;}
+.dash-shell[data-sidebar-collapsed="1"] .dash-sidebar .border-top .btn:not(.btn-link){
+  white-space:nowrap;
+}
+
+/* Dark mode */
+html[data-theme="dark"],
+html.dark,
+body.dark-mode{
+  color-scheme: dark;
+}
+
+/* IMPORTANT: avoid forcing text color on all elements in dark mode.
+   It breaks Bootstrap button hover states (e.g. outline buttons become light bg + light text). */
+/* In dark mode, outline-light buttons often hover to a light background; keep text/icons readable */
+html[data-theme="dark"] .btn-outline-light,
+html.dark .btn-outline-light,
+body.dark-mode .btn-outline-light{
+  --bs-btn-color: var(--brand-fg);
+  --bs-btn-border-color: var(--brand-fg);
+  --bs-btn-hover-bg: var(--brand-fg);
+  --bs-btn-hover-border-color: var(--brand-fg);
+  --bs-btn-hover-color: var(--brand-bg);
+  --bs-btn-active-bg: var(--brand-fg);
+  --bs-btn-active-border-color: var(--brand-fg);
+  --bs-btn-active-color: var(--brand-bg);
+}
+
+html[data-theme="dark"] .btn-outline-light:hover,
+html[data-theme="dark"] .btn-outline-light:hover *,
+html.dark .btn-outline-light:hover,
+html.dark .btn-outline-light:hover *,
+body.dark-mode .btn-outline-light:hover,
+body.dark-mode .btn-outline-light:hover *{color: var(--brand-bg) !important;}
+
+html[data-theme="dark"] .btn-primary:hover,html[data-theme="dark"] .btn-primary:hover *,
+html[data-theme="dark"] .btn-success:hover,html[data-theme="dark"] .btn-success:hover *,
+html[data-theme="dark"] .btn-info:hover,html[data-theme="dark"] .btn-info:hover *,
+html[data-theme="dark"] .btn-danger:hover,html[data-theme="dark"] .btn-danger:hover *,
+html.dark .btn-primary:hover,html.dark .btn-primary:hover *,
+html.dark .btn-success:hover,html.dark .btn-success:hover *,
+html.dark .btn-info:hover,html.dark .btn-info:hover *,
+html.dark .btn-danger:hover,html.dark .btn-danger:hover *,
+body.dark-mode .btn-primary:hover,body.dark-mode .btn-primary:hover *,
+body.dark-mode .btn-success:hover,body.dark-mode .btn-success:hover *,
+body.dark-mode .btn-info:hover,body.dark-mode .btn-info:hover *,
+body.dark-mode .btn-danger:hover,body.dark-mode .btn-danger:hover *{color:var(--brand-bg) !important;}
+
 img.brand-logo{filter:none;}
 html[data-theme="dark"] img.brand-logo{filter:invert(1) grayscale(1) brightness(1.1);}
 
-.bg-light,.bg-white{background-color:var(--brand-bg) !important;}
+.bg-light,.bg-white,.bg-gray-50{background-color:var(--brand-bg) !important;}
 
 html[data-theme="dark"] .bg-dark{background-color:var(--brand-bg) !important;}
 
@@ -87,29 +210,22 @@ a:not(.btn),a:not(.btn):hover,a:not(.btn):focus,a:not(.btn):active,a:not(.btn):v
 .text-primary,.text-success,.text-info,.text-warning,.text-danger,.text-secondary,.text-dark,.text-body{color:var(--brand-brown) !important;}
 .link-primary,.link-success,.link-info,.link-warning,.link-danger,.link-secondary{color:var(--brand-brown) !important;}
 
+/* Navbar */
 .navbar.bg-dark{background-color:var(--brand-brown) !important;}
 
-/* Light mode navbar (brown background) must have readable (white) text */
+/* Public site navigation links */
+.main-nav-link{color:var(--brand-fg);transition:color .2s ease;}
+.main-nav-link:hover,.main-nav-link:focus{color:var(--brand-brown);}
+nav#publicNav:not(.is-scrolled) .main-nav-link{color:rgba(255,255,255,.9);text-shadow:0 1px 2px rgba(0,0,0,.7);}
+nav#publicNav:not(.is-scrolled) .main-nav-link:hover,nav#publicNav:not(.is-scrolled) .main-nav-link:focus{color:#fff;}
+nav#publicNav .mobile-menu .main-nav-link,nav#publicNav .mobile-menu .main-nav-link:hover,nav#publicNav .mobile-menu .main-nav-link:focus{color:var(--brand-fg) !important;}
+
+/* Light mode: dark navbar has white text */
 .navbar.bg-dark,
-.navbar.bg-dark *{
-  color:#ffffff !important;
-}
-
-.navbar.bg-dark .dropdown-menu,
-.navbar.bg-dark .dropdown-menu *{
-  color: var(--brand-brown) !important;
-}
-
-.navbar.bg-dark .dropdown-item.active,
-.navbar.bg-dark .dropdown-item:active{
-  color: #ffffff !important;
-}
-
-.navbar.bg-dark a,
-.navbar.bg-dark a:hover,
-.navbar.bg-dark a:focus,
-.navbar.bg-dark a:active,
-.navbar.bg-dark a:visited{
+.navbar.bg-dark .navbar-brand,
+.navbar.bg-dark .nav-link,
+.navbar.bg-dark .btn,
+.navbar.bg-dark .btn *{
   color:#ffffff !important;
 }
 
@@ -124,24 +240,7 @@ a:not(.btn),a:not(.btn):hover,a:not(.btn):focus,a:not(.btn):active,a:not(.btn):v
   --bs-btn-active-color:var(--brand-brown);
 }
 
-.navbar.bg-dark .btn-outline-light:hover,
-.navbar.bg-dark .btn-outline-light:focus,
-.navbar.bg-dark .btn-outline-light:active,
-.navbar.bg-dark .btn-outline-light:hover *,
-.navbar.bg-dark .btn-outline-light:focus *,
-.navbar.bg-dark .btn-outline-light:active *{
-  color: var(--brand-brown) !important;
-}
-
-html[data-theme="dark"] .navbar.bg-dark .btn-outline-light:hover,
-html[data-theme="dark"] .navbar.bg-dark .btn-outline-light:focus,
-html[data-theme="dark"] .navbar.bg-dark .btn-outline-light:active,
-html[data-theme="dark"] .navbar.bg-dark .btn-outline-light:hover *,
-html[data-theme="dark"] .navbar.bg-dark .btn-outline-light:focus *,
-html[data-theme="dark"] .navbar.bg-dark .btn-outline-light:active *{
-  color: var(--brand-bg) !important;
-}
-
+/* Dark mode: navbar becomes dark surface, use theme variables (avoid global overrides that break hover states) */
 html[data-theme="dark"] .navbar.bg-dark,
 html[data-theme="dark"] .navbar.navbar-dark,
 html[data-theme="dark"] .navbar.navbar-light{
@@ -149,25 +248,37 @@ html[data-theme="dark"] .navbar.navbar-light{
   border-bottom: 1px solid var(--brand-border) !important;
 }
 
-html[data-theme="dark"] .navbar .navbar-brand,
-html[data-theme="dark"] .navbar .nav-link{
+html[data-theme="dark"] .navbar.bg-dark,
+html[data-theme="dark"] .navbar.bg-dark .navbar-brand,
+html[data-theme="dark"] .navbar.bg-dark .nav-link{
   color: var(--brand-fg) !important;
 }
 
-html[data-theme="dark"] .navbar .btn-outline-light{
-  --bs-btn-color: var(--brand-brown);
-  --bs-btn-border-color: var(--brand-brown);
-  --bs-btn-hover-bg: var(--brand-brown);
-  --bs-btn-hover-border-color: var(--brand-brown);
+html[data-theme="dark"] .navbar.bg-dark .btn-outline-light{
+  --bs-btn-color: var(--brand-fg);
+  --bs-btn-border-color: var(--brand-fg);
+  --bs-btn-hover-bg: var(--brand-fg);
+  --bs-btn-hover-border-color: var(--brand-fg);
   --bs-btn-hover-color: var(--brand-bg);
-  --bs-btn-active-bg: var(--brand-brown);
-  --bs-btn-active-border-color: var(--brand-brown);
+  --bs-btn-active-bg: var(--brand-fg);
+  --bs-btn-active-border-color: var(--brand-fg);
   --bs-btn-active-color: var(--brand-bg);
 }
 
-html[data-theme="dark"] .navbar .btn-outline-light:hover,
-html[data-theme="dark"] .navbar .btn-outline-light:focus,
-html[data-theme="dark"] .navbar .btn-outline-light:active{
+/* Navbar dropdowns */
+.navbar.bg-dark .dropdown-menu,
+.navbar.bg-dark .dropdown-menu *{
+  color: var(--brand-brown) !important;
+}
+
+html[data-theme="dark"] .navbar.bg-dark .dropdown-menu,
+html[data-theme="dark"] .navbar.bg-dark .dropdown-menu *{
+  color: var(--brand-fg) !important;
+}
+
+html[data-theme="dark"] .navbar.bg-dark .dropdown-item.active,
+html[data-theme="dark"] .navbar.bg-dark .dropdown-item:active{
+  background-color: var(--brand-brown) !important;
   color: var(--brand-bg) !important;
 }
 
@@ -247,3 +358,5 @@ html[data-theme="dark"] .form-select{
 .focus\:border-emerald-400:focus{border-color: rgba(var(--brand-brown-rgb),.35) !important;}
 .hover\:bg-emerald-300:hover{background-color:rgba(var(--brand-brown-rgb),.9) !important;}
 .hover\:bg-emerald-600:hover{background-color:rgba(var(--brand-brown-rgb),.9) !important;}
+.no-scrollbar{scrollbar-width:none;-ms-overflow-style:none;}
+.no-scrollbar::-webkit-scrollbar{display:none;}

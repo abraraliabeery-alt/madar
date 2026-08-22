@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Referral;
 use App\Models\User;
 use App\Services\UnifonicSmsService;
 use Illuminate\Http\Request;
@@ -79,7 +80,8 @@ class PhoneOtpAuthController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
-        $phone = $this->normalizePhone((string) $request->input('phone_number'), 'SA');
+        $inputPhone = trim((string) $request->input('phone_number'));
+        $phone = $this->normalizePhone($inputPhone, 'SA');
         $password = (string) $request->input('password');
 
         if ($phone === '') {
@@ -90,9 +92,13 @@ class PhoneOtpAuthController extends Controller
 
         $user = User::where('phone_number', $phone)->first();
 
+        if (!$user && $inputPhone !== $phone) {
+            $user = User::where('phone_number', $inputPhone)->first();
+        }
+
         if (!$user) {
             $user = User::create([
-                'name' => $phone,
+                'name' => $inputPhone,
                 'email' => $phone . '@example.local',
                 'phone_number' => $phone,
                 'password' => Hash::make($password),
@@ -101,6 +107,7 @@ class PhoneOtpAuthController extends Controller
             Log::info('User created via phone+password login', [
                 'phone_number' => $phone,
             ]);
+            $this->applyReferral($user, $request->input('ref') ?? $request->query('ref'));
         } else {
             if (!Hash::check($password, (string) $user->password)) {
                 return back()->withErrors([
@@ -165,6 +172,8 @@ class PhoneOtpAuthController extends Controller
                 'password' => Hash::make(str()->random(16)),
             ]);
         }
+
+        $this->applyReferral($user, $request->input('ref') ?? $request->query('ref'));
 
         $otp = (string) random_int(100000, 999999);
 
@@ -281,5 +290,23 @@ class PhoneOtpAuthController extends Controller
         }
 
         return redirect()->intended('/dashboard');
+    }
+
+    private function applyReferral(User $user, $code)
+    {
+        if (!$code) {
+            return;
+        }
+        $referrer = User::where('referral_code', $code)->first();
+        if (!$referrer || $referrer->id === $user->id) {
+            return;
+        }
+        $user->referred_by_user_id = $referrer->id;
+        $user->save();
+
+        Referral::firstOrCreate(
+            ['referrer_id' => $referrer->id, 'referred_user_id' => $user->id],
+            ['status' => 'converted', 'converted_at' => now()]
+        );
     }
 }

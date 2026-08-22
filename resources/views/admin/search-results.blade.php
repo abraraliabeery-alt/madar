@@ -42,7 +42,7 @@
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="products-tab" data-bs-toggle="tab" data-bs-target="#products" type="button" role="tab">
-                        <i class="fas fa-box me-2"></i>المنتجات ({{ $results['products']->total() }})
+                        <i class="fas fa-box me-2"></i>العقارات ({{ $results['products']->total() }})
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
@@ -176,7 +176,7 @@
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
-                                        <th>اسم المنتج</th>
+                                        <th>اسم العقار</th>
                                         <th>العنوان</th>
                                         <th>السعر</th>
                                         <th>تاريخ الإنشاء</th>
@@ -208,7 +208,7 @@
                     @else
                         <div class="text-center py-5">
                             <i class="fas fa-box fa-3x text-muted mb-3"></i>
-                            <h5 class="text-muted">لا توجد نتائج للمنتجات</h5>
+                            <h5 class="text-muted">لا توجد نتائج للعقارات</h5>
                         </div>
                     @endif
                 </div>
@@ -221,7 +221,7 @@
                                 <thead>
                                     <tr>
                                         <th>رقم الحجز</th>
-                                        <th>المنتج</th>
+                                        <th>العقار</th>
                                         <th>المستخدم</th>
                                         <th>تاريخ الإنشاء</th>
                                         <th>الإجراءات</th>

@@ -105,27 +105,37 @@ class CityController extends Controller
             $query->where('facility_id', $request->facility_id);
         }
 
-        // Filter by price range
+        // Filter by price range (active offers)
         if ($request->filled('min_price')) {
-            $query->where('price', '>=', $request->min_price);
+            $query->whereHas('activeOffers', function ($q) use ($request) {
+                $q->where('price', '>=', $request->min_price);
+            });
         }
 
         if ($request->filled('max_price')) {
-            $query->where('price', '<=', $request->max_price);
+            $query->whereHas('activeOffers', function ($q) use ($request) {
+                $q->where('price', '<=', $request->max_price);
+            });
         }
 
-        // Filter by rooms
+        // Filter by rooms (bedrooms attribute)
         if ($request->filled('rooms')) {
-            $query->where('rooms', $request->rooms);
+            $query->whereHas('attributes', function ($q) use ($request) {
+                $q->where('key', 'bedrooms')->where('product_attribute_values.value', $request->rooms);
+            });
         }
 
-        // Filter by area range
+        // Filter by area range (area attribute)
         if ($request->filled('min_area')) {
-            $query->where('area', '>=', $request->min_area);
+            $query->whereHas('attributes', function ($q) use ($request) {
+                $q->where('key', 'area')->whereRaw('CAST(product_attribute_values.value AS DECIMAL(10,2)) >= ?', [$request->min_area]);
+            });
         }
 
         if ($request->filled('max_area')) {
-            $query->where('area', '<=', $request->max_area);
+            $query->whereHas('attributes', function ($q) use ($request) {
+                $q->where('key', 'area')->whereRaw('CAST(product_attribute_values.value AS DECIMAL(10,2)) <= ?', [$request->max_area]);
+            });
         }
 
         // Search by keyword

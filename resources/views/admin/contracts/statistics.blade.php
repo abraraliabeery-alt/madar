@@ -118,7 +118,7 @@
                                         <tr>
                                             <th>رقم العقد</th>
                                             <th>المستخدم</th>
-                                            <th>المنتج</th>
+                                            <th>العقار</th>
                                             <th>نوع العقد</th>
                                             <th>المبلغ</th>
                                             <th>التاريخ</th>
@@ -158,7 +158,7 @@
                                             <td>
                                                 @if($contract->status)
                                                     <span class="badge bg-{{ $contract->status->color }}">
-                                                        {{ $contract->status->name }}
+                                                        {{ $contract->status->getTranslatedName('ar') }}
                                                     </span>
                                                 @else
                                                     <span class="badge bg-secondary">لا توجد حالة</span>

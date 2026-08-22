@@ -357,7 +357,6 @@
 
 <!-- Floating action buttons -->
 <div id="fab" aria-label="اختصارات">
-  <a href="https://wa.me/966503310071" target="_blank" rel="noopener" title="WhatsApp">WA</a>
   <a href="tel:0503310071" class="secondary" title="اتصل">☎</a>
   <div id="cursor-blob" aria-hidden="true"></div>
 </div>
@@ -586,7 +585,7 @@
           <div class="products-grid" style="margin-top:1rem">
             @foreach($products as $product)
               @php($t = $product->translations->first())
-              @php($title = $t->title ?? ('منتج #' . $product->id))
+              @php($title = $t->title ?? ('عقار #' . $product->id))
               @php($img = $product->main_image ? asset('storage/'.$product->main_image) : asset('assets/products/placeholder.svg'))
               <article class="product-card">
                 <div class="imgwrap">
@@ -618,7 +617,7 @@
           <div class="products-grid" style="grid-template-columns: repeat(3, minmax(0,1fr)); margin-top:1rem">
             @foreach($products as $product)
               @php($t = $product->translations->first())
-              @php($title = $t->title ?? ('منتج #' . $product->id))
+              @php($title = $t->title ?? ('عقار #' . $product->id))
               @php($img = $product->main_image ? asset('storage/'.$product->main_image) : asset('assets/products/placeholder.svg'))
               <article class="product-card hover">
                 <div class="imgwrap">
@@ -645,7 +644,7 @@
           <div style="display:grid; gap:12px; margin-top:1rem">
             @foreach($products as $product)
               @php($t = $product->translations->first())
-              @php($title = $t->title ?? ('منتج #' . $product->id))
+              @php($title = $t->title ?? ('عقار #' . $product->id))
               @php($img = $product->main_image ? asset('storage/'.$product->main_image) : asset('assets/products/placeholder.svg'))
               <article class="card hover glow tilt">
                 <div class="body" style="display:flex; gap:1rem; align-items:center; justify-content:space-between; flex-wrap:wrap">
@@ -674,7 +673,7 @@
           <div class="products-grid" style="margin-top:1rem">
             @foreach($products as $product)
               @php($t = $product->translations->first())
-              @php($title = $t->title ?? ('منتج #' . $product->id))
+              @php($title = $t->title ?? ('عقار #' . $product->id))
               @php($img = $product->main_image ? asset('storage/'.$product->main_image) : asset('assets/products/placeholder.svg'))
               <article class="product-card" style="border-top:4px solid var(--primary)">
                 <div class="imgwrap">
@@ -721,7 +720,7 @@
         <article class="tile dark featured">
           <span class="ico" style="background: color-mix(in oklab, var(--primary), #fff 35%)"><i class="fa-solid fa-shield-check"></i></span>
           <h3>جودة وموثوقية</h3>
-          <p>منتجات معتمدة تضمن إنجاز المشاريع بدقة وكفاءة.</p>
+          <p>عقارات معتمدة تضمن إنجاز المشاريع بدقة وكفاءة.</p>
         </article>
         <article class="tile light">
           <span class="ico"><i class="fa-solid fa-receipt"></i></span>
@@ -736,7 +735,7 @@
     <section class="tpl-about section">
       <div class="container center">
         <h2 class="title-deco">عن الشركة</h2>
-        <p class="narrow">نفتخر بتقديم مجموعة متكاملة من أدوات السباكة وأدوات البناء والأدوات الصحية والكهربائية والعدد، ونلتزم بتقديم منتجات عالية الجودة وخدمات موثوقة تسهم في نجاح مشاريع عملائنا وبناء علاقات طويلة الأمد معهم.</p>
+        <p class="narrow">نفتخر بتقديم مجموعة متكاملة من أدوات السباكة وأدوات البناء والأدوات الصحية والكهربائية والعدد، ونلتزم بتقديم عقارات عالية الجودة وخدمات موثوقة تسهم في نجاح مشاريع عملائنا وبناء علاقات طويلة الأمد معهم.</p>
         <a href="#services" class="btn btn-outline">اقرأ المزيد</a>
       </div>
     </section>
@@ -918,7 +917,7 @@
             <div class="author"><span class="avatar"></span><span>عميل من قطاع المقاولات</span></div>
           </article>
           <article class="t-card">
-            <p class="quote">تنوع كبير في المنتجات وأسعار تنافسية، والتزام عالي بالمواعيد.</p>
+            <p class="quote">تنوع كبير في العقارات وأسعار تنافسية، والتزام عالي بالمواعيد.</p>
             <div class="author"><span class="avatar"></span><span>شركة تطوير مشاريع</span></div>
           </article>
           <article class="t-card">
@@ -939,7 +938,6 @@
         </div>
         <div class="cta-actions">
           <a href="#contact" class="btn btn-primary">اطلب عرض</a>
-          <a href="https://wa.me/966503310071" class="btn btn-outline" target="_blank" rel="noopener">WhatsApp</a>
         </div>
       </div>
     </section>
@@ -954,7 +952,6 @@
           <p>يسعدنا خدمتك والإجابة على استفساراتك وتقديم أفضل عرض يناسب مشروعك.</p>
           <div class="info-list">
             <div class="info-item"><i class="fa-solid fa-phone"></i><div><strong>الجوال</strong><div><a href="tel:0503310071">0503310071</a></div></div></div>
-            <div class="info-item"><i class="fa-brands fa-whatsapp"></i><div><strong>واتساب</strong><div><a href="https://wa.me/966503310071" target="_blank" rel="noopener">راسلنا مباشرة</a></div></div></div>
             <div class="info-item"><i class="fa-regular fa-envelope"></i><div><strong>البريد</strong><div><a href="mailto:tour@tourcons.com">tour@tourcons.com</a></div></div></div>
           </div>
         </div>
@@ -973,7 +970,7 @@
                 @error('phone')<div class="invalid-feedback">{{ $message }}</div>@enderror
               </div>
               <div class="full">
-                <label>المنتجات المضافة للطلب</label>
+                <label>العقارات المضافة للطلب</label>
                 <div id="selected-products-new" style="display:flex; gap:.4rem; flex-wrap:wrap"></div>
                 <div style="margin-top:.4rem">
                   <button type="button" class="btn btn-subtle" onclick="clearSelectedProducts()">تفريغ الطلب</button>
@@ -1006,7 +1003,6 @@
             </div>
             <div style="margin-top:.8rem; display:flex; gap:.6rem; flex-wrap:wrap">
               <button class="btn btn-primary" type="submit">إرسال</button>
-              <a class="btn btn-outline" href="https://wa.me/966503310071" target="_blank" rel="noopener">WhatsApp</a>
             </div>
           </form>
         </div>
@@ -1092,8 +1088,8 @@
           <div class="content">نغطي معظم مدن المملكة عبر شركاء لوجستيين موثوقين مع خيارات شحن سريع.</div>
         </details>
         <details class="item">
-          <summary>هل المنتجات أصلية ومضمونة؟</summary>
-          <div class="content">جميع منتجاتنا معتمدة ومطابقة للمواصفات وبضمان مصنّع حيث ينطبق.</div>
+          <summary>هل العقارات أصلية ومضمونة؟</summary>
+          <div class="content">جميع عقاراتنا معتمدة ومطابقة للمواصفات وبضمان مصنّع حيث ينطبق.</div>
         </details>
       </div>
     </section>
@@ -1110,7 +1106,7 @@
           </div></div>
           <div class="tile card glow tilt sheen"><div class="body">
             <div class="num" data-to="1200">0</div>
-            <div class="lbl">منتج وفئة</div>
+            <div class="lbl">عقار وفئة</div>
           </div></div>
           <div class="tile card glow tilt sheen"><div class="body">
             <div class="num" data-to="850">0</div>
@@ -1167,7 +1163,7 @@
           @if(isset($products) && $products->count())
             @foreach($products as $product)
               @php($t = $product->translations->first())
-              @php($title = $t->title ?? ('منتج #' . $product->id))
+              @php($title = $t->title ?? ('عقار #' . $product->id))
               @php($img = $product->main_image ? asset('storage/'.$product->main_image) : asset('assets/products/placeholder.svg'))
               <article class="card hover glow tilt pc-card" style="min-width:280px; scroll-snap-align:start">
                 <div class="body">
@@ -1183,7 +1179,7 @@
               </article>
             @endforeach
           @else
-            <div class="card" style="min-width:280px"><div class="body">لا توجد منتجات لعرضها حاليًا.</div></div>
+            <div class="card" style="min-width:280px"><div class="body">لا توجد عقارات لعرضها حاليًا.</div></div>
           @endif
         </div>
       </div>
@@ -1240,7 +1236,7 @@
       <div class="container grid-2">
         <div>
           <h2><span class="title-deco">ماذا يقول عملاؤنا</span></h2>
-          <p class="pro-lead">“تعامل ممتاز وتوريد سريع، المنتجات كانت مطابقة لما نحتاجه وأسعار منافسة. تجربة رائعة.”</p>
+          <p class="pro-lead">“تعامل ممتاز وتوريد سريع، العقارات كانت مطابقة لما نحتاجه وأسعار منافسة. تجربة رائعة.”</p>
           <p class="m-0"><strong>عميل مؤسسة</strong> • قطاع المقاولات</p>
         </div>
         <div class="illustration small" aria-hidden="true">
@@ -1274,7 +1270,7 @@
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="7" width="18" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M7 12h10" stroke="currentColor" stroke-width="1.5"/></svg>
             </div>
             <h4 style="display:inline">أدوات السباكة (Plumbing Tools)</h4>
-            <p>أنابيب، صمامات، محابس، وصلات، وغيرها — منتجات متينة وموثوقة لضمان كفاءة العمل وسلامة المنشآت.</p>
+            <p>أنابيب، صمامات، محابس، وصلات، وغيرها — عقارات متينة وموثوقة لضمان كفاءة العمل وسلامة المنشآت.</p>
             <ul class="list-compact">
               <li>تشكيلة كاملة من المقاسات والمواد</li>
               <li>مطابقة لمعايير الجودة والسلامة</li>
@@ -1362,7 +1358,7 @@
       <div class="container">
         <h2>لماذا تختارنا</h2>
         <div class="grid-4">
-          <div class="card"><div class="body"><strong>جودة مضمونة</strong><p class="m-0">منتجات موثوقة بمعايير عالية.</p></div></div>
+          <div class="card"><div class="body"><strong>جودة مضمونة</strong><p class="m-0">عقارات موثوقة بمعايير عالية.</p></div></div>
           <div class="card"><div class="body"><strong>توريد سريع</strong><p class="m-0">كميات مرنة وتسليم في الوقت.</p></div></div>
           <div class="card"><div class="body"><strong>تشكيلة واسعة</strong><p class="m-0">كل ما تحتاجه من الأدوات والعدد.</p></div></div>
           <div class="card"><div class="body"><strong>تقسيط ميسر</strong><p class="m-0">خطط دفع تناسب احتياجك.</p></div></div>
@@ -1378,10 +1374,10 @@
         <h2>عن {{ $facility->name }}</h2>
         <div class="grid-2" style="align-items:start">
           <div>
-            <p class="m-0">نؤمن بأن الثقة تُبنى على الجودة والالتزام. نقدم خدمات ومنتجات تساعد عملاءنا على إنجاز مشاريعهم بسلاسة وكفاءة، مع حلول مرنة للدفع.</p>
+            <p class="m-0">نؤمن بأن الثقة تُبنى على الجودة والالتزام. نقدم خدمات وعقارات تساعد عملاءنا على إنجاز مشاريعهم بسلاسة وكفاءة، مع حلول مرنة للدفع.</p>
           </div>
           <div>
-            <p class="m-0">نقدّم خدمات متكاملة في المقاولات والتنفيذ وإدارة المشاريع وفق أفضل الممارسات. تلبية احتياجات عملائنا المتنوعة. نسعى لتوفير منتجات عالية الجودة وموثوقة تسهم في إنجاز المشاريع بدقة وكفاءة. كما نتيح لعملائنا <strong>البيع بالآجل والسداد على دفعات ميسّرة</strong>.</p>
+            <p class="m-0">نقدّم خدمات متكاملة في المقاولات والتنفيذ وإدارة المشاريع وفق أفضل الممارسات. تلبية احتياجات عملائنا المتنوعة. نسعى لتوفير عقارات عالية الجودة وموثوقة تسهم في إنجاز المشاريع بدقة وكفاءة. كما نتيح لعملائنا <strong>البيع بالآجل والسداد على دفعات ميسّرة</strong>.</p>
           </div>
         </div>
       </div>
@@ -1411,8 +1407,8 @@
         <h2><span class="title-deco">أهدافنا</span></h2>
         <div class="grid-4" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem">
           <div class="card hover glow tilt"><div class="body"><div class="badge">01</div><span class="icon-inline"><i data-lucide="target"></i></span><strong>الريادة</strong><p class="m-0">أن نكون الخيار الأول في مجالات السباكة والبناء والصحية والكهربائية والعدد.</p></div></div>
-          <div class="card hover glow tilt"><div class="body"><div class="badge">02</div><span class="icon-inline"><i data-lucide="award"></i></span><strong>الجودة</strong><p class="m-0">تقديم منتجات عالية الجودة وخدمات متميزة بثقة واستمرارية.</p></div></div>
-          <div class="card hover glow tilt"><div class="body"><div class="badge">03</div><span class="icon-inline"><i data-lucide="expand"></i></span><strong>التوسّع</strong><p class="m-0">توسيع مجموعة المنتجات لتلبية احتياجات قطاعات السوق المختلفة.</p></div></div>
+          <div class="card hover glow tilt"><div class="body"><div class="badge">02</div><span class="icon-inline"><i data-lucide="award"></i></span><strong>الجودة</strong><p class="m-0">تقديم عقارات عالية الجودة وخدمات متميزة بثقة واستمرارية.</p></div></div>
+          <div class="card hover glow tilt"><div class="body"><div class="badge">03</div><span class="icon-inline"><i data-lucide="expand"></i></span><strong>التوسّع</strong><p class="m-0">توسيع مجموعة العقارات لتلبية احتياجات قطاعات السوق المختلفة.</p></div></div>
           <div class="card hover glow tilt"><div class="body"><div class="badge">04</div><span class="icon-inline"><i data-lucide="gauge"></i></span><strong>الكفاءة</strong><p class="m-0">تحسين العمليات الداخلية لضمان جودة عالية وأسعار تنافسية.</p></div></div>
         </div>
       </div>
@@ -1492,7 +1488,7 @@
                 @error('type')<div class="invalid-feedback">{{ $message }}</div>@enderror
               </label>
               <div class="full">
-                <label>المنتجات المضافة للطلب</label>
+                <label>العقارات المضافة للطلب</label>
                 <div id="selected-products-legacy" style="display:flex; gap:.4rem; flex-wrap:wrap"></div>
                 <div style="margin-top:.4rem">
                   <button type="button" class="btn btn-subtle" onclick="clearSelectedProducts()">تفريغ الطلب</button>
@@ -1687,7 +1683,7 @@
         if(i>=0){ a[i].qty = Math.min(9999, (a[i].qty||1)+1); }
         else{ a.push({ name, qty: 1 }); }
         setCart(a); render();
-        try{ const t=document.createElement('div'); t.textContent='تمت إضافة المنتج إلى الطلب'; t.style.cssText='position:fixed;inset:auto 50% 24px auto;transform:translateX(-50%);background:#111;color:#fff;padding:.5rem .8rem;border-radius:999px;z-index:90;'; document.body.appendChild(t); setTimeout(()=>t.remove(),1200);}catch{}
+        try{ const t=document.createElement('div'); t.textContent='تمت إضافة العقار إلى الطلب'; t.style.cssText='position:fixed;inset:auto 50% 24px auto;transform:translateX(-50%);background:#111;color:#fff;padding:.5rem .8rem;border-radius:999px;z-index:90;'; document.body.appendChild(t); setTimeout(()=>t.remove(),1200);}catch{}
       }
       window.clearSelectedProducts = function(){ setCart([]); render(); };
       render();
@@ -1700,7 +1696,6 @@
 <div id="mobile-cta" hidden>
   <div class="bar">
     <a class="btn" href="tel:0503310071">اتصل الآن</a>
-    <a class="btn btn-outline" href="https://wa.me/966503310071" target="_blank" rel="noopener">WhatsApp</a>
     <a class="btn btn-outline" href="#contact">اطلب عرض</a>
   </div>
 </div>

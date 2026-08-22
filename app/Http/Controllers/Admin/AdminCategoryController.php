@@ -15,7 +15,15 @@ class AdminCategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::withCount('products')->paginate(15);
+        $categories = Category::withCount('products')
+            ->with('parent')
+            ->where(function ($query) {
+                $query->whereNull('parent_id')
+                      ->orWhereHas('parent', function ($q) {
+                          $q->where('is_active', true);
+                      });
+            })
+            ->paginate(15);
         return view('admin.categories.index', compact('categories'));
     }
 

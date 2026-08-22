@@ -17,22 +17,40 @@
                     <!-- Filters -->
                     <div class="row mb-3" data-intro="{{ __('admin.tour.attributes_filters_desc') }}" data-step="33">
                         <div class="col-md-12">
-                            <form method="GET" action="{{ route('admin.attributes.index') }}" class="row g-3">
+                            <div class="row g-3" id="attributes-filters">
+                                <input type="hidden" id="sort" value="{{ request('sort', 'created_at') }}">
+                                <input type="hidden" id="direction" value="{{ request('direction', 'desc') }}">
+
                                 <div class="col-md-3">
-                                    <input type="text" name="q" class="form-control" placeholder="البحث في الخصائص..." value="{{ request('q') }}">
-                                </div>
-                                <div class="col-md-2">
-                                    <select name="category_id" class="form-control">
-                                        <option value="">جميع الفئات</option>
-                                        @foreach($categories as $category)
-                                            <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
-                                                {{ $category->name }}
+                                    <select name="main_category_id" id="main_category_id" class="form-control">
+                                        <option value="">اختر القطاع</option>
+                                        @foreach($mainCategories as $mainCategory)
+                                            <option value="{{ $mainCategory->id }}" {{ request('main_category_id') == $mainCategory->id ? 'selected' : '' }}>
+                                                {{ $mainCategory->name }}
                                             </option>
                                         @endforeach
                                     </select>
                                 </div>
+
+                                <div class="col-md-3">
+                                    <select name="subcategory_id" id="subcategory_id" class="form-control">
+                                        <option value="" data-parent-id="">اختر الفئة الفرعية</option>
+                                        @foreach($subCategories as $subCategory)
+                                            <option value="{{ $subCategory->id }}"
+                                                    data-parent-id="{{ $subCategory->parent_id }}"
+                                                    {{ request('subcategory_id') == $subCategory->id ? 'selected' : '' }}>
+                                                {{ $subCategory->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <input type="text" name="q" id="q" class="form-control" placeholder="البحث في الخصائص..." value="{{ request('q') }}">
+                                </div>
+
                                 <div class="col-md-2">
-                                    <select name="type" class="form-control">
+                                    <select name="type" id="type" class="form-control">
                                         <option value="">جميع الأنواع</option>
                                         <option value="text" {{ request('type') == 'text' ? 'selected' : '' }}>نص</option>
                                         <option value="number" {{ request('type') == 'number' ? 'selected' : '' }}>رقم</option>
@@ -40,174 +58,27 @@
                                         <option value="select" {{ request('type') == 'select' ? 'selected' : '' }}>قائمة</option>
                                     </select>
                                 </div>
+
                                 <div class="col-md-2">
-                                    <select name="required" class="form-control">
+                                    <select name="required" id="required" class="form-control">
                                         <option value="">جميع الخصائص</option>
                                         <option value="1" {{ request('required') == '1' ? 'selected' : '' }}>إلزامية</option>
                                         <option value="0" {{ request('required') == '0' ? 'selected' : '' }}>اختيارية</option>
                                     </select>
                                 </div>
-                                <div class="col-md-3">
-                                    <button type="submit" class="btn btn-secondary me-2">
-                                        <i class="fas fa-search"></i> بحث
-                                    </button>
-                                    <a href="{{ route('admin.attributes.index') }}" class="btn btn-outline-secondary">
+
+                                <div class="col-md-2">
+                                    <button type="button" id="clear-filters" class="btn btn-outline-secondary w-100">
                                         <i class="fas fa-times"></i> مسح
-                                    </a>
+                                    </button>
                                 </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Attributes Table -->
-                    <div class="table-responsive" data-intro="{{ __('admin.tour.attributes_table_desc') }}" data-step="34">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>الاسم</th>
-                                    <th>النوع</th>
-                                    <th>الفئة</th>
-                                    <th>الحالة</th>
-                                    <th>الرمز</th>
-                                    <th>عدد المنتجات</th>
-                                    <th>تاريخ الإنشاء</th>
-                                    <th>الإجراءات</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($attributes as $attribute)
-                                <tr>
-                                    <td>{{ $attribute->id }}</td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                                                                    @if($attribute->icon)
-                                            @if(\Illuminate\Support\Str::contains($attribute->icon, 'fa-') || !\Illuminate\Support\Str::contains($attribute->icon, '/'))
-                                                <span class="me-2"><i class="{{ $attribute->icon }}"></i></span>
-                                            @else
-                                                <img src="{{ asset($attribute->icon) }}" alt="{{ $attribute->getTranslatedName() ?? 'N/A' }}" class="me-2" style="width: 20px; height: 20px;">
-                                            @endif
-                                        @else
-                                            <div class="avatar-placeholder me-2" style="width: 20px; height: 20px;">
-                                                <i class="fas fa-tag"></i>
-                                            </div>
-                                        @endif
-                                            <span>{{ $attribute->getTranslatedName() ?? 'N/A' }}</span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <span class="badge bg-info">{{ $attribute->type }}</span>
-                                    </td>
-                                    <td>
-                                        @if($attribute->category)
-                                            <span class="badge bg-secondary">{{ $attribute->category->name }}</span>
-                                        @else
-                                            <span class="text-muted">-</span>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if($attribute->required)
-                                            <span class="badge bg-danger">إلزامية</span>
-                                        @else
-                                            <span class="badge bg-warning">اختيارية</span>
-                                        @endif
-                                    </td>
-                                    <td>{{ $attribute->Symbol ?? '-' }}</td>
-                                    <td>
-                                        <span class="badge bg-primary">{{ $attribute->products_count }}</span>
-                                    </td>
-                                    <td>{{ $attribute->created_at->format('Y-m-d') }}</td>
-                                                                <td>
-                                <div class="action-buttons">
-                                    <!-- Mobile View: Compact Horizontal Layout -->
-                                    <div class="d-flex d-md-none gap-1 flex-wrap">
-                                        <a href="{{ route('admin.attributes.show', $attribute) }}"
-                                           class="btn btn-sm btn-outline-info action-btn-mobile"
-                                           data-bs-toggle="tooltip"
-                                           title="عرض">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                        <a href="{{ route('admin.attributes.edit', $attribute) }}"
-                                           class="btn btn-sm btn-outline-warning action-btn-mobile"
-                                           data-bs-toggle="tooltip"
-                                           title="تعديل">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <button type="button"
-                                                class="btn btn-sm btn-outline-danger action-btn-mobile delete-confirm"
-                                                data-bs-toggle="tooltip"
-                                                title="حذف"
-                                                data-attribute-id="{{ $attribute->id }}"
-                                                data-attribute-name="{{ $attribute->getTranslatedName() ?? 'N/A' }}">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                        
-                                        <!-- Toggle Required -->
-                                        <form method="POST" action="{{ route('admin.attributes.toggle-required', $attribute) }}" class="d-inline">
-                                            @csrf
-                                            <button type="submit"
-                                                    class="btn btn-sm btn-outline-secondary action-btn-mobile"
-                                                    data-bs-toggle="tooltip"
-                                                    title="{{ $attribute->required ? 'اختيارية' : 'إلزامية' }}">
-                                                <i class="fas fa-toggle-{{ $attribute->required ? 'on' : 'off' }}"></i>
-                                            </button>
-                                        </form>
-                                    </div>
-                                    
-                                    <!-- Desktop View: Vertical Layout -->
-                                    <div class="d-none d-md-flex flex-column gap-1">
-                                        <!-- Primary Actions Row -->
-                                        <div class="d-flex gap-1 mb-1">
-                                            <a href="{{ route('admin.attributes.show', $attribute) }}"
-                                               class="btn btn-sm btn-outline-info"
-                                               data-bs-toggle="tooltip"
-                                               title="عرض التفاصيل">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                            <a href="{{ route('admin.attributes.edit', $attribute) }}"
-                                               class="btn btn-sm btn-outline-warning"
-                                               data-bs-toggle="tooltip"
-                                               title="تعديل الخاصية">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            <button type="button"
-                                                    class="btn btn-sm btn-outline-danger delete-confirm"
-                                                    data-bs-toggle="tooltip"
-                                                    title="حذف الخاصية"
-                                                    data-attribute-id="{{ $attribute->id }}"
-                                                    data-attribute-name="{{ $attribute->getTranslatedName() ?? 'N/A' }}">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </div>
-
-                                        <!-- Toggle Required Row -->
-                                        <div class="d-flex gap-1 mb-1">
-                                            <form method="POST" action="{{ route('admin.attributes.toggle-required', $attribute) }}" class="d-inline">
-                                                @csrf
-                                                <button type="submit"
-                                                        class="btn btn-sm btn-outline-secondary"
-                                                        data-bs-toggle="tooltip"
-                                                        title="{{ $attribute->required ? 'جعل اختيارية' : 'جعل إلزامية' }}">
-                                                    <i class="fas fa-toggle-{{ $attribute->required ? 'on' : 'off' }}"></i>
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="9" class="text-center">لا توجد خصائص</td>
-                                </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Pagination -->
-                    <div class="pagination-container">
-                        {{ $attributes->links() }}
+                    <div id="attributes-table-container">
+                        @include('admin.attributes._table')
                     </div>
                 </div>
             </div>
@@ -353,7 +224,7 @@ $(document).ready(function() {
     });
 
     // Delete confirmation
-    $('.delete-confirm').click(function(e) {
+    $(document).on('click', '.delete-confirm', function(e) {
         e.preventDefault();
         let attributeId = $(this).data('attribute-id');
         let attributeName = $(this).data('attribute-name');
@@ -370,29 +241,142 @@ $(document).ready(function() {
             reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
-                // Create and submit delete form
-                let form = $('<form>', {
-                    'method': 'POST',
-                    'action': `/admin/attributes/${attributeId}`
+                let $row = $(this).closest('tr');
+                $.ajax({
+                    url: `/admin/attributes/${attributeId}`,
+                    type: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function() {
+                        $row.fadeOut(300, function() {
+                            $(this).remove();
+                            initTooltips();
+                        });
+                        Swal.fire({
+                            title: 'تم الحذف!',
+                            text: `تم حذف الخاصية "${attributeName}" بنجاح.`,
+                            icon: 'success',
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+                    },
+                    error: function() {
+                        Swal.fire('خطأ', 'حدث خطأ أثناء حذف الخاصية.', 'error');
+                    }
                 });
-
-                form.append($('<input>', {
-                    'type': 'hidden',
-                    'name': '_token',
-                    'value': $('meta[name="csrf-token"]').attr('content')
-                }));
-
-                form.append($('<input>', {
-                    'type': 'hidden',
-                    'name': '_method',
-                    'value': 'DELETE'
-                }));
-
-                $('body').append(form);
-                form.submit();
             }
         });
     });
+
+    // AJAX filters, sorting and pagination
+    function initTooltips() {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    }
+
+    function updateSubcategories() {
+        const mainId = $('#main_category_id').val();
+        const subSelect = $('#subcategory_id');
+        subSelect.find('option').each(function () {
+            const parentId = $(this).data('parent-id');
+            const option = $(this);
+            if (!mainId || !parentId || parentId == mainId) {
+                option.show();
+            } else {
+                option.hide();
+                if (option.is(':selected')) {
+                    subSelect.val('');
+                }
+            }
+        });
+    }
+
+    function loadAttributes(page) {
+        page = page || 1;
+        const params = new URLSearchParams();
+        params.set('partial', '1');
+
+        const mainId = $('#main_category_id').val();
+        if (mainId) params.set('main_category_id', mainId);
+
+        const subId = $('#subcategory_id').val();
+        if (subId) params.set('subcategory_id', subId);
+
+        const q = $('#q').val();
+        if (q) params.set('q', q);
+
+        const type = $('#type').val();
+        if (type) params.set('type', type);
+
+        const required = $('#required').val();
+        if (required !== '') params.set('required', required);
+
+        params.set('sort', $('#sort').val());
+        params.set('direction', $('#direction').val());
+        params.set('page', page);
+
+        const url = `{{ route('admin.attributes.index') }}?${params.toString()}`;
+
+        $('#attributes-table-container').html('<div class="text-center p-5"><div class="spinner-border" role="status"></div></div>');
+
+        fetch(url, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(response => response.text())
+        .then(html => {
+            $('#attributes-table-container').html(html);
+            initTooltips();
+        });
+    }
+
+    $('#main_category_id').on('change', function () {
+        updateSubcategories();
+        loadAttributes(1);
+    });
+
+    $('#subcategory_id, #type, #required').on('change', function () {
+        loadAttributes(1);
+    });
+
+    let qTimer;
+    $('#q').on('input', function () {
+        clearTimeout(qTimer);
+        qTimer = setTimeout(() => loadAttributes(1), 300);
+    });
+
+    $(document).on('click', '.sortable', function (e) {
+        e.preventDefault();
+        const col = $(this).data('sort');
+        const currentSort = $('#sort').val();
+        const currentDir = $('#direction').val();
+        const newDir = (currentSort === col && currentDir === 'asc') ? 'desc' : 'asc';
+        $('#sort').val(col);
+        $('#direction').val(newDir);
+        loadAttributes(1);
+    });
+
+    $(document).on('click', '#attributes-table-container .pagination a', function (e) {
+        e.preventDefault();
+        const href = $(this).attr('href');
+        if (!href) return;
+
+        const url = new URL(href, window.location.href);
+        const page = url.searchParams.get('page') || 1;
+        loadAttributes(page);
+    });
+
+    $('#clear-filters').on('click', function () {
+        $('#main_category_id, #subcategory_id, #q, #type, #required').val('');
+        $('#subcategory_id option').show();
+        $('#sort').val('created_at');
+        $('#direction').val('desc');
+        loadAttributes(1);
+    });
+
+    updateSubcategories();
 });
 </script>
 @endpush

@@ -114,43 +114,71 @@
 </head>
 <body class="{{ app()->getLocale() == 'ar' ? 'font-ibm-plex-arabic' : 'font-figtree' }} bg-white text-gray-900 dark:bg-black dark:text-white">
 <!-- Navigation -->
-<nav class="bg-white shadow-lg sticky top-0 z-50 dark:bg-black dark:border-b dark:border-secondary-800" x-data="{ mobileMenuOpen: false }">
+<nav id="publicNav" class="sticky top-0 z-50 transition-all duration-300 dark:border-b dark:border-secondary-800"
+     :class="{ 'is-scrolled bg-white/95 shadow-md backdrop-blur-md dark:bg-secondary-900/95': scrolled, 'bg-transparent shadow-none dark:bg-transparent': !scrolled }"
+     x-data="{ mobileMenuOpen: false, scrolled: (window.scrollY > 10) }"
+     x-on:scroll.window.throttle.50ms="scrolled = (window.scrollY > 10)">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
             <!-- Logo and Brand -->
             <div class="flex-shrink-0">
                 <a href="{{ route('public.home') }}" class="inline-flex items-center p-1">
-                    <img src="{{ asset('images/madar-negotiation-icon.svg') }}" alt="مدار التفاوض" class="w-14 h-14 brand-logo">
+                    <span class="text-lg font-semibold">مدار التفاوض</span>
                 </a>
             </div>
-            <div class="hidden md:flex items-center {{ app()->getLocale() == 'ar' ? 'space-x-8 space-x-reverse' : 'space-x-8' }}">
-                <a href="{{ route('public.home') }}" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                    {{ __('layout.navigation.home') }}
-                </a>
-
-                <a href="{{ route('public.execution.marketplace') }}" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                    {{ __('public.navigation.products') }}
-                </a>
-                @if(\App\Helpers\FacilityHelper::isMultiMode())
-                    <a href="{{ route('public.facilities.index') }}" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                        {{ __('layout.navigation.facilities') }}
+            <div class="hidden lg:flex items-center {{ app()->getLocale() == 'ar' ? 'space-x-6 space-x-reverse' : 'space-x-6' }}">
+                @php($publicMenuConfigured = \App\Models\MenuItem::where('panel', 'public')->exists())
+                @php($publicMenu = \App\Services\MenuService::forPanel('public'))
+                @if($publicMenuConfigured)
+                    @foreach($publicMenu as $item)
+                        <a href="{{ $item['href'] }}" class="main-nav-link px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                            {{ $item['label'] }}
+                        </a>
+                    @endforeach
+                @else
+                    <a href="{{ route('public.home') }}" class="main-nav-link px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                        {{ __('layout.navigation.home') }}
                     </a>
+
+                    @if(\App\Helpers\PlatformModeHelper::allowsRealEstate())
+                        <a href="{{ route('public.products.index') }}" class="main-nav-link px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                            {{ __('public.navigation.products') }}
+                        </a>
+                        <a href="{{ route('public.products.map') }}" class="main-nav-link px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                            {{ __('public.search.map_search') }}
+                        </a>
+                        <a href="{{ route('public.product-requests.form') }}" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                            اطلب عقار
+                        </a>
+                        @if(\App\Helpers\FacilityHelper::isMultiMode())
+                            <a href="{{ route('public.facilities.index') }}" class="main-nav-link px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                                {{ __('layout.navigation.facilities') }}
+                            </a>
+                        @endif
+                    @endif
+
+                    @if(\App\Helpers\PlatformModeHelper::allowsContracting())
+                        <a href="{{ route('public.execution.marketplace') }}" class="main-nav-link px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                            {{ __('layout.navigation.projects') }}
+                        </a>
+                    @endif
+
+                    <a href="{{ route('public.suppliers') }}" class="main-nav-link px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                        {{ __('layout.navigation.suppliers') }}
+                    </a>
+                    <a href="{{ route('public.factories') }}" class="main-nav-link px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                        {{ __('layout.navigation.factories') }}
+                    </a>
+
+                    @guest
+                        <x-language-switcher />
+                    @endguest
                 @endif
-
-                <a href="{{ route('public.suppliers') }}" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                    {{ __('layout.navigation.suppliers') }}
-                </a>
-                <a href="{{ route('public.factories') }}" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                    {{ __('layout.navigation.factories') }}
-                </a>
-
-                @guest
-                    <x-language-switcher />
-                @endguest
             </div>
 
             <!-- Desktop User Menu -->
-            <div class="hidden md:flex items-center {{ app()->getLocale() == 'ar' ? 'space-x-4 space-x-reverse' : 'space-x-4' }}">
+            <div class="hidden lg:flex items-center {{ app()->getLocale() == 'ar' ? 'space-x-3 space-x-reverse' : 'space-x-3' }}">
+                <x-language-switcher />
                 <button id="theme-toggle" type="button" data-theme-toggle class="p-2 rounded-lg border border-gray-200 text-gray-700 hover:text-primary-700 hover:border-primary-300 transition-colors dark:border-secondary-800 dark:text-gray-200 dark:hover:text-white" aria-pressed="false">
                     <i class="fas fa-moon" data-icon="moon"></i>
                     <i class="fas fa-sun hidden" data-icon="sun"></i>
@@ -158,7 +186,7 @@
                 @auth
                     <!-- Notifications -->
                     <div class="relative" x-data="{ open: false }" @click.outside="open=false" @keydown.escape.window="open=false">
-                        <button @click="open = !open" class="relative p-2 text-gray-700 hover:text-primary-600 transition-colors">
+                        <button @click="open = !open" class="relative p-2 main-nav-link transition-colors">
                             <i class="fas fa-bell text-xl"></i>
                             @if(auth()->user()->unreadNotifications->count() > 0)
                                 <span class="absolute -top-1 {{ app()->getLocale() == 'ar' ? '-right-1' : '-left-1' }} bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
@@ -217,7 +245,7 @@
                                     </a>
                                 @endforeach
 
-                                <div class="border-t border-gray-200 px-4 py-2">
+                                <div class="border-t border-gray-200 dark:border-gray-700 px-4 py-2">
                                     <a href="{{ route('client.notifications') }}" class="text-sm text-primary-600 hover:text-primary-700">
                                         {{ __('layout.notifications.view_all_notifications') }}
                                     </a>
@@ -233,7 +261,7 @@
 
                     <!-- Logged in user menu -->
                     <div class="relative" x-data="{ open: false }" @click.outside="open=false" @keydown.escape.window="open=false">
-                        <button @click="open = !open" class="flex items-center {{ app()->getLocale() == 'ar' ? 'space-x-2 space-x-reverse' : 'space-x-2' }} text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                        <button @click="open = !open" class="flex items-center {{ app()->getLocale() == 'ar' ? 'space-x-2 space-x-reverse' : 'space-x-2' }} main-nav-link px-3 py-2 rounded-md text-sm font-medium transition-colors">
                             <img src="{{ auth()->user()->avatar ?? 'https://ui-avatars.com/api/?name=' . auth()->user()->name . '&color=7C3AED&background=EBF4FF' }}"
                                  alt="{{ auth()->user()->name }}"
                                  class="w-8 h-8 rounded-full object-cover">
@@ -242,46 +270,42 @@
                         </button>
 
                         <div x-cloak :class="open ? 'show' : ''" x-transition
-                             class="absolute {{ app()->getLocale() == 'ar' ? 'left-0' : 'right-0' }} mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 dropdown-menu">
+                             class="absolute {{ app()->getLocale() == 'ar' ? 'left-0' : 'right-0' }} mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-50 dropdown-menu border border-gray-200 dark:border-gray-700">
                             @if(auth()->user()->hasRole('admin'))
-                                <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700">
                                     <i class="fas fa-tachometer-alt {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>{{ __('layout.user_menu.dashboard') }}
                                 </a>
                             @endif
 
                             @if(auth()->user()->hasRole('facility'))
-                                <a href="{{ route('facility.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <a href="{{ route('facility.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700">
                                     <i class="fas fa-building {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>{{ __('layout.user_menu.facility_management') }}
                                 </a>
                             @endif
 
                             @if(auth()->user()->hasRole('client'))
-                                <a href="{{ route('client.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <a href="{{ route('client.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700">
                                     <i class="fas fa-user {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>{{ __('layout.user_menu.my_account') }}
                                 </a>
                             @endif
 
                             @if(!auth()->user()->hasRole('facility') && method_exists(auth()->user(), 'facilities') && !auth()->user()->facilities()->exists())
-                                <a href="{{ route('facility.onboarding.create') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <a href="{{ route('facility.onboarding.create') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700">
                                     <i class="fas fa-building-user {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>{{ __('layout.user_menu.convert_to_facility') }}
                                 </a>
                             @endif
 
-                            <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700">
                                 <i class="fas fa-user-edit {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>{{ __('layout.user_menu.edit_profile') }}
                             </a>
 
-                            <hr class="my-1">
-
-                            <a href="{{ url('/dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                <i class="fas fa-gauge {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>{{ __('layout.user_menu.dashboard') }}
-                            </a>
+                            <hr class="my-1 border-t border-gray-200 dark:border-gray-700">
 
                             <!-- Language Switcher in Profile Menu -->
-                            <div class="px-4 py-2 border-t border-gray-200">
+                            <div class="px-4 py-2 border-t border-gray-200 dark:border-gray-700">
                                 <div class="space-y-1">
                                     <a href="{{ route('public.language.change', 'ar') }}"
-                                       class="flex items-center px-2 py-1 text-sm text-gray-700 hover:bg-gray-100 rounded {{ app()->getLocale() === 'ar' ? 'bg-primary-50 text-primary-700' : '' }}">
+                                       class="flex items-center px-2 py-1 text-sm text-gray-700 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 rounded {{ app()->getLocale() === 'ar' ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300' : '' }}">
                                         <span class="{{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }} leading-none flex-shrink-0" aria-hidden="true">
                                             <svg width="16" height="11" viewBox="0 0 18 12" xmlns="http://www.w3.org/2000/svg" class="block rounded-sm">
                                                 <rect width="18" height="12" rx="2" fill="#0B7A3B"/>
@@ -291,11 +315,11 @@
                                         </span>
                                         <span>{{ __('layout.navigation.arabic') }}</span>
                                         @if(app()->getLocale() === 'ar')
-                                            <i class="fas fa-check text-primary-600 {{ app()->getLocale() == 'ar' ? 'mr-auto' : 'ml-auto' }} text-xs"></i>
+                                            <i class="fas fa-check text-primary-600 dark:text-primary-400 {{ app()->getLocale() == 'ar' ? 'mr-auto' : 'ml-auto' }} text-xs"></i>
                                         @endif
                                     </a>
                                     <a href="{{ route('public.language.change', 'en') }}"
-                                       class="flex items-center px-2 py-1 text-sm text-gray-700 hover:bg-gray-100 rounded {{ app()->getLocale() === 'en' ? 'bg-primary-50 text-primary-700' : '' }}">
+                                       class="flex items-center px-2 py-1 text-sm text-gray-700 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 rounded {{ app()->getLocale() === 'en' ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300' : '' }}">
                                         <span class="{{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }} leading-none flex-shrink-0" aria-hidden="true">
                                             <svg width="16" height="11" viewBox="0 0 18 12" xmlns="http://www.w3.org/2000/svg" class="block rounded-sm">
                                                 <rect width="18" height="12" rx="2" fill="#ffffff"/>
@@ -316,12 +340,12 @@
                                         </span>
                                         <span>{{ __('layout.navigation.english') }}</span>
                                         @if(app()->getLocale() === 'en')
-                                            <i class="fas fa-check text-primary-600 {{ app()->getLocale() == 'ar' ? 'mr-auto' : 'ml-auto' }} text-xs"></i>
+                                            <i class="fas fa-check text-primary-600 dark:text-primary-400 {{ app()->getLocale() == 'ar' ? 'mr-auto' : 'ml-auto' }} text-xs"></i>
                                         @endif
                                     </a>
 
                                     <a href="{{ route('public.language.change', 'ur') }}"
-                                       class="flex items-center px-2 py-1 text-sm text-gray-700 hover:bg-gray-100 rounded {{ app()->getLocale() === 'ur' ? 'bg-primary-50 text-primary-700' : '' }}">
+                                       class="flex items-center px-2 py-1 text-sm text-gray-700 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 rounded {{ app()->getLocale() === 'ur' ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300' : '' }}">
                                         <span class="{{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }} leading-none flex-shrink-0" aria-hidden="true">
                                             <svg width="16" height="11" viewBox="0 0 18 12" xmlns="http://www.w3.org/2000/svg" class="block rounded-sm">
                                                 <rect width="18" height="12" rx="2" fill="#0A7F3F"/>
@@ -332,12 +356,12 @@
                                         </span>
                                         <span>{{ __('layout.navigation.urdu') }}</span>
                                         @if(app()->getLocale() === 'ur')
-                                            <i class="fas fa-check text-primary-600 {{ app()->getLocale() == 'ar' ? 'mr-auto' : 'ml-auto' }} text-xs"></i>
+                                            <i class="fas fa-check text-primary-600 dark:text-primary-400 {{ app()->getLocale() == 'ar' ? 'mr-auto' : 'ml-auto' }} text-xs"></i>
                                         @endif
                                     </a>
 
                                     <a href="{{ route('public.language.change', 'zh') }}"
-                                       class="flex items-center px-2 py-1 text-sm text-gray-700 hover:bg-gray-100 rounded {{ app()->getLocale() === 'zh' ? 'bg-primary-50 text-primary-700' : '' }}">
+                                       class="flex items-center px-2 py-1 text-sm text-gray-700 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 rounded {{ app()->getLocale() === 'zh' ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300' : '' }}">
                                         <span class="{{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }} leading-none flex-shrink-0" aria-hidden="true">
                                             <svg width="16" height="11" viewBox="0 0 18 12" xmlns="http://www.w3.org/2000/svg" class="block rounded-sm">
                                                 <rect width="18" height="12" rx="2" fill="#DE2910"/>
@@ -346,17 +370,17 @@
                                         </span>
                                         <span>{{ __('layout.navigation.chinese') }}</span>
                                         @if(app()->getLocale() === 'zh')
-                                            <i class="fas fa-check text-primary-600 {{ app()->getLocale() == 'ar' ? 'mr-auto' : 'ml-auto' }} text-xs"></i>
+                                            <i class="fas fa-check text-primary-600 dark:text-primary-400 {{ app()->getLocale() == 'ar' ? 'mr-auto' : 'ml-auto' }} text-xs"></i>
                                         @endif
                                     </a>
                                 </div>
                             </div>
 
-                            <hr class="my-1">
+                            <hr class="my-1 border-t border-gray-200 dark:border-gray-700">
 
                             <form method="POST" action="{{ route('logout') }}" class="block">
                                 @csrf
-                                <button type="submit" class="w-full {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }} px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
+                                <button type="submit" class="w-full {{ app()->getLocale() == 'ar' ? 'text-right' : 'text-left' }} px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700">
                                     <i class="fas fa-sign-out-alt {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>{{ __('layout.user_menu.logout') }}
                                 </button>
                             </form>
@@ -375,8 +399,8 @@
             </div>
 
             <!-- Mobile menu button -->
-            <div class="md:hidden flex items-center">
-                <button @click="mobileMenuOpen = !mobileMenuOpen" class="text-gray-700 hover:text-primary-600 p-2" aria-expanded="false" :aria-expanded="mobileMenuOpen.toString()">
+            <div class="lg:hidden flex items-center">
+                <button @click="mobileMenuOpen = !mobileMenuOpen" class="main-nav-link p-2" aria-expanded="false" :aria-expanded="mobileMenuOpen.toString()">
                     <i class="fas fa-bars text-xl"></i>
                 </button>
             </div>
@@ -390,23 +414,48 @@
              x-transition:leave="transition ease-in duration-75"
              x-transition:leave-start="transform opacity-100 scale-100"
              x-transition:leave-end="transform opacity-0 scale-95"
-             class="md:hidden mobile-menu">
+             class="lg:hidden mobile-menu">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white dark:bg-black border-t dark:border-secondary-800">
-                <a href="{{ route('public.home') }}" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
-                    {{ __('layout.navigation.home') }}
-                </a>
-                @if(\App\Helpers\FacilityHelper::isMultiMode())
-                    <a href="{{ route('public.facilities.index') }}" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
-                        {{ __('layout.navigation.facilities') }}
+                @php($publicMenuMobileConfigured = \App\Models\MenuItem::where('panel', 'public')->exists())
+                @php($publicMenuMobile = \App\Services\MenuService::forPanel('public'))
+                @if($publicMenuMobileConfigured)
+                    @foreach($publicMenuMobile as $item)
+                        <a href="{{ $item['href'] }}" class="main-nav-link block px-3 py-2 rounded-md text-base font-medium">
+                            {{ $item['label'] }}
+                        </a>
+                    @endforeach
+                @else
+                    <a href="{{ route('public.home') }}" class="main-nav-link block px-3 py-2 rounded-md text-base font-medium">
+                        {{ __('layout.navigation.home') }}
+                    </a>
+
+                    @if(\App\Helpers\PlatformModeHelper::allowsRealEstate())
+                        <a href="{{ route('public.products.index') }}" class="main-nav-link block px-3 py-2 rounded-md text-base font-medium">
+                            {{ __('public.navigation.products') }}
+                        </a>
+                        <a href="{{ route('public.products.map') }}" class="main-nav-link block px-3 py-2 rounded-md text-base font-medium">
+                            {{ __('public.search.map_search') }}
+                        </a>
+                        @if(\App\Helpers\FacilityHelper::isMultiMode())
+                            <a href="{{ route('public.facilities.index') }}" class="main-nav-link block px-3 py-2 rounded-md text-base font-medium">
+                                {{ __('layout.navigation.facilities') }}
+                            </a>
+                        @endif
+                    @endif
+
+                    @if(\App\Helpers\PlatformModeHelper::allowsContracting())
+                        <a href="{{ route('public.execution.marketplace') }}" class="main-nav-link block px-3 py-2 rounded-md text-base font-medium">
+                            {{ __('layout.navigation.projects') }}
+                        </a>
+                    @endif
+
+                    <a href="{{ route('public.suppliers') }}" class="main-nav-link block px-3 py-2 rounded-md text-base font-medium">
+                        {{ __('layout.navigation.suppliers') }}
+                    </a>
+                    <a href="{{ route('public.factories') }}" class="main-nav-link block px-3 py-2 rounded-md text-base font-medium">
+                        {{ __('layout.navigation.factories') }}
                     </a>
                 @endif
-
-                <a href="{{ route('public.suppliers') }}" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
-                    {{ __('layout.navigation.suppliers') }}
-                </a>
-                <a href="{{ route('public.factories') }}" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
-                    {{ __('layout.navigation.factories') }}
-                </a>
 
                 <div class="px-3 py-2">
                     <x-language-switcher />
@@ -484,39 +533,39 @@
 
                     <hr class="my-2">
                     @if(auth()->user()->hasRole('admin'))
-                        <a href="{{ route('admin.dashboard') }}" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
+                        <a href="{{ route('admin.dashboard') }}" class="main-nav-link block px-3 py-2 rounded-md text-base font-medium">
                             <i class="fas fa-tachometer-alt {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>{{ __('layout.user_menu.dashboard') }}
                         </a>
                     @endif
 
                     @if(auth()->user()->hasRole('facility'))
-                        <a href="{{ route('facility.dashboard') }}" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
+                        <a href="{{ route('facility.dashboard') }}" class="main-nav-link block px-3 py-2 rounded-md text-base font-medium">
                             <i class="fas fa-building {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>{{ __('layout.user_menu.facility_management') }}
                         </a>
                     @endif
 
                     @if(auth()->user()->hasRole('client'))
-                        <a href="{{ route('client.dashboard') }}" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
+                        <a href="{{ route('client.dashboard') }}" class="main-nav-link block px-3 py-2 rounded-md text-base font-medium">
                             <i class="fas fa-user {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>{{ __('layout.user_menu.my_account') }}
                         </a>
                     @endif
 
                     @if(!auth()->user()->hasRole('facility') && method_exists(auth()->user(), 'facilities') && !auth()->user()->facilities()->exists())
-                        <a href="{{ route('facility.onboarding.create') }}" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
+                        <a href="{{ route('facility.onboarding.create') }}" class="main-nav-link block px-3 py-2 rounded-md text-base font-medium">
                             <i class="fas fa-building-user {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>{{ __('layout.user_menu.convert_to_facility') }}
                         </a>
                     @endif
 
-                    <a href="{{ route('profile.edit') }}" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
+                    <a href="{{ route('profile.edit') }}" class="main-nav-link block px-3 py-2 rounded-md text-base font-medium">
                         <i class="fas fa-user-edit {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>{{ __('layout.user_menu.edit_profile') }}
                     </a>
 
                     <hr class="my-2">
 
-                    <div class="px-3 py-2 border-t border-gray-200">
+                    <div class="px-3 py-2 border-t border-gray-200 dark:border-gray-700">
                         <div class="space-y-1">
                             <a href="{{ route('public.language.change', 'ar') }}"
-                               class="flex items-center px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded {{ app()->getLocale() === 'ar' ? 'bg-primary-50 text-primary-700' : '' }}">
+                               class="flex items-center px-2 py-2 text-sm text-gray-700 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 rounded {{ app()->getLocale() === 'ar' ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300' : '' }}">
                                 <span class="{{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }} leading-none flex-shrink-0" aria-hidden="true">
                                     <svg width="16" height="11" viewBox="0 0 18 12" xmlns="http://www.w3.org/2000/svg" class="block rounded-sm">
                                         <rect width="18" height="12" rx="2" fill="#0B7A3B"/>
@@ -526,11 +575,11 @@
                                 </span>
                                 <span>{{ __('layout.navigation.arabic') }}</span>
                                 @if(app()->getLocale() === 'ar')
-                                    <i class="fas fa-check text-primary-600 {{ app()->getLocale() == 'ar' ? 'mr-auto' : 'ml-auto' }} text-xs"></i>
+                                    <i class="fas fa-check text-primary-600 dark:text-primary-400 {{ app()->getLocale() == 'ar' ? 'mr-auto' : 'ml-auto' }} text-xs"></i>
                                 @endif
                             </a>
                             <a href="{{ route('public.language.change', 'en') }}"
-                               class="flex items-center px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded {{ app()->getLocale() === 'en' ? 'bg-primary-50 text-primary-700' : '' }}">
+                               class="flex items-center px-2 py-2 text-sm text-gray-700 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 rounded {{ app()->getLocale() === 'en' ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300' : '' }}">
                                 <span class="{{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }} leading-none flex-shrink-0" aria-hidden="true">
                                     <svg width="16" height="11" viewBox="0 0 18 12" xmlns="http://www.w3.org/2000/svg" class="block rounded-sm">
                                         <rect width="18" height="12" rx="2" fill="#ffffff"/>
@@ -551,12 +600,12 @@
                                 </span>
                                 <span>{{ __('layout.navigation.english') }}</span>
                                 @if(app()->getLocale() === 'en')
-                                    <i class="fas fa-check text-primary-600 {{ app()->getLocale() == 'ar' ? 'mr-auto' : 'ml-auto' }} text-xs"></i>
+                                    <i class="fas fa-check text-primary-600 dark:text-primary-400 {{ app()->getLocale() == 'ar' ? 'mr-auto' : 'ml-auto' }} text-xs"></i>
                                 @endif
                             </a>
 
                             <a href="{{ route('public.language.change', 'ur') }}"
-                               class="flex items-center px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded {{ app()->getLocale() === 'ur' ? 'bg-primary-50 text-primary-700' : '' }}">
+                               class="flex items-center px-2 py-2 text-sm text-gray-700 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 rounded {{ app()->getLocale() === 'ur' ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300' : '' }}">
                                 <span class="{{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }} leading-none flex-shrink-0" aria-hidden="true">
                                     <svg width="16" height="11" viewBox="0 0 18 12" xmlns="http://www.w3.org/2000/svg" class="block rounded-sm">
                                         <rect width="18" height="12" rx="2" fill="#0A7F3F"/>
@@ -567,12 +616,12 @@
                                 </span>
                                 <span>{{ __('layout.navigation.urdu') }}</span>
                                 @if(app()->getLocale() === 'ur')
-                                    <i class="fas fa-check text-primary-600 {{ app()->getLocale() == 'ar' ? 'mr-auto' : 'ml-auto' }} text-xs"></i>
+                                    <i class="fas fa-check text-primary-600 dark:text-primary-400 {{ app()->getLocale() == 'ar' ? 'mr-auto' : 'ml-auto' }} text-xs"></i>
                                 @endif
                             </a>
 
                             <a href="{{ route('public.language.change', 'zh') }}"
-                               class="flex items-center px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded {{ app()->getLocale() === 'zh' ? 'bg-primary-50 text-primary-700' : '' }}">
+                               class="flex items-center px-2 py-2 text-sm text-gray-700 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 rounded {{ app()->getLocale() === 'zh' ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300' : '' }}">
                                 <span class="{{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }} leading-none flex-shrink-0" aria-hidden="true">
                                     <svg width="16" height="11" viewBox="0 0 18 12" xmlns="http://www.w3.org/2000/svg" class="block rounded-sm">
                                         <rect width="18" height="12" rx="2" fill="#DE2910"/>
@@ -581,7 +630,7 @@
                                 </span>
                                 <span>{{ __('layout.navigation.chinese') }}</span>
                                 @if(app()->getLocale() === 'zh')
-                                    <i class="fas fa-check text-primary-600 {{ app()->getLocale() == 'ar' ? 'mr-auto' : 'ml-auto' }} text-xs"></i>
+                                    <i class="fas fa-check text-primary-600 dark:text-primary-400 {{ app()->getLocale() == 'ar' ? 'mr-auto' : 'ml-auto' }} text-xs"></i>
                                 @endif
                             </a>
                         </div>
@@ -589,7 +638,7 @@
 
                     <hr class="my-2">
 
-                    <a href="{{ url('/dashboard') }}" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
+                    <a href="{{ url('/dashboard') }}" class="main-nav-link block px-3 py-2 rounded-md text-base font-medium">
                         <i class="fas fa-gauge {{ app()->getLocale() == 'ar' ? 'ml-2' : 'mr-2' }}"></i>{{ __('layout.user_menu.dashboard') }}
                     </a>
 
@@ -648,49 +697,9 @@
 
 <!-- Footer (كما هو) -->
 <footer class="bg-gray-900 text-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-10">
-            <div>
-                <a href="{{ route('public.home') }}" class="inline-flex items-center gap-3">
-                    <img src="{{ asset('images/madar-negotiation-icon.svg') }}" alt="مدار التفاوض" class="w-12 h-12">
-                    <div class="text-base font-semibold">منصة مدار التفاوض</div>
-                </a>
-                <p class="mt-4 text-sm text-gray-300 leading-6">{{ __('layout.footer.description') }}</p>
-            </div>
-
-            <div>
-                <div class="text-sm font-semibold text-white mb-3">{{ __('layout.footer.our_services') }}</div>
-                <div class="space-y-2">
-                    <div class="text-sm text-gray-300">{{ __('layout.footer.property_sales') }}</div>
-                    <div class="text-sm text-gray-300">{{ __('layout.footer.property_rental') }}</div>
-                    <div class="text-sm text-gray-300">{{ __('layout.footer.property_management') }}</div>
-                    <div class="text-sm text-gray-300">{{ __('layout.footer.real_estate_consulting') }}</div>
-                </div>
-            </div>
-
-            <div>
-                <div class="text-sm font-semibold text-white mb-3">{{ __('layout.footer.quick_links') }}</div>
-                <div class="space-y-2">
-                    <a href="{{ route('public.home') }}" class="block text-sm text-gray-300 hover:text-white">{{ __('layout.navigation.home') }}</a>
-                    <a href="{{ route('public.execution.marketplace') }}" class="block text-sm text-gray-300 hover:text-white">{{ __('layout.navigation.properties') }}</a>
-                    <a href="{{ route('public.facilities.index') }}" class="block text-sm text-gray-300 hover:text-white">{{ __('layout.navigation.facilities') }}</a>
-                    <a href="{{ route('public.suppliers') }}" class="block text-sm text-gray-300 hover:text-white">{{ __('layout.navigation.suppliers') }}</a>
-                    <a href="{{ route('public.factories') }}" class="block text-sm text-gray-300 hover:text-white">{{ __('layout.navigation.factories') }}</a>
-                </div>
-            </div>
-
-            <div>
-                <div class="text-sm font-semibold text-white mb-3">{{ __('layout.navigation.contact_us') }}</div>
-                <div class="space-y-2">
-                    <a href="{{ route('public.contact') }}" class="block text-sm text-gray-300 hover:text-white">{{ __('layout.footer.contact_us') }}</a>
-                    <a href="{{ route('public.terms') }}" class="block text-sm text-gray-300 hover:text-white">Terms</a>
-                    <a href="{{ route('public.privacy') }}" class="block text-sm text-gray-300 hover:text-white">Privacy</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-400">
-            <p>&copy; {{ date('Y') }} منصة مدار التفاوض. {{ __('layout.footer.all_rights_reserved') }}</p>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="border-t border-gray-800 pt-8 text-center text-sm text-gray-400">
+            <p>&copy; {{ date('Y') }} مدار التفاوض. {{ __('layout.footer.all_rights_reserved') }}</p>
         </div>
     </div>
 </footer>
@@ -848,5 +857,6 @@
 </script>
 
 @stack('scripts')
+
 </body>
 </html>

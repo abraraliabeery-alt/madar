@@ -38,9 +38,9 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="product_id" class="form-label">المنتج <span class="text-danger">*</span></label>
+                                    <label for="product_id" class="form-label">العقار <span class="text-danger">*</span></label>
                                     <select class="form-select @error('product_id') is-invalid @enderror" id="product_id" name="product_id" required>
-                                        <option value="">اختر المنتج</option>
+                                        <option value="">اختر العقار</option>
                                         @foreach($products as $product)
                                             <option value="{{ $product->id }}" data-facility="{{ $product->facility_id }}" data-price="{{ $product->price }}" {{ old('product_id', $booking->product_id) == $product->id ? 'selected' : '' }}>
                                                 {{ $product->name }} - {{ number_format($product->price, 2) }} {!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}

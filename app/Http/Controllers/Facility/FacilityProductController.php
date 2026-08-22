@@ -17,6 +17,7 @@ use App\Models\City;
 use App\Models\Offer;
 use App\Models\CategoryProductLifecycleStage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 
 class FacilityProductController extends Controller
@@ -26,7 +27,7 @@ class FacilityProductController extends Controller
      */
     public function index(Request $request)
     {
-        $facility = Auth::user()->facilities()->first();
+        $facility = Auth::user()->mainFacility();
 
         if (!$facility) {
             return redirect()->route('facility.create');
@@ -170,45 +171,45 @@ class FacilityProductController extends Controller
      */
     public function create()
     {
-        $facility = Auth::user()->facilities()->first();
+        $facility = Auth::user()->mainFacility();
 
         if (!$facility) {
             return redirect()->route('facility.create');
         }
 
-        $categories = Category::with('translations')->get();
+        $mainCategories = Category::with('translations')->whereNull('parent_id')->get();
+        $subCategories = Category::with('translations')->whereNotNull('parent_id')->get();
+
+        $buildingMainCategoryIds = [];
+        if (Schema::hasColumn('categories', 'requires_building')) {
+            $buildingMainCategoryIds = $mainCategories->filter(fn($c) => (bool) $c->requires_building)->pluck('id')->map(fn($id) => (string) $id)->values()->toArray();
+        }
+
+        $mainCategoryOptions = $mainCategories->mapWithKeys(function ($c) {
+            return [$c->id => $c->getTranslatedName()];
+        })->toArray();
+        $subCategoriesList = $subCategories->map(function ($c) {
+            return [
+                'id' => $c->id,
+                'parent_id' => $c->parent_id,
+                'name' => $c->getTranslatedName(),
+            ];
+        })->values();
+
         $statuses = Status::with('translations')->active()->ordered()->get();
         $cities = City::where('is_active', true)->orderBy('name')->get();
-        $buildings = Building::with('translations')->get();
-        $projects = Project::with('translations')->get();
-        $packages = Package::with('translations')->get();
-
-        // Prepare categories options for the select dropdown
-        $categoryOptions = $categories->mapWithKeys(function ($category) {
-            return [$category->id => $category->getTranslatedName()];
-        })->toArray();
-
+        $buildings = $facility->buildings()->with('translations')->get();
         // Prepare translated statuses options
         $statusOptions = $statuses->mapWithKeys(function ($status) {
             return [$status->id => $status->getTranslatedName(app()->getLocale())];
         });
-
-        // Prepare building, project, and package options using translations or fallback to ID
+        // Prepare building options using translations
         $locale = app()->getLocale();
         $buildingOptions = $buildings->mapWithKeys(function ($b) use ($locale) {
             $label = optional($b->translations->firstWhere('locale', $locale))->name ?? ('#'.$b->id);
             return [$b->id => $label];
         })->toArray();
 
-        $projectOptions = $projects->mapWithKeys(function ($p) use ($locale) {
-            $label = optional($p->translations->firstWhere('locale', $locale))->name ?? ('#'.$p->id);
-            return [$p->id => $label];
-        })->toArray();
-
-        $packageOptions = $packages->mapWithKeys(function ($pk) use ($locale) {
-            $label = optional($pk->translations->firstWhere('locale', $locale))->name ?? ('#'.$pk->id);
-            return [$pk->id => $label];
-        })->toArray();
 
         // مستخدمون يمكن تعيينهم كمالك/موظف مسؤول (مستخلصون من المنتجات الحالية للمنشأة إن وجدت)
         $userIdsFromProducts = $facility->products()
@@ -221,11 +222,15 @@ class FacilityProductController extends Controller
             ? User::whereIn('id', $userIdsFromProducts)->pluck('name', 'id')->toArray()
             : [];
 
-        return view('facility.products.create', compact(
-            'categories', 'statuses', 'cities',
-            'categoryOptions', 'statusOptions',
-            'buildingOptions', 'projectOptions', 'packageOptions',
-            'userOptions'
+        $storeRoute = route('facility.products.store');
+        $indexRoute = route('facility.products.index');
+        $layout = 'facility.layouts.app';
+        $loadTailwind = false;
+
+        return view('products.create', compact(
+            'mainCategoryOptions', 'subCategoriesList', 'statuses', 'cities',
+            'statusOptions', 'buildingOptions', 'buildingMainCategoryIds',
+            'userOptions', 'storeRoute', 'indexRoute', 'layout', 'loadTailwind'
         ));
     }
 
@@ -234,7 +239,7 @@ class FacilityProductController extends Controller
      */
     public function store(Request $request)
     {
-        $facility = Auth::user()->facilities()->first();
+        $facility = Auth::user()->mainFacility();
 
         if (!$facility) {
             return redirect()->route('facility.create');
@@ -253,18 +258,13 @@ class FacilityProductController extends Controller
             'translations' => 'nullable|array',
             'translations.*.locale' => 'nullable|string|distinct',
             'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image_gallery' => 'nullable|array',
+            'image_gallery.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'video' => 'nullable|mimes:mp4,mov,avi,webm',
+            'video_url' => 'nullable|url',
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
             'google_maps_url' => 'nullable|url',
-            'bedrooms' => 'nullable|integer|min:0',
-            'bathrooms' => 'nullable|integer|min:0',
-            'area' => 'nullable|numeric|min:0',
-            'floor_number' => 'nullable|integer',
-            'total_floors' => 'nullable|integer|min:1',
-            'parking_spaces' => 'nullable|integer|min:0',
-            'furnished' => 'boolean',
-            'available_for_rent' => 'boolean',
-            'available_for_sale' => 'boolean',
             'is_featured' => 'boolean',
             'is_verified' => 'boolean',
             'features' => 'array',
@@ -272,45 +272,67 @@ class FacilityProductController extends Controller
             'attributes' => 'array',
             'attributes.*.attribute_id' => 'exists:attributes,id',
             'attributes.*.value' => 'nullable',
+            // Offer availability flags
+            'available_for_sale' => 'boolean',
+            'available_for_rent' => 'boolean',
+            // Sale offer validation (conditional)
+            'sale_offer.price' => 'exclude_unless:available_for_sale,1|required|numeric|min:0',
             // Rent offer validation (conditional)
-            'rent_offer.price' => 'required_if:available_for_rent,1|nullable|numeric|min:0',
-            'rent_offer.period' => 'required_if:available_for_rent,1|nullable|in:rent_daily,rent_monthly,rent_yearly',
-            'rent_offer.deposit' => 'nullable|numeric|min:0',
-            'rent_offer.valid_from' => 'nullable|date',
-            'rent_offer.valid_to' => 'nullable|date|after_or_equal:rent_offer.valid_from',
+            'rent_offer.price' => 'exclude_unless:available_for_rent,1|required|numeric|min:0',
+            'rent_offer.period' => 'exclude_unless:available_for_rent,1|required|in:rent_daily,rent_monthly,rent_yearly',
+            'rent_offer.deposit' => 'exclude_unless:available_for_rent,1|nullable|numeric|min:0',
             'owner_user_id' => 'nullable|exists:users,id',
             'seller_user_id' => 'nullable|exists:users,id',
         ]);
 
         // Custom validation for required attributes only
         if ($request->has('attributes')) {
-            $requiredAttributes = \App\Models\Attribute::where('required', true)
+            $requiredAttributeModels = \App\Models\Attribute::where('required', true)
                 ->whereIn('id', collect($request->attributes)->pluck('attribute_id'))
-                ->pluck('id')
-                ->toArray();
+                ->with('translations')
+                ->get()
+                ->keyBy('id');
+            $requiredAttributeIds = $requiredAttributeModels->keys()->toArray();
 
             foreach ($request->attributes as $index => $attribute) {
                 $attributeId = $attribute['attribute_id'];
                 $value = $attribute['value'];
 
                 // Check if required attribute has value
-                if (in_array($attributeId, $requiredAttributes)) {
-                    if (empty($value)) {
+                if (in_array($attributeId, $requiredAttributeIds)) {
+                    if (is_null($value) || $value === '') {
+                        $attributeName = $requiredAttributeModels->get($attributeId)?->getTranslatedName() ?? 'الخاصية';
                         return redirect()->back()
-                            ->withErrors(["attributes.{$index}.value" => 'This attribute is required.'])
+                            ->withErrors(["attributes.{$index}.value" => "{$attributeName} مطلوب."])
                             ->withInput();
                     }
                 }
             }
         }
 
-        $productData = $request->except(['main_image', 'features', 'attributes']);
+        $productData = $request->except(['main_image', 'image_gallery', 'video', 'video_url', 'features', 'attributes']);
         $productData['facility_id'] = $facility->id;
 
         // معالجة الصورة الرئيسية
         if ($request->hasFile('main_image')) {
             $imagePath = $request->file('main_image')->store('uploads/products/images', 'public');
             $productData['main_image'] = $imagePath;
+        }
+
+        // معالجة معرض الصور
+        if ($request->hasFile('image_gallery')) {
+            $galleryPaths = [];
+            foreach ($request->file('image_gallery') as $file) {
+                $galleryPaths[] = $file->store('uploads/products/gallery', 'public');
+            }
+            $productData['image_gallery'] = $galleryPaths;
+        }
+
+        // معالجة الفيديو
+        if ($request->hasFile('video')) {
+            $productData['video'] = $request->file('video')->store('uploads/products/videos', 'public');
+        } elseif ($request->filled('video_url')) {
+            $productData['video'] = $request->input('video_url');
         }
 
         $product = Product::create($productData);
@@ -342,9 +364,26 @@ class FacilityProductController extends Controller
             }
         }
 
-        // Create rent offer if available_for_rent is enabled and rent_offer data provided
-        if ($request->boolean('available_for_rent') && $request->filled('rent_offer')) {
-            $ro = $request->input('rent_offer');
+        $this->syncLegacyAttributes($request, $product);
+
+        // Create sale offer if available for sale
+        if ($request->input('available_for_sale')) {
+            $so = $request->input('sale_offer', []);
+            try {
+                Offer::create([
+                    'product_id' => $product->id,
+                    'facility_id' => $facility->id,
+                    'created_by' => Auth::id(),
+                    'offer_type' => 'sale',
+                    'price' => isset($so['price']) ? (float)$so['price'] : null,
+                    'is_active' => true,
+                ]);
+            } catch (\Throwable $e) { /* silent create offer failure */ }
+        }
+
+        // Create rent offer if available for rent
+        if ($request->input('available_for_rent')) {
+            $ro = $request->input('rent_offer', []);
             try {
                 Offer::create([
                     'product_id' => $product->id,
@@ -369,7 +408,7 @@ class FacilityProductController extends Controller
      */
     public function edit(Product $product)
     {
-        $facility = Auth::user()->facilities()->first();
+        $facility = Auth::user()->mainFacility();
 
         if (!$facility || $product->facility_id !== $facility->id) {
             return redirect()->route('facility.products.index')
@@ -467,7 +506,7 @@ class FacilityProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        $facility = Auth::user()->facilities()->first();
+        $facility = Auth::user()->mainFacility();
 
         if (!$facility || $product->facility_id !== $facility->id) {
             return redirect()->route('facility.products.index')
@@ -487,16 +526,13 @@ class FacilityProductController extends Controller
             'translations' => 'nullable|array',
             'translations.*.locale' => 'nullable|string|distinct',
             'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image_gallery' => 'nullable|array',
+            'image_gallery.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'video' => 'nullable|mimes:mp4,mov,avi,webm',
+            'video_url' => 'nullable|url',
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
             'google_maps_url' => 'nullable|url',
-            'bedrooms' => 'nullable|integer|min:0',
-            'bathrooms' => 'nullable|integer|min:0',
-            'area' => 'nullable|numeric|min:0',
-            'floor_number' => 'nullable|integer',
-            'total_floors' => 'nullable|integer|min:1',
-            'parking_spaces' => 'nullable|integer|min:0',
-            'furnished' => 'boolean',
             'is_featured' => 'boolean',
             'is_verified' => 'boolean',
             'features' => 'array',
@@ -504,37 +540,43 @@ class FacilityProductController extends Controller
             'attributes' => 'array',
             'attributes.*.attribute_id' => 'exists:attributes,id',
             'attributes.*.value' => 'nullable',
+            // Offer availability flags
+            'available_for_sale' => 'boolean',
+            'available_for_rent' => 'boolean',
+            // Sale offer validation (conditional)
+            'sale_offer.price' => 'exclude_unless:available_for_sale,1|required|numeric|min:0',
             // Rent offer validation (conditional)
-            'rent_offer.price' => 'required_if:available_for_rent,1|nullable|numeric|min:0',
-            'rent_offer.period' => 'required_if:available_for_rent,1|nullable|in:rent_daily,rent_monthly,rent_yearly',
-            'rent_offer.deposit' => 'nullable|numeric|min:0',
-            'rent_offer.valid_from' => 'nullable|date',
-            'rent_offer.valid_to' => 'nullable|date|after_or_equal:rent_offer.valid_from',
+            'rent_offer.price' => 'exclude_unless:available_for_rent,1|required|numeric|min:0',
+            'rent_offer.period' => 'exclude_unless:available_for_rent,1|required|in:rent_daily,rent_monthly,rent_yearly',
+            'rent_offer.deposit' => 'exclude_unless:available_for_rent,1|nullable|numeric|min:0',
         ]);
 
         // Custom validation for required attributes only
         if ($request->has('attributes')) {
-            $requiredAttributes = \App\Models\Attribute::where('required', true)
+            $requiredAttributeModels = \App\Models\Attribute::where('required', true)
                 ->whereIn('id', collect($request->attributes)->pluck('attribute_id'))
-                ->pluck('id')
-                ->toArray();
+                ->with('translations')
+                ->get()
+                ->keyBy('id');
+            $requiredAttributeIds = $requiredAttributeModels->keys()->toArray();
 
             foreach ($request->attributes as $index => $attribute) {
                 $attributeId = $attribute['attribute_id'];
                 $value = $attribute['value'];
 
                 // Check if required attribute has value
-                if (in_array($attributeId, $requiredAttributes)) {
-                    if (empty($value)) {
+                if (in_array($attributeId, $requiredAttributeIds)) {
+                    if (is_null($value) || $value === '') {
+                        $attributeName = $requiredAttributeModels->get($attributeId)?->getTranslatedName() ?? 'الخاصية';
                         return redirect()->back()
-                            ->withErrors(["attributes.{$index}.value" => 'This attribute is required.'])
+                            ->withErrors(["attributes.{$index}.value" => "{$attributeName} مطلوب."])
                             ->withInput();
                     }
                 }
             }
         }
 
-        $productData = $request->except(['main_image', 'features', 'attributes']);
+        $productData = $request->except(['main_image', 'image_gallery', 'video', 'features', 'attributes']);
 
         // معالجة الصورة الرئيسية
         if ($request->hasFile('main_image')) {
@@ -578,8 +620,10 @@ class FacilityProductController extends Controller
             }
         }
 
+        $this->syncLegacyAttributes($request, $product);
+
         // Upsert rent offer if available_for_rent is enabled
-        if ($request->boolean('available_for_rent') && $request->filled('rent_offer')) {
+        if ($request->filled('rent_offer')) {
             $ro = $request->input('rent_offer');
             $offerType = $ro['period'] ?? 'rent_monthly';
             $existing = $product->offers()->where('offer_type', $offerType)->first();
@@ -610,7 +654,7 @@ class FacilityProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        $facility = Auth::user()->facilities()->first();
+        $facility = Auth::user()->mainFacility();
 
         if (!$facility || $product->facility_id !== $facility->id) {
             return redirect()->route('facility.products.index')
@@ -633,7 +677,7 @@ class FacilityProductController extends Controller
      */
     public function toggleStatus(Product $product)
     {
-        $facility = Auth::user()->facilities()->first();
+        $facility = Auth::user()->mainFacility();
 
         if (!$facility || $product->facility_id !== $facility->id) {
             return redirect()->route('facility.products.index')
@@ -651,7 +695,7 @@ class FacilityProductController extends Controller
      */
     public function toggleFeatured(Product $product)
     {
-        $facility = Auth::user()->facilities()->first();
+        $facility = Auth::user()->mainFacility();
 
         if (!$facility || $product->facility_id !== $facility->id) {
             return redirect()->route('facility.products.index')
@@ -669,7 +713,7 @@ class FacilityProductController extends Controller
      */
     public function show(Product $product)
     {
-        $facility = Auth::user()->facilities()->first();
+        $facility = Auth::user()->mainFacility();
 
         if (!$facility || $product->facility_id !== $facility->id) {
             return redirect()->route('facility.products.index')
@@ -686,7 +730,7 @@ class FacilityProductController extends Controller
      */
     public function lifecycle(Product $product)
     {
-        $facility = Auth::user()->facilities()->first();
+        $facility = Auth::user()->mainFacility();
 
         if (!$facility || $product->facility_id !== $facility->id) {
             return redirect()->route('facility.products.index')
@@ -735,7 +779,7 @@ class FacilityProductController extends Controller
      */
     public function categoryProducts(Request $request, Category $category)
     {
-        $facility = Auth::user()->facilities()->first();
+        $facility = Auth::user()->mainFacility();
 
         if (!$facility) {
             return redirect()->route('facility.create');
@@ -856,5 +900,38 @@ class FacilityProductController extends Controller
             'currentCategory'    => $category,
             'categoryAttributes' => $categoryAttributes,
         ]);
+    }
+
+    private function syncLegacyAttributes(Request $request, Product $product)
+    {
+        $legacyMap = [
+            'bedrooms' => 'bedrooms',
+            'bathrooms' => 'bathrooms',
+            'area' => 'area',
+            'floor_number' => 'floor_number',
+            'total_floors' => 'total_floors',
+            'parking_spaces' => 'parking_spaces',
+            'furnished' => 'furnished',
+        ];
+
+        foreach ($legacyMap as $field => $key) {
+            if (! $request->has($field)) {
+                continue;
+            }
+
+            $attribute = \App\Models\Attribute::where('key', $key)
+                ->where(function ($query) use ($product) {
+                    $query->where('category_id', $product->category_id)
+                          ->orWhereNull('category_id');
+                })
+                ->first();
+
+            if ($attribute) {
+                \DB::table('product_attribute_values')->updateOrInsert(
+                    ['product_id' => $product->id, 'attribute_id' => $attribute->id],
+                    ['value' => $request->input($field), 'updated_at' => now()]
+                );
+            }
+        }
     }
 }

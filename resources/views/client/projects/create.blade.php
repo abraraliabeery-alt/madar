@@ -1,55 +1,55 @@
-@extends('layouts.dashboard-bs')
+﻿@extends('client.layouts.app')
 
-@section('title', 'إنشاء مشروع')
+@section('title', 'ط¥ظ†ط´ط§ط، ظ…ط´ط±ظˆط¹')
 
 @section('content')
-<x-bs.card title="إنشاء مشروع">
+<x-bs.card title="ط¥ظ†ط´ط§ط، ظ…ط´ط±ظˆط¹">
     <x-slot name="actions">
-        <a href="{{ route('client.dashboard') }}" class="btn btn-light btn-sm">رجوع</a>
+        <a href="{{ route('client.dashboard') }}" class="btn btn-light btn-sm">ط±ط¬ظˆط¹</a>
     </x-slot>
     <form method="POST" action="{{ route('client.projects.store') }}" enctype="multipart/form-data">
         @csrf
 
         <div class="card mb-4">
             <div class="card-header">
-                <div class="fw-semibold">البيانات الأساسية</div>
+                <div class="fw-semibold">ط§ظ„ط¨ظٹط§ظ†ط§طھ ط§ظ„ط£ط³ط§ط³ظٹط©</div>
             </div>
             <div class="card-body">
                 <div class="text-muted small mb-3">
-                    <div>المصدر: جدول ترجمات المشاريع ⟶ مرتبط بجدول المشاريع</div>
+                    <div>ط§ظ„ظ…طµط¯ط±: ط¬ط¯ظˆظ„ طھط±ط¬ظ…ط§طھ ط§ظ„ظ…ط´ط§ط±ظٹط¹ âں¶ ظ…ط±طھط¨ط· ط¨ط¬ط¯ظˆظ„ ط§ظ„ظ…ط´ط§ط±ظٹط¹</div>
                 </div>
 
                 <div class="mb-3">
-                    <label for="image" class="form-label">صورة المشروع</label>
+                    <label for="image" class="form-label">طµظˆط±ط© ط§ظ„ظ…ط´ط±ظˆط¹</label>
                     <input type="file" class="form-control @error('image') is-invalid @enderror" id="image" name="image" accept="image/*">
                     @error('image')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
-                    <div class="form-text">الحفظ في جدول المشاريع (حقل الصورة)</div>
+                    <div class="form-text">ط§ظ„ط­ظپط¸ ظپظٹ ط¬ط¯ظˆظ„ ط§ظ„ظ…ط´ط§ط±ظٹط¹ (ط­ظ‚ظ„ ط§ظ„طµظˆط±ط©)</div>
                     <div id="image-preview-wrap" class="mt-2" style="display:none;">
-                        <img id="image-preview" src="" alt="معاينة صورة المشروع" class="border" style="width: 120px; height: 120px; border-radius: 50%; object-fit: contain; background: #fff;">
+                        <img id="image-preview" src="" alt="ظ…ط¹ط§ظٹظ†ط© طµظˆط±ط© ط§ظ„ظ…ط´ط±ظˆط¹" class="border" style="width: 120px; height: 120px; border-radius: 50%; object-fit: contain; background: #fff;">
                     </div>
                 </div>
 
                 <div class="card mb-3">
                     <div class="card-body">
-                        <div class="fw-semibold mb-2">المساعد الصوتي</div>
-                        <div class="text-muted small mb-2">تحدث بحرية عن مشروعك، ثم اضغط تحليل وتعبئة لتعبئة الحقول تلقائياً.</div>
+                        <div class="fw-semibold mb-2">ط§ظ„ظ…ط³ط§ط¹ط¯ ط§ظ„طµظˆطھظٹ</div>
+                        <div class="text-muted small mb-2">طھط­ط¯ط« ط¨ط­ط±ظٹط© ط¹ظ† ظ…ط´ط±ظˆط¹ظƒطŒ ط«ظ… ط§ط¶ط؛ط· طھط­ظ„ظٹظ„ ظˆطھط¹ط¨ط¦ط© ظ„طھط¹ط¨ط¦ط© ط§ظ„ط­ظ‚ظˆظ„ طھظ„ظ‚ط§ط¦ظٹط§ظ‹.</div>
                         <div class="d-flex flex-wrap gap-2 align-items-center">
-                            <button type="button" id="voice-start" class="btn btn-danger btn-sm">🎙️ ابدأ التحدث</button>
-                            <button type="button" id="voice-stop" class="btn btn-outline-secondary btn-sm" disabled>■ إيقاف</button>
+                            <button type="button" id="voice-start" class="btn btn-danger btn-sm">ًںژ™ï¸ڈ ط§ط¨ط¯ط£ ط§ظ„طھط­ط¯ط«</button>
+                            <button type="button" id="voice-stop" class="btn btn-outline-secondary btn-sm" disabled>â–  ط¥ظٹظ‚ط§ظپ</button>
                             <span id="voice-status" class="text-muted small"></span>
                         </div>
 
                         <div class="mt-3">
-                            <label for="voice-transcript" class="form-label">النص المحوّل من الصوت</label>
-                            <textarea id="voice-transcript" rows="3" class="form-control" placeholder="مثال: أبغى بناء فيلا سكنية دورين، مساحة الأرض 400، العظم والسباكة والكهرباء... ميزانيتي بين 600 إلى 800 ألف خلال 5 شهور"></textarea>
+                            <label for="voice-transcript" class="form-label">ط§ظ„ظ†طµ ط§ظ„ظ…ط­ظˆظ‘ظ„ ظ…ظ† ط§ظ„طµظˆطھ</label>
+                            <textarea id="voice-transcript" rows="3" class="form-control" placeholder="ظ…ط«ط§ظ„: ط£ط¨ط؛ظ‰ ط¨ظ†ط§ط، ظپظٹظ„ط§ ط³ظƒظ†ظٹط© ط¯ظˆط±ظٹظ†طŒ ظ…ط³ط§ط­ط© ط§ظ„ط£ط±ط¶ 400طŒ ط§ظ„ط¹ط¸ظ… ظˆط§ظ„ط³ط¨ط§ظƒط© ظˆط§ظ„ظƒظ‡ط±ط¨ط§ط،... ظ…ظٹط²ط§ظ†ظٹطھظٹ ط¨ظٹظ† 600 ط¥ظ„ظ‰ 800 ط£ظ„ظپ ط®ظ„ط§ظ„ 5 ط´ظ‡ظˆط±"></textarea>
                         </div>
 
                         <div class="mt-3 d-flex flex-wrap gap-2 align-items-center">
-                            <button type="button" id="voice-analyze" class="btn btn-dark btn-sm">تحليل وتعبئة</button>
-                            <button type="button" id="voice-clear" class="btn btn-outline-secondary btn-sm">مسح</button>
-                            <button type="button" id="voice-undo" class="btn btn-warning btn-sm" disabled>تراجع</button>
+                            <button type="button" id="voice-analyze" class="btn btn-dark btn-sm">طھط­ظ„ظٹظ„ ظˆطھط¹ط¨ط¦ط©</button>
+                            <button type="button" id="voice-clear" class="btn btn-outline-secondary btn-sm">ظ…ط³ط­</button>
+                            <button type="button" id="voice-undo" class="btn btn-warning btn-sm" disabled>طھط±ط§ط¬ط¹</button>
                             <span id="voice-analyze-status" class="text-muted small"></span>
                         </div>
                     </div>
@@ -62,18 +62,18 @@
                         [
                             'type' => 'input',
                             'key' => 'name',
-                            'label' => 'اسم المشروع',
+                            'label' => 'ط§ط³ظ… ط§ظ„ظ…ط´ط±ظˆط¹',
                             'requiredFirst' => true,
                         ],
                         [
                             'type' => 'textarea',
                             'key' => 'description',
-                            'label' => 'وصف المشروع',
+                            'label' => 'ظˆطµظپ ط§ظ„ظ…ط´ط±ظˆط¹',
                             'rows' => 4,
                         ],
                     ],
-                    'addLabel' => 'إضافة ترجمة',
-                    'removeLabel' => 'حذف',
+                    'addLabel' => 'ط¥ط¶ط§ظپط© طھط±ط¬ظ…ط©',
+                    'removeLabel' => 'ط­ط°ظپ',
                     'minItems' => 1,
                     'maxItems' => is_array($locales) ? count($locales) : null,
                 ])
@@ -82,28 +82,28 @@
 
         <div class="card mb-4">
             <div class="card-header">
-                <div class="fw-semibold">الموقع</div>
+                <div class="fw-semibold">ط§ظ„ظ…ظˆظ‚ط¹</div>
             </div>
             <div class="card-body">
                 <div class="row g-3 mb-3">
                     <div class="col-12 col-md-6">
                         <x-bs.select
                             name="city_id"
-                            label="المدينة"
+                            label="ط§ظ„ظ…ط¯ظٹظ†ط©"
                             :options="$cities"
                             option-label="localized_name"
-                            placeholder="اختر المدينة"
+                            placeholder="ط§ط®طھط± ط§ظ„ظ…ط¯ظٹظ†ط©"
                         />
-                        <div class="form-text">المصدر: جدول المدن ⟶ الحفظ في جدول المشاريع (حقل المدينة)</div>
+                        <div class="form-text">ط§ظ„ظ…طµط¯ط±: ط¬ط¯ظˆظ„ ط§ظ„ظ…ط¯ظ† âں¶ ط§ظ„ط­ظپط¸ ظپظٹ ط¬ط¯ظˆظ„ ط§ظ„ظ…ط´ط§ط±ظٹط¹ (ط­ظ‚ظ„ ط§ظ„ظ…ط¯ظٹظ†ط©)</div>
                     </div>
                     <div class="col-12 col-md-6">
                         <x-bs.select
                             name="neighborhood_id"
-                            label="الحي"
+                            label="ط§ظ„ط­ظٹ"
                             :options="$neighborhoods"
-                            placeholder="اختر الحي"
+                            placeholder="ط§ط®طھط± ط§ظ„ط­ظٹ"
                         />
-                        <div class="form-text">المصدر: جدول الأحياء ⟶ الحفظ في جدول المشاريع (حقل الحي)</div>
+                        <div class="form-text">ط§ظ„ظ…طµط¯ط±: ط¬ط¯ظˆظ„ ط§ظ„ط£ط­ظٹط§ط، âں¶ ط§ظ„ط­ظپط¸ ظپظٹ ط¬ط¯ظˆظ„ ط§ظ„ظ…ط´ط§ط±ظٹط¹ (ط­ظ‚ظ„ ط§ظ„ط­ظٹ)</div>
                     </div>
                 </div>
 
@@ -111,30 +111,30 @@
                     <div class="col-12 col-md-6">
                         <x-bs.select
                             name="street_id"
-                            label="الشارع"
+                            label="ط§ظ„ط´ط§ط±ط¹"
                             :options="$streets"
-                            placeholder="اختر الشارع"
+                            placeholder="ط§ط®طھط± ط§ظ„ط´ط§ط±ط¹"
                         />
-                        <div class="form-text">المصدر: جدول الشوارع ⟶ الحفظ في جدول المشاريع (حقل الشارع)</div>
+                        <div class="form-text">ط§ظ„ظ…طµط¯ط±: ط¬ط¯ظˆظ„ ط§ظ„ط´ظˆط§ط±ط¹ âں¶ ط§ظ„ط­ظپط¸ ظپظٹ ط¬ط¯ظˆظ„ ط§ظ„ظ…ط´ط§ط±ظٹط¹ (ط­ظ‚ظ„ ط§ظ„ط´ط§ط±ط¹)</div>
                     </div>
                     <div class="col-12 col-md-6">
-                        <x-bs.input name="address" label="العنوان" />
-                        <div class="form-text">الحفظ في جدول المشاريع (حقل العنوان)</div>
+                        <x-bs.input name="address" label="ط§ظ„ط¹ظ†ظˆط§ظ†" />
+                        <div class="form-text">ط§ظ„ط­ظپط¸ ظپظٹ ط¬ط¯ظˆظ„ ط§ظ„ظ…ط´ط§ط±ظٹط¹ (ط­ظ‚ظ„ ط§ظ„ط¹ظ†ظˆط§ظ†)</div>
                     </div>
                 </div>
 
                 <div class="mt-2">
-                    <div class="fw-semibold mb-2">الموقع على الخريطة</div>
-                    <div class="text-muted small mb-3">ابحث عن الموقع أو حرّك المؤشر على الخريطة لتحديث الإحداثيات تلقائياً.</div>
+                    <div class="fw-semibold mb-2">ط§ظ„ظ…ظˆظ‚ط¹ ط¹ظ„ظ‰ ط§ظ„ط®ط±ظٹط·ط©</div>
+                    <div class="text-muted small mb-3">ط§ط¨ط­ط« ط¹ظ† ط§ظ„ظ…ظˆظ‚ط¹ ط£ظˆ ط­ط±ظ‘ظƒ ط§ظ„ظ…ط¤ط´ط± ط¹ظ„ظ‰ ط§ظ„ط®ط±ظٹط·ط© ظ„طھط­ط¯ظٹط« ط§ظ„ط¥ط­ط¯ط§ط«ظٹط§طھ طھظ„ظ‚ط§ط¦ظٹط§ظ‹.</div>
 
                     <div class="row g-2 align-items-center mb-2">
                         <div class="col-12 col-lg">
-                            <input id="project-map-search" type="text" class="form-control" placeholder="ابحث عن المدينة / الحي / اسم الشارع" autocomplete="off" />
+                            <input id="project-map-search" type="text" class="form-control" placeholder="ط§ط¨ط­ط« ط¹ظ† ط§ظ„ظ…ط¯ظٹظ†ط© / ط§ظ„ط­ظٹ / ط§ط³ظ… ط§ظ„ط´ط§ط±ط¹" autocomplete="off" />
                         </div>
                         <div class="col-12 col-lg-auto d-flex gap-2">
-                            <button type="button" class="btn btn-outline-secondary" id="project-map-search-btn">بحث</button>
-                            <button type="button" class="btn btn-outline-secondary" id="project-map-locate-btn">استخدم موقعي</button>
-                            <a href="#" class="btn btn-outline-secondary" id="project-map-open-gmaps" target="_blank" rel="noopener">فتح في خرائط Google</a>
+                            <button type="button" class="btn btn-outline-secondary" id="project-map-search-btn">ط¨ط­ط«</button>
+                            <button type="button" class="btn btn-outline-secondary" id="project-map-locate-btn">ط§ط³طھط®ط¯ظ… ظ…ظˆظ‚ط¹ظٹ</button>
+                            <a href="#" class="btn btn-outline-secondary" id="project-map-open-gmaps" target="_blank" rel="noopener">ظپطھط­ ظپظٹ ط®ط±ط§ط¦ط· Google</a>
                         </div>
                     </div>
 
@@ -142,7 +142,7 @@
 
                     <div class="row g-3 mt-3">
                         <div class="col-12 col-md-6">
-                            <label for="latitude" class="form-label">خط العرض</label>
+                            <label for="latitude" class="form-label">ط®ط· ط§ظ„ط¹ط±ط¶</label>
                             <input
                                 type="number"
                                 step="any"
@@ -155,11 +155,11 @@
                             @error('latitude')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
-                            <div class="form-text">الحفظ في جدول المشاريع (حقل خط العرض)</div>
+                            <div class="form-text">ط§ظ„ط­ظپط¸ ظپظٹ ط¬ط¯ظˆظ„ ط§ظ„ظ…ط´ط§ط±ظٹط¹ (ط­ظ‚ظ„ ط®ط· ط§ظ„ط¹ط±ط¶)</div>
                         </div>
 
                         <div class="col-12 col-md-6">
-                            <label for="longitude" class="form-label">خط الطول</label>
+                            <label for="longitude" class="form-label">ط®ط· ط§ظ„ط·ظˆظ„</label>
                             <input
                                 type="number"
                                 step="any"
@@ -172,12 +172,12 @@
                             @error('longitude')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
-                            <div class="form-text">الحفظ في جدول المشاريع (حقل خط الطول)</div>
+                            <div class="form-text">ط§ظ„ط­ظپط¸ ظپظٹ ط¬ط¯ظˆظ„ ط§ظ„ظ…ط´ط§ط±ظٹط¹ (ط­ظ‚ظ„ ط®ط· ط§ظ„ط·ظˆظ„)</div>
                         </div>
                     </div>
 
                     <div class="mt-3">
-                        <label for="google_maps_url" class="form-label">رابط خرائط جوجل</label>
+                        <label for="google_maps_url" class="form-label">ط±ط§ط¨ط· ط®ط±ط§ط¦ط· ط¬ظˆط¬ظ„</label>
                         <input
                             type="url"
                             class="form-control @error('google_maps_url') is-invalid @enderror"
@@ -189,7 +189,7 @@
                         @error('google_maps_url')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
-                        <div class="form-text">الحفظ في جدول المشاريع (حقل رابط خرائط جوجل)</div>
+                        <div class="form-text">ط§ظ„ط­ظپط¸ ظپظٹ ط¬ط¯ظˆظ„ ط§ظ„ظ…ط´ط§ط±ظٹط¹ (ط­ظ‚ظ„ ط±ط§ط¨ط· ط®ط±ط§ط¦ط· ط¬ظˆط¬ظ„)</div>
                     </div>
                 </div>
             </div>
@@ -197,53 +197,53 @@
 
         <div class="card mb-4">
             <div class="card-header">
-                <div class="fw-semibold">تفاصيل الطلب</div>
+                <div class="fw-semibold">طھظپط§طµظٹظ„ ط§ظ„ط·ظ„ط¨</div>
             </div>
             <div class="card-body">
                 <div class="row g-3 mb-3">
                     <div class="col-12 col-md-6">
                         <x-bs.select
                             name="project_type"
-                            label="نوع المشروع"
+                            label="ظ†ظˆط¹ ط§ظ„ظ…ط´ط±ظˆط¹"
                             :options="[
-                                ['id' => 'residential', 'name' => 'سكني'],
-                                ['id' => 'commercial', 'name' => 'تجاري'],
-                                ['id' => 'industrial', 'name' => 'صناعي'],
-                                ['id' => 'government', 'name' => 'حكومي/مؤسسي'],
-                                ['id' => 'other', 'name' => 'أخرى'],
+                                ['id' => 'residential', 'name' => 'ط³ظƒظ†ظٹ'],
+                                ['id' => 'commercial', 'name' => 'طھط¬ط§ط±ظٹ'],
+                                ['id' => 'industrial', 'name' => 'طµظ†ط§ط¹ظٹ'],
+                                ['id' => 'government', 'name' => 'ط­ظƒظˆظ…ظٹ/ظ…ط¤ط³ط³ظٹ'],
+                                ['id' => 'other', 'name' => 'ط£ط®ط±ظ‰'],
                             ]"
                             option-value="id"
                             option-label="name"
-                            placeholder="اختر"
+                            placeholder="ط§ط®طھط±"
                         />
-                        <div class="form-text">الحفظ في جدول المشاريع (حقل نوع المشروع)</div>
+                        <div class="form-text">ط§ظ„ط­ظپط¸ ظپظٹ ط¬ط¯ظˆظ„ ط§ظ„ظ…ط´ط§ط±ظٹط¹ (ط­ظ‚ظ„ ظ†ظˆط¹ ط§ظ„ظ…ط´ط±ظˆط¹)</div>
                     </div>
                     <div class="col-12 col-md-6">
                         <x-bs.select
                             name="project_category_id"
-                            label="تصنيف المشروع"
+                            label="طھطµظ†ظٹظپ ط§ظ„ظ…ط´ط±ظˆط¹"
                             :options="($projectCategories ?? [])"
                             option-value="id"
                             option-label="translated_name"
-                            placeholder="اختر"
+                            placeholder="ط§ط®طھط±"
                         />
-                        <div class="form-text">الحفظ في جدول المشاريع (حقل تصنيف المشروع)</div>
+                        <div class="form-text">ط§ظ„ط­ظپط¸ ظپظٹ ط¬ط¯ظˆظ„ ط§ظ„ظ…ط´ط§ط±ظٹط¹ (ط­ظ‚ظ„ طھطµظ†ظٹظپ ط§ظ„ظ…ط´ط±ظˆط¹)</div>
                     </div>
                     <div class="col-12 col-md-6">
                         <x-bs.select
                             name="request_type"
-                            label="نوع الطلب"
+                            label="ظ†ظˆط¹ ط§ظ„ط·ظ„ط¨"
                             :options="[
-                                ['id' => 'build', 'name' => 'بناء جديد'],
-                                ['id' => 'renovation', 'name' => 'ترميم'],
-                                ['id' => 'finishing', 'name' => 'تشطيب'],
-                                ['id' => 'extension', 'name' => 'إضافة/ملحق'],
+                                ['id' => 'build', 'name' => 'ط¨ظ†ط§ط، ط¬ط¯ظٹط¯'],
+                                ['id' => 'renovation', 'name' => 'طھط±ظ…ظٹظ…'],
+                                ['id' => 'finishing', 'name' => 'طھط´ط·ظٹط¨'],
+                                ['id' => 'extension', 'name' => 'ط¥ط¶ط§ظپط©/ظ…ظ„ط­ظ‚'],
                             ]"
                             option-value="id"
                             option-label="name"
-                            placeholder="اختر"
+                            placeholder="ط§ط®طھط±"
                         />
-                        <div class="form-text">قائمة ثابتة ⟶ الحفظ في جدول المشاريع (حقل نوع الطلب)</div>
+                        <div class="form-text">ظ‚ط§ط¦ظ…ط© ط«ط§ط¨طھط© âں¶ ط§ظ„ط­ظپط¸ ظپظٹ ط¬ط¯ظˆظ„ ط§ظ„ظ…ط´ط§ط±ظٹط¹ (ط­ظ‚ظ„ ظ†ظˆط¹ ط§ظ„ط·ظ„ط¨)</div>
                     </div>
                 </div>
 
@@ -251,33 +251,33 @@
                     <div class="col-12 col-md-6">
                         <x-bs.select
                             name="scope_of_work"
-                            label="نطاق العمل"
+                            label="ظ†ط·ط§ظ‚ ط§ظ„ط¹ظ…ظ„"
                             :options="[
-                                ['id' => 'full', 'name' => 'كامل'],
-                                ['id' => 'structure', 'name' => 'عظم'],
-                                ['id' => 'finishing', 'name' => 'تشطيب'],
-                                ['id' => 'mep', 'name' => 'كهرباء/سباكة'],
+                                ['id' => 'full', 'name' => 'ظƒط§ظ…ظ„'],
+                                ['id' => 'structure', 'name' => 'ط¹ط¸ظ…'],
+                                ['id' => 'finishing', 'name' => 'طھط´ط·ظٹط¨'],
+                                ['id' => 'mep', 'name' => 'ظƒظ‡ط±ط¨ط§ط،/ط³ط¨ط§ظƒط©'],
                             ]"
                             option-value="id"
                             option-label="name"
-                            placeholder="اختر"
+                            placeholder="ط§ط®طھط±"
                         />
-                        <div class="form-text">قائمة ثابتة ⟶ الحفظ في جدول المشاريع (حقل نطاق العمل)</div>
+                        <div class="form-text">ظ‚ط§ط¦ظ…ط© ط«ط§ط¨طھط© âں¶ ط§ظ„ط­ظپط¸ ظپظٹ ط¬ط¯ظˆظ„ ط§ظ„ظ…ط´ط§ط±ظٹط¹ (ط­ظ‚ظ„ ظ†ط·ط§ظ‚ ط§ظ„ط¹ظ…ظ„)</div>
                     </div>
                     <div class="col-12 col-md-6">
                         <x-bs.select
                             name="finishing_level"
-                            label="مستوى التشطيب"
+                            label="ظ…ط³طھظˆظ‰ ط§ظ„طھط´ط·ظٹط¨"
                             :options="[
-                                ['id' => 'economic', 'name' => 'اقتصادي'],
-                                ['id' => 'standard', 'name' => 'متوسط'],
-                                ['id' => 'luxury', 'name' => 'فاخر'],
+                                ['id' => 'economic', 'name' => 'ط§ظ‚طھطµط§ط¯ظٹ'],
+                                ['id' => 'standard', 'name' => 'ظ…طھظˆط³ط·'],
+                                ['id' => 'luxury', 'name' => 'ظپط§ط®ط±'],
                             ]"
                             option-value="id"
                             option-label="name"
-                            placeholder="اختر"
+                            placeholder="ط§ط®طھط±"
                         />
-                        <div class="form-text">قائمة ثابتة ⟶ الحفظ في جدول المشاريع (حقل مستوى التشطيب)</div>
+                        <div class="form-text">ظ‚ط§ط¦ظ…ط© ط«ط§ط¨طھط© âں¶ ط§ظ„ط­ظپط¸ ظپظٹ ط¬ط¯ظˆظ„ ط§ظ„ظ…ط´ط§ط±ظٹط¹ (ط­ظ‚ظ„ ظ…ط³طھظˆظ‰ ط§ظ„طھط´ط·ظٹط¨)</div>
                     </div>
                 </div>
             </div>
@@ -285,32 +285,32 @@
 
         <div class="card mb-4">
             <div class="card-header">
-                <div class="fw-semibold">مواصفات المشروع</div>
+                <div class="fw-semibold">ظ…ظˆط§طµظپط§طھ ط§ظ„ظ…ط´ط±ظˆط¹</div>
             </div>
             <div class="card-body">
                 <div class="row g-3 mb-3">
                     <div class="col-12 col-md-6">
-                        <x-bs.input type="number" step="0.01" name="land_area" label="مساحة الأرض (م²)" />
-                        <div class="form-text">الحفظ في جدول المشاريع (حقل مساحة الأرض)</div>
+                        <x-bs.input type="number" step="0.01" name="land_area" label="ظ…ط³ط§ط­ط© ط§ظ„ط£ط±ط¶ (ظ…آ²)" />
+                        <div class="form-text">ط§ظ„ط­ظپط¸ ظپظٹ ط¬ط¯ظˆظ„ ط§ظ„ظ…ط´ط§ط±ظٹط¹ (ط­ظ‚ظ„ ظ…ط³ط§ط­ط© ط§ظ„ط£ط±ط¶)</div>
                     </div>
                     <div class="col-12 col-md-6">
-                        <x-bs.input type="number" step="0.01" name="built_area" label="المساحة المبنية (م²)" />
-                        <div class="form-text">الحفظ في جدول المشاريع (حقل المساحة المبنية)</div>
+                        <x-bs.input type="number" step="0.01" name="built_area" label="ط§ظ„ظ…ط³ط§ط­ط© ط§ظ„ظ…ط¨ظ†ظٹط© (ظ…آ²)" />
+                        <div class="form-text">ط§ظ„ط­ظپط¸ ظپظٹ ط¬ط¯ظˆظ„ ط§ظ„ظ…ط´ط§ط±ظٹط¹ (ط­ظ‚ظ„ ط§ظ„ظ…ط³ط§ط­ط© ط§ظ„ظ…ط¨ظ†ظٹط©)</div>
                     </div>
                 </div>
 
                 <div class="row g-3">
                     <div class="col-12 col-md-4">
-                        <x-bs.input type="number" name="floors_count" label="عدد الأدوار" />
-                        <div class="form-text">الحفظ في جدول المشاريع (حقل عدد الأدوار)</div>
+                        <x-bs.input type="number" name="floors_count" label="ط¹ط¯ط¯ ط§ظ„ط£ط¯ظˆط§ط±" />
+                        <div class="form-text">ط§ظ„ط­ظپط¸ ظپظٹ ط¬ط¯ظˆظ„ ط§ظ„ظ…ط´ط§ط±ظٹط¹ (ط­ظ‚ظ„ ط¹ط¯ط¯ ط§ظ„ط£ط¯ظˆط§ط±)</div>
                     </div>
                     <div class="col-12 col-md-4">
-                        <x-bs.input type="number" name="rooms_count" label="عدد الغرف" />
-                        <div class="form-text">الحفظ في جدول المشاريع (حقل عدد الغرف)</div>
+                        <x-bs.input type="number" name="rooms_count" label="ط¹ط¯ط¯ ط§ظ„ط؛ط±ظپ" />
+                        <div class="form-text">ط§ظ„ط­ظپط¸ ظپظٹ ط¬ط¯ظˆظ„ ط§ظ„ظ…ط´ط§ط±ظٹط¹ (ط­ظ‚ظ„ ط¹ط¯ط¯ ط§ظ„ط؛ط±ظپ)</div>
                     </div>
                     <div class="col-12 col-md-4">
-                        <x-bs.input type="number" name="bathrooms_count" label="عدد دورات المياه" />
-                        <div class="form-text">الحفظ في جدول المشاريع (حقل عدد دورات المياه)</div>
+                        <x-bs.input type="number" name="bathrooms_count" label="ط¹ط¯ط¯ ط¯ظˆط±ط§طھ ط§ظ„ظ…ظٹط§ظ‡" />
+                        <div class="form-text">ط§ظ„ط­ظپط¸ ظپظٹ ط¬ط¯ظˆظ„ ط§ظ„ظ…ط´ط§ط±ظٹط¹ (ط­ظ‚ظ„ ط¹ط¯ط¯ ط¯ظˆط±ط§طھ ط§ظ„ظ…ظٹط§ظ‡)</div>
                     </div>
                 </div>
             </div>
@@ -318,7 +318,7 @@
 
         <div class="card mb-4">
             <div class="card-header">
-                <div class="fw-semibold">الميزانية والجدول الزمني</div>
+                <div class="fw-semibold">ط§ظ„ظ…ظٹط²ط§ظ†ظٹط© ظˆط§ظ„ط¬ط¯ظˆظ„ ط§ظ„ط²ظ…ظ†ظٹ</div>
             </div>
             <div class="card-body">
                 <div class="row g-3 mb-3">
@@ -326,53 +326,53 @@
                         <x-bs.select
                             id="project_status"
                             name="status"
-                            label="حالة النشر"
+                            label="ط­ط§ظ„ط© ط§ظ„ظ†ط´ط±"
                             :options="[
-                                ['id' => 'draft', 'name' => 'مسودة'],
-                                ['id' => 'open_for_bids', 'name' => 'مفتوح للعروض'],
+                                ['id' => 'draft', 'name' => 'ظ…ط³ظˆط¯ط©'],
+                                ['id' => 'open_for_bids', 'name' => 'ظ…ظپطھظˆط­ ظ„ظ„ط¹ط±ظˆط¶'],
                             ]"
                             option-value="id"
                             option-label="name"
-                            placeholder="اختر"
+                            placeholder="ط§ط®طھط±"
                         />
-                        <div class="form-text">الحفظ في جدول المشاريع (حقل حالة النشر). وعند فتحه للعروض يتم إنشاء سجل في جدول طلبات التنفيذ.</div>
+                        <div class="form-text">ط§ظ„ط­ظپط¸ ظپظٹ ط¬ط¯ظˆظ„ ط§ظ„ظ…ط´ط§ط±ظٹط¹ (ط­ظ‚ظ„ ط­ط§ظ„ط© ط§ظ„ظ†ط´ط±). ظˆط¹ظ†ط¯ ظپطھط­ظ‡ ظ„ظ„ط¹ط±ظˆط¶ ظٹطھظ… ط¥ظ†ط´ط§ط، ط³ط¬ظ„ ظپظٹ ط¬ط¯ظˆظ„ ط·ظ„ط¨ط§طھ ط§ظ„طھظ†ظپظٹط°.</div>
                     </div>
                 </div>
 
                 <div class="row g-3 mb-3">
                     <div class="col-12 col-md-6">
-                        <x-bs.input type="number" step="0.01" name="budget_min" label="الميزانية الدنيا" />
-                        <div class="form-text">الحفظ في جدول المشاريع (حقل الميزانية الدنيا) + نسخة للسوق في جدول طلبات التنفيذ (حقل الميزانية الدنيا)</div>
+                        <x-bs.input type="number" step="0.01" name="budget_min" label="ط§ظ„ظ…ظٹط²ط§ظ†ظٹط© ط§ظ„ط¯ظ†ظٹط§" />
+                        <div class="form-text">ط§ظ„ط­ظپط¸ ظپظٹ ط¬ط¯ظˆظ„ ط§ظ„ظ…ط´ط§ط±ظٹط¹ (ط­ظ‚ظ„ ط§ظ„ظ…ظٹط²ط§ظ†ظٹط© ط§ظ„ط¯ظ†ظٹط§) + ظ†ط³ط®ط© ظ„ظ„ط³ظˆظ‚ ظپظٹ ط¬ط¯ظˆظ„ ط·ظ„ط¨ط§طھ ط§ظ„طھظ†ظپظٹط° (ط­ظ‚ظ„ ط§ظ„ظ…ظٹط²ط§ظ†ظٹط© ط§ظ„ط¯ظ†ظٹط§)</div>
                     </div>
                     <div class="col-12 col-md-6">
-                        <x-bs.input type="number" step="0.01" name="budget_max" label="الميزانية القصوى" />
-                        <div class="form-text">الحفظ في جدول المشاريع (حقل الميزانية القصوى) + نسخة للسوق في جدول طلبات التنفيذ (حقل الميزانية القصوى)</div>
+                        <x-bs.input type="number" step="0.01" name="budget_max" label="ط§ظ„ظ…ظٹط²ط§ظ†ظٹط© ط§ظ„ظ‚طµظˆظ‰" />
+                        <div class="form-text">ط§ظ„ط­ظپط¸ ظپظٹ ط¬ط¯ظˆظ„ ط§ظ„ظ…ط´ط§ط±ظٹط¹ (ط­ظ‚ظ„ ط§ظ„ظ…ظٹط²ط§ظ†ظٹط© ط§ظ„ظ‚طµظˆظ‰) + ظ†ط³ط®ط© ظ„ظ„ط³ظˆظ‚ ظپظٹ ط¬ط¯ظˆظ„ ط·ظ„ط¨ط§طھ ط§ظ„طھظ†ظپظٹط° (ط­ظ‚ظ„ ط§ظ„ظ…ظٹط²ط§ظ†ظٹط© ط§ظ„ظ‚طµظˆظ‰)</div>
                     </div>
                 </div>
 
                 <div class="row g-3">
                     <div class="col-12 col-md-6">
-                        <x-bs.input type="date" name="start_date" label="تاريخ البدء المتوقع" />
-                        <div class="form-text">الحفظ في جدول المشاريع (حقل تاريخ البدء المتوقع)</div>
+                        <x-bs.input type="date" name="start_date" label="طھط§ط±ظٹط® ط§ظ„ط¨ط¯ط، ط§ظ„ظ…طھظˆظ‚ط¹" />
+                        <div class="form-text">ط§ظ„ط­ظپط¸ ظپظٹ ط¬ط¯ظˆظ„ ط§ظ„ظ…ط´ط§ط±ظٹط¹ (ط­ظ‚ظ„ طھط§ط±ظٹط® ط§ظ„ط¨ط¯ط، ط§ظ„ظ…طھظˆظ‚ط¹)</div>
                     </div>
                     <div class="col-12 col-md-6">
-                        <x-bs.input type="number" name="duration_days" label="مدة التنفيذ (بالأيام)" />
-                        <div class="form-text">الحفظ في جدول المشاريع (حقل مدة التنفيذ)</div>
+                        <x-bs.input type="number" name="duration_days" label="ظ…ط¯ط© ط§ظ„طھظ†ظپظٹط° (ط¨ط§ظ„ط£ظٹط§ظ…)" />
+                        <div class="form-text">ط§ظ„ط­ظپط¸ ظپظٹ ط¬ط¯ظˆظ„ ط§ظ„ظ…ط´ط§ط±ظٹط¹ (ط­ظ‚ظ„ ظ…ط¯ط© ط§ظ„طھظ†ظپظٹط°)</div>
                     </div>
                 </div>
 
                 <div id="tender-deadlines" class="row g-3 mt-1">
                     <div class="col-12 col-md-4">
-                        <x-bs.input type="date" name="bid_deadline" label="آخر موعد لاستلام العروض" />
-                        <div class="form-text">الحفظ في جدول المشاريع (حقل آخر موعد للعروض) + للسوق في جدول طلبات التنفيذ (حقل موعد الإغلاق)</div>
+                        <x-bs.input type="date" name="bid_deadline" label="ط¢ط®ط± ظ…ظˆط¹ط¯ ظ„ط§ط³طھظ„ط§ظ… ط§ظ„ط¹ط±ظˆط¶" />
+                        <div class="form-text">ط§ظ„ط­ظپط¸ ظپظٹ ط¬ط¯ظˆظ„ ط§ظ„ظ…ط´ط§ط±ظٹط¹ (ط­ظ‚ظ„ ط¢ط®ط± ظ…ظˆط¹ط¯ ظ„ظ„ط¹ط±ظˆط¶) + ظ„ظ„ط³ظˆظ‚ ظپظٹ ط¬ط¯ظˆظ„ ط·ظ„ط¨ط§طھ ط§ظ„طھظ†ظپظٹط° (ط­ظ‚ظ„ ظ…ظˆط¹ط¯ ط§ظ„ط¥ط؛ظ„ط§ظ‚)</div>
                     </div>
                     <div class="col-12 col-md-4">
-                        <x-bs.input type="date" name="qa_deadline" label="آخر موعد للاستفسارات" />
-                        <div class="form-text">الحفظ في جدول المشاريع (حقل آخر موعد للاستفسارات)</div>
+                        <x-bs.input type="date" name="qa_deadline" label="ط¢ط®ط± ظ…ظˆط¹ط¯ ظ„ظ„ط§ط³طھظپط³ط§ط±ط§طھ" />
+                        <div class="form-text">ط§ظ„ط­ظپط¸ ظپظٹ ط¬ط¯ظˆظ„ ط§ظ„ظ…ط´ط§ط±ظٹط¹ (ط­ظ‚ظ„ ط¢ط®ط± ظ…ظˆط¹ط¯ ظ„ظ„ط§ط³طھظپط³ط§ط±ط§طھ)</div>
                     </div>
                     <div class="col-12 col-md-4">
-                        <x-bs.input type="date" name="site_visit_date" label="موعد المعاينة (اختياري)" />
-                        <div class="form-text">الحفظ في جدول المشاريع (حقل موعد المعاينة)</div>
+                        <x-bs.input type="date" name="site_visit_date" label="ظ…ظˆط¹ط¯ ط§ظ„ظ…ط¹ط§ظٹظ†ط© (ط§ط®طھظٹط§ط±ظٹ)" />
+                        <div class="form-text">ط§ظ„ط­ظپط¸ ظپظٹ ط¬ط¯ظˆظ„ ط§ظ„ظ…ط´ط§ط±ظٹط¹ (ط­ظ‚ظ„ ظ…ظˆط¹ط¯ ط§ظ„ظ…ط¹ط§ظٹظ†ط©)</div>
                     </div>
                 </div>
             </div>
@@ -381,10 +381,10 @@
         @if(isset($projectAttributes) && $projectAttributes->count())
             <div class="card mb-4">
                 <div class="card-header">
-                    <div class="fw-semibold">خصائص المشروع (عام)</div>
+                    <div class="fw-semibold">ط®طµط§ط¦طµ ط§ظ„ظ…ط´ط±ظˆط¹ (ط¹ط§ظ…)</div>
                 </div>
                 <div class="card-body">
-                    <div class="text-muted small mb-3">المصدر: جدول الخصائص + جدول ترجمات الخصائص ⟶ الحفظ في جدول ربط مرتبط بجدول المشاريع</div>
+                    <div class="text-muted small mb-3">ط§ظ„ظ…طµط¯ط±: ط¬ط¯ظˆظ„ ط§ظ„ط®طµط§ط¦طµ + ط¬ط¯ظˆظ„ طھط±ط¬ظ…ط§طھ ط§ظ„ط®طµط§ط¦طµ âں¶ ط§ظ„ط­ظپط¸ ظپظٹ ط¬ط¯ظˆظ„ ط±ط¨ط· ظ…ط±طھط¨ط· ط¨ط¬ط¯ظˆظ„ ط§ظ„ظ…ط´ط§ط±ظٹط¹</div>
                     <div class="vstack gap-3">
                         @foreach($projectAttributes as $attribute)
                             @php
@@ -412,10 +412,10 @@
         @if(isset($ideaStageAttributes) && $ideaStageAttributes->count())
             <div class="card mb-4">
                 <div class="card-header">
-                    <div class="fw-semibold">خصائص مرحلة الفكرة</div>
+                    <div class="fw-semibold">ط®طµط§ط¦طµ ظ…ط±ط­ظ„ط© ط§ظ„ظپظƒط±ط©</div>
                 </div>
                 <div class="card-body">
-                    <div class="text-muted small mb-3">المصدر: جدول خصائص المراحل + جدول ترجمات خصائص المراحل ⟶ الحفظ في جدول ربط مرتبط بجدول مراحل المشروع</div>
+                    <div class="text-muted small mb-3">ط§ظ„ظ…طµط¯ط±: ط¬ط¯ظˆظ„ ط®طµط§ط¦طµ ط§ظ„ظ…ط±ط§ط­ظ„ + ط¬ط¯ظˆظ„ طھط±ط¬ظ…ط§طھ ط®طµط§ط¦طµ ط§ظ„ظ…ط±ط§ط­ظ„ âں¶ ط§ظ„ط­ظپط¸ ظپظٹ ط¬ط¯ظˆظ„ ط±ط¨ط· ظ…ط±طھط¨ط· ط¨ط¬ط¯ظˆظ„ ظ…ط±ط§ط­ظ„ ط§ظ„ظ…ط´ط±ظˆط¹</div>
                     <div class="vstack gap-3">
                         @foreach($ideaStageAttributes as $attribute)
                             @php
@@ -446,75 +446,75 @@
 
         <div class="card mb-4">
             <div class="card-header">
-                <div class="fw-semibold">متطلبات ومرفقات</div>
+                <div class="fw-semibold">ظ…طھط·ظ„ط¨ط§طھ ظˆظ…ط±ظپظ‚ط§طھ</div>
             </div>
             <div class="card-body">
                 <div id="requirements-section" class="mb-3">
                     <div class="alert alert-light border mb-3">
-                        <div class="fw-semibold mb-1">مساعدة لكتابة متطلبات واضحة</div>
-                        <div class="text-muted small">عبّئ الحقول التالية وسيتم تكوين نص مرتب تلقائيًا، ويمكنك تعديله قبل الحفظ.</div>
+                        <div class="fw-semibold mb-1">ظ…ط³ط§ط¹ط¯ط© ظ„ظƒطھط§ط¨ط© ظ…طھط·ظ„ط¨ط§طھ ظˆط§ط¶ط­ط©</div>
+                        <div class="text-muted small">ط¹ط¨ظ‘ط¦ ط§ظ„ط­ظ‚ظˆظ„ ط§ظ„طھط§ظ„ظٹط© ظˆط³ظٹطھظ… طھظƒظˆظٹظ† ظ†طµ ظ…ط±طھط¨ طھظ„ظ‚ط§ط¦ظٹظ‹ط§طŒ ظˆظٹظ…ظƒظ†ظƒ طھط¹ط¯ظٹظ„ظ‡ ظ‚ط¨ظ„ ط§ظ„ط­ظپط¸.</div>
                     </div>
 
                     <div class="row g-3">
                         <div class="col-12">
-                            <label for="req_scope" class="form-label">ما الذي تريد تنفيذه؟</label>
-                            <input type="text" id="req_scope" class="form-control" placeholder="مثال: بناء دورين وملحق + تشطيب كامل" />
-                            <div class="form-text">يساعد المنفذ على فهم نطاق العمل بسرعة.</div>
+                            <label for="req_scope" class="form-label">ظ…ط§ ط§ظ„ط°ظٹ طھط±ظٹط¯ طھظ†ظپظٹط°ظ‡طں</label>
+                            <input type="text" id="req_scope" class="form-control" placeholder="ظ…ط«ط§ظ„: ط¨ظ†ط§ط، ط¯ظˆط±ظٹظ† ظˆظ…ظ„ط­ظ‚ + طھط´ط·ظٹط¨ ظƒط§ظ…ظ„" />
+                            <div class="form-text">ظٹط³ط§ط¹ط¯ ط§ظ„ظ…ظ†ظپط° ط¹ظ„ظ‰ ظپظ‡ظ… ظ†ط·ط§ظ‚ ط§ظ„ط¹ظ…ظ„ ط¨ط³ط±ط¹ط©.</div>
                         </div>
 
                         <div class="col-12 col-md-6">
-                            <label for="req_materials" class="form-label">المواد/الماركات المطلوبة (إن وجدت)</label>
-                            <input type="text" id="req_materials" class="form-control" placeholder="مثال: عزل مائي نوع كذا، دهان جوتن، سيراميك مقاس..." />
+                            <label for="req_materials" class="form-label">ط§ظ„ظ…ظˆط§ط¯/ط§ظ„ظ…ط§ط±ظƒط§طھ ط§ظ„ظ…ط·ظ„ظˆط¨ط© (ط¥ظ† ظˆط¬ط¯طھ)</label>
+                            <input type="text" id="req_materials" class="form-control" placeholder="ظ…ط«ط§ظ„: ط¹ط²ظ„ ظ…ط§ط¦ظٹ ظ†ظˆط¹ ظƒط°ط§طŒ ط¯ظ‡ط§ظ† ط¬ظˆطھظ†طŒ ط³ظٹط±ط§ظ…ظٹظƒ ظ…ظ‚ط§ط³..." />
                         </div>
                         <div class="col-12 col-md-6">
-                            <label for="req_schedule" class="form-label">الجدول المتوقع</label>
-                            <input type="text" id="req_schedule" class="form-control" placeholder="مثال: بدء خلال شهر، مدة التنفيذ 120 يوم" />
+                            <label for="req_schedule" class="form-label">ط§ظ„ط¬ط¯ظˆظ„ ط§ظ„ظ…طھظˆظ‚ط¹</label>
+                            <input type="text" id="req_schedule" class="form-control" placeholder="ظ…ط«ط§ظ„: ط¨ط¯ط، ط®ظ„ط§ظ„ ط´ظ‡ط±طŒ ظ…ط¯ط© ط§ظ„طھظ†ظپظٹط° 120 ظٹظˆظ…" />
                         </div>
 
                         <div class="col-12">
-                            <label class="form-label">معلومات تساعد على تسعير أدق</label>
+                            <label class="form-label">ظ…ط¹ظ„ظˆظ…ط§طھ طھط³ط§ط¹ط¯ ط¹ظ„ظ‰ طھط³ط¹ظٹط± ط£ط¯ظ‚</label>
                             <div class="row g-2">
                                 <div class="col-12 col-md-6">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" value="1" id="req_has_plans">
-                                        <label class="form-check-label" for="req_has_plans">يوجد مخططات/رسومات جاهزة</label>
+                                        <label class="form-check-label" for="req_has_plans">ظٹظˆط¬ط¯ ظ…ط®ط·ط·ط§طھ/ط±ط³ظˆظ…ط§طھ ط¬ط§ظ‡ط²ط©</label>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" value="1" id="req_needs_site_visit">
-                                        <label class="form-check-label" for="req_needs_site_visit">أفضل معاينة قبل التسعير</label>
+                                        <label class="form-check-label" for="req_needs_site_visit">ط£ظپط¶ظ„ ظ…ط¹ط§ظٹظ†ط© ظ‚ط¨ظ„ ط§ظ„طھط³ط¹ظٹط±</label>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" value="1" id="req_include_materials">
-                                        <label class="form-check-label" for="req_include_materials">العرض يشمل المواد والتوريد</label>
+                                        <label class="form-check-label" for="req_include_materials">ط§ظ„ط¹ط±ط¶ ظٹط´ظ…ظ„ ط§ظ„ظ…ظˆط§ط¯ ظˆط§ظ„طھظˆط±ظٹط¯</label>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" value="1" id="req_include_labor">
-                                        <label class="form-check-label" for="req_include_labor">العرض يشمل العمالة والتنفيذ</label>
+                                        <label class="form-check-label" for="req_include_labor">ط§ظ„ط¹ط±ط¶ ظٹط´ظ…ظ„ ط§ظ„ط¹ظ…ط§ظ„ط© ظˆط§ظ„طھظ†ظپظٹط°</label>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="col-12">
-                            <label for="req_notes" class="form-label">شروط/ملاحظات خاصة</label>
-                            <textarea id="req_notes" class="form-control" rows="3" placeholder="مثال: الالتزام بالسلامة، تنظيف الموقع، ضمان... "></textarea>
+                            <label for="req_notes" class="form-label">ط´ط±ظˆط·/ظ…ظ„ط§ط­ط¸ط§طھ ط®ط§طµط©</label>
+                            <textarea id="req_notes" class="form-control" rows="3" placeholder="ظ…ط«ط§ظ„: ط§ظ„ط§ظ„طھط²ط§ظ… ط¨ط§ظ„ط³ظ„ط§ظ…ط©طŒ طھظ†ط¸ظٹظپ ط§ظ„ظ…ظˆظ‚ط¹طŒ ط¶ظ…ط§ظ†... "></textarea>
                         </div>
                     </div>
 
                     <div class="mt-3">
-                        <x-bs.textarea name="requirements" label="نص المتطلبات (سيُحفظ)" rows="6" />
-                        <div class="form-text">الحفظ في جدول المشاريع (حقل المتطلبات)</div>
+                        <x-bs.textarea name="requirements" label="ظ†طµ ط§ظ„ظ…طھط·ظ„ط¨ط§طھ (ط³ظٹظڈط­ظپط¸)" rows="6" />
+                        <div class="form-text">ط§ظ„ط­ظپط¸ ظپظٹ ط¬ط¯ظˆظ„ ط§ظ„ظ…ط´ط§ط±ظٹط¹ (ط­ظ‚ظ„ ط§ظ„ظ…طھط·ظ„ط¨ط§طھ)</div>
                     </div>
                 </div>
 
                 <div class="mb-3">
-                    <label for="attachments_files" class="form-label">مرفقات (رفع ملفات)</label>
+                    <label for="attachments_files" class="form-label">ظ…ط±ظپظ‚ط§طھ (ط±ظپط¹ ظ…ظ„ظپط§طھ)</label>
                     <input type="file" class="form-control @error('attachments_files') is-invalid @enderror" id="attachments_files" name="attachments_files[]" multiple>
                     @error('attachments_files')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -522,23 +522,23 @@
                     @error('attachments_files.*')
                         <div class="text-danger small mt-1">{{ $message }}</div>
                     @enderror
-                    <div class="form-text">يتم حفظ الملفات في جدول مرفقات المشاريع وربطها بالمشروع</div>
+                    <div class="form-text">ظٹطھظ… ط­ظپط¸ ط§ظ„ظ…ظ„ظپط§طھ ظپظٹ ط¬ط¯ظˆظ„ ظ…ط±ظپظ‚ط§طھ ط§ظ„ظ…ط´ط§ط±ظٹط¹ ظˆط±ط¨ط·ظ‡ط§ ط¨ط§ظ„ظ…ط´ط±ظˆط¹</div>
                     <div id="attachments-files-list" class="mt-2"></div>
                 </div>
 
                 <div>
                     <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="collapse" data-bs-target="#legacy-attachments" aria-expanded="false" aria-controls="legacy-attachments">
-                        عندي روابط بدل رفع ملفات
+                        ط¹ظ†ط¯ظٹ ط±ظˆط§ط¨ط· ط¨ط¯ظ„ ط±ظپط¹ ظ…ظ„ظپط§طھ
                     </button>
 
                     <div id="legacy-attachments" class="collapse mt-3">
-                        <label class="form-label">مرفقات (روابط/أسماء ملفات)</label>
+                        <label class="form-label">ظ…ط±ظپظ‚ط§طھ (ط±ظˆط§ط¨ط·/ط£ط³ظ…ط§ط، ظ…ظ„ظپط§طھ)</label>
                         <div class="vstack gap-2">
                             @for($i = 0; $i < 3; $i++)
-                                <input type="text" name="attachments[]" value="{{ old('attachments.'.$i) }}" class="form-control" placeholder="مثال: رابط Google Drive أو اسم ملف مثل مخطط.pdf">
+                                <input type="text" name="attachments[]" value="{{ old('attachments.'.$i) }}" class="form-control" placeholder="ظ…ط«ط§ظ„: ط±ط§ط¨ط· Google Drive ط£ظˆ ط§ط³ظ… ظ…ظ„ظپ ظ…ط«ظ„ ظ…ط®ط·ط·.pdf">
                             @endfor
                         </div>
-                        <div class="form-text">الحفظ في جدول المشاريع (حقل المرفقات) بصيغة قائمة</div>
+                        <div class="form-text">ط§ظ„ط­ظپط¸ ظپظٹ ط¬ط¯ظˆظ„ ط§ظ„ظ…ط´ط§ط±ظٹط¹ (ط­ظ‚ظ„ ط§ظ„ظ…ط±ظپظ‚ط§طھ) ط¨طµظٹط؛ط© ظ‚ط§ط¦ظ…ط©</div>
                         @error('attachments')
                             <div class="text-danger small mt-1">{{ $message }}</div>
                         @enderror
@@ -551,7 +551,7 @@
         </div>
 
         <div class="d-flex justify-content-end gap-2">
-            <button type="submit" class="btn btn-primary">حفظ</button>
+            <button type="submit" class="btn btn-primary">ط­ظپط¸</button>
         </div>
     </form>
 </x-bs.card>
@@ -644,30 +644,30 @@
             const scheduleVal = (reqSchedule && reqSchedule.value ? reqSchedule.value.trim() : '');
             const notesVal = (reqNotes && reqNotes.value ? reqNotes.value.trim() : '');
 
-            lines.push('ملخص الطلب:');
-            lines.push(scopeVal ? ('- المطلوب: ' + scopeVal) : '- المطلوب:');
+            lines.push('ظ…ظ„ط®طµ ط§ظ„ط·ظ„ط¨:');
+            lines.push(scopeVal ? ('- ط§ظ„ظ…ط·ظ„ظˆط¨: ' + scopeVal) : '- ط§ظ„ظ…ط·ظ„ظˆط¨:');
 
             if (scheduleVal) {
-                lines.push('- الجدول المتوقع: ' + scheduleVal);
+                lines.push('- ط§ظ„ط¬ط¯ظˆظ„ ط§ظ„ظ…طھظˆظ‚ط¹: ' + scheduleVal);
             }
 
             if (materialsVal) {
-                lines.push('- المواد/الماركات المطلوبة: ' + materialsVal);
+                lines.push('- ط§ظ„ظ…ظˆط§ط¯/ط§ظ„ظ…ط§ط±ظƒط§طھ ط§ظ„ظ…ط·ظ„ظˆط¨ط©: ' + materialsVal);
             }
 
             const info = [];
-            if (reqHasPlans && reqHasPlans.checked) info.push('يوجد مخططات/رسومات جاهزة');
-            if (reqNeedsSiteVisit && reqNeedsSiteVisit.checked) info.push('يفضل معاينة قبل التسعير');
-            if (reqIncludeMaterials && reqIncludeMaterials.checked) info.push('العرض يشمل المواد والتوريد');
-            if (reqIncludeLabor && reqIncludeLabor.checked) info.push('العرض يشمل العمالة والتنفيذ');
+            if (reqHasPlans && reqHasPlans.checked) info.push('ظٹظˆط¬ط¯ ظ…ط®ط·ط·ط§طھ/ط±ط³ظˆظ…ط§طھ ط¬ط§ظ‡ط²ط©');
+            if (reqNeedsSiteVisit && reqNeedsSiteVisit.checked) info.push('ظٹظپط¶ظ„ ظ…ط¹ط§ظٹظ†ط© ظ‚ط¨ظ„ ط§ظ„طھط³ط¹ظٹط±');
+            if (reqIncludeMaterials && reqIncludeMaterials.checked) info.push('ط§ظ„ط¹ط±ط¶ ظٹط´ظ…ظ„ ط§ظ„ظ…ظˆط§ط¯ ظˆط§ظ„طھظˆط±ظٹط¯');
+            if (reqIncludeLabor && reqIncludeLabor.checked) info.push('ط§ظ„ط¹ط±ط¶ ظٹط´ظ…ظ„ ط§ظ„ط¹ظ…ط§ظ„ط© ظˆط§ظ„طھظ†ظپظٹط°');
 
             if (info.length) {
-                lines.push('معلومات إضافية:');
+                lines.push('ظ…ط¹ظ„ظˆظ…ط§طھ ط¥ط¶ط§ظپظٹط©:');
                 info.forEach((item) => lines.push('- ' + item));
             }
 
             if (notesVal) {
-                lines.push('ملاحظات وشروط:');
+                lines.push('ظ…ظ„ط§ط­ط¸ط§طھ ظˆط´ط±ظˆط·:');
                 lines.push(notesVal);
             }
 
@@ -703,7 +703,7 @@
             }
 
             const items = attachmentsDraft.map((f, idx) => {
-                const name = f.name || 'ملف';
+                const name = f.name || 'ظ…ظ„ظپ';
                 const size = typeof f.size === 'number' ? formatBytes(f.size) : '';
                 return `
                     <div class="d-flex justify-content-between align-items-center border rounded px-3 py-2 mb-2">
@@ -711,7 +711,7 @@
                             <div class="fw-semibold text-truncate">${name}</div>
                             <div class="text-muted small">${size}</div>
                         </div>
-                        <button type="button" class="btn btn-outline-danger btn-sm" data-remove-attachment="${idx}">إزالة</button>
+                        <button type="button" class="btn btn-outline-danger btn-sm" data-remove-attachment="${idx}">ط¥ط²ط§ظ„ط©</button>
                     </div>
                 `;
             }).join('');
@@ -805,50 +805,50 @@
 
             const strip = (s) => (s || '').replace(/[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED]/g, '');
             const norm = (s) => strip(s)
-                .replace(/[إأآ]/g, 'ا')
-                .replace(/ى/g, 'ي')
-                .replace(/ؤ/g, 'و')
-                .replace(/ئ/g, 'ي')
+                .replace(/[ط¥ط£ط¢]/g, 'ط§')
+                .replace(/ظ‰/g, 'ظٹ')
+                .replace(/ط¤/g, 'ظˆ')
+                .replace(/ط¦/g, 'ظٹ')
                 .toLowerCase();
 
             const toLatinDigits = (s) => (s || '')
-                .replace(/[٠-٩]/g, (d) => String('٠١٢٣٤٥٦٧٨٩'.indexOf(d)))
-                .replace(/[۰-۹]/g, (d) => String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d)));
+                .replace(/[ظ -ظ©]/g, (d) => String('ظ ظ،ظ¢ظ£ظ¤ظ¥ظ¦ظ§ظ¨ظ©'.indexOf(d)))
+                .replace(/[غ°-غ¹]/g, (d) => String('غ°غ±غ²غ³غ´غµغ¶غ·غ¸غ¹'.indexOf(d)));
 
             const numWordsMap = {
-                'صفر': 0,
-                'واحد': 1,
-                'واحدة': 1,
-                'اثنين': 2,
-                'اثنان': 2,
-                'اثنتين': 2,
-                'اثنتان': 2,
-                'ثلاث': 3,
-                'ثلاثه': 3,
-                'ثلاثة': 3,
-                'اربع': 4,
-                'اربعه': 4,
-                'اربعة': 4,
-                'أربع': 4,
-                'أربعة': 4,
-                'خمس': 5,
-                'خمسه': 5,
-                'خمسة': 5,
-                'ست': 6,
-                'سته': 6,
-                'ستة': 6,
-                'سبع': 7,
-                'سبعه': 7,
-                'سبعة': 7,
-                'ثمان': 8,
-                'ثمانيه': 8,
-                'ثمانية': 8,
-                'تسع': 9,
-                'تسعه': 9,
-                'تسعة': 9,
-                'عشر': 10,
-                'عشره': 10,
-                'عشرة': 10,
+                'طµظپط±': 0,
+                'ظˆط§ط­ط¯': 1,
+                'ظˆط§ط­ط¯ط©': 1,
+                'ط§ط«ظ†ظٹظ†': 2,
+                'ط§ط«ظ†ط§ظ†': 2,
+                'ط§ط«ظ†طھظٹظ†': 2,
+                'ط§ط«ظ†طھط§ظ†': 2,
+                'ط«ظ„ط§ط«': 3,
+                'ط«ظ„ط§ط«ظ‡': 3,
+                'ط«ظ„ط§ط«ط©': 3,
+                'ط§ط±ط¨ط¹': 4,
+                'ط§ط±ط¨ط¹ظ‡': 4,
+                'ط§ط±ط¨ط¹ط©': 4,
+                'ط£ط±ط¨ط¹': 4,
+                'ط£ط±ط¨ط¹ط©': 4,
+                'ط®ظ…ط³': 5,
+                'ط®ظ…ط³ظ‡': 5,
+                'ط®ظ…ط³ط©': 5,
+                'ط³طھ': 6,
+                'ط³طھظ‡': 6,
+                'ط³طھط©': 6,
+                'ط³ط¨ط¹': 7,
+                'ط³ط¨ط¹ظ‡': 7,
+                'ط³ط¨ط¹ط©': 7,
+                'ط«ظ…ط§ظ†': 8,
+                'ط«ظ…ط§ظ†ظٹظ‡': 8,
+                'ط«ظ…ط§ظ†ظٹط©': 8,
+                'طھط³ط¹': 9,
+                'طھط³ط¹ظ‡': 9,
+                'طھط³ط¹ط©': 9,
+                'ط¹ط´ط±': 10,
+                'ط¹ط´ط±ظ‡': 10,
+                'ط¹ط´ط±ط©': 10,
             };
 
             function parseSimpleNumberToken(token) {
@@ -867,9 +867,9 @@
 
             function multiplierFromText(s) {
                 const n = norm(s);
-                if (/(مليون|ملايين)/.test(n)) return 1000000;
-                if (/(الف|ألف|الاف|آلاف|الآف)/.test(n)) return 1000;
-                if (/(مليار)/.test(n)) return 1000000000;
+                if (/(ظ…ظ„ظٹظˆظ†|ظ…ظ„ط§ظٹظٹظ†)/.test(n)) return 1000000;
+                if (/(ط§ظ„ظپ|ط£ظ„ظپ|ط§ظ„ط§ظپ|ط¢ظ„ط§ظپ|ط§ظ„ط¢ظپ)/.test(n)) return 1000;
+                if (/(ظ…ظ„ظٹط§ط±)/.test(n)) return 1000000000;
                 return 1;
             }
 
@@ -877,7 +877,7 @@
                 const raw = toLatinDigits(text);
                 const n = norm(raw);
 
-                if (/نص\s*مليون/.test(n) || /نصف\s*مليون/.test(n)) {
+                if (/ظ†طµ\s*ظ…ظ„ظٹظˆظ†/.test(n) || /ظ†طµظپ\s*ظ…ظ„ظٹظˆظ†/.test(n)) {
                     return 500000;
                 }
 
@@ -903,12 +903,12 @@
 
             function extractMoneyRange(text) {
                 const s = norm(toLatinDigits(text));
-                const isBudgetContext = /(ميزان|ميزانيه|ميزانية|ميزانيتي|تكلف|سعر|قيمة|بحدود|حدود|تقريبا|تقريباً)/.test(s);
+                const isBudgetContext = /(ظ…ظٹط²ط§ظ†|ظ…ظٹط²ط§ظ†ظٹظ‡|ظ…ظٹط²ط§ظ†ظٹط©|ظ…ظٹط²ط§ظ†ظٹطھظٹ|طھظƒظ„ظپ|ط³ط¹ط±|ظ‚ظٹظ…ط©|ط¨ط­ط¯ظˆط¯|ط­ط¯ظˆط¯|طھظ‚ط±ظٹط¨ط§|طھظ‚ط±ظٹط¨ط§ظ‹)/.test(s);
                 if (!isBudgetContext) {
                     return null;
                 }
 
-                const between = s.match(/(?:بين|من)\s+([^\n]+?)\s+(?:الى|إلى|و)\s+([^\n]+)/);
+                const between = s.match(/(?:ط¨ظٹظ†|ظ…ظ†)\s+([^\n]+?)\s+(?:ط§ظ„ظ‰|ط¥ظ„ظ‰|ظˆ)\s+([^\n]+)/);
                 if (between) {
                     const a = parseMoneyValue(between[1]);
                     const b = parseMoneyValue(between[2]);
@@ -919,20 +919,20 @@
                     if (b !== null) return { min: null, max: b };
                 }
 
-                const upTo = s.match(/(?:الى|إلى|حتى|حدود)\s+([^\n]+)/);
+                const upTo = s.match(/(?:ط§ظ„ظ‰|ط¥ظ„ظ‰|ط­طھظ‰|ط­ط¯ظˆط¯)\s+([^\n]+)/);
                 if (upTo) {
                     const v = parseMoneyValue(upTo[1]);
                     if (v !== null) return { min: null, max: v };
                 }
 
-                const from = s.match(/(?:من)\s+([^\n]+)/);
+                const from = s.match(/(?:ظ…ظ†)\s+([^\n]+)/);
                 if (from) {
                     const v = parseMoneyValue(from[1]);
                     if (v !== null) return { min: v, max: null };
                 }
 
                 const vals = [];
-                const moneyTokens = s.match(/(?:\d+(?:\.\d+)?)\s*(?:مليون|ملايين|الف|ألف|آلاف|الاف)?/g) || [];
+                const moneyTokens = s.match(/(?:\d+(?:\.\d+)?)\s*(?:ظ…ظ„ظٹظˆظ†|ظ…ظ„ط§ظٹظٹظ†|ط§ظ„ظپ|ط£ظ„ظپ|ط¢ظ„ط§ظپ|ط§ظ„ط§ظپ)?/g) || [];
                 moneyTokens.forEach((t) => {
                     const v = parseMoneyValue(t);
                     if (v !== null) vals.push(v);
@@ -949,23 +949,23 @@
 
             function extractDurationDays(text) {
                 const s = norm(toLatinDigits(text));
-                const m = s.match(/(\d+|[\p{L}]+)\s*(يوم|ايام|أيام|اسبوع|أسبوع|اسابيع|أسابيع|شهر|شهور|سنه|سنة|سنوات)/u);
+                const m = s.match(/(\d+|[\p{L}]+)\s*(ظٹظˆظ…|ط§ظٹط§ظ…|ط£ظٹط§ظ…|ط§ط³ط¨ظˆط¹|ط£ط³ط¨ظˆط¹|ط§ط³ط§ط¨ظٹط¹|ط£ط³ط§ط¨ظٹط¹|ط´ظ‡ط±|ط´ظ‡ظˆط±|ط³ظ†ظ‡|ط³ظ†ط©|ط³ظ†ظˆط§طھ)/u);
                 if (!m) return null;
                 const count = parseSimpleNumberToken(m[1]);
                 if (count === null) return null;
 
                 const unit = m[2];
-                if (/اسبوع|أسبوع|اسابيع|أسابيع/.test(unit)) return Math.round(count * 7);
-                if (/شهر|شهور/.test(unit)) return Math.round(count * 30);
-                if (/سنه|سنة|سنوات/.test(unit)) return Math.round(count * 365);
+                if (/ط§ط³ط¨ظˆط¹|ط£ط³ط¨ظˆط¹|ط§ط³ط§ط¨ظٹط¹|ط£ط³ط§ط¨ظٹط¹/.test(unit)) return Math.round(count * 7);
+                if (/ط´ظ‡ط±|ط´ظ‡ظˆط±/.test(unit)) return Math.round(count * 30);
+                if (/ط³ظ†ظ‡|ط³ظ†ط©|ط³ظ†ظˆط§طھ/.test(unit)) return Math.round(count * 365);
                 return Math.round(count);
             }
 
             function extractArea(text, which) {
                 const s = norm(toLatinDigits(text));
                 const patterns = which === 'land'
-                    ? [/(?:مساحة\s*الارض|مساحه\s*الارض|الارض|الأرض)\s*(\d{2,7}(?:\.\d+)?)/]
-                    : [/(?:مساحة\s*البناء|مساحه\s*البناء|المبني|المبنى|البناء)\s*(\d{2,7}(?:\.\d+)?)/];
+                    ? [/(?:ظ…ط³ط§ط­ط©\s*ط§ظ„ط§ط±ط¶|ظ…ط³ط§ط­ظ‡\s*ط§ظ„ط§ط±ط¶|ط§ظ„ط§ط±ط¶|ط§ظ„ط£ط±ط¶)\s*(\d{2,7}(?:\.\d+)?)/]
+                    : [/(?:ظ…ط³ط§ط­ط©\s*ط§ظ„ط¨ظ†ط§ط،|ظ…ط³ط§ط­ظ‡\s*ط§ظ„ط¨ظ†ط§ط،|ط§ظ„ظ…ط¨ظ†ظٹ|ط§ظ„ظ…ط¨ظ†ظ‰|ط§ظ„ط¨ظ†ط§ط،)\s*(\d{2,7}(?:\.\d+)?)/];
                 for (const re of patterns) {
                     const m = s.match(re);
                     if (m) {
@@ -979,10 +979,10 @@
             function extractCount(text, type) {
                 const s = norm(toLatinDigits(text));
                 const re = type === 'floors'
-                    ? /(\d+|[\p{L}]+)\s*(دور|ادوار|أدوار)/u
+                    ? /(\d+|[\p{L}]+)\s*(ط¯ظˆط±|ط§ط¯ظˆط§ط±|ط£ط¯ظˆط§ط±)/u
                     : type === 'rooms'
-                        ? /(\d+|[\p{L}]+)\s*(غرف|غرفة)/u
-                        : /(\d+|[\p{L}]+)\s*(حمام|حمامات)/u;
+                        ? /(\d+|[\p{L}]+)\s*(ط؛ط±ظپ|ط؛ط±ظپط©)/u
+                        : /(\d+|[\p{L}]+)\s*(ط­ظ…ط§ظ…|ط­ظ…ط§ظ…ط§طھ)/u;
                 const m = s.match(re);
                 if (!m) return null;
                 const v = parseSimpleNumberToken(m[1]);
@@ -1057,20 +1057,20 @@
 
             function start() {
                 if (!supported) {
-                    setVoiceStatus('متصفحك لا يدعم الإملاء الصوتي.');
+                    setVoiceStatus('ظ…طھطµظپط­ظƒ ظ„ط§ ظٹط¯ط¹ظ… ط§ظ„ط¥ظ…ظ„ط§ط، ط§ظ„طµظˆطھظٹ.');
                     return;
                 }
                 if (listening) return;
 
                 rec = makeRec();
                 if (!rec) {
-                    setVoiceStatus('تعذر تشغيل الإملاء الصوتي.');
+                    setVoiceStatus('طھط¹ط°ط± طھط´ط؛ظٹظ„ ط§ظ„ط¥ظ…ظ„ط§ط، ط§ظ„طµظˆطھظٹ.');
                     return;
                 }
 
                 listening = true;
                 wantStop = false;
-                setVoiceStatus('يتم الاستماع...');
+                setVoiceStatus('ظٹطھظ… ط§ظ„ط§ط³طھظ…ط§ط¹...');
                 setAnalyzeStatus('');
 
                 rec.onresult = (e) => {
@@ -1084,12 +1084,12 @@
                     final = final.trim();
                     if (final) {
                         voiceTranscriptEl.value = (voiceTranscriptEl.value ? (voiceTranscriptEl.value + ' ') : '') + final;
-                        setVoiceStatus('تم التحويل إلى نص.');
+                        setVoiceStatus('طھظ… ط§ظ„طھط­ظˆظٹظ„ ط¥ظ„ظ‰ ظ†طµ.');
                     }
                 };
 
                 rec.onerror = () => {
-                    setVoiceStatus('حدث خطأ أثناء الاستماع.');
+                    setVoiceStatus('ط­ط¯ط« ط®ط·ط£ ط£ط«ظ†ط§ط، ط§ظ„ط§ط³طھظ…ط§ط¹.');
                 };
 
                 rec.onend = () => {
@@ -1117,7 +1117,7 @@
                     rec.start();
                 } catch (_) {
                     listening = false;
-                    setVoiceStatus('تعذر بدء الاستماع.');
+                    setVoiceStatus('طھط¹ط°ط± ط¨ط¯ط، ط§ظ„ط§ط³طھظ…ط§ط¹.');
                     return;
                 }
 
@@ -1135,16 +1135,16 @@
             function analyzeAndFill() {
                 const text = (voiceTranscriptEl.value || '').trim();
                 if (!text) {
-                    setAnalyzeStatus('اكتب/سجّل نصاً أولاً.');
+                    setAnalyzeStatus('ط§ظƒطھط¨/ط³ط¬ظ‘ظ„ ظ†طµط§ظ‹ ط£ظˆظ„ط§ظ‹.');
                     return;
                 }
 
                 snapshot();
-                setAnalyzeStatus('جاري التعبئة...');
+                setAnalyzeStatus('ط¬ط§ط±ظٹ ط§ظ„طھط¹ط¨ط¦ط©...');
 
                 const normalized = toLatinDigits(text).replace(/\s+/g, ' ').trim();
                 const n2 = norm(normalized);
-                const firstLine = normalized.split(/\n|\.|\!|\؟|\?/).map(s => s.trim()).filter(Boolean)[0] || '';
+                const firstLine = normalized.split(/\n|\.|\!|\طں|\?/).map(s => s.trim()).filter(Boolean)[0] || '';
                 const rest = normalized.replace(firstLine, '').trim();
 
                 const name0 = document.querySelector('input[name="translations[0][name]"]');
@@ -1172,29 +1172,29 @@
                 const has = (re) => re.test(n2);
 
                 if (projectTypeEl && !projectTypeEl.value) {
-                    if (has(/سكني|فيلا|شقه|شقة|دوبلكس/)) projectTypeEl.value = 'residential';
-                    else if (has(/تجاري|محل|مكتب|معرض/)) projectTypeEl.value = 'commercial';
-                    else if (has(/صناعي|مستودع|مصنع/)) projectTypeEl.value = 'industrial';
-                    else if (has(/حكومي|مدرسه|مدرسة|مستشفى|جامعه|جامعة/)) projectTypeEl.value = 'government';
+                    if (has(/ط³ظƒظ†ظٹ|ظپظٹظ„ط§|ط´ظ‚ظ‡|ط´ظ‚ط©|ط¯ظˆط¨ظ„ظƒط³/)) projectTypeEl.value = 'residential';
+                    else if (has(/طھط¬ط§ط±ظٹ|ظ…ط­ظ„|ظ…ظƒطھط¨|ظ…ط¹ط±ط¶/)) projectTypeEl.value = 'commercial';
+                    else if (has(/طµظ†ط§ط¹ظٹ|ظ…ط³طھظˆط¯ط¹|ظ…طµظ†ط¹/)) projectTypeEl.value = 'industrial';
+                    else if (has(/ط­ظƒظˆظ…ظٹ|ظ…ط¯ط±ط³ظ‡|ظ…ط¯ط±ط³ط©|ظ…ط³طھط´ظپظ‰|ط¬ط§ظ…ط¹ظ‡|ط¬ط§ظ…ط¹ط©/)) projectTypeEl.value = 'government';
                 }
 
                 if (requestTypeEl && !requestTypeEl.value) {
-                    if (has(/ترميم|تجديد|إعادة/)) requestTypeEl.value = 'renovation';
-                    else if (has(/تشطيب/)) requestTypeEl.value = 'finishing';
-                    else if (has(/إضافة|ملحق|توسعة/)) requestTypeEl.value = 'extension';
-                    else if (has(/بناء|انشاء|إنشاء|عظم/)) requestTypeEl.value = 'build';
+                    if (has(/طھط±ظ…ظٹظ…|طھط¬ط¯ظٹط¯|ط¥ط¹ط§ط¯ط©/)) requestTypeEl.value = 'renovation';
+                    else if (has(/طھط´ط·ظٹط¨/)) requestTypeEl.value = 'finishing';
+                    else if (has(/ط¥ط¶ط§ظپط©|ظ…ظ„ط­ظ‚|طھظˆط³ط¹ط©/)) requestTypeEl.value = 'extension';
+                    else if (has(/ط¨ظ†ط§ط،|ط§ظ†ط´ط§ط،|ط¥ظ†ط´ط§ط،|ط¹ط¸ظ…/)) requestTypeEl.value = 'build';
                 }
 
                 if (scopeOfWorkEl && !scopeOfWorkEl.value) {
-                    if (has(/كامل|تسليم مفتاح/)) scopeOfWorkEl.value = 'full';
-                    else if (has(/عظم/)) scopeOfWorkEl.value = 'structure';
-                    else if (has(/تشطيب/)) scopeOfWorkEl.value = 'finishing';
+                    if (has(/ظƒط§ظ…ظ„|طھط³ظ„ظٹظ… ظ…ظپطھط§ط­/)) scopeOfWorkEl.value = 'full';
+                    else if (has(/ط¹ط¸ظ…/)) scopeOfWorkEl.value = 'structure';
+                    else if (has(/طھط´ط·ظٹط¨/)) scopeOfWorkEl.value = 'finishing';
                 }
 
                 if (finishingLevelEl && !finishingLevelEl.value) {
-                    if (has(/فاخر|vip|فخم/)) finishingLevelEl.value = 'luxury';
-                    else if (has(/متوسط/)) finishingLevelEl.value = 'standard';
-                    else if (has(/اقتصادي/)) finishingLevelEl.value = 'economic';
+                    if (has(/ظپط§ط®ط±|vip|ظپط®ظ…/)) finishingLevelEl.value = 'luxury';
+                    else if (has(/ظ…طھظˆط³ط·/)) finishingLevelEl.value = 'standard';
+                    else if (has(/ط§ظ‚طھطµط§ط¯ظٹ/)) finishingLevelEl.value = 'economic';
                 }
 
                 const moneyRange = extractMoneyRange(normalized);
@@ -1231,7 +1231,7 @@
                 }
 
                 buildRequirementsText();
-                setAnalyzeStatus('تمت التعبئة.');
+                setAnalyzeStatus('طھظ…طھ ط§ظ„طھط¹ط¨ط¦ط©.');
             }
 
             voiceStartBtn.addEventListener('click', start);
@@ -1247,7 +1247,7 @@
 
             voiceUndoBtn && voiceUndoBtn.addEventListener('click', function () {
                 restoreSnapshot();
-                setAnalyzeStatus('تم التراجع.');
+                setAnalyzeStatus('طھظ… ط§ظ„طھط±ط§ط¬ط¹.');
             });
         }
 
@@ -1374,3 +1374,4 @@
 </script>
 @endpush
 @endsection
+

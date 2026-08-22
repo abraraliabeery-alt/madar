@@ -22,6 +22,27 @@
         </div>
     </div>
 
+    <div class="card shadow-sm mb-4 border-primary-subtle" id="admin-ai-assistant">
+        <div class="card-header d-flex align-items-center justify-content-between">
+            <h5 class="mb-0">مساعد تشغيل المنصة</h5>
+            <span class="badge bg-primary">AI</span>
+        </div>
+        <div class="card-body">
+            <p class="text-muted small">اسأل عن العقارات الناقصة أو الطلبات المفتوحة أو أولويات العمل. المساعد للقراءة والاقتراح ولا ينفذ تغييرات تلقائيًا.</p>
+            <div class="input-group">
+                <input type="text" class="form-control" id="admin-ai-question" placeholder="مثال: ما أهم الأعمال التي أبدأ بها اليوم؟">
+                <button type="button" class="btn btn-primary" id="admin-ai-ask">اسأل</button>
+            </div>
+            <div class="d-flex flex-wrap gap-2 mt-2">
+                <button type="button" class="btn btn-sm btn-outline-secondary admin-ai-prompt" data-prompt="اعرض أهم العقارات الناقصة وما الذي ينقصها">العقارات الناقصة</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary admin-ai-prompt" data-prompt="لخص طلبات العملاء المفتوحة وحدد الأولوية">طلبات العملاء</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary admin-ai-prompt" data-prompt="اقترح خطة تشغيل مختصرة لليوم بناءً على بيانات المنصة">خطة اليوم</button>
+            </div>
+            <div id="admin-ai-answer" class="alert alert-light border mt-3 mb-0" style="display:none; white-space:pre-line;"></div>
+            <div id="admin-ai-links" class="d-flex flex-wrap gap-2 mt-2"></div>
+        </div>
+    </div>
+
     <!-- Statistics Cards -->
     <div class="row g-4 mb-4" data-intro="{{ __('admin.tour.stats_cards_desc') }}" data-step="11">
         <div class="col-md-3">
@@ -264,12 +285,12 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <h6 class="mb-0">{{ $booking->user->name }}</h6>
-                                    <small class="text-muted">{{ $booking->product->name }}</small>
+                                    <h6 class="mb-0">{{ $booking->user?->name ?? '—' }}</h6>
+                                    <small class="text-muted">{{ $booking->product?->name ?? '—' }}</small>
                                 </div>
                                 <div class="ms-auto text-end">
                                     @if($booking->status)
-                                    <span class="badge bg-{{ $booking->status->color }}">{{ $booking->status->name }}</span>
+                                    <span class="badge bg-{{ $booking->status->color }}">{{ $booking->status->getTranslatedName('ar') }}</span>
                                 @else
                                     <span class="badge bg-secondary">{{ __('admin.dashboard.no_status') }}</span>
                                 @endif
@@ -291,4 +312,64 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+    var input = document.getElementById('admin-ai-question');
+    var ask = document.getElementById('admin-ai-ask');
+    var answer = document.getElementById('admin-ai-answer');
+    var links = document.getElementById('admin-ai-links');
+    if(!input || !ask || !answer || !links) return;
+
+    function submitQuestion(){
+        var question = (input.value || '').trim();
+        if(question.length < 3) return;
+        var original = ask.textContent;
+        ask.disabled = true;
+        ask.textContent = 'جارٍ التحليل...';
+        fetch(@json(route('admin.ai-assistant')), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+            },
+            body: JSON.stringify({question: question})
+        }).then(function(response){
+            return response.json().then(function(data){ return {ok: response.ok, data: data}; });
+        }).then(function(result){
+            if(!result.ok || !result.data.success) throw new Error(result.data.message || 'تعذر تشغيل المساعد');
+            var data = result.data.data || {};
+            answer.textContent = data.answer || 'لا توجد إجابة.';
+            answer.style.display = 'block';
+            links.innerHTML = '';
+            (data.quick_links || []).forEach(function(link){
+                var anchor = document.createElement('a');
+                anchor.href = link.url;
+                anchor.className = 'btn btn-sm btn-outline-primary';
+                anchor.textContent = link.label;
+                links.appendChild(anchor);
+            });
+        }).catch(function(error){
+            answer.textContent = error.message || 'تعذر الاتصال بالمساعد.';
+            answer.className = 'alert alert-danger mt-3 mb-0';
+            answer.style.display = 'block';
+        }).finally(function(){
+            ask.disabled = false;
+            ask.textContent = original;
+        });
+    }
+
+    ask.addEventListener('click', submitQuestion);
+    input.addEventListener('keydown', function(e){ if(e.key === 'Enter') submitQuestion(); });
+    document.querySelectorAll('.admin-ai-prompt').forEach(function(button){
+        button.addEventListener('click', function(){
+            input.value = button.getAttribute('data-prompt') || '';
+            submitQuestion();
+        });
+    });
+});
+</script>
+@endpush
 @endsection

@@ -24,7 +24,6 @@ return new class extends Migration
             $table->date('available_from')->nullable();
             $table->date('available_to')->nullable();
             $table->text('additional_info')->nullable();
-            $table->decimal('price', 12, 2)->nullable();
             $table->string('image')->nullable();
             $table->string('video')->nullable();
             $table->text('image_gallery')->nullable();

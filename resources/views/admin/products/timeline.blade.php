@@ -3,7 +3,7 @@
 @section('content')
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h5 class="mb-0">الخط الزمني للمنتج</h5>
+        <h5 class="mb-0">الخط الزمني للعقار</h5>
         <a href="{{ route('admin.products.show', $product) }}" class="btn btn-secondary">
             <i class="fas fa-arrow-right me-2"></i>رجوع
         </a>
@@ -16,8 +16,8 @@
                     <label class="form-label">نوع الحدث</label>
                     <select name="type" class="form-select">
                         <option value="">الكل</option>
-                        <option value="product_created" {{ request('type')=='product_created'?'selected':'' }}>إنشاء منتج</option>
-                        <option value="product_updated" {{ request('type')=='product_updated'?'selected':'' }}>تحديث منتج</option>
+                        <option value="product_created" {{ request('type')=='product_created'?'selected':'' }}>إنشاء عقار</option>
+                        <option value="product_updated" {{ request('type')=='product_updated'?'selected':'' }}>تحديث عقار</option>
                         <option value="status_changed" {{ request('type')=='status_changed'?'selected':'' }}>تغيير حالة</option>
                         <option value="offer_created" {{ request('type')=='offer_created'?'selected':'' }}>إنشاء عرض</option>
                         <option value="offer_updated" {{ request('type')=='offer_updated'?'selected':'' }}>تحديث عرض</option>
@@ -31,7 +31,7 @@
                     <label class="form-label">المصدر</label>
                     <select name="source" class="form-select">
                         <option value="">الكل</option>
-                        <option value="product" {{ request('source')=='product'?'selected':'' }}>منتج</option>
+                        <option value="product" {{ request('source')=='product'?'selected':'' }}>عقار</option>
                         <option value="status" {{ request('source')=='status'?'selected':'' }}>حالة</option>
                         <option value="offer" {{ request('source')=='offer'?'selected':'' }}>عرض</option>
                         <option value="booking" {{ request('source')=='booking'?'selected':'' }}>حجز</option>

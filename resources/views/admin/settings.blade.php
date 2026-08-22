@@ -178,6 +178,20 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="platform_mode" class="form-label">وضع المنصة <span class="text-danger">*</span></label>
+                                    <select class="form-select @error('platform_mode') is-invalid @enderror" id="platform_mode" name="platform_mode" required>
+                                        @php($mode = old('platform_mode', \App\Models\Setting::getValue('platform_mode', 'lifecycle')))
+                                        <option value="real_estate" {{ $mode === 'real_estate' ? 'selected' : '' }}>منصة عقارات</option>
+                                        <option value="contracting" {{ $mode === 'contracting' ? 'selected' : '' }}>منصة مقاولات</option>
+                                        <option value="lifecycle" {{ $mode === 'lifecycle' ? 'selected' : '' }}>دورة حياة العقار (عقارات + مقاولات)</option>
+                                    </select>
+                                    @error('platform_mode')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
                                 <div class="form-check form-switch mb-3">
                                     <input type="checkbox" class="form-check-input" id="maintenance_mode" name="maintenance_mode" value="1" {{ old('maintenance_mode', \App\Models\Setting::getValue('maintenance_mode')) ? 'checked' : '' }}>
                                     <label class="form-check-label" for="maintenance_mode">وضع الصيانة</label>

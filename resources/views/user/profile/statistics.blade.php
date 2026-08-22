@@ -249,7 +249,7 @@
     const activityChart = new Chart(activityCtx, {
         type: 'doughnut',
         data: {
-            labels: ['الحجوزات', 'العقود', 'المنتجات', 'المفضلة', 'المواعيد', 'التعليقات'],
+            labels: ['الحجوزات', 'العقود', 'العقارات', 'المفضلة', 'المواعيد', 'التعليقات'],
             datasets: [{
                 data: [
                     {{ $stats['total_bookings'] }},

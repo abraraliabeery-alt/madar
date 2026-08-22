@@ -18,8 +18,15 @@ class SetLocale
      */
     public function handle(Request $request, Closure $next)
     {
-        // Get locale from session
-        $locale = Session::get('locale');
+        // Get locale from session (if session is available)
+        $locale = null;
+        try {
+            if ($request->hasSession()) {
+                $locale = Session::get('locale');
+            }
+        } catch (\Throwable) {
+            $locale = null;
+        }
         $availableLocales = array_keys((array) config('locales.available', []));
         $rtlLocales = collect((array) config('locales.available', []))
             ->filter(fn($cfg) => ($cfg['direction'] ?? null) === 'rtl')

@@ -13,6 +13,11 @@ use App\Models\Attribute;
 use App\Models\City;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Building;
+use App\Models\Project;
+use App\Models\Package;
+use App\Models\Offer;
 
 class AdminProductController extends Controller
 {
@@ -78,13 +83,56 @@ class AdminProductController extends Controller
      */
     public function create()
     {
-        $facilities = Facility::all();
-        $categories = Category::all();
-        $statuses = Status::all();
-        $cities = City::where('is_active', true)->orderBy('name')->get();
-        $locales = config('locales.available');
+        $facility = Auth::user()->mainFacility();
 
-        return view('admin.products.create', compact('facilities', 'categories', 'statuses', 'cities', 'locales'));
+        if (!$facility) {
+            return redirect()->route('admin.products.index')
+                ->with('error', 'لا يوجد منشأة مرتبطة بحسابك');
+        }
+
+        $mainCategories = Category::with('translations')->whereNull('parent_id')->get();
+        $subCategories = Category::with('translations')->whereNotNull('parent_id')->get();
+        $mainCategoryOptions = $mainCategories->mapWithKeys(function ($c) {
+            return [$c->id => $c->getTranslatedName()];
+        })->toArray();
+        $subCategoriesList = $subCategories->map(function ($c) {
+            return [
+                'id' => $c->id,
+                'parent_id' => $c->parent_id,
+                'name' => $c->getTranslatedName(),
+            ];
+        })->values();
+
+        $statuses = Status::with('translations')->active()->ordered()->get();
+        $cities = City::where('is_active', true)->orderBy('name')->get();
+        // Prepare translated statuses options
+        $statusOptions = $statuses->mapWithKeys(function ($status) {
+            return [$status->id => $status->getTranslatedName(app()->getLocale())];
+        });
+
+
+        // مستخدمون يمكن تعيينهم كمالك/موظف مسؤول (مستخلصون من المنتجات الحالية للمنشأة إن وجدت)
+        $userIdsFromProducts = $facility->products()
+            ->pluck('owner_user_id', 'seller_user_id')
+            ->flatten()
+            ->filter()
+            ->unique()
+            ->values();
+        $userOptions = $userIdsFromProducts->isNotEmpty()
+            ? User::whereIn('id', $userIdsFromProducts)->pluck('name', 'id')->toArray()
+            : [];
+
+        $storeRoute = route('admin.products.store');
+        $indexRoute = route('admin.products.index');
+        $suggestPriceRoute = route('admin.products.suggest-price');
+        $layout = 'admin.layouts.app';
+        $loadTailwind = true;
+
+        return view('products.create', compact(
+            'mainCategoryOptions', 'subCategoriesList', 'statuses', 'cities',
+            'statusOptions',
+            'userOptions', 'storeRoute', 'indexRoute', 'layout', 'loadTailwind', 'suggestPriceRoute'
+        ));
     }
 
     /**
@@ -92,95 +140,116 @@ class AdminProductController extends Controller
      */
     public function store(Request $request)
     {
-        $availableLocales = array_keys(config('locales.available', []));
+        $facility = Auth::user()->mainFacility();
+
+        if (!$facility) {
+            return redirect()->route('admin.products.index')
+                ->with('error', 'لا يوجد منشأة مرتبطة بحسابك');
+        }
+
         $request->validate([
             'address' => 'required|string',
-            'price' => 'required|numeric|min:0',
-            'facility_id' => 'required|exists:facilities,id',
             'category_id' => 'required|exists:categories,id',
             'city_id' => 'required|exists:cities,id',
+            'neighborhood_id' => 'nullable|exists:neighborhoods,id',
+            'street_id' => 'nullable|exists:streets,id',
             'status_id' => 'required|exists:statuses,id',
-            'owner_user_id' => 'required|exists:users,id',
-            'parking_spaces' => 'nullable|integer|min:0',
-            'contact_phone' => 'nullable|string',
-            'contact_email' => 'nullable|email',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'is_active' => 'boolean',
+            'building_id' => 'nullable|exists:buildings,id',
+            'project_id' => 'nullable|exists:projects,id',
+            'package_id' => 'nullable|exists:packages,id',
+            'translations' => 'nullable|array',
+            'translations.*.locale' => 'nullable|string|distinct',
+            'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image_gallery' => 'nullable|array',
+            'image_gallery.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'video' => 'nullable|mimes:mp4,mov,avi,webm',
+            'video_url' => 'nullable|url',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
+            'google_maps_url' => 'nullable|url',
             'is_featured' => 'boolean',
             'is_verified' => 'boolean',
             'features' => 'array',
             'features.*' => 'exists:features,id',
             'attributes' => 'array',
-            'attributes.*.value' => 'nullable|string',
-            'translations' => 'nullable|array',
-            'translations.*.locale' => 'required_with:translations|string|in:' . implode(',', $availableLocales) . '|distinct',
-            'translations.*.name' => 'required_with:translations|string|max:255',
-            'translations.*.description' => 'nullable|string',
-            'title' => 'nullable|string|max:255',
-            'description' => 'nullable|string',
+            'attributes.*.attribute_id' => 'exists:attributes,id',
+            'attributes.*.value' => 'nullable',
+            // Offer availability flags
+            'available_for_sale' => 'boolean',
+            'available_for_rent' => 'boolean',
+            // Sale offer validation (conditional)
+            'sale_offer.price' => 'exclude_unless:available_for_sale,1|required|numeric|min:0',
+            // Rent offer validation (conditional)
+            'rent_offer.price' => 'exclude_unless:available_for_rent,1|required|numeric|min:0',
+            'rent_offer.period' => 'exclude_unless:available_for_rent,1|required|in:rent_daily,rent_monthly,rent_yearly',
+            'rent_offer.deposit' => 'exclude_unless:available_for_rent,1|nullable|numeric|min:0',
+            'owner_user_id' => 'nullable|exists:users,id',
+            'seller_user_id' => 'nullable|exists:users,id',
         ]);
 
-        $incomingTranslations = $request->input('translations');
-        if (!is_array($incomingTranslations) || !count($incomingTranslations)) {
-            $incomingTranslations = [];
-            if ($request->filled('title') || $request->filled('description')) {
-                $incomingTranslations[] = [
-                    'locale' => app()->getLocale(),
-                    'name' => $request->input('title'),
-                    'description' => $request->input('description'),
-                ];
+        // Custom validation for required attributes only
+        if ($request->has('attributes')) {
+            $requiredAttributeModels = \App\Models\Attribute::where('required', true)
+            ->whereIn('id', collect($request->attributes)->pluck('attribute_id'))
+            ->with('translations')
+            ->get()
+            ->keyBy('id');
+        $requiredAttributeIds = $requiredAttributeModels->keys()->toArray();
+
+        foreach ($request->attributes as $index => $attribute) {
+            $attributeId = $attribute['attribute_id'] ?? null;
+            $value = $attribute['value'] ?? null;
+            $isFile = $requiredAttributeModels->get($attributeId)?->type === 'file';
+
+            // Check if required attribute has value
+            if (in_array($attributeId, $requiredAttributeIds)) {
+                if (($isFile && !$request->hasFile("attributes.{$index}.value")) || (!$isFile && (is_null($value) || $value === ''))) {
+                    $attributeName = $requiredAttributeModels->get($attributeId)?->getTranslatedName() ?? 'الخاصية';
+                    return redirect()->back()
+                        ->withErrors(["attributes.{$index}.value" => "{$attributeName} مطلوب."])
+                        ->withInput();
+                }
             }
         }
-
-        $firstTranslationName = null;
-        foreach ($incomingTranslations as $t) {
-            if (!empty($t['name'])) {
-                $firstTranslationName = $t['name'];
-                break;
-            }
         }
 
-        if (!$firstTranslationName) {
-            return back()
-                ->withErrors(['translations' => 'يجب إدخال اسم المنتج في ترجمة واحدة على الأقل'])
-                ->withInput();
-        }
-
-        $productData = $request->except(['image', 'features', 'status_id', 'translations', 'title', 'description']);
-
-        // Handle checkbox fields - set to false if not present
-        $productData['is_active'] = $request->has('is_active');
-        $productData['is_featured'] = $request->has('is_featured');
-        $productData['is_verified'] = $request->has('is_verified');
+        $productData = $request->except(['main_image', 'image_gallery', 'video', 'video_url', 'features', 'attributes']);
+        $productData['facility_id'] = $facility->id;
 
         // معالجة الصورة الرئيسية
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('uploads/products/images', 'public');
-            $productData['image'] = $imagePath;
+        if ($request->hasFile('main_image')) {
+            $imagePath = $request->file('main_image')->store('uploads/products/images', 'public');
+            $productData['main_image'] = $imagePath;
+        }
+
+        // معالجة معرض الصور
+        if ($request->hasFile('image_gallery')) {
+            $galleryPaths = [];
+            foreach ($request->file('image_gallery') as $file) {
+                $galleryPaths[] = $file->store('uploads/products/gallery', 'public');
+            }
+            $productData['image_gallery'] = $galleryPaths;
+        }
+
+        // معالجة الفيديو
+        if ($request->hasFile('video')) {
+            $productData['video'] = $request->file('video')->store('uploads/products/videos', 'public');
+        } elseif ($request->filled('video_url')) {
+            $productData['video'] = $request->input('video_url');
         }
 
         $product = Product::create($productData);
 
-        foreach ($incomingTranslations as $translationData) {
-            if (empty($translationData['locale']) || empty($translationData['name'])) {
-                continue;
-            }
-
-            $product->translations()->create([
-                'locale' => $translationData['locale'],
-                'name' => $translationData['name'],
-                'description' => $translationData['description'] ?? null,
-            ]);
-        }
-
-        // ربط الحالة
-        if ($request->has('status_id')) {
-            $product->statuses()->attach($request->status_id, [
-                'notes' => 'تم تعيين الحالة عند إنشاء المنتج',
-                'user_id' => auth()->id(),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+        // مزامنة سجلّ الحالات اختيارياً
+        if (env('PRODUCT_STATUS_SYNC_ENABLED', true) && isset($productData['status_id'])) {
+            try {
+                $product->statuses()->attach($productData['status_id'], [
+                    'notes' => 'تعيين الحالة عند الإنشاء (إدمن)',
+                    'user_id' => Auth::id(),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            } catch (\Throwable $e) { /* silent */ }
         }
 
         // ربط المميزات
@@ -190,17 +259,90 @@ class AdminProductController extends Controller
 
         // ربط الخصائص
         if ($request->has('attributes')) {
-            foreach ($request->attributes as $attributeId => $attributeData) {
-                if (!empty($attributeData['value'])) {
+            foreach ($request->attributes as $index => $attribute) {
+                $attributeId = $attribute['attribute_id'] ?? null;
+                $value = $attribute['value'] ?? null;
+                $attrModel = \App\Models\Attribute::find($attributeId);
+
+                if ($attrModel && $attrModel->type === 'file') {
+                    if ($request->hasFile("attributes.{$index}.value")) {
+                        $value = $request->file("attributes.{$index}.value")->store('uploads/attributes/files', 'public');
+                    } else {
+                        $value = null;
+                    }
+                }
+
+                if ($value !== null && $value !== '') {
                     $product->attributes()->attach($attributeId, [
-                        'value' => $attributeData['value']
+                        'value' => $value,
                     ]);
                 }
             }
         }
 
+        $this->syncLegacyAttributes($request, $product);
+
+        // Create sale offer if available for sale
+        if ($request->input('available_for_sale')) {
+            $so = $request->input('sale_offer', []);
+            try {
+                Offer::create([
+                    'product_id' => $product->id,
+                    'facility_id' => $facility->id,
+                    'created_by' => Auth::id(),
+                    'offer_type' => 'sale',
+                    'price' => isset($so['price']) ? (float)$so['price'] : null,
+                    'is_active' => true,
+                ]);
+            } catch (\Throwable $e) { /* silent create offer failure */ }
+        }
+
+        // Create rent offer if available for rent
+        if ($request->input('available_for_rent')) {
+            $ro = $request->input('rent_offer', []);
+            try {
+                Offer::create([
+                    'product_id' => $product->id,
+                    'facility_id' => $facility->id,
+                    'created_by' => Auth::id(),
+                    'offer_type' => $ro['period'] ?? 'rent_monthly',
+                    'price' => isset($ro['price']) ? (float)$ro['price'] : null,
+                    'deposit_amount' => isset($ro['deposit']) ? (float)$ro['deposit'] : null,
+                    'is_active' => true,
+                    'valid_from' => $ro['valid_from'] ?? null,
+                    'valid_to' => $ro['valid_to'] ?? null,
+                ]);
+            } catch (\Throwable $e) { /* silent create offer failure */ }
+        }
+
         return redirect()->route('admin.products.index')
             ->with('success', 'تم إنشاء المنتج بنجاح');
+    }
+
+    /**
+     * اقتراح سعر بناءً على متوسط عروض مشابهة
+     */
+    public function suggestPrice(Request $request)
+    {
+        $data = $request->validate([
+            'category_id' => 'required|integer|exists:categories,id',
+            'city_id' => 'required|integer|exists:cities,id',
+            'offer_type' => 'required|in:sale,rent_daily,rent_monthly,rent_yearly',
+        ]);
+
+        $query = Offer::where('offer_type', $data['offer_type'])
+            ->whereHas('product', function ($q) use ($data) {
+                $q->where('category_id', $data['category_id'])
+                  ->where('city_id', $data['city_id']);
+            })
+            ->where('is_active', true);
+
+        $avg = $query->avg('price');
+
+        return response()->json([
+            'price' => $avg ? ceil($avg) : null,
+            'count' => $query->count(),
+        ]);
     }
 
     /**
@@ -242,7 +384,7 @@ class AdminProductController extends Controller
             'features' => 'array',
             'features.*' => 'exists:features,id',
             'attributes' => 'array',
-            'attributes.*.value' => 'nullable|string',
+            'attributes.*.value' => 'nullable',
             'translations' => 'nullable|array',
             'translations.*.locale' => 'required_with:translations|string|in:' . implode(',', $availableLocales) . '|distinct',
             'translations.*.name' => 'required_with:translations|string|max:255',
@@ -337,12 +479,34 @@ class AdminProductController extends Controller
         }
 
         // تحديث الخصائص
+        $existingFileValues = [];
+        foreach ($product->attributes as $attr) {
+            if ($attr->type === 'file' && $attr->pivot->value) {
+                $existingFileValues[$attr->id] = $attr->pivot->value;
+            }
+        }
+
         $product->attributes()->detach();
         if ($request->has('attributes')) {
-            foreach ($request->attributes as $attributeId => $attributeData) {
-                if (!empty($attributeData['value'])) {
+            foreach ($request->attributes as $index => $attributeData) {
+                $attributeId = $attributeData['attribute_id'] ?? null;
+                $value = $attributeData['value'] ?? null;
+                $attrModel = \App\Models\Attribute::find($attributeId);
+
+                if ($attrModel && $attrModel->type === 'file') {
+                    if ($request->hasFile("attributes.{$index}.value")) {
+                        if (isset($existingFileValues[$attributeId])) {
+                            Storage::disk('public')->delete($existingFileValues[$attributeId]);
+                        }
+                        $value = $request->file("attributes.{$index}.value")->store('uploads/attributes/files', 'public');
+                    } else {
+                        $value = $existingFileValues[$attributeId] ?? null;
+                    }
+                }
+
+                if ($value !== null && $value !== '') {
                     $product->attributes()->attach($attributeId, [
-                        'value' => $attributeData['value']
+                        'value' => $value
                     ]);
                 }
             }
@@ -608,5 +772,38 @@ class AdminProductController extends Controller
                 'to' => $to,
             ],
         ]);
+    }
+
+    private function syncLegacyAttributes(Request $request, Product $product)
+    {
+        $legacyMap = [
+            'bedrooms' => 'bedrooms',
+            'bathrooms' => 'bathrooms',
+            'area' => 'area',
+            'floor_number' => 'floor_number',
+            'total_floors' => 'total_floors',
+            'parking_spaces' => 'parking_spaces',
+            'furnished' => 'furnished',
+        ];
+
+        foreach ($legacyMap as $field => $key) {
+            if (! $request->has($field)) {
+                continue;
+            }
+
+            $attribute = \App\Models\Attribute::where('key', $key)
+                ->where(function ($query) use ($product) {
+                    $query->where('category_id', $product->category_id)
+                          ->orWhereNull('category_id');
+                })
+                ->first();
+
+            if ($attribute) {
+                \DB::table('product_attribute_values')->updateOrInsert(
+                    ['product_id' => $product->id, 'attribute_id' => $attribute->id],
+                    ['value' => $request->input($field), 'updated_at' => now()]
+                );
+            }
+        }
     }
 }

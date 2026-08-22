@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('client.layouts.app')
 
 @section('title', __('client.appointments.title'))
 
@@ -115,6 +115,7 @@
     </div>
 </div>
 @endsection
+
 
 
 

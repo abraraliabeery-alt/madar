@@ -86,7 +86,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-start">
                         <div class="flex-grow-1">
-                            <h6 class="mb-2">المنتجات الجديدة</h6>
+                            <h6 class="mb-2">العقارات الجديدة</h6>
                             <h3 class="mb-1">{{ number_format($monthlyStats['products']) }}</h3>
                             <div class="d-flex align-items-center">
                                 @if(isset($growthRates['products']))
@@ -229,7 +229,7 @@
         <div class="col-md-6">
             <div class="card h-100">
                 <div class="card-header">
-                    <h6 class="mb-0"><i class="fas fa-box me-2"></i>إحصائيات المنتجات</h6>
+                    <h6 class="mb-0"><i class="fas fa-box me-2"></i>إحصائيات العقارات</h6>
                 </div>
                 <div class="card-body">
                     <div class="row g-3">
@@ -240,7 +240,7 @@
                                 </div>
                                 <div>
                                     <h6 class="mb-0">{{ number_format($productStats['total_products']) }}</h6>
-                                    <small class="text-muted">إجمالي المنتجات</small>
+                                    <small class="text-muted">إجمالي العقارات</small>
                                 </div>
                             </div>
                         </div>
@@ -251,7 +251,7 @@
                                 </div>
                                 <div>
                                     <h6 class="mb-0">{{ number_format($productStats['featured_products']) }}</h6>
-                                    <small class="text-muted">منتجات مميزة</small>
+                                    <small class="text-muted">عقارات مميزة</small>
                                 </div>
                             </div>
                         </div>
@@ -356,8 +356,8 @@
                         <div class="timeline-item">
                             <div class="timeline-marker bg-info"></div>
                             <div class="timeline-content">
-                                <h6 class="mb-1">منتج جديد</h6>
-                                <p class="mb-0 text-muted">تم إضافة منتج جديد</p>
+                                <h6 class="mb-1">عقار جديد</h6>
+                                <p class="mb-0 text-muted">تم إضافة عقار جديد</p>
                                 <small class="text-muted">{{ now()->subHours(2)->diffForHumans() }}</small>
                             </div>
                         </div>
@@ -382,7 +382,7 @@
                                 <h6 class="mb-1">{{ $facility['name'] }}</h6>
                                 <div class="d-flex gap-3">
                                     <small class="text-muted">
-                                        <i class="fas fa-box me-1"></i>{{ $facility['products_count'] }} منتج
+                                        <i class="fas fa-box me-1"></i>{{ $facility['products_count'] }} عقار
                                     </small>
                                     <small class="text-muted">
                                         <i class="fas fa-calendar-check me-1"></i>{{ $facility['bookings_count'] }} حجز
