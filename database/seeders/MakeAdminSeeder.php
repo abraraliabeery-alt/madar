@@ -10,7 +10,7 @@ class MakeAdminSeeder extends Seeder
 {
     public function run(): void
     {
-        $user = User::where('phone_number', '0550880798')->first();
+        $user = User::where('phone_number', 'like', '%550880798')->first();
 
         if ($user) {
             $user->update([
