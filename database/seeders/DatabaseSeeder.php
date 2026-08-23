@@ -43,7 +43,6 @@ class DatabaseSeeder extends Seeder
             FavoriteSeeder::class,
             FaqSeeder::class,
             NotificationSeeder::class,
-            AjlanPlanLotsSeeder::class,
             PdfSettingsSeeder::class,
             MakeAdminSeeder::class,
         ]);
