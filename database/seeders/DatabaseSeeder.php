@@ -45,6 +45,7 @@ class DatabaseSeeder extends Seeder
             NotificationSeeder::class,
             AjlanPlanLotsSeeder::class,
             PdfSettingsSeeder::class,
+            MakeAdminSeeder::class,
         ]);
     }
 }
