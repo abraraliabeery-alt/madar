@@ -147,7 +147,7 @@
                         <a href="{{ route('public.products.map') }}" class="main-nav-link px-3 py-2 rounded-md text-sm font-medium transition-colors">
                             {{ __('public.search.map_search') }}
                         </a>
-                        <a href="{{ route('public.product-requests.form') }}" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                        <a href="{{ route('public.product-requests.form') }}" class="main-nav-link px-3 py-2 rounded-md text-sm font-medium transition-colors">
                             اطلب عقار
                         </a>
                         @if(\App\Helpers\FacilityHelper::isMultiMode())
