@@ -399,45 +399,6 @@
                     </div>
                 </div>
 
-                <div class="card mb-4" id="section-attrs">
-                    <div class="card-header">
-                        <h6 class="mb-0">ترتيب الخصائص</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-flex align-items-center justify-content-between gap-2 flex-wrap mb-2">
-                            <div>
-                                <label class="form-label mb-0">الترتيب الافتراضي للخصائص</label>
-                                <div class="text-muted small">اسحب الخصائص لتحديد ترتيبها عندما لا يوجد ترتيب خاص بالفئة.</div>
-                            </div>
-                            <span class="badge bg-secondary">{{ ($sortedAttributes ?? collect())->count() }} خاصية</span>
-                        </div>
-                        <div class="pdf-sortable" style="max-height: 420px; overflow:auto;" id="attr_sortable">
-                            @foreach(($sortedAttributes ?? collect()) as $attr)
-                                @php
-                                    $attrName = $attr->translations->first()->name ?? $attr->name ?? $attr->key ?? 'خاصية';
-                                @endphp
-                                <div class="pdf-sort-item" draggable="true" data-attr-id="{{ $attr->id }}">
-                                    <div class="d-flex align-items-center gap-2">
-                                        <span class="pdf-drag" aria-hidden="true"><i class="fas fa-grip-vertical"></i></span>
-                                        <div>
-                                            <div class="fw-bold">{{ $attrName }}</div>
-                                            <div class="text-muted small">{{ $attr->key ?? '-' }} · ID: {{ $attr->id }}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                        <details class="mt-3">
-                            <summary class="text-muted small" role="button">خيارات متقدمة: تعديل IDs يدويًا</summary>
-                            <div class="mt-2">
-                                <input type="text" class="form-control" name="attribute_order_csv" value="{{ is_array($order) ? implode(',', $order) : '' }}" placeholder="مثال: 12,5,9,1">
-                                <div class="form-text">استخدم هذا الحقل فقط عند الحاجة؛ السحب بالأعلى هو الطريقة الأساسية.</div>
-                            </div>
-                        </details>
-                        <div id="attr_hidden_fields"></div>
-                    </div>
-                </div>
-
                 <div class="card mb-4" id="section-groups">
                     <div class="card-header">
                         <h6 class="mb-0">شرائح الخصائص حسب الفئة</h6>
