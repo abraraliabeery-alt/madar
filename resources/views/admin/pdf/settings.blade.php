@@ -159,9 +159,7 @@
                                         <button type="button" class="btn btn-sm btn-outline-secondary color-preset" data-preset='{"brand_color":"#0d3b66","accent_color":"#f4d35e","bg_color":"#ffffff","title_color":"#0d3b66","text_color":"#1b263b","dark_bg":"#051024","dark_title":"#ffffff","dark_text":"#d1d5db"}'>أزرق ذهبي</button>
                                         <button type="button" class="btn btn-sm btn-outline-secondary color-preset" data-preset='{"brand_color":"#8B0000","accent_color":"#D4AF37","bg_color":"#fff9f9","title_color":"#2c0a0a","text_color":"#4a1a1a","dark_bg":"#2a0505","dark_title":"#fff0f0","dark_text":"#e8d5d5"}'>أحمر فاخر</button>
                                         <button type="button" class="btn btn-sm btn-outline-secondary color-preset" data-preset='{"brand_color":"#1f2937","accent_color":"#10b981","bg_color":"#ffffff","title_color":"#111827","text_color":"#374151","dark_bg":"#111827","dark_title":"#f9fafb","dark_text":"#d1d5db"}'>داكن نيون</button>
-                                        <button type="button" class="btn btn-sm btn-outline-info" id="ai-suggest-palette"><i class="fas fa-wand-magic-sparkles me-1"></i>اقتراح ذكي</button>
                                     </div>
-                                    <div id="ai-palette-note" class="form-text mt-2" style="display:none;"></div>
                                 </div>
                                 <div class="row g-3">
                                     <div class="col-12">
@@ -482,9 +480,6 @@
                                                         <span class="badge bg-secondary ms-2 category-groups-count">{{ $groupCount }} شريحة · {{ $attrInGroups }} خاصية</span>
                                                     </label>
                                                     <div class="d-flex gap-2">
-                                                        <button type="button" class="btn btn-sm btn-outline-info ai-suggest-groups" data-cat-id="{{ $category->id }}">
-                                                            <i class="fas fa-wand-magic-sparkles me-1"></i> ترتيب ذكي
-                                                        </button>
                                                         <button type="button" class="btn btn-sm btn-outline-primary add-attr-group" data-cat-id="{{ $category->id }}">
                                                             <i class="fas fa-plus me-1"></i> شريحة جديدة
                                                         </button>
