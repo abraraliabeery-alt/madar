@@ -101,6 +101,20 @@
                             <i class="fas fa-box"></i>
                             <span>{{ __('admin.products.title') }}</span>
                         </a>
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle {{ request()->routeIs('admin.product-requests.*', 'admin.marketing-product-requests.*') ? 'active' : '' }}" data-bs-toggle="dropdown">
+                                <i class="fas fa-clipboard-list"></i>
+                                <span>الطلبات</span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{{ route('admin.product-requests.index') }}">
+                                    <i class="fas fa-building me-2"></i>طلبات العقار
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ route('admin.marketing-product-requests.index') }}">
+                                    <i class="fas fa-bullhorn me-2"></i>طلبات التسويق
+                                </a></li>
+                            </ul>
+                        </div>
                     @endif
                     <a href="{{ route('admin.bookings.index') }}" class="nav-link {{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}">
                         <i class="fas fa-calendar-check"></i>
