@@ -87,16 +87,6 @@ class AdminThemeSettingsController extends Controller
         $darkRgb = $this->hexToRgb($dark['brand_brown']);
 
         $css = ":root{
-  --brand-brown:{$light['brand_brown']};
-  --brand-brown-rgb:{$lightRgb};
-  --brand-bg:{$light['brand_bg']};
-  --brand-fg:{$light['brand_fg']};
-  --brand-border:{$light['brand_border']};
-  --brand-muted:{$light['brand_muted']};
-  --brand-shadow:0 .25rem 1rem rgba({$lightRgb},.09);
-}
-
-html[data-theme=\"dark\"]{
   --brand-brown:{$dark['brand_brown']};
   --brand-brown-rgb:{$darkRgb};
   --brand-bg:{$dark['brand_bg']};
@@ -104,6 +94,16 @@ html[data-theme=\"dark\"]{
   --brand-border:{$dark['brand_border']};
   --brand-muted:{$dark['brand_muted']};
   --brand-shadow:0 .25rem 1rem rgba(0,0,0,.35);
+}
+
+html[data-theme=\"light\"]{
+  --brand-brown:{$light['brand_brown']};
+  --brand-brown-rgb:{$lightRgb};
+  --brand-bg:{$light['brand_bg']};
+  --brand-fg:{$light['brand_fg']};
+  --brand-border:{$light['brand_border']};
+  --brand-muted:{$light['brand_muted']};
+  --brand-shadow:0 .25rem 1rem rgba({$lightRgb},.09);
 }";
 
         file_put_contents(public_path('theme.css'), $css);

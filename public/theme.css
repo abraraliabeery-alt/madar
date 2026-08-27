@@ -1,14 +1,4 @@
 :root{
-  --brand-brown:#126b61;
-  --brand-brown-rgb:18,107,97;
-  --brand-bg:#f6f8f8;
-  --brand-fg:#172524;
-  --brand-border:rgba(18,107,97,.18);
-  --brand-muted:#647472;
-  --brand-shadow:0 .25rem 1rem rgba(18,107,97,.09);
-}
-
-html[data-theme="dark"]{
   --brand-brown:#55c8b8;
   --brand-brown-rgb:85,200,184;
   --brand-bg:#0d1717;
@@ -16,6 +6,16 @@ html[data-theme="dark"]{
   --brand-border:rgba(85,200,184,.22);
   --brand-muted:#9bb0ad;
   --brand-shadow:0 .25rem 1rem rgba(0,0,0,.35);
+}
+
+html[data-theme="light"]{
+  --brand-brown:#126b61;
+  --brand-brown-rgb:18,107,97;
+  --brand-bg:#f6f8f8;
+  --brand-fg:#172524;
+  --brand-border:rgba(18,107,97,.18);
+  --brand-muted:#647472;
+  --brand-shadow:0 .25rem 1rem rgba(18,107,97,.09);
 }
 
 /* Global primitives */
