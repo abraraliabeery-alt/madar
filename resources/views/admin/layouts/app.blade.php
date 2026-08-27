@@ -133,6 +133,10 @@
                     <i class="fas fa-file-pdf"></i>
                     <span>{{ __('admin.pdf_settings.title') }}</span>
                 </a>
+                <a href="{{ route('admin.theme.settings.edit') }}" class="nav-link">
+                    <i class="fas fa-palette"></i>
+                    <span>إعدادات الهوية</span>
+                </a>
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf
                     <button type="submit" class="nav-link text-danger" style="width:100%;background:transparent;border:0;">

@@ -26,6 +26,7 @@ use App\Http\Controllers\Admin\MenuAdminController;
 use App\Http\Controllers\Admin\ProductRequestController as AdminProductRequestController;
 use App\Http\Controllers\Admin\MarketingProductRequestController as AdminMarketingProductRequestController;
 use App\Http\Controllers\Admin\AdminPdfSettingsController;
+use App\Http\Controllers\Admin\AdminThemeSettingsController;
 
 Route::group([], function () {
 
@@ -37,6 +38,8 @@ Route::group([], function () {
     Route::post('/settings', [AdminController::class, 'updateSettings'])->name('settings.update');
     Route::get('/pdf-settings', [AdminPdfSettingsController::class, 'edit'])->name('pdf.settings.edit');
     Route::post('/pdf-settings', [AdminPdfSettingsController::class, 'update'])->name('pdf.settings.update');
+    Route::get('/theme-settings', [AdminThemeSettingsController::class, 'edit'])->name('theme.settings.edit');
+    Route::post('/theme-settings', [AdminThemeSettingsController::class, 'update'])->name('theme.settings.update');
     Route::post('/pdf-settings/ai/suggest-slides', [AdminPdfSettingsController::class, 'suggestCategorySlides'])->name('pdf.settings.ai.suggest-slides');
     Route::post('/pdf-settings/ai/audit-product', [AdminPdfSettingsController::class, 'auditProduct'])->name('pdf.settings.ai.audit-product');
     Route::post('/pdf-settings/ai/suggest-palette', [AdminPdfSettingsController::class, 'suggestPalette'])->name('pdf.settings.ai.suggest-palette');
