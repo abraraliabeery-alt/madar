@@ -350,26 +350,70 @@
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto text-right">
-                <a href="{{ url('/investment-studies') }}" class="group p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-emerald-400 dark:hover:border-emerald-600 shadow-sm hover:shadow-md transition">
-                    <i class="fas fa-chart-line text-emerald-600 text-2xl mb-3 block"></i>
-                    <h3 class="font-bold text-slate-900 dark:text-white mb-1">تحليل جدوى</h3>
-                    <p class="text-sm text-slate-500 dark:text-slate-400">أرض تجارية بمساحة 1000م في الرياض</p>
-                </a>
-                <a href="{{ url('/investment-studies') }}" class="group p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-emerald-400 dark:hover:border-emerald-600 shadow-sm hover:shadow-md transition">
-                    <i class="fas fa-map-pin text-emerald-600 text-2xl mb-3 block"></i>
-                    <h3 class="font-bold text-slate-900 dark:text-white mb-1">مقترحات استثمارية</h3>
-                    <p class="text-sm text-slate-500 dark:text-slate-400">أرض سكنية في جدة مع وحدات الإيجار</p>
-                </a>
-                <a href="{{ url('/investment-studies') }}" class="group p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-emerald-400 dark:hover:border-emerald-600 shadow-sm hover:shadow-md transition">
-                    <i class="fas fa-home text-emerald-600 text-2xl mb-3 block"></i>
-                    <h3 class="font-bold text-slate-900 dark:text-white mb-1">مقارنة تطوير</h3>
-                    <p class="text-sm text-slate-500 dark:text-slate-400">فيلا فاخرة vs وحدات صغيرة في الخبر</p>
-                </a>
-                <a href="{{ url('/investment-studies') }}" class="group p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-emerald-400 dark:hover:border-emerald-600 shadow-sm hover:shadow-md transition">
-                    <i class="fas fa-scroll text-emerald-600 text-2xl mb-3 block"></i>
-                    <h3 class="font-bold text-slate-900 dark:text-white mb-1">متطلبات تنظيمية</h3>
-                    <p class="text-sm text-slate-500 dark:text-slate-400">البناء الصناعي وفق الكود السعودي</p>
-                </a>
+                @if($mode === \App\Helpers\PlatformModeHelper::MODE_REAL_ESTATE)
+                    <a href="{{ url('/investment-studies') }}" class="group p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-emerald-400 dark:hover:border-emerald-600 shadow-sm hover:shadow-md transition">
+                        <i class="fas fa-chart-line text-emerald-600 text-2xl mb-3 block"></i>
+                        <h3 class="font-bold text-slate-900 dark:text-white mb-1">تحليل جدوى</h3>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">أرض تجارية بمساحة 1000م في الرياض</p>
+                    </a>
+                    <a href="{{ url('/investment-studies') }}" class="group p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-emerald-400 dark:hover:border-emerald-600 shadow-sm hover:shadow-md transition">
+                        <i class="fas fa-map-pin text-emerald-600 text-2xl mb-3 block"></i>
+                        <h3 class="font-bold text-slate-900 dark:text-white mb-1">مقترحات استثمارية</h3>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">أرض سكنية في جدة مع وحدات الإيجار</p>
+                    </a>
+                    <a href="{{ url('/investment-studies') }}" class="group p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-emerald-400 dark:hover:border-emerald-600 shadow-sm hover:shadow-md transition">
+                        <i class="fas fa-home text-emerald-600 text-2xl mb-3 block"></i>
+                        <h3 class="font-bold text-slate-900 dark:text-white mb-1">مقارنة تطوير</h3>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">فيلا فاخرة vs وحدات صغيرة في الخبر</p>
+                    </a>
+                    <a href="{{ url('/investment-studies') }}" class="group p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-emerald-400 dark:hover:border-emerald-600 shadow-sm hover:shadow-md transition">
+                        <i class="fas fa-scroll text-emerald-600 text-2xl mb-3 block"></i>
+                        <h3 class="font-bold text-slate-900 dark:text-white mb-1">متطلبات تنظيمية</h3>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">البناء الصناعي وفق الكود السعودي</p>
+                    </a>
+                @elseif($mode === \App\Helpers\PlatformModeHelper::MODE_CONTRACTING)
+                    <a href="{{ url('/investment-studies') }}" class="group p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-emerald-400 dark:hover:border-emerald-600 shadow-sm hover:shadow-md transition">
+                        <i class="fas fa-hard-hat text-emerald-600 text-2xl mb-3 block"></i>
+                        <h3 class="font-bold text-slate-900 dark:text-white mb-1">تقدير تكلفة</h3>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">مشروع سكني بـ 500 وحدة في الرياض</p>
+                    </a>
+                    <a href="{{ url('/investment-studies') }}" class="group p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-emerald-400 dark:hover:border-emerald-600 shadow-sm hover:shadow-md transition">
+                        <i class="fas fa-tools text-emerald-600 text-2xl mb-3 block"></i>
+                        <h3 class="font-bold text-slate-900 dark:text-white mb-1">مقارنة المقاولين</h3>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">عروض البناء للمشاريع التجارية</p>
+                    </a>
+                    <a href="{{ url('/investment-studies') }}" class="group p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-emerald-400 dark:hover:border-emerald-600 shadow-sm hover:shadow-md transition">
+                        <i class="fas fa-file-contract text-emerald-600 text-2xl mb-3 block"></i>
+                        <h3 class="font-bold text-slate-900 dark:text-white mb-1">صياغة عقود</h3>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">عقود المقاولات وشروط الالتزام</p>
+                    </a>
+                    <a href="{{ url('/investment-studies') }}" class="group p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-emerald-400 dark:hover:border-emerald-600 shadow-sm hover:shadow-md transition">
+                        <i class="fas fa-building text-emerald-600 text-2xl mb-3 block"></i>
+                        <h3 class="font-bold text-slate-900 dark:text-white mb-1">جدولة مشاريع</h3>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">تخطيط الجدول الزمني للتنفيذ</p>
+                    </a>
+                @else
+                    <a href="{{ url('/investment-studies') }}" class="group p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-emerald-400 dark:hover:border-emerald-600 shadow-sm hover:shadow-md transition">
+                        <i class="fas fa-chart-line text-emerald-600 text-2xl mb-3 block"></i>
+                        <h3 class="font-bold text-slate-900 dark:text-white mb-1">تحليل جدوى</h3>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">أرض تجارية بمساحة 1000م في الرياض</p>
+                    </a>
+                    <a href="{{ url('/investment-studies') }}" class="group p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-emerald-400 dark:hover:border-emerald-600 shadow-sm hover:shadow-md transition">
+                        <i class="fas fa-map-pin text-emerald-600 text-2xl mb-3 block"></i>
+                        <h3 class="font-bold text-slate-900 dark:text-white mb-1">مقترحات استثمارية</h3>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">أرض سكنية في جدة مع وحدات الإيجار</p>
+                    </a>
+                    <a href="{{ url('/investment-studies') }}" class="group p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-emerald-400 dark:hover:border-emerald-600 shadow-sm hover:shadow-md transition">
+                        <i class="fas fa-home text-emerald-600 text-2xl mb-3 block"></i>
+                        <h3 class="font-bold text-slate-900 dark:text-white mb-1">مقارنة تطوير</h3>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">فيلا فاخرة vs وحدات صغيرة في الخبر</p>
+                    </a>
+                    <a href="{{ url('/investment-studies') }}" class="group p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-emerald-400 dark:hover:border-emerald-600 shadow-sm hover:shadow-md transition">
+                        <i class="fas fa-scroll text-emerald-600 text-2xl mb-3 block"></i>
+                        <h3 class="font-bold text-slate-900 dark:text-white mb-1">متطلبات تنظيمية</h3>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">البناء الصناعي وفق الكود السعودي</p>
+                    </a>
+                @endif
             </div>
         </div>
     </section>
