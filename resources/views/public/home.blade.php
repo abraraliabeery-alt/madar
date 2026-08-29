@@ -418,6 +418,34 @@
         </div>
     </section>
 
+    <!-- Data Sources Section -->
+    <section class="py-12 sm:py-16 bg-white dark:bg-slate-900 border-y border-slate-200 dark:border-slate-800">
+        <div class="home-container">
+            <div class="text-center mb-8 sm:mb-10">
+                <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-2">مبني على بيانات موثوقة</h2>
+                <p class="text-sm text-slate-600 dark:text-slate-400">نستخدم مصادر بيانات متعددة لضمان دقة المعلومات</p>
+            </div>
+            <div class="flex flex-wrap justify-center items-center gap-6 sm:gap-8">
+                <div class="flex items-center gap-2 px-4 py-2 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
+                    <i class="fas fa-database text-2xl text-emerald-600"></i>
+                    <span class="text-sm font-medium text-slate-700 dark:text-slate-300">قاعدة البيانات المركزية</span>
+                </div>
+                <div class="flex items-center gap-2 px-4 py-2 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
+                    <i class="fas fa-landmark text-2xl text-blue-600"></i>
+                    <span class="text-sm font-medium text-slate-700 dark:text-slate-300">المصادر الرسمية</span>
+                </div>
+                <div class="flex items-center gap-2 px-4 py-2 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
+                    <i class="fas fa-shield-alt text-2xl text-purple-600"></i>
+                    <span class="text-sm font-medium text-slate-700 dark:text-slate-300">البيانات الموثقة</span>
+                </div>
+                <div class="flex items-center gap-2 px-4 py-2 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
+                    <i class="fas fa-chart-bar text-2xl text-orange-600"></i>
+                    <span class="text-sm font-medium text-slate-700 dark:text-slate-300">تحليلات السوق</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <div class="home-container">
     <!-- Featured Cities -->
     @if(isset($featuredCities) && $featuredCities->count() > 0)
