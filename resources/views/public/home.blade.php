@@ -349,72 +349,7 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto text-right">
-                @if($mode === \App\Helpers\PlatformModeHelper::MODE_REAL_ESTATE)
-                    <a href="{{ url('/investment-studies') }}" class="group p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-emerald-400 dark:hover:border-emerald-600 shadow-sm hover:shadow-md transition">
-                        <i class="fas fa-lightbulb text-emerald-600 text-2xl mb-3 block"></i>
-                        <h3 class="font-bold text-slate-900 dark:text-white mb-1">استشارة استثمارية</h3>
-                        <p class="text-sm text-slate-500 dark:text-slate-400">حدد أفضل الفرص الاستثمارية في السوق</p>
-                    </a>
-                    <a href="{{ url('/investment-studies') }}" class="group p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-emerald-400 dark:hover:border-emerald-600 shadow-sm hover:shadow-md transition">
-                        <i class="fas fa-calculator text-emerald-600 text-2xl mb-3 block"></i>
-                        <h3 class="font-bold text-slate-900 dark:text-white mb-1">تقييم عقاري</h3>
-                        <p class="text-sm text-slate-500 dark:text-slate-400">اعرف القيمة السوقية العادلة لعقارك</p>
-                    </a>
-                    <a href="{{ url('/investment-studies') }}" class="group p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-emerald-400 dark:hover:border-emerald-600 shadow-sm hover:shadow-md transition">
-                        <i class="fas fa-hand-holding-usd text-emerald-600 text-2xl mb-3 block"></i>
-                        <h3 class="font-bold text-slate-900 dark:text-white mb-1">نصيحة شراء</h3>
-                        <p class="text-sm text-slate-500 dark:text-slate-400">تأكد من قرار الشراء قبل التعاقد</p>
-                    </a>
-                    <a href="{{ url('/investment-studies') }}" class="group p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-emerald-400 dark:hover:border-emerald-600 shadow-sm hover:shadow-md transition">
-                        <i class="fas fa-chart-area text-emerald-600 text-2xl mb-3 block"></i>
-                        <h3 class="font-bold text-slate-900 dark:text-white mb-1">تحليل سوق</h3>
-                        <p class="text-sm text-slate-500 dark:text-slate-400">تعرف على اتجاهات السوق والأسعار</p>
-                    </a>
-                @elseif($mode === \App\Helpers\PlatformModeHelper::MODE_CONTRACTING)
-                    <a href="{{ url('/investment-studies') }}" class="group p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-emerald-400 dark:hover:border-emerald-600 shadow-sm hover:shadow-md transition">
-                        <i class="fas fa-hard-hat text-emerald-600 text-2xl mb-3 block"></i>
-                        <h3 class="font-bold text-slate-900 dark:text-white mb-1">تقدير تكلفة</h3>
-                        <p class="text-sm text-slate-500 dark:text-slate-400">مشروع سكني بـ 500 وحدة في الرياض</p>
-                    </a>
-                    <a href="{{ url('/investment-studies') }}" class="group p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-emerald-400 dark:hover:border-emerald-600 shadow-sm hover:shadow-md transition">
-                        <i class="fas fa-tools text-emerald-600 text-2xl mb-3 block"></i>
-                        <h3 class="font-bold text-slate-900 dark:text-white mb-1">مقارنة المقاولين</h3>
-                        <p class="text-sm text-slate-500 dark:text-slate-400">عروض البناء للمشاريع التجارية</p>
-                    </a>
-                    <a href="{{ url('/investment-studies') }}" class="group p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-emerald-400 dark:hover:border-emerald-600 shadow-sm hover:shadow-md transition">
-                        <i class="fas fa-file-contract text-emerald-600 text-2xl mb-3 block"></i>
-                        <h3 class="font-bold text-slate-900 dark:text-white mb-1">صياغة عقود</h3>
-                        <p class="text-sm text-slate-500 dark:text-slate-400">عقود المقاولات وشروط الالتزام</p>
-                    </a>
-                    <a href="{{ url('/investment-studies') }}" class="group p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-emerald-400 dark:hover:border-emerald-600 shadow-sm hover:shadow-md transition">
-                        <i class="fas fa-building text-emerald-600 text-2xl mb-3 block"></i>
-                        <h3 class="font-bold text-slate-900 dark:text-white mb-1">جدولة مشاريع</h3>
-                        <p class="text-sm text-slate-500 dark:text-slate-400">تخطيط الجدول الزمني للتنفيذ</p>
-                    </a>
-                @else
-                    <a href="{{ url('/investment-studies') }}" class="group p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-emerald-400 dark:hover:border-emerald-600 shadow-sm hover:shadow-md transition">
-                        <i class="fas fa-lightbulb text-emerald-600 text-2xl mb-3 block"></i>
-                        <h3 class="font-bold text-slate-900 dark:text-white mb-1">استشارة استثمارية</h3>
-                        <p class="text-sm text-slate-500 dark:text-slate-400">حدد أفضل الفرص الاستثمارية في السوق</p>
-                    </a>
-                    <a href="{{ url('/investment-studies') }}" class="group p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-emerald-400 dark:hover:border-emerald-600 shadow-sm hover:shadow-md transition">
-                        <i class="fas fa-calculator text-emerald-600 text-2xl mb-3 block"></i>
-                        <h3 class="font-bold text-slate-900 dark:text-white mb-1">تقييم عقاري</h3>
-                        <p class="text-sm text-slate-500 dark:text-slate-400">اعرف القيمة السوقية العادلة لعقارك</p>
-                    </a>
-                    <a href="{{ url('/investment-studies') }}" class="group p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-emerald-400 dark:hover:border-emerald-600 shadow-sm hover:shadow-md transition">
-                        <i class="fas fa-hand-holding-usd text-emerald-600 text-2xl mb-3 block"></i>
-                        <h3 class="font-bold text-slate-900 dark:text-white mb-1">نصيحة شراء</h3>
-                        <p class="text-sm text-slate-500 dark:text-slate-400">تأكد من قرار الشراء قبل التعاقد</p>
-                    </a>
-                    <a href="{{ url('/investment-studies') }}" class="group p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-emerald-400 dark:hover:border-emerald-600 shadow-sm hover:shadow-md transition">
-                        <i class="fas fa-chart-area text-emerald-600 text-2xl mb-3 block"></i>
-                        <h3 class="font-bold text-slate-900 dark:text-white mb-1">تحليل سوق</h3>
-                        <p class="text-sm text-slate-500 dark:text-slate-400">تعرف على اتجاهات السوق والأسعار</p>
-                    </a>
-                @endif
-            </div>
+
         </div>
     </section>
 
