@@ -12,12 +12,18 @@
                     <p class="text-sm mt-1" style="color:var(--brand-muted);">{{ __('public.map_search.subtitle') }}</p>
                 </div>
                 <div class="hidden sm:flex gap-3">
-                    <a href="{{ route('public.search.advanced') }}" class="px-4 py-2 rounded-lg text-sm font-medium transition" style="background-color:var(--brand-bg);color:var(--brand-fg);border:1px solid var(--brand-border);">
-                        <i class="fas fa-cog {{ app()->getLocale() === 'ar' ? 'ml-2' : 'mr-2' }}"></i>{{ __('public.search.advanced_search') }}
-                    </a>
-                    <a href="{{ route('public.execution.marketplace') }}" class="px-4 py-2 rounded-lg text-sm font-medium transition text-white" style="background-color:var(--brand-brown);">
-                        <i class="fas fa-list {{ app()->getLocale() === 'ar' ? 'ml-2' : 'mr-2' }}"></i>{{ __('public.map_search.list_view') }}
-                    </a>
+                    @if($mode === 'real_estate' || $mode === 'lifecycle')
+                        <a href="{{ route('public.search.advanced') }}" class="px-4 py-2 rounded-lg text-sm font-medium transition" style="background-color:var(--brand-bg);color:var(--brand-fg);border:1px solid var(--brand-border);">
+                            <i class="fas fa-cog {{ app()->getLocale() === 'ar' ? 'ml-2' : 'mr-2' }}"></i>{{ __('public.search.advanced_search') }}
+                        </a>
+                        <a href="{{ route('public.products.index') }}" class="px-4 py-2 rounded-lg text-sm font-medium transition text-white" style="background-color:var(--brand-brown);">
+                            <i class="fas fa-list {{ app()->getLocale() === 'ar' ? 'ml-2' : 'mr-2' }}"></i>{{ __('public.map_search.list_view') }}
+                        </a>
+                    @else
+                        <a href="{{ route('public.execution.marketplace') }}" class="px-4 py-2 rounded-lg text-sm font-medium transition text-white" style="background-color:var(--brand-brown);">
+                            <i class="fas fa-list {{ app()->getLocale() === 'ar' ? 'ml-2' : 'mr-2' }}"></i>{{ __('public.map_search.list_view') }}
+                        </a>
+                    @endif
                 </div>
             </div>
 
@@ -27,12 +33,16 @@
                     <div class="flex rounded-lg p-1" style="background-color:rgba(var(--brand-brown-rgb),.08);">
                         <label class="cursor-pointer">
                             <input type="radio" name="search_type" value="projects" class="peer sr-only" {{ request('search_type','projects') === 'projects' ? 'checked' : '' }} onchange="filterMap()">
-                            <span class="block px-4 py-2 rounded-md text-sm font-medium transition" style="color:var(--brand-muted);" data-active="background-color:var(--brand-brown);color:#fff;">{{ __('public.map_search.projects') }}</span>
+                            <span class="block px-4 py-2 rounded-md text-sm font-medium transition" style="color:var(--brand-muted);" data-active="background-color:var(--brand-brown);color:#fff;">
+                                {{ $mode === 'contracting' ? __('public.map_search.projects') : __('public.map_search.properties') }}
+                            </span>
                         </label>
+                        @if($mode !== 'real_estate')
                         <label class="cursor-pointer">
                             <input type="radio" name="search_type" value="facilities" class="peer sr-only" {{ request('search_type') === 'facilities' ? 'checked' : '' }} onchange="filterMap()">
                             <span class="block px-4 py-2 rounded-md text-sm font-medium transition" style="color:var(--brand-muted);" data-active="background-color:var(--brand-brown);color:#fff;">{{ __('public.map_search.facilities') }}</span>
                         </label>
+                        @endif
                     </div>
 
                     <div id="categoryFilterBlock" class="hidden flex-1 min-w-[140px] max-w-xs">
@@ -91,12 +101,16 @@
                 <div class="flex rounded-lg p-1" style="background-color:rgba(var(--brand-brown-rgb),.08);">
                     <label class="cursor-pointer flex-1 text-center">
                         <input type="radio" name="search_type" value="projects" class="peer sr-only" {{ request('search_type','projects') === 'projects' ? 'checked' : '' }} onchange="filterMap(true)">
-                        <span class="block px-3 py-2 rounded-md text-sm font-medium" style="color:var(--brand-muted);">{{ __('public.map_search.projects') }}</span>
+                        <span class="block px-3 py-2 rounded-md text-sm font-medium" style="color:var(--brand-muted);">
+                            {{ $mode === 'contracting' ? __('public.map_search.projects') : __('public.map_search.properties') }}
+                        </span>
                     </label>
+                    @if($mode !== 'real_estate')
                     <label class="cursor-pointer flex-1 text-center">
                         <input type="radio" name="search_type" value="facilities" class="peer sr-only" {{ request('search_type') === 'facilities' ? 'checked' : '' }} onchange="filterMap(true)">
                         <span class="block px-3 py-2 rounded-md text-sm font-medium" style="color:var(--brand-muted);">{{ __('public.map_search.facilities') }}</span>
                     </label>
+                    @endif
                 </div>
                 <div id="mobileCategoryFilter" class="hidden">
                     <label class="block text-sm mb-1" style="color:var(--brand-muted);">{{ __('public.map_search.category') }}</label>
@@ -126,12 +140,16 @@
             <div class="flex flex-wrap gap-4 sm:gap-6">
                 <div class="flex items-center gap-2">
                     <span class="w-3 h-3 rounded-full" style="background-color:#3B82F6;"></span>
-                    <span class="text-sm" style="color:var(--brand-muted);">{{ __('public.map_search.projects') }}</span>
+                    <span class="text-sm" style="color:var(--brand-muted);">
+                        {{ $mode === 'contracting' ? __('public.map_search.projects') : __('public.map_search.properties') }}
+                    </span>
                 </div>
+                @if($mode !== 'real_estate')
                 <div class="flex items-center gap-2">
                     <span class="w-3 h-3 rounded-full" style="background-color:#10B981;"></span>
                     <span class="text-sm" style="color:var(--brand-muted);">{{ __('public.map_search.facilities') }}</span>
                 </div>
+                @endif
                 <div class="flex items-center gap-2">
                     <span class="w-3 h-3 rounded-full border" style="background-color:var(--brand-bg);border-color:var(--brand-brown);"></span>
                     <span class="text-sm" style="color:var(--brand-muted);">{{ __('public.map_search.my_location') }}</span>
@@ -299,7 +317,7 @@ function updateFormVisibility(searchType, mobile = false) {
     const price = document.getElementById(mobile ? null : 'priceFilters');
     const maxPrice = document.getElementById(mobile ? null : 'maxPriceFilter');
 
-    if (catBlock) catBlock.style.display = searchType === 'facilities' ? 'block' : 'none';
+    if (catBlock) catBlock.style.display = 'block';
     if (price) price.style.display = searchType === 'projects' ? 'block' : 'none';
     if (maxPrice) maxPrice.style.display = searchType === 'projects' ? 'block' : 'none';
 

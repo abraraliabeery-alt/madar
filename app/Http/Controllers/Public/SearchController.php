@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Facility;
+use App\Models\FacilityCategory;
 use App\Models\Category;
 use App\Models\Status;
 use App\Models\Feature;
@@ -1265,16 +1266,21 @@ class SearchController extends Controller
      */
     public function map(Request $request)
     {
-        $searchType = $request->get('search_type', 'projects');
-        
-        if ($searchType === 'facilities') {
+        $mode = PlatformModeHelper::getMode();
+        $defaultType = PlatformModeHelper::allowsContracting() ? 'projects' : 'projects';
+        $searchType = $request->get('search_type', $defaultType);
+
+        // Real estate / lifecycle: projects means Product (properties). Contracting only: ExecutionRequest.
+        $isRealEstate = PlatformModeHelper::allowsRealEstate();
+        $isContracting = PlatformModeHelper::allowsContracting();
+
+        if ($searchType === 'facilities' && $isContracting) {
             $query = Facility::with(['facilityCategory'])
                 ->where('is_active', true)
                 ->where('is_verified', true)
                 ->whereNotNull('latitude')
                 ->whereNotNull('longitude');
 
-            // فلترة حسب الفئة
             if ($request->has('category_id') && $request->category_id) {
                 $query->where('facility_category_id', $request->category_id);
             }
@@ -1289,13 +1295,57 @@ class SearchController extends Controller
                     'address' => $facility->address,
                     'latitude' => $facility->latitude,
                     'longitude' => $facility->longitude,
-                    'category' => $facility->facilityCategory->name ?? 'No Category',
+                    'category' => optional($facility->facilityCategory)->getTranslatedName() ?? '',
                     'facility' => $facility->name,
                     'image' => $facility->logo,
                     'url' => route('public.facilities.show', $facility->id),
                     'type' => 'facility'
                 ];
             });
+            $categories = FacilityCategory::where('is_active', true)->get();
+        } elseif ($isRealEstate) {
+            $query = Product::with(['category', 'facility', 'city'])
+                ->where('is_active', true)
+                ->whereNotNull('latitude')
+                ->whereNotNull('longitude');
+
+            if ($request->has('category_id') && $request->category_id) {
+                $query->where('category_id', $request->category_id);
+            }
+
+            $minBudget = $request->get('min_budget');
+            $maxBudget = $request->get('max_budget');
+            if ($minBudget !== null && $minBudget !== '') {
+                $query->where(function ($q) use ($minBudget) {
+                    $q->whereNull('price')
+                      ->orWhere('price', '>=', $minBudget);
+                });
+            }
+            if ($maxBudget !== null && $maxBudget !== '') {
+                $query->where(function ($q) use ($maxBudget) {
+                    $q->whereNull('price')
+                      ->orWhere('price', '<=', $maxBudget);
+                });
+            }
+
+            $products = $query->get();
+
+            $mapData = $products->map(function (Product $product) {
+                return [
+                    'id' => $product->id,
+                    'name' => $product->title,
+                    'price' => $product->price,
+                    'address' => $product->address ?? optional($product->city)->name ?? '',
+                    'latitude' => $product->latitude,
+                    'longitude' => $product->longitude,
+                    'category' => optional($product->category)->getTranslatedName() ?? '',
+                    'facility' => optional($product->facility)->name ?? '',
+                    'image' => $product->main_image,
+                    'url' => route('public.products.show', $product->id),
+                    'type' => 'product'
+                ];
+            });
+            $categories = Category::where('is_active', true)->get();
         } else {
             $query = ExecutionRequest::query()
                 ->with(['translations', 'project'])
@@ -1350,19 +1400,19 @@ class SearchController extends Controller
                     'type' => 'project'
                 ];
             });
+            $categories = collect();
         }
-
-        $categories = $searchType === 'facilities' ? Category::where('is_active', true)->get() : collect();
 
         if ($request->get('format') === 'json' || $request->wantsJson()) {
             return response()->json([
                 'search_type' => $searchType,
+                'mode' => $mode,
                 'items' => $mapData,
                 'categories' => $categories,
             ]);
         }
 
-        return view('public.search.map', compact('mapData', 'categories'));
+        return view('public.search.map', compact('mapData', 'categories', 'mode'));
     }
 
     /**
