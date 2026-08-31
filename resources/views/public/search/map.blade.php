@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', __('public.search.map_search'))
+@section('title', __('public.map_search.title'))
 
 @section('content')
 <div class="map-page min-h-screen" style="background-color:var(--brand-bg);color:var(--brand-fg);">
@@ -8,8 +8,8 @@
         <div class="max-w-7xl mx-auto">
             <div class="flex items-center justify-between gap-4 mb-4">
                 <div>
-                    <h1 class="text-2xl sm:text-3xl font-bold" style="color:var(--brand-fg);">{{ __('public.search.map_search') }}</h1>
-                    <p class="text-sm mt-1" style="color:var(--brand-muted);">استكشف العقارات والمنشآت على الخريطة</p>
+                    <h1 class="text-2xl sm:text-3xl font-bold" style="color:var(--brand-fg);">{{ __('public.map_search.title') }}</h1>
+                    <p class="text-sm mt-1" style="color:var(--brand-muted);">{{ __('public.map_search.subtitle') }}</p>
                 </div>
                 <div class="hidden sm:flex gap-3">
                     <a href="{{ route('public.search.advanced') }}" class="px-4 py-2 rounded-lg text-sm font-medium transition" style="background-color:var(--brand-bg);color:var(--brand-fg);border:1px solid var(--brand-border);">
@@ -27,11 +27,11 @@
                     <div class="flex rounded-lg p-1" style="background-color:rgba(var(--brand-brown-rgb),.08);">
                         <label class="cursor-pointer">
                             <input type="radio" name="search_type" value="projects" class="peer sr-only" {{ request('search_type','projects') === 'projects' ? 'checked' : '' }} onchange="filterMap()">
-                            <span class="block px-4 py-2 rounded-md text-sm font-medium transition" style="color:var(--brand-muted);" data-active="background-color:var(--brand-brown);color:#fff;">المشاريع</span>
+                            <span class="block px-4 py-2 rounded-md text-sm font-medium transition" style="color:var(--brand-muted);" data-active="background-color:var(--brand-brown);color:#fff;">{{ __('public.map_search.projects') }}</span>
                         </label>
                         <label class="cursor-pointer">
                             <input type="radio" name="search_type" value="facilities" class="peer sr-only" {{ request('search_type') === 'facilities' ? 'checked' : '' }} onchange="filterMap()">
-                            <span class="block px-4 py-2 rounded-md text-sm font-medium transition" style="color:var(--brand-muted);" data-active="background-color:var(--brand-brown);color:#fff;">{{ __('public.navigation.facilities') }}</span>
+                            <span class="block px-4 py-2 rounded-md text-sm font-medium transition" style="color:var(--brand-muted);" data-active="background-color:var(--brand-brown);color:#fff;">{{ __('public.map_search.facilities') }}</span>
                         </label>
                     </div>
 
@@ -61,17 +61,17 @@
 
         <!-- Map Controls -->
         <div class="absolute top-4 {{ app()->getLocale() === 'ar' ? 'left-4' : 'right-4' }} z-[1000] flex flex-col gap-2">
-            <button type="button" id="map-fullscreen-btn" class="w-10 h-10 rounded-lg shadow flex items-center justify-center transition" style="background-color:var(--brand-bg);color:var(--brand-fg);border:1px solid var(--brand-border);" title="ملء الشاشة">
+            <button type="button" id="map-fullscreen-btn" class="w-10 h-10 rounded-lg shadow flex items-center justify-center transition" style="background-color:var(--brand-bg);color:var(--brand-fg);border:1px solid var(--brand-border);" title="{{ __('public.map_search.fullscreen') }}">
                 <i class="fas fa-expand"></i>
             </button>
-            <button type="button" id="map-locate-btn" class="w-10 h-10 rounded-lg shadow flex items-center justify-center transition" style="background-color:var(--brand-bg);color:var(--brand-fg);border:1px solid var(--brand-border);" title="موقعي الحالي">
+            <button type="button" id="map-locate-btn" class="w-10 h-10 rounded-lg shadow flex items-center justify-center transition" style="background-color:var(--brand-bg);color:var(--brand-fg);border:1px solid var(--brand-border);" title="{{ __('public.map_search.my_location') }}">
                 <i class="fas fa-crosshairs"></i>
             </button>
         </div>
 
         <!-- Results Count -->
         <div class="absolute bottom-4 {{ app()->getLocale() === 'ar' ? 'right-4' : 'left-4' }} z-[1000] px-3 py-1.5 rounded-full text-sm font-medium shadow" style="background-color:var(--brand-bg);color:var(--brand-fg);border:1px solid var(--brand-border);">
-            <span id="results-count">{{ count($mapData) }}</span> نتيجة
+            <span id="results-count">{{ count($mapData) }}</span> {{ __('public.map_search.result') }}
         </div>
     </div>
 
@@ -84,22 +84,22 @@
     <div id="mobile-filter-sheet" class="sm:hidden fixed inset-0 z-[1002] hidden" style="background-color:rgba(0,0,0,.5);">
         <div class="absolute bottom-0 inset-x-0 rounded-t-2xl p-5 max-h-[80vh] overflow-y-auto" style="background-color:var(--brand-bg);color:var(--brand-fg);">
             <div class="flex items-center justify-between mb-4">
-                <h3 class="font-bold text-lg">الفلترة</h3>
+                <h3 class="font-bold text-lg">{{ __('public.map_search.filter_title') }}</h3>
                 <button id="close-mobile-filter" class="p-2" style="color:var(--brand-muted);"><i class="fas fa-times text-xl"></i></button>
             </div>
             <form id="mobileMapSearchForm" action="{{ route('public.search.map') }}" method="GET" class="space-y-4">
                 <div class="flex rounded-lg p-1" style="background-color:rgba(var(--brand-brown-rgb),.08);">
                     <label class="cursor-pointer flex-1 text-center">
                         <input type="radio" name="search_type" value="projects" class="peer sr-only" {{ request('search_type','projects') === 'projects' ? 'checked' : '' }} onchange="filterMap(true)">
-                        <span class="block px-3 py-2 rounded-md text-sm font-medium" style="color:var(--brand-muted);">المشاريع</span>
+                        <span class="block px-3 py-2 rounded-md text-sm font-medium" style="color:var(--brand-muted);">{{ __('public.map_search.projects') }}</span>
                     </label>
                     <label class="cursor-pointer flex-1 text-center">
                         <input type="radio" name="search_type" value="facilities" class="peer sr-only" {{ request('search_type') === 'facilities' ? 'checked' : '' }} onchange="filterMap(true)">
-                        <span class="block px-3 py-2 rounded-md text-sm font-medium" style="color:var(--brand-muted);">المنشآت</span>
+                        <span class="block px-3 py-2 rounded-md text-sm font-medium" style="color:var(--brand-muted);">{{ __('public.map_search.facilities') }}</span>
                     </label>
                 </div>
                 <div id="mobileCategoryFilter" class="hidden">
-                    <label class="block text-sm mb-1" style="color:var(--brand-muted);">الفئة</label>
+                    <label class="block text-sm mb-1" style="color:var(--brand-muted);">{{ __('public.map_search.category') }}</label>
                     <select name="category_id" onchange="filterMap(true)" class="w-full px-3 py-2 rounded-lg outline-none" style="background-color:var(--brand-bg);color:var(--brand-fg);border:1px solid var(--brand-border);">
                         <option value="">{{ __('public.search.all_categories') }}</option>
                         @foreach($categories as $category)
@@ -108,11 +108,11 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm mb-1" style="color:var(--brand-muted);">السعر من</label>
+                    <label class="block text-sm mb-1" style="color:var(--brand-muted);">{{ __('public.map_search.min_price_label') }}</label>
                     <input type="number" name="min_budget" value="{{ request('min_budget') }}" placeholder="{{ __('public.search.minimum_price') }}" onchange="filterMap(true)" class="w-full px-3 py-2 rounded-lg outline-none" style="background-color:var(--brand-bg);color:var(--brand-fg);border:1px solid var(--brand-border);">
                 </div>
                 <div>
-                    <label class="block text-sm mb-1" style="color:var(--brand-muted);">السعر إلى</label>
+                    <label class="block text-sm mb-1" style="color:var(--brand-muted);">{{ __('public.map_search.max_price_label') }}</label>
                     <input type="number" name="max_budget" value="{{ request('max_budget') }}" placeholder="{{ __('public.search.maximum_price') }}" onchange="filterMap(true)" class="w-full px-3 py-2 rounded-lg outline-none" style="background-color:var(--brand-bg);color:var(--brand-fg);border:1px solid var(--brand-border);">
                 </div>
             </form>
@@ -122,19 +122,19 @@
     <!-- Legend -->
     <div class="px-4 sm:px-6 py-4 border-t" style="background-color:var(--brand-bg);border-color:var(--brand-border);">
         <div class="max-w-7xl mx-auto">
-            <h3 class="text-sm font-semibold mb-3" style="color:var(--brand-fg);">دليل العلامات</h3>
+            <h3 class="text-sm font-semibold mb-3" style="color:var(--brand-fg);">{{ __('public.map_search.map_legend') }}</h3>
             <div class="flex flex-wrap gap-4 sm:gap-6">
                 <div class="flex items-center gap-2">
                     <span class="w-3 h-3 rounded-full" style="background-color:#3B82F6;"></span>
-                    <span class="text-sm" style="color:var(--brand-muted);">المشاريع</span>
+                    <span class="text-sm" style="color:var(--brand-muted);">{{ __('public.map_search.projects') }}</span>
                 </div>
                 <div class="flex items-center gap-2">
                     <span class="w-3 h-3 rounded-full" style="background-color:#10B981;"></span>
-                    <span class="text-sm" style="color:var(--brand-muted);">المنشآت</span>
+                    <span class="text-sm" style="color:var(--brand-muted);">{{ __('public.map_search.facilities') }}</span>
                 </div>
                 <div class="flex items-center gap-2">
                     <span class="w-3 h-3 rounded-full border" style="background-color:var(--brand-bg);border-color:var(--brand-brown);"></span>
-                    <span class="text-sm" style="color:var(--brand-muted);">موقعي الحالي</span>
+                    <span class="text-sm" style="color:var(--brand-muted);">{{ __('public.map_search.my_location') }}</span>
                 </div>
             </div>
         </div>
@@ -151,6 +151,13 @@
 <script>
 const initialMapData = @json($mapData);
 const categoriesList = @json($categories);
+const t = {
+    no_price: @json(__('public.map_search.no_price')),
+    geolocation_not_supported: @json(__('public.map_search.geolocation_not_supported')),
+    geolocation_error: @json(__('public.map_search.geolocation_error')),
+    current_location: @json(__('public.map_search.current_location')),
+    view_details: @json(__('public.search.view_details')),
+};
 let map;
 let markersCluster;
 let markers = [];
@@ -201,7 +208,7 @@ function createCustomIcon(color) {
 }
 
 function formatPrice(price) {
-    if (price === null || price === undefined || price === '') return 'غير محدد';
+    if (price === null || price === undefined || price === '') return t.no_price;
     return new Intl.NumberFormat('ar-SA', {
         style: 'currency',
         currency: 'SAR',
@@ -322,7 +329,7 @@ function setMapFullscreen(next) {
 
 function locateUser() {
     if (!navigator.geolocation) {
-        alert('المتصفح لا يدعم تحديد الموقع.');
+        alert(t.geolocation_not_supported);
         return;
     }
     navigator.geolocation.getCurrentPosition(
@@ -338,10 +345,10 @@ function locateUser() {
                 opacity: 1,
                 fillOpacity: 0.9
             }).addTo(map);
-            currentLocationMarker.bindPopup('موقعك الحالي').openPopup();
+            currentLocationMarker.bindPopup(t.current_location).openPopup();
             map.setView(latlng, 14);
         },
-        () => alert('تعذر الحصول على موقعك. تأكد من تفعيل خدمة الموقع.')
+        () => alert(t.geolocation_error)
     );
 }
 
