@@ -496,14 +496,7 @@ class ProductController extends Controller
      */
     public function map()
     {
-        $products = Product::with(['facility', 'category'])
-            ->where('is_active', true)
-            ->where('is_verified', true)
-            ->whereNotNull('latitude')
-            ->whereNotNull('longitude')
-            ->get();
-
-        return view('public.products.map', compact('products'));
+        return redirect()->route('public.search.map', ['search_type' => 'projects']);
     }
 
     /**
