@@ -1354,6 +1354,14 @@ class SearchController extends Controller
 
         $categories = $searchType === 'facilities' ? Category::where('is_active', true)->get() : collect();
 
+        if ($request->get('format') === 'json' || $request->wantsJson()) {
+            return response()->json([
+                'search_type' => $searchType,
+                'items' => $mapData,
+                'categories' => $categories,
+            ]);
+        }
+
         return view('public.search.map', compact('mapData', 'categories'));
     }
 

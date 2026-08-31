@@ -3,104 +3,140 @@
 @section('title', __('public.search.map_search'))
 
 @section('content')
-<div class="container mx-auto px-4 py-8">
-    <div class="max-w-7xl mx-auto">
-        <h1 class="text-3xl font-bold text-gray-900 mb-8">{{ __('public.search.map_search') }}</h1>
-        
-        <!-- Search Filters -->
-        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-            <form action="{{ route('public.search.map') }}" method="GET" id="mapSearchForm">
-                <!-- Search Type Toggle -->
-                <div class="mb-6">
-                    <label class="block text-sm font-medium text-gray-700 mb-3">{{ __('public.search.search_type') }}</label>
-                    <div class="flex space-x-4">
-                        <label class="flex items-center">
-                            <input type="radio" name="search_type" value="projects" 
-                                   {{ request('search_type', 'projects') == 'projects' ? 'checked' : '' }}
-                                   onchange="updateMapForm()" class="mr-2">
-                            <span class="text-sm text-gray-700">العقارات</span>
+<div class="map-page min-h-screen" style="background-color:var(--brand-bg);color:var(--brand-fg);">
+    <div class="map-header px-4 sm:px-6 py-5 border-b" style="background-color:var(--brand-bg);border-color:var(--brand-border);">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex items-center justify-between gap-4 mb-4">
+                <div>
+                    <h1 class="text-2xl sm:text-3xl font-bold" style="color:var(--brand-fg);">{{ __('public.search.map_search') }}</h1>
+                    <p class="text-sm mt-1" style="color:var(--brand-muted);">استكشف العقارات والمنشآت على الخريطة</p>
+                </div>
+                <div class="hidden sm:flex gap-3">
+                    <a href="{{ route('public.search.advanced') }}" class="px-4 py-2 rounded-lg text-sm font-medium transition" style="background-color:var(--brand-bg);color:var(--brand-fg);border:1px solid var(--brand-border);">
+                        <i class="fas fa-cog {{ app()->getLocale() === 'ar' ? 'ml-2' : 'mr-2' }}"></i>{{ __('public.search.advanced_search') }}
+                    </a>
+                    <a href="{{ route('public.execution.marketplace') }}" class="px-4 py-2 rounded-lg text-sm font-medium transition text-white" style="background-color:var(--brand-brown);">
+                        <i class="fas fa-list {{ app()->getLocale() === 'ar' ? 'ml-2' : 'mr-2' }}"></i>{{ __('public.map_search.list_view') }}
+                    </a>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <form id="mapSearchForm" action="{{ route('public.search.map') }}" method="GET" class="hidden sm:block">
+                <div class="flex flex-wrap items-end gap-3">
+                    <div class="flex rounded-lg p-1" style="background-color:rgba(var(--brand-brown-rgb),.08);">
+                        <label class="cursor-pointer">
+                            <input type="radio" name="search_type" value="projects" class="peer sr-only" {{ request('search_type','projects') === 'projects' ? 'checked' : '' }} onchange="filterMap()">
+                            <span class="block px-4 py-2 rounded-md text-sm font-medium transition" style="color:var(--brand-muted);" data-active="background-color:var(--brand-brown);color:#fff;">المشاريع</span>
                         </label>
-                        <label class="flex items-center">
-                            <input type="radio" name="search_type" value="facilities" 
-                                   {{ request('search_type') == 'facilities' ? 'checked' : '' }}
-                                   onchange="updateMapForm()" class="mr-2">
-                            <span class="text-sm text-gray-700">{{ __('public.navigation.facilities') }}</span>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="search_type" value="facilities" class="peer sr-only" {{ request('search_type') === 'facilities' ? 'checked' : '' }} onchange="filterMap()">
+                            <span class="block px-4 py-2 rounded-md text-sm font-medium transition" style="color:var(--brand-muted);" data-active="background-color:var(--brand-brown);color:#fff;">{{ __('public.navigation.facilities') }}</span>
                         </label>
                     </div>
-                </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                    <div id="categoryFilterBlock">
-                        <label for="category_id" class="block text-sm font-medium text-gray-700 mb-2">{{ __('public.common.category') }}</label>
-                        <select class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
-                                id="category_id" name="category_id" onchange="filterMap()">
+                    <div id="categoryFilterBlock" class="hidden flex-1 min-w-[140px] max-w-xs">
+                        <select id="category_id" name="category_id" onchange="filterMap()" class="w-full px-3 py-2 rounded-lg text-sm outline-none" style="background-color:var(--brand-bg);color:var(--brand-fg);border:1px solid var(--brand-border);">
                             <option value="">{{ __('public.search.all_categories') }}</option>
                             @foreach($categories as $category)
-                                <option value="{{ $category->id }}" 
-                                        {{ request('category_id') == $category->id ? 'selected' : '' }}>
-                                    {{ $category->getTranslatedName() }}
-                                </option>
+                                <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>{{ $category->getTranslatedName() }}</option>
                             @endforeach
                         </select>
                     </div>
-                    <div id="priceFilters" style="display: block;">
-                        <label for="min_price" class="block text-sm font-medium text-gray-700 mb-2">{{ __('public.search.min_price') }}</label>
-                        <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
-                               id="min_price" name="min_budget" value="{{ request('min_budget') }}" placeholder="{{ __('public.search.minimum_price') }}" onchange="filterMap()">
+
+                    <div id="priceFilters" class="flex-1 min-w-[120px] max-w-xs">
+                        <input type="number" name="min_budget" value="{{ request('min_budget') }}" placeholder="{{ __('public.search.min_price') }}" onchange="filterMap()" class="w-full px-3 py-2 rounded-lg text-sm outline-none" style="background-color:var(--brand-bg);color:var(--brand-fg);border:1px solid var(--brand-border);">
                     </div>
-                    <div id="maxPriceFilter" style="display: block;">
-                        <label for="max_price" class="block text-sm font-medium text-gray-700 mb-2">{{ __('public.search.max_price') }}</label>
-                        <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
-                               id="max_price" name="max_budget" value="{{ request('max_budget') }}" placeholder="{{ __('public.search.maximum_price') }}" onchange="filterMap()">
-                    </div>
-                    <div class="flex items-end">
-                        <button type="button" onclick="filterMap()" class="w-full px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
-                            <i class="fas fa-search mr-2"></i> {{ __('public.search.filter') }}
-                        </button>
+                    <div id="maxPriceFilter" class="flex-1 min-w-[120px] max-w-xs">
+                        <input type="number" name="max_budget" value="{{ request('max_budget') }}" placeholder="{{ __('public.search.max_price') }}" onchange="filterMap()" class="w-full px-3 py-2 rounded-lg text-sm outline-none" style="background-color:var(--brand-bg);color:var(--brand-fg);border:1px solid var(--brand-border);">
                     </div>
                 </div>
             </form>
         </div>
+    </div>
 
-        <!-- Map Container -->
-        <div id="map-wrapper" class="bg-white rounded-lg shadow-md overflow-hidden relative">
-            <button type="button" id="map-fullscreen-btn" class="absolute top-3 right-3 z-[1000] inline-flex items-center justify-center w-10 h-10 rounded-md bg-white/90 border border-gray-200 text-gray-800 hover:bg-white shadow">
+    <!-- Map Container -->
+    <div class="relative w-full h-[calc(100dvh-180px)] sm:h-[calc(100dvh-230px)]" id="map-wrapper">
+        <div id="map" class="w-full h-full z-0"></div>
+
+        <!-- Map Controls -->
+        <div class="absolute top-4 {{ app()->getLocale() === 'ar' ? 'left-4' : 'right-4' }} z-[1000] flex flex-col gap-2">
+            <button type="button" id="map-fullscreen-btn" class="w-10 h-10 rounded-lg shadow flex items-center justify-center transition" style="background-color:var(--brand-bg);color:var(--brand-fg);border:1px solid var(--brand-border);" title="ملء الشاشة">
                 <i class="fas fa-expand"></i>
             </button>
-            <div id="map" class="w-full h-96"></div>
+            <button type="button" id="map-locate-btn" class="w-10 h-10 rounded-lg shadow flex items-center justify-center transition" style="background-color:var(--brand-bg);color:var(--brand-fg);border:1px solid var(--brand-border);" title="موقعي الحالي">
+                <i class="fas fa-crosshairs"></i>
+            </button>
         </div>
 
-        <!-- Map Legend -->
-        <div class="mt-6 bg-white rounded-lg shadow-md p-6">
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">{{ __('public.map_search.map_legend') }}</h3>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div class="flex items-center">
-                    <div class="w-4 h-4 bg-blue-500 rounded-full mr-2"></div>
-                    <span class="text-sm text-gray-700">{{ __('public.map_search.properties') }}</span>
+        <!-- Results Count -->
+        <div class="absolute bottom-4 {{ app()->getLocale() === 'ar' ? 'right-4' : 'left-4' }} z-[1000] px-3 py-1.5 rounded-full text-sm font-medium shadow" style="background-color:var(--brand-bg);color:var(--brand-fg);border:1px solid var(--brand-border);">
+            <span id="results-count">{{ count($mapData) }}</span> نتيجة
+        </div>
+    </div>
+
+    <!-- Mobile Filter Sheet Trigger -->
+    <button type="button" id="mobile-filter-btn" class="sm:hidden fixed bottom-6 {{ app()->getLocale() === 'ar' ? 'left-6' : 'right-6' }} z-[1001] w-12 h-12 rounded-full shadow-lg flex items-center justify-center text-white" style="background-color:var(--brand-brown);">
+        <i class="fas fa-sliders-h"></i>
+    </button>
+
+    <!-- Mobile Filter Sheet -->
+    <div id="mobile-filter-sheet" class="sm:hidden fixed inset-0 z-[1002] hidden" style="background-color:rgba(0,0,0,.5);">
+        <div class="absolute bottom-0 inset-x-0 rounded-t-2xl p-5 max-h-[80vh] overflow-y-auto" style="background-color:var(--brand-bg);color:var(--brand-fg);">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="font-bold text-lg">الفلترة</h3>
+                <button id="close-mobile-filter" class="p-2" style="color:var(--brand-muted);"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <form id="mobileMapSearchForm" action="{{ route('public.search.map') }}" method="GET" class="space-y-4">
+                <div class="flex rounded-lg p-1" style="background-color:rgba(var(--brand-brown-rgb),.08);">
+                    <label class="cursor-pointer flex-1 text-center">
+                        <input type="radio" name="search_type" value="projects" class="peer sr-only" {{ request('search_type','projects') === 'projects' ? 'checked' : '' }} onchange="filterMap(true)">
+                        <span class="block px-3 py-2 rounded-md text-sm font-medium" style="color:var(--brand-muted);">المشاريع</span>
+                    </label>
+                    <label class="cursor-pointer flex-1 text-center">
+                        <input type="radio" name="search_type" value="facilities" class="peer sr-only" {{ request('search_type') === 'facilities' ? 'checked' : '' }} onchange="filterMap(true)">
+                        <span class="block px-3 py-2 rounded-md text-sm font-medium" style="color:var(--brand-muted);">المنشآت</span>
+                    </label>
                 </div>
-                <div class="flex items-center">
-                    <div class="w-4 h-4 bg-green-500 rounded-full mr-2"></div>
-                    <span class="text-sm text-gray-700">{{ __('public.map_search.for_sale') }}</span>
+                <div id="mobileCategoryFilter" class="hidden">
+                    <label class="block text-sm mb-1" style="color:var(--brand-muted);">الفئة</label>
+                    <select name="category_id" onchange="filterMap(true)" class="w-full px-3 py-2 rounded-lg outline-none" style="background-color:var(--brand-bg);color:var(--brand-fg);border:1px solid var(--brand-border);">
+                        <option value="">{{ __('public.search.all_categories') }}</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>{{ $category->getTranslatedName() }}</option>
+                        @endforeach
+                    </select>
                 </div>
-                <div class="flex items-center">
-                    <div class="w-4 h-4 bg-orange-500 rounded-full mr-2"></div>
-                    <span class="text-sm text-gray-700">{{ __('public.map_search.for_rent') }}</span>
+                <div>
+                    <label class="block text-sm mb-1" style="color:var(--brand-muted);">السعر من</label>
+                    <input type="number" name="min_budget" value="{{ request('min_budget') }}" placeholder="{{ __('public.search.minimum_price') }}" onchange="filterMap(true)" class="w-full px-3 py-2 rounded-lg outline-none" style="background-color:var(--brand-bg);color:var(--brand-fg);border:1px solid var(--brand-border);">
                 </div>
-                <div class="flex items-center">
-                    <div class="w-4 h-4 bg-purple-500 rounded-full mr-2"></div>
-                    <span class="text-sm text-gray-700">{{ __('public.map_search.featured') }}</span>
+                <div>
+                    <label class="block text-sm mb-1" style="color:var(--brand-muted);">السعر إلى</label>
+                    <input type="number" name="max_budget" value="{{ request('max_budget') }}" placeholder="{{ __('public.search.maximum_price') }}" onchange="filterMap(true)" class="w-full px-3 py-2 rounded-lg outline-none" style="background-color:var(--brand-bg);color:var(--brand-fg);border:1px solid var(--brand-border);">
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Legend -->
+    <div class="px-4 sm:px-6 py-4 border-t" style="background-color:var(--brand-bg);border-color:var(--brand-border);">
+        <div class="max-w-7xl mx-auto">
+            <h3 class="text-sm font-semibold mb-3" style="color:var(--brand-fg);">دليل العلامات</h3>
+            <div class="flex flex-wrap gap-4 sm:gap-6">
+                <div class="flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-full" style="background-color:#3B82F6;"></span>
+                    <span class="text-sm" style="color:var(--brand-muted);">المشاريع</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-full" style="background-color:#10B981;"></span>
+                    <span class="text-sm" style="color:var(--brand-muted);">المنشآت</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-full border" style="background-color:var(--brand-bg);border-color:var(--brand-brown);"></span>
+                    <span class="text-sm" style="color:var(--brand-muted);">موقعي الحالي</span>
                 </div>
             </div>
-        </div>
-
-        <!-- Quick Actions -->
-        <div class="mt-6 flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="{{ \App\Helpers\SearchHelper::buildSearchRoute('public.search.advanced') }}" class="inline-flex items-center px-6 py-3 bg-gray-200 text-gray-800 font-medium rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors">
-                <i class="fas fa-cog mr-2"></i> {{ __('public.search.advanced_search') }}
-            </a>
-            <a href="{{ route('public.execution.marketplace') }}" class="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
-                <i class="fas fa-list mr-2"></i> {{ __('public.map_search.list_view') }}
-            </a>
         </div>
     </div>
 </div>
@@ -108,119 +144,64 @@
 <!-- Map Scripts -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
 
 <script>
-// Map data from Laravel
-const mapData = @json($mapData);
+const initialMapData = @json($mapData);
+const categoriesList = @json($categories);
 let map;
+let markersCluster;
 let markers = [];
+let currentLocationMarker = null;
 let isMapFullscreen = false;
 
-// Initialize map
+const brandBrown = getComputedStyle(document.documentElement).getPropertyValue('--brand-brown').trim() || '#126b61';
+
 function initMap() {
-    // Default center (Riyadh, Saudi Arabia)
     const defaultCenter = [24.7136, 46.6753];
-    
     map = L.map('map').setView(defaultCenter, 10);
-    
-    // Add OpenStreetMap tiles
+
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
+        attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
-    
-    // Add markers
-    addMarkersToMap();
-}
 
-function setMapFullscreen(next) {
-    isMapFullscreen = !!next;
-    document.body.classList.toggle('map-fullscreen', isMapFullscreen);
-
-    const btn = document.getElementById('map-fullscreen-btn');
-    if (btn) {
-        btn.innerHTML = isMapFullscreen ? '<i class="fas fa-compress"></i>' : '<i class="fas fa-expand"></i>';
-    }
-
-    if (map) {
-        setTimeout(() => {
-            map.invalidateSize();
-        }, 150);
-    }
-}
-
-// Add markers to map
-function addMarkersToMap() {
-    // Clear existing markers
-    markers.forEach(marker => map.removeLayer(marker));
-    markers = [];
-    
-    if (mapData.length === 0) {
-        // Show message if no properties found
-        const noDataDiv = L.divIcon({
-            html: '<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">' +
-                  '<i class="fas fa-exclamation-triangle mr-2"></i>' +
-                  '{{ __("public.map_search.no_properties_area") }}' +
-                  '</div>',
-            className: 'custom-div-icon',
-            iconSize: [300, 50],
-            iconAnchor: [150, 25]
-        });
-        
-        L.marker(defaultCenter, { icon: noDataDiv }).addTo(map);
-        return;
-    }
-    
-    // Add markers for each property
-    mapData.forEach(property => {
-        const markerColor = getMarkerColor(property);
-        
-        const marker = L.circleMarker([property.latitude, property.longitude], {
-            radius: 8,
-            fillColor: markerColor,
-            color: '#fff',
-            weight: 2,
-            opacity: 1,
-            fillOpacity: 0.8
-        }).addTo(map);
-        
-        // Create popup content
-        const popupContent = `
-            <div class="p-2">
-                <h4 class="font-semibold text-gray-800 mb-2">${property.name}</h4>
-                <p class="text-sm text-gray-600 mb-2">${property.address}</p>
-                <p class="text-lg font-bold text-blue-600 mb-2">${formatPrice(property.price)}</p>
-                <p class="text-sm text-gray-500 mb-2">
-                    <i class="fas fa-tag mr-1"></i> ${property.category}
-                </p>
-                <p class="text-sm text-gray-500 mb-3">
-                    <i class="fas fa-building mr-1"></i> ${property.facility}
-                </p>
-                <a href="${property.url}" class="inline-block bg-blue-600 !text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition-colors">
-                    {{ __('public.search.view_details') }}
-                </a>
-            </div>
-        `;
-        
-        marker.bindPopup(popupContent);
-        markers.push(marker);
+    markersCluster = L.markerClusterGroup({
+        chunkedLoading: true,
+        spiderfyOnMaxZoom: true,
+        showCoverageOnHover: false,
+        maxClusterRadius: 60,
+        iconCreateFunction: function(cluster) {
+            return L.divIcon({
+                html: `<div class="flex items-center justify-center w-8 h-8 rounded-full text-white text-xs font-bold shadow-lg" style="background-color:${brandBrown};">${cluster.getChildCount()}</div>`,
+                className: 'marker-cluster-custom',
+                iconSize: [32, 32],
+                iconAnchor: [16, 16]
+            });
+        }
     });
-    
-    // Fit map to show all markers
-    if (mapData.length > 0) {
-        const group = new L.featureGroup(markers);
-        map.fitBounds(group.getBounds().pad(0.1));
-    }
+    map.addLayer(markersCluster);
+
+    addMarkersToMap(initialMapData);
 }
 
-// Get marker color based on property type
-function getMarkerColor(property) {
-    // This would need to be determined based on your property data structure
-    // For now, using a default blue color
-    return '#3B82F6';
+function getMarkerColor(item) {
+    return item.type === 'facility' ? '#10B981' : '#3B82F6';
 }
 
-// Format price
+function createCustomIcon(color) {
+    return L.divIcon({
+        html: `<div class="w-8 h-8 rounded-full border-2 border-white shadow-md flex items-center justify-center" style="background-color:${color};"><i class="fas fa-map-marker-alt text-white text-xs"></i></div>`,
+        className: 'custom-map-marker',
+        iconSize: [32, 32],
+        iconAnchor: [16, 32],
+        popupAnchor: [0, -34]
+    });
+}
+
 function formatPrice(price) {
+    if (price === null || price === undefined || price === '') return 'غير محدد';
     return new Intl.NumberFormat('ar-SA', {
         style: 'currency',
         currency: 'SAR',
@@ -228,88 +209,184 @@ function formatPrice(price) {
     }).format(price);
 }
 
-// Update form action based on search type
-function updateMapForm() {
-    const form = document.getElementById('mapSearchForm');
-    const searchType = document.querySelector('input[name="search_type"]:checked').value;
-    const categoryFilterBlock = document.getElementById('categoryFilterBlock');
-    const priceFilters = document.getElementById('priceFilters');
-    const maxPriceFilter = document.getElementById('maxPriceFilter');
-    
-    form.action = '{{ route("public.search.map") }}';
+function addMarkersToMap(data) {
+    markersCluster.clearLayers();
+    markers = [];
 
-    const showBudget = searchType === 'projects';
-    if (priceFilters) priceFilters.style.display = showBudget ? 'block' : 'none';
-    if (maxPriceFilter) maxPriceFilter.style.display = showBudget ? 'block' : 'none';
-    if (categoryFilterBlock) categoryFilterBlock.style.display = searchType === 'facilities' ? 'block' : 'none';
-}
+    const countEl = document.getElementById('results-count');
+    if (countEl) countEl.textContent = data.length;
 
-// Filter map based on form inputs
-function filterMap() {
-    const form = document.getElementById('mapSearchForm');
-    const formData = new FormData(form);
-    const params = new URLSearchParams(formData);
-    
-    // Reload page with new parameters
-    window.location.href = form.action + '?' + params.toString();
-}
-
-// Initialize map when page loads
-document.addEventListener('DOMContentLoaded', function() {
-    updateMapForm();
-    initMap();
-
-    const btn = document.getElementById('map-fullscreen-btn');
-    if (btn) {
-        btn.addEventListener('click', function () {
-            setMapFullscreen(!isMapFullscreen);
+    if (data.length === 0) {
+        const noDataDiv = L.divIcon({
+            html: `<div class="px-4 py-3 rounded-lg text-sm" style="background-color:rgba(var(--brand-brown-rgb),.12);color:var(--brand-fg);border:1px solid var(--brand-border);"><i class="fas fa-exclamation-triangle {{ app()->getLocale() === 'ar' ? 'ml-2' : 'mr-2' }}"></i>{{ __('public.map_search.no_properties_area') }}</div>`,
+            className: 'custom-div-icon',
+            iconSize: [260, 50],
+            iconAnchor: [130, 25]
         });
+        L.marker(map.getCenter(), { icon: noDataDiv }).addTo(markersCluster);
+        return;
     }
 
-    document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && isMapFullscreen) {
-            setMapFullscreen(false);
+    data.forEach(item => {
+        const color = getMarkerColor(item);
+        const marker = L.marker([item.latitude, item.longitude], { icon: createCustomIcon(color) });
+
+        const imageHtml = item.image ? `<img src="${item.image}" alt="" class="w-full h-28 object-cover rounded-t-lg mb-3">` : '';
+        const priceHtml = item.price !== null ? `<p class="text-lg font-bold" style="color:${brandBrown};">${formatPrice(item.price)}</p>` : '';
+
+        const popupContent = `
+            <div class="w-56 rounded-lg overflow-hidden shadow-lg" style="font-family:Tajawal,Cairo,sans-serif;background-color:var(--brand-bg);color:var(--brand-fg);">
+                ${imageHtml}
+                <div class="p-3">
+                    <h4 class="font-bold text-sm mb-1 leading-tight" style="color:var(--brand-fg);">${item.name}</h4>
+                    <p class="text-xs mb-2" style="color:var(--brand-muted);">${item.address || ''}</p>
+                    ${priceHtml}
+                    <div class="flex items-center gap-2 mb-3 text-xs" style="color:var(--brand-muted);">
+                        <span class="px-2 py-0.5 rounded" style="background-color:rgba(var(--brand-brown-rgb),.1);color:var(--brand-brown);">${item.category}</span>
+                        <span>${item.facility}</span>
+                    </div>
+                    <a href="${item.url}" class="block w-full text-center text-white text-xs font-medium px-3 py-2 rounded transition" style="background-color:var(--brand-brown);">
+                        {{ __('public.search.view_details') }}
+                    </a>
+                </div>
+            </div>
+        `;
+
+        marker.bindPopup(popupContent, { maxWidth: 240, className: 'map-popup-custom' });
+        markers.push(marker);
+    });
+
+    markersCluster.addLayers(markers);
+
+    if (data.length > 0) {
+        const group = new L.featureGroup(markers);
+        map.fitBounds(group.getBounds().pad(0.15));
+    }
+}
+
+function filterMap(mobile = false) {
+    const form = document.getElementById(mobile ? 'mobileMapSearchForm' : 'mapSearchForm');
+    const formData = new FormData(form);
+    const params = new URLSearchParams(formData);
+    const url = '{{ route('public.search.map') }}?format=json&' + params.toString();
+
+    // Update UI for search type
+    const searchType = formData.get('search_type') || 'projects';
+    updateFormVisibility(searchType, mobile);
+
+    fetch(url)
+        .then(r => r.json())
+        .then(data => {
+            addMarkersToMap(data.items || []);
+            // Update URL without reload
+            window.history.replaceState({}, '', '{{ route('public.search.map') }}?' + params.toString());
+        })
+        .catch(() => {
+            // Fallback to reload
+            window.location.href = '{{ route('public.search.map') }}?' + params.toString();
+        });
+}
+
+function updateFormVisibility(searchType, mobile = false) {
+    const catBlock = document.getElementById(mobile ? 'mobileCategoryFilter' : 'categoryFilterBlock');
+    const price = document.getElementById(mobile ? null : 'priceFilters');
+    const maxPrice = document.getElementById(mobile ? null : 'maxPriceFilter');
+
+    if (catBlock) catBlock.style.display = searchType === 'facilities' ? 'block' : 'none';
+    if (price) price.style.display = searchType === 'projects' ? 'block' : 'none';
+    if (maxPrice) maxPrice.style.display = searchType === 'projects' ? 'block' : 'none';
+
+    // Radio buttons active styling
+    document.querySelectorAll('input[name="search_type"]').forEach(radio => {
+        const label = radio.closest('label');
+        const span = label?.querySelector('span');
+        if (span) {
+            if (radio.checked) {
+                span.style.backgroundColor = 'var(--brand-brown)';
+                span.style.color = '#fff';
+            } else {
+                span.style.backgroundColor = '';
+                span.style.color = '';
+            }
         }
+    });
+}
+
+function setMapFullscreen(next) {
+    isMapFullscreen = !!next;
+    document.body.classList.toggle('map-fullscreen', isMapFullscreen);
+    const btn = document.getElementById('map-fullscreen-btn');
+    if (btn) btn.innerHTML = isMapFullscreen ? '<i class="fas fa-compress"></i>' : '<i class="fas fa-expand"></i>';
+    if (map) setTimeout(() => map.invalidateSize(), 150);
+}
+
+function locateUser() {
+    if (!navigator.geolocation) {
+        alert('المتصفح لا يدعم تحديد الموقع.');
+        return;
+    }
+    navigator.geolocation.getCurrentPosition(
+        (pos) => {
+            const { latitude, longitude } = pos.coords;
+            const latlng = [latitude, longitude];
+            if (currentLocationMarker) map.removeLayer(currentLocationMarker);
+            currentLocationMarker = L.circleMarker(latlng, {
+                radius: 8,
+                fillColor: brandBrown,
+                color: '#fff',
+                weight: 3,
+                opacity: 1,
+                fillOpacity: 0.9
+            }).addTo(map);
+            currentLocationMarker.bindPopup('موقعك الحالي').openPopup();
+            map.setView(latlng, 14);
+        },
+        () => alert('تعذر الحصول على موقعك. تأكد من تفعيل خدمة الموقع.')
+    );
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    initMap();
+    updateFormVisibility(document.querySelector('input[name="search_type"]:checked')?.value || 'projects');
+
+    document.getElementById('map-fullscreen-btn')?.addEventListener('click', () => setMapFullscreen(!isMapFullscreen));
+    document.getElementById('map-locate-btn')?.addEventListener('click', locateUser);
+
+    const mobileFilterBtn = document.getElementById('mobile-filter-btn');
+    const mobileFilterSheet = document.getElementById('mobile-filter-sheet');
+    const closeMobileFilter = document.getElementById('close-mobile-filter');
+
+    mobileFilterBtn?.addEventListener('click', () => mobileFilterSheet?.classList.remove('hidden'));
+    closeMobileFilter?.addEventListener('click', () => mobileFilterSheet?.classList.add('hidden'));
+    mobileFilterSheet?.addEventListener('click', (e) => {
+        if (e.target === mobileFilterSheet) mobileFilterSheet.classList.add('hidden');
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && isMapFullscreen) setMapFullscreen(false);
     });
 });
 
-// Handle map resize
-window.addEventListener('resize', function() {
-    if (map) {
-        setTimeout(() => {
-            map.invalidateSize();
-        }, 100);
-    }
+window.addEventListener('resize', () => {
+    if (map) setTimeout(() => map.invalidateSize(), 100);
 });
 </script>
 
 <style>
-.custom-div-icon {
-    background: transparent;
-    border: none;
-}
-
-.leaflet-popup-content {
-    margin: 0;
-}
-
-.leaflet-popup-content-wrapper {
-    border-radius: 8px;
-}
-
-.map-fullscreen {
-    overflow: hidden;
-}
-
+.map-fullscreen { overflow: hidden; }
 .map-fullscreen #map-wrapper {
     position: fixed;
     inset: 0;
     z-index: 9999;
+    height: 100vh;
     border-radius: 0;
 }
-
-.map-fullscreen #map {
-    height: 100vh;
-}
+.map-fullscreen #map { height: 100%; }
+.marker-cluster-custom { background: transparent; border: none; }
+.custom-map-marker { background: transparent; border: none; }
+.custom-div-icon { background: transparent; border: none; }
+.leaflet-popup-content-wrapper { border-radius: 12px; overflow: hidden; padding: 0; }
+.leaflet-popup-content { margin: 0; }
+.leaflet-container a.leaflet-popup-close-button { color: var(--brand-fg); top: 6px; {{ app()->getLocale() === 'ar' ? 'left' : 'right' }}: 6px; }
 </style>
 @endsection

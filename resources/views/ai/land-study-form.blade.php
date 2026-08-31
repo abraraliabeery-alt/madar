@@ -1,5 +1,6 @@
-﻿<!DOCTYPE html>
-<html lang="ar" dir="rtl">
+﻿@php($theme = in_array(request('theme'), ['dark','light']) ? request('theme') : 'light')
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="{{ $theme }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,53 +10,71 @@
     <!-- Lucide Icons CDN -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Configure Tailwind to use Arabic font and custom colors -->
+    <!-- Load platform identity from the public site theme -->
+    <link rel="stylesheet" href="{{ asset('site.css') }}?v={{ filemtime(public_path('site.css')) }}">
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'], // Fallback font for English
-                        arabic: ['Noto Sans Arabic', 'sans-serif'], // Using a modern Arabic font
+                        sans: ['Tajawal', 'Cairo', 'system-ui', 'sans-serif'],
+                        arabic: ['Tajawal', 'Cairo', 'system-ui', 'sans-serif'],
                     },
                     colors: {
-                        'primary-blue': '#10B981', // Emerald Green for primary actions
-                        'primary-light': '#F0FDF4', // Lightest green for background
-                        'ai-bg': '#E5E7EB', // Light gray for AI messages
-                        'user-bg': '#DBF9EA', // Very light green for user messages
+                        'primary-blue': 'var(--brand-brown)',
+                        'primary-light': 'var(--brand-bg)',
+                        'ai-bg': 'var(--brand-bg)',
+                        'user-bg': 'var(--brand-bg)',
                     },
                 }
             }
         }
     </script>
     <style>
-        /* Import a clean Arabic font */
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;600;700&display=swap');
-        
-        html {
-            font-size: clamp(12px, 1.6vw, 14px);
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Tajawal:wght@400;500;700&display=swap');
+
+        :root {
+            --brand-brown: #126b61;
+            --brand-brown-rgb: 18,107,97;
+            --brand-bg: #f6f8f8;
+            --brand-fg: #172524;
+            --brand-border: rgba(18,107,97,.18);
+            --brand-muted: #647472;
+            --brand-shadow: 0 .25rem 1rem rgba(18,107,97,.09);
+            --ai-user-bg: #dbfcf5;
+            --ai-bot-bg: #eef7f6;
+        }
+        html[data-theme="dark"], .dark {
+            --brand-brown: #55c8b8;
+            --brand-brown-rgb: 85,200,184;
+            --brand-bg: #0d1717;
+            --brand-fg: #edf7f5;
+            --brand-border: rgba(85,200,184,.22);
+            --brand-muted: #9bb0ad;
+            --brand-shadow: 0 .25rem 1rem rgba(0,0,0,.35);
+            --ai-user-bg: rgba(85,200,184,.12);
+            --ai-bot-bg: rgba(85,200,184,.06);
         }
 
+        html { font-size: clamp(13px, 1.6vw, 15px); }
+
         body {
-            font-family: 'Noto Sans Arabic', sans-serif;
-            background-color: #f7f8f9; /* Off-white background */
+            font-family: 'Tajawal', 'Cairo', system-ui, -apple-system, Segoe UI, Roboto, Arial, 'Noto Kufi Arabic', sans-serif;
+            background-color: var(--brand-bg);
+            color: var(--brand-fg);
             display: flex;
             height: 100vh;
             overflow: hidden;
         }
+
         /* Custom scrollbar for chat area */
-        .chat-area::-webkit-scrollbar {
-            width: 8px;
-        }
-        .chat-area::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .chat-area::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 4px;
-        }
-        .chat-area::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
-        }
+        .chat-area::-webkit-scrollbar { width: 6px; }
+        .chat-area::-webkit-scrollbar-track { background: transparent; }
+        .chat-area::-webkit-scrollbar-thumb { background: var(--brand-brown); border-radius: 4px; opacity: 0.45; }
+        .chat-area::-webkit-scrollbar-thumb:hover { opacity: 1; }
+
+        .chat-area { scrollbar-color: var(--brand-brown) transparent; scrollbar-width: thin; }
 
         /* Animation for the AI typing indicator */
         .dot {
@@ -65,18 +84,24 @@
             width: 6px;
             height: 6px;
             border-radius: 50%;
-            background-color: #4B5563; /* Gray-600 */
+            background-color: var(--brand-muted);
         }
-        .dot:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-        .dot:nth-child(3) {
-            animation-delay: 0.4s;
-        }
+        .dot:nth-child(2) { animation-delay: 0.2s; }
+        .dot:nth-child(3) { animation-delay: 0.4s; }
         @keyframes dot-flicker {
             0%, 80%, 100% { transform: scale(0); }
             40% { transform: scale(1); }
         }
+
+        /* Force identity colors across Tailwind hard-coded classes */
+        body, .bg-white, .bg-gray-50, .bg-primary-light, aside, main, header, footer { background-color: var(--brand-bg) !important; }
+        .text-gray-800, .text-gray-900, h1, h2, h3, p, span, a { color: var(--brand-fg); }
+        .text-gray-600, .text-gray-500, .text-gray-400, .placeholder-gray-400::placeholder { color: var(--brand-muted) !important; }
+        .border-gray-200, .border-l { border-color: var(--brand-border) !important; }
+        .bg-primary-blue, .bg-emerald-600 { background-color: var(--brand-brown) !important; color: #fff !important; }
+        .bg-user-bg { background-color: var(--ai-user-bg) !important; }
+        .bg-ai-bg { background-color: var(--ai-bot-bg) !important; }
+        textarea, input { color: var(--brand-fg) !important; background: transparent !important; }
     </style>
     <!-- Firebase SDK (Mandatory Setup) -->
     <script type="module">

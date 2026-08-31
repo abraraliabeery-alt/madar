@@ -423,25 +423,12 @@
         <div class="home-container">
             <div class="text-center mb-8 sm:mb-10">
                 <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-2">مبني على بيانات موثوقة</h2>
-                <p class="text-sm text-slate-600 dark:text-slate-400">نستخدم مصادر بيانات متعددة لضمان دقة المعلومات</p>
+                <p class="text-sm text-slate-600 dark:text-slate-400">نعتمد على مصادر بيانات رسمية وموثوقة لضمان دقة المعلومات</p>
             </div>
-            <div class="flex flex-wrap justify-center items-center gap-6 sm:gap-8">
-                <div class="flex items-center gap-2 px-4 py-2 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
-                    <i class="fas fa-database text-2xl text-emerald-600"></i>
-                    <span class="text-sm font-medium text-slate-700 dark:text-slate-300">قاعدة البيانات المركزية</span>
-                </div>
-                <div class="flex items-center gap-2 px-4 py-2 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
-                    <i class="fas fa-landmark text-2xl text-blue-600"></i>
-                    <span class="text-sm font-medium text-slate-700 dark:text-slate-300">المصادر الرسمية</span>
-                </div>
-                <div class="flex items-center gap-2 px-4 py-2 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
-                    <i class="fas fa-shield-alt text-2xl text-purple-600"></i>
-                    <span class="text-sm font-medium text-slate-700 dark:text-slate-300">البيانات الموثقة</span>
-                </div>
-                <div class="flex items-center gap-2 px-4 py-2 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
-                    <i class="fas fa-chart-bar text-2xl text-orange-600"></i>
-                    <span class="text-sm font-medium text-slate-700 dark:text-slate-300">تحليلات السوق</span>
-                </div>
+            <div class="flex flex-wrap justify-center items-center gap-8 sm:gap-12">
+                <img src="https://rega.gov.sa/images/logos/REGA_LOGO.svg" alt="الهيئة العامة للعقار" title="الهيئة العامة للعقار" class="h-12 w-auto" onerror="this.style.display='none'">
+                <img src="https://wasmenia.com/_next/image?url=https%3A%2F%2Fstrapi.wasmenia.com%2Fuploads%2FEjar_f2e582437b.svg&w=828&q=75" alt="إيجار" title="إيجار" class="h-12 w-auto" onerror="this.style.display='none'">
+                <img src="https://my.gov.sa/_next/static/media/logo_DGA.301aceb9.svg" alt="بوابة البيانات المفتوحة" title="بوابة البيانات المفتوحة" class="h-12 w-auto" onerror="this.style.display='none'">
             </div>
         </div>
     </section>
@@ -643,20 +630,20 @@
 
 
 <!-- AI Investment Study Modal -->
-<div id="aiModal" class="fixed inset-0 z-[100] hidden" aria-modal="true" role="dialog" aria-label="استشارة بالذكاء الاصطناعي">
+<div id="aiModal" class="fixed inset-0 z-[100] hidden h-dvh max-h-dvh" aria-modal="true" role="dialog" aria-label="استشارة بالذكاء الاصطناعي">
     <div class="absolute inset-0 bg-slate-900/80 backdrop-blur-sm" onclick="closeAiModal()"></div>
-    <div class="absolute inset-0 sm:inset-6 lg:inset-10 bg-white dark:bg-slate-900 rounded-none sm:rounded-2xl shadow-2xl overflow-hidden flex flex-col">
-        <div class="flex items-center justify-between px-4 sm:px-6 py-3 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
-            <h3 class="font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <i class="fas fa-robot text-emerald-600"></i>
+    <div class="absolute inset-x-0 bottom-0 top-0 sm:inset-4 lg:inset-8 sm:max-w-[95vw] lg:max-w-6xl sm:mx-auto sm:my-auto sm:h-[92vh] sm:max-h-[92vh] rounded-t-2xl sm:rounded-2xl shadow-2xl overflow-hidden flex flex-col" style="background-color:var(--brand-bg);color:var(--brand-fg);border-color:var(--brand-border);height:100dvh;max-height:100dvh;">
+        <div class="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b shrink-0" style="background-color:var(--brand-bg);border-color:var(--brand-border);">
+            <h3 class="font-bold flex items-center gap-2 text-base sm:text-lg" style="color:var(--brand-fg);">
+                <i class="fas fa-robot" style="color:var(--brand-brown);"></i>
                 <span>مدار الذكي</span>
             </h3>
-            <button type="button" onclick="closeAiModal()" class="p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition" aria-label="إغلاق">
+            <button type="button" onclick="closeAiModal()" class="p-2 sm:p-2.5 rounded-lg transition min-w-10 min-h-10 flex items-center justify-center" style="color:var(--brand-muted);" onmouseover="this.style.background='var(--brand-border)'" onmouseout="this.style.background='transparent'" aria-label="إغلاق">
                 <i class="fas fa-times text-xl"></i>
             </button>
         </div>
-        <div class="flex-1 relative">
-            <iframe id="aiModalFrame" src="{{ url('/investment-studies') }}" class="w-full h-full border-0" loading="lazy" title="استشارة بالذكاء الاصطناعي"></iframe>
+        <div class="flex-1 relative min-h-0 overflow-hidden">
+            <iframe id="aiModalFrame" src="{{ url('/investment-studies') }}" class="w-full h-full border-0" loading="lazy" title="استشارة بالذكاء الاصطناعي" style="min-height:100%;"></iframe>
         </div>
     </div>
 </div>
@@ -666,7 +653,9 @@
         const modal = document.getElementById('aiModal');
         const frame = document.getElementById('aiModalFrame');
         const baseUrl = '{{ url('/investment-studies') }}';
-        const url = prompt ? baseUrl + '?prompt=' + encodeURIComponent(prompt) : baseUrl;
+        const theme = document.documentElement.getAttribute('data-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        let url = baseUrl + '?theme=' + encodeURIComponent(theme);
+        if (prompt) url += '&prompt=' + encodeURIComponent(prompt);
         if (frame) frame.src = url;
         if (modal) modal.classList.remove('hidden');
         document.body.style.overflow = 'hidden';
