@@ -131,6 +131,19 @@
                     </a>
                 @endif
 
+                <a href="{{ route('admin.cities.index') }}" class="nav-link {{ request()->routeIs('admin.cities.*') ? 'active' : '' }}">
+                    <i class="fas fa-city"></i>
+                    <span>إدارة المدن</span>
+                </a>
+                <a href="{{ route('admin.neighborhoods.index') }}" class="nav-link {{ request()->routeIs('admin.neighborhoods.*') ? 'active' : '' }}">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>إدارة الأحياء</span>
+                </a>
+                <a href="{{ route('admin.streets.index') }}" class="nav-link {{ request()->routeIs('admin.streets.*') ? 'active' : '' }}">
+                    <i class="fas fa-road"></i>
+                    <span>إدارة الشوارع</span>
+                </a>
+
                 <a href="{{ route('admin.menus.index') }}" class="nav-link {{ request()->routeIs('admin.menus.*') ? 'active' : '' }}">
                     <i class="fas fa-list"></i>
                     <span>{{ __('admin.menus.title') }}</span>

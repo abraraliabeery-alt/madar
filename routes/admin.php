@@ -20,6 +20,9 @@ use App\Http\Controllers\Admin\AdminUploadController;
 use App\Http\Controllers\Admin\AdminFinancialController;
 use App\Http\Controllers\Admin\AdminPermissionController;
 use App\Http\Controllers\Admin\AdminUserManagementController;
+use App\Http\Controllers\Admin\AdminCityController;
+use App\Http\Controllers\Admin\AdminNeighborhoodController;
+use App\Http\Controllers\Admin\AdminStreetController;
 use App\Http\Controllers\Admin\IconPickerController;
 use App\Http\Controllers\Admin\AdminPlanLotController;
 use App\Http\Controllers\Admin\MenuAdminController;
@@ -204,6 +207,11 @@ Route::group([], function () {
     Route::post('attributes/{attribute}/toggle-required', [AdminAttributeController::class, 'toggleRequired'])->name('attributes.toggle-required');
     Route::post('attributes/{attribute}/toggle-status', [AdminAttributeController::class, 'toggleStatus'])->name('attributes.toggle-status');
     Route::get('attributes/statistics', [AdminAttributeController::class, 'statistics'])->name('attributes.statistics');
+
+    // Cities / Neighborhoods / Streets Management
+    Route::resource('cities', AdminCityController::class);
+    Route::resource('neighborhoods', AdminNeighborhoodController::class);
+    Route::resource('streets', AdminStreetController::class);
 
     // FAQ Management
     Route::resource('faqs', AdminFaqController::class);
