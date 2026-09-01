@@ -7,7 +7,7 @@
             <h5 class="mb-0">تعديل مدينة</h5>
         </div>
         <div class="card-body">
-            <form action="{{ route('admin.cities.update', $city) }}" method="POST">
+            <form action="{{ route('admin.cities.update', $city) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="row g-3">
@@ -24,8 +24,13 @@
                         <textarea name="description" class="form-control" rows="3">{{ old('description', $city->description) }}</textarea>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">الصورة (رابط)</label>
-                        <input type="text" name="image" class="form-control" value="{{ old('image', $city->image) }}">
+                        <label class="form-label">الصورة</label>
+                        @if($city->image)
+                            <div class="mb-2">
+                                <img src="{{ $city->image_url }}" alt="{{ $city->name }}" style="max-height: 100px;" class="img-thumbnail">
+                            </div>
+                        @endif
+                        <input type="file" name="image" class="form-control" accept="image/*">
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">الترتيب</label>

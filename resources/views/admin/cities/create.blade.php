@@ -7,7 +7,7 @@
             <h5 class="mb-0">إضافة مدينة</h5>
         </div>
         <div class="card-body">
-            <form action="{{ route('admin.cities.store') }}" method="POST">
+            <form action="{{ route('admin.cities.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="row g-3">
                     <div class="col-md-6">
@@ -23,8 +23,8 @@
                         <textarea name="description" class="form-control" rows="3">{{ old('description') }}</textarea>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">الصورة (رابط)</label>
-                        <input type="text" name="image" class="form-control" value="{{ old('image') }}">
+                        <label class="form-label">الصورة</label>
+                        <input type="file" name="image" class="form-control" accept="image/*">
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">الترتيب</label>

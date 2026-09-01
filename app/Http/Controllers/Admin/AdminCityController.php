@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\City;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class AdminCityController extends Controller
 {
@@ -25,7 +26,7 @@ class AdminCityController extends Controller
             'name' => 'required|string|max:255',
             'slug' => 'nullable|string|max:255|unique:cities,slug',
             'description' => 'nullable|string',
-            'image' => 'nullable|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp,gif,svg|max:2048',
             'sort_order' => 'nullable|integer',
             'is_active' => 'boolean',
             'is_featured' => 'boolean',
@@ -34,6 +35,10 @@ class AdminCityController extends Controller
         $validated['is_active'] = $request->boolean('is_active', true);
         $validated['is_featured'] = $request->boolean('is_featured', false);
         $validated['sort_order'] = $validated['sort_order'] ?? 0;
+
+        if ($request->hasFile('image')) {
+            $validated['image'] = $request->file('image')->store('cities', 'public');
+        }
 
         City::create($validated);
 
@@ -51,15 +56,24 @@ class AdminCityController extends Controller
             'name' => 'required|string|max:255',
             'slug' => 'nullable|string|max:255|unique:cities,slug,' . $city->id,
             'description' => 'nullable|string',
-            'image' => 'nullable|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp,gif,svg|max:2048',
             'sort_order' => 'nullable|integer',
             'is_active' => 'boolean',
             'is_featured' => 'boolean',
         ]);
 
-        $validated['is_active'] = $request->boolean('is_active', true);
-        $validated['is_featured'] = $request->boolean('is_featured', false);
-        $validated['sort_order'] = $validated['sort_order'] ?? 0;
+        $validated['is_active'] = $request->boolean('is_active', $city->is_active);
+        $validated['is_featured'] = $request->boolean('is_featured', $city->is_featured);
+        $validated['sort_order'] = $validated['sort_order'] ?? $city->sort_order;
+
+        if ($request->hasFile('image')) {
+            if ($city->image && Storage::disk('public')->exists($city->image)) {
+                Storage::disk('public')->delete($city->image);
+            }
+            $validated['image'] = $request->file('image')->store('cities', 'public');
+        } else {
+            $validated['image'] = $city->image;
+        }
 
         $city->update($validated);
 
@@ -68,6 +82,9 @@ class AdminCityController extends Controller
 
     public function destroy(City $city)
     {
+        if ($city->image && Storage::disk('public')->exists($city->image)) {
+            Storage::disk('public')->delete($city->image);
+        }
         $city->delete();
         return redirect()->route('admin.cities.index')->with('success', 'تم حذف المدينة بنجاح.');
     }
