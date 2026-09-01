@@ -22,9 +22,13 @@
                         <label class="form-label">الوصف</label>
                         <textarea name="description" class="form-control" rows="3">{{ old('description') }}</textarea>
                     </div>
-                    <div class="col-md-4">
-                        <label class="form-label">الصورة</label>
-                        <input type="file" name="image" class="form-control" accept="image/*">
+                    <div class="col-md-3">
+                        <label class="form-label">رابط الصورة</label>
+                        <input type="text" name="image" class="form-control" value="{{ old('image') }}" placeholder="https://...">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">أو ارفع صورة</label>
+                        <input type="file" name="image_file" class="form-control" accept="image/*">
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">الترتيب</label>

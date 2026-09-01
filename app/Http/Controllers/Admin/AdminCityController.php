@@ -26,7 +26,8 @@ class AdminCityController extends Controller
             'name' => 'required|string|max:255',
             'slug' => 'nullable|string|max:255|unique:cities,slug',
             'description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp,gif,svg|max:2048',
+            'image' => 'nullable|string|max:500',
+            'image_file' => 'nullable|image|mimes:jpeg,png,jpg,webp,gif,svg|max:2048',
             'sort_order' => 'nullable|integer',
             'is_active' => 'boolean',
             'is_featured' => 'boolean',
@@ -36,8 +37,10 @@ class AdminCityController extends Controller
         $validated['is_featured'] = $request->boolean('is_featured', false);
         $validated['sort_order'] = $validated['sort_order'] ?? 0;
 
-        if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('cities', 'public');
+        if ($request->hasFile('image_file')) {
+            $validated['image'] = $request->file('image_file')->store('cities', 'public');
+        } else {
+            $validated['image'] = $validated['image'] ?? null;
         }
 
         City::create($validated);
@@ -56,7 +59,8 @@ class AdminCityController extends Controller
             'name' => 'required|string|max:255',
             'slug' => 'nullable|string|max:255|unique:cities,slug,' . $city->id,
             'description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp,gif,svg|max:2048',
+            'image' => 'nullable|string|max:500',
+            'image_file' => 'nullable|image|mimes:jpeg,png,jpg,webp,gif,svg|max:2048',
             'sort_order' => 'nullable|integer',
             'is_active' => 'boolean',
             'is_featured' => 'boolean',
@@ -66,13 +70,13 @@ class AdminCityController extends Controller
         $validated['is_featured'] = $request->boolean('is_featured', $city->is_featured);
         $validated['sort_order'] = $validated['sort_order'] ?? $city->sort_order;
 
-        if ($request->hasFile('image')) {
-            if ($city->image && Storage::disk('public')->exists($city->image)) {
+        if ($request->hasFile('image_file')) {
+            if ($city->image && !str_starts_with($city->image, 'http') && Storage::disk('public')->exists($city->image)) {
                 Storage::disk('public')->delete($city->image);
             }
-            $validated['image'] = $request->file('image')->store('cities', 'public');
+            $validated['image'] = $request->file('image_file')->store('cities', 'public');
         } else {
-            $validated['image'] = $city->image;
+            $validated['image'] = $validated['image'] ?? $city->image;
         }
 
         $city->update($validated);
@@ -82,7 +86,7 @@ class AdminCityController extends Controller
 
     public function destroy(City $city)
     {
-        if ($city->image && Storage::disk('public')->exists($city->image)) {
+        if ($city->image && !str_starts_with($city->image, 'http') && Storage::disk('public')->exists($city->image)) {
             Storage::disk('public')->delete($city->image);
         }
         $city->delete();
