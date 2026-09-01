@@ -105,14 +105,14 @@
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle {{ request()->routeIs('admin.product-requests.*', 'admin.marketing-product-requests.*') ? 'active' : '' }}" data-bs-toggle="dropdown">
                                 <i class="fas fa-clipboard-list"></i>
-                                <span>الطلبات</span>
+                                <span>{{ __('admin.sidebar.requests') }}</span>
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="{{ route('admin.product-requests.index') }}">
-                                    <i class="fas fa-building me-2"></i>طلبات العقار
+                                    <i class="fas fa-building me-2"></i>{{ __('admin.sidebar.product_requests') }}
                                 </a></li>
                                 <li><a class="dropdown-item" href="{{ route('admin.marketing-product-requests.index') }}">
-                                    <i class="fas fa-bullhorn me-2"></i>طلبات التسويق
+                                    <i class="fas fa-bullhorn me-2"></i>{{ __('admin.sidebar.marketing_requests') }}
                                 </a></li>
                             </ul>
                         </div>
@@ -133,15 +133,15 @@
 
                 <a href="{{ route('admin.cities.index') }}" class="nav-link {{ request()->routeIs('admin.cities.*') ? 'active' : '' }}">
                     <i class="fas fa-city"></i>
-                    <span>إدارة المدن</span>
+                    <span>{{ __('admin.cities.title') }}</span>
                 </a>
                 <a href="{{ route('admin.neighborhoods.index') }}" class="nav-link {{ request()->routeIs('admin.neighborhoods.*') ? 'active' : '' }}">
                     <i class="fas fa-map-marker-alt"></i>
-                    <span>إدارة الأحياء</span>
+                    <span>{{ __('admin.neighborhoods.title') }}</span>
                 </a>
                 <a href="{{ route('admin.streets.index') }}" class="nav-link {{ request()->routeIs('admin.streets.*') ? 'active' : '' }}">
                     <i class="fas fa-road"></i>
-                    <span>إدارة الشوارع</span>
+                    <span>{{ __('admin.streets.title') }}</span>
                 </a>
 
                 <a href="{{ route('admin.menus.index') }}" class="nav-link {{ request()->routeIs('admin.menus.*') ? 'active' : '' }}">
@@ -163,7 +163,7 @@
                 </a>
                 <a href="{{ route('admin.theme.settings.edit') }}" class="nav-link">
                     <i class="fas fa-palette"></i>
-                    <span>إعدادات الهوية</span>
+                    <span>{{ __('admin.theme_settings.title') }}</span>
                 </a>
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf

@@ -38,7 +38,7 @@ class AdminStreetController extends Controller
 
         Street::create($validated);
 
-        return redirect()->route('admin.streets.index')->with('success', 'تم إضافة الشارع بنجاح.');
+        return redirect()->route('admin.streets.index')->with('success', __('admin.messages.street_created'));
     }
 
     public function edit(Street $street)
@@ -59,12 +59,12 @@ class AdminStreetController extends Controller
 
         $street->update($validated);
 
-        return redirect()->route('admin.streets.index')->with('success', 'تم تحديث الشارع بنجاح.');
+        return redirect()->route('admin.streets.index')->with('success', __('admin.messages.street_updated'));
     }
 
     public function destroy(Street $street)
     {
         $street->delete();
-        return redirect()->route('admin.streets.index')->with('success', 'تم حذف الشارع بنجاح.');
+        return redirect()->route('admin.streets.index')->with('success', __('admin.messages.street_deleted'));
     }
 }

@@ -163,7 +163,7 @@
                                     @else
                                         <span class="text-3xl font-bold text-gray-900">{{ number_format($lowestSalePrice, 0) }} - {{ number_format($highestSalePrice, 0) }}</span>
                                     @endif
-                                    <span class="text-lg text-gray-600">ريال</span>
+                                    <span class="text-lg text-gray-600">{{ __('products.show.sar') }}</span>
                                 </div>
                                 
                                 @if($saleOffers->where('is_featured', true)->count() > 0)
@@ -193,7 +193,7 @@
                                 
                                 <div class="flex items-baseline space-x-2 space-x-reverse mb-2">
                                     <span class="text-3xl font-bold text-gray-900">{{ number_format($lowestRentPrice, 0) }}</span>
-                                    <span class="text-lg text-gray-600">ريال</span>
+                                    <span class="text-lg text-gray-600">{{ __('products.show.sar') }}</span>
                                 </div>
                                 <p class="text-sm text-gray-600 mb-3">{{ $rentLabels[$rentType] ?? $rentType }}</p>
                             @endif
@@ -222,7 +222,7 @@
                                 <a href="{{ route('public.products.pdf', $product) }}" target="_blank"
                                    class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200 flex items-center justify-center">
                                     <i class="fas fa-file-pdf ml-2"></i>
-                                    معاينة PDF
+                                    {{ __('products.show.pdf_preview') }}
                                 </a>
                             @else
                                 <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200 flex items-center justify-center">
@@ -236,7 +236,7 @@
                                 <a href="{{ route('public.products.pdf', $product) }}" target="_blank"
                                    class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200 flex items-center justify-center">
                                     <i class="fas fa-file-pdf ml-2"></i>
-                                    معاينة PDF
+                                    {{ __('products.show.pdf_preview') }}
                                 </a>
                             @endif
                         </div>
@@ -256,7 +256,7 @@
                                                 <div class="flex-1">
                                                     <div class="flex items-center space-x-2 space-x-reverse">
                                                         <span class="text-lg font-bold {{ $offer->is_featured ? 'text-blue-600' : 'text-green-600' }}">
-                                                            {{ number_format($offer->price, 0) }} ريال
+                                                            {{ number_format($offer->price, 0) }} {{ __('products.show.sar') }}
                                                         </span>
                                                         @if($offer->is_featured)
                                                             <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
@@ -267,7 +267,7 @@
                                                     </div>
                                                     @if($offer->deposit_amount)
                                                         <p class="text-xs text-gray-600 mt-1">
-                                                            {{ __('products.show.deposit') }}: {{ number_format($offer->deposit_amount, 0) }} ريال
+                                                            {{ __('products.show.deposit') }}: {{ number_format($offer->deposit_amount, 0) }} {{ __('products.show.sar') }}
                                                         </p>
                                                     @endif
                                                 </div>
@@ -319,7 +319,7 @@
                                     <a href="{{ route('public.products.pdf', $product) }}" target="_blank"
                                        class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200 flex items-center justify-center">
                                         <i class="fas fa-file-pdf ml-2"></i>
-                                        معاينة PDF
+                                        {{ __('products.show.pdf_preview') }}
                                     </a>
                                 @else
                                     <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200 flex items-center justify-center">
@@ -329,7 +329,7 @@
                                     <a href="{{ route('public.products.pdf', $product) }}" target="_blank"
                                        class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200 flex items-center justify-center">
                                         <i class="fas fa-file-pdf ml-2"></i>
-                                        معاينة PDF
+                                        {{ __('products.show.pdf_preview') }}
                                     </a>
                                 @endif
                             </div>
@@ -510,13 +510,15 @@
 
 @push('scripts')
 <script>
+const trans = @json(__('products.show'));
+
 function openOfferModal(offerId) {
     const modal = document.getElementById('offersModal');
     const modalBody = document.getElementById('modalBody');
     const modalTitle = document.getElementById('modalTitle');
     
     // Show loading
-    modalBody.innerHTML = '<div class="text-center py-8"><i class="fas fa-spinner fa-spin text-2xl text-gray-400"></i><p class="mt-2 text-gray-600">جاري التحميل...</p></div>';
+    modalBody.innerHTML = '<div class="text-center py-8"><i class="fas fa-spinner fa-spin text-2xl text-gray-400"></i><p class="mt-2 text-gray-600">${trans.loading}</p></div>';
     modal.classList.remove('hidden');
     
     // Fetch offer details
@@ -525,14 +527,14 @@ function openOfferModal(offerId) {
         .then(data => {
             if (data.success) {
                 modalBody.innerHTML = renderOfferDetails(data.offer, data.relatedOffers);
-                modalTitle.textContent = data.offer.title || 'تفاصيل العرض';
+                modalTitle.textContent = data.offer.title || trans.offer_details;
             } else {
-                modalBody.innerHTML = '<div class="text-center py-8 text-red-600">حدث خطأ في تحميل تفاصيل العرض</div>';
+                modalBody.innerHTML = '<div class="text-center py-8 text-red-600">${trans.error_loading_details}</div>';
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            modalBody.innerHTML = '<div class="text-center py-8 text-red-600">حدث خطأ في تحميل تفاصيل العرض</div>';
+            modalBody.innerHTML = '<div class="text-center py-8 text-red-600">${trans.error_loading_details}</div>';
         });
 }
 
@@ -542,9 +544,9 @@ function openAllOffersModal() {
     const modalTitle = document.getElementById('modalTitle');
     
     // Show loading
-    modalBody.innerHTML = '<div class="text-center py-8"><i class="fas fa-spinner fa-spin text-2xl text-gray-400"></i><p class="mt-2 text-gray-600">جاري التحميل...</p></div>';
+    modalBody.innerHTML = '<div class="text-center py-8"><i class="fas fa-spinner fa-spin text-2xl text-gray-400"></i><p class="mt-2 text-gray-600">${trans.loading}</p></div>';
     modal.classList.remove('hidden');
-    modalTitle.textContent = 'جميع العروض المتاحة';
+    modalTitle.textContent = trans.all_offers;
     
     // Fetch all offers for this product
     const productId = {{ $product->id }};
@@ -554,12 +556,12 @@ function openAllOffersModal() {
             if (data.success) {
                 modalBody.innerHTML = renderAllOffers(data.offers);
             } else {
-                modalBody.innerHTML = '<div class="text-center py-8 text-red-600">حدث خطأ في تحميل العروض</div>';
+                modalBody.innerHTML = '<div class="text-center py-8 text-red-600">${trans.error_loading_offers}</div>';
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            modalBody.innerHTML = '<div class="text-center py-8 text-red-600">حدث خطأ في تحميل العروض</div>';
+            modalBody.innerHTML = '<div class="text-center py-8 text-red-600">${trans.error_loading_offers}</div>';
         });
 }
 
@@ -569,16 +571,16 @@ function closeOfferModal() {
 
 function renderOfferDetails(offer, relatedOffers = []) {
     // Determine offer type display
-    let offerTypeDisplay = 'عرض';
+    let offerTypeDisplay = trans.offer;
     if (offer.offer_type === 'sale') {
-        offerTypeDisplay = 'عرض للبيع';
+        offerTypeDisplay = trans.sale_offer;
     } else if (offer.offer_type && offer.offer_type.startsWith('rent_')) {
         const rentTypes = {
-            'rent_daily': 'عرض إيجار يومي',
-            'rent_monthly': 'عرض إيجار شهري',
-            'rent_yearly': 'عرض إيجار سنوي'
+            'rent_daily': trans.rent_daily,
+            'rent_monthly': trans.rent_monthly,
+            'rent_yearly': trans.rent_yearly
         };
-        offerTypeDisplay = rentTypes[offer.offer_type] || 'عرض إيجار';
+        offerTypeDisplay = rentTypes[offer.offer_type] || trans.rent_offer;
     }
     
     let html = `
@@ -587,19 +589,19 @@ function renderOfferDetails(offer, relatedOffers = []) {
             <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <div class="flex items-center justify-between mb-3">
                     <h4 class="text-lg font-semibold text-blue-900">${offer.title || offerTypeDisplay}</h4>
-                    ${offer.is_featured ? '<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800"><i class="fas fa-star ml-1"></i>موصى به</span>' : ''}
+                    ${offer.is_featured ? '<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800"><i class="fas fa-star ml-1"></i>${trans.recommended}</span>' : ''}
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <div class="text-2xl font-bold text-blue-600 mb-2">
-                            ${offer.price ? offer.price.toLocaleString() : 'غير محدد'} ريال
+                            ${offer.price ? offer.price.toLocaleString() : trans.unspecified} ${trans.sar}
                         </div>
-                        ${offer.deposit_amount ? `<div class="text-sm text-gray-600">عربون: ${offer.deposit_amount.toLocaleString()} ريال</div>` : ''}
+                        ${offer.deposit_amount ? `<div class="text-sm text-gray-600">${trans.deposit}: ${offer.deposit_amount.toLocaleString()} ${trans.sar}</div>` : ''}
                     </div>
                     <div class="text-right">
-                        ${offer.valid_to ? `<div class="text-sm text-gray-600">صالح حتى: ${new Date(offer.valid_to).toLocaleDateString('en-GB')}</div>` : ''}
-                        <div class="text-sm text-gray-600 mt-1">تاريخ الإنشاء: ${new Date(offer.created_at).toLocaleDateString('ar-SA')}</div>
+                        ${offer.valid_to ? `<div class="text-sm text-gray-600">${trans.valid_until}: ${new Date(offer.valid_to).toLocaleDateString('{{ app()->getLocale() }}')}</div>` : ''}
+                        <div class="text-sm text-gray-600 mt-1">${trans.created_at}: ${new Date(offer.created_at).toLocaleDateString('{{ app()->getLocale() }}')}</div>
                     </div>
                 </div>
                 
@@ -609,20 +611,20 @@ function renderOfferDetails(offer, relatedOffers = []) {
             <!-- Related Offers -->
             ${relatedOffers.length > 0 ? `
                 <div>
-                    <h5 class="text-md font-medium text-gray-800 mb-3">عروض أخرى متاحة</h5>
+                    <h5 class="text-md font-medium text-gray-800 mb-3">${trans.other_offers}</h5>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                         ${relatedOffers.map(relatedOffer => {
                             // Determine related offer type display
-                            let relatedOfferTypeDisplay = 'عرض';
+                            let relatedOfferTypeDisplay = trans.offer;
                             if (relatedOffer.offer_type === 'sale') {
-                                relatedOfferTypeDisplay = 'عرض للبيع';
+                                relatedOfferTypeDisplay = trans.sale_offer;
                             } else if (relatedOffer.offer_type && relatedOffer.offer_type.startsWith('rent_')) {
                                 const rentTypes = {
-                                    'rent_daily': 'عرض إيجار يومي',
-                                    'rent_monthly': 'عرض إيجار شهري',
-                                    'rent_yearly': 'عرض إيجار سنوي'
+                                    'rent_daily': trans.rent_daily,
+                                    'rent_monthly': trans.rent_monthly,
+                                    'rent_yearly': trans.rent_yearly
                                 };
-                                relatedOfferTypeDisplay = rentTypes[relatedOffer.offer_type] || 'عرض إيجار';
+                                relatedOfferTypeDisplay = rentTypes[relatedOffer.offer_type] || trans.rent_offer;
                             }
                             
                             return `
@@ -630,9 +632,9 @@ function renderOfferDetails(offer, relatedOffers = []) {
                                     <div class="flex justify-between items-center">
                                         <div>
                                             <div class="font-medium text-gray-900">${relatedOffer.title || relatedOfferTypeDisplay}</div>
-                                            <div class="text-lg font-bold text-green-600">${relatedOffer.price ? relatedOffer.price.toLocaleString() : 'غير محدد'} ريال</div>
+                                            <div class="text-lg font-bold text-green-600">${relatedOffer.price ? relatedOffer.price.toLocaleString() : trans.unspecified} ${trans.sar}</div>
                                         </div>
-                                        ${relatedOffer.is_featured ? '<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800"><i class="fas fa-crown ml-1"></i>موصى به</span>' : ''}
+                                        ${relatedOffer.is_featured ? '<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800"><i class="fas fa-crown ml-1"></i>${trans.recommended}</span>' : ''}
                                     </div>
                                 </div>
                             `;
@@ -645,11 +647,11 @@ function renderOfferDetails(offer, relatedOffers = []) {
             <div class="flex space-x-3 space-x-reverse">
                 <button onclick="bookAppointment(${offer.id})" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200">
                     <i class="fas fa-calendar-check ml-2"></i>
-                    احجز موعد للمعاينة
+                    ${trans.book_visit}
                 </button>
                 <button onclick="requestQuote(${offer.id})" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200">
                     <i class="fas fa-handshake ml-2"></i>
-                    طلب عرض سعر
+                    ${trans.request_quote}
                 </button>
             </div>
         </div>
@@ -660,7 +662,7 @@ function renderOfferDetails(offer, relatedOffers = []) {
 
 function renderAllOffers(offers) {
     if (!offers || offers.length === 0) {
-        return '<div class="text-center py-8 text-gray-600">لا توجد عروض متاحة</div>';
+        return `<div class="text-center py-8 text-gray-600">${trans.no_offers}</div>`;
     }
     
     // Group offers by type
@@ -675,7 +677,7 @@ function renderAllOffers(offers) {
             <div>
                 <h4 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                     <i class="fas fa-tag text-green-600 ml-2"></i>
-                    عروض البيع
+                    ${trans.sale_offers}
                 </h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     ${saleOffers.map(offer => `
@@ -684,14 +686,14 @@ function renderAllOffers(offers) {
                                 <div class="flex-1">
                                     <div class="flex items-center space-x-2 space-x-reverse mb-2">
                                         <span class="text-xl font-bold ${offer.is_featured ? 'text-blue-600' : 'text-green-600'}">
-                                            ${offer.price ? offer.price.toLocaleString() : 'غير محدد'} ريال
+                                            ${offer.price ? offer.price.toLocaleString() : trans.unspecified} ${trans.sar}
                                         </span>
-                                        ${offer.is_featured ? '<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800"><i class="fas fa-crown ml-1"></i>موصى به</span>' : ''}
+                                        ${offer.is_featured ? '<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800"><i class="fas fa-crown ml-1"></i>${trans.recommended}</span>' : ''}
                                     </div>
-                                    ${offer.deposit_amount ? `<div class="text-sm text-gray-600 mb-2">عربون: ${offer.deposit_amount.toLocaleString()} ريال</div>` : ''}
+                                    ${offer.deposit_amount ? `<div class="text-sm text-gray-600 mb-2">${trans.deposit}: ${offer.deposit_amount.toLocaleString()} ${trans.sar}</div>` : ''}
                                     ${offer.title ? `<p class="text-sm text-gray-700">${offer.title}</p>` : ''}
                                 </div>
-                                ${offer.valid_to ? `<div class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">صالح حتى<br>${new Date(offer.valid_to).toLocaleDateString('en-GB')}</div>` : ''}
+                                ${offer.valid_to ? `<div class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">${trans.valid_until}<br>${new Date(offer.valid_to).toLocaleDateString('{{ app()->getLocale() }}')}</div>` : ''}
                             </div>
                         </div>
                     `).join('')}
@@ -703,16 +705,16 @@ function renderAllOffers(offers) {
     // Rent Offers
     if (rentOffers.length > 0) {
         const rentTypes = {
-            'rent_daily': 'إيجار يومي',
-            'rent_monthly': 'إيجار شهري',
-            'rent_yearly': 'إيجار سنوي'
+            'rent_daily': trans.rent_daily,
+            'rent_monthly': trans.rent_monthly,
+            'rent_yearly': trans.rent_yearly
         };
         
         html += `
             <div>
                 <h4 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                     <i class="fas fa-calendar-alt text-blue-600 ml-2"></i>
-                    عروض الإيجار
+                    ${trans.rent_offers}
                 </h4>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     ${rentOffers.map(offer => `
@@ -720,9 +722,9 @@ function renderAllOffers(offers) {
                             <div class="text-center">
                                 <h6 class="text-sm font-medium text-gray-700 mb-2">${rentTypes[offer.offer_type] || offer.offer_type}</h6>
                                 <div class="text-xl font-bold text-blue-600 mb-2">
-                                    ${offer.price ? offer.price.toLocaleString() : 'غير محدد'} ريال
+                                    ${offer.price ? offer.price.toLocaleString() : trans.unspecified} ${trans.sar}
                                 </div>
-                                ${offer.is_featured ? '<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800"><i class="fas fa-crown ml-1"></i>موصى به</span>' : ''}
+                                ${offer.is_featured ? '<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800"><i class="fas fa-crown ml-1"></i>${trans.recommended}</span>' : ''}
                             </div>
                         </div>
                     `).join('')}
@@ -753,7 +755,7 @@ function bookAppointment(offerId) {
         window.location.href = '{{ route("public.bookings.create") }}?offer_id=' + offerId;
     @else
         // Show login modal or redirect to login
-        if (confirm('يجب تسجيل الدخول أولاً لحجز الموعد. هل تريد الانتقال إلى صفحة تسجيل الدخول؟')) {
+        if (confirm(trans.login_required_book)) {
             window.location.href = '{{ route("login") }}?redirect=' + encodeURIComponent(window.location.href);
         }
     @endauth
@@ -770,7 +772,7 @@ function requestQuote(offerId) {
         showQuoteRequestForm(offerId);
     @else
         // Show login modal or redirect to login
-        if (confirm('يجب تسجيل الدخول أولاً لطلب عرض السعر. هل تريد الانتقال إلى صفحة تسجيل الدخول؟')) {
+        if (confirm(trans.login_required_quote)) {
             window.location.href = '{{ route("login") }}?redirect=' + encodeURIComponent(window.location.href);
         }
     @endauth
@@ -786,7 +788,7 @@ function showQuoteRequestForm(offerId) {
         <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-2/3 lg:w-1/2 shadow-lg rounded-md bg-white">
             <div class="mt-3">
                 <div class="flex items-center justify-between pb-4 border-b border-gray-200">
-                    <h3 class="text-lg font-semibold text-gray-900">طلب عرض سعر</h3>
+                    <h3 class="text-lg font-semibold text-gray-900">{{ __('products.show.quote_title') }}</h3>
                     <button onclick="closeQuoteModal()" class="text-gray-400 hover:text-gray-600">
                         <i class="fas fa-times text-xl"></i>
                     </button>
@@ -798,39 +800,39 @@ function showQuoteRequestForm(offerId) {
                     
                     <div class="space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">الاسم الكامل *</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('products.show.full_name') }} *</label>
                             <input type="text" name="name" required 
                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">رقم الهاتف *</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('products.show.phone') }} *</label>
                             <input type="tel" name="phone" required 
                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">البريد الإلكتروني</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('products.show.email') }}</label>
                             <input type="email" name="email" 
                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">الرسالة</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('products.show.message') }}</label>
                             <textarea name="message" rows="4" 
                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                      placeholder="اكتب رسالتك هنا..."></textarea>
+                                      placeholder="{{ __('products.show.message_placeholder') }}"></textarea>
                         </div>
                     </div>
                     
                     <div class="flex justify-end space-x-3 space-x-reverse pt-4 border-t border-gray-200 mt-6">
                         <button type="button" onclick="closeQuoteModal()" 
                                 class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition duration-200">
-                            إلغاء
+                            {{ __('products.show.cancel') }}
                         </button>
                         <button type="submit" 
                                 class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition duration-200">
-                            إرسال الطلب
+                            {{ __('products.show.submit_quote') }}
                         </button>
                     </div>
                 </form>
@@ -854,7 +856,7 @@ function submitQuoteRequest(form) {
     // Show loading
     const submitBtn = form.querySelector('button[type="submit"]');
     const originalText = submitBtn.textContent;
-    submitBtn.textContent = 'جاري الإرسال...';
+    submitBtn.textContent = trans.sending;
     submitBtn.disabled = true;
     
     // Submit the form
@@ -869,15 +871,15 @@ function submitQuoteRequest(form) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert('تم إرسال طلب عرض السعر بنجاح! سنتواصل معك قريباً.');
+            alert(trans.quote_success);
             closeQuoteModal();
         } else {
-            alert('حدث خطأ في إرسال الطلب. يرجى المحاولة مرة أخرى.');
+            alert(trans.quote_error);
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('حدث خطأ في إرسال الطلب. يرجى المحاولة مرة أخرى.');
+        alert(trans.quote_error);
     })
     .finally(() => {
         submitBtn.textContent = originalText;

@@ -13,6 +13,7 @@ return [
     */
 
     'home' => [
+        'site_title' => 'Madar Al-Tafawud',
         'title' => 'Welcome to the Contracting Platform',
         'subtitle' => 'Publish your project and receive execution bids from contractors.',
         'hero' => [
@@ -31,6 +32,15 @@ return [
         ],
         'search_placeholder' => 'Search contractors, projects, or tenders...',
         'search_button' => 'Search',
+        'ai_badge' => 'Powered by AI',
+        'ai_placeholder' => 'Ask Madar AI...',
+        'ai_name' => 'Madar AI',
+        'ai_modal_title' => 'AI Consultation',
+        'data_sources_title' => 'Built on trusted data',
+        'close' => 'Close',
+        'all' => 'All',
+        'properties' => 'Properties',
+        'to' => 'To',
         'featured_facilities' => 'Featured Contractors',
         'popular_categories' => 'Popular Categories',
         'latest_products' => 'Latest Projects',

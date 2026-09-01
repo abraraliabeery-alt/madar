@@ -45,7 +45,7 @@ class AdminCityController extends Controller
 
         City::create($validated);
 
-        return redirect()->route('admin.cities.index')->with('success', 'تم إضافة المدينة بنجاح.');
+        return redirect()->route('admin.cities.index')->with('success', __('admin.messages.city_created'));
     }
 
     public function edit(City $city)
@@ -81,7 +81,7 @@ class AdminCityController extends Controller
 
         $city->update($validated);
 
-        return redirect()->route('admin.cities.index')->with('success', 'تم تحديث المدينة بنجاح.');
+        return redirect()->route('admin.cities.index')->with('success', __('admin.messages.city_updated'));
     }
 
     public function destroy(City $city)
@@ -90,6 +90,6 @@ class AdminCityController extends Controller
             Storage::disk('public')->delete($city->image);
         }
         $city->delete();
-        return redirect()->route('admin.cities.index')->with('success', 'تم حذف المدينة بنجاح.');
+        return redirect()->route('admin.cities.index')->with('success', __('admin.messages.city_deleted'));
     }
 }

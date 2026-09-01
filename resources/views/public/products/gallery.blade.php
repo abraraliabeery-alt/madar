@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="ar" dir="rtl">
+<html lang="{{ app()->getLocale() }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>معرض صور {{ $product->title }}</title>
+    <title>{{ __('products.gallery.title') }} {{ $product->title }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <style>
@@ -169,15 +169,15 @@
     <div class="gallery-wrap" data-count="{{ $count }}">
         <div class="gallery-top">
             <h1 class="gallery-title">{{ $product->title }}</h1>
-            <button class="gallery-close" onclick="window.close(); window.history.back();" title="إغلاق">
+            <button class="gallery-close" onclick="window.close(); window.history.back();" title="{{ __('products.gallery.close') }}">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
 
         <div class="gallery-main">
             @if($count > 0)
-                <button class="gallery-arrow prev" onclick="gallery.prev()" title="السابق">&#8250;</button>
-                <button class="gallery-arrow next" onclick="gallery.next()" title="التالي">&#8249;</button>
+                <button class="gallery-arrow prev" onclick="gallery.prev()" title="{{ __('products.gallery.previous') }}">&#8250;</button>
+                <button class="gallery-arrow next" onclick="gallery.next()" title="{{ __('products.gallery.next') }}">&#8249;</button>
 
                 <div class="gallery-stage" id="galleryStage">
                     <img src="{{ $images[0] }}" alt="{{ $product->title }}" id="galleryImage">
@@ -185,7 +185,7 @@
 
                 <div class="gallery-counter" id="galleryCounter">1 / {{ $count }}</div>
             @else
-                <div class="empty-state">لا توجد صور لعرضها.</div>
+                <div class="empty-state">{{ __('products.gallery.no_images') }}</div>
             @endif
         </div>
 

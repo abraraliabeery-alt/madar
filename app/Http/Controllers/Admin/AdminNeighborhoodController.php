@@ -38,7 +38,7 @@ class AdminNeighborhoodController extends Controller
 
         Neighborhood::create($validated);
 
-        return redirect()->route('admin.neighborhoods.index')->with('success', 'تم إضافة الحي بنجاح.');
+        return redirect()->route('admin.neighborhoods.index')->with('success', __('admin.messages.neighborhood_created'));
     }
 
     public function edit(Neighborhood $neighborhood)
@@ -59,12 +59,12 @@ class AdminNeighborhoodController extends Controller
 
         $neighborhood->update($validated);
 
-        return redirect()->route('admin.neighborhoods.index')->with('success', 'تم تحديث الحي بنجاح.');
+        return redirect()->route('admin.neighborhoods.index')->with('success', __('admin.messages.neighborhood_updated'));
     }
 
     public function destroy(Neighborhood $neighborhood)
     {
         $neighborhood->delete();
-        return redirect()->route('admin.neighborhoods.index')->with('success', 'تم حذف الحي بنجاح.');
+        return redirect()->route('admin.neighborhoods.index')->with('success', __('admin.messages.neighborhood_deleted'));
     }
 }

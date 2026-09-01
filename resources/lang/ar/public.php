@@ -13,6 +13,7 @@ return [
     */
 
     'home' => [
+        'site_title' => 'مدار التفاوض',
         'title' => 'مرحباً بك في منصة المقاولات',
         'subtitle' => 'اطرح مشروعك واستقبل عروض التنفيذ من المقاولين.',
         'hero' => [
@@ -31,6 +32,15 @@ return [
         ],
         'search_placeholder' => 'ابحث عن مقاولين أو عقارات أو منافسات...',
         'search_button' => 'بحث',
+        'ai_badge' => 'مدعوم بالذكاء الاصطناعي',
+        'ai_placeholder' => 'اسأل مدار الذكي...',
+        'ai_name' => 'مدار الذكي',
+        'ai_modal_title' => 'استشارة بالذكاء الاصطناعي',
+        'data_sources_title' => 'مبني على بيانات موثوقة',
+        'close' => 'إغلاق',
+        'all' => 'الكل',
+        'properties' => 'العقارات',
+        'to' => 'إلى',
         'featured_facilities' => 'المقاولون المميزون',
         'popular_categories' => 'الفئات الشائعة',
         'latest_products' => 'أحدث العقارات',

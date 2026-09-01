@@ -1,17 +1,17 @@
 @extends('layouts.app')
 
-@section('title', 'مدار التفاوض')
+@section('title', __('public.home.site_title'))
 
 @section('meta')
 <meta name="language" content="{{ app()->getLocale() }}">
 <meta name="language-alternate" content="{{ app()->getLocale() === 'ar' ? 'en' : 'ar' }}">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta property="og:title" content="مدار التفاوض">
-<meta property="og:site_name" content="مدار التفاوض">
+<meta property="og:title" content="{{ __('public.home.site_title') }}">
+<meta property="og:site_name" content="{{ __('public.home.site_title') }}">
 <meta property="og:type" content="website">
 <meta property="og:url" content="{{ url()->current() }}">
-<meta property="twitter:title" content="مدار التفاوض">
+<meta property="twitter:title" content="{{ __('public.home.site_title') }}">
 @endsection
 
 @section('content')
@@ -27,7 +27,7 @@
                  style="-webkit-mask-image: linear-gradient(to top, black 0%, black 30%, transparent 100%); mask-image: linear-gradient(to top, black 0%, black 30%, transparent 100%);"></div>
         </div>
     <!-- Hero Section -->
-    <div class="relative text-center px-4 sm:px-6 lg:px-8 pt-24 sm:pt-32 lg:pt-44 pb-14 sm:pb-20 lg:pb-24 hero z-10">
+    <div class="relative text-center px-4 sm:px-6 lg:px-8 pt-36 sm:pt-32 lg:pt-44 pb-14 sm:pb-20 lg:pb-24 hero z-10">
         <div class="relative">
             @php($mode = \App\Helpers\PlatformModeHelper::getMode())
             <h1 class="font-bold text-white mb-3 sm:mb-4 hero-title drop-shadow-md text-balance">
@@ -184,7 +184,7 @@
                                     maxIn.name = 'attr_max[' + attr.id + ']';
                                     maxIn.className = inputBaseClass;
                                     maxIn.step = '0.01';
-                                    maxIn.placeholder = labelText + ' - ' + 'إلى';
+                                    maxIn.placeholder = labelText + ' - ' + @json(__('public.home.to'));
                                     row.appendChild(minIn);
                                     row.appendChild(maxIn);
                                     wrapper.appendChild(row);
@@ -279,7 +279,7 @@
                             <div class="mb-4 flex flex-wrap items-center justify-center gap-2">
                                 <label class="segmented">
                                     <input type="radio" name="search_type" value="projects" checked onchange="updateHomeMapFilters()">
-                                    <span>العقارات</span>
+                                    <span>{{ __('public.home.properties') }}</span>
                                 </label>
                                 <label class="segmented">
                                     <input type="radio" name="search_type" value="facilities" onchange="updateHomeMapFilters()">
@@ -326,11 +326,11 @@
         <div class="home-container text-center max-w-5xl">
             <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 text-sm font-medium mb-6">
                 <i class="fas fa-robot"></i>
-                <span>مدعوم بالذكاء الاصطناعي</span>
+                <span>{{ __('public.home.ai_badge') }}</span>
             </div>
             <div class="max-w-2xl mx-auto mb-12">
                 <div class="relative flex items-center">
-                    <input type="text" id="ai-home-input" class="w-full h-14 pr-5 pl-16 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 text-right focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="اسأل مدار الذكي..." onkeydown="if(event.key === 'Enter') openAiModalWithHomePrompt()">
+                    <input type="text" id="ai-home-input" class="w-full h-14 pr-5 pl-16 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 text-right focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="{{ __('public.home.ai_placeholder') }}" onkeydown="if(event.key === 'Enter') openAiModalWithHomePrompt()">
                     <button type="button" onclick="openAiModalWithHomePrompt()" class="absolute left-2 top-2 bottom-2 px-5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold transition">
                         <i class="fas fa-paper-plane"></i>
                     </button>
@@ -338,7 +338,7 @@
             </div>
 
             <div class="pt-10 border-t" style="border-color:rgba(255,255,255,.15);">
-                <p class="text-sm font-medium mb-6 text-slate-700 dark:text-slate-300">مبني على بيانات موثوقة</p>
+                <p class="text-sm font-medium mb-6 text-slate-700 dark:text-slate-300">{{ __('public.home.data_sources_title') }}</p>
                 <div class="flex flex-wrap justify-center items-center gap-8 sm:gap-12">
                     <img src="https://rega.gov.sa/images/logos/REGA_LOGO.svg" alt="الهيئة العامة للعقار" title="الهيئة العامة للعقار" class="h-12 w-auto logo-shadow" onerror="this.style.display='none'">
                     <img src="https://wasmenia.com/_next/image?url=https%3A%2F%2Fstrapi.wasmenia.com%2Fuploads%2FEjar_f2e582437b.svg&w=828&q=75" alt="إيجار" title="إيجار" class="h-16 sm:h-20 w-auto logo-shadow" onerror="this.style.display='none'">
@@ -424,7 +424,7 @@
                     @if(request('category_id'))
                         <a href="{{ request()->url() }}" onclick="filterRealEstate(''); return false;" class="chip chip-clear">
                             <i class="fas fa-times"></i>
-                            <span>الكل</span>
+                            <span>{{ __('public.home.all') }}</span>
                         </a>
                     @endif
                     @foreach($searchCategories->whereNull('parent_id') as $mainCategory)
@@ -469,20 +469,20 @@
 
 
 <!-- AI Investment Study Modal -->
-<div id="aiModal" class="fixed inset-0 z-[100] hidden h-dvh max-h-dvh" aria-modal="true" role="dialog" aria-label="استشارة بالذكاء الاصطناعي">
+<div id="aiModal" class="fixed inset-0 z-[100] hidden h-dvh max-h-dvh" aria-modal="true" role="dialog" aria-label="{{ __('public.home.ai_modal_title') }}">
     <div class="absolute inset-0 bg-slate-900/80 backdrop-blur-sm" onclick="closeAiModal()"></div>
     <div class="absolute inset-x-0 bottom-0 top-0 sm:inset-4 lg:inset-8 sm:max-w-[95vw] lg:max-w-6xl sm:mx-auto sm:my-auto sm:h-[92vh] sm:max-h-[92vh] rounded-t-2xl sm:rounded-2xl shadow-2xl overflow-hidden flex flex-col" style="background-color:var(--brand-bg);color:var(--brand-fg);border-color:var(--brand-border);height:100dvh;max-height:100dvh;">
         <div class="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b shrink-0" style="background-color:var(--brand-bg);border-color:var(--brand-border);">
             <h3 class="font-bold flex items-center gap-2 text-base sm:text-lg" style="color:var(--brand-fg);">
                 <i class="fas fa-robot" style="color:var(--brand-brown);"></i>
-                <span>مدار الذكي</span>
+                <span>{{ __('public.home.ai_name') }}</span>
             </h3>
-            <button type="button" onclick="closeAiModal()" class="p-2 sm:p-2.5 rounded-lg transition min-w-10 min-h-10 flex items-center justify-center" style="color:var(--brand-muted);" onmouseover="this.style.background='var(--brand-border)'" onmouseout="this.style.background='transparent'" aria-label="إغلاق">
+            <button type="button" onclick="closeAiModal()" class="p-2 sm:p-2.5 rounded-lg transition min-w-10 min-h-10 flex items-center justify-center" style="color:var(--brand-muted);" onmouseover="this.style.background='var(--brand-border)'" onmouseout="this.style.background='transparent'" aria-label="{{ __('public.home.close') }}">
                 <i class="fas fa-times text-xl"></i>
             </button>
         </div>
         <div class="flex-1 relative min-h-0 overflow-hidden">
-            <iframe id="aiModalFrame" src="{{ url('/investment-studies') }}" class="w-full h-full border-0" loading="lazy" title="استشارة بالذكاء الاصطناعي" style="min-height:100%;"></iframe>
+            <iframe id="aiModalFrame" src="{{ url('/investment-studies') }}" class="w-full h-full border-0" loading="lazy" title="{{ __('public.home.ai_modal_title') }}" style="min-height:100%;"></iframe>
         </div>
     </div>
 </div>
@@ -580,13 +580,19 @@ html[data-theme="dark"] .hero-scrim {
 }
 
 .hero-title {
-    /* 1.9rem on a 360px phone → 3.25rem on desktop */
-    font-size: clamp(1.9rem, 1.15rem + 3.4vw, 3.25rem);
+    /* 1.5rem on a 360px phone → 3.25rem on desktop */
+    font-size: clamp(1.5rem, 1.1rem + 2.8vw, 3.25rem);
     line-height: 1.22;
     letter-spacing: -0.01em;
 }
 .hero-subtitle {
-    font-size: clamp(0.975rem, 0.9rem + 0.5vw, 1.25rem);
+    font-size: clamp(0.85rem, 0.8rem + 0.4vw, 1.25rem);
+}
+
+/* Mobile: smaller hero text + extra top spacing before the copy */
+@media (max-width: 600px) {
+    .hero-title { font-size: 1.45rem; line-height: 1.25; }
+    .hero-subtitle { font-size: 0.85rem; }
 }
 
 /* Motion / data saving: don't autoplay-animate the background for these users */
