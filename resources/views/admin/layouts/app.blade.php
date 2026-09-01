@@ -33,6 +33,7 @@
                 @if($adminMenuConfigured)
                     @foreach($adminMenu as $item)
                         @continue(in_array($item['route_name'], ['admin.settings', 'admin.menus.index']))
+                        @continue($item['key'] === 'project_categories')
                         @php($isActive = $item['route_name'] ? request()->routeIs($item['route_name']) : false)
                         <a href="{{ $item['href'] }}" class="nav-link {{ $isActive ? 'active' : '' }}">
                             @if(!empty($item['icon']))

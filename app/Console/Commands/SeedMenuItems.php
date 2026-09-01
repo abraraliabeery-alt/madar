@@ -28,7 +28,7 @@ class SeedMenuItems extends Command
             ['panel' => 'admin', 'key' => 'permissions', 'label_key' => 'admin.permissions.title', 'route_name' => 'admin.permissions.index', 'icon' => 'fas fa-user-cog', 'sort_order' => 22],
             ['panel' => 'admin', 'key' => 'facilities', 'label_key' => 'admin.facilities.title', 'route_name' => 'admin.facilities.index', 'icon' => 'fas fa-building', 'sort_order' => 30],
             ['panel' => 'admin', 'key' => 'categories', 'label_key' => 'admin.categories.title', 'route_name' => 'admin.categories.index', 'icon' => 'fas fa-th-large', 'sort_order' => 35],
-            ['panel' => 'admin', 'key' => 'project_categories', 'label_key' => 'admin.project_categories.title', 'label_override' => 'إدارة تصنيفات المشاريع', 'route_name' => 'admin.project-categories.index', 'icon' => 'fas fa-layer-group', 'sort_order' => 36],
+            ['panel' => 'admin', 'key' => 'project_categories', 'label_key' => 'admin.project_categories.title', 'label_override' => 'إدارة تصنيفات المشاريع', 'route_name' => 'admin.project-categories.index', 'icon' => 'fas fa-layer-group', 'sort_order' => 36, 'enabled' => false],
             ['panel' => 'admin', 'key' => 'features', 'label_key' => 'admin.features.title', 'route_name' => 'admin.features.index', 'icon' => 'fas fa-star', 'sort_order' => 37],
             ['panel' => 'admin', 'key' => 'attributes', 'label_key' => 'admin.attributes.title', 'route_name' => 'admin.attributes.index', 'icon' => 'fas fa-tags', 'sort_order' => 38],
             ['panel' => 'admin', 'key' => 'products', 'label_key' => 'admin.products.title', 'route_name' => 'admin.products.index', 'icon' => 'fas fa-box', 'sort_order' => 40, 'visibility' => ['modes' => ['real_estate', 'lifecycle']]],
