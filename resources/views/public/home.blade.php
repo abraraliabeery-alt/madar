@@ -54,11 +54,11 @@
         <div class="max-w-5xl mx-auto text-start">
             <div class="search-card bg-black/45 backdrop-blur-md rounded-2xl border border-white/20 shadow-2xl overflow-hidden">
                 <div class="divide-y divide-white/10">
-                    <button type="button" class="accordion-trigger" onclick="toggleHomeSection('home-basic')" aria-expanded="true" aria-controls="home-basic">
+                    <button type="button" class="accordion-trigger" onclick="toggleHomeSection('home-basic')" aria-expanded="false" aria-controls="home-basic">
                         <span>{{ __('general.home.quick_search') }}</span>
-                        <i class="fas fa-chevron-up" data-accordion-icon="home-basic"></i>
+                        <i class="fas fa-chevron-down" data-accordion-icon="home-basic"></i>
                     </button>
-                    <div id="home-basic" class="px-4 sm:px-5 pb-5">
+                    <div id="home-basic" class="px-4 sm:px-5 pb-5 hidden">
                         @if(\App\Helpers\PlatformModeHelper::getMode() === \App\Helpers\PlatformModeHelper::MODE_CONTRACTING)
                             <form action="{{ route('public.execution.marketplace') }}" method="GET" class="search-form">
                                 <input type="text"
@@ -349,21 +349,13 @@
                 </div>
             </div>
 
-
-        </div>
-    </section>
-
-    <!-- Data Sources Section -->
-    <section class="py-12 sm:py-16 bg-white dark:bg-slate-900 border-y border-slate-200 dark:border-slate-800">
-        <div class="home-container">
-            <div class="text-center mb-8 sm:mb-10">
-                <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-2">مبني على بيانات موثوقة</h2>
-                <p class="text-sm text-slate-600 dark:text-slate-400">نعتمد على مصادر بيانات رسمية وموثوقة لضمان دقة المعلومات</p>
-            </div>
-            <div class="flex flex-wrap justify-center items-center gap-8 sm:gap-12">
-                <img src="https://rega.gov.sa/images/logos/REGA_LOGO.svg" alt="الهيئة العامة للعقار" title="الهيئة العامة للعقار" class="h-12 w-auto" onerror="this.style.display='none'">
-                <img src="https://wasmenia.com/_next/image?url=https%3A%2F%2Fstrapi.wasmenia.com%2Fuploads%2FEjar_f2e582437b.svg&w=828&q=75" alt="إيجار" title="إيجار" class="h-12 w-auto" onerror="this.style.display='none'">
-                <img src="https://my.gov.sa/_next/static/media/logo_DGA.301aceb9.svg" alt="بوابة البيانات المفتوحة" title="بوابة البيانات المفتوحة" class="h-12 w-auto" onerror="this.style.display='none'">
+            <div class="pt-10 border-t" style="border-color:rgba(255,255,255,.15);">
+                <p class="text-sm font-medium mb-6 text-slate-700 dark:text-slate-300">مبني على بيانات موثوقة</p>
+                <div class="flex flex-wrap justify-center items-center gap-8 sm:gap-12">
+                    <img src="https://rega.gov.sa/images/logos/REGA_LOGO.svg" alt="الهيئة العامة للعقار" title="الهيئة العامة للعقار" class="h-12 w-auto" onerror="this.style.display='none'">
+                    <img src="https://wasmenia.com/_next/image?url=https%3A%2F%2Fstrapi.wasmenia.com%2Fuploads%2FEjar_f2e582437b.svg&w=828&q=75" alt="إيجار" title="إيجار" class="h-16 sm:h-20 w-auto" onerror="this.style.display='none'">
+                    <img src="https://my.gov.sa/_next/static/media/logo_DGA.301aceb9.svg" alt="بوابة البيانات المفتوحة" title="بوابة البيانات المفتوحة" class="h-12 w-auto" onerror="this.style.display='none'">
+                </div>
             </div>
         </div>
     </section>
