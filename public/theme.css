@@ -360,3 +360,16 @@ html[data-theme="dark"] .form-select{
 .hover\:bg-emerald-600:hover{background-color:rgba(var(--brand-brown-rgb),.9) !important;}
 .no-scrollbar{scrollbar-width:none;-ms-overflow-style:none;}
 .no-scrollbar::-webkit-scrollbar{display:none;}
+
+/* Crisp white outline around partner logos in dark mode */
+.dark .logo-shadow{
+  filter:
+    drop-shadow(1px 0 0 #fff)
+    drop-shadow(-1px 0 0 #fff)
+    drop-shadow(0 1px 0 #fff)
+    drop-shadow(0 -1px 0 #fff)
+    drop-shadow(1px 1px 0 #fff)
+    drop-shadow(-1px 1px 0 #fff)
+    drop-shadow(1px -1px 0 #fff)
+    drop-shadow(-1px -1px 0 #fff);
+}
