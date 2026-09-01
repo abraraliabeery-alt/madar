@@ -31,22 +31,10 @@
         <div class="relative">
             @php($mode = \App\Helpers\PlatformModeHelper::getMode())
             <h1 class="font-bold text-white mb-3 sm:mb-4 hero-title drop-shadow-md text-balance">
-                @if($mode === \App\Helpers\PlatformModeHelper::MODE_REAL_ESTATE)
-                    مدار التفاوض — منصة العقارات الذكية
-                @elseif($mode === \App\Helpers\PlatformModeHelper::MODE_CONTRACTING)
-                    منصة المقاولات — اعتمد واطرح مشروعك
-                @else
-                    مدار التفاوض — دورة حياة العقار
-                @endif
+                {{ __('public.home.hero.' . $mode . '.title') }}
             </h1>
             <p class="hero-subtitle text-white/85 mb-7 sm:mb-10 max-w-2xl mx-auto leading-relaxed text-pretty drop-shadow-sm">
-                @if($mode === \App\Helpers\PlatformModeHelper::MODE_REAL_ESTATE)
-                    ابحث عن عقارك، قارن العروض، وابدأ التفاوض بثقة—في تجربة واحدة.
-                @elseif($mode === \App\Helpers\PlatformModeHelper::MODE_CONTRACTING)
-                    اطرح منافستك، استقبل عروض المقاولين، وقارن بسرعة عبر منصة واحدة.
-                @else
-                    من البحث والشراء/الإيجار إلى التنفيذ والعقود—كلها في منصة واحدة.
-                @endif
+                {{ __('public.home.hero.' . $mode . '.subtitle') }}
             </p>
         </div>
 

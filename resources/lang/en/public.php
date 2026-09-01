@@ -15,6 +15,20 @@ return [
     'home' => [
         'title' => 'Welcome to the Contracting Platform',
         'subtitle' => 'Publish your project and receive execution bids from contractors.',
+        'hero' => [
+            'real_estate' => [
+                'title' => 'Madar Al-Tafawud — Smart Real Estate Platform',
+                'subtitle' => 'Find your property, compare offers, and start negotiating — all in one experience.',
+            ],
+            'contracting' => [
+                'title' => 'Contracting Platform — Plan and Publish Your Project',
+                'subtitle' => 'Submit your tender, receive contractor bids, and compare quickly in one platform.',
+            ],
+            'lifecycle' => [
+                'title' => 'Madar Al-Tafawud — Property Lifecycle',
+                'subtitle' => 'From search and buy/rent to execution and contracts — all in one platform.',
+            ],
+        ],
         'search_placeholder' => 'Search contractors, projects, or tenders...',
         'search_button' => 'Search',
         'featured_facilities' => 'Featured Contractors',
