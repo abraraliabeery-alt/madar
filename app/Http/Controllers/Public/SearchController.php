@@ -15,6 +15,7 @@ use App\Models\Plan;
 use App\Models\PlanLot;
 use App\Models\ExecutionRequest;
 use Illuminate\Support\Facades\Http;
+use App\Helpers\PlatformModeHelper;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use JsonMachine\Items;
@@ -1302,7 +1303,7 @@ class SearchController extends Controller
                     'type' => 'facility'
                 ];
             });
-            $categories = FacilityCategory::where('is_active', true)->get();
+            $categories = FacilityCategory::where('is_active', true)->whereNull('parent_id')->get();
         } elseif ($isRealEstate) {
             $query = Product::with(['category', 'facility', 'city'])
                 ->where('is_active', true)
@@ -1345,7 +1346,7 @@ class SearchController extends Controller
                     'type' => 'product'
                 ];
             });
-            $categories = Category::where('is_active', true)->get();
+            $categories = Category::where('is_active', true)->whereNull('parent_id')->get();
         } else {
             $query = ExecutionRequest::query()
                 ->with(['translations', 'project'])

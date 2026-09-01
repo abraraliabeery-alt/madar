@@ -11,20 +11,13 @@
                     <h1 class="text-2xl sm:text-3xl font-bold" style="color:var(--brand-fg);">{{ __('public.map_search.title') }}</h1>
                     <p class="text-sm mt-1" style="color:var(--brand-muted);">{{ __('public.map_search.subtitle') }}</p>
                 </div>
-                <div class="hidden sm:flex gap-3">
-                    @if($mode === 'real_estate' || $mode === 'lifecycle')
+                @if($mode === 'real_estate' || $mode === 'lifecycle')
+                    <div class="hidden sm:flex gap-3">
                         <a href="{{ route('public.search.advanced') }}" class="px-4 py-2 rounded-lg text-sm font-medium transition" style="background-color:var(--brand-bg);color:var(--brand-fg);border:1px solid var(--brand-border);">
                             <i class="fas fa-cog {{ app()->getLocale() === 'ar' ? 'ml-2' : 'mr-2' }}"></i>{{ __('public.search.advanced_search') }}
                         </a>
-                        <a href="{{ route('public.products.index') }}" class="px-4 py-2 rounded-lg text-sm font-medium transition text-white" style="background-color:var(--brand-brown);">
-                            <i class="fas fa-list {{ app()->getLocale() === 'ar' ? 'ml-2' : 'mr-2' }}"></i>{{ __('public.map_search.list_view') }}
-                        </a>
-                    @else
-                        <a href="{{ route('public.execution.marketplace') }}" class="px-4 py-2 rounded-lg text-sm font-medium transition text-white" style="background-color:var(--brand-brown);">
-                            <i class="fas fa-list {{ app()->getLocale() === 'ar' ? 'ml-2' : 'mr-2' }}"></i>{{ __('public.map_search.list_view') }}
-                        </a>
-                    @endif
-                </div>
+                    </div>
+                @endif
             </div>
 
             <!-- Filters -->
