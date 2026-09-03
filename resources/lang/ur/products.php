@@ -91,4 +91,22 @@ return [
         'price_on_request' => 'قیمت درخواست پر',
     ],
 
+    'pdf' => [
+        'overview' => 'جائزہ',
+        'category' => 'زمرہ',
+        'facility' => 'ٹھیکیدار',
+        'city' => 'شہر',
+        'status' => 'حالت',
+        'prices_and_offers' => 'قیمتیں اور آفرز',
+        'details' => 'تفصیلات',
+        'features' => 'خصوصیات',
+        'description' => 'تفصیل',
+        'facility_data' => 'ٹھیکیدار کی معلومات',
+        'currency' => 'ریال',
+        'for_sale' => 'فروخت کے لیے',
+        'rent_daily' => 'یومیہ کرایہ',
+        'rent_monthly' => 'ماہانہ کرایہ',
+        'rent_yearly' => 'سالانہ کرایہ',
+    ],
+
 ];

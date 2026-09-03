@@ -7,7 +7,7 @@
     <div class="max-w-md mx-auto">
         <!-- Logo -->
         <div class="text-center mb-8">
-            <div class="text-2xl font-bold mb-4">مدار التفاوض</div>
+            <div class="text-2xl font-bold mb-4">{{ __('public.home.site_title') }}</div>
             <h2 class="text-3xl font-bold">{{ __('auth.login.welcome_back') }}</h2>
             <p class="mt-2" style="color:var(--brand-muted);">{{ __('auth.login.login_to_account') }}</p>
         </div>

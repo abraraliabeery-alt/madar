@@ -24,12 +24,12 @@ class AdminThemeSettingsController extends Controller
             'light.brand_brown' => 'required|string|max:7',
             'light.brand_bg' => 'required|string|max:7',
             'light.brand_fg' => 'required|string|max:7',
-            'light.brand_border' => 'required|string|max:7',
+            'light.brand_border' => 'required|string|max:60',
             'light.brand_muted' => 'required|string|max:7',
             'dark.brand_brown' => 'required|string|max:7',
             'dark.brand_bg' => 'required|string|max:7',
             'dark.brand_fg' => 'required|string|max:7',
-            'dark.brand_border' => 'required|string|max:7',
+            'dark.brand_border' => 'required|string|max:60',
             'dark.brand_muted' => 'required|string|max:7',
         ]);
 
@@ -40,7 +40,9 @@ class AdminThemeSettingsController extends Controller
 
         Setting::setValue('platform.theme.settings', json_encode($settings));
 
-        $this->generateThemeCss($settings);
+        if (! $this->generateThemeCss($settings)) {
+            return redirect()->back()->with('warning', 'تم حفظ الإعدادات، لكن لم نتمكن من كتابة ملف theme.css. تأكد من صلاحيات مجلد public.');
+        }
 
         return redirect()->back()->with('success', 'تم حفظ إعدادات الهوية بنجاح');
     }
@@ -78,7 +80,7 @@ class AdminThemeSettingsController extends Controller
         ];
     }
 
-    private function generateThemeCss(array $settings): void
+    private function generateThemeCss(array $settings): bool
     {
         $light = $settings['light'] ?? $this->defaultLight();
         $dark = $settings['dark'] ?? $this->defaultDark();
@@ -87,16 +89,6 @@ class AdminThemeSettingsController extends Controller
         $darkRgb = $this->hexToRgb($dark['brand_brown']);
 
         $css = ":root{
-  --brand-brown:{$dark['brand_brown']};
-  --brand-brown-rgb:{$darkRgb};
-  --brand-bg:{$dark['brand_bg']};
-  --brand-fg:{$dark['brand_fg']};
-  --brand-border:{$dark['brand_border']};
-  --brand-muted:{$dark['brand_muted']};
-  --brand-shadow:0 .25rem 1rem rgba(0,0,0,.35);
-}
-
-html[data-theme=\"light\"]{
   --brand-brown:{$light['brand_brown']};
   --brand-brown-rgb:{$lightRgb};
   --brand-bg:{$light['brand_bg']};
@@ -104,9 +96,29 @@ html[data-theme=\"light\"]{
   --brand-border:{$light['brand_border']};
   --brand-muted:{$light['brand_muted']};
   --brand-shadow:0 .25rem 1rem rgba({$lightRgb},.09);
+}
+
+html[data-theme=\"dark\"]{
+  --brand-brown:{$dark['brand_brown']};
+  --brand-brown-rgb:{$darkRgb};
+  --brand-bg:{$dark['brand_bg']};
+  --brand-fg:{$dark['brand_fg']};
+  --brand-border:{$dark['brand_border']};
+  --brand-muted:{$dark['brand_muted']};
+  --brand-shadow:0 .25rem 1rem rgba(0,0,0,.35);
 }";
 
-        file_put_contents(public_path('theme.css'), $css);
+        $path = public_path('theme.css');
+        $existing = file_exists($path) ? file_get_contents($path) : '';
+        $marker = '/* Global primitives */';
+
+        if ($existing && ($pos = strpos($existing, $marker)) !== false) {
+            $rest = substr($existing, $pos);
+        } else {
+            $rest = "\n{$marker}\nhtml,body{background:var(--brand-bg) !important;color:var(--brand-fg) !important;}";
+        }
+
+        return file_put_contents($path, $css . "\n\n" . $rest) !== false;
     }
 
     private function hexToRgb(string $hex): string

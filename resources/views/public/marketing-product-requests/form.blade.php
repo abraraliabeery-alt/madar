@@ -6,10 +6,10 @@
         <!-- Hero -->
         <div class="text-center mb-10">
             <h1 class="text-3xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-3">
-                سوق عقارك معنا
+                {{ __('public.marketing.title') }}
             </h1>
             <p class="text-lg text-gray-600 dark:text-gray-300">
-                اكتب أو تكلم بصوتك، وسنساعدك في تسويق عقارك والوصول للعملاء.
+                {{ __('public.marketing.subtitle') }}
             </p>
         </div>
 
@@ -17,43 +17,43 @@
             <!-- Voice controls -->
             <div class="flex flex-wrap items-center gap-4 mb-6">
                 <button id="voice-start" type="button" class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-xl shadow transition">
-                    <span class="text-xl">🎙️</span> ابدأ التسجيل
+                    <span class="text-xl">🎙️</span> {{ __('public.marketing.start_recording') }}
                 </button>
                 <button id="voice-stop" type="button" disabled class="inline-flex items-center gap-2 bg-gray-200 dark:bg-slate-700 text-gray-500 font-semibold py-3 px-6 rounded-xl cursor-not-allowed">
-                    ■ أوقف
+                    ■ {{ __('public.marketing.stop_recording') }}
                 </button>
                 <span id="voice-status" class="text-sm text-gray-500 dark:text-gray-400"></span>
             </div>
 
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">وصف العقار المراد تسويقه</label>
-            <textarea id="description" rows="4" class="w-full p-4 rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none" placeholder="مثال: عندي شقة 3 غرف في شمال الرياض أبي أأجرها، أو أرض استثمارية في جدة أبي أبيعها..."></textarea>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">{{ __('public.marketing.property_description_label') }}</label>
+            <textarea id="description" rows="4" class="w-full p-4 rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none" placeholder="{{ __('public.marketing.property_description_placeholder') }}"></textarea>
 
             <!-- Extracted preview -->
             <div id="extracted-preview" class="hidden mb-8">
-                <h3 class="font-bold text-gray-800 dark:text-white mb-3">المعلومات المستخرجة</h3>
+                <h3 class="font-bold text-gray-800 dark:text-white mb-3">{{ __('public.marketing.extracted_info') }}</h3>
                 <div id="extracted-chips" class="flex flex-wrap gap-2"></div>
             </div>
 
             <!-- Contact fields -->
             <div class="grid md:grid-cols-2 gap-6 mb-8">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">الاسم *</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">{{ __('public.marketing.name') }} *</label>
                     <input id="name" type="text" required class="w-full p-3 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">رقم الجوال *</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">{{ __('public.marketing.phone') }} *</label>
                     <input id="phone" type="tel" required class="w-full p-3 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 </div>
             </div>
 
             <button id="submit-btn" type="button" class="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-bold py-4 rounded-2xl shadow-lg transition transform hover:-translate-y-1">
-                أرسل طلب التسويق
+                {{ __('public.marketing.submit') }}
             </button>
 
             <!-- Results -->
             <div id="results" class="hidden mt-10">
                 <div class="p-4 rounded-2xl bg-indigo-50 dark:bg-indigo-900/20 text-indigo-800 dark:text-indigo-200 mb-6" id="result-message"></div>
-                <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">عقارات مشابهة</h3>
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">{{ __('public.marketing.similar_properties') }}</h3>
                 <div id="matches-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
             </div>
         </div>
@@ -63,6 +63,7 @@
 <script>
     const storeUrl = "{{ route('public.marketing-product-requests.store') }}";
     const csrf = "{{ csrf_token() }}";
+    const trans = @json(__('public.marketing'));
 
     const description = document.getElementById('description');
     const voiceStart = document.getElementById('voice-start');
@@ -84,7 +85,7 @@
         const C = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (!C) return null;
         const r = new C();
-        r.lang = 'ar-SA';
+        r.lang = @json(app()->getLocale() === 'ar' ? 'ar-SA' : 'en-US');
         r.interimResults = true;
         r.continuous = true;
         return r;
@@ -99,19 +100,19 @@
                 const transcript = Array.from(e.results).map(r => r[0].transcript).join('');
                 description.value = transcript;
             };
-            rec.onerror = () => { voiceStatus.textContent = 'حدث خطأ في المايك'; stopVoice(); };
+            rec.onerror = () => { voiceStatus.textContent = trans.mic_error; stopVoice(); };
             rec.onend = () => { listening = false; voiceStart.disabled = false; voiceStatus.textContent = ''; voiceStop.disabled = true; };
             rec.start();
             listening = true;
             voiceStart.disabled = true;
             voiceStop.disabled = false;
-            voiceStatus.textContent = 'جاري الاستماع...';
+            voiceStatus.textContent = trans.listening;
         });
 
         voiceStop.addEventListener('click', stopVoice);
     } else {
         voiceStart.disabled = true;
-        voiceStart.textContent = 'المتصفح لا يدعم الصوت';
+        voiceStart.textContent = trans.browser_no_voice;
     }
 
     function stopVoice() {
@@ -120,12 +121,7 @@
 
     function renderExtracted(obj) {
         extractedChips.innerHTML = '';
-        const labels = {
-            product_type: 'نوع العقار', city: 'المدينة', neighborhood: 'الحي',
-            price: 'السعر', rooms: 'الغرف', bathrooms: 'الحمامات',
-            area: 'المساحة', purpose: 'الغرض', marketing_channels: 'قنوات التسويق',
-            target_audience: 'الجمهور المستهدف', notes: 'ملاحظات'
-        };
+        const labels = trans.extracted;
         for (const [k, v] of Object.entries(obj)) {
             if (k === 'notes' || v === null || v === '') continue;
             const chip = document.createElement('span');
@@ -141,13 +137,13 @@
         const phoneValue = document.getElementById('phone').value.trim();
 
         if (!nameValue || !phoneValue) {
-            resultMessage.textContent = 'الرجاء تعبئة الاسم ورقم الجوال.';
+            resultMessage.textContent = trans.fill_name_phone;
             results.classList.remove('hidden');
             return;
         }
 
         submitBtn.disabled = true;
-        submitBtn.textContent = 'جاري الإرسال...';
+        submitBtn.textContent = trans.sending;
         try {
             const res = await fetch(storeUrl, {
                 method: 'POST',
@@ -165,18 +161,18 @@
             results.classList.remove('hidden');
             results.scrollIntoView({ behavior: 'smooth' });
         } catch (e) {
-            resultMessage.textContent = 'حدث خطأ أثناء الإرسال. حاول مرة أخرى.';
+            resultMessage.textContent = trans.send_error;
             results.classList.remove('hidden');
         } finally {
             submitBtn.disabled = false;
-            submitBtn.textContent = 'أرسل طلب التسويق';
+            submitBtn.textContent = trans.submit;
         }
     });
 
     function renderMatches(matches) {
         matchesGrid.innerHTML = '';
         if (matches.length === 0) {
-            matchesGrid.innerHTML = '<p class="col-span-full text-center text-gray-500 dark:text-gray-400">لا توجد عقارات مشابهة حالياً.</p>';
+            matchesGrid.innerHTML = '<p class="col-span-full text-center text-gray-500 dark:text-gray-400">' + trans.no_similar_properties + '</p>';
             return;
         }
         matches.forEach(m => {
@@ -187,7 +183,7 @@
                 <img src="${m.image_url}" alt="${m.title}" class="w-full h-40 object-cover">
                 <div class="p-4">
                     <h4 class="font-bold text-gray-900 dark:text-white mb-1 line-clamp-1">${m.title}</h4>
-                    <p class="text-indigo-600 font-semibold mb-1">${m.price || 'السعر عند الطلب'}</p>
+                    <p class="text-indigo-600 font-semibold mb-1">${m.price || trans.price_on_request}</p>
                     <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-1">${m.address || ''}</p>
                     <span class="inline-block mt-2 text-xs bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 px-2 py-1 rounded">${m.category || ''}</span>
                 </div>

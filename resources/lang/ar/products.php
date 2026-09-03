@@ -287,4 +287,23 @@ return [
         'title' => 'اعثر على مشروعك المثالي',
         'subtitle' => 'اكتشف أفضل العقارات في منطقتك',
     ],
+
+    'pdf' => [
+        'overview' => 'نظرة عامة',
+        'category' => 'الفئة',
+        'facility' => 'المنشأة',
+        'city' => 'المدينة',
+        'status' => 'الحالة',
+        'prices_and_offers' => 'الأسعار والعروض',
+        'details' => 'التفاصيل',
+        'features' => 'المميزات',
+        'description' => 'الوصف',
+        'facility_data' => 'بيانات المنشأة',
+        'currency' => 'ريال',
+        'for_sale' => 'للبيع',
+        'rent_daily' => 'إيجار يومي',
+        'rent_monthly' => 'إيجار شهري',
+        'rent_yearly' => 'إيجار سنوي',
+    ],
+
 ];

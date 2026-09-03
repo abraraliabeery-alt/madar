@@ -288,4 +288,23 @@ return [
         'title' => 'Find Your Perfect Property',
         'subtitle' => 'Discover the best properties in your area',
     ],
+
+    'pdf' => [
+        'overview' => 'Overview',
+        'category' => 'Category',
+        'facility' => 'Facility',
+        'city' => 'City',
+        'status' => 'Status',
+        'prices_and_offers' => 'Prices and Offers',
+        'details' => 'Details',
+        'features' => 'Features',
+        'description' => 'Description',
+        'facility_data' => 'Facility Information',
+        'currency' => 'SAR',
+        'for_sale' => 'For Sale',
+        'rent_daily' => 'Daily Rent',
+        'rent_monthly' => 'Monthly Rent',
+        'rent_yearly' => 'Yearly Rent',
+    ],
+
 ];

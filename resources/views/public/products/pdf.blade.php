@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="{{ app()->getLocale() }}" dir="{{ app()->getLocale() === 'ar' || app()->getLocale() === 'ur' ? 'rtl' : 'ltr' }}">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>{{ $product->title }}</title>
@@ -9,7 +9,7 @@
             font-family: DejaVu Sans, sans-serif;
             font-size: 12px;
             color: #333;
-            direction: rtl;
+            direction: {{ app()->getLocale() === 'ar' || app()->getLocale() === 'ur' ? 'rtl' : 'ltr' }};
             margin: 0;
             padding: 0;
         }
@@ -78,7 +78,7 @@
         table.info-table td {
             border: 1px solid #e2e8f0;
             padding: 8px;
-            text-align: right;
+            text-align: start;
         }
         table.info-table th {
             background: #f7fafc;
@@ -153,22 +153,22 @@
         @endif
 
         <div class="section">
-            <h2>نظرة عامة</h2>
+            <h2>{{ __('products.pdf.overview') }}</h2>
             <table class="info-table">
                 <tr>
-                    <th>الفئة</th>
+                    <th>{{ __('products.pdf.category') }}</th>
                     <td>{{ $product->category?->name ?? '-' }}</td>
                 </tr>
                 <tr>
-                    <th>المنشأة</th>
+                    <th>{{ __('products.pdf.facility') }}</th>
                     <td>{{ $product->facility?->name ?? '-' }}</td>
                 </tr>
                 <tr>
-                    <th>المدينة</th>
+                    <th>{{ __('products.pdf.city') }}</th>
                     <td>{{ $product->city?->name ?? '-' }}</td>
                 </tr>
                 <tr>
-                    <th>الحالة</th>
+                    <th>{{ __('products.pdf.status') }}</th>
                     <td>
                         @foreach($product->statuses as $status)
                             {{ $status->getTranslatedName() }}{{ !$loop->last ? '، ' : '' }}
@@ -180,15 +180,15 @@
 
         @if($product->activeOffers && $product->activeOffers->count() > 0)
             <div class="section">
-                <h2>الأسعار والعروض</h2>
+                <h2>{{ __('products.pdf.prices_and_offers') }}</h2>
                 @foreach($product->activeOffers as $offer)
                     <div class="offer">
-                        <div class="price">{{ number_format($offer->price, 0) }} ريال</div>
+                        <div class="price">{{ number_format($offer->price, 0) }} {{ __('products.pdf.currency') }}</div>
                         <div>
                             @if($offer->offer_type === 'sale')
-                                للبيع
+                                {{ __('products.pdf.for_sale') }}
                             @elseif(str_starts_with($offer->offer_type, 'rent_'))
-                                {{ ['rent_daily' => 'إيجار يومي', 'rent_monthly' => 'إيجار شهري', 'rent_yearly' => 'إيجار سنوي'][$offer->offer_type] ?? $offer->offer_type }}
+                                {{ ['rent_daily' => __('products.pdf.rent_daily'), 'rent_monthly' => __('products.pdf.rent_monthly'), 'rent_yearly' => __('products.pdf.rent_yearly')][$offer->offer_type] ?? $offer->offer_type }}
                             @else
                                 {{ $offer->offer_type }}
                             @endif
@@ -200,7 +200,7 @@
 
         @if($product->attributes && $product->attributes->count() > 0)
             <div class="section">
-                <h2>التفاصيل</h2>
+                <h2>{{ __('products.pdf.details') }}</h2>
                 <div class="attributes">
                     @foreach($product->attributes as $attribute)
                         <div class="attribute">
@@ -214,7 +214,7 @@
 
         @if($product->features && $product->features->count() > 0)
             <div class="section">
-                <h2>المميزات</h2>
+                <h2>{{ __('products.pdf.features') }}</h2>
                 <ul class="features">
                     @foreach($product->features as $feature)
                         <li>{{ $feature->getTranslatedName() }}</li>
@@ -225,14 +225,14 @@
 
         @if($product->description)
             <div class="section">
-                <h2>الوصف</h2>
+                <h2>{{ __('products.pdf.description') }}</h2>
                 <p>{!! nl2br(e($product->description)) !!}</p>
             </div>
         @endif
 
         @if($product->facility)
             <div class="section">
-                <h2>بيانات المنشأة</h2>
+                <h2>{{ __('products.pdf.facility_data') }}</h2>
                 <div class="facility">
                     <strong>{{ $product->facility->name }}</strong>
                     <p>{{ $product->facility->address ?? '' }}</p>

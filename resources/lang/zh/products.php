@@ -91,4 +91,22 @@ return [
         'price_on_request' => '价格面议',
     ],
 
+    'pdf' => [
+        'overview' => '概览',
+        'category' => '类别',
+        'facility' => '承包商',
+        'city' => '城市',
+        'status' => '状态',
+        'prices_and_offers' => '价格与优惠',
+        'details' => '详情',
+        'features' => '特点',
+        'description' => '描述',
+        'facility_data' => '承包商信息',
+        'currency' => '里亚尔',
+        'for_sale' => '出售',
+        'rent_daily' => '日租',
+        'rent_monthly' => '月租',
+        'rent_yearly' => '年租',
+    ],
+
 ];
