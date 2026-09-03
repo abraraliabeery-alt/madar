@@ -19,6 +19,7 @@ return [
         'chinese' => 'Chinese',
         'suppliers' => 'Suppliers',
         'factories' => 'Factories',
+        'request_property' => 'Request a Property',
     ],
 
     'dashboard_nav' => [

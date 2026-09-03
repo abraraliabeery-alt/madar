@@ -123,7 +123,7 @@
             <!-- Logo and Brand -->
             <div class="flex-shrink-0">
                 <a href="{{ route('public.home') }}" class="inline-flex items-center p-1">
-                    <span class="text-lg font-semibold">مدار التفاوض</span>
+                    <span class="text-lg font-semibold">{{ __('public.home.site_title') }}</span>
                 </a>
             </div>
             <div class="hidden lg:flex items-center {{ app()->getLocale() == 'ar' ? 'space-x-6 space-x-reverse' : 'space-x-6' }}">
@@ -148,7 +148,7 @@
                             {{ __('public.search.map_search') }}
                         </a>
                         <a href="{{ route('public.product-requests.form') }}" class="main-nav-link px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                            اطلب عقار
+                            {{ __('layout.navigation.request_property') }}
                         </a>
                         @if(\App\Helpers\FacilityHelper::isMultiMode())
                             <a href="{{ route('public.facilities.index') }}" class="main-nav-link px-3 py-2 rounded-md text-sm font-medium transition-colors">
@@ -697,7 +697,7 @@
 <footer class="bg-gray-900 text-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div class="border-t border-gray-800 pt-8 text-center text-sm text-gray-400">
-            <p>&copy; {{ date('Y') }} مدار التفاوض. {{ __('layout.footer.all_rights_reserved') }}</p>
+            <p>&copy; {{ date('Y') }} {{ __('public.home.site_title') }}. {{ __('layout.footer.all_rights_reserved') }}</p>
         </div>
     </div>
 </footer>

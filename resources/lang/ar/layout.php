@@ -19,6 +19,7 @@ return [
         'chinese' => 'الصينية',
         'suppliers' => 'موردون',
         'factories' => 'مصانع',
+        'request_property' => 'اطلب عقار',
     ],
 
     'dashboard_nav' => [

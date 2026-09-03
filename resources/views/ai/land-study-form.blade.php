@@ -1,10 +1,10 @@
 ﻿@php($theme = in_array(request('theme'), ['dark','light']) ? request('theme') : 'light')
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" data-theme="{{ $theme }}">
+<html lang="{{ app()->getLocale() }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}" data-theme="{{ $theme }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مدار الذكي</title>
+    <title>{{ __('public.home.ai_name') }}</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons CDN -->
@@ -57,15 +57,27 @@
             --ai-bot-bg: rgba(85,200,184,.06);
         }
 
-        html { font-size: clamp(13px, 1.6vw, 15px); }
+        html { font-size: clamp(14px, 2.2vw, 16px); }
 
         body {
             font-family: 'Tajawal', 'Cairo', system-ui, -apple-system, Segoe UI, Roboto, Arial, 'Noto Kufi Arabic', sans-serif;
             background-color: var(--brand-bg);
             color: var(--brand-fg);
             display: flex;
-            height: 100vh;
+            height: 100dvh;
+            min-height: 100dvh;
             overflow: hidden;
+            overscroll-behavior: none;
+        }
+
+        /* Mobile polish: keep text readable, input usable and safe-area padded */
+        @media (max-width: 640px) {
+            html { font-size: 15px; }
+            .chat-area { padding: 0.75rem; }
+            .chat-area > div > div:last-child { font-size: 0.95rem; }
+            footer { padding-bottom: calc(0.75rem + env(safe-area-inset-bottom)); }
+            #send-btn { min-width: 44px; min-height: 44px; }
+            #user-input { font-size: 16px; min-height: 44px; }
         }
 
         /* Custom scrollbar for chat area */
@@ -178,7 +190,7 @@
         <!-- 1. Sidebar (New Chat/History) -->
         <aside id="sidebar" class="w-full md:w-64 bg-white p-4 flex-shrink-0 border-l border-gray-200 shadow-xl md:shadow-none transition-transform duration-300 ease-in-out transform -translate-x-full md:translate-x-0 absolute md:relative z-20 h-full">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-xl font-bold text-gray-800">مدار الذكي</h2>
+                <h2 class="text-xl font-bold text-gray-800">{{ __('public.home.ai_name') }}</h2>
                 <button id="close-sidebar-btn" class="md:hidden p-2 text-gray-600 hover:text-gray-800">
                     <i data-lucide="x"></i>
                 </button>
@@ -187,17 +199,17 @@
             <!-- New Chat Button -->
             <button class="w-full flex items-center justify-center p-3 mb-4 rounded-xl bg-primary-blue text-white font-semibold hover:bg-emerald-600 transition duration-150 shadow-md">
                 <i data-lucide="plus" class="w-5 h-5 ml-2"></i>
-                استشارة جديدة
+                {{ __('public.ai.new_chat') }}
             </button>
 
             <!-- Recent Chats (Mock) -->
             <div class="space-y-2">
-                <p class="text-sm font-semibold text-gray-500 mb-2 mt-4">اليوم</p>
+                <p class="text-sm font-semibold text-gray-500 mb-2 mt-4">{{ __('public.ai.today') }}</p>
                 <a href="#" class="block p-3 rounded-xl bg-user-bg text-gray-800 hover:bg-gray-100 transition duration-150 truncate border border-primary-blue">
-                    تحليل جدوى أرض تجارية في الرياض
+                    {{ __('public.ai.example_1') }}
                 </a>
                 <a href="#" class="block p-3 rounded-xl hover:bg-gray-100 transition duration-150 truncate">
-                    مقترحات تطوير أرض سكنية
+                    {{ __('public.ai.example_2') }}
                 </a>
             </div>
         </aside>
@@ -210,7 +222,7 @@
                 <button id="open-sidebar-btn" class="p-2 text-gray-600 hover:text-gray-800">
                     <i data-lucide="menu"></i>
                 </button>
-                <h1 class="text-lg font-semibold text-gray-800 mx-auto">مدار الذكي</h1>
+                <h1 class="text-lg font-semibold text-gray-800 mx-auto">{{ __('public.home.ai_name') }}</h1>
             </header>
 
             <!-- Chat Messages Area -->
@@ -227,7 +239,7 @@
                         <div class="dot"></div>
                         <div class="dot"></div>
                         <div class="dot"></div>
-                        <span class="sr-only">الذكاء الاصطناعي يكتب...</span>
+                        <span class="sr-only">{{ __('public.ai.typing') }}</span>
                     </div>
                 </div>
             </div>
@@ -237,14 +249,14 @@
                 <!-- Chat input only -->
 
                 <div class="max-w-4xl mx-auto flex items-end bg-gray-50 rounded-3xl shadow-lg border border-gray-200">
-                    <textarea id="user-input" rows="1" class="flex-1 w-full p-4 resize-none bg-transparent focus:outline-none placeholder-gray-400 text-gray-800" placeholder="...اكتب رسالتك" oninput="adjustTextareaHeight(this)"></textarea>
-                    
+                    <textarea id="user-input" rows="1" class="flex-1 w-full p-4 resize-none bg-transparent focus:outline-none placeholder-gray-400 text-gray-800 text-base" placeholder="{{ __('public.home.ai_placeholder') }}" oninput="adjustTextareaHeight(this)" style="max-height: 140px;"></textarea>
+
                     <!-- Send Button -->
-                    <button id="send-btn" class="flex-shrink-0 p-3 m-2 rounded-full bg-primary-blue text-white disabled:bg-gray-400 hover:bg-emerald-600 transition duration-150 shadow-lg" disabled>
+                    <button id="send-btn" class="flex-shrink-0 p-2.5 m-1.5 rounded-full bg-primary-blue text-white disabled:bg-gray-400 hover:bg-emerald-600 transition duration-150 shadow-lg flex items-center justify-center min-h-[44px] min-w-[44px]" disabled>
                         <i data-lucide="send" class="w-5 h-5"></i>
                     </button>
                 </div>
-                <p class="text-xs text-center text-gray-400 mt-2">يمكن أن يرتكب الذكاء الاصطناعي أخطاءً. تحقق من المعلومات الهامة.</p>
+                <p class="text-xs text-center text-gray-400 mt-2">{{ __('public.ai.disclaimer') }}</p>
             </footer>
 
         </main>
@@ -273,6 +285,7 @@
         let isAiThinking = false;
         // Use Laravel backend endpoint instead of calling Gemini directly from the browser
         const apiUrl = "{{ route('ai.investment.chat') }}";
+        const trans = @json(__('public.ai'));
 
         // --- Firebase/Auth/App Globals (Placeholder for persistence integration) ---
         // Assume db and userId are defined in the module script block above.
@@ -296,11 +309,11 @@
             const isUser = role === 'user';
             const messageContainer = document.createElement('div');
             messageContainer.className = `flex items-start space-x-3 space-x-reverse ${isUser ? 'justify-end' : ''}`;
-            
+
             const contentDiv = document.createElement('div');
             // Use 'white-space: pre-wrap;' to respect line breaks and preserve formatting
-            contentDiv.style.whiteSpace = 'pre-wrap'; 
-            contentDiv.className = `${isUser ? 'bg-user-bg text-gray-800 rounded-2xl rounded-bl-none' : 'bg-ai-bg text-gray-800 rounded-2xl rounded-tr-none'} p-3 max-w-3xl shadow-sm`;
+            contentDiv.style.whiteSpace = 'pre-wrap';
+            contentDiv.className = `${isUser ? 'bg-user-bg text-gray-800 rounded-2xl rounded-bl-none' : 'bg-ai-bg text-gray-800 rounded-2xl rounded-tr-none'} p-3 sm:p-4 text-sm sm:text-base max-w-[88%] sm:max-w-3xl shadow-sm`;
             contentDiv.innerHTML = text.trim();
 
             const avatarDiv = document.createElement('div');
@@ -317,7 +330,7 @@
                 const copyBtn = document.createElement('button');
                 copyBtn.className = 'absolute top-2 left-2 p-1 text-gray-500 hover:text-primary-blue opacity-0 group-hover:opacity-100 transition';
                 copyBtn.innerHTML = '<i data-lucide="copy" class="w-4 h-4"></i>';
-                copyBtn.title = "نسخ الرد";
+                copyBtn.title = trans.copy_response;
                 copyBtn.onclick = () => copyToClipboard(text);
 
                 contentDiv.classList.add('relative');
@@ -356,12 +369,12 @@
 
             const aiContentDiv = document.createElement('div');
             aiContentDiv.style.whiteSpace = 'pre-wrap';
-            aiContentDiv.className = 'bg-ai-bg text-gray-800 p-3 rounded-2xl rounded-tr-none max-w-4xl shadow-sm relative group';
+            aiContentDiv.className = 'bg-ai-bg text-gray-800 p-3 sm:p-4 text-sm sm:text-base rounded-2xl rounded-tr-none max-w-[88%] sm:max-w-3xl shadow-sm relative group';
             
             const copyBtn = document.createElement('button');
             copyBtn.className = 'absolute top-2 left-2 p-1 text-gray-500 hover:text-primary-blue opacity-0 group-hover:opacity-100 transition';
             copyBtn.innerHTML = '<i data-lucide="copy" class="w-4 h-4"></i>';
-            copyBtn.title = "نسخ الرد";
+            copyBtn.title = trans.copy_response;
             aiContentDiv.appendChild(copyBtn);
             
             aiMessageContainer.appendChild(aiContentDiv);
@@ -395,25 +408,25 @@
                         const result = await response.json().catch(() => ({}));
 
                         if (!response.ok) {
-                            let serverMessage = result.message || "حدث خطأ أثناء معالجة طلبك. يرجى المحاولة مرة أخرى.";
+                            let serverMessage = result.message || trans.error_generic;
 
                             if (response.status === 503) {
                                 if (result.error === 'AI_CONFIG_MISSING') {
-                                    serverMessage = result.message || "خدمة الذكاء الاصطناعي غير مفعّلة حالياً بسبب نقص الإعدادات.";
+                                    serverMessage = result.message || trans.ai_config_missing;
                                 } else {
-                                    serverMessage = result.message || "خدمة الذكاء الاصطناعي غير متاحة حالياً. يرجى المحاولة لاحقاً.";
+                                    serverMessage = result.message || trans.service_unavailable;
                                 }
                             }
 
                             if (response.status === 429) {
-                                serverMessage = result.message || "تم تجاوز حد الطلبات. انتظر قليلاً ثم أعد المحاولة.";
+                                serverMessage = result.message || trans.rate_limit;
                             }
 
                             aiContentDiv.innerHTML = serverMessage;
                             break;
                         }
 
-                        let generatedText = result.reply || "لم يتمكن الذكاء الاصطناعي من توليد استجابة واضحة.";
+                        let generatedText = result.reply || trans.no_reply;
 
                         // Update the content and stop thinking state
                         aiContentDiv.innerHTML = generatedText;
@@ -422,7 +435,7 @@
 
                     } catch (error) {
                         console.error("API Call Error:", error);
-                        aiContentDiv.innerHTML = "تعذر الاتصال بالخدمة حالياً. تحقق من اتصال السيرفر ثم أعد المحاولة.";
+                        aiContentDiv.innerHTML = trans.server_error;
                         break; // Stop retrying on non-rate limit errors
                     }
                 }
@@ -504,46 +517,32 @@
                 const url = (gmapsInput?.value || '').trim();
                 const area = (landAreaInput?.value || '').trim();
 
-                let roleLine = '';
-                switch (role) {
-                    case 'builder':
-                        roleLine = 'أنا شخص أريد البناء على أرض في السعودية.';
-                        break;
-                    case 'contractor':
-                        roleLine = 'أنا مقاول في السعودية وأريد تقييم مشروع على هذه الأرض.';
-                        break;
-                    case 'architect':
-                        roleLine = 'أنا مهندس معماري في السعودية وأريد تصور معماري واستثماري لهذه الأرض.';
-                        break;
-                    default:
-                        roleLine = 'أنا مستثمر مشاريعي في السعودية.';
-                }
+                const roleLines = {
+                    builder: trans.role_builder,
+                    contractor: trans.role_contractor,
+                    architect: trans.role_architect,
+                    investor: trans.role_default,
+                };
 
-                let text = roleLine + '\n';
+                let text = (roleLines[role] || roleLines.investor) + '\n';
 
                 if (url) {
-                    text += 'رابط موقع الأرض على خرائط قوقل: ' + url + "\n";
+                    text += trans.gmaps_url_label.replace('{url}', url) + '\n';
                 }
 
                 if (area) {
-                    text += 'مساحة الأرض تقريباً: ' + area + ' متر مربع.\n';
+                    text += trans.land_area_label.replace('{area}', area) + '\n';
                 }
 
-                text += '\nأريد تحليلاً احترافياً يتضمن:\n';
+                text += '\n' + trans.analysis_intro + '\n';
 
-                if (role === 'contractor') {
-                    text += '- تقييم المخاطر التنفيذية والإنشائية وفقاً للكود السعودي للبناء.\n';
-                    text += '- ملاحظات على بنود عقد المقاولة وأهم ما يجب التنبه له.\n';
-                    text += '- نطاق أعمال مقترح وتقدير تقريبي للتكاليف.\n';
-                } else if (role === 'architect') {
-                    text += '- أفكار Concept Design وتوزيع كتل مبدئي متوافق مع الكود السعودي.\n';
-                    text += '- اقتراح استخدامات مناسبة للأرض (سكني / تجاري / مختلط) مع شرح مبسط.\n';
-                    text += '- نقاط رئيسية يجب الانتباه لها في الارتدادات والارتفاعات المتوقعة.\n';
-                } else {
-                    text += '- تحليل للموقع والسوق بناءً على موقع الأرض.\n';
-                    text += '- أفضل 3 سيناريوهات استثمارية مع CAPEX تقريبي والعائد المتوقع.\n';
-                    text += '- ملاحظات على المخاطر المحتملة وكيفية تخفيفها.\n';
-                }
+                const bullets = {
+                    contractor: trans.bullets_contractor,
+                    architect: trans.bullets_architect,
+                    investor: trans.bullets_default,
+                };
+
+                text += bullets[role] || bullets.investor;
 
                 userInput.value = text.trim();
                 adjustTextareaHeight(userInput);
@@ -573,9 +572,9 @@
             try {
                 const successful = document.execCommand('copy');
                 // Optional: Show a temporary success message
-                showCopyMessage(successful ? "تم النسخ!" : "فشل النسخ.");
+                showCopyMessage(successful ? trans.copy_success : trans.copy_failed);
             } catch (err) {
-                showCopyMessage("فشل النسخ.");
+                showCopyMessage(trans.copy_failed);
             }
             document.body.removeChild(tempInput);
         }

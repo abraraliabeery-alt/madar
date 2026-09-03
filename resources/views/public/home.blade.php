@@ -471,14 +471,19 @@
 <!-- AI Investment Study Modal -->
 <div id="aiModal" class="fixed inset-0 z-[100] hidden h-dvh max-h-dvh" aria-modal="true" role="dialog" aria-label="{{ __('public.home.ai_modal_title') }}">
     <div class="absolute inset-0 bg-slate-900/80 backdrop-blur-sm" onclick="closeAiModal()"></div>
-    <div class="absolute inset-x-0 bottom-0 top-0 sm:inset-4 lg:inset-8 sm:max-w-[95vw] lg:max-w-6xl sm:mx-auto sm:my-auto sm:h-[92vh] sm:max-h-[92vh] rounded-t-2xl sm:rounded-2xl shadow-2xl overflow-hidden flex flex-col" style="background-color:var(--brand-bg);color:var(--brand-fg);border-color:var(--brand-border);height:100dvh;max-height:100dvh;">
-        <div class="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b shrink-0" style="background-color:var(--brand-bg);border-color:var(--brand-border);">
+    <div class="absolute inset-x-0 bottom-0 top-0 sm:inset-4 lg:inset-8 sm:max-w-[95vw] lg:max-w-6xl sm:mx-auto sm:my-auto sm:h-[92dvh] sm:max-h-[92dvh] rounded-none sm:rounded-2xl shadow-2xl overflow-hidden flex flex-col" style="background-color:var(--brand-bg);color:var(--brand-fg);border-color:var(--brand-border);height:100dvh;max-height:100dvh;">
+        <div class="hidden sm:flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b shrink-0" style="background-color:var(--brand-bg);border-color:var(--brand-border);">
             <h3 class="font-bold flex items-center gap-2 text-base sm:text-lg" style="color:var(--brand-fg);">
                 <i class="fas fa-robot" style="color:var(--brand-brown);"></i>
                 <span>{{ __('public.home.ai_name') }}</span>
             </h3>
             <button type="button" onclick="closeAiModal()" class="p-2 sm:p-2.5 rounded-lg transition min-w-10 min-h-10 flex items-center justify-center" style="color:var(--brand-muted);" onmouseover="this.style.background='var(--brand-border)'" onmouseout="this.style.background='transparent'" aria-label="{{ __('public.home.close') }}">
                 <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        <div class="absolute top-4 right-4 sm:hidden z-10">
+            <button type="button" onclick="closeAiModal()" class="p-2 rounded-full bg-black/30 text-white shadow" aria-label="{{ __('public.home.close') }}">
+                <i class="fas fa-times text-lg"></i>
             </button>
         </div>
         <div class="flex-1 relative min-h-0 overflow-hidden">
