@@ -137,7 +137,6 @@ return [
         
         'stats' => [
             'happy_customers' => 'Happy Customers',
-            'projects_completed' => 'Projects Completed',
             'years_in_business' => 'Years in Business',
             'team_members' => 'Team Members',
             'countries_served' => 'Countries Served',

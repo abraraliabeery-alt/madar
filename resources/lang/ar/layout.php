@@ -8,7 +8,7 @@ return [
         'cities' => 'المدن',
         'view_all_cities' => 'عرض جميع المدن',
         'properties' => 'العقارات',
-        'projects' => 'المشاريع',
+        'projects' => 'المنافسات',
         'facilities' => 'المقاولون',
         'about_us' => 'من نحن',
         'contact_us' => 'اتصل بنا',
@@ -30,6 +30,10 @@ return [
         'profile' => 'الملف الشخصي',
         'settings' => 'الإعدادات',
         'control_panel' => 'لوحة التحكم',
+        'search' => 'بحث',
+        'search_placeholder' => 'ابحث عن مستخدم، منشأة، منتج، حجز…',
+        'search_no_results' => 'لا توجد نتائج',
+        'quick_create' => 'إنشاء سريع',
     ],
     
     'notifications' => [

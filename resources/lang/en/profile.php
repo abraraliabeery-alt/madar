@@ -26,8 +26,6 @@ return [
     // Facility Information
     'facility_info' => 'Facility Information',
     'bank_account' => 'Bank Account Number',
-    'bank' => 'Bank',
-    'select_bank' => 'Select Bank',
     'latitude' => 'Latitude',
     'latitude_placeholder' => 'Example: 24.7136',
     'longitude' => 'Longitude',

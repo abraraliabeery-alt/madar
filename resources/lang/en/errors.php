@@ -11,4 +11,7 @@ return [
         'contact_us' => 'Contact Us',
         'contact_message' => 'If you believe this is an error, please',
     ],
+    '500_title' => 'Server Error',
+    '500_message' => 'An unexpected error occurred. Please try again later.',
+    'back_home' => 'Back to Home',
 ];

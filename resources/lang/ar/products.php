@@ -3,22 +3,22 @@
 return [
     'page_titles' => [
         'products' => 'العقارات',
-        'product_details' => 'تفاصيل المشروع',
+        'product_details' => 'تفاصيل المنتج',
     ],
     
     'headers' => [
         'products' => 'العقارات',
         'browse_products' => 'تصفح جميع العقارات المتاحة',
-        'product_details' => 'تفاصيل المشروع',
-        'product_information' => 'معلومات المشروع',
+        'product_details' => 'تفاصيل المنتج',
+        'product_information' => 'معلومات المنتج',
         'product_features' => 'المميزات',
         'product_attributes' => 'الخصائص',
-        'product_status' => 'حالة المشروع',
-        'product_comments' => 'تعليقات المشروع',
+        'product_status' => 'حالة المنتج',
+        'product_comments' => 'تعليقات المنتج',
         'publisher_information' => 'معلومات الناشر',
         'actions' => 'إجراءات',
-        'product_details_section' => 'تفاصيل المشروع',
-        'share_product' => 'مشاركة المشروع',
+        'product_details_section' => 'تفاصيل المنتج',
+        'share_product' => 'مشاركة المنتج',
     ],
     
     'filters' => [
@@ -84,7 +84,7 @@ return [
     'empty_state' => [
         'no_products' => 'لا توجد عقارات',
         'no_products_message' => 'لم يتم العثور على عقارات تطابق معايير البحث.',
-        'add_new_product' => 'إضافة مشروع جديد',
+        'add_new_product' => 'إضافة منتج جديد',
     ],
     
     'pagination' => [
@@ -95,7 +95,7 @@ return [
     'breadcrumb' => [
         'home' => 'الرئيسية',
         'products' => 'العقارات',
-        'product' => 'المشروع',
+        'product' => 'المنتج',
     ],
     
     'comments' => [
@@ -128,7 +128,7 @@ return [
         'request_quote' => 'طلب عرض سعر',
         'remove_from_favorites' => 'إزالة من المفضلة',
         'add_to_favorites' => 'إضافة للمفضلة',
-        'property_details' => 'تفاصيل المشروع',
+        'property_details' => 'تفاصيل المنتج',
         'type' => 'النوع',
         'floor' => 'الطابق',
         'floors_count' => 'عدد الطوابق',
@@ -206,7 +206,7 @@ return [
         'all_categories' => 'جميع الفئات',
         'city' => 'المدينة',
         'all_cities' => 'جميع المدن',
-        'property_type' => 'نوع المشروع',
+        'property_type' => 'نوع العقار',
         'all_types' => 'جميع الأنواع',
         'apartment' => 'شقة',
         'villa' => 'فيلا',
@@ -227,7 +227,7 @@ return [
     
     'results' => [
         'title' => 'نتائج البحث',
-        'properties_available' => 'مشروع متاح',
+        'properties_available' => 'منتج متاح',
         'no_results' => 'لم يتم العثور على نتائج',
         'no_results_message' => 'لم نتمكن من العثور على عقارات تطابق معايير البحث الخاصة بك.',
         'view_all_properties' => 'عرض جميع العقارات',
@@ -236,13 +236,13 @@ return [
     'categories' => [
         'title' => 'فئات العقارات',
         'subtitle' => 'تصفح العقارات حسب الفئة',
-        'properties_count' => 'مشروع',
+        'properties_count' => 'منتج',
     ],
     
     'by_category' => [
         'title' => 'عقارات :category',
         'subtitle' => 'اكتشف أفضل عقارات :category في منطقتك',
-        'properties_available' => 'مشروع متاح',
+        'properties_available' => 'منتج متاح',
         'view_all_properties' => 'عرض جميع العقارات',
         'no_properties' => 'لم يتم العثور على عقارات',
         'no_properties_message' => 'لا توجد عقارات :category متاحة حالياً.',
@@ -264,7 +264,7 @@ return [
         'limited_time' => 'عرض لفترة محدودة',
         'in_stock' => 'متوفر',
         'available' => 'متاح',
-        'property_available' => 'المشروع متاح',
+        'property_available' => 'المنتج متاح',
         'offers_available' => 'عروض متاحة',
         'available_options' => 'الخيارات المتاحة',
         'purchase_options' => 'خيارات الشراء',
@@ -276,7 +276,7 @@ return [
     ],
     
     'by_facility' => [
-        'properties_available' => 'مشروع متاح',
+        'properties_available' => 'منتج متاح',
         'view_facility' => 'عرض المنشأة',
         'view_all_properties' => 'عرض جميع العقارات',
         'no_properties' => 'لم يتم العثور على عقارات',
@@ -284,7 +284,7 @@ return [
     ],
     
     'hero' => [
-        'title' => 'اعثر على مشروعك المثالي',
+        'title' => 'اعثر على عقارك المثالي',
         'subtitle' => 'اكتشف أفضل العقارات في منطقتك',
     ],
 

@@ -137,7 +137,6 @@ return [
         
         'stats' => [
             'happy_customers' => 'عميل سعيد',
-            'projects_completed' => 'مشروع مكتمل',
             'years_in_business' => 'سنة في العمل',
             'team_members' => 'عضو في الفريق',
             'countries_served' => 'دولة نخدمها',

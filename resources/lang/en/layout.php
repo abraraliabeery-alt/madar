@@ -7,8 +7,8 @@ return [
         'view_all_categories' => 'View All Categories',
         'cities' => 'Cities',
         'view_all_cities' => 'View All Cities',
-        'properties' => 'Projects',
-        'projects' => 'Projects',
+        'properties' => 'Properties',
+        'projects' => 'Tenders',
         'facilities' => 'Contractors',
         'about_us' => 'About Us',
         'contact_us' => 'Contact Us',
@@ -30,6 +30,10 @@ return [
         'profile' => 'Profile',
         'settings' => 'Settings',
         'control_panel' => 'Control Panel',
+        'search' => 'Search',
+        'search_placeholder' => 'Search users, facilities, products, bookings…',
+        'search_no_results' => 'No results found',
+        'quick_create' => 'Quick Create',
     ],
     
     'notifications' => [

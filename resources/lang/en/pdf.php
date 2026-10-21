@@ -73,7 +73,6 @@ return [
         'neighborhood' => 'Neighbourhood',
         'street' => 'Street',
         'building' => 'Building',
-        'project' => 'Project',
         'package' => 'Package',
         'owner' => 'Owner',
         'seller' => 'Marketer',

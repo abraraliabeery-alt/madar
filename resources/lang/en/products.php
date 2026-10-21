@@ -2,18 +2,18 @@
 
 return [
     'page_titles' => [
-        'products' => 'Projects',
-        'product_details' => 'Project Details',
+        'products' => 'Products',
+        'product_details' => 'Product Details',
     ],
     
     'headers' => [
-        'products' => 'Projects',
-        'browse_products' => 'Browse all available projects',
-        'product_details' => 'Project Details',
-        'product_information' => 'Project Information',
+        'products' => 'Products',
+        'browse_products' => 'Browse all available products',
+        'product_details' => 'Product Details',
+        'product_information' => 'Product Information',
         'product_features' => 'Features',
         'product_attributes' => 'Attributes',
-        'product_status' => 'Project Status',
+        'product_status' => 'Product Status',
         'product_comments' => 'Comments',
         'publisher_information' => 'Publisher Information',
         'actions' => 'Actions',
@@ -23,7 +23,7 @@ return [
     
     'filters' => [
         'search' => 'Search',
-        'search_placeholder' => 'Search in projects...',
+        'search_placeholder' => 'Search products...',
         'category' => 'Category',
         'all_categories' => 'All Categories',
         'status' => 'Status',
@@ -82,9 +82,9 @@ return [
     ],
     
     'empty_state' => [
-        'no_products' => 'No projects found',
-        'no_products_message' => 'No projects match the search criteria.',
-        'add_new_product' => 'Add New Project',
+        'no_products' => 'No products found',
+        'no_products_message' => 'No products match the search criteria.',
+        'add_new_product' => 'Add New Product',
     ],
     
     'pagination' => [
@@ -94,8 +94,8 @@ return [
     
     'breadcrumb' => [
         'home' => 'Home',
-        'products' => 'Projects',
-        'product' => 'Project',
+        'products' => 'Products',
+        'product' => 'Product',
     ],
     
     'comments' => [

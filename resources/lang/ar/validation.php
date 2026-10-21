@@ -215,7 +215,6 @@ return [
         'street_id' => 'الشارع',
         'status_id' => 'الحالة',
         'building_id' => 'العمارة',
-        'project_id' => 'المشروع',
         'package_id' => 'الحزمة',
         'main_image' => 'الصورة الرئيسية',
         'image_gallery' => 'معرض الصور',

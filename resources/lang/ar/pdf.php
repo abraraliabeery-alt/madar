@@ -73,7 +73,6 @@ return [
         'neighborhood' => 'الحي',
         'street' => 'الشارع',
         'building' => 'المبنى',
-        'project' => 'المشروع',
         'package' => 'الباقة',
         'owner' => 'المالك',
         'seller' => 'المسوق',

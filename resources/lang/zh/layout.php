@@ -30,6 +30,10 @@ return [
         'profile' => '个人资料',
         'settings' => '设置',
         'control_panel' => '控制面板',
+        'search' => '搜索',
+        'search_placeholder' => '搜索用户、设施、产品、预订…',
+        'search_no_results' => '没有找到结果',
+        'quick_create' => 'Quick Create',
     ],
 
     'notifications' => [

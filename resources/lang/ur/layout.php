@@ -30,6 +30,10 @@ return [
         'profile' => 'پروفائل',
         'settings' => 'سیٹنگز',
         'control_panel' => 'کنٹرول پینل',
+        'search' => 'تلاش',
+        'search_placeholder' => 'صارفین، سہولیات، مصنوعات، بکنگ تلاش کریں…',
+        'search_no_results' => 'کوئی نتیجہ نہیں ملا',
+        'quick_create' => 'Quick Create',
     ],
 
     'notifications' => [

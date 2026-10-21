@@ -31,8 +31,6 @@ return [
     'whatsapp_number' => 'رقم الواتساب',
     'facility_info' => 'معلومات المنشأة',
     'bank_account' => 'الحساب البنكي',
-    'bank' => 'البنك',
-    'select_bank' => 'اختر البنك',
     'latitude' => 'خط العرض',
     'latitude_placeholder' => 'أدخل خط العرض',
     'longitude' => 'خط الطول',
