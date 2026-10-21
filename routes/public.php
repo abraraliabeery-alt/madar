@@ -256,8 +256,7 @@ Route::group([], function () {
         ->group(function(){
             Route::get('/services', [\App\Http\Controllers\FacilitySite\ServiceController::class, 'index'])->name('services.index');
             Route::get('/services/{slug}', [\App\Http\Controllers\FacilitySite\ServiceController::class, 'show'])->name('services.show');
-            Route::get('/projects', [\App\Http\Controllers\FacilitySite\ProjectController::class, 'index'])->name('projects.index');
-            Route::get('/projects/{slug}', [\App\Http\Controllers\FacilitySite\ProjectController::class, 'show'])->name('projects.show');
+
             Route::get('/partners', [\App\Http\Controllers\FacilitySite\PartnerController::class, 'index'])->name('partners.index');
             Route::get('/partners/{slug}', [\App\Http\Controllers\FacilitySite\PartnerController::class, 'show'])->name('partners.show');
             Route::get('/faqs', [\App\Http\Controllers\FacilitySite\FaqController::class, 'index'])->name('faqs.index');

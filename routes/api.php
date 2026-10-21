@@ -36,7 +36,6 @@ use App\Http\Controllers\Api\ApiFacilityBookingController;
 use App\Http\Controllers\Api\ApiFacilityProfileController;
 use App\Http\Controllers\Api\ApiTicketController;
 use App\Http\Controllers\Api\ApiAttributeController;
-use App\Http\Controllers\Api\ApiLoanController;
 use App\Http\Controllers\Api\ApiLocationController;
 
 /*
@@ -258,21 +257,6 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     Route::post('/help/tickets/{ticket}/reply', [ApiTicketController::class, 'reply']);
     Route::delete('/help/tickets/{ticket}', [ApiTicketController::class, 'destroy']);
 
-    // Loan Requests and Offers (Competitive flow like Mrsool)
-    Route::prefix('loan')->group(function () {
-        // Client creates a loan request
-        Route::post('/requests', [ApiLoanController::class, 'storeRequest']);
-
-        // Bank employees actions
-        Route::post('/requests/{loanRequest}/claim', [ApiLoanController::class, 'claim']);
-        Route::post('/requests/{loanRequest}/release', [ApiLoanController::class, 'release']);
-        Route::post('/requests/{loanRequest}/offers', [ApiLoanController::class, 'submitOffer']);
-
-        // Client selects offer and admin assigns advisor
-        Route::post('/requests/{loanRequest}/choose-offer/{offer}', [ApiLoanController::class, 'chooseOffer']);
-        Route::post('/requests/{loanRequest}/assign-advisor', [ApiLoanController::class, 'assignAdvisor']);
-    });
-
     // Rating Routes
     Route::post('/products/{product}/rate', [ApiProductController::class, 'rate']);
     Route::post('/facilities/{facility}/rate', [ApiFacilityController::class, 'rate']);
@@ -405,7 +389,7 @@ Route::middleware(['auth:sanctum', 'role:facility'])->prefix('v1/facility')->nam
     Route::get('/financial-report', [ApiFacilityOfferController::class, 'getFinancialReport']);
 
     // Legacy Facility Routes (for backward compatibility)
-    Route::apiResource('legacy-offers', ApiOfferController::class);
+    Route::apiResource('legacy-offers', ApiOfferController::class)->parameters(['legacy-offers' => 'offer']);
     Route::post('legacy-offers/{offer}/toggle-status', [ApiOfferController::class, 'toggleStatus']);
     Route::post('legacy-offers/{offer}/copy', [ApiOfferController::class, 'copy']);
     Route::get('legacy-offers/statistics', [ApiOfferController::class, 'statistics']);

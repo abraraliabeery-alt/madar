@@ -61,5 +61,22 @@ return [
         ),
     ],
 
+    'moyasar' => [
+        'api_key' => env('MOYASAR_API_KEY'),
+        'publishable_key' => env('MOYASAR_PUBLISHABLE_KEY'),
+        'base_url' => env('MOYASAR_BASE_URL', 'https://api.moyasar.com/v1'),
+    ],
+
+    'ultramsg' => [
+        'instance_id' => env('ULTRAMSG_INSTANCE_ID'),
+        'token' => env('ULTRAMSG_TOKEN'),
+        'base_url' => env('ULTRAMSG_BASE_URL', 'https://api.ultramsg.com'),
+    ],
+
+    'fatora' => [
+        'api_key' => env('FATORA_API_KEY'),
+        'base_url' => env('FATORA_BASE_URL', 'https://api.fatora.io/v1'),
+    ],
+
 ];
 

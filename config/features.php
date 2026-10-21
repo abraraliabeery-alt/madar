@@ -1,7 +1,6 @@
 <?php
 
 return [
-    'facility_home_v2' => env('FACILITY_HOME_V2', true),
     'facility_product_location_v2' => env('FACILITY_PRODUCT_LOCATION_V2', false),
     'facility_product_create_v2' => env('FACILITY_PRODUCT_CREATE_V2', false),
     'facility_product_map_picker' => env('FACILITY_PRODUCT_MAP_PICKER', false),
@@ -19,12 +18,6 @@ return [
     'facility_lifecycle_widgets' => env('FACILITY_LIFECYCLE_WIDGETS', false),
     'facility_nba_widget' => env('FACILITY_NBA_WIDGET', false),
     'facility_ui_v2' => env('FACILITY_UI_V2', false),
-    // HR feature flags
-    'hr_core' => env('HR_CORE', false),
-    'hr_attendance' => env('HR_ATTENDANCE', false),
-    'hr_leave' => env('HR_LEAVE', false),
-    'hr_payroll_lite' => env('HR_PAYROLL_LITE', false),
-    'hr_performance' => env('HR_PERFORMANCE', false),
 
     'contracting_rebrand' => true,
 ];

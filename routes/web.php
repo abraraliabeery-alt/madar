@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Bank\BankLoanController;
 use App\Http\Controllers\AI\LandStudyController;
 use App\Http\Controllers\Public\SmartBrokerController;
 use App\Http\Controllers\Public\ReferralController;
@@ -42,6 +41,22 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/referrals', [ReferralController::class, 'index'])
         ->name('referrals.index');
 });
+
+// بوابة المستأجر — روابط موقّعة بدون تسجيل دخول
+Route::middleware(['signed'])->group(function () {
+    Route::get('/tenant-portal/contract/{contract}', [App\Http\Controllers\TenantPortalController::class, 'show'])
+        ->name('tenant-portal.contract');
+    Route::post('/tenant-portal/contract/{contract}/maintenance', [App\Http\Controllers\TenantPortalController::class, 'storeMaintenance'])
+        ->name('tenant-portal.maintenance');
+    Route::get('/owner-portal/{owner}', [App\Http\Controllers\OwnerPortalController::class, 'show'])
+        ->name('owner-portal.show');
+    Route::get('/tenant-portal/contract/{contract}/pay/{invoice}', [App\Http\Controllers\TenantPortalController::class, 'pay'])
+        ->name('tenant-portal.pay');
+});
+
+// عودة بوابة الدفع — التحقق يتم من البوابة نفسها لا من التوقيع
+Route::get('/tenant-portal/payment/callback', [App\Http\Controllers\TenantPortalController::class, 'paymentCallback'])
+    ->name('tenant-portal.payment.callback');
 
 
 Route::get('/migration-seeder', function () {
@@ -124,6 +139,11 @@ Route::post('/contact-home', [App\Http\Controllers\Public\ContactController::cla
 // General dashboard route (redirects to role-specific dashboard)
 Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
 
+// Shared unread notifications count (polled by all panels)
+Route::get('/dashboard/notifications-count', function () {
+    return response()->json(['count' => (int) (auth()->user()?->unreadNotifications()->count() ?? 0)]);
+})->middleware(['auth', 'throttle:60,1'])->name('dashboard.notifications.count');
+
 // Profile routes for authenticated users (must come before public profile route)
 Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'show'])->name('profile.show');
@@ -170,12 +190,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/user/statistics/period', [App\Http\Controllers\UserStatisticsController::class, 'getPeriodStats'])->name('user.statistics.period');
 });
 
-// Bank employee simple loan panel
-Route::middleware(['auth'])->prefix('bank')->name('bank.')->group(function () {
-    Route::get('/loans/requests', [BankLoanController::class, 'index'])->name('loans.requests');
-    Route::post('/loans/{loanRequest}/offers', [BankLoanController::class, 'storeOffer'])->name('loans.offers.store');
-});
-
 // User Export Routes
 Route::middleware(['auth'])->group(function () {
     Route::get('/user/export', [App\Http\Controllers\UserExportController::class, 'index'])->name('user.export.index');
@@ -193,11 +207,6 @@ Route::get('/profile/{id}', [App\Http\Controllers\ProfileController::class, 'pub
 Route::get('/welcome', function () {
     return view('welcome');
 })->name('welcome');
-
-// Public projects listing (alias to execution marketplace)
-Route::get('/projects', [App\Http\Controllers\Public\ExecutionMarketplaceController::class, 'index'])
-    ->middleware('platform.mode:contracting')
-    ->name('public.projects.index');
 
 // Public execution marketplace (requests & bids)
 Route::get('/execution', [App\Http\Controllers\Public\ExecutionMarketplaceController::class, 'index'])
@@ -228,6 +237,11 @@ Route::get('/investment-studies', [LandStudyController::class, 'form'])
     ->name('web.investment-studies.form');
 Route::post('/investment-studies', [LandStudyController::class, 'submit'])
     ->name('web.investment-studies.submit');
+
+// Public tender compliance checker
+// Route::match(['get', 'post'], '/tools/tender-compliance', \App\Http\Controllers\Public\TenderComplianceController::class)
+//     ->middleware('throttle:10,1')
+//     ->name('public.tender-compliance');
 
 // Route files are now registered through RouteServiceProvider
 // This provides better organization, middleware handling, and performance

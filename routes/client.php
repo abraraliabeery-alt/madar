@@ -6,7 +6,7 @@ use App\Http\Controllers\Client\ClientBookingController;
 use App\Http\Controllers\Client\ClientOfferController;
 use App\Http\Controllers\Client\ClientContractController;
 use App\Http\Controllers\Client\ClientFinancialController;
-use App\Http\Controllers\Client\ClientProjectController;
+
 use App\Http\Controllers\AI\LandStudyController;
 
 // Client Routes - جميع routes تحتاج middleware client
@@ -36,16 +36,7 @@ Route::group([], function () {
     Route::get('/activity/views', [ClientController::class, 'viewActivity'])->name('activity.views');
     Route::get('/activity/searches', [ClientController::class, 'searchActivity'])->name('activity.searches');
 
-    // Loan Requests (Client-side simple UI)
-    Route::get('/loans/requests', [ClientController::class, 'loanRequests'])->name('loans.requests');
-    Route::post('/loans/requests', [ClientController::class, 'storeLoanRequest'])->name('loans.requests.store');
-    Route::get('/loans/requests/{loanRequest}', [ClientController::class, 'showLoanRequest'])->name('loans.requests.show');
-    Route::post('/loans/requests/{loanRequest}/offers/{offer}/choose', [ClientController::class, 'chooseLoanOffer'])->name('loans.offers.choose');
 
-    // Projects (Client)
-    Route::get('/projects/create', [ClientProjectController::class, 'create'])->middleware('platform.mode:contracting')->name('projects.create');
-    Route::post('/projects', [ClientProjectController::class, 'store'])->middleware('platform.mode:contracting')->name('projects.store');
-    Route::get('/projects/{project}', [ClientProjectController::class, 'show'])->middleware('platform.mode:contracting')->name('projects.show');
 
     // Notifications
     Route::get('/notifications', [ClientController::class, 'notifications'])->name('notifications');
@@ -56,31 +47,32 @@ Route::group([], function () {
 
     // Bookings Management
     Route::middleware('platform.mode:real_estate')->group(function () {
+        Route::get('bookings/statistics', [ClientBookingController::class, 'statistics'])->name('bookings.statistics');
         Route::resource('bookings', ClientBookingController::class);
         Route::post('bookings/{booking}/cancel', [ClientBookingController::class, 'cancel'])->name('bookings.cancel');
         Route::post('bookings/{booking}/reschedule', [ClientBookingController::class, 'reschedule'])->name('bookings.reschedule');
         Route::post('bookings/{booking}/review', [ClientBookingController::class, 'review'])->name('bookings.review');
-        Route::get('bookings/statistics', [ClientBookingController::class, 'statistics'])->name('bookings.statistics');
     });
 
     // Offers
     Route::middleware('platform.mode:real_estate')->group(function () {
         Route::get('/offers', [ClientOfferController::class, 'index'])->name('offers.index');
-        Route::get('/offers/{offer}', [ClientOfferController::class, 'show'])->name('offers.show');
         Route::get('/offers/type/{type}', [ClientOfferController::class, 'byType'])->name('offers.by-type');
         Route::get('/offers/product/{product}', [ClientOfferController::class, 'byProduct'])->name('offers.by-product');
         Route::get('/offers/search', [ClientOfferController::class, 'search'])->name('offers.search');
+        Route::get('/offers/compare', [ClientOfferController::class, 'compare'])->name('offers.compare');
+        Route::get('/offers/statistics', [ClientOfferController::class, 'statistics'])->name('offers.statistics');
+        Route::get('/offers/{offer}', [ClientOfferController::class, 'show'])->name('offers.show');
         Route::post('/offers/{offer}/add-to-favorites', [ClientOfferController::class, 'addToFavorites'])->name('offers.add-to-favorites');
         Route::delete('/offers/{offer}/remove-from-favorites', [ClientOfferController::class, 'removeFromFavorites'])->name('offers.remove-from-favorites');
         Route::post('/offers/{offer}/request-info', [ClientOfferController::class, 'requestInfo'])->name('offers.request-info');
         Route::post('/offers/{offer}/book-visit', [ClientOfferController::class, 'bookVisit'])->name('offers.book-visit');
-        Route::get('/offers/compare', [ClientOfferController::class, 'compare'])->name('offers.compare');
-        Route::get('/offers/statistics', [ClientOfferController::class, 'statistics'])->name('offers.statistics');
     });
 
     // Contracts
     Route::middleware('platform.mode:contracting')->group(function () {
-        Route::resource('contracts', ClientContractController::class);
+        Route::get('contracts/statistics', [ClientContractController::class, 'statistics'])->name('contracts.statistics');
+        Route::resource('contracts', ClientContractController::class)->only(['index', 'show']);
         Route::get('contracts/{contract}/invoices', [ClientContractController::class, 'invoices'])->name('contracts.invoices');
         Route::get('contracts/{contract}/payments', [ClientContractController::class, 'payments'])->name('contracts.payments');
         Route::get('contracts/{contract}/financial-report', [ClientContractController::class, 'financialReport'])->name('contracts.financial-report');
@@ -90,7 +82,6 @@ Route::group([], function () {
         Route::get('contracts/{contract}/download', [ClientContractController::class, 'download'])->name('contracts.download');
         Route::get('contracts/{contract}/payment', [ClientContractController::class, 'paymentPage'])->name('contracts.payment-page');
         Route::post('contracts/{contract}/pay-invoice', [ClientContractController::class, 'payInvoice'])->name('contracts.pay-invoice');
-        Route::get('contracts/statistics', [ClientContractController::class, 'statistics'])->name('contracts.statistics');
     });
 
     // Appointments
@@ -173,7 +164,7 @@ Route::group([], function () {
     });
 
     // AI Land Studies - always enabled routes (no feature flag on routing)
-    Route::prefix('ai/land-studies')->name('client.ai.land-studies.')->group(function () {
+    Route::prefix('ai/land-studies')->name('ai.land-studies.')->group(function () {
         Route::get('/', [LandStudyController::class, 'list'])->name('index');
         Route::get('/new', [LandStudyController::class, 'form'])->name('form');
         Route::post('/', [LandStudyController::class, 'submit'])->name('submit');

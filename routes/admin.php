@@ -11,7 +11,7 @@ use App\Http\Controllers\Admin\AdminContractController;
 use App\Http\Controllers\Admin\AdminOfferController;
 use App\Http\Controllers\Admin\AdminFinancialReportController;
 use App\Http\Controllers\Admin\AdminCategoryController;
-use App\Http\Controllers\Admin\AdminProjectCategoryController;
+
 use App\Http\Controllers\Admin\AdminFeatureController;
 use App\Http\Controllers\Admin\AdminAttributeController;
 use App\Http\Controllers\Admin\AdminFaqController;
@@ -34,6 +34,7 @@ use App\Http\Controllers\Admin\AdminThemeSettingsController;
 Route::group([], function () {
 
     // Dashboard
+    Route::get('/', fn () => redirect()->route('admin.dashboard'));
     Route::get('/index', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::post('/ai-assistant', [AdminController::class, 'aiAssistant'])->name('ai-assistant');
     Route::get('/statistics', [AdminController::class, 'statistics'])->name('statistics');
@@ -65,20 +66,18 @@ Route::group([], function () {
     Route::post('/menus', [MenuAdminController::class, 'update'])->name('menus.update');
 
     // Users Management
+    Route::get('users/statistics', [AdminUserManagementController::class, 'statistics'])->name('users.statistics');
+    Route::get('users/export', [AdminUserManagementController::class, 'export'])->name('users.export');
+    Route::post('users/export-data', [AdminUserManagementController::class, 'exportData'])->name('users.export-data');
+    Route::get('users/activity-logs', [AdminUserManagementController::class, 'activityLogs'])->name('users.activity-logs');
+    Route::post('users/bulk-action', [AdminUserManagementController::class, 'bulkAction'])->name('users.bulk-action');
     Route::resource('users', AdminUserController::class);
     Route::post('users/{user}/toggle-status', [AdminUserController::class, 'toggleStatus'])->name('users.toggle-status');
     Route::post('users/{user}/toggle-verification', [AdminUserController::class, 'toggleVerification'])->name('users.toggle-verification');
     Route::post('users/{user}/assign-role', [AdminUserController::class, 'assignRole'])->name('users.assign-role');
     Route::post('users/{user}/assign-facility', [AdminUserController::class, 'assignFacility'])->name('users.assign-facility');
     Route::get('users/{user}/activity', [AdminUserController::class, 'activity'])->name('users.activity');
-
-    // Advanced User Management
-    Route::get('users/statistics', [AdminUserManagementController::class, 'statistics'])->name('users.statistics');
-    Route::get('users/export', [AdminUserManagementController::class, 'export'])->name('users.export');
-    Route::post('users/export-data', [AdminUserManagementController::class, 'exportData'])->name('users.export-data');
-    Route::get('users/activity-logs', [AdminUserManagementController::class, 'activityLogs'])->name('users.activity-logs');
     Route::get('users/{user}/details', [AdminUserManagementController::class, 'userDetails'])->name('users.details');
-    Route::post('users/bulk-action', [AdminUserManagementController::class, 'bulkAction'])->name('users.bulk-action');
 
     // Facilities Management
     Route::resource('facilities', AdminFacilityController::class);
@@ -125,12 +124,12 @@ Route::group([], function () {
     Route::get('products/{product}/timeline', [AdminProductController::class, 'timeline'])->name('products.timeline');
 
     // Bookings Management
+    Route::get('bookings/statistics', [AdminBookingController::class, 'statistics'])->name('bookings.statistics');
+    Route::get('bookings/export', [AdminBookingController::class, 'export'])->name('bookings.export');
     Route::resource('bookings', AdminBookingController::class);
     Route::post('bookings/{booking}/confirm', [AdminBookingController::class, 'confirm'])->name('bookings.confirm');
     Route::post('bookings/{booking}/unconfirm', [AdminBookingController::class, 'unconfirm'])->name('bookings.unconfirm');
     Route::post('bookings/{booking}/update-payment-status', [AdminBookingController::class, 'updatePaymentStatus'])->name('bookings.update-payment-status');
-    Route::get('bookings/statistics', [AdminBookingController::class, 'statistics'])->name('bookings.statistics');
-    Route::get('bookings/export', [AdminBookingController::class, 'export'])->name('bookings.export');
 
     // Roles Management
     Route::resource('roles', AdminRoleController::class);
@@ -138,12 +137,14 @@ Route::group([], function () {
     Route::post('roles/{role}/permissions', [AdminRoleController::class, 'updatePermissions'])->name('roles.update-permissions');
 
     // Permissions Management
-    Route::resource('permissions', AdminPermissionController::class);
-    Route::post('permissions/{permission}/toggle-status', [AdminPermissionController::class, 'toggleStatus'])->name('permissions.toggle-status');
     Route::get('permissions/statistics', [AdminPermissionController::class, 'statistics'])->name('permissions.statistics');
     Route::get('permissions/export', [AdminPermissionController::class, 'export'])->name('permissions.export');
+    Route::resource('permissions', AdminPermissionController::class);
+    Route::post('permissions/{permission}/toggle-status', [AdminPermissionController::class, 'toggleStatus'])->name('permissions.toggle-status');
 
     // Contracts Management
+    Route::get('contracts/statistics', [AdminContractController::class, 'statistics'])->name('contracts.statistics');
+    Route::get('contracts/export', [AdminContractController::class, 'export'])->name('contracts.export');
     Route::resource('contracts', AdminContractController::class);
     Route::post('contracts/{contract}/toggle-status', [AdminContractController::class, 'toggleStatus'])->name('contracts.toggle-status');
     Route::post('contracts/{contract}/toggle-verification', [AdminContractController::class, 'toggleVerification'])->name('contracts.toggle-verification');
@@ -153,15 +154,13 @@ Route::group([], function () {
     Route::get('contracts/{contract}/invoices', [AdminContractController::class, 'invoices'])->name('contracts.invoices');
     Route::get('contracts/{contract}/payments', [AdminContractController::class, 'payments'])->name('contracts.payments');
     Route::get('contracts/{contract}/financial-report', [AdminContractController::class, 'financialReport'])->name('contracts.financial-report');
-    Route::get('contracts/statistics', [AdminContractController::class, 'statistics'])->name('contracts.statistics');
-    Route::get('contracts/export', [AdminContractController::class, 'export'])->name('contracts.export');
 
     // Offers Management
+    Route::get('offers/statistics', [AdminOfferController::class, 'statistics'])->name('offers.statistics');
+    Route::get('offers/export', [AdminOfferController::class, 'export'])->name('offers.export');
     Route::resource('offers', AdminOfferController::class);
     Route::post('offers/{offer}/toggle-status', [AdminOfferController::class, 'toggleStatus'])->name('offers.toggle-status');
     Route::post('offers/{offer}/copy', [AdminOfferController::class, 'copy'])->name('offers.copy');
-    Route::get('offers/statistics', [AdminOfferController::class, 'statistics'])->name('offers.statistics');
-    Route::get('offers/export', [AdminOfferController::class, 'export'])->name('offers.export');
 
     // Financial Reports
     Route::prefix('financial')->name('financial.')->group(function () {
@@ -181,32 +180,26 @@ Route::group([], function () {
     });
 
     // Categories Management
+    Route::get('categories/check-parent', [AdminCategoryController::class, 'checkParent'])->name('categories.check-parent');
+    Route::get('categories/statistics', [AdminCategoryController::class, 'statistics'])->name('categories.statistics');
     Route::resource('categories', AdminCategoryController::class);
     Route::post('categories/{category}/toggle-status', [AdminCategoryController::class, 'toggleStatus'])->name('categories.toggle-status');
     Route::post('categories/{category}/toggle-featured', [AdminCategoryController::class, 'toggleFeatured'])->name('categories.toggle-featured');
     Route::post('categories/reorder', [AdminCategoryController::class, 'reorder'])->name('categories.reorder');
-    Route::get('categories/check-parent', [AdminCategoryController::class, 'checkParent'])->name('categories.check-parent');
-    Route::get('categories/statistics', [AdminCategoryController::class, 'statistics'])->name('categories.statistics');
 
-    // Project Categories Management
-    Route::resource('project-categories', AdminProjectCategoryController::class);
-    Route::post('project-categories/{project_category}/toggle-status', [AdminProjectCategoryController::class, 'toggleStatus'])->name('project-categories.toggle-status');
-    Route::post('project-categories/{project_category}/toggle-featured', [AdminProjectCategoryController::class, 'toggleFeatured'])->name('project-categories.toggle-featured');
-    Route::post('project-categories/reorder', [AdminProjectCategoryController::class, 'reorder'])->name('project-categories.reorder');
-    Route::get('project-categories/check-parent', [AdminProjectCategoryController::class, 'checkParent'])->name('project-categories.check-parent');
-    Route::get('project-categories/statistics', [AdminProjectCategoryController::class, 'statistics'])->name('project-categories.statistics');
+
 
     // Features Management
+    Route::get('features/statistics', [AdminFeatureController::class, 'statistics'])->name('features.statistics');
     Route::resource('features', AdminFeatureController::class);
     Route::post('features/{feature}/toggle-status', [AdminFeatureController::class, 'toggleStatus'])->name('features.toggle-status');
     Route::post('features/reorder', [AdminFeatureController::class, 'reorder'])->name('features.reorder');
-    Route::get('features/statistics', [AdminFeatureController::class, 'statistics'])->name('features.statistics');
 
     // Attributes Management
+    Route::get('attributes/statistics', [AdminAttributeController::class, 'statistics'])->name('attributes.statistics');
     Route::resource('attributes', AdminAttributeController::class);
     Route::post('attributes/{attribute}/toggle-required', [AdminAttributeController::class, 'toggleRequired'])->name('attributes.toggle-required');
     Route::post('attributes/{attribute}/toggle-status', [AdminAttributeController::class, 'toggleStatus'])->name('attributes.toggle-status');
-    Route::get('attributes/statistics', [AdminAttributeController::class, 'statistics'])->name('attributes.statistics');
 
     // Cities / Neighborhoods / Streets Management
     Route::resource('cities', AdminCityController::class);
@@ -255,10 +248,10 @@ Route::group([], function () {
         
         // Contracts Management
         Route::get('/contracts', [AdminFinancialController::class, 'contracts'])->name('contracts');
+        Route::get('/contracts/export', [AdminFinancialController::class, 'exportContracts'])->name('contracts.export');
+        Route::post('/contracts/bulk-action', [AdminFinancialController::class, 'bulkContractAction'])->name('contracts.bulk-action');
         Route::get('/contracts/{id}', [AdminFinancialController::class, 'contractDetails'])->name('contract-details');
         Route::put('/contracts/{id}/status', [AdminFinancialController::class, 'updateContractStatus'])->name('contracts.update-status');
-        Route::post('/contracts/bulk-action', [AdminFinancialController::class, 'bulkContractAction'])->name('contracts.bulk-action');
-        Route::get('/contracts/export', [AdminFinancialController::class, 'exportContracts'])->name('contracts.export');
         Route::get('/contracts/{id}/download', [AdminFinancialController::class, 'downloadContract'])->name('contracts.download');
         
         // Payments Management

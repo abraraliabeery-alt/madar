@@ -19,28 +19,25 @@ use App\Http\Controllers\Facility\FinancialReportController;
 use App\Http\Controllers\Facility\FacilityUserController;
 use App\Http\Controllers\FacilityCustomizationController;
 use App\Http\Controllers\Facility\FacilityTaskController;
-use App\Http\Controllers\Facility\FacilityProjectController;
+
 use App\Http\Controllers\Facility\FacilityAppointmentController;
 use App\Http\Controllers\Facility\FacilityRentalsReportController;
 use App\Http\Controllers\Facility\FacilitySmartBrokerController;
-use App\Http\Controllers\Facility\HR\DepartmentController as FacilityHrDepartmentController;
-use App\Http\Controllers\Facility\HR\PositionController as FacilityHrPositionController;
 use App\Http\Controllers\Facility\ProductLifecycleController;
-use App\Http\Controllers\Facility\FacilityBuildingController;
 use App\Http\Controllers\Facility\FacilityExecutionRequestController;
+use App\Http\Controllers\Facility\FacilityQuoteController;
+use App\Http\Controllers\Facility\FacilityTenderController;
 
 Route::group([], function () {
 
     // Dashboard
     Route::get('/', [FacilityController::class, 'dashboard'])->name('dashboard');
+    Route::get('/index', [FacilityController::class, 'dashboard'])->name('index');
+    Route::get('/group', [FacilityController::class, 'group'])->name('group');
     Route::get('/statistics', [FacilityController::class, 'statistics'])->name('statistics');
     Route::get('/settings', [FacilityController::class, 'settings'])->name('settings');
     Route::post('/settings', [FacilityController::class, 'updateSettings'])->name('settings.update');
 
-    // Optional new Home v2 (behind feature flag)
-    if (config('features.facility_home_v2')) {
-        Route::get('/home-v2', [FacilityController::class, 'homeV2'])->name('home-v2');
-    }
 
     // Facility Management
     Route::get('/create', [FacilityController::class, 'create'])->name('create');
@@ -52,11 +49,13 @@ Route::group([], function () {
     Route::post('/toggle-featured', [FacilityController::class, 'toggleFeatured'])->name('toggle-featured');
 
     // Products Management
+    Route::get('products/vacant', [FacilityProductController::class, 'vacant'])->middleware('platform.mode:real_estate')->name('products.vacant');
+    Route::get('products/occupancy-map', [FacilityProductController::class, 'occupancyMap'])->middleware('platform.mode:real_estate')->name('products.occupancy-map');
+    Route::get('products/timeline', [FacilityProductController::class, 'timeline'])->middleware('platform.mode:real_estate')->name('products.timeline');
     Route::resource('products', FacilityProductController::class)->middleware('platform.mode:real_estate');
 
-    // Buildings Management
-    Route::resource('buildings', FacilityBuildingController::class);
     Route::get('categories/{category}/products', [FacilityProductController::class, 'categoryProducts'])->middleware('platform.mode:real_estate')->name('categories.products');
+    Route::get('products/{product}/manage', [FacilityProductController::class, 'manage'])->middleware('platform.mode:real_estate')->name('products.manage');
     Route::get('products/{product}/lifecycle', [FacilityProductController::class, 'lifecycle'])->middleware('platform.mode:real_estate')->name('products.lifecycle');
     Route::post('products/{product}/toggle-status', [FacilityProductController::class, 'toggleStatus'])->middleware('platform.mode:real_estate')->name('products.toggle-status');
     Route::post('products/{product}/toggle-verification', [FacilityProductController::class, 'toggleVerification'])->middleware('platform.mode:real_estate')->name('products.toggle-verification');
@@ -81,11 +80,7 @@ Route::group([], function () {
     Route::post('tasks/generate-reminders', [FacilityTaskController::class, 'generateReminders'])->name('tasks.generate-reminders');
     Route::resource('tasks', FacilityTaskController::class);
 
-    // Projects Management (basic lifecycle view for facility projects)
-    Route::get('projects', [FacilityProjectController::class, 'index'])->name('projects.index');
-    Route::get('projects/{project}', [FacilityProjectController::class, 'show'])->name('projects.show');
-    Route::get('projects/{project}/lifecycle', [FacilityProjectController::class, 'lifecycle'])->name('projects.lifecycle');
-    Route::post('projects/{project}/lifecycle/ai', [FacilityProjectController::class, 'aiStage'])->name('projects.lifecycle.ai');
+
 
     // Smart Real Estate Broker (AI matching)
     Route::get('smart-broker', [FacilitySmartBrokerController::class, 'index'])->name('smart-broker.index');
@@ -98,6 +93,25 @@ Route::group([], function () {
     Route::post('execution-requests', [FacilityExecutionRequestController::class, 'store'])->middleware('platform.mode:contracting')->name('execution-requests.store');
     Route::get('execution-requests/{executionRequest}', [FacilityExecutionRequestController::class, 'show'])->middleware('platform.mode:contracting')->name('execution-requests.show');
     Route::post('execution-requests/{executionRequest}/bids', [FacilityExecutionRequestController::class, 'storeBid'])->middleware('platform.mode:contracting')->name('execution-requests.bids.store');
+
+    // Quotes Management
+    Route::get('quotes', [FacilityQuoteController::class, 'index'])->middleware('platform.mode:contracting')->name('quotes.index');
+    Route::get('quotes/create', [FacilityQuoteController::class, 'create'])->middleware('platform.mode:contracting')->name('quotes.create');
+    Route::post('quotes', [FacilityQuoteController::class, 'store'])->middleware('platform.mode:contracting')->name('quotes.store');
+    Route::get('quotes/{quote}/download', [FacilityQuoteController::class, 'download'])->middleware('platform.mode:contracting')->name('quotes.download');
+    Route::post('quotes/ai-suggest-price', [FacilityQuoteController::class, 'suggestPrice'])->middleware('platform.mode:contracting')->name('quotes.suggest-price');
+    Route::resource('quotes', FacilityQuoteController::class, ['except' => ['index', 'create', 'store']])->middleware('platform.mode:contracting');
+
+    // Tender AI Analysis
+    Route::get('tenders', [FacilityTenderController::class, 'index'])->middleware('platform.mode:contracting')->name('tenders.index');
+    Route::get('tenders/create', [FacilityTenderController::class, 'create'])->middleware('platform.mode:contracting')->name('tenders.create');
+    Route::post('tenders', [FacilityTenderController::class, 'store'])->middleware('platform.mode:contracting')->name('tenders.store');
+    Route::get('tenders/{tender}', [FacilityTenderController::class, 'show'])->middleware('platform.mode:contracting')->name('tenders.show');
+    Route::get('tenders/{tender}/respond', [FacilityTenderController::class, 'respond'])->middleware('platform.mode:contracting')->name('tenders.respond');
+    Route::post('tenders/{tender}/respond', [FacilityTenderController::class, 'generate'])->middleware('platform.mode:contracting')->name('tenders.generate-response');
+    Route::get('tenders/{tender}/respond/download', [FacilityTenderController::class, 'downloadResponse'])->middleware('platform.mode:contracting')->name('tenders.respond.download');
+    Route::get('tenders/{tender}/respond/download-word', [FacilityTenderController::class, 'downloadWord'])->middleware('platform.mode:contracting')->name('tenders.respond.download-word');
+    Route::delete('tenders/{tender}', [FacilityTenderController::class, 'destroy'])->middleware('platform.mode:contracting')->name('tenders.destroy');
 
     // Appointments Management
     Route::get('appointments', [FacilityAppointmentController::class, 'index'])->name('appointments.index');
@@ -114,11 +128,12 @@ Route::group([], function () {
     // Rentals Reports
     Route::get('reports/rentals/occupancy', [FacilityRentalsReportController::class, 'occupancy'])->name('reports.rentals.occupancy');
     Route::get('reports/rentals/collections', [FacilityRentalsReportController::class, 'collections'])->name('reports.rentals.collections');
+    Route::get('reports/rentals/overdue', [FacilityRentalsReportController::class, 'overdue'])->name('reports.rentals.overdue');
+    Route::get('reports/executive', [FacilityRentalsReportController::class, 'executive'])->name('reports.executive')->middleware('platform.mode:real_estate');
+    Route::get('reports/executive/pdf', [FacilityRentalsReportController::class, 'executivePdf'])->name('reports.executive.pdf')->middleware('platform.mode:real_estate');
+    Route::get('reports/portfolio', [FacilityRentalsReportController::class, 'portfolio'])->name('reports.portfolio')->middleware('platform.mode:real_estate');
+    Route::get('reports/portfolio/pdf', [FacilityRentalsReportController::class, 'portfolioPdf'])->name('reports.portfolio.pdf')->middleware('platform.mode:real_estate');
     
-    // Facility Loan Requests Dashboard
-    Route::get('loans/requests', [FacilityController::class, 'loanRequests'])->name('loans.requests');
-    Route::get('loans/requests/{loanRequest}', [FacilityController::class, 'showLoanRequest'])->name('loans.requests.show');
-
     // Contracts Management
     Route::get('contracts/statistics', [FacilityContractController::class, 'statistics'])->name('contracts.statistics');
     Route::get('contracts/export', [FacilityContractController::class, 'export'])->name('contracts.export');
@@ -127,10 +142,30 @@ Route::group([], function () {
     Route::post('contracts/{contract}/cancel', [FacilityContractController::class, 'cancel'])->name('contracts.cancel');
     Route::post('contracts/{contract}/record-payment', [FacilityContractController::class, 'recordPayment'])->name('contracts.record-payment');
     Route::post('contracts/{contract}/renew', [FacilityContractController::class, 'renew'])->name('contracts.renew');
+    Route::post('contracts/{contract}/ejar', [FacilityContractController::class, 'updateEjar'])->name('contracts.ejar');
+    Route::get('contracts/{contract}/ejar-data', [FacilityContractController::class, 'ejarData'])->name('contracts.ejar-data');
     Route::get('contracts/{contract}/invoices', [FacilityContractController::class, 'invoices'])->name('contracts.invoices');
     Route::get('contracts/{contract}/payments', [FacilityContractController::class, 'payments'])->name('contracts.payments');
     Route::get('contracts/{contract}/financial-report', [FacilityContractController::class, 'financialReport'])->name('contracts.financial-report');
     Route::post('contracts/{contract}/commissions', [FacilityContractController::class, 'storeCommission'])->name('contracts.commissions.store');
+
+    // المستأجرين
+    Route::resource('tenants', \App\Http\Controllers\Facility\FacilityTenantController::class)->except(['show']);
+
+    // الملاك
+    Route::post('owners/{owner}/payouts', [\App\Http\Controllers\Facility\FacilityOwnerController::class, 'storePayout'])->name('owners.payouts.store')->middleware('platform.mode:real_estate');
+    Route::get('owners/{owner}/statement-pdf', [\App\Http\Controllers\Facility\FacilityOwnerController::class, 'statementPdf'])->name('owners.statement-pdf')->middleware('platform.mode:real_estate');
+    Route::resource('owners', \App\Http\Controllers\Facility\FacilityOwnerController::class)->middleware('platform.mode:real_estate');
+
+    // الصيانة
+    Route::post('maintenance/{maintenance}/update-status', [\App\Http\Controllers\Facility\FacilityMaintenanceController::class, 'updateStatus'])->name('maintenance.update-status')->middleware('platform.mode:real_estate');
+    Route::resource('maintenance', \App\Http\Controllers\Facility\FacilityMaintenanceController::class)->except(['show'])->middleware('platform.mode:real_estate');
+
+    // العملاء المحتملون (CRM)
+    Route::get('leads/report', [\App\Http\Controllers\Facility\FacilityLeadController::class, 'report'])->name('leads.report')->middleware('platform.mode:real_estate');
+    Route::patch('leads/{lead}/stage', [\App\Http\Controllers\Facility\FacilityLeadController::class, 'updateStage'])->name('leads.update-stage')->middleware('platform.mode:real_estate');
+    Route::post('leads/{lead}/activities', [\App\Http\Controllers\Facility\FacilityLeadController::class, 'storeActivity'])->name('leads.activities.store')->middleware('platform.mode:real_estate');
+    Route::resource('leads', \App\Http\Controllers\Facility\FacilityLeadController::class)->middleware('platform.mode:real_estate');
 
     // Invoices Management
     Route::get('invoices/statistics', [FacilityInvoiceController::class, 'statistics'])->name('invoices.statistics');
@@ -157,14 +192,6 @@ Route::group([], function () {
     Route::post('users/{user}/assign-role', [FacilityUserController::class, 'assignRole'])->name('users.assign-role');
     Route::delete('users/{user}/roles/{role}', [FacilityUserController::class, 'removeRole'])->name('users.remove-role');
 
-    // HR Management (behind feature flag)
-    if (config('features.hr_core')) {
-        Route::prefix('hr')->name('hr.')->group(function () {
-            Route::resource('departments', FacilityHrDepartmentController::class)->only(['index','store','show','update','destroy']);
-            Route::resource('positions', FacilityHrPositionController::class)->only(['index','store','show','update','destroy']);
-        });
-    }
-
     // Product Lifecycle metrics (behind feature flag)
     if (config('features.facility_lifecycle_widgets')) {
         Route::get('lifecycle/metrics', [ProductLifecycleController::class, 'metrics'])->name('lifecycle.metrics');
@@ -176,9 +203,9 @@ Route::group([], function () {
         Route::get('/revenue', [FacilityFinancialReportController::class, 'revenue'])->name('revenue');
         Route::get('/receivables', [FacilityFinancialReportController::class, 'receivables'])->name('receivables');
         Route::get('/commissions', [FacilityFinancialReportController::class, 'commissions'])->name('commissions');
-        Route::get('/payments', [FacilityFinancialReportController::class, 'payments'])->name('payments');
+        Route::get('/payments-report', [FacilityFinancialReportController::class, 'payments'])->name('payments-report');
         Route::get('/invoices', [FacilityFinancialReportController::class, 'invoices'])->name('invoices');
-        Route::get('/contracts', [FacilityFinancialReportController::class, 'contracts'])->name('contracts');
+        Route::get('/contracts-report', [FacilityFinancialReportController::class, 'contracts'])->name('contracts-report');
         Route::get('/customer', [FacilityFinancialReportController::class, 'customer'])->name('customer');
         Route::get('/owner', [FacilityFinancialReportController::class, 'owner'])->name('owner');
         Route::get('/monthly', [FacilityFinancialReportController::class, 'monthly'])->name('monthly');
@@ -187,6 +214,8 @@ Route::group([], function () {
     });
 
     // Additional Facility Routes
+    Route::get('search', [FacilityController::class, 'globalSearch'])->name('search');
+    Route::post('settings/target', [FacilityController::class, 'saveTarget'])->name('settings.target');
     Route::get('notifications', [FacilityController::class, 'notifications'])->name('notifications');
     Route::post('notifications/mark-read', [FacilityController::class, 'markNotificationsRead'])->name('notifications.mark-read');
     Route::get('profile', [FacilityController::class, 'profile'])->name('profile');
@@ -197,7 +226,6 @@ Route::group([], function () {
     Route::get('reports/bookings', [FacilityController::class, 'bookingReports'])->name('reports.bookings');
     Route::get('reports/products', [FacilityController::class, 'productReports'])->name('reports.products');
     Route::get('reports/revenue', [FacilityController::class, 'revenueReports'])->name('reports.revenue');
-    Route::get('banks', [FacilityController::class, 'banks'])->name('banks.index');
     
     // Facility Customization Routes
     Route::get('customization/{facility}/edit', [FacilityCustomizationController::class, 'edit'])->name('customization.edit');
@@ -241,15 +269,15 @@ Route::group([], function () {
         Route::get('/entries', [AccountingController::class, 'entriesIndex'])->name('entries.index');
         Route::get('/entries/create', [AccountingController::class, 'createEntry'])->name('entries.create');
         Route::post('/entries', [AccountingController::class, 'storeEntry'])->name('entries.store');
+        Route::get('/entries/export', [AccountingController::class, 'exportEntries'])->name('entries.export');
         Route::get('/entries/{entry}', [AccountingController::class, 'showEntry'])->name('entries.show');
         Route::post('/entries/{entry}/reverse', [AccountingController::class, 'reverseEntry'])->name('entries.reverse');
-        Route::get('/entries/export', [AccountingController::class, 'exportEntries'])->name('entries.export');
-        
+
         // Chart of Accounts
-        Route::resource('chart-of-accounts', ChartOfAccountController::class);
-        Route::post('chart-of-accounts/{account}/opening-balance', [ChartOfAccountController::class, 'updateOpeningBalance'])->name('chart-of-accounts.opening-balance');
         Route::get('chart-of-accounts/export', [ChartOfAccountController::class, 'export'])->name('chart-of-accounts.export');
+        Route::post('chart-of-accounts/{account}/opening-balance', [ChartOfAccountController::class, 'updateOpeningBalance'])->name('chart-of-accounts.opening-balance');
         Route::post('chart-of-accounts/create-default', [ChartOfAccountController::class, 'createDefault'])->name('chart-of-accounts.create-default');
+        Route::resource('chart-of-accounts', ChartOfAccountController::class);
         
         // Accounting Periods
         Route::resource('periods', AccountingPeriodController::class);
@@ -283,6 +311,9 @@ Route::group([], function () {
             Route::get('/export-cash-flow', [FinancialReportController::class, 'exportCashFlow'])->name('export-cash-flow');
             Route::get('/export-budget-report', [FinancialReportController::class, 'exportBudgetReport'])->name('export-budget-report');
             Route::get('/export-trial-balance', [FinancialReportController::class, 'exportTrialBalance'])->name('export-trial-balance');
+            Route::get('/export-account-details', [FinancialReportController::class, 'exportAccountDetails'])->name('export-account-details');
+            Route::get('/export-custom', [FinancialReportController::class, 'exportCustomReport'])->name('export-custom');
+            Route::get('/download/{file}', [FinancialReportController::class, 'download'])->name('download');
         });
         
         // Reports and Analytics (moved to nested reports group above)
