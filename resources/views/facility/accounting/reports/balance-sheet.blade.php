@@ -34,7 +34,7 @@
                             </div>
                             <div>
                                 <strong class="text-gray-700">التاريخ:</strong><br>
-                                <span class="text-gray-600">{{ $endDate->format('Y-m-d') }}</span>
+                                <span class="text-gray-600">{{ \Illuminate\Support\Carbon::parse($asOfDate)->format('Y-m-d') }}</span>
                             </div>
                         </div>
                     </div>
@@ -94,7 +94,7 @@
                                                     <td><strong>الخصوم المتداولة</strong></td>
                                                     <td class="text-end"><strong>{{ $summary['current_liabilities'] ?? '0.00' }} ر.س</strong></td>
                                                 </tr>
-                                                @if(isset($currentAssets) && $currentAssets && $currentAssets->count() > 0)
+                                                @if(isset($currentAssets) && $currentAssets && count($currentAssets) > 0)
                                                     @foreach($currentAssets as $asset)
                                                         <tr>
                                                             <td style="padding-left: 2rem;">{{ $asset->account_name ?? 'غير محدد' }}</td>
@@ -112,7 +112,7 @@
                                                     <td><strong>الخصوم طويلة الأجل</strong></td>
                                                     <td class="text-end"><strong>{{ $summary['long_term_liabilities'] ?? '0.00' }} ر.س</strong></td>
                                                 </tr>
-                                                @if(isset($fixedAssets) && $fixedAssets && $fixedAssets->count() > 0)
+                                                @if(isset($fixedAssets) && $fixedAssets && count($fixedAssets) > 0)
                                                     @foreach($fixedAssets as $asset)
                                                         <tr>
                                                             <td style="padding-left: 2rem;">{{ $asset->account_name ?? 'غير محدد' }}</td>
@@ -138,7 +138,7 @@
                                                     <td><strong>حقوق الملكية</strong></td>
                                                     <td class="text-end"><strong>{{ $summary['total_equity'] ?? '0.00' }} ر.س</strong></td>
                                                 </tr>
-                                                @if(isset($equity) && $equity && $equity->count() > 0)
+                                                @if(isset($equity) && $equity && count($equity) > 0)
                                                     @foreach($equity as $equityItem)
                                                         <tr>
                                                             <td></td>

@@ -128,10 +128,10 @@
                                     <tbody>
                                         @foreach($stats['recent_bookings'] as $booking)
                                         <tr>
-                                            <td>{{ $booking->booking_number }}</td>
-                                            <td>{{ $booking->user->name }}</td>
-                                            <td>{{ $booking->product->name }}</td>
-                                            <td>{{ $booking->booking_date }}</td>
+                                            <td>{{ $booking->booking_number ?? '#'.$booking->id }}</td>
+                                            <td>{{ $booking->user?->name ?? '—' }}</td>
+                                            <td>{{ $booking->product?->getTranslatedTitle() ?? '—' }}</td>
+                                            <td>{{ $booking->preferred_date?->toDateString() ?? '—' }}</td>
                                             <td>{{ number_format($booking->total_amount, 2) }} {!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}</td>
                                             <td>
                                                 @if($booking->is_confirmed)

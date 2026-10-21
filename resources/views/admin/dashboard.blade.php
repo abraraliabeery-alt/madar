@@ -5,42 +5,100 @@
     <!-- Welcome Card -->
     <div class="card shadow-sm mb-4" data-intro="{{ __('admin.tour.welcome_card_desc') }}" data-step="10">
         <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
                 <div>
                     <h4 class="mb-1 fw-bold">{{ __('admin.dashboard.welcome_title') }}</h4>
                     <p class="text-muted mb-0">{{ __('admin.dashboard.welcome_subtitle') }}</p>
                 </div>
-                <div>
-                    <a href="{{ route('admin.statistics') }}" class="btn btn-outline-primary">
-                        <i class="fas fa-chart-bar me-2"></i>{{ __('admin.dashboard.detailed_statistics') }}
+                <div class="d-flex gap-2 flex-shrink-0">
+                    <a href="{{ route('admin.statistics') }}" class="dashboard-quick-link d-inline-flex align-items-center gap-2 text-decoration-none rounded-3 border bg-white px-3 py-2 shadow-sm">
+                        <span class="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary-subtle text-primary" style="width:36px;height:36px;">
+                            <i class="fas fa-chart-bar"></i>
+                        </span>
+                        <span class="fw-semibold text-dark">{{ __('admin.dashboard.detailed_statistics') }}</span>
                     </a>
-                    <a href="{{ route('admin.reports') }}" class="btn btn-outline-primary">
-                        <i class="fas fa-file-alt me-2"></i>{{ __('admin.dashboard.reports') }}
+                    <a href="{{ route('admin.reports') }}" class="dashboard-quick-link d-inline-flex align-items-center gap-2 text-decoration-none rounded-3 border bg-white px-3 py-2 shadow-sm">
+                        <span class="d-inline-flex align-items-center justify-content-center rounded-circle bg-success-subtle text-success" style="width:36px;height:36px;">
+                            <i class="fas fa-file-alt"></i>
+                        </span>
+                        <span class="fw-semibold text-dark">{{ __('admin.dashboard.reports') }}</span>
                     </a>
                 </div>
             </div>
         </div>
     </div>
 
+    @php
+        $needsActionItems = collect([
+            [
+                'label' => __('admin.dashboard.new_product_requests'),
+                'count' => (int) ($stats['pending_product_requests'] ?? 0),
+                'url' => \Illuminate\Support\Facades\Route::has('admin.product-requests.index') ? route('admin.product-requests.index') : null,
+                'icon' => 'fa-building',
+            ],
+            [
+                'label' => __('admin.dashboard.new_marketing_requests'),
+                'count' => (int) ($stats['pending_marketing_requests'] ?? 0),
+                'url' => \Illuminate\Support\Facades\Route::has('admin.marketing-product-requests.index') ? route('admin.marketing-product-requests.index') : null,
+                'icon' => 'fa-bullhorn',
+            ],
+            [
+                'label' => __('admin.dashboard.unread_notifications'),
+                'count' => (int) ($stats['unread_notifications'] ?? 0),
+                'url' => \Illuminate\Support\Facades\Route::has('admin.notifications') ? route('admin.notifications') : null,
+                'icon' => 'fa-bell',
+            ],
+        ])->filter(fn ($item) => $item['count'] > 0 && $item['url']);
+    @endphp
+
+    @if($needsActionItems->isNotEmpty())
+    <div class="card shadow-sm mb-4 border-warning-subtle">
+        <div class="card-body d-flex align-items-center flex-wrap gap-3 py-3">
+            <div class="d-flex align-items-center gap-2">
+                <span class="d-inline-flex align-items-center justify-content-center rounded-circle bg-warning-subtle text-warning" style="width:36px;height:36px;">
+                    <i class="fas fa-exclamation"></i>
+                </span>
+                <h6 class="mb-0 fw-bold">{{ __('admin.dashboard.needs_action') }}</h6>
+            </div>
+            <div class="d-flex gap-2 flex-wrap">
+                @foreach($needsActionItems as $item)
+                    <a href="{{ $item['url'] }}" class="dashboard-quick-link d-inline-flex align-items-center gap-2 text-decoration-none rounded-3 border bg-white px-3 py-2 shadow-sm">
+                        <i class="fas {{ $item['icon'] }} text-muted"></i>
+                        <span class="fw-semibold text-dark small">{{ $item['label'] }}</span>
+                        <span class="badge rounded-pill bg-danger">{{ $item['count'] }}</span>
+                    </a>
+                @endforeach
+            </div>
+        </div>
+    </div>
+    @endif
+
     <div class="card shadow-sm mb-4 border-primary-subtle" id="admin-ai-assistant">
         <div class="card-header d-flex align-items-center justify-content-between">
-            <h5 class="mb-0">مساعد تشغيل المنصة</h5>
+            <h5 class="mb-0">{{ __('admin.dashboard.ai.title') }}</h5>
             <span class="badge bg-primary">AI</span>
         </div>
         <div class="card-body">
-            <p class="text-muted small">اسأل عن العقارات الناقصة أو الطلبات المفتوحة أو أولويات العمل. المساعد للقراءة والاقتراح ولا ينفذ تغييرات تلقائيًا.</p>
+            <p class="text-muted small">{{ __('admin.dashboard.ai.subtitle') }}</p>
             <div class="input-group">
-                <input type="text" class="form-control" id="admin-ai-question" placeholder="مثال: ما أهم الأعمال التي أبدأ بها اليوم؟">
-                <button type="button" class="btn btn-primary" id="admin-ai-ask">اسأل</button>
+                <input type="text" class="form-control" id="admin-ai-question" placeholder="{{ __('admin.dashboard.ai.placeholder') }}">
+                <button type="button" class="btn btn-primary" id="admin-ai-ask">{{ __('admin.dashboard.ai.ask') }}</button>
             </div>
             <div class="d-flex flex-wrap gap-2 mt-2">
-                <button type="button" class="btn btn-sm btn-outline-secondary admin-ai-prompt" data-prompt="اعرض أهم العقارات الناقصة وما الذي ينقصها">العقارات الناقصة</button>
-                <button type="button" class="btn btn-sm btn-outline-secondary admin-ai-prompt" data-prompt="لخص طلبات العملاء المفتوحة وحدد الأولوية">طلبات العملاء</button>
-                <button type="button" class="btn btn-sm btn-outline-secondary admin-ai-prompt" data-prompt="اقترح خطة تشغيل مختصرة لليوم بناءً على بيانات المنصة">خطة اليوم</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary admin-ai-prompt" data-prompt="{{ __('admin.dashboard.ai.prompt_missing_products_q') }}">{{ __('admin.dashboard.ai.prompt_missing_products') }}</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary admin-ai-prompt" data-prompt="{{ __('admin.dashboard.ai.prompt_requests_q') }}">{{ __('admin.dashboard.ai.prompt_requests') }}</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary admin-ai-prompt" data-prompt="{{ __('admin.dashboard.ai.prompt_daily_plan_q') }}">{{ __('admin.dashboard.ai.prompt_daily_plan') }}</button>
             </div>
             <div id="admin-ai-answer" class="alert alert-light border mt-3 mb-0" style="display:none; white-space:pre-line;"></div>
             <div id="admin-ai-links" class="d-flex flex-wrap gap-2 mt-2"></div>
         </div>
+    </div>
+
+    <!-- Period filter -->
+    <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
+        @foreach(['all' => 'period_all', 'today' => 'period_today', 'week' => 'period_week', 'month' => 'period_month'] as $key => $labelKey)
+            <a href="{{ route('admin.dashboard', ['period' => $key]) }}" class="btn btn-sm {{ ($period ?? 'all') === $key ? 'btn-primary' : 'btn-outline-secondary' }}">{{ __('admin.dashboard.' . $labelKey) }}</a>
+        @endforeach
     </div>
 
     <!-- Statistics Cards -->
@@ -123,6 +181,18 @@
                         <a href="{{ route('admin.bookings.index') }}" class="small text-decoration-none">{{ __('admin.dashboard.booking_details') }}</a>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bookings & Revenue Chart -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header d-flex align-items-center justify-content-between">
+            <h6 class="mb-0">{{ __('admin.dashboard.chart_title') }}</h6>
+        </div>
+        <div class="card-body">
+            <div style="position:relative;height:280px;">
+                <canvas id="bookingsRevenueChart"></canvas>
             </div>
         </div>
     </div>
@@ -313,6 +383,13 @@
     </div>
 </div>
 
+@push('styles')
+<style>
+.dashboard-quick-link { transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease; }
+.dashboard-quick-link:hover { transform: translateY(-2px); box-shadow: 0 .5rem 1rem rgba(0,0,0,.08) !important; border-color: var(--bs-primary) !important; }
+</style>
+@endpush
+
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function(){
@@ -327,7 +404,7 @@ document.addEventListener('DOMContentLoaded', function(){
         if(question.length < 3) return;
         var original = ask.textContent;
         ask.disabled = true;
-        ask.textContent = 'جارٍ التحليل...';
+        ask.textContent = @json(__('admin.dashboard.ai.analyzing'));
         fetch(@json(route('admin.ai-assistant')), {
             method: 'POST',
             headers: {
@@ -339,9 +416,9 @@ document.addEventListener('DOMContentLoaded', function(){
         }).then(function(response){
             return response.json().then(function(data){ return {ok: response.ok, data: data}; });
         }).then(function(result){
-            if(!result.ok || !result.data.success) throw new Error(result.data.message || 'تعذر تشغيل المساعد');
+            if(!result.ok || !result.data.success) throw new Error(result.data.message || @json(__('admin.dashboard.ai.run_error')));
             var data = result.data.data || {};
-            answer.textContent = data.answer || 'لا توجد إجابة.';
+            answer.textContent = data.answer || @json(__('admin.dashboard.ai.no_answer'));
             answer.style.display = 'block';
             links.innerHTML = '';
             (data.quick_links || []).forEach(function(link){
@@ -352,7 +429,7 @@ document.addEventListener('DOMContentLoaded', function(){
                 links.appendChild(anchor);
             });
         }).catch(function(error){
-            answer.textContent = error.message || 'تعذر الاتصال بالمساعد.';
+            answer.textContent = error.message || @json(__('admin.dashboard.ai.error'));
             answer.className = 'alert alert-danger mt-3 mb-0';
             answer.style.display = 'block';
         }).finally(function(){
@@ -368,6 +445,70 @@ document.addEventListener('DOMContentLoaded', function(){
             input.value = button.getAttribute('data-prompt') || '';
             submitQuestion();
         });
+    });
+});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var el = document.getElementById('bookingsRevenueChart');
+    if (!el || typeof Chart === 'undefined') return;
+
+    var chartData = @json($chart ?? ['labels' => [], 'bookings' => [], 'revenue' => []]);
+    var brandBrown = getComputedStyle(document.documentElement).getPropertyValue('--brand-brown').trim() || '#6f4e37';
+    var brandMuted = getComputedStyle(document.documentElement).getPropertyValue('--brand-muted').trim() || '#6c757d';
+    var brandFg = getComputedStyle(document.documentElement).getPropertyValue('--brand-fg').trim() || '#172524';
+    var isRtl = document.documentElement.dir === 'rtl';
+
+    function hexToRgba(hex, alpha) {
+        var h = hex.replace('#', '');
+        if (h.length === 3) h = h.split('').map(function(c){ return c + c; }).join('');
+        var n = parseInt(h, 16);
+        return 'rgba(' + ((n >> 16) & 255) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + alpha + ')';
+    }
+
+    new Chart(el, {
+        data: {
+            labels: chartData.labels,
+            datasets: [
+                {
+                    type: 'bar',
+                    label: @json(__('admin.dashboard.chart_bookings')),
+                    data: chartData.bookings,
+                    backgroundColor: hexToRgba(brandBrown, 0.25),
+                    borderColor: brandBrown,
+                    borderWidth: 1.5,
+                    borderRadius: 6,
+                    yAxisID: 'y'
+                },
+                {
+                    type: 'line',
+                    label: @json(__('admin.dashboard.chart_revenue')),
+                    data: chartData.revenue,
+                    borderColor: '#198754',
+                    backgroundColor: 'rgba(25,135,84,0.12)',
+                    borderWidth: 2,
+                    tension: 0.35,
+                    fill: true,
+                    pointRadius: 3,
+                    yAxisID: 'y1'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {mode: 'index', intersect: false},
+            scales: {
+                y: {beginAtZero: true, ticks: {precision: 0, color: brandMuted}, grid: {color: 'rgba(0,0,0,0.05)'}},
+                y1: {beginAtZero: true, position: isRtl ? 'left' : 'right', grid: {drawOnChartArea: false}, ticks: {color: brandMuted}},
+                x: {ticks: {color: brandMuted}, grid: {display: false}}
+            },
+            plugins: {
+                legend: {rtl: isRtl, labels: {color: brandFg, usePointStyle: true}},
+                tooltip: {rtl: isRtl}
+            }
+        }
     });
 });
 </script>

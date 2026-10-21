@@ -405,7 +405,7 @@
                 :items="$latestExecutionRequests"
                 type="execution_requests"
                 :title="__('general.home.latest_properties')"
-                :viewAllRoute="route('public.projects.index')"
+                :viewAllRoute="route('public.execution.marketplace')"
                 :viewAllText="__('general.home.view_all_properties')"
                 :maxItems="6"
                 :showViewToggle="false"

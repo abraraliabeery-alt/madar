@@ -8,6 +8,30 @@
         <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
             <h3 class="text-2xl font-bold text-gray-800">تفاصيل العقد</h3>
             <div class="flex space-x-3 space-x-reverse">
+                @if($contract->status === 'active')
+                    <form method="POST" action="{{ route('facility.contracts.renew', $contract) }}" onsubmit="return confirm('إنشاء عقد تجديد بنفس البيانات؟')">
+                        @csrf
+                        <button class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 space-x-reverse transition-colors">
+                            <i class="fas fa-rotate"></i>
+                            <span>تجديد</span>
+                        </button>
+                    </form>
+                @endif
+                <button type="button" onclick="navigator.clipboard.writeText(@js(URL::signedRoute('tenant-portal.contract', ['contract' => $contract->id]))).then(() => this.innerHTML = '<i class=\'fas fa-check\'></i> <span>تم النسخ!</span>')"
+                        class="bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 space-x-reverse transition-colors">
+                    <i class="fas fa-link"></i>
+                    <span>رابط المستأجر</span>
+                </button>
+                @php
+                    $portalLink = URL::signedRoute('tenant-portal.contract', ['contract' => $contract->id]);
+                    $waText = "مرحباً، هذا رابط متابعة عقدك رقم " . ($contract->contract_number ?? $contract->id) . " — تقدر منه تشوف الفواتير وترفع طلبات الصيانة:\n" . $portalLink;
+                    $tenantPhone = preg_replace('/\D/', '', (string) ($contract->tenant->phone ?? ''));
+                    $waUrl = 'https://wa.me/' . ($tenantPhone !== '' ? $tenantPhone . '?' : '?') . 'text=' . urlencode($waText);
+                @endphp
+                <a href="{{ $waUrl }}" target="_blank" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 space-x-reverse transition-colors" title="إرسال الرابط للمستأجر عبر واتساب">
+                    <i class="fab fa-whatsapp"></i>
+                    <span>واتساب</span>
+                </a>
                 <a href="{{ route('facility.contracts.edit', $contract) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 space-x-reverse transition-colors">
                     <i class="fas fa-edit"></i>
                     <span>تعديل</span>
@@ -70,6 +94,30 @@
                                 @endswitch
                             </span>
                         </div>
+                        <div class="pt-2 border-t border-gray-200">
+                            <span class="text-gray-600 text-sm block mb-1">توثيق إيجار:</span>
+                            @if($contract->ejar_contract_number)
+                                <div class="flex items-center justify-between">
+                                    <span class="inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full bg-emerald-100 text-emerald-800">
+                                        <i class="fas fa-shield-halved ml-1"></i> موثّق: {{ $contract->ejar_contract_number }}
+                                    </span>
+                                    <form action="{{ route('facility.contracts.ejar', $contract) }}" method="POST" class="flex gap-1">
+                                        @csrf
+                                        <input type="text" name="ejar_contract_number" value="" placeholder="تحديث الرقم" class="text-xs border border-gray-300 rounded px-2 py-1 w-28">
+                                        <button class="text-xs text-blue-600 hover:underline">حفظ</button>
+                                    </form>
+                                </div>
+                            @else
+                                <form action="{{ route('facility.contracts.ejar', $contract) }}" method="POST" class="flex gap-2">
+                                    @csrf
+                                    <input type="text" name="ejar_contract_number" placeholder="رقم عقد إيجار" class="flex-1 text-sm border border-gray-300 rounded px-2 py-1">
+                                    <button class="bg-emerald-600 text-white text-xs px-3 py-1 rounded">تسجيل</button>
+                                </form>
+                                <a href="{{ route('facility.contracts.ejar-data', $contract) }}" class="text-xs text-blue-600 hover:underline mt-1 inline-block">
+                                    <i class="fas fa-copy ml-1"></i>عرض بيانات التوثيق
+                                </a>
+                            @endif
+                        </div>
                     </div>
                 </div>
 
@@ -79,15 +127,15 @@
                         <div class="flex justify-between">
                             <span class="text-gray-600">العميل:</span>
                             <div class="text-right">
-                                <div class="font-semibold text-gray-800">{{ $contract->user->name }}</div>
-                                <div class="text-sm text-gray-600">{{ $contract->user->email }}</div>
+                                <div class="font-semibold text-gray-800">{{ $contract->tenant?->getTranslatedName() ?? $contract->user?->name ?? '—' }}</div>
+                                <div class="text-sm text-gray-600">{{ $contract->tenant?->phone ?? $contract->user?->email }}</div>
                             </div>
                         </div>
                         <div class="flex justify-between">
                             <span class="text-gray-600">المالك:</span>
                             <div class="text-right">
-                                <div class="font-semibold text-gray-800">{{ $contract->owner->name }}</div>
-                                <div class="text-sm text-gray-600">{{ $contract->owner->email }}</div>
+                                <div class="font-semibold text-gray-800">{{ $contract->propertyOwner->name ?? $contract->owner?->name ?? '—' }}</div>
+                                <div class="text-sm text-gray-600">{{ $contract->propertyOwner->phone ?? $contract->owner?->email }}</div>
                             </div>
                         </div>
                     </div>

@@ -181,10 +181,12 @@
                                 <div class="mb-3">
                                     <label for="platform_mode" class="form-label">وضع المنصة <span class="text-danger">*</span></label>
                                     <select class="form-select @error('platform_mode') is-invalid @enderror" id="platform_mode" name="platform_mode" required>
-                                        @php($mode = old('platform_mode', \App\Models\Setting::getValue('platform_mode', 'lifecycle')))
-                                        <option value="real_estate" {{ $mode === 'real_estate' ? 'selected' : '' }}>منصة عقارات</option>
-                                        <option value="contracting" {{ $mode === 'contracting' ? 'selected' : '' }}>منصة مقاولات</option>
-                                        <option value="lifecycle" {{ $mode === 'lifecycle' ? 'selected' : '' }}>دورة حياة العقار (عقارات + مقاولات)</option>
+                                        @php($mode = old('platform_mode', \App\Models\Setting::getValue('platform_mode', \App\Enums\PlatformMode::Lifecycle->value)))
+                                        @foreach(\App\Enums\PlatformMode::cases() as $platformMode)
+                                            <option value="{{ $platformMode->value }}" {{ $mode === $platformMode->value ? 'selected' : '' }}>
+                                                {{ $platformMode->settingsLabel() }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                     @error('platform_mode')
                                         <div class="invalid-feedback">{{ $message }}</div>

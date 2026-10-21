@@ -234,7 +234,7 @@
                 <div class="col-xl-4 col-lg-6 col-md-6 mb-4 offer-item">
                     <div class="card offer-card h-100">
                         <div class="position-relative">
-                            @if($offer->product->images->count() > 0)
+                            @if($offer->product && $offer->product->images->count() > 0)
                                 <img src="{{ $offer->product->images->first()->url }}" 
                                      class="card-img-top offer-image" alt="{{ $offer->product->name }}">
                             @else
@@ -244,8 +244,8 @@
                             @endif
                             
                             <!-- Status Badge -->
-                            <span class="position-absolute top-0 start-0 m-2 badge bg-{{ $offer->status == 'active' ? 'success' : 'secondary' }}">
-                                {{ __('facility_management.status_' . $offer->status) }}
+                            <span class="position-absolute top-0 start-0 m-2 badge bg-{{ $offer->is_active ? 'success' : 'secondary' }}">
+                                {{ __($offer->is_active ? 'financial.active' : 'financial.inactive') }}
                             </span>
                             
                             <!-- Type Badge -->
@@ -261,10 +261,10 @@
                         </div>
 
                         <div class="card-body">
-                            <h6 class="card-title">{{ $offer->product->name }}</h6>
+                            <h6 class="card-title">{{ $offer->product?->name ?? '—' }}</h6>
                             <p class="card-text text-muted small">
                                 <i class="bi bi-geo-alt"></i>
-                                {{ $offer->product->location }}
+                                {{ $offer->product?->location ?? '' }}
                             </p>
                             
                             <div class="offer-details">
@@ -310,9 +310,9 @@
                                        class="btn btn-outline-primary btn-sm">
                                         <i class="bi bi-pencil"></i>
                                     </a>
-                                    <button type="button" class="btn btn-outline-{{ $offer->status == 'active' ? 'warning' : 'success' }} btn-sm"
+                                    <button type="button" class="btn btn-outline-{{ $offer->is_active ? 'warning' : 'success' }} btn-sm"
                                             onclick="toggleOfferStatus({{ $offer->id }})">
-                                        <i class="bi bi-{{ $offer->status == 'active' ? 'pause' : 'play' }}"></i>
+                                        <i class="bi bi-{{ $offer->is_active ? 'pause' : 'play' }}"></i>
                                     </button>
                                 </div>
                             </div>
@@ -349,7 +349,7 @@
                                 </td>
                                 <td>
                                     <div class="d-flex align-items-center">
-                                        @if($offer->product->images->count() > 0)
+                                        @if($offer->product && $offer->product->images->count() > 0)
                                             <img src="{{ $offer->product->images->first()->url }}" 
                                                  class="offer-thumb me-3" alt="{{ $offer->product->name }}">
                                         @else
@@ -358,8 +358,8 @@
                                             </div>
                                         @endif
                                         <div>
-                                            <div class="fw-semibold">{{ $offer->product->name }}</div>
-                                            <small class="text-muted">{{ $offer->product->location }}</small>
+                                            <div class="fw-semibold">{{ $offer->product?->name ?? '—' }}</div>
+                                            <small class="text-muted">{{ $offer->product?->location ?? '' }}</small>
                                         </div>
                                     </div>
                                 </td>
@@ -380,8 +380,8 @@
                                     <span class="fw-semibold">{{ $offer->commission_rate }}%</span>
                                 </td>
                                 <td>
-                                    <span class="badge bg-{{ $offer->status == 'active' ? 'success' : 'secondary' }}">
-                                        {{ __('facility_management.status_' . $offer->status) }}
+                                    <span class="badge bg-{{ $offer->is_active ? 'success' : 'secondary' }}">
+                                        {{ __($offer->is_active ? 'financial.active' : 'financial.inactive') }}
                                     </span>
                                 </td>
                                 <td>
@@ -398,10 +398,10 @@
                                            title="{{ __('facility_management.edit') }}">
                                             <i class="bi bi-pencil"></i>
                                         </a>
-                                        <button type="button" class="btn btn-outline-{{ $offer->status == 'active' ? 'warning' : 'success' }} btn-sm"
+                                        <button type="button" class="btn btn-outline-{{ $offer->is_active ? 'warning' : 'success' }} btn-sm"
                                                 onclick="toggleOfferStatus({{ $offer->id }})" data-bs-toggle="tooltip"
-                                                title="{{ $offer->status == 'active' ? __('facility_management.deactivate') : __('facility_management.activate') }}">
-                                            <i class="bi bi-{{ $offer->status == 'active' ? 'pause' : 'play' }}"></i>
+                                                title="{{ $offer->is_active ? __('facility_management.deactivate') : __('facility_management.activate') }}">
+                                            <i class="bi bi-{{ $offer->is_active ? 'pause' : 'play' }}"></i>
                                         </button>
                                     </div>
                                 </td>

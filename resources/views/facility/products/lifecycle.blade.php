@@ -104,7 +104,7 @@
                                 @elseif($step['key'] === 'offers')
                                     {{ $hasOffers ? ($saleOffers->count() + $rentOffers->count()) . ' عرض' : 'لا يوجد عروض بعد' }}
                                 @elseif($step['key'] === 'bookings')
-                                    {{ $hasBookings ? $bookings->count() . ' حجز' : 'لا يوجد حجوزات' }}
+                                    {{ $hasBookings ? $bookings->count() . ' معاينة' : 'لا توجد معاينات' }}
                                 @elseif($step['key'] === 'contracts')
                                     {{ $hasContracts ? $contracts->count() . ' عقد' : 'لا يوجد عقود' }}
                                 @endif

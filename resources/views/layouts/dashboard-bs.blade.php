@@ -553,10 +553,6 @@
                                 <i class="fas fa-home me-2"></i>
                                 <span class="dash-label">{{ __('client.navigation.dashboard') }}</span>
                             </a>
-                            <a href="{{ route('client.projects.create') }}" class="list-group-item list-group-item-action dash-link {{ request()->routeIs('client.projects.*') ? 'active' : '' }}">
-                                <i class="fas fa-plus-circle me-2"></i>
-                                <span class="dash-label">{{ __('client.navigation.create_project') }}</span>
-                            </a>
                             <a href="{{ route('client.bookings.index') }}" class="list-group-item list-group-item-action dash-link {{ request()->routeIs('client.bookings.*') ? 'active' : '' }}">
                                 <i class="fas fa-calendar-check me-2"></i>
                                 <span class="dash-label">{{ __('client.navigation.bookings') }}</span>
@@ -576,9 +572,9 @@
                                 <i class="fas fa-home me-2"></i>
                                 <span class="dash-label">لوحة المنشأة</span>
                             </a>
-                            <a href="{{ route('facility.projects.index') }}" class="list-group-item list-group-item-action dash-link {{ request()->routeIs('facility.projects.*') ? 'active' : '' }}">
-                                <i class="fas fa-diagram-project me-2"></i>
-                                <span class="dash-label">المشاريع</span>
+                            <a href="{{ route('facility.products.index') }}" class="list-group-item list-group-item-action dash-link {{ request()->routeIs('facility.products.*') ? 'active' : '' }}">
+                                <i class="fas fa-box me-2"></i>
+                                <span class="dash-label">المنتجات</span>
                             </a>
                             <a href="{{ route('facility.execution-requests.workspace') }}" class="list-group-item list-group-item-action dash-link {{ request()->routeIs('facility.execution-requests.*') ? 'active' : '' }}">
                                 <i class="fas fa-gavel me-2"></i>
@@ -655,10 +651,6 @@
                     <i class="fas fa-home me-2"></i>
                     {{ __('client.navigation.dashboard') }}
                 </a>
-                <a href="{{ route('client.projects.create') }}" class="list-group-item list-group-item-action {{ request()->routeIs('client.projects.*') ? 'active' : '' }}">
-                    <i class="fas fa-plus-circle me-2"></i>
-                    {{ __('client.navigation.create_project') }}
-                </a>
                 <a href="{{ route('client.bookings.index') }}" class="list-group-item list-group-item-action {{ request()->routeIs('client.bookings.*') ? 'active' : '' }}">
                     <i class="fas fa-calendar-check me-2"></i>
                     {{ __('client.navigation.bookings') }}
@@ -678,9 +670,9 @@
                     <i class="fas fa-home me-2"></i>
                     لوحة المنشأة
                 </a>
-                <a href="{{ route('facility.projects.index') }}" class="list-group-item list-group-item-action {{ request()->routeIs('facility.projects.*') ? 'active' : '' }}">
-                    <i class="fas fa-diagram-project me-2"></i>
-                    المشاريع
+                <a href="{{ route('facility.products.index') }}" class="list-group-item list-group-item-action {{ request()->routeIs('facility.products.*') ? 'active' : '' }}">
+                    <i class="fas fa-box me-2"></i>
+                    المنتجات
                 </a>
                 <a href="{{ route('facility.execution-requests.workspace') }}" class="list-group-item list-group-item-action {{ request()->routeIs('facility.execution-requests.*') ? 'active' : '' }}">
                     <i class="fas fa-gavel me-2"></i>

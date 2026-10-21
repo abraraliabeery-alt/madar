@@ -208,7 +208,7 @@
                         <strong>{{ $contract->contract_number }}</strong>
                         <br>
                         <small class="text-muted">
-                            {{ $contract->user->name }} - {{ $contract->facility->name }}
+                            {{ $contract->user?->name ?? '—' }} - {{ $contract->facility?->name ?? '—' }}
                         </small>
                         <br>
                         <small class="timestamp" data-timestamp="{{ $contract->created_at }}">
@@ -256,7 +256,7 @@
                         <strong>{{ $payment->reference_number }}</strong>
                         <br>
                         <small class="text-muted">
-                            {{ $payment->contract->user->name }}
+                            {{ $payment->contract?->user?->name ?? '—' }}
                         </small>
                         <br>
                         <small class="timestamp" data-timestamp="{{ $payment->created_at }}">

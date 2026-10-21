@@ -78,13 +78,17 @@
                                                 @endif
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
-                                                <a href="{{ route('facility.products.show', $contract->product) }}" class="text-sm text-blue-600 hover:text-blue-900">
-                                                    {{ $contract->product->getTranslatedTitle() }}
-                                                </a>
+                                                @if($contract->product)
+                                                    <a href="{{ route('facility.products.show', $contract->product) }}" class="text-sm text-blue-600 hover:text-blue-900">
+                                                        {{ $contract->product->getTranslatedTitle() }}
+                                                    </a>
+                                                @else
+                                                    <span class="text-sm text-gray-400">—</span>
+                                                @endif
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="text-sm font-medium text-gray-900">{{ $contract->user->name }}</div>
-                                                <div class="text-sm text-gray-500">{{ $contract->user->email }}</div>
+                                                <div class="text-sm font-medium text-gray-900">{{ $contract->tenant?->getTranslatedName() ?? $contract->user?->name ?? '—' }}</div>
+                                                <div class="text-sm text-gray-500">{{ $contract->tenant?->phone ?? $contract->user?->email }}</div>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full {{ $contract->contract_type == 'sale' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' }}">

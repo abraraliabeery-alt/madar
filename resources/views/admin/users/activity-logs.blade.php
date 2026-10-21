@@ -122,7 +122,7 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <span class="badge bg-{{ $this->getActionColor($log->action) }}">{{ $log->action }}</span>
+                                        <span class="badge bg-{{ ['login' => 'success', 'logout' => 'secondary', 'create' => 'primary', 'update' => 'warning', 'delete' => 'danger', 'view' => 'info', 'export' => 'dark', 'import' => 'light'][$log->action] ?? 'secondary' }}">{{ $log->action }}</span>
                                     </td>
                                     <td>{{ Str::limit($log->description, 50) }}</td>
                                     <td>
@@ -331,20 +331,3 @@
     });
 </script>
 @endpush
-
-@php
-function getActionColor($action) {
-    $colors = [
-        'login' => 'success',
-        'logout' => 'secondary',
-        'create' => 'primary',
-        'update' => 'warning',
-        'delete' => 'danger',
-        'view' => 'info',
-        'export' => 'dark',
-        'import' => 'light',
-    ];
-    
-    return $colors[$action] ?? 'secondary';
-}
-@endphp

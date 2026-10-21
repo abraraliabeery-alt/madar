@@ -92,6 +92,21 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
+
+                                <div class="mb-3">
+                                    <label for="platform_mode" class="form-label">وضع المنصة</label>
+                                    <select class="form-select @error('platform_mode') is-invalid @enderror" id="platform_mode" name="platform_mode" required>
+                                        @php($selectedMode = old('platform_mode', \App\Enums\PlatformMode::Lifecycle->value))
+                                        @foreach(\App\Enums\PlatformMode::cases() as $mode)
+                                            <option value="{{ $mode->value }}" {{ $selectedMode === $mode->value ? 'selected' : '' }}>
+                                                {{ $mode->label() }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('platform_mode')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -298,7 +313,7 @@ $(document).ready(function() {
         const maxSizeBytes = maxSizeMB * 1024 * 1024;
         
         if (file.size > maxSizeBytes) {
-            return `{{ __('admin.categories.file_size_error', ['size' => maxSizeMB]) }}`;
+            return '{{ __('admin.categories.file_size_error', ['size' => ':size']) }}'.replace(':size', maxSizeMB);
         }
         
         if (!allowedTypes.includes(file.type)) {
@@ -410,7 +425,7 @@ $(document).ready(function() {
             const maxSize = parseInt($('#icon').data('max-size'));
             if (iconFile.size > maxSize * 1024 * 1024) {
                 $('#icon').addClass('is-invalid');
-                $('#icon-error').html(`{{ __('admin.categories.file_size_error', ['size' => maxSize]) }}`).show();
+                $('#icon-error').html('{{ __('admin.categories.file_size_error', ['size' => ':size']) }}'.replace(':size', maxSize)).show();
                 hasErrors = true;
             }
         }
@@ -419,7 +434,7 @@ $(document).ready(function() {
             const maxSize = parseInt($('#image').data('max-size'));
             if (imageFile.size > maxSize * 1024 * 1024) {
                 $('#image').addClass('is-invalid');
-                $('#image-error').html(`{{ __('admin.categories.file_size_error', ['size' => maxSize]) }}`).show();
+                $('#image-error').html('{{ __('admin.categories.file_size_error', ['size' => ':size']) }}'.replace(':size', maxSize)).show();
                 hasErrors = true;
             }
         }
@@ -468,7 +483,7 @@ $(document).ready(function() {
                         parentSelect.addClass('is-valid');
                         helpText.html(`
                             <i class="fas fa-check-circle text-success me-1"></i>
-                            <strong>فئة فرعية:</strong> {{ __('admin.categories.parent_sub_selected', ['name' => response.name]) }}
+                            <strong>فئة فرعية:</strong> '{{ __('admin.categories.parent_sub_selected', ['name' => ':name']) }}'.replace(':name', response.name)
                         `);
                     } else {
                         parentSelect.addClass('is-invalid');

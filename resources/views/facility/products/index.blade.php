@@ -423,6 +423,11 @@
                                                     </span>
                                                 @endif
                                             </div>
+                                            @if($product->parent)
+                                                <div class="text-xs text-blue-600 mt-0.5">
+                                                    <i class="fas fa-level-up-alt ml-1"></i>يتبع: {{ $product->parent->getTranslatedTitle() ?? ('#'.$product->parent->id) }}
+                                                </div>
+                                            @endif
                                             <div class="text-xs text-gray-500">
                                                 {{ Str::limit($product->additional_info, 60) }}
                                             </div>

@@ -155,67 +155,6 @@
                         </div>
                     </div>
 
-                    <!-- Bank Details -->
-                    <div class="col-md-6">
-                        <div class="card" id="bankDetails" style="{{ $contract->contract_type !== 'sale' ? 'display: none;' : '' }}">
-                            <div class="card-header">
-                                <h6 class="mb-0">{{ __('admin.contracts.bank_details') }}</h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="mb-3">
-                                    <label for="bank_id" class="form-label">{{ __('admin.contracts.bank') }}</label>
-                                    <select class="form-select @error('bank_id') is-invalid @enderror" id="bank_id" name="bank_id">
-                                        <option value="">{{ __('admin.contracts.select_bank') }}</option>
-                                        @foreach($banks as $bank)
-                                            <option value="{{ $bank->id }}" {{ old('bank_id', $contract->bank_id) == $bank->id ? 'selected' : '' }}>
-                                                {{ $bank->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('bank_id')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="mb-3">
-                                            <label for="loan_amount" class="form-label">{{ __('admin.contracts.loan_amount') }}</label>
-                                            <div class="input-group">
-                                                <input type="number" class="form-control @error('loan_amount') is-invalid @enderror" id="loan_amount" name="loan_amount" value="{{ old('loan_amount', $contract->loan_amount) }}" min="0" step="0.01">
-                                                <span class="input-group-text">{!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}</span>
-                                            </div>
-                                            @error('loan_amount')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="mb-3">
-                                            <label for="interest_rate" class="form-label">{{ __('admin.contracts.interest_rate') }}</label>
-                                            <div class="input-group">
-                                                <input type="number" class="form-control @error('interest_rate') is-invalid @enderror" id="interest_rate" name="interest_rate" value="{{ old('interest_rate', $contract->interest_rate) }}" min="0" step="0.01">
-                                                <span class="input-group-text">%</span>
-                                            </div>
-                                            @error('interest_rate')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="mb-3">
-                                            <label for="loan_term" class="form-label">{{ __('admin.contracts.loan_term') }}</label>
-                                            <input type="number" class="form-control @error('loan_term') is-invalid @enderror" id="loan_term" name="loan_term" value="{{ old('loan_term', $contract->loan_term) }}" min="1">
-                                            @error('loan_term')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                     <!-- Additional Information -->
                     <div class="col-md-6">
                         <div class="card">
@@ -324,33 +263,21 @@ $(document).ready(function() {
         }
     });
 
-    // Handle contract type change
-    $('#contract_type').change(function() {
-        let type = $(this).val();
-        if (type === 'sale') {
-            $('#bankDetails').show();
-        } else {
-            $('#bankDetails').hide();
-            $('#bank_id').val('').trigger('change');
-            $('#loan_amount, #interest_rate, #loan_term').val('');
-        }
-    });
-
     // Calculate payments
     function calculatePayments() {
         let totalAmount = parseFloat($('#total_amount').val()) || 0;
         let downPayment = parseFloat($('#down_payment').val()) || 0;
-        let loanTerm = parseInt($('#loan_term').val()) || 1;
+        let installments = parseInt($('#total_installments').val()) || 1;
 
-        if (totalAmount > 0 && downPayment >= 0 && loanTerm > 0) {
+        if (totalAmount > 0 && downPayment >= 0 && installments > 0) {
             let remainingAmount = totalAmount - downPayment;
-            let monthlyPayment = remainingAmount / loanTerm;
+            let monthlyPayment = remainingAmount / installments;
             $('#monthly_payment').val(monthlyPayment.toFixed(2));
         }
     }
 
     // Bind calculation events
-    $('#total_amount, #down_payment, #loan_term').change(calculatePayments);
+    $('#total_amount, #down_payment, #total_installments').change(calculatePayments);
 
     // Set minimum end date based on start date
     $('#start_date').change(function() {

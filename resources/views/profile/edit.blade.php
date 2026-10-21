@@ -99,19 +99,6 @@
                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
                         </div>
 
-                        <!-- Bank -->
-                        <div>
-                            <label for="bank_id" class="block text-sm font-medium text-gray-700 mb-2">{{ __('profile.bank') }}</label>
-                            <select name="bank_id" id="bank_id" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
-                                <option value="">{{ __('profile.select_bank') }}</option>
-                                @foreach(\App\Models\Bank::all() as $bank)
-                                    <option value="{{ $bank->id }}" {{ old('bank_id', $user->bank_id) == $bank->id ? 'selected' : '' }}>
-                                        {{ $bank->name ?? 'Bank ' . $bank->id }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-
                         <!-- Location Fields -->
                         <div>
                             <label for="latitude" class="block text-sm font-medium text-gray-700 mb-2">{{ __('profile.latitude') }}</label>

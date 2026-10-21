@@ -161,7 +161,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($contracts as $contract)
+                        @forelse($contracts as $contract)
                         <tr>
                             <td class="d-none d-md-table-cell">{{ $contract->contract_number }}</td>
                             <td>
@@ -324,7 +324,14 @@
                                 </div>
                             </td>
                         </tr>
-                        @endforeach
+                        @empty
+                        <tr>
+                            <td colspan="13" class="text-center text-muted py-5">
+                                <i class="fas fa-file-contract fa-2x d-block mb-2 opacity-50"></i>
+                                {{ __('admin.messages.no_records') }}
+                            </td>
+                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>

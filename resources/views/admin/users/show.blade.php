@@ -118,10 +118,6 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label text-muted">البنك</label>
-                                    <p class="fs-5">{{ $user->bank->name ?? '-' }}</p>
-                                </div>
-                                <div class="col-md-6 mb-3">
                                     <label class="form-label text-muted">رقم الحساب</label>
                                     <p class="fs-5">{{ $user->bank_account ?? '-' }}</p>
                                 </div>

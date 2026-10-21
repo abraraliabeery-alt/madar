@@ -92,9 +92,13 @@
                                                 </a>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
-                                                <a href="{{ route('facility.products.show', $invoice->contract->product) }}" class="text-sm text-blue-600 hover:text-blue-900">
-                                                    {{ $invoice->contract->product->getTranslatedTitle() }}
-                                                </a>
+                                                @if($invoice->contract?->product)
+                                                    <a href="{{ route('facility.products.show', $invoice->contract->product) }}" class="text-sm text-blue-600 hover:text-blue-900">
+                                                        {{ $invoice->contract->product->getTranslatedTitle() }}
+                                                    </a>
+                                                @else
+                                                    <span class="text-sm text-gray-400">—</span>
+                                                @endif
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full 

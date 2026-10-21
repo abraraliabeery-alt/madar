@@ -420,7 +420,6 @@
           <p class="narrow" style="margin-inline:auto">{{ $facility->description ?? 'نقدّم خدمات متكاملة في المقاولات والتنفيذ وإدارة المشاريع وفق أفضل الممارسات.' }}</p>
           <div class="hero-actions" style="justify-content:center">
             <a href="#contact" class="btn btn-primary magnet">اطلب عرض الآن</a>
-            <a href="#projects" class="btn btn-outline magnet">المشاريع</a>
             <a href="#services" class="btn btn-subtle magnet">الخدمات</a>
           </div>
         </div>
@@ -460,114 +459,6 @@
             <?php $heroOpt = data_get($opts,'hero_image'); ?>
             <?php $hero = $heroOpt ? asset('storage/'.$heroOpt) : asset('assets/hero-smart-home.jpg'); ?>
             <img src="{{ $hero }}" alt="صورة هيرو" class="tpl-hero-img" style="filter:saturate(1.05) contrast(1.02)" onerror="this.onerror=null; this.src='{{ asset('assets/hero-smart-home.jpg') }}'" />
-          </div>
-        </div>
-      </section>
-    @endif
-    @endif
-
-    @if($show('projects') && isset($projects) && $projects->count())
-    @php($projectsVariant = $variant('projects', 1))
-    @if($projectsVariant === 1)
-      <section id="projects" class="tpl-projects section reveal">
-        <div class="container">
-          <div class="center">
-            <h2 class="title-deco">مشاريعنا</h2>
-            <p class="narrow">نماذج من مشاريعنا المنفذة.</p>
-          </div>
-          <div class="grid-3" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px">
-            @foreach($projects as $project)
-              <article class="card hover glow tilt">
-                <div class="body">
-                  <strong>{{ $project->title }}</strong>
-                  @if($project->excerpt)
-                    <p class="m-0" style="margin-top:.35rem">{{ $project->excerpt }}</p>
-                  @endif
-                  <a class="btn-link" href="{{ route('public.facility.site.projects.show', [$facility->slug ?? $facility->id, $project->slug]) }}">عرض المشروع</a>
-                </div>
-              </article>
-            @endforeach
-          </div>
-          <div style="margin-top:12px; text-align:center">
-            <a class="btn btn-outline" href="{{ route('public.facility.site.projects.index', $facility->slug ?? $facility->id) }}">عرض كل المشاريع</a>
-          </div>
-        </div>
-      </section>
-    @elseif($projectsVariant === 2)
-      <section id="projects" class="tpl-projects section reveal">
-        <div class="container">
-          <div class="section-title" style="align-items:center">
-            <h2 style="margin:0"><span class="title-deco">مشاريعنا</span></h2>
-            <div class="chips">
-              <a class="btn btn-outline" href="{{ route('public.facility.site.projects.index', $facility->slug ?? $facility->id) }}">عرض الكل</a>
-            </div>
-          </div>
-          <div style="display:grid; gap:12px">
-            @foreach($projects as $project)
-              <article class="card hover">
-                <div class="body" style="display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap">
-                  <div style="min-width:220px">
-                    <strong style="display:block">{{ $project->title }}</strong>
-                    @if($project->excerpt)
-                      <div class="meta" style="margin-top:.25rem">{{ $project->excerpt }}</div>
-                    @endif
-                  </div>
-                  <a class="btn btn-subtle" href="{{ route('public.facility.site.projects.show', [$facility->slug ?? $facility->id, $project->slug]) }}">عرض</a>
-                </div>
-              </article>
-            @endforeach
-          </div>
-        </div>
-      </section>
-    @elseif($projectsVariant === 3)
-      <section id="projects" class="tpl-projects section reveal">
-        <div class="container">
-          <div class="center">
-            <h2 class="title-deco">مشاريعنا</h2>
-          </div>
-          <div class="grid-3" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px">
-            @foreach($projects as $project)
-              <article class="card glow tilt">
-                <div class="body">
-                  <div style="display:flex; gap:.4rem; flex-wrap:wrap; margin-bottom:.35rem">
-                    <span class="badge v2">مشروع</span>
-                    <span class="badge v1">تنفيذ</span>
-                  </div>
-                  <strong>{{ $project->title }}</strong>
-                  @if($project->excerpt)
-                    <p class="m-0" style="margin-top:.35rem">{{ $project->excerpt }}</p>
-                  @endif
-                  <div style="margin-top:.6rem">
-                    <a class="btn btn-outline" href="{{ route('public.facility.site.projects.show', [$facility->slug ?? $facility->id, $project->slug]) }}">تفاصيل</a>
-                  </div>
-                </div>
-              </article>
-            @endforeach
-          </div>
-        </div>
-      </section>
-    @else
-      <section id="projects" class="tpl-projects section reveal">
-        <div class="container">
-          <div class="center">
-            <h2 class="title-deco">مشاريعنا</h2>
-            <p class="narrow">نستعرض مجموعة من المشاريع التي نفذناها بكفاءة عالية.</p>
-          </div>
-          <div class="grid-3" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px">
-            @foreach($projects as $project)
-              <article class="card hover" style="border-left:4px solid var(--primary)">
-                <div class="body">
-                  <strong>{{ $project->title }}</strong>
-                  @if($project->excerpt)
-                    <p class="m-0" style="margin-top:.35rem">{{ $project->excerpt }}</p>
-                  @endif
-                  <a class="btn-link" href="{{ route('public.facility.site.projects.show', [$facility->slug ?? $facility->id, $project->slug]) }}">عرض المشروع</a>
-                </div>
-              </article>
-            @endforeach
-          </div>
-          <div style="margin-top:12px; text-align:center">
-            <a class="btn btn-outline" href="{{ route('public.facility.site.projects.index', $facility->slug ?? $facility->id) }}">عرض كل المشاريع</a>
           </div>
         </div>
       </section>
@@ -1048,7 +939,6 @@
     @if($show('tpl_hero'))
     <nav id="subnav" class="fade-in reveal" aria-label="روابط الأقسام">
       <div class="inner">
-        <a href="#projects">المشاريع</a>
         <a href="#products-carousel">الأعمال</a>
         <a href="#showcase-a">العروض</a>
         <a href="#goals">أهدافنا</a>
@@ -1116,33 +1006,6 @@
             <div class="num" data-to="18">0</div>
             <div class="lbl">مدن مخدومة</div>
           </div></div>
-        </div>
-      </div>
-    </section>
-    @endif
-
-    <!-- Projects -->
-    @if($show('projects') && isset($projects) && $projects->count())
-    <section id="projects" class="section fade-in reveal">
-      <div class="container">
-        <div class="section-title" style="align-items:center">
-          <h2 style="margin:0"><span class="title-deco">مشاريعنا</span></h2>
-          <div class="chips">
-            <a class="btn btn-outline" href="{{ route('public.facility.site.projects.index', $facility->slug ?? $facility->id) }}">عرض الكل</a>
-          </div>
-        </div>
-        <div class="grid-3" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem">
-          @foreach($projects as $project)
-            <article class="card hover glow tilt">
-              <div class="body">
-                <strong>{{ $project->title }}</strong>
-                @if($project->excerpt)
-                  <p class="m-0" style="margin-top:.35rem">{{ $project->excerpt }}</p>
-                @endif
-                <a class="btn-link" href="{{ route('public.facility.site.projects.show', [$facility->slug ?? $facility->id, $project->slug]) }}">عرض المشروع</a>
-              </div>
-            </article>
-          @endforeach
         </div>
       </div>
     </section>

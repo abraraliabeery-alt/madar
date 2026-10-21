@@ -86,23 +86,6 @@
                             @enderror
                         </div>
 
-                        <!-- Bank -->
-                        <div>
-                            <label for="bank_id" class="block text-sm font-medium text-gray-700 mb-2">البنك</label>
-                            <select id="bank_id" name="bank_id" 
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 @error('bank_id') border-red-500 @enderror">
-                                <option value="">اختر البنك</option>
-                                @foreach($banks as $bank)
-                                    <option value="{{ $bank->id }}" {{ old('bank_id', $user->bank_id) == $bank->id ? 'selected' : '' }}>
-                                        {{ $bank->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('bank_id')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
-
                         <!-- Bank Account -->
                         <div>
                             <label for="bank_account" class="block text-sm font-medium text-gray-700 mb-2">رقم الحساب البنكي</label>

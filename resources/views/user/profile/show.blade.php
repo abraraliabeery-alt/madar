@@ -63,10 +63,6 @@
                                 <h3 class="text-md font-medium text-gray-900 mb-4">المعلومات البنكية</h3>
                                 <div class="space-y-3">
                                     <div>
-                                        <label class="text-sm font-medium text-gray-600">البنك</label>
-                                        <p class="text-gray-900">{{ $user->bank->name ?? 'غير محدد' }}</p>
-                                    </div>
-                                    <div>
                                         <label class="text-sm font-medium text-gray-600">رقم الحساب</label>
                                         <p class="text-gray-900">{{ $user->bank_account ?: 'غير محدد' }}</p>
                                     </div>

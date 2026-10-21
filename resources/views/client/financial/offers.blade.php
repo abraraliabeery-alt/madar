@@ -225,7 +225,7 @@
                     <div class="mb-3">
                         <small class="text-muted">
                             <i class="fas fa-building ms-1"></i>
-                            {{ $offer->facility->name }}
+                            {{ $offer->facility?->name ?? '—' }}
                         </small>
                         <br>
                         <small class="text-muted">
@@ -315,7 +315,7 @@
                                 <p class="card-text">
                                     <small class="text-muted">
                                         <i class="fas fa-building ms-1"></i>
-                                        {{ $offer->facility->name }}
+                                        {{ $offer->facility?->name ?? '—' }}
                                     </small>
                                     <br>
                                     <small class="text-muted">

@@ -254,17 +254,17 @@
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex items-center">
                                             <div class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">
-                                                {{ substr($contract->client->name, 0, 1) }}
+                                                {{ substr($contract->client?->name ?? "—", 0, 1) }}
                                             </div>
                                             <div>
-                                                <div class="text-sm font-medium text-gray-900">{{ $contract->client->name }}</div>
-                                                <div class="text-sm text-gray-500">{{ $contract->client->email }}</div>
+                                                <div class="text-sm font-medium text-gray-900">{{ $contract->client?->name ?? "—" }}</div>
+                                                <div class="text-sm text-gray-500">{{ $contract->client?->email ?? "" }}</div>
                                             </div>
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">{{ $contract->offer->product->name }}</div>
-                                        <div class="text-sm text-gray-500">{{ $contract->offer->offer_type }}</div>
+                                        <div class="text-sm font-medium text-gray-900">{{ $contract->offer?->product?->name ?? $contract->product?->name ?? "—" }}</div>
+                                        <div class="text-sm text-gray-500">{{ $contract->offer?->offer_type ?? $contract->contract_type ?? "—" }}</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <span class="text-sm font-medium text-gray-900">{{ number_format($contract->total_amount) }}</span>
@@ -328,10 +328,10 @@
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex items-center">
                                             <div class="w-8 h-8 bg-gray-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">
-                                                {{ substr($payment->contract->client->name, 0, 1) }}
+                                                {{ substr($payment->contract?->client?->name ?? "—", 0, 1) }}
                                             </div>
                                             <div>
-                                                <div class="text-sm font-medium text-gray-900">{{ $payment->contract->client->name }}</div>
+                                                <div class="text-sm font-medium text-gray-900">{{ $payment->contract?->client?->name ?? "—" }}</div>
                                                 <div class="text-sm text-gray-500">{{ $payment->payment_method }}</div>
                                             </div>
                                         </div>
@@ -401,21 +401,21 @@
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex items-center">
                                             <div class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3">
-                                                {{ substr($contract->client->name, 0, 1) }}
+                                                {{ substr($contract->client?->name ?? "—", 0, 1) }}
                                             </div>
                                             <div>
-                                                <div class="text-sm font-medium text-gray-900">{{ $contract->client->name }}</div>
-                                                <div class="text-sm text-gray-500">{{ $contract->client->email }}</div>
+                                                <div class="text-sm font-medium text-gray-900">{{ $contract->client?->name ?? "—" }}</div>
+                                                <div class="text-sm text-gray-500">{{ $contract->client?->email ?? "" }}</div>
                                             </div>
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">{{ $contract->offer->product->name }}</div>
-                                        <div class="text-sm text-gray-500">{{ $contract->offer->product->location }}</div>
+                                        <div class="text-sm font-medium text-gray-900">{{ $contract->offer?->product?->name ?? $contract->product?->name ?? "—" }}</div>
+                                        <div class="text-sm text-gray-500">{{ $contract->offer?->product?->location ?? "" }}</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
-                                            {{ __('facility_management.offer_type_' . $contract->offer->offer_type) }}
+                                            {{ $contract->offer ? __('facility_management.offer_type_' . $contract->offer->offer_type) : ($contract->contract_type ?? '—') }}
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">

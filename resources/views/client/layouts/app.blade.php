@@ -4,24 +4,19 @@
     $panelRoutes = [
         'notifications_index' => '#',
         'notifications_latest' => '#',
-        'search_global' => '#',
-        'search_results' => '#',
+        'search_global' => null,
+        'search_results' => null,
     ];
     $panelShowQuickActions = false;
     $panelEnableNotifications = false;
     $panelEnableGlobalSearch = false;
 @endphp
 
-@section('panel_title', __('client.navigation.dashboard'))
+@section('panel_title', '')
 
 @section('sidebar')
-    <aside class="sidebar">
-        <div class="sidebar-header">
-            <h4 class="mb-0">مدار التفاوض</h4>
-            <button class="btn btn-light d-lg-none" id="sidebarClose">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
+    <aside class="sidebar sb-nav">
+        @include('layouts.partials.sidebar-brand', ['icon' => 'fas fa-user', 'title' => auth()->user()?->name ?? __('client.navigation.dashboard'), 'badge' => __('client.navigation.dashboard')])
 
         <div class="nav-scroll">
             <div class="nav flex-column">
@@ -50,6 +45,7 @@
                         <span>{{ __('client.navigation.dashboard') }}</span>
                     </a>
 
+                    @include('layouts.partials.sidebar-group-open', ['key' => 'activity', 'label' => __('client.navigation.groups.activity'), 'icon' => 'fas fa-house-user'])
                     @if(\App\Helpers\PlatformModeHelper::allowsRealEstate())
                         <a href="{{ route('client.bookings.index') }}" class="nav-link {{ request()->routeIs('client.bookings.*') ? 'active' : '' }}">
                             <i class="fas fa-calendar-check"></i>
@@ -68,28 +64,41 @@
                     @endif
 
                     @if(\App\Helpers\PlatformModeHelper::allowsContracting())
-                        <a href="{{ route('client.projects.create') }}" class="nav-link {{ request()->routeIs('client.projects.*') ? 'active' : '' }}">
-                            <i class="fas fa-diagram-project"></i>
-                            <span>{{ __('client.navigation.create_project') }}</span>
-                        </a>
-
                         <a href="{{ route('client.contracts.index') }}" class="nav-link {{ request()->routeIs('client.contracts.*') ? 'active' : '' }}">
                             <i class="fas fa-file-contract"></i>
                             <span>{{ __('client.navigation.contracts') }}</span>
                         </a>
                     @endif
-                @endif
-            </div>
-        </div>
+                    @include('layouts.partials.sidebar-group-close')
 
-        <div class="p-3 border-top">
-            <div class="d-flex flex-column gap-2">
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="btn btn-light w-100 text-start text-danger">
-                        <i class="fas fa-sign-out-alt ms-2"></i>{{ __('layout.user_menu.logout') }}
-                    </button>
-                </form>
+                    @include('layouts.partials.sidebar-group-open', ['key' => 'financial', 'label' => __('client.navigation.groups.financial'), 'icon' => 'fas fa-coins'])
+                    <a href="{{ route('client.financial.invoices') }}" class="nav-link {{ request()->routeIs('client.financial.invoices*') ? 'active' : '' }}">
+                        <i class="fas fa-file-invoice"></i>
+                        <span>{{ __('client.navigation.invoices') }}</span>
+                    </a>
+
+                    <a href="{{ route('client.financial.payments') }}" class="nav-link {{ request()->routeIs('client.financial.payments*') ? 'active' : '' }}">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <span>{{ __('client.navigation.payments') }}</span>
+                    </a>
+                    @include('layouts.partials.sidebar-group-close')
+                @endif
+
+                <div class="sidebar-foot">
+                    @php($clientUnread = auth()->user()?->unreadNotifications()->count() ?? 0)
+                    <a href="{{ route('client.notifications') }}" class="nav-link {{ request()->routeIs('client.notifications*') ? 'active' : '' }}">
+                        <i class="fas fa-bell"></i>
+                        <span>{{ __('client.navigation.notifications') }}</span>
+                        <span class="badge bg-danger ms-auto notif-count {{ $clientUnread > 0 ? '' : 'd-none' }}">{{ $clientUnread > 99 ? '99+' : $clientUnread }}</span>
+                    </a>
+                    <form action="{{ route('logout') }}" method="POST" class="m-0 p-0">
+                        @csrf
+                        <button type="submit" class="nav-link w-100 text-start text-danger border-0 bg-transparent">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>{{ __('layout.user_menu.logout') }}</span>
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </aside>

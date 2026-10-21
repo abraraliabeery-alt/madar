@@ -54,23 +54,6 @@
                                 @enderror
                             </div>
 
-                            <!-- Bank -->
-                            <div>
-                                <label for="bank_id" class="block text-sm font-medium text-gray-700 mb-2">ط§ظ„ط¨ظ†ظƒ</label>
-                                <select id="bank_id" name="bank_id" 
-                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 @error('bank_id') border-red-500 @enderror">
-                                    <option value="">ط§ط®طھط± ط§ظ„ط¨ظ†ظƒ</option>
-                                    @foreach(\App\Models\Bank::all() as $bank)
-                                        <option value="{{ $bank->id }}" {{ old('bank_id', $user->bank_id) == $bank->id ? 'selected' : '' }}>
-                                            {{ $bank->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('bank_id')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
-
                             <!-- Bank Account -->
                             <div>
                                 <label for="bank_account" class="block text-sm font-medium text-gray-700 mb-2">ط±ظ‚ظ… ط§ظ„ط­ط³ط§ط¨ ط§ظ„ط¨ظ†ظƒظٹ</label>

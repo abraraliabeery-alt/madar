@@ -211,7 +211,7 @@
         <h3 class="text-xl font-semibold">إضافة مستخدم موجود</h3>
     </div>
     <div class="p-6">
-        <form method="POST" action="{{ route('facility.users.assign-existing') }}" id="assignUserForm">
+        <form method="POST" action="{{ route('facility.users.add-existing') }}" id="assignUserForm">
             @csrf
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div>

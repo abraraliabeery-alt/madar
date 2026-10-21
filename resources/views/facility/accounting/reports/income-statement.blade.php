@@ -106,8 +106,8 @@
                                                     <td><strong>المصروفات</strong></td>
                                                     <td class="text-end"><strong>{{ $summary['total_expenses'] ?? '0.00' }} ر.س</strong></td>
                                                 </tr>
-                                                @if(isset($expenses) && $expenses->count() > 0)
-                                                    @foreach($expenses as $expense)
+                                                @if(isset($expensesList) && $expensesList->count() > 0)
+                                                    @foreach($expensesList as $expense)
                                                         <tr>
                                                             <td style="padding-left: 2rem;">{{ $expense->account_name }}</td>
                                                             <td class="text-end">{{ number_format($expense->total_amount, 2) }} ر.س</td>

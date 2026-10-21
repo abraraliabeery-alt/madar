@@ -61,7 +61,7 @@
                                     <div class="text-gray-500">{{ $product->category ? $product->category->getTranslatedName('ar') : 'بدون تصنيف' }}</div>
                                 </td>
                                 <td class="px-4 py-2 whitespace-nowrap">
-                                    {{ $product->owner ? $product->owner->name : 'غير محدد' }}
+                                    {{ $product->propertyOwner?->name ?? $product->owner?->name ?? 'غير محدد' }}
                                 </td>
                                 <td class="px-4 py-2 whitespace-nowrap">
                                     {{ $product->status ? $product->status->getTranslatedName('ar') : 'غير محدد' }}

@@ -20,7 +20,7 @@
                        data-tab="products">
                         {{ __('client.favorites.products') }}
                         <span class="ml-2 bg-gray-100 text-gray-900 py-0.5 px-2.5 rounded-full text-xs font-medium">
-                            {{ $favoriteProducts->total() }}
+                            {{ $favoriteProducts->count() }}
                         </span>
                     </a>
                     <a href="#facilities" 
@@ -28,7 +28,7 @@
                        data-tab="facilities">
                         {{ __('client.favorites.facilities') }}
                         <span class="ml-2 bg-gray-100 text-gray-900 py-0.5 px-2.5 rounded-full text-xs font-medium">
-                            {{ $favoriteFacilities->total() }}
+                            {{ $favoriteFacilities->count() }}
                         </span>
                     </a>
                 </nav>
@@ -107,7 +107,7 @@
                 </div>
 
                 <!-- Pagination -->
-                @if($favoriteProducts->hasPages())
+                @if(method_exists($favoriteProducts, 'hasPages') && $favoriteProducts->hasPages())
                     <div class="mt-8">
                         {{ $favoriteProducts->links() }}
                     </div>
@@ -215,7 +215,7 @@
                 </div>
 
                 <!-- Pagination -->
-                @if($favoriteFacilities->hasPages())
+                @if(method_exists($favoriteFacilities, 'hasPages') && $favoriteFacilities->hasPages())
                     <div class="mt-8">
                         {{ $favoriteFacilities->links() }}
                     </div>

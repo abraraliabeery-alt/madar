@@ -89,6 +89,21 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
+
+                                <div class="mb-3">
+                                    <label for="platform_mode" class="form-label">وضع المنصة</label>
+                                    <select class="form-select @error('platform_mode') is-invalid @enderror" id="platform_mode" name="platform_mode" required>
+                                        @php($selectedMode = old('platform_mode', $category->platform_mode?->value ?? \App\Enums\PlatformMode::Lifecycle->value))
+                                        @foreach(\App\Enums\PlatformMode::cases() as $mode)
+                                            <option value="{{ $mode->value }}" {{ $selectedMode === $mode->value ? 'selected' : '' }}>
+                                                {{ $mode->label() }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('platform_mode')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
                             </div>
                         </div>
                     </div>

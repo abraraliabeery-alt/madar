@@ -281,16 +281,31 @@
                         </div>
 
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                @if(isset($buildingOptions) && !empty($buildingOptions))
-                                    <div class="md:col-span-1" id="building-select-wrapper">
-                                        <label for="building_id" class="block text-sm font-medium text-gray-700 mb-2">العمارة</label>
-                                        <select id="building_id" name="building_id" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                            <option value="">اختر العمارة</option>
-                                            @foreach($buildingOptions as $id => $name)
-                                                <option value="{{ $id }}" {{ old('building_id') == $id ? 'selected' : '' }}>{{ $name }}</option>
+                                @if(isset($parentProductOptions) && !empty($parentProductOptions))
+                                    <div class="md:col-span-1">
+                                        <label for="parent_id" class="block text-sm font-medium text-gray-700 mb-2">المنتج الأب</label>
+                                        <select id="parent_id" name="parent_id" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                            <option value="">بدون أب (مستقل)</option>
+                                            @foreach($parentProductOptions as $id => $name)
+                                                <option value="{{ $id }}" {{ old('parent_id', request('parent_id')) == $id ? 'selected' : '' }}>{{ $name }}</option>
                                             @endforeach
                                         </select>
-                                        @error('building_id')
+                                        <p class="text-xs text-gray-500 mt-1">اختياري — مثال: شقة تتبع عمارة، وعمارة تتبع مشروع</p>
+                                        @error('parent_id')
+                                            <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                @endif
+                                @if(isset($ownerOptions) && !empty($ownerOptions))
+                                    <div class="md:col-span-1">
+                                        <label for="owner_id" class="block text-sm font-medium text-gray-700 mb-2">المالك</label>
+                                        <select id="owner_id" name="owner_id" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                            <option value="">بدون مالك</option>
+                                            @foreach($ownerOptions as $id => $name)
+                                                <option value="{{ $id }}" {{ old('owner_id', request('owner_id')) == $id ? 'selected' : '' }}>{{ $name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('owner_id')
                                             <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                                         @enderror
                                     </div>
@@ -823,22 +838,11 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(() => featuresContainer.innerHTML = '<p class="text-red-500 text-sm">{{ __('facility.products.create.error_loading_features') }}</p>');
     };
 
-    const buildingSelectWrapper = document.getElementById('building_id')?.closest('.md\\:col-span-1');
-
-    const syncBuildingVisibility = () => {
-        if (!buildingSelectWrapper || !mainCategorySelect) return;
-        const ids = (cfg.buildingMainCategoryIds || []).map(String);
-        buildingSelectWrapper.classList.toggle('hidden', !ids.includes(String(mainCategorySelect.value)));
-    };
-
     mainCategorySelect.addEventListener('change', function() {
         populateSubCategories(this.value);
         attributesContainer.innerHTML = '<p class="text-gray-500 text-sm">{{ __('facility.products.create.select_category_for_attributes') }}</p>';
         featuresContainer.innerHTML = '<p class="text-gray-500 text-sm">{{ __('facility.products.create.select_category_for_features') }}</p>';
-        syncBuildingVisibility();
     });
-
-    syncBuildingVisibility();
 
     categorySelect.addEventListener('change', function() {
         loadAttributes(this.value);
@@ -847,7 +851,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (selectedSub && mainCategorySelect) {
             mainCategorySelect.value = selectedSub.parent_id;
         }
-        syncBuildingVisibility();
     });
 
     if (oldCategoryId) {

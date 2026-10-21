@@ -121,59 +121,6 @@
                         </div>
                     </div>
 
-                    <!-- Bank Information -->
-                    <div class="col-md-6" id="bank-section" style="display:none;">
-                        <div class="card">
-                            <div class="card-header">
-                                <h6 class="mb-0">المعلومات البنكية</h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="bank_id" class="form-label">البنك</label>
-                                            <select class="form-select @error('bank_id') is-invalid @enderror" id="bank_id" name="bank_id">
-                                                <option value="">اختر البنك</option>
-                                                @foreach($banks as $bank)
-                                                    <option value="{{ $bank->id }}" {{ old('bank_id') == $bank->id ? 'selected' : '' }}>
-                                                        {{ $bank->name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                            @error('bank_id')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="bank_account" class="form-label">رقم الحساب</label>
-                                            <input type="text" class="form-control @error('bank_account') is-invalid @enderror" id="bank_account" name="bank_account" value="{{ old('bank_account') }}">
-                                            @error('bank_account')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="mb-3">
-                                            <label for="customer_banks" class="form-label">بنوك العميل (اختياري)</label>
-                                            <select class="form-select @error('customer_banks') is-invalid @enderror" id="customer_banks" name="customer_banks[]" multiple>
-                                                @foreach($banks as $bank)
-                                                    <option value="{{ $bank->id }}" {{ collect(old('customer_banks', []))->contains($bank->id) ? 'selected' : '' }}>
-                                                        {{ $bank->name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                            @error('customer_banks')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                     <!-- Location -->
                     <div class="col-md-6">
                         <div class="card">
@@ -348,20 +295,6 @@ $(document).ready(function() {
         }
     });
 
-    function toggleBankSection() {
-        const selected = $('#role_id').find(':selected');
-        const roleName = selected.data('role');
-        if (roleName === 'bank_employee') {
-            $('#bank-section').show();
-            $('#bank_id').attr('required', true);
-        } else {
-            $('#bank-section').hide();
-            $('#bank_id').removeAttr('required').val('');
-        }
-    }
-
-    $('#role_id').on('change', toggleBankSection);
-    toggleBankSection();
 });
 </script>
 @endpush

@@ -23,6 +23,10 @@
 
     @vite(['resources/sass/app.scss'])
 
+    <style>
+        .navbar.sticky-top .btn-sm:not(.dropdown-menu *){display:inline-flex;align-items:center;justify-content:center;height:34px;min-width:34px;padding:0 .6rem;border-radius:.375rem;}
+    </style>
+
     @stack('styles')
 </head>
 <body class="bg-light">
@@ -31,7 +35,10 @@
     $isRtl = app()->getLocale() === 'ar';
 
     $rolePrefix = null;
-    if ($u && method_exists($u, 'hasRole')) {
+    $routePrefix = explode('.', (string) (request()->route()?->getName() ?? ''))[0] ?? null;
+    if (in_array($routePrefix, ['client', 'facility', 'admin'], true)) {
+        $rolePrefix = $routePrefix;
+    } elseif ($u && method_exists($u, 'hasRole')) {
         if ($u->hasRole('client')) $rolePrefix = 'client';
         elseif ($u->hasRole('facility')) $rolePrefix = 'facility';
         elseif ($u->hasRole('admin')) $rolePrefix = 'admin';
@@ -63,12 +70,57 @@
 
 <nav class="navbar navbar-dark bg-dark sticky-top">
     <div class="container-fluid">
-        <button class="btn btn-outline-light d-lg-none me-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#dashSidebar" aria-controls="dashSidebar">
+        <button class="btn btn-sm btn-outline-light d-lg-none me-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#dashSidebar" aria-controls="dashSidebar">
             <i class="fas fa-bars"></i>
         </button>
 
         <div class="d-flex align-items-center gap-2">
-            
+
+            @if(!empty($panelRoutes['search_global']))
+                <button class="btn btn-sm btn-outline-light d-inline-flex align-items-center gap-2" type="button" data-bs-toggle="modal" data-bs-target="#globalSearchModal" aria-label="{{ __('layout.dashboard_nav.search') }}">
+                    <i class="fas fa-magnifying-glass"></i>
+                    <span class="d-none d-lg-inline">{{ __('layout.dashboard_nav.search') }}</span>
+                    <kbd class="d-none d-lg-inline" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);font-size:.65rem;">Ctrl K</kbd>
+                </button>
+            @endif
+
+            @if($rolePrefix === 'admin')
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-outline-light" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="{{ __('layout.dashboard_nav.quick_create') }}">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <a class="dropdown-item" href="{{ route('admin.users.create') }}"><i class="fas fa-user-plus me-2"></i>{{ __('admin.users.create') }}</a>
+                        <a class="dropdown-item" href="{{ route('admin.facilities.create') }}"><i class="fas fa-building me-2"></i>{{ __('admin.facilities.create') }}</a>
+                        @if(\Illuminate\Support\Facades\Route::has('admin.products.create'))
+                            <a class="dropdown-item" href="{{ route('admin.products.create') }}"><i class="fas fa-box me-2"></i>{{ __('admin.products.create') }}</a>
+                        @endif
+                        <a class="dropdown-item" href="{{ route('admin.bookings.create') }}"><i class="fas fa-calendar-plus me-2"></i>{{ __('admin.bookings.create') }}</a>
+                        <a class="dropdown-item" href="{{ route('admin.contracts.create') }}"><i class="fas fa-file-contract me-2"></i>{{ __('admin.contracts.create') }}</a>
+                    </div>
+                </div>
+            @elseif($rolePrefix === 'facility')
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-outline-light" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="{{ __('layout.dashboard_nav.quick_create') }}">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        @if(\Illuminate\Support\Facades\Route::has('facility.products.create'))
+                            <a class="dropdown-item" href="{{ route('facility.products.create') }}"><i class="fas fa-box me-2"></i>{{ __('facility.sidebar.products') }}</a>
+                        @endif
+                        @if(\Illuminate\Support\Facades\Route::has('facility.leads.create'))
+                            <a class="dropdown-item" href="{{ route('facility.leads.create') }}"><i class="fas fa-user-plus me-2"></i>{{ __('facility.sidebar.leads') }}</a>
+                        @endif
+                        @if(\Illuminate\Support\Facades\Route::has('facility.bookings.create'))
+                            <a class="dropdown-item" href="{{ route('facility.bookings.create') }}"><i class="fas fa-calendar-check me-2"></i>{{ __('facility.sidebar.bookings') }}</a>
+                        @endif
+                        @if(\Illuminate\Support\Facades\Route::has('facility.tenants.create'))
+                            <a class="dropdown-item" href="{{ route('facility.tenants.create') }}"><i class="fas fa-user-check me-2"></i>{{ __('facility.sidebar.tenants') }}</a>
+                        @endif
+                    </div>
+                </div>
+            @endif
+
             @if(\Illuminate\Support\Facades\Route::has('public.home'))
                 <a href="{{ route('public.home') }}" class="btn btn-sm btn-outline-light d-none d-md-inline-flex">
                     <i class="fas fa-globe me-2"></i>
@@ -112,11 +164,9 @@
                 <div class="dropdown">
                     <button class="btn btn-sm btn-outline-light position-relative" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fas fa-bell"></i>
-                        @if($unreadCount > 0)
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill" style="background: #ffffff; color: var(--brand-brown); border: 1px solid rgba(var(--brand-brown-rgb), 0.35);">
-                                {{ $unreadCount }}
-                            </span>
-                        @endif
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill notif-count {{ $unreadCount > 0 ? '' : 'd-none' }}" style="background: #ffffff; color: var(--brand-brown); border: 1px solid rgba(var(--brand-brown-rgb), 0.35);">
+                            {{ $unreadCount > 99 ? '99+' : $unreadCount }}
+                        </span>
                     </button>
                     <div class="dropdown-menu dropdown-menu-end" style="min-width: 340px;">
                         <div class="px-3 py-2 border-bottom d-flex justify-content-between align-items-center">
@@ -130,7 +180,7 @@
                         </div>
                         <div class="list-group list-group-flush" style="max-height: 320px; overflow:auto;">
                             @forelse($latestNotifications as $n)
-                                <a class="list-group-item list-group-item-action" href="#">
+                                <a class="list-group-item list-group-item-action" href="{{ data_get($n->data, 'action_url') ?: $notificationsRoute }}">
                                     <div class="small text-muted">{{ $n->created_at?->diffForHumans() }}</div>
                                     <div>{{ data_get($n->data, 'message', __('layout.dashboard_nav.new_notification')) }}</div>
                                 </a>
@@ -196,6 +246,43 @@
         </div>
 
         <div class="col py-4 px-3 {{ $isRtl ? 'order-lg-1' : 'order-lg-2' }}">
+            @php
+                $breadcrumbs = [];
+                $currentRouteName = request()->route()?->getName() ?? '';
+                $panelHome = match($rolePrefix) {
+                    'admin' => [__('admin.dashboard.title'), 'admin.dashboard'],
+                    'facility' => [__('facility.dashboard.title'), 'facility.dashboard'],
+                    'client' => [__('client.navigation.dashboard'), 'client.dashboard'],
+                    default => null,
+                };
+                $dashboardRoutes = ['admin.dashboard', 'facility.dashboard', 'facility.index', 'client.dashboard'];
+                if ($panelHome && !in_array($currentRouteName, $dashboardRoutes, true) && str_starts_with($currentRouteName, $rolePrefix . '.')) {
+                    $section = str_replace('-', '_', explode('.', $currentRouteName)[1] ?? '');
+                    $sectionLabel = null;
+                    foreach (["{$rolePrefix}.{$section}.title", "{$rolePrefix}.sidebar.{$section}", "{$rolePrefix}.navigation.{$section}"] as $labelKey) {
+                        $translated = __($labelKey);
+                        if ($translated !== $labelKey) {
+                            $sectionLabel = $translated;
+                            break;
+                        }
+                    }
+                    $breadcrumbs[] = ['label' => $panelHome[0], 'url' => route($panelHome[1])];
+                    $breadcrumbs[] = ['label' => $sectionLabel ?? ucfirst(str_replace('-', ' ', $section)), 'url' => null];
+                }
+            @endphp
+            @if(count($breadcrumbs) > 1)
+                <nav aria-label="breadcrumb" class="mb-3">
+                    <ol class="breadcrumb small mb-0">
+                        @foreach($breadcrumbs as $crumb)
+                            @if($crumb['url'])
+                                <li class="breadcrumb-item"><a href="{{ $crumb['url'] }}" class="text-decoration-none">{{ $crumb['label'] }}</a></li>
+                            @else
+                                <li class="breadcrumb-item active" aria-current="page">{{ $crumb['label'] }}</li>
+                            @endif
+                        @endforeach
+                    </ol>
+                </nav>
+            @endif
             @if(session('success'))
                 <div class="alert alert-success">{{ session('success') }}</div>
             @endif
@@ -227,7 +314,155 @@
         </div>
 </div>
 
+<script>
+    (function () {
+        var KEY = 'sbOpen:' + @json($rolePrefix ?: 'panel');
+        var asides = document.querySelectorAll('aside.sb-nav');
+        if (!asides.length) return;
+        var saved = null;
+        try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {}
+
+        function setOpen(box, open) {
+            box.classList.toggle('is-open', open);
+            var btn = box.querySelector(':scope > [data-sb-toggle]');
+            if (btn) btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        }
+
+        asides.forEach(function (aside) {
+            aside.querySelectorAll('.sb-collapsible').forEach(function (box) {
+                var hasActive = !!box.querySelector('.nav-link.active:not([data-sb-toggle])');
+                box.classList.toggle('has-active', hasActive);
+                var count = box.querySelector(':scope > [data-sb-toggle] .sidebar-group-count');
+                if (count) count.textContent = box.querySelectorAll('.sidebar-group-items a.nav-link').length;
+                var isGroup = box.classList.contains('sidebar-group');
+                box.classList.add('no-anim');
+                setOpen(box, hasActive || (saved ? saved.indexOf(box.dataset.sbKey) !== -1 : isGroup));
+            });
+        });
+        requestAnimationFrame(function () {
+            document.querySelectorAll('aside.sb-nav .no-anim').forEach(function (b) { b.classList.remove('no-anim'); });
+        });
+
+        document.addEventListener('click', function (e) {
+            var btn = e.target.closest('aside.sb-nav [data-sb-toggle]');
+            if (!btn) return;
+            var box = btn.closest('.sb-collapsible');
+            setOpen(box, !box.classList.contains('is-open'));
+            var open = [];
+            btn.closest('aside.sb-nav').querySelectorAll('.sb-collapsible.is-open').forEach(function (b) { open.push(b.dataset.sbKey); });
+            try { localStorage.setItem(KEY, JSON.stringify(open)); } catch (e) {}
+        });
+    })();
+</script>
+
+@if(!empty($panelRoutes['search_global']))
+<div class="modal fade" id="globalSearchModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable" style="margin-top:8vh;max-width:560px;">
+        <div class="modal-content">
+            <div class="modal-body p-3">
+                <div class="input-group mb-2">
+                    <span class="input-group-text bg-transparent"><i class="fas fa-magnifying-glass"></i></span>
+                    <input type="text" class="form-control" id="globalSearchInput" placeholder="{{ __('layout.dashboard_nav.search_placeholder') }}" autocomplete="off">
+                </div>
+                <div id="globalSearchResults" class="list-group list-group-flush"></div>
+                <div id="globalSearchEmpty" class="text-muted small text-center py-3" style="display:none;">{{ __('layout.dashboard_nav.search_no_results') }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+@auth
+<script>
+(function () {
+    var url = @json(route('dashboard.notifications.count'));
+    function refresh() {
+        fetch(url, {headers: {'Accept': 'application/json'}})
+            .then(function (r) { return r.json(); })
+            .then(function (d) {
+                var n = parseInt(d.count, 10) || 0;
+                document.querySelectorAll('.notif-count').forEach(function (el) {
+                    if (n > 0) {
+                        el.textContent = n > 99 ? '99+' : n;
+                        el.classList.remove('d-none');
+                    } else {
+                        el.classList.add('d-none');
+                    }
+                });
+            })
+            .catch(function () {});
+    }
+    setInterval(refresh, 30000);
+})();
+</script>
+@endauth
+@if(!empty($panelRoutes['search_global']))
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var modalEl = document.getElementById('globalSearchModal');
+    var input = document.getElementById('globalSearchInput');
+    var list = document.getElementById('globalSearchResults');
+    var empty = document.getElementById('globalSearchEmpty');
+    if (!modalEl || !input || !list) return;
+
+    var icons = {user:'fa-user', facility:'fa-building', product:'fa-box', booking:'fa-calendar-check'};
+    var timer = null;
+    var searchUrl = @json($panelRoutes['search_global']);
+    var modal = function(){ return bootstrap.Modal.getOrCreateInstance(modalEl); };
+
+    document.addEventListener('keydown', function (e) {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+            e.preventDefault();
+            modal().show();
+        }
+    });
+    modalEl.addEventListener('shown.bs.modal', function () { input.focus(); });
+
+    function render(results) {
+        list.innerHTML = '';
+        empty.style.display = results.length ? 'none' : 'block';
+        results.forEach(function (r) {
+            var a = document.createElement('a');
+            a.href = r.url;
+            a.className = 'list-group-item list-group-item-action d-flex align-items-center gap-2';
+            var icon = document.createElement('i');
+            icon.className = 'fas ' + (icons[r.type] || 'fa-circle') + ' text-muted';
+            var body = document.createElement('div');
+            body.className = 'flex-grow-1';
+            var title = document.createElement('div');
+            title.className = 'fw-semibold';
+            title.textContent = r.title || '';
+            var subtitle = document.createElement('div');
+            subtitle.className = 'small text-muted';
+            subtitle.textContent = r.subtitle || '';
+            body.appendChild(title);
+            body.appendChild(subtitle);
+            a.appendChild(icon);
+            a.appendChild(body);
+            list.appendChild(a);
+        });
+    }
+
+    function search() {
+        var q = input.value.trim();
+        if (q.length < 2) { list.innerHTML = ''; empty.style.display = 'none'; return; }
+        fetch(searchUrl + '?q=' + encodeURIComponent(q), {headers: {'Accept': 'application/json'}})
+            .then(function (r) { return r.json(); })
+            .then(function (d) { render(d.results || []); })
+            .catch(function () {});
+    }
+
+    input.addEventListener('input', function () { clearTimeout(timer); timer = setTimeout(search, 250); });
+    input.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+            var first = list.querySelector('a');
+            if (first) { e.preventDefault(); window.location.href = first.href; }
+        }
+    });
+});
+</script>
+@endif
 <script>
     (function () {
         const shell = document.getElementById('dashShell');

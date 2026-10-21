@@ -179,25 +179,25 @@
                         <td>
                             <div>
                                 <strong>{{ $contract->contract_number }}</strong>
-                                <br><small class="text-muted">{{ $contract->facility->name }}</small>
+                                <br><small class="text-muted">{{ $contract->facility?->name ?? '—' }}</small>
                             </div>
                         </td>
                         <td>
                             <div>
-                                <strong>{{ $contract->user->name }}</strong>
-                                <br><small class="text-muted">{{ $contract->user->email }}</small>
+                                <strong>{{ $contract->user?->name ?? '—' }}</strong>
+                                <br><small class="text-muted">{{ $contract->user?->email }}</small>
                             </div>
                         </td>
                         <td>
                             <div>
-                                <strong>{{ $contract->owner->name }}</strong>
-                                <br><small class="text-muted">{{ $contract->owner->phone_number ?? 'غير متوفر' }}</small>
+                                <strong>{{ $contract->owner?->name ?? '—' }}</strong>
+                                <br><small class="text-muted">{{ $contract->owner?->phone_number ?? 'غير متوفر' }}</small>
                             </div>
                         </td>
                         <td>
                             <div>
-                                <strong>{{ $contract->product->getTranslatedTitle() }}</strong>
-                                <br><small class="text-muted">{{ Str::limit($contract->product->address, 30) }}</small>
+                                <strong>{{ $contract->product?->getTranslatedTitle() }}</strong>
+                                <br><small class="text-muted">{{ Str::limit($contract->product?->address, 30) }}</small>
                             </div>
                         </td>
                         <td>

@@ -145,7 +145,7 @@
                         <div class="d-flex justify-content-between align-items-start mb-3">
                             <div>
                                 <h5 class="mb-1">{{ $contract->contract_number }}</h5>
-                                <h6 class="text-muted mb-0">{{ $contract->product->getTranslatedTitle() }}</h6>
+                                <h6 class="text-muted mb-0">{{ $contract->product?->getTranslatedTitle() ?? '—' }}</h6>
                             </div>
                             <div class="text-end">
                                 @switch($contract->status)
@@ -175,11 +175,11 @@
                             <div class="col-md-6">
                                 <p class="mb-2">
                                     <i class="fas fa-map-marker-alt text-muted ms-2"></i>
-                                    <strong>الموقع:</strong> {{ Str::limit($contract->product->address, 50) }}
+                                    <strong>الموقع:</strong> {{ Str::limit($contract->product?->address ?? '—', 50) }}
                                 </p>
                                 <p class="mb-2">
                                     <i class="fas fa-building text-muted ms-2"></i>
-                                    <strong>المؤسسة:</strong> {{ $contract->facility->name }}
+                                    <strong>المؤسسة:</strong> {{ $contract->facility?->name ?? '—' }}
                                 </p>
                                 <p class="mb-2">
                                     <i class="fas fa-calendar text-muted ms-2"></i>

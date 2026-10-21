@@ -168,7 +168,7 @@
                     <div>
                         <strong>{{ $invoice->invoice_number }}</strong>
                         <br>
-                        <small class="text-muted">{{ $invoice->contract->product->getTranslatedTitle() }}</small>
+                        <small class="text-muted">{{ $invoice->contract?->product?->getTranslatedTitle() ?? '—' }}</small>
                         <br>
                         <small class="text-info">
                             استحقاق: {{ $invoice->due_date ? $invoice->due_date->format('Y/m/d') : 'غير محدد' }}
@@ -214,9 +214,9 @@
                     <div>
                         <strong>{{ $contract->contract_number }}</strong>
                         <br>
-                        <small class="text-muted">{{ $contract->product->getTranslatedTitle() }}</small>
+                        <small class="text-muted">{{ $contract->product?->getTranslatedTitle() ?? '—' }}</small>
                         <br>
-                        <small class="text-info">{{ $contract->facility->name }}</small>
+                        <small class="text-info">{{ $contract->facility?->name ?? '—' }}</small>
                         <br>
                         <small class="text-muted">{{ $contract->created_at->diffForHumans() }}</small>
                     </div>
@@ -275,7 +275,7 @@
                     <div>
                         <strong>{{ $payment->reference_number }}</strong>
                         <br>
-                        <small class="text-muted">{{ $payment->contract->product->getTranslatedTitle() }}</small>
+                        <small class="text-muted">{{ $payment->contract?->product?->getTranslatedTitle() ?? '—' }}</small>
                         <br>
                         <small class="text-info">
                             @switch($payment->payment_method)

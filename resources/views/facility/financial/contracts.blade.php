@@ -305,21 +305,27 @@
                             <td>
                                 <div class="d-flex align-items-center">
                                     <div class="avatar-sm bg-primary text-white rounded-circle me-2">
-                                        {{ substr($contract->client->name, 0, 1) }}
+                                        {{ substr($contract->client?->name ?? '—', 0, 1) }}
                                     </div>
                                     <div>
-                                        <div class="fw-semibold">{{ $contract->client->name }}</div>
-                                        <small class="text-muted">{{ $contract->client->email }}</small>
+                                        <div class="fw-semibold">{{ $contract->client?->name ?? '—' }}</div>
+                                        <small class="text-muted">{{ $contract->client?->email ?? '' }}</small>
                                     </div>
                                 </div>
                             </td>
                             <td>
-                                <div class="fw-semibold">{{ $contract->offer->product->name }}</div>
-                                <small class="text-muted">{{ $contract->offer->product->location }}</small>
+                                @if($contract->offer?->product)
+                                    <div class="fw-semibold">{{ $contract->offer->product->name }}</div>
+                                    <small class="text-muted">{{ $contract->offer->product->location ?? '' }}</small>
+                                @elseif($contract->product)
+                                    <div class="fw-semibold">{{ $contract->product->name }}</div>
+                                @else
+                                    <span class="text-muted">—</span>
+                                @endif
                             </td>
                             <td>
                                 <span class="badge bg-info">
-                                    {{ __('facility_management.offer_type_' . $contract->offer->offer_type) }}
+                                    {{ $contract->offer ? __('facility_management.offer_type_' . $contract->offer->offer_type) : ($contract->contract_type ?? '—') }}
                                 </span>
                             </td>
                             <td>
@@ -327,7 +333,8 @@
                             </td>
                             <td>
                                 @php
-                                    $progress = $contract->total_amount > 0 ? ($contract->paid_amount / $contract->total_amount) * 100 : 0;
+                                    $paidAmount = $contract->getTotalPaidAmount();
+                                    $progress = $contract->total_amount > 0 ? ($paidAmount / $contract->total_amount) * 100 : 0;
                                 @endphp
                                 <div class="progress" style="height: 20px;">
                                     <div class="progress-bar bg-{{ $progress >= 100 ? 'success' : ($progress >= 50 ? 'warning' : 'info') }}" 
@@ -336,7 +343,7 @@
                                     </div>
                                 </div>
                                 <small class="text-muted">
-                                    {{ number_format($contract->paid_amount) }} / {{ number_format($contract->total_amount) }}
+                                    {{ number_format($paidAmount) }} / {{ number_format($contract->total_amount) }}
                                 </small>
                             </td>
                             <td>

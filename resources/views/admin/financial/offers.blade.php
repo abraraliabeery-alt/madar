@@ -164,12 +164,12 @@
                         </td>
                         <td>
                             <div>
-                                <strong>{{ $offer->product->getTranslatedTitle() }}</strong>
-                                <br><small class="text-muted">{{ $offer->product->address }}</small>
+                                <strong>{{ $offer->product?->getTranslatedTitle() }}</strong>
+                                <br><small class="text-muted">{{ $offer->product?->address }}</small>
                             </div>
                         </td>
                         <td>
-                            <span class="badge bg-info">{{ $offer->facility->name }}</span>
+                            <span class="badge bg-info">{{ $offer->facility?->name ?? '—' }}</span>
                         </td>
                         <td>
                             @switch($offer->offer_type)
@@ -237,11 +237,13 @@
                                                 <i class="fas fa-home ms-2"></i>عرض العقار
                                             </a>
                                         </li>
+                                        @if($offer->facility)
                                         <li>
                                             <a class="dropdown-item" href="{{ route('admin.facilities.show', $offer->facility_id) }}">
                                                 <i class="fas fa-building ms-2"></i>عرض المؤسسة
                                             </a>
                                         </li>
+                                        @endif
                                         <li><hr class="dropdown-divider"></li>
                                         <li>
                                             <button class="dropdown-item" onclick="toggleOfferStatus({{ $offer->id }})">

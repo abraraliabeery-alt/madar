@@ -73,7 +73,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($products as $product)
+                        @forelse($products as $product)
                         <tr>
                             <td>
                                 @if($product->main_image)
@@ -259,7 +259,14 @@
                                 </div>
                             </td>
                         </tr>
-                        @endforeach
+                        @empty
+                        <tr>
+                            <td colspan="12" class="text-center text-muted py-5">
+                                <i class="fas fa-box-open fa-2x d-block mb-2 opacity-50"></i>
+                                {{ __('admin.messages.no_records') }}
+                            </td>
+                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>

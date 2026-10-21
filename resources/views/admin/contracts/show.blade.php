@@ -197,37 +197,6 @@
                     </div>
                 </div>
 
-                @if($contract->contract_type === 'sale')
-                <!-- Bank Information -->
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h6 class="mb-0">معلومات القرض البنكي</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label text-muted">البنك</label>
-                                    <p>{{ $contract->bank->name ?? '-' }}</p>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label text-muted">مبلغ القرض</label>
-                                    <p>{{ $contract->loan_amount ? number_format($contract->loan_amount, 2) . ' ' . \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() : '-' }}</p>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label text-muted">نسبة الفائدة</label>
-                                    <p>{{ $contract->interest_rate ? $contract->interest_rate . '%' : '-' }}</p>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label text-muted">مدة القرض</label>
-                                    <p>{{ $contract->loan_term ? $contract->loan_term . ' شهر' : '-' }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @endif
-
                 <!-- Additional Information -->
                 <div class="col-md-6">
                     <div class="card">

@@ -137,12 +137,6 @@
                                 </div>
                             @endif
 
-                            @if($user->bank)
-                                <div>
-                                    <span class="text-gray-600">{{ __('profile.bank') }}:</span>
-                                    <span class="block font-medium">{{ $user->bank->name ?? 'Bank ' . $user->bank->id }}</span>
-                                </div>
-                            @endif
 
                             @if($user->latitude && $user->longitude)
                                 <div class="md:col-span-2">

@@ -250,8 +250,6 @@
             [__('pdf.fields.city'), \App\Helpers\LanguageHelper::getCityName($product->city) ?: $product->city?->name],
             [__('pdf.fields.neighborhood'), $product->neighborhood?->name],
             [__('pdf.fields.street'), $product->street?->name],
-            [__('pdf.fields.building'), $product->building?->name],
-            [__('pdf.fields.project'), $product->project?->name],
             [__('pdf.fields.package'), $product->package?->name],
             [__('pdf.fields.owner'), $product->owner?->name],
             [__('pdf.fields.seller'), $product->seller?->name],

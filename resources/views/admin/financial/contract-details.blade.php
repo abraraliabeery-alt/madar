@@ -135,9 +135,13 @@
                             <tr>
                                 <td class="fw-bold">المؤسسة:</td>
                                 <td>
-                                    <a href="{{ route('admin.facilities.show', $contract->facility_id) }}" class="text-decoration-none">
-                                        {{ $contract->facility->name }}
-                                    </a>
+                                    @if($contract->facility)
+                                        <a href="{{ route('admin.facilities.show', $contract->facility_id) }}" class="text-decoration-none">
+                                            {{ $contract->facility->name }}
+                                        </a>
+                                    @else
+                                        —
+                                    @endif
                                 </td>
                             </tr>
                             <tr>
@@ -215,18 +219,18 @@
                         <i class="fas fa-user fa-lg"></i>
                     </div>
                     <div>
-                        <h6 class="mb-0">{{ $contract->user->name }}</h6>
+                        <h6 class="mb-0">{{ $contract->user?->name }}</h6>
                         <small class="text-muted">العميل</small>
                     </div>
                 </div>
                 <table class="table table-sm table-borderless">
                     <tr>
                         <td>البريد الإلكتروني:</td>
-                        <td>{{ $contract->user->email }}</td>
+                        <td>{{ $contract->user?->email }}</td>
                     </tr>
                     <tr>
                         <td>رقم الهاتف:</td>
-                        <td>{{ $contract->user->phone_number ?? 'غير متوفر' }}</td>
+                        <td>{{ $contract->user?->phone_number ?? 'غير متوفر' }}</td>
                     </tr>
                 </table>
                 <a href="{{ route('admin.users.show', $contract->user_id) }}" class="btn btn-outline-primary btn-sm">
@@ -247,18 +251,18 @@
                         <i class="fas fa-user-tie fa-lg"></i>
                     </div>
                     <div>
-                        <h6 class="mb-0">{{ $contract->owner->name }}</h6>
+                        <h6 class="mb-0">{{ $contract->owner?->name }}</h6>
                         <small class="text-muted">المالك</small>
                     </div>
                 </div>
                 <table class="table table-sm table-borderless">
                     <tr>
                         <td>البريد الإلكتروني:</td>
-                        <td>{{ $contract->owner->email }}</td>
+                        <td>{{ $contract->owner?->email }}</td>
                     </tr>
                     <tr>
                         <td>رقم الهاتف:</td>
-                        <td>{{ $contract->owner->phone_number ?? 'غير متوفر' }}</td>
+                        <td>{{ $contract->owner?->phone_number ?? 'غير متوفر' }}</td>
                     </tr>
                 </table>
                 <a href="{{ route('admin.users.show', $contract->owner_id) }}" class="btn btn-outline-success btn-sm">
@@ -279,18 +283,18 @@
                         <i class="fas fa-home fa-lg"></i>
                     </div>
                     <div>
-                        <h6 class="mb-0">{{ $contract->product->getTranslatedTitle() }}</h6>
+                        <h6 class="mb-0">{{ $contract->product?->getTranslatedTitle() }}</h6>
                         <small class="text-muted">المشروع</small>
                     </div>
                 </div>
                 <table class="table table-sm table-borderless">
                     <tr>
                         <td>العنوان:</td>
-                        <td>{{ Str::limit($contract->product->address, 30) }}</td>
+                        <td>{{ Str::limit($contract->product?->address, 30) }}</td>
                     </tr>
                     <tr>
                         <td>الفئة:</td>
-                        <td>{{ $contract->product->category->getTranslatedName() ?? 'غير محدد' }}</td>
+                        <td>{{ $contract->product?->category?->getTranslatedName() ?? 'غير محدد' }}</td>
                     </tr>
                 </table>
                 <a href="{{ route('admin.products.show', $contract->product_id) }}" class="btn btn-outline-info btn-sm">

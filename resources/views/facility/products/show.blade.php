@@ -11,7 +11,12 @@
             <p class="text-gray-600 mt-1">{{ __('facility.products.product_details_subtitle') }}</p>
         </div>
         <div class="flex items-center space-x-3 space-x-reverse mt-4 sm:mt-0">
-            <a href="{{ route('facility.products.edit', $product) }}" 
+            <a href="{{ route('facility.products.manage', $product) }}"
+               class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition duration-200 inline-flex items-center">
+                <i class="fas fa-sitemap ml-2"></i>
+                لوحة الإدارة
+            </a>
+            <a href="{{ route('facility.products.edit', $product) }}"
                class="bg-yellow-600 hover:bg-yellow-700 text-white font-medium py-2 px-4 rounded-md transition duration-200 inline-flex items-center">
                 <i class="fas fa-edit ml-2"></i>
                 {{ __('facility.products.edit_button') }}
@@ -561,6 +566,63 @@
             </div>
         </div>
     </div>
+
+    {{-- Hierarchy: parent + children --}}
+    @if($product->parent || $product->children->isNotEmpty())
+        <div class="mt-6 bg-white rounded-lg shadow-lg p-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">
+                <i class="fas fa-sitemap ml-2 text-blue-600"></i>التسلسل الهرمي
+            </h3>
+
+            @if($hierarchyStats)
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
+                    <div class="bg-gray-50 rounded-lg p-3 text-center">
+                        <div class="text-2xl font-bold text-gray-800">{{ $hierarchyStats['children'] }}</div>
+                        <div class="text-xs text-gray-500">عناصر مباشرة</div>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-3 text-center">
+                        <div class="text-2xl font-bold text-gray-800">{{ $hierarchyStats['descendants'] }}</div>
+                        <div class="text-xs text-gray-500">إجمالي التابعين</div>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-3 text-center">
+                        <div class="text-2xl font-bold text-blue-600">{{ $hierarchyStats['active_contracts'] }}</div>
+                        <div class="text-xs text-gray-500">عقود نشطة</div>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-3 text-center">
+                        <div class="text-2xl font-bold text-emerald-600">{{ number_format($hierarchyStats['contracts_value'], 0) }}</div>
+                        <div class="text-xs text-gray-500">قيمة العقود النشطة</div>
+                    </div>
+                </div>
+            @endif
+
+            @if($product->parent)
+                <div class="mb-4 flex items-center gap-2">
+                    <span class="text-sm text-gray-500">المنتج الأب:</span>
+                    <a href="{{ route('facility.products.show', $product->parent) }}" class="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-medium">
+                        <i class="fas fa-level-up-alt"></i>
+                        {{ $product->parent->getTranslatedTitle() ?? ('#'.$product->parent->id) }}
+                    </a>
+                </div>
+            @endif
+
+            @if($product->children->isNotEmpty())
+                <div>
+                    <span class="text-sm text-gray-500 block mb-2">العناصر التابعة ({{ $product->children->count() }}):</span>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                        @foreach($product->children as $child)
+                            <a href="{{ route('facility.products.show', $child) }}" class="flex items-center gap-2 border border-gray-200 rounded-lg px-3 py-2 hover:bg-gray-50 transition-colors">
+                                <i class="fas fa-cube text-gray-400"></i>
+                                <span class="text-sm text-gray-800">{{ $child->getTranslatedTitle() ?? ('#'.$child->id) }}</span>
+                                @if($child->category)
+                                    <span class="text-[10px] text-gray-400">({{ $child->category->getTranslatedName() }})</span>
+                                @endif
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+        </div>
+    @endif
 </div>
 
 <!-- Offers Modal -->

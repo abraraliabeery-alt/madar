@@ -57,7 +57,7 @@
         @endforeach
     </div>
 
-    <div class="mt-3">
+    <div class="mt-3 mb-4">
         <button type="button" class="btn btn-outline-secondary btn-sm" data-tr-add>
             {{ $addLabel }}
         </button>

@@ -330,7 +330,6 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         @php($sections = [
                             'tpl_hero' => 'الهيرو (المقدمة)',
-                            'projects' => 'المشاريع',
                             'works' => 'الأعمال',
                             'kpis' => 'الإحصائيات',
                             'tiles' => 'المميزات (Tiles)',
@@ -381,7 +380,6 @@
                     @php($variants = data_get($facility->customization_settings ?? [], 'variants', []))
                     @php($variantSections = [
                         'tpl_hero' => 'الهيرو (المقدمة)',
-                        'projects' => 'المشاريع',
                         'works' => 'الأعمال',
                         'services' => 'الخدمات',
                     ])

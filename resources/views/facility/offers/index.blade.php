@@ -84,9 +84,13 @@
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <a href="{{ route('facility.products.show', $offer->product) }}" class="text-blue-600 hover:text-blue-800 font-medium">
-                                        {{ $offer->product->getTranslatedTitle() }}
-                                    </a>
+                                    @if($offer->product)
+                                        <a href="{{ route('facility.products.show', $offer->product) }}" class="text-blue-600 hover:text-blue-800 font-medium">
+                                            {{ $offer->product->getTranslatedTitle() }}
+                                        </a>
+                                    @else
+                                        <span class="text-gray-400">—</span>
+                                    @endif
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">

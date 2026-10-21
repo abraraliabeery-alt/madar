@@ -61,7 +61,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($users as $user)
+                        @forelse($users as $user)
                         <tr>
                             <td class="d-none d-md-table-cell">
                                 @if($user->avatar)
@@ -153,7 +153,14 @@
                                 </div>
                             </td>
                         </tr>
-                        @endforeach
+                        @empty
+                        <tr>
+                            <td colspan="9" class="text-center text-muted py-5">
+                                <i class="fas fa-inbox fa-2x d-block mb-2 opacity-50"></i>
+                                {{ __('admin.messages.no_records') }}
+                            </td>
+                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>

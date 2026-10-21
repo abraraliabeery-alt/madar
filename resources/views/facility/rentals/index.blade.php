@@ -16,21 +16,11 @@
             <a href="{{ route('facility.reports.rentals.occupancy') }}" class="px-3 py-2 bg-indigo-600 text-white rounded-md" title="تقرير الإشغال">تقرير الإشغال</a>
             <a href="{{ route('facility.reports.rentals.collections') }}" class="px-3 py-2 bg-indigo-600 text-white rounded-md" title="تقرير التحصيل">تقرير التحصيل</a>
             <form method="GET" class="flex flex-wrap gap-2 items-center">
-            <select name="project_id" class="px-3 py-2 border rounded-md">
-                <option value="">كل المشاريع</option>
-                @isset($projects)
-                    @foreach($projects as $p)
-                        @php($pName = optional($p->translations->firstWhere('locale', app()->getLocale()))->name ?? ('#'.$p->id))
-                        <option value="{{ $p->id }}" {{ request('project_id') == $p->id ? 'selected' : '' }}>{{ $pName }}</option>
-                    @endforeach
-                @endisset
-            </select>
-            <select name="building_id" class="px-3 py-2 border rounded-md">
-                <option value="">كل العمائر</option>
-                @isset($buildings)
-                    @foreach($buildings as $b)
-                        @php($bName = optional($b->translations->firstWhere('locale', app()->getLocale()))->name ?? ('#'.$b->id))
-                        <option value="{{ $b->id }}" {{ request('building_id') == $b->id ? 'selected' : '' }}>{{ $bName }}</option>
+            <select name="parent_id" class="px-3 py-2 border rounded-md">
+                <option value="">كل الأصول</option>
+                @isset($parents)
+                    @foreach($parents as $p)
+                        <option value="{{ $p->id }}" {{ request('parent_id') == $p->id ? 'selected' : '' }}>{{ $p->getTranslatedTitle() ?? ('#'.$p->id) }}</option>
                     @endforeach
                 @endisset
             </select>
@@ -42,7 +32,7 @@
             </select>
             <input name="search" value="{{ request('search') }}" class="px-3 py-2 border rounded-md" placeholder="بحث بالعنوان">
             <button class="px-4 py-2 bg-primary-600 text-white rounded-md">تطبيق</button>
-            @if(request()->hasAny(['project_id','building_id','search']))
+            @if(request()->hasAny(['parent_id','search']))
                 <a href="{{ route('facility.rentals.index') }}" class="px-3 py-2 text-sm text-gray-700 underline">إزالة الفلاتر</a>
             @endif
             </form>
@@ -56,8 +46,7 @@
                     <th class="px-4 py-2 text-right text-sm font-medium text-gray-600">#</th>
                     <th class="px-4 py-2 text-right text-sm font-medium text-gray-600">العنوان</th>
                     <th class="px-4 py-2 text-right text-sm font-medium text-gray-600">الفئة</th>
-                    <th class="px-4 py-2 text-right text-sm font-medium text-gray-600">المشروع</th>
-                    <th class="px-4 py-2 text-right text-sm font-medium text-gray-600">العمارة</th>
+                    <th class="px-4 py-2 text-right text-sm font-medium text-gray-600">الأصل</th>
                     <th class="px-4 py-2 text-right text-sm font-medium text-gray-600">سعر الإيجار</th>
                     <th class="px-4 py-2 text-right text-sm font-medium text-gray-600">الدورية</th>
                     <th class="px-4 py-2 text-right text-sm font-medium text-gray-600">الحالة</th>
@@ -72,12 +61,13 @@
                         <td class="px-4 py-2 text-sm">{{ $product->address }}</td>
                         <td class="px-4 py-2 text-sm">{{ optional($product->category)->getTranslatedName() }}</td>
                         <td class="px-4 py-2 text-sm">
-                            @php($pName = optional(optional($product->project)->translations->firstWhere('locale', app()->getLocale()))->name ?? ($product->project_id ? '#'.$product->project_id : '-'))
-                            {{ $pName }}
-                        </td>
-                        <td class="px-4 py-2 text-sm">
-                            @php($bName = optional(optional($product->building)->translations->firstWhere('locale', app()->getLocale()))->name ?? ($product->building_id ? '#'.$product->building_id : '-'))
-                            {{ $bName }}
+                            @if($product->parent)
+                                <a href="{{ route('facility.products.manage', $product->parent) }}" class="text-primary-600 hover:underline">
+                                    {{ $product->parent->getTranslatedTitle() ?? '#'.$product->parent->id }}
+                                </a>
+                            @else
+                                -
+                            @endif
                         </td>
                         <td class="px-4 py-2 text-sm">{{ $rentOffer?->price ? number_format($rentOffer->price) : '-' }}</td>
                         <td class="px-4 py-2 text-sm">
@@ -112,7 +102,7 @@
                                         </button>
                                     </form>
                                 @endif
-                                <a href="{{ route('facility.bookings.create', ['product_id' => $product->id]) }}" class="text-xs px-2 py-1 rounded bg-indigo-600 text-white" title="إنشاء حجز">حجز</a>
+                                <a href="{{ route('facility.bookings.create', ['product_id' => $product->id]) }}" class="text-xs px-2 py-1 rounded bg-indigo-600 text-white" title="إنشاء معاينة">معاينة</a>
                                 <a href="{{ route('facility.contracts.create', ['product_id' => $product->id]) }}" class="text-xs px-2 py-1 rounded bg-amber-600 text-white" title="إنشاء عقد">عقد</a>
                             </div>
                         </td>

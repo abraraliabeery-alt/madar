@@ -57,6 +57,33 @@
                                 </div>
                             @endif
 
+                            @if(!empty($parentProductOptions) || !empty($ownerOptions))
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                                    @if(!empty($parentProductOptions))
+                                        <div>
+                                            <x-form-select
+                                                name="parent_id"
+                                                :label="'المنتج الأب (اختياري)'"
+                                                :options="$parentProductOptions"
+                                                :selected="$product->parent_id"
+                                                :placeholder="'بدون أب (مستقل)'"
+                                            />
+                                        </div>
+                                    @endif
+                                    @if(!empty($ownerOptions))
+                                        <div>
+                                            <x-form-select
+                                                name="owner_id"
+                                                :label="'المالك (اختياري)'"
+                                                :options="$ownerOptions"
+                                                :selected="$product->owner_id"
+                                                :placeholder="'بدون مالك'"
+                                            />
+                                        </div>
+                                    @endif
+                                </div>
+                            @endif
+
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                     <x-form-select 

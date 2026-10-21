@@ -137,33 +137,6 @@
             </div>
         </div>
 
-        <div class="col-md-3">
-            <div class="card bg-danger text-white h-100">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div class="flex-grow-1">
-                            <h6 class="mb-2">المشاريع الجديدة</h6>
-                            <h3 class="mb-1">{{ number_format($monthlyStats['projects']) }}</h3>
-                            <div class="d-flex align-items-center">
-                                @if(isset($growthRates['projects']))
-                                    <span class="badge bg-light text-danger me-2">
-                                        @if($growthRates['projects'] >= 0)
-                                            <i class="fas fa-arrow-up me-1"></i>{{ $growthRates['projects'] }}%
-                                        @else
-                                            <i class="fas fa-arrow-down me-1"></i>{{ abs($growthRates['projects']) }}%
-                                        @endif
-                                    </span>
-                                @endif
-                                <small class="text-white-50">مقارنة بالشهر السابق</small>
-                            </div>
-                        </div>
-                        <div class="fs-1 opacity-75">
-                            <i class="fas fa-project-diagram"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <!-- Additional Statistics -->

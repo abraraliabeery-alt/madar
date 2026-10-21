@@ -147,13 +147,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($bookings as $booking)
+                        @forelse($bookings as $booking)
                         <tr>
                             <td class="d-none d-md-table-cell">{{ $booking->booking_number }}</td>
                             <td>
                                 <div class="d-flex align-items-center">
                                     <div class="avatar me-2 d-none d-sm-inline-block">
-                                        @if($booking->user->avatar)
+                                        @if($booking->user?->avatar)
                                             <img src="{{ asset($booking->user->avatar) }}" alt="avatar" class="rounded-circle" width="32">
                                         @else
                                             <div class="avatar-placeholder rounded-circle">
@@ -162,19 +162,27 @@
                                         @endif
                                     </div>
                                     <div>
-                                        <a href="{{ route('admin.users.show', $booking->user) }}" class="text-decoration-none">
-                                            {{ $booking->user->name }}
-                                        </a>
+                                        @if($booking->user)
+                                            <a href="{{ route('admin.users.show', $booking->user) }}" class="text-decoration-none">
+                                                {{ $booking->user->name }}
+                                            </a>
+                                        @else
+                                            <span class="text-muted">{{ $booking->name ?? '—' }}</span>
+                                        @endif
                                         <div class="small text-muted d-md-none">
-                                            {{ $booking->product->name ?? 'عقار' }}
+                                            {{ $booking->product?->getTranslatedTitle() ?? 'عقار' }}
                                         </div>
                                     </div>
                                 </div>
                             </td>
                             <td class="d-none d-lg-table-cell">
-                                <a href="{{ route('admin.products.show', $booking->product) }}">
-                                    {{ $booking->product->name }}
-                                </a>
+                                @if($booking->product)
+                                    <a href="{{ route('admin.products.show', $booking->product) }}">
+                                        {{ $booking->product->getTranslatedTitle() }}
+                                    </a>
+                                @else
+                                    <span class="text-muted">-</span>
+                                @endif
                             </td>
                             <td class="d-none d-lg-table-cell">
                                 @if($booking->facility)
@@ -185,9 +193,9 @@
                                     <span class="text-muted">-</span>
                                 @endif
                             </td>
-                            <td class="d-none d-md-table-cell">{{ $booking->booking_date }}</td>
-                            <td class="d-none d-md-table-cell">{{ $booking->booking_time }}</td>
-                            <td class="d-none d-lg-table-cell">{{ $booking->duration }} ساعة</td>
+                            <td class="d-none d-md-table-cell">{{ $booking->preferred_date?->toDateString() ?? '—' }}</td>
+                            <td class="d-none d-md-table-cell">{{ $booking->preferred_time ?? '—' }}</td>
+                            <td class="d-none d-lg-table-cell">{{ $booking->visit_type ?? '—' }}</td>
                                                             <td class="d-none d-md-table-cell">{{ number_format($booking->total_amount, 2) }} {!! \App\Helpers\LanguageHelper::getSaudiRiyalSymbol() !!}</td>
                             <td class="d-none d-md-table-cell">
                                 @if($booking->status)
@@ -336,7 +344,14 @@
                                 </div>
                             </td>
                         </tr>
-                        @endforeach
+                        @empty
+                        <tr>
+                            <td colspan="13" class="text-center text-muted py-5">
+                                <i class="fas fa-calendar-times fa-2x d-block mb-2 opacity-50"></i>
+                                {{ __('admin.messages.no_records') }}
+                            </td>
+                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>

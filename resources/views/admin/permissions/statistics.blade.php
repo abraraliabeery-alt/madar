@@ -81,8 +81,8 @@
                                                             <td>
                                                                 <div class="progress" style="height: 20px;">
                                                                     <div class="progress-bar" role="progressbar" 
-                                                                         style="width: {{ ($count / $stats['total_permissions']) * 100 }}%">
-                                                                        {{ number_format(($count / $stats['total_permissions']) * 100, 1) }}%
+                                                                         style="width: {{ ($count / max(1, $stats['total_permissions'])) * 100 }}%">
+                                                                        {{ number_format(($count / max(1, $stats['total_permissions'])) * 100, 1) }}%
                                                                     </div>
                                                                 </div>
                                                             </td>
@@ -136,8 +136,8 @@
                                                             <td>
                                                                 <div class="progress" style="height: 20px;">
                                                                     <div class="progress-bar bg-success" role="progressbar" 
-                                                                         style="width: {{ ($permission->roles_count / $stats['most_used_permissions']->max('roles_count')) * 100 }}%">
-                                                                        {{ number_format(($permission->roles_count / $stats['most_used_permissions']->max('roles_count')) * 100, 1) }}%
+                                                                         style="width: {{ ($permission->roles_count / max(1, $stats['most_used_permissions']->max('roles_count') ?? 1)) * 100 }}%">
+                                                                        {{ number_format(($permission->roles_count / max(1, $stats['most_used_permissions']->max('roles_count') ?? 1)) * 100, 1) }}%
                                                                     </div>
                                                                 </div>
                                                             </td>
@@ -196,8 +196,8 @@
                                             <h6>الصلاحيات النشطة</h6>
                                             <div class="progress mb-3">
                                                 <div class="progress-bar bg-success" role="progressbar" 
-                                                     style="width: {{ ($stats['active_permissions'] / $stats['total_permissions']) * 100 }}%">
-                                                    {{ $stats['active_permissions'] }} ({{ number_format(($stats['active_permissions'] / $stats['total_permissions']) * 100, 1) }}%)
+                                                     style="width: {{ ($stats['active_permissions'] / max(1, $stats['total_permissions'])) * 100 }}%">
+                                                    {{ $stats['active_permissions'] }} ({{ number_format(($stats['active_permissions'] / max(1, $stats['total_permissions'])) * 100, 1) }}%)
                                                 </div>
                                             </div>
                                         </div>
@@ -205,8 +205,8 @@
                                             <h6>الصلاحيات غير النشطة</h6>
                                             <div class="progress mb-3">
                                                 <div class="progress-bar bg-danger" role="progressbar" 
-                                                     style="width: {{ ($stats['inactive_permissions'] / $stats['total_permissions']) * 100 }}%">
-                                                    {{ $stats['inactive_permissions'] }} ({{ number_format(($stats['inactive_permissions'] / $stats['total_permissions']) * 100, 1) }}%)
+                                                     style="width: {{ ($stats['inactive_permissions'] / max(1, $stats['total_permissions'])) * 100 }}%">
+                                                    {{ $stats['inactive_permissions'] }} ({{ number_format(($stats['inactive_permissions'] / max(1, $stats['total_permissions'])) * 100, 1) }}%)
                                                 </div>
                                             </div>
                                         </div>

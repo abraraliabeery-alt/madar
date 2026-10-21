@@ -4,10 +4,6 @@
     @yield('title', 'النظام المالي')
 @endsection
 
-@push('styles')
-    <link href="{{ asset('financial-bundle.css') }}" rel="stylesheet">
-@endpush
-
 @if(View::hasSection('styles'))
     @push('styles')
         @yield('styles')

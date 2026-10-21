@@ -4,10 +4,6 @@
     @yield('title', __('facility_management.financial_system'))
 @endsection
 
-@push('styles')
-    <link href="{{ asset('financial-bundle.css') }}" rel="stylesheet">
-@endpush
-
 @if(View::hasSection('styles'))
     @push('styles')
         @yield('styles')

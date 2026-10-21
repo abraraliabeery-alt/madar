@@ -100,40 +100,10 @@
                                     @enderror
                                 </div>
 
-                                <div class="mb-3" id="bank-section" style="display:none;">
-                                    <label for="bank_id" class="form-label">البنك</label>
-                                    <select class="form-select @error('bank_id') is-invalid @enderror" id="bank_id" name="bank_id">
-                                        <option value="">اختر البنك</option>
-                                        @foreach($banks as $bank)
-                                            <option value="{{ $bank->id }}" {{ old('bank_id', $user->bank_id) == $bank->id ? 'selected' : '' }}>
-                                                {{ $bank->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('bank_id')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
                                 <div class="mb-3">
                                     <label for="bank_account" class="form-label">رقم الحساب البنكي</label>
                                     <input type="text" class="form-control @error('bank_account') is-invalid @enderror" id="bank_account" name="bank_account" value="{{ old('bank_account', $user->bank_account) }}">
                                     @error('bank_account')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="customer_banks" class="form-label">بنوك العميل (اختياري)</label>
-                                    <select class="form-select @error('customer_banks') is-invalid @enderror" id="customer_banks" name="customer_banks[]" multiple>
-                                        @php $selectedBanks = old('customer_banks', $user->customerBanks->pluck('id')->toArray()); @endphp
-                                        @foreach($banks as $bank)
-                                            <option value="{{ $bank->id }}" {{ in_array($bank->id, $selectedBanks) ? 'selected' : '' }}>
-                                                {{ $bank->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('customer_banks')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
@@ -289,20 +259,6 @@ $(document).ready(function() {
         width: '100%'
     });
 
-    function toggleBankSection() {
-        const selected = $('#role_id').find(':selected');
-        const roleName = selected.data('role');
-        if (roleName === 'bank_employee') {
-            $('#bank-section').show();
-            $('#bank_id').attr('required', true);
-        } else {
-            $('#bank-section').hide();
-            $('#bank_id').removeAttr('required');
-        }
-    }
-
-    $('#role_id').on('change', toggleBankSection);
-    toggleBankSection();
 });
 </script>
 @endpush

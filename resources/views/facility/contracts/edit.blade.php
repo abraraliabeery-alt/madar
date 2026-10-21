@@ -74,8 +74,8 @@
                         </div>
 
                         <div class="mb-4">
-                            <label for="user_id" class="block text-sm font-medium text-gray-700 mb-2">العميل <span class="text-red-500">*</span></label>
-                            <select name="user_id" id="user_id" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 @error('user_id') border-red-500 @enderror" required>
+                            <label for="user_id" class="block text-sm font-medium text-gray-700 mb-2">العميل (حساب مستخدم)</label>
+                            <select name="user_id" id="user_id" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 @error('user_id') border-red-500 @enderror">
                                 <option value="">اختر العميل</option>
                                 @foreach($users as $user)
                                     <option value="{{ $user->id }}" {{ old('user_id', $contract->user_id) == $user->id ? 'selected' : '' }}>
@@ -89,8 +89,24 @@
                         </div>
 
                         <div class="mb-4">
-                            <label for="owner_id" class="block text-sm font-medium text-gray-700 mb-2">المالك <span class="text-red-500">*</span></label>
-                            <select name="owner_id" id="owner_id" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 @error('owner_id') border-red-500 @enderror" required>
+                            <label for="tenant_id" class="block text-sm font-medium text-gray-700 mb-2">المستأجر (بدون حساب)</label>
+                            <select name="tenant_id" id="tenant_id" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 @error('tenant_id') border-red-500 @enderror">
+                                <option value="">اختر المستأجر</option>
+                                @foreach($tenants as $tenant)
+                                    <option value="{{ $tenant->id }}" {{ old('tenant_id', $contract->tenant_id) == $tenant->id ? 'selected' : '' }}>
+                                        {{ $tenant->getTranslatedName() }}{{ $tenant->phone ? ' - ' . $tenant->phone : '' }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <p class="mt-1 text-xs text-gray-500">اختر عميل بلا حساب أو مستأجر مسجّل — أحدهما مطلوب</p>
+                            @error('tenant_id')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="owner_id" class="block text-sm font-medium text-gray-700 mb-2">المالك (حساب مستخدم)</label>
+                            <select name="owner_id" id="owner_id" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 @error('owner_id') border-red-500 @enderror">
                                 <option value="">اختر المالك</option>
                                 @foreach($owners as $owner)
                                     <option value="{{ $owner->id }}" {{ old('owner_id', $contract->owner_id) == $owner->id ? 'selected' : '' }}>
@@ -99,6 +115,22 @@
                                 @endforeach
                             </select>
                             @error('owner_id')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="property_owner_id" class="block text-sm font-medium text-gray-700 mb-2">المالك (بدون حساب)</label>
+                            <select name="property_owner_id" id="property_owner_id" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 @error('property_owner_id') border-red-500 @enderror">
+                                <option value="">اختر مالك بدون حساب</option>
+                                @foreach($propertyOwners as $pOwner)
+                                    <option value="{{ $pOwner->id }}" {{ old('property_owner_id', $contract->property_owner_id) == $pOwner->id ? 'selected' : '' }}>
+                                        {{ $pOwner->name }}@if($pOwner->phone) - {{ $pOwner->phone }}@endif
+                                    </option>
+                                @endforeach
+                            </select>
+                            <p class="mt-1 text-xs text-gray-500">اختر مالك بحساب أو مالك بدون حساب — أحدهما مطلوب</p>
+                            @error('property_owner_id')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>

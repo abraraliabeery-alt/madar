@@ -79,24 +79,24 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex items-center">
-                                            @if($contract->product->image)
-                                                <img src="{{ asset('storage/' . $contract->product->image) }}" 
+                                            @if($contract->product?->main_image)
+                                                <img src="{{ asset('storage/' . $contract->product->main_image) }}" 
                                                      class="h-10 w-10 rounded-lg object-cover ml-3" alt="طµظˆط±ط© ط§ظ„ظ…ظ†طھط¬">
                                             @endif
                                             <div>
                                                 <div class="text-sm font-medium text-gray-900">
-                                                    {{ $contract->product->getTranslatedTitle() }}
+                                                    {{ $contract->product?->getTranslatedTitle() ?? '—' }}
                                                 </div>
                                                 <div class="text-sm text-gray-500">
-                                                    {{ $contract->product->address }}
+                                                    {{ $contract->product?->address ?? '—' }}
                                                 </div>
                                             </div>
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div>
-                                            <div class="text-sm font-medium text-gray-900">{{ $contract->owner->name }}</div>
-                                            <div class="text-sm text-gray-500">{{ $contract->owner->email }}</div>
+                                            <div class="text-sm font-medium text-gray-900">{{ $contract->owner?->name ?? '—' }}</div>
+                                            <div class="text-sm text-gray-500">{{ $contract->owner?->email ?? '—' }}</div>
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
