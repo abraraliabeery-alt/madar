@@ -28,7 +28,7 @@ class VoiceProductController extends Controller
             return response()->json(['data' => $data], 200);
         } catch (\Throwable $e) {
             report($e);
-            return response()->json(['message' => 'تعذر تحليل النص. تحقق من إعداد مزود الذكاء الاصطناعي.'], 422);
+            return response()->json(['message' => __('تعذر تحليل النص. تحقق من إعداد مزود الذكاء الاصطناعي.')], 422);
         }
     }
 
@@ -44,7 +44,7 @@ class VoiceProductController extends Controller
             ]);
         } catch (\Throwable $e) {
             report($e);
-            return response()->json(['message' => 'تعذر قراءة الصورة. تأكد من وضوحها وإعداد مزود الذكاء الاصطناعي.'], 422);
+            return response()->json(['message' => __('تعذر قراءة الصورة. تأكد من وضوحها وإعداد مزود الذكاء الاصطناعي.')], 422);
         }
     }
 }

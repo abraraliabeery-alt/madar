@@ -18,7 +18,7 @@ class UserProfileController extends Controller
      */
     public function show(User $user)
     {
-        $user->load(['roles', 'facilities', 'bank', 'translations']);
+        $user->load(['roles', 'facilities', 'translations']);
         return view('user.profile.show', compact('user'));
     }
 
@@ -27,7 +27,7 @@ class UserProfileController extends Controller
      */
     public function edit(User $user)
     {
-        $user->load(['roles', 'facilities', 'bank', 'translations']);
+        $user->load(['roles', 'facilities', 'translations']);
         $banks = Bank::all();
         $roles = Role::all();
         $facilities = Facility::all();
@@ -81,7 +81,7 @@ class UserProfileController extends Controller
 
         $user->update($userData);
 
-        return redirect()->back()->with('success', 'تم تحديث الملف الشخصي بنجاح');
+        return redirect()->back()->with('success', __('تم تحديث الملف الشخصي بنجاح'));
     }
 
     /**
@@ -96,14 +96,14 @@ class UserProfileController extends Controller
 
         // التحقق من كلمة المرور الحالية
         if (!Hash::check($request->current_password, $user->password)) {
-            return redirect()->back()->withErrors(['current_password' => 'كلمة المرور الحالية غير صحيحة']);
+            return redirect()->back()->withErrors(['current_password' => __('كلمة المرور الحالية غير صحيحة')]);
         }
 
         $user->update([
             'password' => Hash::make($request->password)
         ]);
 
-        return redirect()->back()->with('success', 'تم تغيير كلمة المرور بنجاح');
+        return redirect()->back()->with('success', __('تم تغيير كلمة المرور بنجاح'));
     }
 
     /**
@@ -127,7 +127,7 @@ class UserProfileController extends Controller
             'is_multilanguage_enabled'
         ]));
 
-        return redirect()->back()->with('success', 'تم تحديث الإعدادات بنجاح');
+        return redirect()->back()->with('success', __('تم تحديث الإعدادات بنجاح'));
     }
 
     /**
@@ -143,7 +143,7 @@ class UserProfileController extends Controller
 
         $user->update($request->only(['latitude', 'longitude', 'google_maps_url']));
 
-        return redirect()->back()->with('success', 'تم تحديث الموقع بنجاح');
+        return redirect()->back()->with('success', __('تم تحديث الموقع بنجاح'));
     }
 
     /**
@@ -170,7 +170,7 @@ class UserProfileController extends Controller
             'whatsapp_number', 'telegram'
         ]));
 
-        return redirect()->back()->with('success', 'تم تحديث روابط التواصل الاجتماعي بنجاح');
+        return redirect()->back()->with('success', __('تم تحديث روابط التواصل الاجتماعي بنجاح'));
     }
 
     /**
@@ -185,7 +185,7 @@ class UserProfileController extends Controller
 
         // التحقق من كلمة المرور
         if (!Hash::check($request->password, $user->password)) {
-            return redirect()->back()->withErrors(['password' => 'كلمة المرور غير صحيحة']);
+            return redirect()->back()->withErrors(['password' => __('كلمة المرور غير صحيحة')]);
         }
 
         // حذف الصورة الشخصية
@@ -195,7 +195,7 @@ class UserProfileController extends Controller
 
         $user->delete();
 
-        return redirect()->route('home')->with('success', 'تم حذف الحساب بنجاح');
+        return redirect()->route('home')->with('success', __('تم حذف الحساب بنجاح'));
     }
 
     /**

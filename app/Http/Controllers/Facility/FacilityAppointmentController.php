@@ -74,6 +74,6 @@ class FacilityAppointmentController extends Controller
 
         return redirect()
             ->route('facility.appointments.show', $appointment)
-            ->with('success', 'تم تحديث حالة الموعد بنجاح');
+            ->with('success', __('تم تحديث حالة الموعد بنجاح'));
     }
 }

@@ -6,8 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Product;
-use App\Models\Project;
-use App\Models\Building;
 use Carbon\Carbon;
 
 class FacilityRentalController extends Controller
@@ -21,8 +19,6 @@ class FacilityRentalController extends Controller
 
         $query = Product::with([
             'category',
-            'project.translations',
-            'building.translations',
             'offers' => function($q){
                 $q->where('offer_type', 'like', 'rent_%')->latest();
             }
@@ -32,12 +28,6 @@ class FacilityRentalController extends Controller
 
         if ($request->filled('category_id')) {
             $query->where('category_id', $request->category_id);
-        }
-        if ($request->filled('project_id')) {
-            $query->where('project_id', $request->project_id);
-        }
-        if ($request->filled('building_id')) {
-            $query->where('building_id', $request->building_id);
         }
         if ($request->filled('search')) {
             $query->where('address', 'like', '%'.$request->search.'%');
@@ -79,8 +69,8 @@ class FacilityRentalController extends Controller
         $products = $query->paginate(20);
 
         // مصادر الفلاتر (بدون الاعتماد على أعمدة الاسم في الجدول الأساسي)
-        $projects = Project::where('facility_id', $facility->id)->with('translations')->orderBy('id', 'desc')->get(['id']);
-        $buildings = Building::where('facility_id', $facility->id)->with('translations')->orderBy('id', 'desc')->get(['id']);
+        $projects = collect();
+        $buildings = collect();
 
         return view('facility.rentals.index', compact('products','projects','buildings'));
     }

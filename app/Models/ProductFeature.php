@@ -12,7 +12,6 @@ class ProductFeature extends Model
     protected $fillable = [
         'feature_id',
         'product_id',
-        'building_id',
         'land_id',
     ];
 
@@ -27,8 +26,4 @@ class ProductFeature extends Model
         return $this->belongsTo(Feature::class);
     }
 
-    public function building()
-    {
-        return $this->belongsTo(Building::class);
-    }
 }

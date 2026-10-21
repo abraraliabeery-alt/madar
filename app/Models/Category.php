@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\PlatformMode;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,6 +19,7 @@ class Category extends Model
         'requires_building',
         'order',
         'sort_order',
+        'platform_mode',
     ];
 
     protected $casts = [
@@ -25,6 +27,7 @@ class Category extends Model
         'is_featured' => 'boolean',
         'order' => 'integer',
         'sort_order' => 'integer',
+        'platform_mode' => PlatformMode::class,
     ];
 
     // العلاقات
@@ -151,5 +154,15 @@ class Category extends Model
     public function scopeOrdered($query)
     {
         return $query->orderBy('sort_order', 'asc')->orderBy('order', 'asc');
+    }
+
+    /**
+     * Filter categories by the current platform mode.
+     */
+    public function scopeForPlatformMode($query, ?PlatformMode $mode = null)
+    {
+        $mode ??= PlatformMode::current();
+
+        return $query->whereIn('platform_mode', $mode->allowedCategoryValues());
     }
 }

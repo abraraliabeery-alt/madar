@@ -96,6 +96,6 @@ class SettingAdminController extends Controller
 
         $setting->save();
 
-        return back()->with('status', 'تم حفظ الإعدادات بنجاح');
+        return back()->with('status', __('تم حفظ الإعدادات بنجاح'));
     }
 }

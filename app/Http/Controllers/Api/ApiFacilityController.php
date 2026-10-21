@@ -76,7 +76,7 @@ class ApiFacilityController extends Controller
         return response()->json([
             'success' => true,
             'data' => $facilities,
-            'message' => 'تم جلب المنشآت بنجاح'
+            'message' => __('تم جلب المنشآت بنجاح')
         ]);
     }
 
@@ -88,7 +88,7 @@ class ApiFacilityController extends Controller
         if (!$facility->is_active || !$facility->is_verified) {
             return response()->json([
                 'success' => false,
-                'message' => 'المنشأة غير متاحة'
+                'message' => __('المنشأة غير متاحة')
             ], 404);
         }
 
@@ -97,7 +97,7 @@ class ApiFacilityController extends Controller
         return response()->json([
             'success' => true,
             'data' => $facility,
-            'message' => 'تم جلب تفاصيل المنشأة بنجاح'
+            'message' => __('تم جلب تفاصيل المنشأة بنجاح')
         ]);
     }
 
@@ -117,7 +117,7 @@ class ApiFacilityController extends Controller
         return response()->json([
             'success' => true,
             'data' => $facilities,
-            'message' => 'تم جلب المنشآت المميزة بنجاح'
+            'message' => __('تم جلب المنشآت المميزة بنجاح')
         ]);
     }
 
@@ -138,7 +138,7 @@ class ApiFacilityController extends Controller
                 'category' => $category,
                 'facilities' => $facilities
             ],
-            'message' => 'تم جلب المنشآت حسب الفئة بنجاح'
+            'message' => __('تم جلب المنشآت حسب الفئة بنجاح')
         ]);
     }
 
@@ -150,7 +150,7 @@ class ApiFacilityController extends Controller
         if (!$facility->is_active || !$facility->is_verified) {
             return response()->json([
                 'success' => false,
-                'message' => 'المنشأة غير متاحة'
+                'message' => __('المنشأة غير متاحة')
             ], 404);
         }
 
@@ -213,7 +213,7 @@ class ApiFacilityController extends Controller
                 'facility' => $facility,
                 'products' => $products
             ],
-            'message' => 'تم جلب منتجات المنشأة بنجاح'
+            'message' => __('تم جلب منتجات المنشأة بنجاح')
         ]);
     }
 
@@ -231,7 +231,7 @@ class ApiFacilityController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'بيانات غير صحيحة',
+                'message' => __('بيانات غير صحيحة'),
                 'errors' => $validator->errors()
             ], 422);
         }
@@ -258,7 +258,7 @@ class ApiFacilityController extends Controller
         return response()->json([
             'success' => true,
             'data' => $facilities,
-            'message' => 'تم البحث بنجاح'
+            'message' => __('تم البحث بنجاح')
         ]);
     }
 
@@ -277,7 +277,7 @@ class ApiFacilityController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'بيانات غير صحيحة',
+                'message' => __('بيانات غير صحيحة'),
                 'errors' => $validator->errors()
             ], 422);
         }
@@ -288,7 +288,7 @@ class ApiFacilityController extends Controller
         if ($existingRating) {
             return response()->json([
                 'success' => false,
-                'message' => 'لقد قمت بتقييم هذه المنشأة من قبل'
+                'message' => __('لقد قمت بتقييم هذه المنشأة من قبل')
             ], 400);
         }
 
@@ -305,7 +305,7 @@ class ApiFacilityController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم إضافة تقييمك بنجاح'
+            'message' => __('تم إضافة تقييمك بنجاح')
         ]);
     }
 
@@ -320,13 +320,13 @@ class ApiFacilityController extends Controller
             $user->facilities()->attach($facility->id);
             return response()->json([
                 'success' => true,
-                'message' => 'تم إضافة المنشأة للمفضلة بنجاح'
+                'message' => __('تم إضافة المنشأة للمفضلة بنجاح')
             ]);
         }
 
         return response()->json([
             'success' => false,
-            'message' => 'المنشأة موجودة بالفعل في المفضلة'
+            'message' => __('المنشأة موجودة بالفعل في المفضلة')
         ], 400);
     }
 
@@ -340,7 +340,7 @@ class ApiFacilityController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم إزالة المنشأة من المفضلة بنجاح'
+            'message' => __('تم إزالة المنشأة من المفضلة بنجاح')
         ]);
     }
 
@@ -357,7 +357,7 @@ class ApiFacilityController extends Controller
         return response()->json([
             'success' => true,
             'data' => $favorites,
-            'message' => 'تم جلب المنشآت المفضلة بنجاح'
+            'message' => __('تم جلب المنشآت المفضلة بنجاح')
         ]);
     }
 
@@ -380,7 +380,7 @@ class ApiFacilityController extends Controller
         return response()->json([
             'success' => true,
             'data' => $stats,
-            'message' => 'تم جلب الإحصائيات بنجاح'
+            'message' => __('تم جلب الإحصائيات بنجاح')
         ]);
     }
 }

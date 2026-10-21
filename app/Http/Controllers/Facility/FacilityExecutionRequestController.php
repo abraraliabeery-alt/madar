@@ -157,7 +157,7 @@ class FacilityExecutionRequestController extends Controller
             }
         }
 
-        return redirect()->route('facility.execution-requests.show', $executionRequest)->with('success', 'تم إنشاء طلب التنفيذ بنجاح');
+        return redirect()->route('facility.execution-requests.show', $executionRequest)->with('success', __('تم إنشاء طلب التنفيذ بنجاح'));
     }
 
     public function show(ExecutionRequest $executionRequest)
@@ -177,7 +177,7 @@ class FacilityExecutionRequestController extends Controller
 
         if (!$facility->isExecutionEligible()) {
             return redirect()->back()->withErrors([
-                'execution' => 'تصنيف منشأتك الحالي لا يسمح بتقديم عروض تنفيذ. الرجاء التواصل مع الإدارة لتفعيل منشأتك كمنفِّذ.'
+                'execution' => __('تصنيف منشأتك الحالي لا يسمح بتقديم عروض تنفيذ. الرجاء التواصل مع الإدارة لتفعيل منشأتك كمنفِّذ.')
             ]);
         }
 
@@ -203,6 +203,6 @@ class FacilityExecutionRequestController extends Controller
             ],
         ]);
 
-        return redirect()->route('facility.execution-requests.show', $executionRequest)->with('success', 'تم إضافة عرض المنفِّذ بنجاح');
+        return redirect()->route('facility.execution-requests.show', $executionRequest)->with('success', __('تم إضافة عرض المنفِّذ بنجاح'));
     }
 }

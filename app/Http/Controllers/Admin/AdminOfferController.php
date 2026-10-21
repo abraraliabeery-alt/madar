@@ -81,6 +81,59 @@ class AdminOfferController extends Controller
     /**
      * عرض نموذج تعديل العرض
      */
+    /**
+     * عرض نموذج إنشاء عرض جديد
+     */
+    public function create()
+    {
+        $facilities = Facility::all();
+        $products = Product::with('translations')->get();
+        $offerTypes = [
+            'sale' => 'بيع',
+            'rent_monthly' => 'إيجار شهري',
+            'rent_yearly' => 'إيجار سنوي',
+            'rent_daily' => 'إيجار يومي',
+        ];
+
+        return view('admin.offers.create', compact('facilities', 'products', 'offerTypes'));
+    }
+
+    /**
+     * حفظ عرض جديد
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'facility_id' => 'required|exists:facilities,id',
+            'offer_type' => 'required|in:sale,rent_monthly,rent_yearly,rent_daily',
+            'price' => 'required|numeric|min:0',
+            'deposit_amount' => 'nullable|numeric|min:0',
+            'commission_rate' => 'nullable|numeric|min:0|max:1',
+            'offer_title' => 'nullable|string|max:255',
+            'offer_description' => 'nullable|string',
+            'terms_conditions' => 'nullable|string',
+            'is_active' => 'boolean',
+            'is_featured' => 'boolean',
+            'valid_from' => 'nullable|date',
+            'valid_to' => 'nullable|date|after:valid_from',
+        ]);
+
+        $data = $request->only([
+            'product_id', 'facility_id', 'offer_type', 'price', 'deposit_amount',
+            'commission_rate', 'offer_title', 'offer_description', 'terms_conditions',
+            'valid_from', 'valid_to',
+        ]);
+        $data['is_active'] = $request->boolean('is_active');
+        $data['is_featured'] = $request->boolean('is_featured');
+        $data['created_by'] = Auth::id();
+
+        $this->offerService->createOffer($data);
+
+        return redirect()->route('admin.offers.index')
+            ->with('success', __('تم إنشاء العرض بنجاح'));
+    }
+
     public function edit(Offer $offer)
     {
         $facilities = Facility::all();
@@ -136,7 +189,7 @@ class AdminOfferController extends Controller
         }
 
         return redirect()->route('admin.offers.index')
-            ->with('success', 'تم تحديث العرض بنجاح');
+            ->with('success', __('تم تحديث العرض بنجاح'));
     }
 
     /**
@@ -147,7 +200,7 @@ class AdminOfferController extends Controller
         $offer->delete();
 
         return redirect()->route('admin.offers.index')
-            ->with('success', 'تم حذف العرض بنجاح');
+            ->with('success', __('تم حذف العرض بنجاح'));
     }
 
     /**
@@ -174,7 +227,7 @@ class AdminOfferController extends Controller
         $newOffer = $this->offerService->copyOffer($offer, $request->product_id);
 
         return redirect()->route('admin.offers.index')
-            ->with('success', 'تم نسخ العرض بنجاح');
+            ->with('success', __('تم نسخ العرض بنجاح'));
     }
 
     /**

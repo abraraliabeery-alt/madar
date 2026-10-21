@@ -110,7 +110,7 @@ class StaticController extends Controller
 
         // Handle job application logic here
 
-        return redirect()->back()->with('success', 'تم إرسال طلب التوظيف بنجاح');
+        return redirect()->back()->with('success', __('تم إرسال طلب التوظيف بنجاح'));
     }
 
     /**

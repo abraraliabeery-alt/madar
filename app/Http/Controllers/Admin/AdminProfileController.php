@@ -61,6 +61,6 @@ class AdminProfileController extends Controller
 
         $user->update($data);
 
-        return redirect()->back()->with('success', 'تم تحديث الملف الشخصي بنجاح');
+        return redirect()->back()->with('success', __('تم تحديث الملف الشخصي بنجاح'));
     }
 }

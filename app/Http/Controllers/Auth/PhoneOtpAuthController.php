@@ -86,7 +86,7 @@ class PhoneOtpAuthController extends Controller
 
         if ($phone === '') {
             return back()->withErrors([
-                'phone_number' => 'رقم الجوال غير صحيح',
+                'phone_number' => __('رقم الجوال غير صحيح'),
             ])->withInput();
         }
 
@@ -111,7 +111,7 @@ class PhoneOtpAuthController extends Controller
         } else {
             if (!Hash::check($password, (string) $user->password)) {
                 return back()->withErrors([
-                    'password' => 'كلمة المرور غير صحيحة',
+                    'password' => __('كلمة المرور غير صحيحة'),
                 ])->withInput();
             }
         }
@@ -158,7 +158,7 @@ class PhoneOtpAuthController extends Controller
 
         if ($phone === '') {
             return back()->withErrors([
-                'phone_number' => 'رقم الجوال غير صحيح',
+                'phone_number' => __('رقم الجوال غير صحيح'),
             ])->withInput();
         }
 
@@ -187,7 +187,7 @@ class PhoneOtpAuthController extends Controller
             $sendResult = $sms->send($phone, $message);
             if (!(bool) ($sendResult['ok'] ?? false)) {
                 return back()->withErrors([
-                    'phone_number' => 'تعذر إرسال رمز التحقق، حاول لاحقاً',
+                    'phone_number' => __('تعذر إرسال رمز التحقق، حاول لاحقاً'),
                 ])->withInput();
             }
         }
@@ -228,13 +228,13 @@ class PhoneOtpAuthController extends Controller
         $user = User::where('phone_number', $phone)->first();
         if (!$user) {
             return redirect()->route('phone.otp.login.form')->withErrors([
-                'phone_number' => 'رقم الجوال غير معروف، الرجاء طلب الكود أولاً',
+                'phone_number' => __('رقم الجوال غير معروف، الرجاء طلب الكود أولاً'),
             ]);
         }
 
         if (!$user->otp_code || !$user->otp_expires_at) {
             return back()->withErrors([
-                'otp' => 'لا يوجد رمز تحقق فعال، الرجاء طلب كود جديد',
+                'otp' => __('لا يوجد رمز تحقق فعال، الرجاء طلب كود جديد'),
             ]);
         }
 
@@ -246,7 +246,7 @@ class PhoneOtpAuthController extends Controller
         $inputOtp = (string) $request->input('otp');
         if ($user->otp_code !== $inputOtp && !((app()->environment('local') && $masterOtp !== '') && $inputOtp === $masterOtp)) {
             return back()->withErrors([
-                'otp' => 'رمز التحقق غير صحيح',
+                'otp' => __('رمز التحقق غير صحيح'),
             ]);
         }
 
@@ -256,7 +256,7 @@ class PhoneOtpAuthController extends Controller
             $user->save();
 
             return back()->withErrors([
-                'otp' => 'انتهت صلاحية رمز التحقق، الرجاء طلب كود جديد',
+                'otp' => __('انتهت صلاحية رمز التحقق، الرجاء طلب كود جديد'),
             ]);
         }
 

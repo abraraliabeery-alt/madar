@@ -45,7 +45,7 @@ class ApiCommentController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم إضافة التعليق بنجاح',
+            'message' => __('تم إضافة التعليق بنجاح'),
             'data' => $comment
         ]);
     }
@@ -70,7 +70,7 @@ class ApiCommentController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم إضافة التعليق بنجاح',
+            'message' => __('تم إضافة التعليق بنجاح'),
             'data' => $comment
         ]);
     }
@@ -89,7 +89,7 @@ class ApiCommentController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم تحديث التعليق بنجاح',
+            'message' => __('تم تحديث التعليق بنجاح'),
             'data' => $comment
         ]);
     }
@@ -103,7 +103,7 @@ class ApiCommentController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم حذف التعليق بنجاح'
+            'message' => __('تم حذف التعليق بنجاح')
         ]);
     }
 }

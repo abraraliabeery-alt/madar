@@ -87,7 +87,7 @@ class ClientBookingController extends Controller
 
         if (!$product) {
             return redirect()->back()
-                ->with('error', 'المنتج غير متاح للحجز')
+                ->with('error', __('المنتج غير متاح للحجز'))
                 ->withInput();
         }
 
@@ -105,7 +105,7 @@ class ClientBookingController extends Controller
         ]);
 
         return redirect()->route('client.bookings.index')
-            ->with('success', 'تم إنشاء الحجز بنجاح. سنتواصل معك قريباً لتأكيد الحجز.');
+            ->with('success', __('تم إنشاء الحجز بنجاح. سنتواصل معك قريباً لتأكيد الحجز.'));
     }
 
     /**
@@ -117,7 +117,7 @@ class ClientBookingController extends Controller
 
         if ($booking->user_id !== $user->id) {
             return redirect()->route('client.bookings.index')
-                ->with('error', 'غير مصرح لك بعرض هذا الحجز');
+                ->with('error', __('غير مصرح لك بعرض هذا الحجز'));
         }
 
         $booking->load(['product', 'facility']);
@@ -133,18 +133,18 @@ class ClientBookingController extends Controller
 
         if ($booking->user_id !== $user->id) {
             return redirect()->route('client.bookings.index')
-                ->with('error', 'غير مصرح لك بإلغاء هذا الحجز');
+                ->with('error', __('غير مصرح لك بإلغاء هذا الحجز'));
         }
 
         if ($booking->is_confirmed) {
             return redirect()->back()
-                ->with('error', 'لا يمكن إلغاء الحجز بعد تأكيده');
+                ->with('error', __('لا يمكن إلغاء الحجز بعد تأكيده'));
         }
 
         $booking->update(['status' => 'cancelled']); // cancelled status
 
         return redirect()->route('client.bookings.index')
-            ->with('success', 'تم إلغاء الحجز بنجاح');
+            ->with('success', __('تم إلغاء الحجز بنجاح'));
     }
 
     /**
@@ -156,7 +156,7 @@ class ClientBookingController extends Controller
 
         if ($booking->user_id !== $user->id) {
             return redirect()->route('client.bookings.index')
-                ->with('error', 'غير مصرح لك بتعديل هذا الحجز');
+                ->with('error', __('غير مصرح لك بتعديل هذا الحجز'));
         }
 
         $request->validate([
@@ -167,7 +167,7 @@ class ClientBookingController extends Controller
         // التحقق من أن الحجز يمكن تعديله
         if ($booking->is_confirmed) {
             return redirect()->back()
-                ->with('error', 'لا يمكن تعديل الحجز بعد تأكيده')
+                ->with('error', __('لا يمكن تعديل الحجز بعد تأكيده'))
                 ->withInput();
         }
 
@@ -178,7 +178,7 @@ class ClientBookingController extends Controller
         ]);
 
         return redirect()->route('client.bookings.index')
-            ->with('success', 'تم إعادة جدولة الحجز بنجاح');
+            ->with('success', __('تم إعادة جدولة الحجز بنجاح'));
     }
 
     /**
@@ -190,7 +190,7 @@ class ClientBookingController extends Controller
 
         if ($booking->user_id !== $user->id) {
             return redirect()->route('client.bookings.index')
-                ->with('error', 'غير مصرح لك بتقييم هذا الحجز');
+                ->with('error', __('غير مصرح لك بتقييم هذا الحجز'));
         }
 
         $request->validate([
@@ -201,7 +201,7 @@ class ClientBookingController extends Controller
         // هنا يمكن إضافة التقييم إلى جدول منفصل للتقارير
         // سيتم تنفيذ هذا لاحقاً
 
-        return redirect()->back()->with('success', 'تم إرسال تقييمك بنجاح');
+        return redirect()->back()->with('success', __('تم إرسال تقييمك بنجاح'));
     }
 
     /**

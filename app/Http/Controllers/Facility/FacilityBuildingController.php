@@ -102,7 +102,7 @@ class FacilityBuildingController extends Controller
         }
 
         return redirect()->route('facility.buildings.index')
-            ->with('success', 'تم إضافة العمارة بنجاح');
+            ->with('success', __('تم إضافة العمارة بنجاح'));
     }
 
     /**
@@ -175,7 +175,7 @@ class FacilityBuildingController extends Controller
         }
 
         return redirect()->route('facility.buildings.index')
-            ->with('success', 'تم تحديث بيانات العمارة بنجاح');
+            ->with('success', __('تم تحديث بيانات العمارة بنجاح'));
     }
 
     /**
@@ -198,6 +198,6 @@ class FacilityBuildingController extends Controller
         $building->delete();
 
         return redirect()->route('facility.buildings.index')
-            ->with('success', 'تم حذف العمارة بنجاح');
+            ->with('success', __('تم حذف العمارة بنجاح'));
     }
 }

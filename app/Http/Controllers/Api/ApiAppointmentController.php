@@ -41,7 +41,7 @@ class ApiAppointmentController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم إنشاء الموعد بنجاح',
+            'message' => __('تم إنشاء الموعد بنجاح'),
             'data' => $appointment
         ]);
     }
@@ -75,7 +75,7 @@ class ApiAppointmentController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم تحديث الموعد بنجاح',
+            'message' => __('تم تحديث الموعد بنجاح'),
             'data' => $appointment
         ]);
     }
@@ -89,7 +89,7 @@ class ApiAppointmentController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم حذف الموعد بنجاح'
+            'message' => __('تم حذف الموعد بنجاح')
         ]);
     }
 
@@ -102,7 +102,7 @@ class ApiAppointmentController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم إلغاء الموعد بنجاح'
+            'message' => __('تم إلغاء الموعد بنجاح')
         ]);
     }
 
@@ -120,7 +120,7 @@ class ApiAppointmentController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم إعادة جدولة الموعد بنجاح'
+            'message' => __('تم إعادة جدولة الموعد بنجاح')
         ]);
     }
 }

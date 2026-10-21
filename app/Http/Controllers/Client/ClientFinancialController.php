@@ -118,7 +118,7 @@ class ClientFinancialController extends Controller
             ));
 
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'حدث خطأ في تحميل لوحة المعلومات: ' . $e->getMessage());
+            return redirect()->back()->with('error', __('حدث خطأ في تحميل لوحة المعلومات: ') . $e->getMessage());
         }
     }
 
@@ -188,7 +188,7 @@ class ClientFinancialController extends Controller
             return view('client.financial.offers', compact('offers', 'facilities', 'offerStats'));
 
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'حدث خطأ في جلب العروض: ' . $e->getMessage());
+            return redirect()->back()->with('error', __('حدث خطأ في جلب العروض: ') . $e->getMessage());
         }
     }
 
@@ -206,7 +206,7 @@ class ClientFinancialController extends Controller
             // التحقق من أن العرض نشط
             if (!$offer->is_active || !$offer->product->is_active) {
                 return redirect()->route('client.financial.offers')
-                    ->with('error', 'هذا العرض غير متاح حالياً');
+                    ->with('error', __('هذا العرض غير متاح حالياً'));
             }
 
             // عروض مشابهة
@@ -233,7 +233,7 @@ class ClientFinancialController extends Controller
 
         } catch (\Exception $e) {
             return redirect()->route('client.financial.offers')
-                ->with('error', 'العرض غير موجود');
+                ->with('error', __('العرض غير موجود'));
         }
     }
 
@@ -258,7 +258,7 @@ class ClientFinancialController extends Controller
 
             // التحقق من أن العرض متاح
             if (!$offer->is_active || !$offer->product->is_active) {
-                return redirect()->back()->with('error', 'هذا العرض غير متاح حالياً');
+                return redirect()->back()->with('error', __('هذا العرض غير متاح حالياً'));
             }
 
             // التحقق من عدم وجود عقد سابق
@@ -268,7 +268,7 @@ class ClientFinancialController extends Controller
                 ->first();
 
             if ($existingContract) {
-                return redirect()->back()->with('error', 'لديك عقد سابق لهذا العقار');
+                return redirect()->back()->with('error', __('لديك عقد سابق لهذا العقار'));
             }
 
             // إنشاء العقد
@@ -292,10 +292,10 @@ class ClientFinancialController extends Controller
             $contract = $this->contractService->createContract($contractData);
 
             return redirect()->route('client.financial.contract-details', $contract->id)
-                ->with('success', 'تم إنشاء طلب العقد بنجاح. في انتظار موافقة المؤسسة.');
+                ->with('success', __('تم إنشاء طلب العقد بنجاح. في انتظار موافقة المؤسسة.'));
 
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'حدث خطأ في إنشاء العقد: ' . $e->getMessage());
+            return redirect()->back()->with('error', __('حدث خطأ في إنشاء العقد: ') . $e->getMessage());
         }
     }
 
@@ -332,7 +332,7 @@ class ClientFinancialController extends Controller
             return view('client.financial.contracts', compact('contracts', 'facilities'));
 
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'حدث خطأ في جلب العقود: ' . $e->getMessage());
+            return redirect()->back()->with('error', __('حدث خطأ في جلب العقود: ') . $e->getMessage());
         }
     }
 
@@ -351,7 +351,7 @@ class ClientFinancialController extends Controller
 
         } catch (\Exception $e) {
             return redirect()->route('client.financial.contracts')
-                ->with('error', 'العقد غير موجود');
+                ->with('error', __('العقد غير موجود'));
         }
     }
 
@@ -364,16 +364,16 @@ class ClientFinancialController extends Controller
             $contract = Contract::where('user_id', Auth::id())->findOrFail($id);
 
             if ($contract->status !== 'draft') {
-                return redirect()->back()->with('error', 'لا يمكن إلغاء هذا العقد');
+                return redirect()->back()->with('error', __('لا يمكن إلغاء هذا العقد'));
             }
 
             $this->contractService->cancelContract($contract, 'إلغاء من قبل العميل');
 
             return redirect()->route('client.financial.contracts')
-                ->with('success', 'تم إلغاء العقد بنجاح');
+                ->with('success', __('تم إلغاء العقد بنجاح'));
 
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'حدث خطأ في إلغاء العقد: ' . $e->getMessage());
+            return redirect()->back()->with('error', __('حدث خطأ في إلغاء العقد: ') . $e->getMessage());
         }
     }
 
@@ -410,7 +410,7 @@ class ClientFinancialController extends Controller
             return view('client.financial.invoices', compact('invoices', 'contracts'));
 
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'حدث خطأ في جلب الفواتير: ' . $e->getMessage());
+            return redirect()->back()->with('error', __('حدث خطأ في جلب الفواتير: ') . $e->getMessage());
         }
     }
 
@@ -439,7 +439,7 @@ class ClientFinancialController extends Controller
             // التحقق من المبلغ
             $remainingAmount = $contract->getRemainingAmount();
             if ($request->amount > $remainingAmount) {
-                return redirect()->back()->with('error', 'المبلغ أكبر من المبلغ المتبقي');
+                return redirect()->back()->with('error', __('المبلغ أكبر من المبلغ المتبقي'));
             }
 
             // إنشاء الدفعة
@@ -459,10 +459,10 @@ class ClientFinancialController extends Controller
             $payment = Payment::create($paymentData);
 
             return redirect()->route('client.financial.payments')
-                ->with('success', 'تم إرسال الدفعة بنجاح. في انتظار التأكيد من المؤسسة.');
+                ->with('success', __('تم إرسال الدفعة بنجاح. في انتظار التأكيد من المؤسسة.'));
 
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'حدث خطأ في إجراء الدفعة: ' . $e->getMessage());
+            return redirect()->back()->with('error', __('حدث خطأ في إجراء الدفعة: ') . $e->getMessage());
         }
     }
 
@@ -499,7 +499,7 @@ class ClientFinancialController extends Controller
             return view('client.financial.payments', compact('payments', 'contracts'));
 
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'حدث خطأ في جلب المدفوعات: ' . $e->getMessage());
+            return redirect()->back()->with('error', __('حدث خطأ في جلب المدفوعات: ') . $e->getMessage());
         }
     }
 
@@ -561,7 +561,7 @@ class ClientFinancialController extends Controller
             ));
 
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'حدث خطأ في جلب الملخص المالي: ' . $e->getMessage());
+            return redirect()->back()->with('error', __('حدث خطأ في جلب الملخص المالي: ') . $e->getMessage());
         }
     }
 
@@ -581,7 +581,7 @@ class ClientFinancialController extends Controller
             return response()->download($invoicePath ?? '');
 
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'حدث خطأ في تحميل الفاتورة');
+            return redirect()->back()->with('error', __('حدث خطأ في تحميل الفاتورة'));
         }
     }
 
@@ -598,7 +598,7 @@ class ClientFinancialController extends Controller
             return view('client.financial.contract-print', compact('contract'));
 
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'حدث خطأ في طباعة العقد');
+            return redirect()->back()->with('error', __('حدث خطأ في طباعة العقد'));
         }
     }
 }

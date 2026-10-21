@@ -8,12 +8,14 @@ use App\Models\Booking;
 use App\Models\Contract;
 use App\Models\Appointment;
 use App\Models\Product;
-use App\Models\Project;
-use App\Models\LoanRequest;
-use App\Models\LoanOffer;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Carbon;
 use App\Models\Facility;
+use App\Models\Comment;
+use App\Models\SupportTicket;
+use App\Models\SupportTicketReply;
 
 class ClientController extends Controller
 {
@@ -33,9 +35,6 @@ class ClientController extends Controller
             'recent_appointments' => $user->appointments()->with(['facility'])->latest()->take(5)->get(),
             'pending_bookings' => $user->bookings()->where('status', 'reserved')->count(), // pending status
             'active_contracts' => $user->contracts()->where('status', 'active')->count(), // active status
-            'total_projects' => Project::where('client_user_id', $user->id)->count(),
-            'open_projects' => Project::where('client_user_id', $user->id)->whereIn('status', ['draft', 'open_for_bids'])->count(),
-            'recent_projects' => Project::where('client_user_id', $user->id)->with(['translations'])->latest()->take(5)->get(),
         ];
 
         return view('client.dashboard', compact('stats'));
@@ -47,7 +46,7 @@ class ClientController extends Controller
     public function profile()
     {
         $user = Auth::user();
-        $user->load(['roles', 'facilities', 'bank']);
+        $user->load(['roles', 'facilities']);
 
         return view('client.profile', compact('user'));
     }
@@ -63,7 +62,6 @@ class ClientController extends Controller
             'name' => 'required|string|max:255',
             'phone_number' => 'required|string|unique:users,phone_number,' . $user->id,
             'email' => 'required|email|unique:users,email,' . $user->id,
-            'bank_id' => 'nullable|exists:banks,id',
             'bank_account' => 'nullable|string',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'latitude' => 'nullable|numeric',
@@ -95,7 +93,7 @@ class ClientController extends Controller
 
         $user->update($userData);
 
-        return redirect()->back()->with('success', 'تم تحديث الملف الشخصي بنجاح');
+        return redirect()->back()->with('success', __('تم تحديث الملف الشخصي بنجاح'));
     }
 
     /**
@@ -115,10 +113,10 @@ class ClientController extends Controller
      */
     public function favoriteProducts()
     {
-        $user = Auth::user();
-        $favorites = $user->favoriteProducts()->with(['facility', 'category', 'status'])->paginate(12);
+        $favoriteProducts = Auth::user()->favoriteProducts()->with(['facility', 'category', 'status'])->paginate(12);
+        $favoriteFacilities = new LengthAwarePaginator([], 0, 12);
 
-        return view('client.favorites', compact('favorites', 'favoriteProducts', 'favoriteFacilities'));
+        return view('client.favorites', compact('favoriteProducts', 'favoriteFacilities'));
     }
 
     /**
@@ -126,10 +124,10 @@ class ClientController extends Controller
      */
     public function favoriteFacilities()
     {
-        $user = Auth::user();
-        $favorites = $user->favoriteFacilities()->with(['facilityCategory', 'owner'])->paginate(12);
+        $favoriteFacilities = Auth::user()->favoriteFacilities()->with(['facilityCategory', 'owner'])->paginate(12);
+        $favoriteProducts = new LengthAwarePaginator([], 0, 12);
 
-        return view('client.favorites', compact('favorites', 'favoriteProducts', 'favoriteFacilities'));
+        return view('client.favorites', compact('favoriteProducts', 'favoriteFacilities'));
     }
 
     /**
@@ -141,10 +139,10 @@ class ClientController extends Controller
 
         if (!$user->favoriteProducts()->where('products.id', $product->id)->exists()) {
             $user->favoriteProducts()->attach($product->id);
-            return redirect()->back()->with('success', 'تم إضافة المنتج للمفضلة بنجاح');
+            return redirect()->back()->with('success', __('تم إضافة المنتج للمفضلة بنجاح'));
         }
 
-        return redirect()->back()->with('info', 'المنتج موجود بالفعل في المفضلة');
+        return redirect()->back()->with('info', __('المنتج موجود بالفعل في المفضلة'));
     }
 
     /**
@@ -155,7 +153,7 @@ class ClientController extends Controller
         $user = Auth::user();
         $user->favoriteProducts()->detach($product->id);
 
-        return redirect()->back()->with('success', 'تم إزالة المنتج من المفضلة بنجاح');
+        return redirect()->back()->with('success', __('تم إزالة المنتج من المفضلة بنجاح'));
     }
 
     /**
@@ -167,10 +165,10 @@ class ClientController extends Controller
 
         if (!$user->favoriteFacilities()->where('facilities.id', $facility->id)->exists()) {
             $user->favoriteFacilities()->attach($facility->id);
-            return redirect()->back()->with('success', 'تم إضافة المنشأة للمفضلة بنجاح');
+            return redirect()->back()->with('success', __('تم إضافة المنشأة للمفضلة بنجاح'));
         }
 
-        return redirect()->back()->with('info', 'المنشأة موجودة بالفعل في المفضلة');
+        return redirect()->back()->with('info', __('المنشأة موجودة بالفعل في المفضلة'));
     }
 
     /**
@@ -181,7 +179,7 @@ class ClientController extends Controller
         $user = Auth::user();
         $user->favoriteFacilities()->detach($facility->id);
 
-        return redirect()->back()->with('success', 'تم إزالة المنشأة من المفضلة بنجاح');
+        return redirect()->back()->with('success', __('تم إزالة المنشأة من المفضلة بنجاح'));
     }
 
     /**
@@ -199,7 +197,7 @@ class ClientController extends Controller
             $activities->push([
                 'type' => 'booking',
                 'title' => 'حجز جديد',
-                'description' => "تم حجز {$booking->product->name}",
+                'description' => 'تم حجز ' . ($booking->product?->getTranslatedTitle() ?? '—'),
                 'date' => $booking->created_at,
                 'data' => $booking
             ]);
@@ -211,7 +209,7 @@ class ClientController extends Controller
             $activities->push([
                 'type' => 'contract',
                 'title' => 'عقد جديد',
-                'description' => "تم توقيع عقد لـ {$contract->product->name}",
+                'description' => 'تم توقيع عقد لـ ' . ($contract->product?->getTranslatedTitle() ?? '—'),
                 'date' => $contract->created_at,
                 'data' => $contract
             ]);
@@ -223,7 +221,7 @@ class ClientController extends Controller
             $activities->push([
                 'type' => 'appointment',
                 'title' => 'موعد جديد',
-                'description' => "تم تحديد موعد مع {$appointment->facility->name}",
+                'description' => 'تم تحديد موعد مع ' . ($appointment->facility?->name ?? '—'),
                 'date' => $appointment->created_at,
                 'data' => $appointment
             ]);
@@ -233,133 +231,6 @@ class ClientController extends Controller
         $activities = $activities->sortByDesc('date')->values();
 
         return view('client.activity', compact('activities'));
-    }
-
-    /**
-     * طلبات التمويل للعميل الحالي
-     */
-    public function loanRequests(Request $request)
-    {
-        $user = Auth::user();
-
-        $query = LoanRequest::with(['product'])
-            ->withCount('offers')
-            ->where('user_id', $user->id)
-            ->latest();
-
-        if ($request->filled('status')) {
-            $query->where('status', $request->get('status'));
-        }
-
-        $requests = $query->paginate(15)->appends($request->query());
-
-        return view('client.loans.requests', compact('requests'));
-    }
-
-    /**
-     * عرض طلب تمويل واحد مع عروضه
-     */
-    public function showLoanRequest(LoanRequest $loanRequest)
-    {
-        $user = Auth::user();
-        if ($loanRequest->user_id !== $user->id) {
-            abort(403, 'غير مصرح لك بعرض هذا الطلب');
-        }
-
-        $loanRequest->load(['product', 'offers.banker']);
-        $contract = null;
-
-        if ($loanRequest->product_id) {
-            $contract = Contract::where('product_id', $loanRequest->product_id)
-                ->where('user_id', $loanRequest->user_id)
-                ->latest()
-                ->first();
-        }
-
-        return view('client.loans.show', compact('loanRequest', 'contract'));
-    }
-
-    /**
-     * اختيار عرض تمويل من العميل
-     */
-    public function chooseLoanOffer(LoanRequest $loanRequest, LoanOffer $offer)
-    {
-        $user = Auth::user();
-
-        if ($loanRequest->user_id !== $user->id) {
-            abort(403, 'غير مصرح لك باختيار عرض لهذا الطلب');
-        }
-
-        if ($offer->loan_request_id !== $loanRequest->id) {
-            return redirect()->back()->with('error', 'العرض لا ينتمي لهذا الطلب');
-        }
-
-        $loanRequest->update([
-            'chosen_offer_id' => $offer->id,
-            'status' => 'selected',
-        ]);
-
-        $product = $loanRequest->product;
-
-        if ($product) {
-            $startDate = Carbon::now();
-            $termMonths = $offer->term_months ?? 0;
-            $endDate = $termMonths > 0 ? $startDate->copy()->addMonths($termMonths) : null;
-
-            $contract = Contract::create([
-                'product_id' => $product->id,
-                'user_id' => $loanRequest->user_id,
-                'owner_id' => $product->owner_user_id ?? null,
-                'facility_id' => $product->facility_id ?? null,
-                'contract_type' => 'sale',
-                'start_date' => $startDate,
-                'end_date' => $endDate,
-                'total_amount' => $offer->amount,
-                'status' => 'draft',
-                'payment_frequency' => 'monthly',
-                'total_installments' => $termMonths > 0 ? $termMonths : null,
-                'created_by' => $loanRequest->user_id,
-                'is_active' => false,
-                'is_verified' => false,
-            ]);
-
-            $contract->generateContractNumber();
-
-            if ($termMonths > 0) {
-                $contract->generatePaymentPlan();
-            }
-
-            $contract->save();
-        }
-
-        return redirect()->route('client.loans.requests.show', $loanRequest)
-            ->with('success', 'تم اختيار عرض التمويل وإنشاء عقد مبدئي بنجاح');
-    }
-
-    /**
-     * إنشاء طلب تمويل جديد (بسيط)
-     */
-    public function storeLoanRequest(Request $request)
-    {
-        $user = Auth::user();
-
-        $data = $request->validate([
-            'product_id' => 'nullable|exists:products,id',
-            'notes' => 'nullable|string',
-        ]);
-
-        $loan = LoanRequest::create([
-            'user_id' => $user->id,
-            'product_id' => $data['product_id'] ?? null,
-            'status' => 'new',
-            'sla_due_at' => now()->addHours(24),
-            'notes' => $data['notes'] ?? null,
-        ]);
-
-        $loan->update(['status' => 'dispatched']);
-
-        return redirect()->route('client.loans.requests')
-            ->with('success', 'تم إنشاء طلب التمويل بنجاح');
     }
 
     /**
@@ -389,7 +260,7 @@ class ClientController extends Controller
 
         $user->update($request->all());
 
-        return redirect()->back()->with('success', 'تم تحديث الإعدادات بنجاح');
+        return redirect()->back()->with('success', __('تم تحديث الإعدادات بنجاح'));
     }
 
     /**
@@ -420,11 +291,11 @@ class ClientController extends Controller
         if ($request->expectsJson()) {
             return response()->json([
                 'success' => true,
-                'message' => 'تم تحديث حالة الإشعار'
+                'message' => __('تم تحديث حالة الإشعار')
             ]);
         }
 
-        return redirect()->back()->with('success', 'تم تحديث حالة الإشعار');
+        return redirect()->back()->with('success', __('تم تحديث حالة الإشعار'));
     }
 
     /**
@@ -438,11 +309,11 @@ class ClientController extends Controller
         if ($request->expectsJson()) {
             return response()->json([
                 'success' => true,
-                'message' => 'تم تحديد جميع الإشعارات كمقروءة'
+                'message' => __('تم تحديد جميع الإشعارات كمقروءة')
             ]);
         }
 
-        return redirect()->back()->with('success', 'تم تحديد جميع الإشعارات كمقروءة');
+        return redirect()->back()->with('success', __('تم تحديد جميع الإشعارات كمقروءة'));
     }
 
     /**
@@ -475,7 +346,7 @@ class ClientController extends Controller
             'notification_frequency' => $request->notification_frequency ?? 'immediate',
         ]);
 
-        return redirect()->back()->with('success', 'تم تحديث إعدادات الإشعارات بنجاح');
+        return redirect()->back()->with('success', __('تم تحديث إعدادات الإشعارات بنجاح'));
     }
 
     /**
@@ -495,7 +366,7 @@ class ClientController extends Controller
     public function createAppointment()
     {
         $user = Auth::user();
-        $facilities = Facility::where('status', 'active')->get();
+        $facilities = Facility::where('is_active', true)->get();
 
         return view('client.appointments.create', compact('facilities'));
     }
@@ -523,7 +394,7 @@ class ClientController extends Controller
         ]);
 
         return redirect()->route('client.appointments.show', $appointment)
-            ->with('success', 'تم إنشاء الموعد بنجاح');
+            ->with('success', __('تم إنشاء الموعد بنجاح'));
     }
 
     /**
@@ -556,12 +427,12 @@ class ClientController extends Controller
         }
 
         if ($appointment->status === 'cancelled') {
-            return redirect()->back()->with('error', 'الموعد ملغي بالفعل');
+            return redirect()->back()->with('error', __('الموعد ملغي بالفعل'));
         }
 
         $appointment->update(['status' => 'cancelled']);
 
-        return redirect()->back()->with('success', 'تم إلغاء الموعد بنجاح');
+        return redirect()->back()->with('success', __('تم إلغاء الموعد بنجاح'));
     }
 
     /**
@@ -587,6 +458,395 @@ class ClientController extends Controller
             'notes' => $request->notes,
         ]);
 
-        return redirect()->back()->with('success', 'تم إعادة جدولة الموعد بنجاح');
+        return redirect()->back()->with('success', __('تم إعادة جدولة الموعد بنجاح'));
+    }
+
+    /**
+     * تغيير كلمة المرور
+     */
+    public function changePassword()
+    {
+        return view('client.change-password');
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $user = Auth::user();
+
+        if (!Hash::check($request->current_password, $user->password)) {
+            return back()->withErrors(['current_password' => __('كلمة المرور الحالية غير صحيحة')]);
+        }
+
+        $user->update([
+            'password' => Hash::make($request->password),
+            'password_changed_at' => now(),
+        ]);
+
+        return back()->with('success', __('تم تغيير كلمة المرور بنجاح'));
+    }
+
+    /**
+     * التعليقات
+     */
+    public function comments()
+    {
+        $comments = Auth::user()->comments()->with(['product.translations', 'facility'])->latest()->paginate(15);
+        return view('client.comments', compact('comments'));
+    }
+
+    public function productComments()
+    {
+        $comments = Auth::user()->comments()->whereNotNull('product_id')
+            ->with(['product.translations'])->latest()->paginate(15);
+        return view('client.comments', compact('comments'));
+    }
+
+    public function facilityComments()
+    {
+        $comments = Auth::user()->comments()->whereNotNull('facility_id')
+            ->with(['facility'])->latest()->paginate(15);
+        return view('client.comments', compact('comments'));
+    }
+
+    public function addProductComment(Request $request, Product $product)
+    {
+        $request->validate([
+            'comment' => 'required|string|max:1000',
+            'rating' => 'nullable|integer|min:1|max:5',
+        ]);
+
+        Comment::create([
+            'user_id' => Auth::id(),
+            'product_id' => $product->id,
+            'comment' => $request->comment,
+            'rating' => $request->rating,
+        ]);
+
+        return back()->with('success', __('تم إضافة تعليقك بنجاح'));
+    }
+
+    public function addFacilityComment(Request $request, Facility $facility)
+    {
+        $request->validate([
+            'comment' => 'required|string|max:1000',
+            'rating' => 'nullable|integer|min:1|max:5',
+        ]);
+
+        Comment::create([
+            'user_id' => Auth::id(),
+            'facility_id' => $facility->id,
+            'comment' => $request->comment,
+            'rating' => $request->rating,
+        ]);
+
+        return back()->with('success', __('تم إضافة تعليقك بنجاح'));
+    }
+
+    public function updateComment(Request $request, Comment $comment)
+    {
+        abort_unless($comment->user_id === Auth::id(), 403);
+
+        $request->validate([
+            'comment' => 'required|string|max:1000',
+            'rating' => 'nullable|integer|min:1|max:5',
+        ]);
+
+        $comment->update($request->only(['comment', 'rating']));
+
+        return back()->with('success', __('تم تحديث التعليق بنجاح'));
+    }
+
+    public function deleteComment(Comment $comment)
+    {
+        abort_unless($comment->user_id === Auth::id(), 403);
+        $comment->delete();
+
+        return back()->with('success', __('تم حذف التعليق بنجاح'));
+    }
+
+    /**
+     * المعرض: المنتجات والمنشآت المفضلة
+     */
+    public function gallery()
+    {
+        $user = Auth::user();
+        $products = $user->favoriteProducts()->with(['translations', 'facility'])->paginate(12);
+        $facilities = $user->favoriteFacilities()->paginate(12);
+
+        return view('client.gallery', compact('products', 'facilities'));
+    }
+
+    public function productGallery()
+    {
+        $products = Auth::user()->favoriteProducts()->with(['translations', 'facility'])->paginate(12);
+        $facilities = collect();
+
+        return view('client.gallery', compact('products', 'facilities'));
+    }
+
+    public function facilityGallery()
+    {
+        $facilities = Auth::user()->favoriteFacilities()->paginate(12);
+        $products = collect();
+
+        return view('client.gallery', compact('products', 'facilities'));
+    }
+
+    /**
+     * نشاطات مفصلة حسب النوع
+     */
+    public function bookingActivity()
+    {
+        $activities = $this->buildActivityFeed()->where('type', 'booking')->values();
+        return view('client.activity', compact('activities'));
+    }
+
+    public function viewActivity()
+    {
+        $activities = $this->buildActivityFeed()->where('type', 'view')->values();
+        return view('client.activity', compact('activities'));
+    }
+
+    public function searchActivity()
+    {
+        $activities = $this->buildActivityFeed()->where('type', 'search')->values();
+        return view('client.activity', compact('activities'));
+    }
+
+    private function buildActivityFeed()
+    {
+        $user = Auth::user();
+        $activities = collect();
+
+        foreach ($user->bookings()->with(['product', 'facility'])->latest()->get() as $booking) {
+            $activities->push([
+                'type' => 'booking',
+                'title' => 'حجز جديد',
+                'description' => 'تم حجز ' . ($booking->product?->getTranslatedTitle() ?? '—'),
+                'date' => $booking->created_at,
+                'data' => $booking,
+            ]);
+        }
+        foreach ($user->contracts()->with(['product', 'facility'])->latest()->get() as $contract) {
+            $activities->push([
+                'type' => 'contract',
+                'title' => 'عقد جديد',
+                'description' => 'تم توقيع عقد لـ ' . ($contract->product?->getTranslatedTitle() ?? '—'),
+                'date' => $contract->created_at,
+                'data' => $contract,
+            ]);
+        }
+        foreach ($user->appointments()->with(['facility'])->latest()->get() as $appointment) {
+            $activities->push([
+                'type' => 'appointment',
+                'title' => 'موعد جديد',
+                'description' => 'تم تحديد موعد مع ' . ($appointment->facility?->name ?? '—'),
+                'date' => $appointment->created_at,
+                'data' => $appointment,
+            ]);
+        }
+
+        return $activities->sortByDesc('date')->values();
+    }
+
+    /**
+     * التقارير
+     */
+    public function reports()
+    {
+        $user = Auth::user();
+        $stats = [
+            'total_bookings' => $user->bookings()->count(),
+            'confirmed_bookings' => $user->bookings()->where('is_confirmed', true)->count(),
+            'total_contracts' => $user->contracts()->count(),
+            'total_spent' => $user->bookings()->where('is_paid', true)->sum('total_amount')
+                + \App\Models\Payment::whereHas('contract', fn ($q) => $q->where('user_id', $user->id))
+                    ->where('status', 'confirmed')->sum('amount'),
+            'total_appointments' => $user->appointments()->count(),
+        ];
+
+        return view('client.reports.index', compact('stats'));
+    }
+
+    public function bookingReports()
+    {
+        $bookings = Auth::user()->bookings()->with(['product.translations', 'facility'])->latest()->paginate(15);
+        return view('client.reports.bookings', compact('bookings'));
+    }
+
+    public function spendingReports()
+    {
+        $bookings = Auth::user()->bookings()->where('is_paid', true)
+            ->with(['product.translations'])->latest()->paginate(15);
+        $total = Auth::user()->bookings()->where('is_paid', true)->sum('total_amount');
+
+        return view('client.reports.spending', compact('bookings', 'total'));
+    }
+
+    public function activityReports()
+    {
+        $user = Auth::user();
+        $activities = $this->buildActivityFeed();
+
+        $stats = [
+            'total_views' => 0,
+            'total_favorites' => $user->favoriteProducts()->count() + $user->favoriteFacilities()->count(),
+            'total_searches' => 0,
+            'total_reviews' => $user->comments()->count(),
+            'search_categories' => [],
+            'recent_activity' => $activities->take(10)->map(fn ($a) => [
+                'icon' => match ($a['type']) {
+                    'booking' => 'calendar-check',
+                    'contract' => 'file-contract',
+                    'appointment' => 'clock',
+                    default => 'circle',
+                },
+                'description' => $a['title'] . ' — ' . $a['description'],
+                'time' => $a['date']->diffForHumans(),
+            ])->values(),
+        ];
+
+        return view('client.statistics', compact('stats'));
+    }
+
+    /**
+     * إعدادات الخصوصية والأمان
+     */
+    public function privacySettings()
+    {
+        return view('client.settings.privacy');
+    }
+
+    public function updatePrivacySettings(Request $request)
+    {
+        $request->validate([
+            'profile_visibility' => 'required|in:public,private',
+        ]);
+
+        $user = Auth::user();
+        $settings = $user->privacy_settings ?? [];
+        $settings['profile_visibility'] = $request->profile_visibility;
+        $user->update(['privacy_settings' => $settings]);
+
+        return back()->with('success', __('تم حفظ إعدادات الخصوصية'));
+    }
+
+    public function securitySettings()
+    {
+        return view('client.settings.security', ['user' => Auth::user()]);
+    }
+
+    public function updateSecuritySettings(Request $request)
+    {
+        $user = Auth::user();
+        $settings = $user->security_settings ?? [];
+        foreach (['two_factor_enabled', 'login_alerts'] as $key) {
+            if ($request->has($key)) {
+                $settings[$key] = $request->boolean($key);
+            }
+        }
+        $user->update(['security_settings' => $settings]);
+
+        return back()->with('success', __('تم حفظ إعدادات الأمان'));
+    }
+
+    /**
+     * المساعدة والدعم
+     */
+    public function help()
+    {
+        return view('client.help.index');
+    }
+
+    public function faq()
+    {
+        return view('client.help.faq');
+    }
+
+    public function contact()
+    {
+        return view('client.help.contact');
+    }
+
+    public function sendContactMessage(Request $request)
+    {
+        $request->validate([
+            'subject' => 'required|string|max:255',
+            'message' => 'required|string|max:2000',
+        ]);
+
+        SupportTicket::create([
+            'user_id' => Auth::id(),
+            'subject' => $request->subject,
+            'category' => 'contact',
+            'message' => $request->message,
+            'status' => 'open',
+            'priority' => 'normal',
+        ]);
+
+        return redirect()->route('client.help.tickets')->with('success', __('تم إرسال رسالتك بنجاح'));
+    }
+
+    public function tickets()
+    {
+        $tickets = Auth::user()->supportTickets()->withCount('replies')->latest()->paginate(15);
+        return view('client.help.tickets', compact('tickets'));
+    }
+
+    public function createTicket()
+    {
+        return view('client.help.ticket-create');
+    }
+
+    public function storeTicket(Request $request)
+    {
+        $request->validate([
+            'subject' => 'required|string|max:255',
+            'priority' => 'required|in:low,normal,high',
+            'message' => 'required|string|max:2000',
+        ]);
+
+        $ticket = SupportTicket::create([
+            'user_id' => Auth::id(),
+            'subject' => $request->subject,
+            'category' => 'support',
+            'message' => $request->message,
+            'status' => 'open',
+            'priority' => $request->priority,
+        ]);
+
+        return redirect()->route('client.help.tickets.show', $ticket)->with('success', __('تم إنشاء التذكرة بنجاح'));
+    }
+
+    public function showTicket(SupportTicket $ticket)
+    {
+        abort_unless($ticket->user_id === Auth::id(), 403);
+        $ticket->load('replies.user');
+
+        return view('client.help.ticket-show', compact('ticket'));
+    }
+
+    public function replyTicket(Request $request, SupportTicket $ticket)
+    {
+        abort_unless($ticket->user_id === Auth::id(), 403);
+
+        $request->validate(['message' => 'required|string|max:2000']);
+
+        SupportTicketReply::create([
+            'support_ticket_id' => $ticket->id,
+            'user_id' => Auth::id(),
+            'message' => $request->message,
+        ]);
+
+        if ($ticket->status !== 'open') {
+            $ticket->update(['status' => 'open']);
+        }
+
+        return back()->with('success', __('تم إرسال الرد بنجاح'));
     }
 }

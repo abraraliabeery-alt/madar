@@ -93,11 +93,11 @@ class AdminPdfSettingsController extends Controller
         if ($request->wantsJson()) {
             return response()->json([
                 'success' => true,
-                'message' => 'تم حفظ إعدادات PDF بنجاح',
+                'message' => __('تم حفظ إعدادات PDF بنجاح'),
             ]);
         }
 
-        return redirect()->back()->with('success', 'تم حفظ إعدادات PDF بنجاح');
+        return redirect()->back()->with('success', __('تم حفظ إعدادات PDF بنجاح'));
     }
 
     public function suggestCategorySlides(Request $request)
@@ -123,7 +123,7 @@ class AdminPdfSettingsController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => 'تعذر توليد اقتراح الشرائح. تحقق من إعداد مزود الذكاء الاصطناعي.',
+                'message' => __('تعذر توليد اقتراح الشرائح. تحقق من إعداد مزود الذكاء الاصطناعي.'),
             ], 422);
         }
     }
@@ -158,7 +158,7 @@ class AdminPdfSettingsController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => 'تعذر اقتراح لوحة الألوان. تحقق من إعداد مزود الذكاء الاصطناعي.',
+                'message' => __('تعذر اقتراح لوحة الألوان. تحقق من إعداد مزود الذكاء الاصطناعي.'),
             ], 422);
         }
     }

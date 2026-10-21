@@ -30,6 +30,11 @@ class Invoice extends Model
         'tax_rate', // نسبة الضريبة
         'tax_amount', // مبلغ الضريبة
         'net_amount', // المبلغ الصافي
+        'payment_url', // رابط الدفع الإلكتروني
+        'gateway_invoice_id', // معرف الفاتورة عند بوابة الدفع
+        'zatca_uuid', // معرف الفاتورة لدى مزوّد الفوترة الإلكترونية
+        'zatca_qr', // رمز QR للفاتورة الإلكترونية
+        'zatca_status', // حالة التوثيق لدى زاتكا
         'payment_terms_days', // مدة السداد بالأيام
         'reminder_sent', // تم إرسال التذكير
         'reminder_count', // عدد التذكيرات
@@ -43,7 +48,7 @@ class Invoice extends Model
         'installment_amount' => 'decimal:2',
         'late_fee_amount' => 'decimal:2',
         'discount_amount' => 'decimal:2',
-        'tax_rate' => 'decimal:5,4',
+        'tax_rate' => 'decimal:4',
         'tax_amount' => 'decimal:2',
         'net_amount' => 'decimal:2',
         'payment_terms_days' => 'integer',
@@ -85,9 +90,9 @@ class Invoice extends Model
     }
 
     // Accessor to get the current status
-    public function getStatusAttribute()
+    public function getStatusAttribute($value)
     {
-        return $this->statuses()->latest()->first();
+        return $this->statuses()->latest()->first() ?? $value;
     }
 
     // Scopes

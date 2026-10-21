@@ -44,7 +44,7 @@ class AdminPlanLotController extends Controller
     private function importFeatureCollection(string $slug, array $payload): array
     {
         if (($payload['type'] ?? null) !== 'FeatureCollection' || !is_array($payload['features'] ?? null)) {
-            return ['ok' => false, 'message' => 'صيغة GeoJSON غير صحيحة. المطلوب FeatureCollection'];
+            return ['ok' => false, 'message' => __('صيغة GeoJSON غير صحيحة. المطلوب FeatureCollection')];
         }
 
         $plan = Plan::query()->firstOrCreate(
@@ -149,7 +149,7 @@ class AdminPlanLotController extends Controller
         $lot->fill($data);
         $lot->save();
 
-        return back()->with('success', 'تم تحديث القطعة بنجاح');
+        return back()->with('success', __('تم تحديث القطعة بنجاح'));
     }
 
     public function import(Request $request, string $slug): RedirectResponse
@@ -160,7 +160,7 @@ class AdminPlanLotController extends Controller
 
         $payload = json_decode($data['geojson'], true);
         if (!is_array($payload)) {
-            return back()->withErrors(['geojson' => 'لم يتمكن النظام من قراءة JSON']);
+            return back()->withErrors(['geojson' => __('لم يتمكن النظام من قراءة JSON')]);
         }
 
         $result = $this->importFeatureCollection($slug, $payload);
@@ -175,26 +175,26 @@ class AdminPlanLotController extends Controller
     {
         $viewPath = resource_path('views/public/plans/plans.blade.php');
         if (!File::exists($viewPath)) {
-            return back()->withErrors(['geojson' => 'ملف الاستخراج غير موجود داخل المشروع']);
+            return back()->withErrors(['geojson' => __('ملف الاستخراج غير موجود داخل المشروع')]);
         }
 
         $content = File::get($viewPath);
         $marker = 'const parcelsWGS = ';
         $start = strpos($content, $marker);
         if ($start === false) {
-            return back()->withErrors(['geojson' => 'لم يتم العثور على parcelsWGS داخل ملف الاستخراج']);
+            return back()->withErrors(['geojson' => __('لم يتم العثور على parcelsWGS داخل ملف الاستخراج')]);
         }
 
         $start += strlen($marker);
         $end = strpos($content, ';', $start);
         if ($end === false) {
-            return back()->withErrors(['geojson' => 'فشل تحديد نهاية JSON داخل ملف الاستخراج']);
+            return back()->withErrors(['geojson' => __('فشل تحديد نهاية JSON داخل ملف الاستخراج')]);
         }
 
         $json = trim(substr($content, $start, $end - $start));
         $payload = json_decode($json, true);
         if (!is_array($payload)) {
-            return back()->withErrors(['geojson' => 'تعذر قراءة GeoJSON من ملف الاستخراج']);
+            return back()->withErrors(['geojson' => __('تعذر قراءة GeoJSON من ملف الاستخراج')]);
         }
 
         $result = $this->importFeatureCollection($slug, $payload);

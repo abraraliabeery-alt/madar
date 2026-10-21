@@ -50,7 +50,7 @@ class StructuredAiService
             $client = $client->withoutVerifying();
         }
 
-        $content = $client->post($base.'/chat/completions', [
+        $body = [
             'model' => $model,
             'messages' => [
                 ['role' => 'system', 'content' => $systemPrompt],
@@ -60,8 +60,13 @@ class StructuredAiService
                 ]]],
             ],
             'response_format' => ['type' => 'json_object'],
-            'temperature' => 0.1,
-        ])->throw()->json('choices.0.message.content');
+        ];
+
+        if (! preg_match('/^(gpt-5|o\d)/i', (string) $model)) {
+            $body['temperature'] = 0.1;
+        }
+
+        $content = $client->post($base.'/chat/completions', $body)->throw()->json('choices.0.message.content');
 
         $decoded = is_string($content) ? json_decode($content, true) : null;
         if (! is_array($decoded)) {
@@ -96,8 +101,11 @@ class StructuredAiService
                 ['role' => 'system', 'content' => $systemPrompt],
                 ['role' => 'user', 'content' => $userPrompt],
             ],
-            'temperature' => $temperature,
         ];
+
+        if (! preg_match('/^(gpt-5|o\d)/i', (string) $model)) {
+            $body['temperature'] = $temperature;
+        }
 
         if ($json) {
             $body['response_format'] = ['type' => 'json_object'];

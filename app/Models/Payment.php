@@ -72,9 +72,9 @@ class Payment extends Model
     }
 
     // Accessor to get the current status
-    public function getStatusAttribute()
+    public function getStatusAttribute($value)
     {
-        return $this->statuses()->latest()->first();
+        return $this->statuses()->latest()->first() ?? $value;
     }
 
     // Scopes

@@ -78,7 +78,7 @@ class AdminFeatureController extends Controller
 
         if (!$firstTranslationName) {
             return back()
-                ->withErrors(['translations' => 'يجب إدخال اسم المميزة في ترجمة واحدة على الأقل'])
+                ->withErrors(['translations' => __('يجب إدخال اسم المميزة في ترجمة واحدة على الأقل')])
                 ->withInput();
         }
 
@@ -112,7 +112,7 @@ class AdminFeatureController extends Controller
         }
 
         return redirect()->route('admin.features.index')
-            ->with('success', 'تم إنشاء المميزة بنجاح');
+            ->with('success', __('تم إنشاء المميزة بنجاح'));
     }
 
     /**
@@ -175,7 +175,7 @@ class AdminFeatureController extends Controller
 
         if (!$firstTranslationName) {
             return back()
-                ->withErrors(['translations' => 'يجب إدخال اسم المميزة في ترجمة واحدة على الأقل'])
+                ->withErrors(['translations' => __('يجب إدخال اسم المميزة في ترجمة واحدة على الأقل')])
                 ->withInput();
         }
 
@@ -224,7 +224,7 @@ class AdminFeatureController extends Controller
             ->delete();
 
         return redirect()->route('admin.features.index')
-            ->with('success', 'تم تحديث المميزة بنجاح');
+            ->with('success', __('تم تحديث المميزة بنجاح'));
     }
 
     /**
@@ -235,7 +235,7 @@ class AdminFeatureController extends Controller
         // التحقق من وجود منتجات مرتبطة
         if ($feature->products()->count() > 0) {
             return redirect()->back()
-                ->with('error', 'لا يمكن حذف المميزة لوجود منتجات مرتبطة بها');
+                ->with('error', __('لا يمكن حذف المميزة لوجود منتجات مرتبطة بها'));
         }
 
         // حذف الأيقونة
@@ -249,7 +249,7 @@ class AdminFeatureController extends Controller
         $feature->delete();
 
         return redirect()->route('admin.features.index')
-            ->with('success', 'تم حذف المميزة بنجاح');
+            ->with('success', __('تم حذف المميزة بنجاح'));
     }
 
     /**
@@ -290,7 +290,7 @@ class AdminFeatureController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم ترتيب المميزات بنجاح'
+            'message' => __('تم ترتيب المميزات بنجاح')
         ]);
     }
 

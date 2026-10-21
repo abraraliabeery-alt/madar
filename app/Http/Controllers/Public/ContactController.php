@@ -84,7 +84,7 @@ class ContactController extends Controller
         }
 
         return redirect()->back()
-            ->with('success', 'تم إرسال رسالتك بنجاح. سنتواصل معك قريباً.');
+            ->with('success', __('تم إرسال رسالتك بنجاح. سنتواصل معك قريباً.'));
     }
 
     /**
@@ -164,7 +164,7 @@ class ContactController extends Controller
         }
 
         return redirect()->back()
-            ->with('success', 'تم إرسال طلب عرض السعر بنجاح. سنتواصل معك خلال 24 ساعة.');
+            ->with('success', __('تم إرسال طلب عرض السعر بنجاح. سنتواصل معك خلال 24 ساعة.'));
     }
 
     /**
@@ -235,7 +235,7 @@ class ContactController extends Controller
         }
 
         return redirect()->back()
-            ->with('success', 'تم إرسال ملاحظتك بنجاح. شكراً لك على اهتمامك.');
+            ->with('success', __('تم إرسال ملاحظتك بنجاح. شكراً لك على اهتمامك.'));
     }
 
     /**

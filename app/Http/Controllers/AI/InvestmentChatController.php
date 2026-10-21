@@ -43,7 +43,7 @@ class InvestmentChatController extends Controller
 
                 return response()->json([
                     'error' => 'AI_CONFIG_MISSING',
-                    'message' => 'خدمة الذكاء الاصطناعي غير مفعّلة حالياً بسبب نقص الإعدادات. تأكد من إعداد مفاتيح المزود في ملف .env ثم أعد المحاولة.',
+                    'message' => __('خدمة الذكاء الاصطناعي غير مفعّلة حالياً بسبب نقص الإعدادات. تأكد من إعداد مفاتيح المزود في ملف .env ثم أعد المحاولة.'),
                 ], 503);
             }
 
@@ -54,7 +54,7 @@ class InvestmentChatController extends Controller
 
             return response()->json([
                 'error' => 'AI_RUNTIME_ERROR',
-                'message' => 'تعذر معالجة طلبك حالياً. يرجى المحاولة مرة أخرى.',
+                'message' => __('تعذر معالجة طلبك حالياً. يرجى المحاولة مرة أخرى.'),
             ], 503);
         } catch (RequestException $e) {
             $status = $e->response?->status();
@@ -70,20 +70,20 @@ class InvestmentChatController extends Controller
             if ($status === 401 || $status === 403) {
                 return response()->json([
                     'error' => 'AI_AUTH_FAILED',
-                    'message' => 'فشل التحقق من مزود الذكاء الاصطناعي. تأكد من صحة مفتاح API وإعدادات المزود ثم أعد المحاولة.',
+                    'message' => __('فشل التحقق من مزود الذكاء الاصطناعي. تأكد من صحة مفتاح API وإعدادات المزود ثم أعد المحاولة.'),
                 ], 503);
             }
 
             if ($status === 429) {
                 return response()->json([
                     'error' => 'AI_RATE_LIMITED',
-                    'message' => 'تم تجاوز حد الطلبات لدى مزود الذكاء الاصطناعي. انتظر قليلاً ثم أعد المحاولة.',
+                    'message' => __('تم تجاوز حد الطلبات لدى مزود الذكاء الاصطناعي. انتظر قليلاً ثم أعد المحاولة.'),
                 ], 429);
             }
 
             return response()->json([
                 'error' => 'AI_UNAVAILABLE',
-                'message' => 'خدمة الذكاء الاصطناعي غير متاحة حالياً. يرجى المحاولة لاحقاً.',
+                'message' => __('خدمة الذكاء الاصطناعي غير متاحة حالياً. يرجى المحاولة لاحقاً.'),
             ], 503);
         } catch (\Throwable $e) {
             Log::error('AI investment chat failed: '.$e->getMessage(), [
@@ -93,7 +93,7 @@ class InvestmentChatController extends Controller
 
             return response()->json([
                 'error' => 'AI_UNAVAILABLE',
-                'message' => 'حدث خطأ أثناء معالجة طلبك. يرجى المحاولة مرة أخرى.',
+                'message' => __('حدث خطأ أثناء معالجة طلبك. يرجى المحاولة مرة أخرى.'),
             ], 503);
         }
     }

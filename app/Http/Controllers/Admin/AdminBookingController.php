@@ -104,7 +104,7 @@ class AdminBookingController extends Controller
         }
 
         return redirect()->route('admin.bookings.index')
-            ->with('success', 'تم إنشاء الحجز بنجاح');
+            ->with('success', __('تم إنشاء الحجز بنجاح'));
     }
 
     /**
@@ -151,7 +151,7 @@ class AdminBookingController extends Controller
         }
 
         return redirect()->route('admin.bookings.index')
-            ->with('success', 'تم تحديث الحجز بنجاح');
+            ->with('success', __('تم تحديث الحجز بنجاح'));
     }
 
     /**
@@ -162,7 +162,7 @@ class AdminBookingController extends Controller
         $booking->delete();
 
         return redirect()->route('admin.bookings.index')
-            ->with('success', 'تم حذف الحجز بنجاح');
+            ->with('success', __('تم حذف الحجز بنجاح'));
     }
 
     /**
@@ -172,7 +172,7 @@ class AdminBookingController extends Controller
     {
         $booking->update(['is_confirmed' => true]);
 
-        return redirect()->back()->with('success', 'تم تأكيد الحجز بنجاح');
+        return redirect()->back()->with('success', __('تم تأكيد الحجز بنجاح'));
     }
 
     /**
@@ -182,7 +182,7 @@ class AdminBookingController extends Controller
     {
         $booking->update(['is_confirmed' => false]);
 
-        return redirect()->back()->with('success', 'تم إلغاء تأكيد الحجز بنجاح');
+        return redirect()->back()->with('success', __('تم إلغاء تأكيد الحجز بنجاح'));
     }
 
     /**
@@ -210,11 +210,11 @@ class AdminBookingController extends Controller
      */
     public function export(Request $request)
     {
-        $query = Booking::with(['user', 'product', 'facility', 'status']);
+        $query = Booking::with(['user', 'product', 'facility', 'statuses']);
 
         // تطبيق نفس الفلاتر
-        if ($request->has('status_id') && $request->status_id) {
-            $query->where('status_id', $request->status_id);
+        if ($request->has('status') && $request->status) {
+            $query->where('status', $request->status);
         }
         if ($request->has('date_from') && $request->date_from) {
             $query->whereDate('created_at', '>=', $request->date_from);
@@ -225,10 +225,33 @@ class AdminBookingController extends Controller
 
         $bookings = $query->get();
 
-        // هنا يمكن تصدير البيانات إلى Excel أو CSV
-        // سيتم تنفيذ هذا لاحقاً
+        $headers = [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="bookings-' . now()->format('Y-m-d') . '.csv"',
+        ];
 
-        return redirect()->back()->with('success', 'تم تصدير البيانات بنجاح');
+        $columns = ['الرقم', 'العميل', 'العقار', 'المنشأة', 'الحالة', 'المبلغ الإجمالي', 'مدفوع', 'التاريخ المفضل', 'أُنشئ في'];
+
+        return response()->streamDownload(function () use ($bookings, $columns) {
+            $out = fopen('php://output', 'w');
+            // BOM لتصحيح العربية في Excel
+            fprintf($out, chr(0xEF) . chr(0xBB) . chr(0xBF));
+            fputcsv($out, $columns);
+            foreach ($bookings as $b) {
+                fputcsv($out, [
+                    $b->id,
+                    $b->user->name ?? $b->name ?? '—',
+                    $b->product?->getTranslatedTitle() ?: '—',
+                    $b->facility->name ?? '—',
+                    $b->getOriginal('status'),
+                    $b->total_amount,
+                    $b->is_paid ? 'نعم' : 'لا',
+                    $b->preferred_date?->format('Y-m-d'),
+                    $b->created_at?->format('Y-m-d H:i'),
+                ]);
+            }
+            fclose($out);
+        }, 'bookings-' . now()->format('Y-m-d') . '.csv', $headers);
     }
 
     /**
@@ -240,7 +263,7 @@ class AdminBookingController extends Controller
             'total_bookings' => Booking::count(),
             'confirmed_bookings' => Booking::where('is_confirmed', true)->count(),
             'paid_bookings' => Booking::where('is_paid', true)->count(),
-            'pending_bookings' => Booking::where('status_id', 1)->count(), // pending status
+            'pending_bookings' => Booking::where('status', 'pending')->count(), // pending status
             'monthly_revenue' => Booking::where('is_paid', true)
                 ->whereMonth('created_at', now()->month)
                 ->sum('total_amount'),

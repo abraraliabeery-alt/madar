@@ -119,7 +119,7 @@ class AdminPermissionController extends Controller
         });
 
         return redirect()->route('admin.permissions.index')
-            ->with('success', 'تم إنشاء الصلاحية بنجاح');
+            ->with('success', __('تم إنشاء الصلاحية بنجاح'));
     }
 
     /**
@@ -212,7 +212,7 @@ class AdminPermissionController extends Controller
         });
 
         return redirect()->route('admin.permissions.index')
-            ->with('success', 'تم تحديث الصلاحية بنجاح');
+            ->with('success', __('تم تحديث الصلاحية بنجاح'));
     }
 
     /**
@@ -223,13 +223,13 @@ class AdminPermissionController extends Controller
         // التحقق من وجود أدوار مرتبطة
         if ($permission->roles()->count() > 0) {
             return redirect()->back()
-                ->with('error', 'لا يمكن حذف الصلاحية لأنها مرتبطة بأدوار');
+                ->with('error', __('لا يمكن حذف الصلاحية لأنها مرتبطة بأدوار'));
         }
 
         $permission->delete();
 
         return redirect()->route('admin.permissions.index')
-            ->with('success', 'تم حذف الصلاحية بنجاح');
+            ->with('success', __('تم حذف الصلاحية بنجاح'));
     }
 
     /**
@@ -240,7 +240,7 @@ class AdminPermissionController extends Controller
         $permission->update(['is_active' => !$permission->is_active]);
 
         return redirect()->back()
-            ->with('success', 'تم تحديث حالة الصلاحية بنجاح');
+            ->with('success', __('تم تحديث حالة الصلاحية بنجاح'));
     }
 
     /**

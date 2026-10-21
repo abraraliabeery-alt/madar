@@ -98,7 +98,7 @@ class ProductRequestController extends Controller
         $productRequest->save();
 
         return redirect()->route('admin.product-requests.index')
-            ->with('success', 'تم تحديث طلب المنتج بنجاح.');
+            ->with('success', __('تم تحديث طلب المنتج بنجاح.'));
     }
 
     public function updateStatus(Request $request, ProductRequest $productRequest)
@@ -118,7 +118,7 @@ class ProductRequestController extends Controller
         $productRequest->status = $validated['status'];
         $productRequest->save();
 
-        return redirect()->back()->with('success', 'تم تحديث الحالة إلى: ' . ProductRequest::statuses()[$validated['status']]);
+        return redirect()->back()->with('success', __('تم تحديث الحالة إلى: ') . ProductRequest::statuses()[$validated['status']]);
     }
 
     public function aiMatches(ProductRequest $productRequest)
@@ -180,7 +180,7 @@ class ProductRequestController extends Controller
         ]);
 
         return redirect()->route('admin.product-requests.show', $productRequest)
-            ->with('success', 'تم إضافة طلب المنتج بنجاح.');
+            ->with('success', __('تم إضافة طلب المنتج بنجاح.'));
     }
 
     public function analyzeText(Request $request)
@@ -330,7 +330,7 @@ class ProductRequestController extends Controller
         $productRequest->delete();
 
         return redirect()->route('admin.product-requests.index')
-            ->with('success', 'تم حذف الطلب بنجاح.');
+            ->with('success', __('تم حذف الطلب بنجاح.'));
     }
 
     public function bulkAction(Request $request)

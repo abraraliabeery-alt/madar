@@ -93,7 +93,7 @@ class ApiProductController extends Controller
         return response()->json([
             'success' => true,
             'data' => $products,
-            'message' => 'تم جلب المنتجات بنجاح'
+            'message' => __('تم جلب المنتجات بنجاح')
         ]);
     }
 
@@ -105,7 +105,7 @@ class ApiProductController extends Controller
         if (!$product->is_active) {
             return response()->json([
                 'success' => false,
-                'message' => 'المنتج غير متاح'
+                'message' => __('المنتج غير متاح')
             ], 404);
         }
 
@@ -114,7 +114,7 @@ class ApiProductController extends Controller
         return response()->json([
             'success' => true,
             'data' => $product,
-            'message' => 'تم جلب تفاصيل المنتج بنجاح'
+            'message' => __('تم جلب تفاصيل المنتج بنجاح')
         ]);
     }
 
@@ -133,7 +133,7 @@ class ApiProductController extends Controller
         return response()->json([
             'success' => true,
             'data' => $products,
-            'message' => 'تم جلب المنتجات المميزة بنجاح'
+            'message' => __('تم جلب المنتجات المميزة بنجاح')
         ]);
     }
 
@@ -151,7 +151,7 @@ class ApiProductController extends Controller
         return response()->json([
             'success' => true,
             'data' => $products,
-            'message' => 'تم جلب أحدث المنتجات بنجاح'
+            'message' => __('تم جلب أحدث المنتجات بنجاح')
         ]);
     }
 
@@ -171,7 +171,7 @@ class ApiProductController extends Controller
                 'category' => $category,
                 'products' => $products
             ],
-            'message' => 'تم جلب المنتجات حسب الفئة بنجاح'
+            'message' => __('تم جلب المنتجات حسب الفئة بنجاح')
         ]);
     }
 
@@ -188,7 +188,7 @@ class ApiProductController extends Controller
         return response()->json([
             'success' => true,
             'data' => $products,
-            'message' => 'تم جلب منتجات المنشأة بنجاح'
+            'message' => __('تم جلب منتجات المنشأة بنجاح')
         ]);
     }
 
@@ -208,7 +208,7 @@ class ApiProductController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'بيانات غير صحيحة',
+                'message' => __('بيانات غير صحيحة'),
                 'errors' => $validator->errors()
             ], 422);
         }
@@ -251,7 +251,7 @@ class ApiProductController extends Controller
         return response()->json([
             'success' => true,
             'data' => $products,
-            'message' => 'تم البحث بنجاح'
+            'message' => __('تم البحث بنجاح')
         ]);
     }
 
@@ -266,13 +266,13 @@ class ApiProductController extends Controller
             $user->products()->attach($product->id);
             return response()->json([
                 'success' => true,
-                'message' => 'تم إضافة المنتج للمفضلة بنجاح'
+                'message' => __('تم إضافة المنتج للمفضلة بنجاح')
             ]);
         }
 
         return response()->json([
             'success' => false,
-            'message' => 'المنتج موجود بالفعل في المفضلة'
+            'message' => __('المنتج موجود بالفعل في المفضلة')
         ], 400);
     }
 
@@ -286,7 +286,7 @@ class ApiProductController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم إزالة المنتج من المفضلة بنجاح'
+            'message' => __('تم إزالة المنتج من المفضلة بنجاح')
         ]);
     }
 
@@ -303,7 +303,7 @@ class ApiProductController extends Controller
         return response()->json([
             'success' => true,
             'data' => $favorites,
-            'message' => 'تم جلب المنتجات المفضلة بنجاح'
+            'message' => __('تم جلب المنتجات المفضلة بنجاح')
         ]);
     }
 
@@ -326,7 +326,7 @@ class ApiProductController extends Controller
         return response()->json([
             'success' => true,
             'data' => $stats,
-            'message' => 'تم جلب الإحصائيات بنجاح'
+            'message' => __('تم جلب الإحصائيات بنجاح')
         ]);
     }
 
@@ -388,7 +388,7 @@ class ApiProductController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => 'تعذر توليد المحتوى. تحقق من إعداد مزود الذكاء الاصطناعي.',
+                'message' => __('تعذر توليد المحتوى. تحقق من إعداد مزود الذكاء الاصطناعي.'),
             ], 422);
         }
     }
@@ -415,7 +415,7 @@ class ApiProductController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => 'تعذر تحليل الصورة. تأكد من جودتها أو تحقق من إعداد الذكاء الاصطناعي.',
+                'message' => __('تعذر تحليل الصورة. تأكد من جودتها أو تحقق من إعداد الذكاء الاصطناعي.'),
             ], 422);
         }
     }

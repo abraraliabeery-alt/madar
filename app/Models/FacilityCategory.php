@@ -18,6 +18,7 @@ class FacilityCategory extends Model
         'image',
         'is_active',
         'is_featured',
+        'platform_mode',
         'order',
         'sort_order',
     ];
@@ -28,6 +29,21 @@ class FacilityCategory extends Model
         'order' => 'integer',
         'sort_order' => 'integer',
     ];
+
+    public function isHybrid(): bool
+    {
+        return $this->platform_mode === 'lifecycle';
+    }
+
+    public function isRealEstate(): bool
+    {
+        return in_array($this->platform_mode, ['real_estate', 'lifecycle'], true);
+    }
+
+    public function isContracting(): bool
+    {
+        return in_array($this->platform_mode, ['contracting', 'lifecycle'], true);
+    }
 
     // العلاقات
     public function facilities()

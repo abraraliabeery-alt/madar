@@ -28,7 +28,6 @@ class SeedMenuItems extends Command
             ['panel' => 'admin', 'key' => 'permissions', 'label_key' => 'admin.permissions.title', 'route_name' => 'admin.permissions.index', 'icon' => 'fas fa-user-cog', 'sort_order' => 22],
             ['panel' => 'admin', 'key' => 'facilities', 'label_key' => 'admin.facilities.title', 'route_name' => 'admin.facilities.index', 'icon' => 'fas fa-building', 'sort_order' => 30],
             ['panel' => 'admin', 'key' => 'categories', 'label_key' => 'admin.categories.title', 'route_name' => 'admin.categories.index', 'icon' => 'fas fa-th-large', 'sort_order' => 35],
-            ['panel' => 'admin', 'key' => 'project_categories', 'label_key' => 'admin.project_categories.title', 'label_override' => 'إدارة تصنيفات المشاريع', 'route_name' => 'admin.project-categories.index', 'icon' => 'fas fa-layer-group', 'sort_order' => 36, 'enabled' => false],
             ['panel' => 'admin', 'key' => 'features', 'label_key' => 'admin.features.title', 'route_name' => 'admin.features.index', 'icon' => 'fas fa-star', 'sort_order' => 37],
             ['panel' => 'admin', 'key' => 'attributes', 'label_key' => 'admin.attributes.title', 'route_name' => 'admin.attributes.index', 'icon' => 'fas fa-tags', 'sort_order' => 38],
             ['panel' => 'admin', 'key' => 'products', 'label_key' => 'admin.products.title', 'route_name' => 'admin.products.index', 'icon' => 'fas fa-box', 'sort_order' => 40, 'visibility' => ['modes' => ['real_estate', 'lifecycle']]],
@@ -43,7 +42,6 @@ class SeedMenuItems extends Command
             ['panel' => 'admin', 'key' => 'settings', 'label_key' => 'admin.settings.title', 'route_name' => 'admin.settings', 'icon' => 'fas fa-cog', 'sort_order' => 90],
 
             ['panel' => 'facility', 'key' => 'dashboard', 'label_key' => 'facility.dashboard.title', 'route_name' => 'facility.dashboard', 'icon' => 'fas fa-home', 'sort_order' => 10],
-            ['panel' => 'facility', 'key' => 'projects', 'label_key' => 'facility.projects.title', 'route_name' => 'facility.projects.index', 'icon' => 'fas fa-diagram-project', 'sort_order' => 20, 'visibility' => ['modes' => ['contracting', 'lifecycle']]],
             ['panel' => 'facility', 'key' => 'execution_requests', 'label_key' => 'facility.execution_requests.title', 'route_name' => 'facility.execution-requests.workspace', 'icon' => 'fas fa-gavel', 'sort_order' => 30, 'visibility' => ['modes' => ['contracting', 'lifecycle']]],
             ['panel' => 'facility', 'key' => 'tasks', 'label_key' => 'facility.tasks.title', 'route_name' => 'facility.tasks.index', 'icon' => 'fas fa-list-check', 'sort_order' => 40],
             ['panel' => 'facility', 'key' => 'accounting', 'label_key' => 'facility.accounting.title', 'route_name' => 'facility.accounting.dashboard', 'icon' => 'fas fa-calculator', 'sort_order' => 50],
@@ -53,7 +51,6 @@ class SeedMenuItems extends Command
             ['panel' => 'facility', 'key' => 'settings', 'label_key' => 'facility.settings.title', 'route_name' => 'facility.edit', 'icon' => 'fas fa-cog', 'sort_order' => 90],
 
             ['panel' => 'client', 'key' => 'dashboard', 'label_key' => 'client.navigation.dashboard', 'route_name' => 'client.dashboard', 'icon' => 'fas fa-home', 'sort_order' => 10],
-            ['panel' => 'client', 'key' => 'projects', 'label_key' => 'client.navigation.create_project', 'route_name' => 'client.projects.create', 'icon' => 'fas fa-diagram-project', 'sort_order' => 20, 'visibility' => ['modes' => ['contracting', 'lifecycle']]],
             ['panel' => 'client', 'key' => 'bookings', 'label_key' => 'client.navigation.bookings', 'route_name' => 'client.bookings.index', 'icon' => 'fas fa-calendar-check', 'sort_order' => 30],
             ['panel' => 'client', 'key' => 'contracts', 'label_key' => 'client.navigation.contracts', 'route_name' => 'client.contracts.index', 'icon' => 'fas fa-file-contract', 'sort_order' => 40],
             ['panel' => 'client', 'key' => 'profile', 'label_key' => 'layout.user_menu.profile', 'route_name' => 'client.profile', 'icon' => 'fas fa-user', 'sort_order' => 50],

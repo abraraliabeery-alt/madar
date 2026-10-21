@@ -51,7 +51,7 @@ class ProductRequestController extends Controller
         return response()->json([
             'request' => $requestRecord,
             'matches' => $matches,
-            'message' => 'تم استلام طلبك بنجاح، وهذه أبرز النتائج المطابقة.',
+            'message' => __('تم استلام طلبك بنجاح، وهذه أبرز النتائج المطابقة.'),
         ]);
     }
 

@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Services\ContractService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class FacilityContractController extends Controller
 {
@@ -66,7 +67,7 @@ class FacilityContractController extends Controller
     /**
      * عرض نموذج إنشاء عقد
      */
-    public function create()
+    public function create(Request $request)
     {
         $facility = Auth::user()->facilities()->first();
         
@@ -74,17 +75,21 @@ class FacilityContractController extends Controller
             return redirect()->route('facility.create');
         }
 
+        $lead = $request->filled('lead_id') ? $facility->leads()->find($request->lead_id) : null;
+
         $products = $facility->products()->with('translations')->get();
         $offers = $facility->offers()->active()->valid()->with('product')->get();
-        $users = User::where('primary_role', 'user')->get();
-        $owners = User::where('primary_role', 'owner')->get();
+        $users = User::where('primary_role', 'client')->orderBy('name')->get();
+        $owners = User::whereIn('primary_role', ['client', 'facility'])->orderBy('name')->get();
+        $tenants = $facility->tenants()->with('translations')->where('is_active', true)->get();
+        $propertyOwners = $facility->owners()->where('is_active', true)->orderBy('name')->get();
         
         $contractTypes = [
             'sale' => 'بيع',
             'rent' => 'إيجار',
         ];
 
-        return view('facility.contracts.create', compact('products', 'offers', 'users', 'owners', 'contractTypes'));
+        return view('facility.contracts.create', compact('products', 'offers', 'users', 'owners', 'tenants', 'propertyOwners', 'contractTypes', 'lead'));
     }
 
     /**
@@ -99,10 +104,13 @@ class FacilityContractController extends Controller
         }
 
         $request->validate([
-            'product_id' => 'required|exists:products,id',
-            'offer_id' => 'required|exists:offers,id',
-            'user_id' => 'required|exists:users,id',
-            'owner_id' => 'required|exists:users,id',
+            'product_id' => ['required', Rule::exists('products', 'id')->where('facility_id', $facility->id)],
+            'offer_id' => 'nullable|exists:offers,id',
+            'user_id' => 'nullable|required_without:tenant_id|exists:users,id',
+            'tenant_id' => ['nullable', 'required_without:user_id', Rule::exists('tenants', 'id')->where('facility_id', $facility->id)],
+            'owner_id' => 'nullable|required_without:property_owner_id|exists:users,id',
+            'property_owner_id' => ['nullable', 'required_without:owner_id', Rule::exists('owners', 'id')->where('facility_id', $facility->id)],
+            'lead_id' => ['nullable', Rule::exists('leads', 'id')->where('facility_id', $facility->id)],
             'contract_type' => 'required|in:sale,rent',
             'start_date' => 'required|date',
             'end_date' => 'nullable|date|after:start_date',
@@ -126,6 +134,10 @@ class FacilityContractController extends Controller
 
         $contract = $this->contractService->createContract($data);
 
+        if ($contract->lead_id) {
+            $facility->leads()->whereKey($contract->lead_id)->update(['stage' => \App\Models\Lead::STAGE_WON]);
+        }
+
         // حفظ الترجمات
         if ($request->filled('terms_conditions_ar')) {
             $contract->translations()->create([
@@ -135,7 +147,7 @@ class FacilityContractController extends Controller
         }
 
         return redirect()->route('facility.contracts.index')
-            ->with('success', 'تم إنشاء العقد بنجاح');
+            ->with('success', __('تم إنشاء العقد بنجاح'));
     }
 
     /**
@@ -225,7 +237,7 @@ class FacilityContractController extends Controller
         }
 
         return redirect()->route('facility.contracts.index')
-            ->with('success', 'تم تحديث العقد بنجاح');
+            ->with('success', __('تم تحديث العقد بنجاح'));
     }
 
     /**
@@ -238,7 +250,7 @@ class FacilityContractController extends Controller
         $contract->delete();
 
         return redirect()->route('facility.contracts.index')
-            ->with('success', 'تم حذف العقد بنجاح');
+            ->with('success', __('تم حذف العقد بنجاح'));
     }
 
     /**
@@ -254,7 +266,7 @@ class FacilityContractController extends Controller
 
         $contract = $this->contractService->updateContractStatus($contract, $request->status);
 
-        return redirect()->back()->with('success', 'تم تحديث حالة العقد بنجاح');
+        return redirect()->back()->with('success', __('تم تحديث حالة العقد بنجاح'));
     }
 
     /**
@@ -270,7 +282,7 @@ class FacilityContractController extends Controller
 
         $contract = $this->contractService->cancelContract($contract, $request->reason);
 
-        return redirect()->back()->with('success', 'تم إلغاء العقد بنجاح');
+        return redirect()->back()->with('success', __('تم إلغاء العقد بنجاح'));
     }
 
     /**
@@ -298,7 +310,7 @@ class FacilityContractController extends Controller
 
         $payment = $this->contractService->recordPayment($data);
 
-        return redirect()->back()->with('success', 'تم تسجيل الدفعة بنجاح');
+        return redirect()->back()->with('success', __('تم تسجيل الدفعة بنجاح'));
     }
 
     /**
@@ -378,7 +390,7 @@ class FacilityContractController extends Controller
 
         CommissionParty::create($data);
 
-        return redirect()->back()->with('success', 'تم إضافة وسيط وعمولته بنجاح');
+        return redirect()->back()->with('success', __('تم إضافة وسيط وعمولته بنجاح'));
     }
 
     /**
@@ -390,7 +402,7 @@ class FacilityContractController extends Controller
         
         // هنا يمكن إضافة منطق إنشاء PDF للعقد
         return response()->json([
-            'message' => 'سيتم إضافة ميزة تحميل العقد قريباً'
+            'message' => __('سيتم إضافة ميزة تحميل العقد قريباً')
         ]);
     }
 
@@ -452,7 +464,7 @@ class FacilityContractController extends Controller
 
         // هنا يمكن إضافة منطق تصدير العقود
         return response()->json([
-            'message' => 'سيتم إضافة ميزة تصدير العقود قريباً'
+            'message' => __('سيتم إضافة ميزة تصدير العقود قريباً')
         ]);
     }
 }

@@ -32,7 +32,7 @@ class ApiNotificationController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم تحديث الإشعار'
+            'message' => __('تم تحديث الإشعار')
         ]);
     }
 
@@ -46,7 +46,7 @@ class ApiNotificationController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم تحديث جميع الإشعارات'
+            'message' => __('تم تحديث جميع الإشعارات')
         ]);
     }
 
@@ -82,7 +82,7 @@ class ApiNotificationController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم تحديث إعدادات الإشعارات'
+            'message' => __('تم تحديث إعدادات الإشعارات')
         ]);
     }
 }

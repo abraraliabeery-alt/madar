@@ -7,9 +7,9 @@ use App\Models\MenuItem;
 
 class MenuService
 {
-    public static function forPanel(string $panel): array
+    public static function forPanel(string $panel, ?string $facilityMode = null, ?object $facility = null): array
     {
-        $mode = PlatformModeHelper::getMode();
+        $mode = $facilityMode ?? ($facility ? PlatformModeHelper::MODE_LIFECYCLE : PlatformModeHelper::getMode());
 
         $items = MenuItem::query()
             ->where('panel', $panel)
@@ -31,7 +31,11 @@ class MenuService
             $href = null;
             if (!empty($item->route_name)) {
                 try {
-                    $href = route($item->route_name);
+                    $params = [];
+                    if ($item->route_name === 'facility.customization.edit' && $facility) {
+                        $params = ['facility' => $facility];
+                    }
+                    $href = route($item->route_name, $params);
                 } catch (\Throwable $e) {
                     $href = null;
                 }
@@ -57,6 +61,8 @@ class MenuService
                 'icon' => $item->icon,
                 'href' => $href,
                 'route_name' => $item->route_name,
+                'group' => $visibility['group'] ?? null,
+                'sub' => (bool) ($visibility['sub'] ?? false),
             ];
         }
 

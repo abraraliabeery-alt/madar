@@ -24,7 +24,7 @@ class ChartOfAccountController extends Controller
         
         if (!$facility) {
             return redirect()->route('facility.create')
-                ->with('error', 'يجب إنشاء منشأة أولاً');
+                ->with('error', __('يجب إنشاء منشأة أولاً'));
         }
         
         $query = ChartOfAccount::where('facility_id', $facility->id)
@@ -75,7 +75,7 @@ class ChartOfAccountController extends Controller
         
         if (!$facility) {
             return redirect()->route('facility.create')
-                ->with('error', 'يجب إنشاء منشأة أولاً');
+                ->with('error', __('يجب إنشاء منشأة أولاً'));
         }
         
         $parentAccounts = ChartOfAccount::where('facility_id', $facility->id)
@@ -115,7 +115,7 @@ class ChartOfAccountController extends Controller
         
         if (!$facility) {
             return redirect()->route('facility.create')
-                ->with('error', 'يجب إنشاء منشأة أولاً');
+                ->with('error', __('يجب إنشاء منشأة أولاً'));
         }
 
         // حساب المستوى
@@ -142,7 +142,7 @@ class ChartOfAccountController extends Controller
         ]);
 
         return redirect()->route('facility.accounting.chart-of-accounts.index')
-            ->with('success', 'تم إنشاء الحساب بنجاح');
+            ->with('success', __('تم إنشاء الحساب بنجاح'));
     }
 
     /**
@@ -188,7 +188,7 @@ class ChartOfAccountController extends Controller
         
         if (!$facility) {
             return redirect()->route('facility.create')
-                ->with('error', 'يجب إنشاء منشأة أولاً');
+                ->with('error', __('يجب إنشاء منشأة أولاً'));
         }
         
         $parentAccounts = ChartOfAccount::where('facility_id', $facility->id)
@@ -249,7 +249,7 @@ class ChartOfAccountController extends Controller
         ]);
 
         return redirect()->route('facility.accounting.chart-of-accounts.index')
-            ->with('success', 'تم تحديث الحساب بنجاح');
+            ->with('success', __('تم تحديث الحساب بنجاح'));
     }
 
     /**
@@ -260,13 +260,13 @@ class ChartOfAccountController extends Controller
         $this->authorize('delete', $chartOfAccount);
 
         if (!$chartOfAccount->canBeDeleted()) {
-            return back()->with('error', 'لا يمكن حذف هذا الحساب لأنه يحتوي على قيود محاسبية أو حسابات فرعية');
+            return back()->with('error', __('لا يمكن حذف هذا الحساب لأنه يحتوي على قيود محاسبية أو حسابات فرعية'));
         }
 
         $chartOfAccount->delete();
 
         return redirect()->route('facility.accounting.chart-of-accounts.index')
-            ->with('success', 'تم حذف الحساب بنجاح');
+            ->with('success', __('تم حذف الحساب بنجاح'));
     }
 
     /**
@@ -285,7 +285,7 @@ class ChartOfAccountController extends Controller
             'current_balance' => $request->opening_balance,
         ]);
 
-        return back()->with('success', 'تم تحديث الرصيد الافتتاحي بنجاح');
+        return back()->with('success', __('تم تحديث الرصيد الافتتاحي بنجاح'));
     }
 
     /**
@@ -297,7 +297,7 @@ class ChartOfAccountController extends Controller
         
         if (!$facility) {
             return redirect()->route('facility.create')
-                ->with('error', 'يجب إنشاء منشأة أولاً');
+                ->with('error', __('يجب إنشاء منشأة أولاً'));
         }
         
         $query = ChartOfAccount::where('facility_id', $facility->id)
@@ -375,20 +375,20 @@ class ChartOfAccountController extends Controller
         
         if (!$facility) {
             return redirect()->route('facility.create')
-                ->with('error', 'يجب إنشاء منشأة أولاً');
+                ->with('error', __('يجب إنشاء منشأة أولاً'));
         }
         
         if (ChartOfAccount::where('facility_id', $facility->id)->exists()) {
-            return back()->with('error', 'يوجد بالفعل دليل حسابات لهذه المنشأة');
+            return back()->with('error', __('يوجد بالفعل دليل حسابات لهذه المنشأة'));
         }
 
         try {
             ChartOfAccount::createDefaultAccounts($facility->id, Auth::id());
             
             return redirect()->route('facility.accounting.chart-of-accounts.index')
-                ->with('success', 'تم إنشاء دليل الحسابات الافتراضي بنجاح');
+                ->with('success', __('تم إنشاء دليل الحسابات الافتراضي بنجاح'));
         } catch (\Exception $e) {
-            return back()->with('error', 'حدث خطأ أثناء إنشاء دليل الحسابات: ' . $e->getMessage());
+            return back()->with('error', __('حدث خطأ أثناء إنشاء دليل الحسابات: ') . $e->getMessage());
         }
     }
 }

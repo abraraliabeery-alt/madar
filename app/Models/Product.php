@@ -28,8 +28,8 @@ class Product extends Model
         'neighborhood_id',
         'street_id',
         'status_id',
-        'building_id',
-        'project_id',
+        'parent_id',
+        'owner_id',
         'package_id',
         'views_count',
         'rating',
@@ -94,14 +94,43 @@ class Product extends Model
         return $this->belongsTo(Status::class);
     }
 
-    public function building()
+    public function parent()
     {
-        return $this->belongsTo(Building::class);
+        return $this->belongsTo(Product::class, 'parent_id');
     }
 
-    public function project()
+    public function propertyOwner()
     {
-        return $this->belongsTo(Project::class);
+        return $this->belongsTo(Owner::class, 'owner_id');
+    }
+
+    public function children()
+    {
+        return $this->hasMany(Product::class, 'parent_id');
+    }
+
+    /**
+     * IDs of all descendant products (children, grandchildren, ...)
+     */
+    public function descendantIds(): array
+    {
+        $ids = [];
+        $queue = [$this->id];
+        while ($queue) {
+            $level = static::whereIn('parent_id', $queue)->pluck('id')->all();
+            $ids = array_merge($ids, $level);
+            $queue = $level;
+        }
+        return $ids;
+    }
+
+    /**
+     * True if $candidateId is this product or one of its descendants
+     * (used to prevent circular parent references)
+     */
+    public function isSelfOrDescendant(int $candidateId): bool
+    {
+        return $candidateId === $this->id || in_array($candidateId, $this->descendantIds(), true);
     }
 
     public function package()
@@ -362,6 +391,11 @@ class Product extends Model
     }
 
     // Scopes
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
     public function scopeFeatured($query)
     {
         return $query->where('is_featured', true);

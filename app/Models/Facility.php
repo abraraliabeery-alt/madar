@@ -16,6 +16,7 @@ class Facility extends Model
         'address',
         'phone',
         'email',
+        'collection_target',
         'website',
         'license_number',
         'license_expiry',
@@ -75,6 +76,22 @@ class Facility extends Model
         'customization_settings' => 'array',
     ];
 
+    protected static function booted()
+    {
+        static::created(function (Facility $facility) {
+            try {
+                if (!ChartOfAccount::where('facility_id', $facility->id)->exists()) {
+                    ChartOfAccount::createDefaultAccounts($facility->id, $facility->owner_user_id);
+                }
+                if (!AccountingPeriod::where('facility_id', $facility->id)->exists()) {
+                    AccountingPeriod::createMonthlyPeriods(now()->year, $facility->id, $facility->owner_user_id);
+                }
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::warning('Facility accounting seed failed: ' . $e->getMessage());
+            }
+        });
+    }
+
     // العلاقات
     public function facilityCategory()
     {
@@ -114,19 +131,44 @@ class Facility extends Model
         return $this->hasMany(Product::class);
     }
 
-    public function buildings()
+    public function quotes()
     {
-        return $this->hasMany(Building::class);
+        return $this->hasMany(Quote::class);
+    }
+
+    public function tenders()
+    {
+        return $this->hasMany(FacilityTender::class);
     }
 
     public function bookings()
     {
-        return $this->hasManyThrough(Booking::class, Product::class);
+        return $this->hasMany(Booking::class);
     }
 
     public function contracts()
     {
         return $this->hasMany(Contract::class);
+    }
+
+    public function tenants()
+    {
+        return $this->hasMany(Tenant::class);
+    }
+
+    public function maintenanceRequests()
+    {
+        return $this->hasMany(MaintenanceRequest::class);
+    }
+
+    public function owners()
+    {
+        return $this->hasMany(Owner::class);
+    }
+
+    public function leads()
+    {
+        return $this->hasMany(Lead::class);
     }
 
     public function offers()
@@ -249,6 +291,11 @@ class Facility extends Model
 
         // Simple rule: only certain categories are considered "executors".
         // This can later be moved to config or extended, but no schema change is needed.
+        // If the category has a platform mode, restrict eligibility.
+        if ($this->facilityCategory->platform_mode !== null) {
+            return $this->facilityCategory->isContracting();
+        }
+
         $allowedCategoryIds = config('services.execution.allowed_facility_category_ids', []);
 
         if (!empty($allowedCategoryIds)) {

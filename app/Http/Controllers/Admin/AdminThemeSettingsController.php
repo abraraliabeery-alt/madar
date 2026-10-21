@@ -41,10 +41,10 @@ class AdminThemeSettingsController extends Controller
         Setting::setValue('platform.theme.settings', json_encode($settings));
 
         if (! $this->generateThemeCss($settings)) {
-            return redirect()->back()->with('warning', 'تم حفظ الإعدادات، لكن لم نتمكن من كتابة ملف theme.css. تأكد من صلاحيات مجلد public.');
+            return redirect()->back()->with('warning', __('تم حفظ الإعدادات، لكن لم نتمكن من كتابة ملف theme.css. تأكد من صلاحيات مجلد public.'));
         }
 
-        return redirect()->back()->with('success', 'تم حفظ إعدادات الهوية بنجاح');
+        return redirect()->back()->with('success', __('تم حفظ إعدادات الهوية بنجاح'));
     }
 
     private function loadSettings(): array

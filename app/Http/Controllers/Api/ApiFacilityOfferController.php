@@ -43,7 +43,7 @@ class ApiFacilityOfferController extends Controller
             if (!$facilityId) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'غير مصرح لك بالوصول'
+                    'message' => __('غير مصرح لك بالوصول')
                 ], 403);
             }
 
@@ -72,13 +72,13 @@ class ApiFacilityOfferController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $offers,
-                'message' => 'تم جلب العروض بنجاح'
+                'message' => __('تم جلب العروض بنجاح')
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'حدث خطأ في جلب العروض: ' . $e->getMessage()
+                'message' => __('حدث خطأ في جلب العروض: ') . $e->getMessage()
             ], 500);
         }
     }
@@ -95,7 +95,7 @@ class ApiFacilityOfferController extends Controller
             if (!$facilityId) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'غير مصرح لك بالوصول'
+                    'message' => __('غير مصرح لك بالوصول')
                 ], 403);
             }
 
@@ -116,7 +116,7 @@ class ApiFacilityOfferController extends Controller
             if ($validator->fails()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'بيانات غير صحيحة',
+                    'message' => __('بيانات غير صحيحة'),
                     'errors' => $validator->errors()
                 ], 422);
             }
@@ -137,13 +137,13 @@ class ApiFacilityOfferController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $offer->load(['product', 'translations']),
-                'message' => 'تم إنشاء العرض بنجاح'
+                'message' => __('تم إنشاء العرض بنجاح')
             ], 201);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'حدث خطأ في إنشاء العرض: ' . $e->getMessage()
+                'message' => __('حدث خطأ في إنشاء العرض: ') . $e->getMessage()
             ], 500);
         }
     }
@@ -164,13 +164,13 @@ class ApiFacilityOfferController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $offer,
-                'message' => 'تم جلب تفاصيل العرض بنجاح'
+                'message' => __('تم جلب تفاصيل العرض بنجاح')
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'العرض غير موجود'
+                'message' => __('العرض غير موجود')
             ], 404);
         }
     }
@@ -202,7 +202,7 @@ class ApiFacilityOfferController extends Controller
             if ($validator->fails()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'بيانات غير صحيحة',
+                    'message' => __('بيانات غير صحيحة'),
                     'errors' => $validator->errors()
                 ], 422);
             }
@@ -212,13 +212,13 @@ class ApiFacilityOfferController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $updatedOffer->load(['product', 'translations']),
-                'message' => 'تم تحديث العرض بنجاح'
+                'message' => __('تم تحديث العرض بنجاح')
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'حدث خطأ في تحديث العرض: ' . $e->getMessage()
+                'message' => __('حدث خطأ في تحديث العرض: ') . $e->getMessage()
             ], 500);
         }
     }
@@ -245,7 +245,7 @@ class ApiFacilityOfferController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'حدث خطأ في تحديث حالة العرض: ' . $e->getMessage()
+                'message' => __('حدث خطأ في تحديث حالة العرض: ') . $e->getMessage()
             ], 500);
         }
     }
@@ -265,7 +265,7 @@ class ApiFacilityOfferController extends Controller
             if ($offer->contracts()->exists()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'لا يمكن حذف العرض - يوجد عقود مرتبطة به'
+                    'message' => __('لا يمكن حذف العرض - يوجد عقود مرتبطة به')
                 ], 422);
             }
 
@@ -273,13 +273,13 @@ class ApiFacilityOfferController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'تم حذف العرض بنجاح'
+                'message' => __('تم حذف العرض بنجاح')
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'حدث خطأ في حذف العرض: ' . $e->getMessage()
+                'message' => __('حدث خطأ في حذف العرض: ') . $e->getMessage()
             ], 500);
         }
     }
@@ -310,13 +310,13 @@ class ApiFacilityOfferController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $contracts,
-                'message' => 'تم جلب العقود بنجاح'
+                'message' => __('تم جلب العقود بنجاح')
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'حدث خطأ في جلب العقود: ' . $e->getMessage()
+                'message' => __('حدث خطأ في جلب العقود: ') . $e->getMessage()
             ], 500);
         }
     }
@@ -339,13 +339,13 @@ class ApiFacilityOfferController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $contract->load(['product', 'offer', 'user']),
-                'message' => 'تم الموافقة على العقد بنجاح'
+                'message' => __('تم الموافقة على العقد بنجاح')
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'حدث خطأ في الموافقة على العقد: ' . $e->getMessage()
+                'message' => __('حدث خطأ في الموافقة على العقد: ') . $e->getMessage()
             ], 500);
         }
     }
@@ -369,13 +369,13 @@ class ApiFacilityOfferController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'تم رفض العقد'
+                'message' => __('تم رفض العقد')
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'حدث خطأ في رفض العقد: ' . $e->getMessage()
+                'message' => __('حدث خطأ في رفض العقد: ') . $e->getMessage()
             ], 500);
         }
     }
@@ -398,13 +398,13 @@ class ApiFacilityOfferController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $payment->load(['invoice', 'contract']),
-                'message' => 'تم تأكيد الدفعة بنجاح'
+                'message' => __('تم تأكيد الدفعة بنجاح')
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'حدث خطأ في تأكيد الدفعة: ' . $e->getMessage()
+                'message' => __('حدث خطأ في تأكيد الدفعة: ') . $e->getMessage()
             ], 500);
         }
     }
@@ -426,13 +426,13 @@ class ApiFacilityOfferController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'تم رفض الدفعة'
+                'message' => __('تم رفض الدفعة')
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'حدث خطأ في رفض الدفعة: ' . $e->getMessage()
+                'message' => __('حدث خطأ في رفض الدفعة: ') . $e->getMessage()
             ], 500);
         }
     }
@@ -454,13 +454,13 @@ class ApiFacilityOfferController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $report,
-                'message' => 'تم جلب التقرير المالي بنجاح'
+                'message' => __('تم جلب التقرير المالي بنجاح')
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'حدث خطأ في جلب التقرير المالي: ' . $e->getMessage()
+                'message' => __('حدث خطأ في جلب التقرير المالي: ') . $e->getMessage()
             ], 500);
         }
     }
@@ -479,13 +479,13 @@ class ApiFacilityOfferController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $statistics,
-                'message' => 'تم جلب إحصائيات العروض بنجاح'
+                'message' => __('تم جلب إحصائيات العروض بنجاح')
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'حدث خطأ في جلب الإحصائيات: ' . $e->getMessage()
+                'message' => __('حدث خطأ في جلب الإحصائيات: ') . $e->getMessage()
             ], 500);
         }
     }
@@ -506,7 +506,7 @@ class ApiFacilityOfferController extends Controller
             if ($validator->fails()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'بيانات غير صحيحة',
+                    'message' => __('بيانات غير صحيحة'),
                     'errors' => $validator->errors()
                 ], 422);
             }
@@ -522,13 +522,13 @@ class ApiFacilityOfferController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $newOffer->load(['product', 'translations']),
-                'message' => 'تم نسخ العرض بنجاح'
+                'message' => __('تم نسخ العرض بنجاح')
             ], 201);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'حدث خطأ في نسخ العرض: ' . $e->getMessage()
+                'message' => __('حدث خطأ في نسخ العرض: ') . $e->getMessage()
             ], 500);
         }
     }
@@ -550,7 +550,7 @@ class ApiFacilityOfferController extends Controller
             if ($validator->fails()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'بيانات غير صحيحة',
+                    'message' => __('بيانات غير صحيحة'),
                     'errors' => $validator->errors()
                 ], 422);
             }
@@ -568,13 +568,13 @@ class ApiFacilityOfferController extends Controller
                     'operation' => $request->operation,
                     'percentage' => $request->percentage
                 ],
-                'message' => 'تم تحديث الأسعار بنجاح'
+                'message' => __('تم تحديث الأسعار بنجاح')
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'حدث خطأ في تحديث الأسعار: ' . $e->getMessage()
+                'message' => __('حدث خطأ في تحديث الأسعار: ') . $e->getMessage()
             ], 500);
         }
     }
@@ -591,7 +591,7 @@ class ApiFacilityOfferController extends Controller
             if (!$facilityId) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'غير مصرح لك بالوصول'
+                    'message' => __('غير مصرح لك بالوصول')
                 ], 403);
             }
 
@@ -602,7 +602,7 @@ class ApiFacilityOfferController extends Controller
             if (!$offer) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'العرض غير موجود'
+                    'message' => __('العرض غير موجود')
                 ], 404);
             }
 
@@ -622,7 +622,7 @@ class ApiFacilityOfferController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'حدث خطأ في جلب تفاصيل العرض: ' . $e->getMessage()
+                'message' => __('حدث خطأ في جلب تفاصيل العرض: ') . $e->getMessage()
             ], 500);
         }
     }
@@ -639,7 +639,7 @@ class ApiFacilityOfferController extends Controller
             if (!$facilityId) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'غير مصرح لك بالوصول'
+                    'message' => __('غير مصرح لك بالوصول')
                 ], 403);
             }
 
@@ -650,7 +650,7 @@ class ApiFacilityOfferController extends Controller
             if (!$product) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'المنتج غير موجود'
+                    'message' => __('المنتج غير موجود')
                 ], 404);
             }
 
@@ -669,7 +669,7 @@ class ApiFacilityOfferController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'حدث خطأ في جلب عروض المنتج: ' . $e->getMessage()
+                'message' => __('حدث خطأ في جلب عروض المنتج: ') . $e->getMessage()
             ], 500);
         }
     }

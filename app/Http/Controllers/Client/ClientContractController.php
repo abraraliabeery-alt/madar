@@ -132,7 +132,7 @@ class ClientContractController extends Controller
         if (!Auth::check()) {
             return response()->json([
                 'success' => false,
-                'message' => 'يجب تسجيل الدخول أولاً'
+                'message' => __('يجب تسجيل الدخول أولاً')
             ], 401);
         }
 
@@ -157,7 +157,7 @@ class ClientContractController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم إنشاء طلب العقد بنجاح',
+            'message' => __('تم إنشاء طلب العقد بنجاح'),
             'contract_id' => $contract->id
         ]);
     }
@@ -175,7 +175,7 @@ class ClientContractController extends Controller
         if ($contract->status !== 'draft') {
             return response()->json([
                 'success' => false,
-                'message' => 'لا يمكن تأكيد هذا العقد'
+                'message' => __('لا يمكن تأكيد هذا العقد')
             ], 400);
         }
 
@@ -184,7 +184,7 @@ class ClientContractController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم تأكيد العقد بنجاح'
+            'message' => __('تم تأكيد العقد بنجاح')
         ]);
     }
 
@@ -206,7 +206,7 @@ class ClientContractController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم إلغاء العقد بنجاح'
+            'message' => __('تم إلغاء العقد بنجاح')
         ]);
     }
 
@@ -222,7 +222,7 @@ class ClientContractController extends Controller
 
         // هنا يمكن إضافة منطق إنشاء PDF للعقد
         return response()->json([
-            'message' => 'سيتم إضافة ميزة تحميل العقد قريباً'
+            'message' => __('سيتم إضافة ميزة تحميل العقد قريباً')
         ]);
     }
 
@@ -250,7 +250,7 @@ class ClientContractController extends Controller
         if (!$invoice) {
             return response()->json([
                 'success' => false,
-                'message' => 'الفاتورة غير موجودة'
+                'message' => __('الفاتورة غير موجودة')
             ], 404);
         }
 
@@ -263,7 +263,7 @@ class ClientContractController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم تسجيل الدفعة بنجاح',
+            'message' => __('تم تسجيل الدفعة بنجاح'),
             'payment_id' => $payment->id
         ]);
     }

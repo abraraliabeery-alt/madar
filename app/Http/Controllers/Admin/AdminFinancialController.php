@@ -120,7 +120,7 @@ class AdminFinancialController extends Controller
             ));
 
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'حدث خطأ في تحميل لوحة المعلومات: ' . $e->getMessage());
+            return redirect()->back()->with('error', __('حدث خطأ في تحميل لوحة المعلومات: ') . $e->getMessage());
         }
     }
 
@@ -163,7 +163,7 @@ class AdminFinancialController extends Controller
             return view('admin.financial.offers', compact('offers', 'facilities'));
 
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'حدث خطأ في جلب العروض: ' . $e->getMessage());
+            return redirect()->back()->with('error', __('حدث خطأ في جلب العروض: ') . $e->getMessage());
         }
     }
 
@@ -205,7 +205,7 @@ class AdminFinancialController extends Controller
             return view('admin.financial.contracts', compact('contracts', 'facilities'));
 
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'حدث خطأ في جلب العقود: ' . $e->getMessage());
+            return redirect()->back()->with('error', __('حدث خطأ في جلب العقود: ') . $e->getMessage());
         }
     }
 
@@ -223,7 +223,7 @@ class AdminFinancialController extends Controller
             return view('admin.financial.contract-details', compact('contract'));
 
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'العقد غير موجود');
+            return redirect()->back()->with('error', __('العقد غير موجود'));
         }
     }
 
@@ -255,7 +255,7 @@ class AdminFinancialController extends Controller
             return redirect()->back()->with('success', $message);
 
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'حدث خطأ في تحديث حالة العقد: ' . $e->getMessage());
+            return redirect()->back()->with('error', __('حدث خطأ في تحديث حالة العقد: ') . $e->getMessage());
         }
     }
 
@@ -305,7 +305,7 @@ class AdminFinancialController extends Controller
             return view('admin.financial.payments', compact('payments', 'facilities'));
 
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'حدث خطأ في جلب المدفوعات: ' . $e->getMessage());
+            return redirect()->back()->with('error', __('حدث خطأ في جلب المدفوعات: ') . $e->getMessage());
         }
     }
 
@@ -318,15 +318,15 @@ class AdminFinancialController extends Controller
             $payment = Payment::with(['invoice', 'contract'])->findOrFail($id);
 
             if ($payment->status !== 'pending') {
-                return redirect()->back()->with('error', 'الدفعة ليست في حالة معلق');
+                return redirect()->back()->with('error', __('الدفعة ليست في حالة معلق'));
             }
 
             $payment->confirm();
 
-            return redirect()->back()->with('success', 'تم تأكيد الدفعة بنجاح');
+            return redirect()->back()->with('success', __('تم تأكيد الدفعة بنجاح'));
 
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'حدث خطأ في تأكيد الدفعة: ' . $e->getMessage());
+            return redirect()->back()->with('error', __('حدث خطأ في تأكيد الدفعة: ') . $e->getMessage());
         }
     }
 
@@ -339,15 +339,15 @@ class AdminFinancialController extends Controller
             $payment = Payment::findOrFail($id);
 
             if ($payment->status !== 'pending') {
-                return redirect()->back()->with('error', 'الدفعة ليست في حالة معلق');
+                return redirect()->back()->with('error', __('الدفعة ليست في حالة معلق'));
             }
 
             $payment->fail();
 
-            return redirect()->back()->with('success', 'تم رفض الدفعة');
+            return redirect()->back()->with('success', __('تم رفض الدفعة'));
 
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'حدث خطأ في رفض الدفعة: ' . $e->getMessage());
+            return redirect()->back()->with('error', __('حدث خطأ في رفض الدفعة: ') . $e->getMessage());
         }
     }
 
@@ -388,7 +388,7 @@ class AdminFinancialController extends Controller
             ));
 
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'حدث خطأ في جلب التقرير: ' . $e->getMessage());
+            return redirect()->back()->with('error', __('حدث خطأ في جلب التقرير: ') . $e->getMessage());
         }
     }
 
@@ -435,7 +435,7 @@ class AdminFinancialController extends Controller
             return view('admin.financial.customers-report', compact('customersData', 'facilities'));
 
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'حدث خطأ في جلب تقرير العملاء: ' . $e->getMessage());
+            return redirect()->back()->with('error', __('حدث خطأ في جلب تقرير العملاء: ') . $e->getMessage());
         }
     }
 
@@ -481,7 +481,7 @@ class AdminFinancialController extends Controller
             return view('admin.financial.owners-report', compact('ownersData', 'facilities'));
 
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'حدث خطأ في جلب تقرير الملاك: ' . $e->getMessage());
+            return redirect()->back()->with('error', __('حدث خطأ في جلب تقرير الملاك: ') . $e->getMessage());
         }
     }
 
@@ -525,7 +525,7 @@ class AdminFinancialController extends Controller
             return view('admin.financial.facilities-report', compact('facilitiesData', 'startDate', 'endDate'));
 
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'حدث خطأ في جلب تقرير المؤسسات: ' . $e->getMessage());
+            return redirect()->back()->with('error', __('حدث خطأ في جلب تقرير المؤسسات: ') . $e->getMessage());
         }
     }
 
@@ -566,7 +566,7 @@ class AdminFinancialController extends Controller
             return view('admin.financial.accounting-entries', compact('entries', 'facilities'));
 
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'حدث خطأ في جلب القيود المحاسبية: ' . $e->getMessage());
+            return redirect()->back()->with('error', __('حدث خطأ في جلب القيود المحاسبية: ') . $e->getMessage());
         }
     }
 
@@ -596,10 +596,131 @@ class AdminFinancialController extends Controller
                 'reference_id' => null,
             ]));
 
-            return redirect()->back()->with('success', 'تم إنشاء القيد المحاسبي بنجاح');
+            return redirect()->back()->with('success', __('تم إنشاء القيد المحاسبي بنجاح'));
 
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'حدث خطأ في إنشاء القيد المحاسبي: ' . $e->getMessage());
+            return redirect()->back()->with('error', __('حدث خطأ في إنشاء القيد المحاسبي: ') . $e->getMessage());
         }
+    }
+
+    /**
+     * تنزيل CSV بالعربية — يضيف BOM ليتصحّح العرض في Excel
+     */
+    private function exportCsv(string $filename, array $columns, iterable $rows)
+    {
+        return response()->streamDownload(function () use ($columns, $rows) {
+            $out = fopen('php://output', 'w');
+            fprintf($out, chr(0xEF) . chr(0xBB) . chr(0xBF));
+            fputcsv($out, $columns);
+            foreach ($rows as $row) {
+                fputcsv($out, $row);
+            }
+            fclose($out);
+        }, $filename, [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ]);
+    }
+
+    public function exportOffers(Request $request)
+    {
+        $offers = Offer::with(['product.translations', 'facility'])->latest()->get();
+
+        return $this->exportCsv('offers-' . now()->format('Y-m-d') . '.csv',
+            ['المعرف', 'العنوان', 'العقار', 'المنشأة', 'النوع', 'السعر', 'العمولة', 'نشط', 'أُنشئ في'],
+            $offers->map(fn ($o) => [
+                $o->id,
+                $o->offer_title,
+                $o->product?->getTranslatedTitle() ?: '—',
+                $o->facility->name ?? '—',
+                $o->offer_type,
+                $o->price,
+                $o->commission_amount,
+                $o->is_active ? 'نعم' : 'لا',
+                $o->created_at?->format('Y-m-d'),
+            ]));
+    }
+
+    public function exportContracts(Request $request)
+    {
+        $contracts = Contract::with(['product.translations', 'user', 'owner', 'facility'])->latest()->get();
+
+        return $this->exportCsv('contracts-' . now()->format('Y-m-d') . '.csv',
+            ['رقم العقد', 'العميل', 'المالك', 'العقار', 'المنشأة', 'النوع', 'المبلغ', 'الحالة', 'أُنشئ في'],
+            $contracts->map(fn ($c) => [
+                $c->contract_number,
+                $c->user->name ?? '—',
+                $c->owner->name ?? '—',
+                $c->product?->getTranslatedTitle() ?: '—',
+                $c->facility->name ?? '—',
+                $c->contract_type,
+                $c->total_amount,
+                $c->status,
+                $c->created_at?->format('Y-m-d'),
+            ]));
+    }
+
+    public function exportPayments(Request $request)
+    {
+        $payments = Payment::with(['contract', 'contract.user', 'facility'])
+            ->latest('payment_date')->get();
+
+        return $this->exportCsv('payments-' . now()->format('Y-m-d') . '.csv',
+            ['#', 'رقم العقد', 'العميل', 'المنشأة', 'المبلغ', 'الطريقة', 'التاريخ', 'الحالة', 'المرجع'],
+            $payments->map(fn ($p) => [
+                $p->id,
+                $p->contract->contract_number ?? '—',
+                $p->contract?->user?->name ?? '—',
+                $p->facility->name ?? '—',
+                $p->amount,
+                $p->payment_method,
+                $p->payment_date,
+                $p->status,
+                $p->reference_number,
+            ]));
+    }
+
+    public function exportReports(Request $request)
+    {
+        $startDate = $request->start_date ? Carbon::parse($request->start_date) : now()->startOfMonth();
+        $endDate = $request->end_date ? Carbon::parse($request->end_date) : now()->endOfMonth();
+        $facilityId = $request->facility_id;
+
+        $revenue = $this->reportService->getRevenueReport($facilityId, $startDate, $endDate);
+        $payments = $this->reportService->getPaymentsReport($facilityId, $startDate, $endDate);
+        $invoices = $this->reportService->getInvoicesReport($facilityId, $startDate, $endDate);
+        $commission = $this->reportService->getCommissionReport($facilityId, $startDate, $endDate);
+        $contracts = $this->reportService->getContractsReport($facilityId, $startDate, $endDate);
+
+        return $this->exportCsv('financial-report-' . now()->format('Y-m-d') . '.csv',
+            ['البند', 'القيمة'],
+            [
+                ['الفترة', $startDate->format('Y-m-d') . ' → ' . $endDate->format('Y-m-d')],
+                ['إجمالي الإيرادات', $revenue['total_revenue'] ?? 0],
+                ['إجمالي المدفوعات', $payments['total_payments'] ?? 0],
+                ['إجمالي الفواتير', $invoices['total_invoices'] ?? $invoices['total'] ?? 0],
+                ['إجمالي العمولات', $commission['total_commission'] ?? 0],
+                ['عدد العقود', $contracts['total_contracts'] ?? $contracts['count'] ?? 0],
+            ]);
+    }
+
+    public function exportAccountingEntries(Request $request)
+    {
+        $entries = AccountingEntry::with(['contract', 'facility', 'createdBy'])
+            ->latest('entry_date')->get();
+
+        return $this->exportCsv('accounting-entries-' . now()->format('Y-m-d') . '.csv',
+            ['#', 'التاريخ', 'الوصف', 'نوع الحساب', 'مدين/دائن', 'المبلغ', 'العقد', 'المنشأة', 'بواسطة'],
+            $entries->map(fn ($e) => [
+                $e->id,
+                $e->entry_date,
+                $e->description,
+                $e->account_type,
+                $e->entry_type,
+                $e->amount,
+                $e->contract->contract_number ?? '—',
+                $e->facility->name ?? '—',
+                $e->createdBy->name ?? '—',
+            ]));
     }
 }

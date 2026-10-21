@@ -130,12 +130,12 @@ class FacilityPaymentController extends Controller
             DB::commit();
 
             return redirect()->route('facility.payments.index')
-                ->with('success', 'تم إنشاء الدفعة بنجاح');
+                ->with('success', __('تم إنشاء الدفعة بنجاح'));
 
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->back()
-                ->with('error', 'حدث خطأ أثناء إنشاء الدفعة: ' . $e->getMessage())
+                ->with('error', __('حدث خطأ أثناء إنشاء الدفعة: ') . $e->getMessage())
                 ->withInput();
         }
     }
@@ -215,12 +215,12 @@ class FacilityPaymentController extends Controller
             DB::commit();
 
             return redirect()->route('facility.payments.index')
-                ->with('success', 'تم تحديث الدفعة بنجاح');
+                ->with('success', __('تم تحديث الدفعة بنجاح'));
 
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->back()
-                ->with('error', 'حدث خطأ أثناء تحديث الدفعة: ' . $e->getMessage())
+                ->with('error', __('حدث خطأ أثناء تحديث الدفعة: ') . $e->getMessage())
                 ->withInput();
         }
     }
@@ -235,7 +235,7 @@ class FacilityPaymentController extends Controller
         $payment->delete();
 
         return redirect()->route('facility.payments.index')
-            ->with('success', 'تم حذف الدفعة بنجاح');
+            ->with('success', __('تم حذف الدفعة بنجاح'));
     }
 
     /**
@@ -254,11 +254,11 @@ class FacilityPaymentController extends Controller
 
             DB::commit();
 
-            return redirect()->back()->with('success', 'تم تأكيد الدفعة بنجاح');
+            return redirect()->back()->with('success', __('تم تأكيد الدفعة بنجاح'));
 
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->back()->with('error', 'حدث خطأ أثناء تأكيد الدفعة: ' . $e->getMessage());
+            return redirect()->back()->with('error', __('حدث خطأ أثناء تأكيد الدفعة: ') . $e->getMessage());
         }
     }
 
@@ -271,7 +271,7 @@ class FacilityPaymentController extends Controller
         
         $payment->fail();
 
-        return redirect()->back()->with('success', 'تم إلغاء الدفعة');
+        return redirect()->back()->with('success', __('تم إلغاء الدفعة'));
     }
 
     /**
@@ -290,11 +290,11 @@ class FacilityPaymentController extends Controller
 
             DB::commit();
 
-            return redirect()->back()->with('success', 'تم استرداد الدفعة بنجاح');
+            return redirect()->back()->with('success', __('تم استرداد الدفعة بنجاح'));
 
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->back()->with('error', 'حدث خطأ أثناء استرداد الدفعة: ' . $e->getMessage());
+            return redirect()->back()->with('error', __('حدث خطأ أثناء استرداد الدفعة: ') . $e->getMessage());
         }
     }
 

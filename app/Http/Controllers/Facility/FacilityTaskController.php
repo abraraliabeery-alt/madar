@@ -118,7 +118,7 @@ class FacilityTaskController extends Controller
             $task->users()->sync($request->assignees);
         }
 
-        return redirect()->route('facility.tasks.index')->with('success', 'تم إنشاء المهمة بنجاح');
+        return redirect()->route('facility.tasks.index')->with('success', __('تم إنشاء المهمة بنجاح'));
     }
 
     /**
@@ -147,7 +147,7 @@ class FacilityTaskController extends Controller
             $task->users()->sync($request->assignees);
         }
 
-        return redirect()->route('facility.tasks.index')->with('success', 'تمت إضافة مهمة سريعة');
+        return redirect()->route('facility.tasks.index')->with('success', __('تمت إضافة مهمة سريعة'));
     }
 
     /**
@@ -187,7 +187,7 @@ class FacilityTaskController extends Controller
 
         $task->users()->sync($request->assignees ?? []);
 
-        return redirect()->route('facility.tasks.index')->with('success', 'تم تحديث المهمة بنجاح');
+        return redirect()->route('facility.tasks.index')->with('success', __('تم تحديث المهمة بنجاح'));
     }
 
     /**
@@ -196,7 +196,7 @@ class FacilityTaskController extends Controller
     public function destroy(Task $task)
     {
         $task->delete();
-        return redirect()->route('facility.tasks.index')->with('success', 'تم حذف المهمة بنجاح');
+        return redirect()->route('facility.tasks.index')->with('success', __('تم حذف المهمة بنجاح'));
     }
 
     /**
@@ -209,7 +209,7 @@ class FacilityTaskController extends Controller
     {
         $facility = Auth::user()->facilities()->first();
         if (!$facility) {
-            return redirect()->route('facility.tasks.index')->with('error', 'لا توجد منشأة مرتبطة');
+            return redirect()->route('facility.tasks.index')->with('error', __('لا توجد منشأة مرتبطة'));
         }
 
         $today = Carbon::today();
@@ -281,6 +281,6 @@ class FacilityTaskController extends Controller
             }
         }
 
-        return redirect()->route('facility.tasks.index')->with('success', 'تم توليد ' . $created . ' مهام تذكير');
+        return redirect()->route('facility.tasks.index')->with('success', __('تم توليد ') . $created . ' مهام تذكير');
     }
 }

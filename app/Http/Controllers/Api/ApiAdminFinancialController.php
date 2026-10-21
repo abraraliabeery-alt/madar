@@ -112,13 +112,13 @@ class ApiAdminFinancialController extends Controller
                     ],
                     'top_facilities' => $topFacilities,
                 ],
-                'message' => 'تم جلب بيانات لوحة المعلومات بنجاح'
+                'message' => __('تم جلب بيانات لوحة المعلومات بنجاح')
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'حدث خطأ في جلب بيانات لوحة المعلومات: ' . $e->getMessage()
+                'message' => __('حدث خطأ في جلب بيانات لوحة المعلومات: ') . $e->getMessage()
             ], 500);
         }
     }
@@ -160,13 +160,13 @@ class ApiAdminFinancialController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $offers,
-                'message' => 'تم جلب العروض بنجاح'
+                'message' => __('تم جلب العروض بنجاح')
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'حدث خطأ في جلب العروض: ' . $e->getMessage()
+                'message' => __('حدث خطأ في جلب العروض: ') . $e->getMessage()
             ], 500);
         }
     }
@@ -206,13 +206,13 @@ class ApiAdminFinancialController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $contracts,
-                'message' => 'تم جلب العقود بنجاح'
+                'message' => __('تم جلب العقود بنجاح')
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'حدث خطأ في جلب العقود: ' . $e->getMessage()
+                'message' => __('حدث خطأ في جلب العقود: ') . $e->getMessage()
             ], 500);
         }
     }
@@ -256,13 +256,13 @@ class ApiAdminFinancialController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $payments,
-                'message' => 'تم جلب المدفوعات بنجاح'
+                'message' => __('تم جلب المدفوعات بنجاح')
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'حدث خطأ في جلب المدفوعات: ' . $e->getMessage()
+                'message' => __('حدث خطأ في جلب المدفوعات: ') . $e->getMessage()
             ], 500);
         }
     }
@@ -279,7 +279,7 @@ class ApiAdminFinancialController extends Controller
             if ($payment->status !== 'pending') {
                 return response()->json([
                     'success' => false,
-                    'message' => 'الدفعة ليست في حالة معلق'
+                    'message' => __('الدفعة ليست في حالة معلق')
                 ], 422);
             }
 
@@ -288,13 +288,13 @@ class ApiAdminFinancialController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $payment->fresh(),
-                'message' => 'تم تأكيد الدفعة بنجاح'
+                'message' => __('تم تأكيد الدفعة بنجاح')
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'حدث خطأ في تأكيد الدفعة: ' . $e->getMessage()
+                'message' => __('حدث خطأ في تأكيد الدفعة: ') . $e->getMessage()
             ], 500);
         }
     }
@@ -314,7 +314,7 @@ class ApiAdminFinancialController extends Controller
             if ($validator->fails()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'بيانات غير صحيحة',
+                    'message' => __('بيانات غير صحيحة'),
                     'errors' => $validator->errors()
                 ], 422);
             }
@@ -330,13 +330,13 @@ class ApiAdminFinancialController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $contract->fresh(['product', 'offer', 'user', 'owner']),
-                'message' => 'تم تحديث حالة العقد بنجاح'
+                'message' => __('تم تحديث حالة العقد بنجاح')
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'حدث خطأ في تحديث حالة العقد: ' . $e->getMessage()
+                'message' => __('حدث خطأ في تحديث حالة العقد: ') . $e->getMessage()
             ], 500);
         }
     }
@@ -381,13 +381,13 @@ class ApiAdminFinancialController extends Controller
                             : 0,
                     ],
                 ],
-                'message' => 'تم جلب التقرير الشامل بنجاح'
+                'message' => __('تم جلب التقرير الشامل بنجاح')
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'حدث خطأ في جلب التقرير: ' . $e->getMessage()
+                'message' => __('حدث خطأ في جلب التقرير: ') . $e->getMessage()
             ], 500);
         }
     }
@@ -429,13 +429,13 @@ class ApiAdminFinancialController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $customersData,
-                'message' => 'تم جلب تقرير العملاء بنجاح'
+                'message' => __('تم جلب تقرير العملاء بنجاح')
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'حدث خطأ في جلب تقرير العملاء: ' . $e->getMessage()
+                'message' => __('حدث خطأ في جلب تقرير العملاء: ') . $e->getMessage()
             ], 500);
         }
     }
@@ -476,13 +476,13 @@ class ApiAdminFinancialController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $ownersData,
-                'message' => 'تم جلب تقرير الملاك بنجاح'
+                'message' => __('تم جلب تقرير الملاك بنجاح')
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'حدث خطأ في جلب تقرير الملاك: ' . $e->getMessage()
+                'message' => __('حدث خطأ في جلب تقرير الملاك: ') . $e->getMessage()
             ], 500);
         }
     }
@@ -528,13 +528,13 @@ class ApiAdminFinancialController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $facilitiesData,
-                'message' => 'تم جلب تقرير المؤسسات بنجاح'
+                'message' => __('تم جلب تقرير المؤسسات بنجاح')
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'حدث خطأ في جلب تقرير المؤسسات: ' . $e->getMessage()
+                'message' => __('حدث خطأ في جلب تقرير المؤسسات: ') . $e->getMessage()
             ], 500);
         }
     }
@@ -578,13 +578,13 @@ class ApiAdminFinancialController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $entries,
-                'message' => 'تم جلب القيود المحاسبية بنجاح'
+                'message' => __('تم جلب القيود المحاسبية بنجاح')
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'حدث خطأ في جلب القيود المحاسبية: ' . $e->getMessage()
+                'message' => __('حدث خطأ في جلب القيود المحاسبية: ') . $e->getMessage()
             ], 500);
         }
     }
@@ -609,7 +609,7 @@ class ApiAdminFinancialController extends Controller
             if ($validator->fails()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'بيانات غير صحيحة',
+                    'message' => __('بيانات غير صحيحة'),
                     'errors' => $validator->errors()
                 ], 422);
             }
@@ -623,13 +623,13 @@ class ApiAdminFinancialController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $entry->load(['contract', 'facility', 'createdBy']),
-                'message' => 'تم إنشاء القيد المحاسبي بنجاح'
+                'message' => __('تم إنشاء القيد المحاسبي بنجاح')
             ], 201);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'حدث خطأ في إنشاء القيد المحاسبي: ' . $e->getMessage()
+                'message' => __('حدث خطأ في إنشاء القيد المحاسبي: ') . $e->getMessage()
             ], 500);
         }
     }

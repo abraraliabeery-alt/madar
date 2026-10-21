@@ -87,7 +87,7 @@ class AdminProductController extends Controller
 
         if (!$facility) {
             return redirect()->route('admin.products.index')
-                ->with('error', 'لا يوجد منشأة مرتبطة بحسابك');
+                ->with('error', __('لا يوجد منشأة مرتبطة بحسابك'));
         }
 
         $mainCategories = Category::with('translations')->whereNull('parent_id')->get();
@@ -144,7 +144,7 @@ class AdminProductController extends Controller
 
         if (!$facility) {
             return redirect()->route('admin.products.index')
-                ->with('error', 'لا يوجد منشأة مرتبطة بحسابك');
+                ->with('error', __('لا يوجد منشأة مرتبطة بحسابك'));
         }
 
         $request->validate([
@@ -316,7 +316,7 @@ class AdminProductController extends Controller
         }
 
         return redirect()->route('admin.products.index')
-            ->with('success', 'تم إنشاء المنتج بنجاح');
+            ->with('success', __('تم إنشاء المنتج بنجاح'));
     }
 
     /**
@@ -415,7 +415,7 @@ class AdminProductController extends Controller
 
         if (!$firstTranslationName) {
             return back()
-                ->withErrors(['translations' => 'يجب إدخال اسم المنتج في ترجمة واحدة على الأقل'])
+                ->withErrors(['translations' => __('يجب إدخال اسم المنتج في ترجمة واحدة على الأقل')])
                 ->withInput();
         }
 
@@ -513,7 +513,7 @@ class AdminProductController extends Controller
         }
 
         return redirect()->route('admin.products.index')
-            ->with('success', 'تم تحديث المنتج بنجاح');
+            ->with('success', __('تم تحديث المنتج بنجاح'));
     }
 
     /**
@@ -529,7 +529,7 @@ class AdminProductController extends Controller
         $product->delete();
 
         return redirect()->route('admin.products.index')
-            ->with('success', 'تم حذف المنتج بنجاح');
+            ->with('success', __('تم حذف المنتج بنجاح'));
     }
 
     /**

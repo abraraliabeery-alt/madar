@@ -46,6 +46,7 @@ class FacilityFinancialReportController extends Controller
             'total_revenue' => $monthlyReport['summary']['total_revenue'],
             'total_payments' => $monthlyReport['summary']['total_payments'],
             'collection_rate' => $monthlyReport['summary']['collection_rate'],
+            'pending_payments' => $facility->payments()->where('status', 'pending')->count(),
         ];
 
         return view('facility.financial.index', compact('monthlyReport', 'quickStats'));
@@ -101,15 +102,7 @@ class FacilityFinancialReportController extends Controller
      */
     public function payments(Request $request)
     {
-        $facility = Auth::user()->facilities()->first();
-        $facilityId = $facility->id;
-        
-        $startDate = $request->get('start_date') ? Carbon::parse($request->start_date) : now()->startOfMonth();
-        $endDate = $request->get('end_date') ? Carbon::parse($request->end_date) : now()->endOfMonth();
-
-        $report = $this->financialReportService->getPaymentsReport($facilityId, $startDate, $endDate);
-
-        return view('facility.financial.payments', compact('report', 'startDate', 'endDate'));
+        return redirect()->route('facility.financial.payments', $request->query());
     }
 
     /**
@@ -133,15 +126,7 @@ class FacilityFinancialReportController extends Controller
      */
     public function contracts(Request $request)
     {
-        $facility = Auth::user()->facilities()->first();
-        $facilityId = $facility->id;
-        
-        $startDate = $request->get('start_date') ? Carbon::parse($request->start_date) : now()->startOfMonth();
-        $endDate = $request->get('end_date') ? Carbon::parse($request->end_date) : now()->endOfMonth();
-
-        $report = $this->financialReportService->getContractsReport($facilityId, $startDate, $endDate);
-
-        return view('facility.financial.contracts', compact('report', 'startDate', 'endDate'));
+        return redirect()->route('facility.financial.contracts', $request->query());
     }
 
     /**

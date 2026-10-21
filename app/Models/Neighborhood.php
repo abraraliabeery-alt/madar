@@ -19,6 +19,11 @@ class Neighborhood extends Model
         'is_active' => 'boolean',
     ];
 
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
     public function city()
     {
         return $this->belongsTo(City::class);

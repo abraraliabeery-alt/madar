@@ -278,7 +278,7 @@ class FacilityController extends Controller
 
         if (!$user) {
             return redirect()->back()
-                ->with('error', 'يجب تسجيل الدخول لتقييم المنشأة');
+                ->with('error', __('يجب تسجيل الدخول لتقييم المنشأة'));
         }
 
         // التحقق من أن المستخدم لم يقيم المنشأة من قبل
@@ -286,7 +286,7 @@ class FacilityController extends Controller
 
         if ($existingRating) {
             return redirect()->back()
-                ->with('error', 'لقد قمت بتقييم هذه المنشأة من قبل');
+                ->with('error', __('لقد قمت بتقييم هذه المنشأة من قبل'));
         }
 
         // إضافة التقييم
@@ -301,7 +301,7 @@ class FacilityController extends Controller
         $facility->update(['rating' => round($avgRating, 1)]);
 
         return redirect()->back()
-            ->with('success', 'تم إضافة تقييمك بنجاح');
+            ->with('success', __('تم إضافة تقييمك بنجاح'));
     }
 
     /**
@@ -313,17 +313,17 @@ class FacilityController extends Controller
 
         if (!$user) {
             return redirect()->back()
-                ->with('error', 'يجب تسجيل الدخول لإضافة المنشأة للمفضلة');
+                ->with('error', __('يجب تسجيل الدخول لإضافة المنشأة للمفضلة'));
         }
 
         if (!$user->facilities()->where('facility_id', $facility->id)->exists()) {
             $user->facilities()->attach($facility->id);
             return redirect()->back()
-                ->with('success', 'تم إضافة المنشأة للمفضلة بنجاح');
+                ->with('success', __('تم إضافة المنشأة للمفضلة بنجاح'));
         }
 
         return redirect()->back()
-            ->with('error', 'المنشأة موجودة بالفعل في المفضلة');
+            ->with('error', __('المنشأة موجودة بالفعل في المفضلة'));
     }
 
     /**
@@ -335,13 +335,13 @@ class FacilityController extends Controller
 
         if (!$user) {
             return redirect()->back()
-                ->with('error', 'يجب تسجيل الدخول');
+                ->with('error', __('يجب تسجيل الدخول'));
         }
 
         $user->facilities()->detach($facility->id);
 
         return redirect()->back()
-            ->with('success', 'تم إزالة المنشأة من المفضلة بنجاح');
+            ->with('success', __('تم إزالة المنشأة من المفضلة بنجاح'));
     }
 
     /**
@@ -362,7 +362,7 @@ class FacilityController extends Controller
         // سيتم تنفيذ هذا لاحقاً
 
         return redirect()->back()
-            ->with('success', 'تم إرسال طلب عرض السعر بنجاح. سنتواصل معك قريباً.');
+            ->with('success', __('تم إرسال طلب عرض السعر بنجاح. سنتواصل معك قريباً.'));
     }
 
     /**
@@ -383,6 +383,6 @@ class FacilityController extends Controller
         // سيتم تنفيذ هذا لاحقاً
 
         return redirect()->back()
-            ->with('success', 'تم حجز الموعد بنجاح. سنتواصل معك قريباً لتأكيد الموعد.');
+            ->with('success', __('تم حجز الموعد بنجاح. سنتواصل معك قريباً لتأكيد الموعد.'));
     }
 }

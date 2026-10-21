@@ -8,13 +8,14 @@ use App\Models\Status;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Product;
-use App\Models\Building;
-use App\Models\Project;
 use App\Models\Package;
 use App\Models\Feature;
 use App\Models\Attribute;
 use App\Models\City;
 use App\Models\Offer;
+use App\Models\Facility;
+use App\Models\MaintenanceRequest;
+use App\Models\Invoice;
 use App\Models\CategoryProductLifecycleStage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
@@ -198,17 +199,11 @@ class FacilityProductController extends Controller
 
         $statuses = Status::with('translations')->active()->ordered()->get();
         $cities = City::where('is_active', true)->orderBy('name')->get();
-        $buildings = $facility->buildings()->with('translations')->get();
         // Prepare translated statuses options
         $statusOptions = $statuses->mapWithKeys(function ($status) {
             return [$status->id => $status->getTranslatedName(app()->getLocale())];
         });
-        // Prepare building options using translations
-        $locale = app()->getLocale();
-        $buildingOptions = $buildings->mapWithKeys(function ($b) use ($locale) {
-            $label = optional($b->translations->firstWhere('locale', $locale))->name ?? ('#'.$b->id);
-            return [$b->id => $label];
-        })->toArray();
+        $buildingOptions = [];
 
 
         // مستخدمون يمكن تعيينهم كمالك/موظف مسؤول (مستخلصون من المنتجات الحالية للمنشأة إن وجدت)
@@ -252,8 +247,6 @@ class FacilityProductController extends Controller
             'neighborhood_id' => 'nullable|exists:neighborhoods,id',
             'street_id' => 'nullable|exists:streets,id',
             'status_id' => 'required|exists:statuses,id',
-            'building_id' => 'nullable|exists:buildings,id',
-            'project_id' => 'nullable|exists:projects,id',
             'package_id' => 'nullable|exists:packages,id',
             'translations' => 'nullable|array',
             'translations.*.locale' => 'nullable|string|distinct',
@@ -400,7 +393,7 @@ class FacilityProductController extends Controller
         }
 
         return redirect()->route('facility.products.index')
-            ->with('success', 'تم إنشاء المنتج بنجاح');
+            ->with('success', __('تم إنشاء المنتج بنجاح'));
     }
 
     /**
@@ -412,7 +405,7 @@ class FacilityProductController extends Controller
 
         if (!$facility || $product->facility_id !== $facility->id) {
             return redirect()->route('facility.products.index')
-                ->with('error', 'غير مصرح لك بتعديل هذا المنتج');
+                ->with('error', __('غير مصرح لك بتعديل هذا المنتج'));
         }
 
         $product->load(['category', 'city', 'statuses', 'features', 'attributes']);
@@ -510,7 +503,7 @@ class FacilityProductController extends Controller
 
         if (!$facility || $product->facility_id !== $facility->id) {
             return redirect()->route('facility.products.index')
-                ->with('error', 'غير مصرح لك بتعديل هذا المنتج');
+                ->with('error', __('غير مصرح لك بتعديل هذا المنتج'));
         }
 
         $request->validate([
@@ -520,8 +513,6 @@ class FacilityProductController extends Controller
             'neighborhood_id' => 'nullable|exists:neighborhoods,id',
             'street_id' => 'nullable|exists:streets,id',
             'status_id' => 'required|exists:statuses,id',
-            'building_id' => 'nullable|exists:buildings,id',
-            'project_id' => 'nullable|exists:projects,id',
             'package_id' => 'nullable|exists:packages,id',
             'translations' => 'nullable|array',
             'translations.*.locale' => 'nullable|string|distinct',
@@ -646,7 +637,7 @@ class FacilityProductController extends Controller
         }
 
         return redirect()->route('facility.products.index')
-            ->with('success', 'تم تحديث بيانات المنتج بنجاح');
+            ->with('success', __('تم تحديث بيانات المنتج بنجاح'));
     }
 
     /**
@@ -658,7 +649,7 @@ class FacilityProductController extends Controller
 
         if (!$facility || $product->facility_id !== $facility->id) {
             return redirect()->route('facility.products.index')
-                ->with('error', 'غير مصرح لك بحذف هذا المنتج');
+                ->with('error', __('غير مصرح لك بحذف هذا المنتج'));
         }
 
         // حذف الصورة الرئيسية
@@ -669,7 +660,7 @@ class FacilityProductController extends Controller
         $product->delete();
 
         return redirect()->route('facility.products.index')
-            ->with('success', 'تم حذف المنتج بنجاح');
+            ->with('success', __('تم حذف المنتج بنجاح'));
     }
 
     /**
@@ -681,7 +672,7 @@ class FacilityProductController extends Controller
 
         if (!$facility || $product->facility_id !== $facility->id) {
             return redirect()->route('facility.products.index')
-                ->with('error', 'غير مصرح لك بتعديل هذا المنتج');
+                ->with('error', __('غير مصرح لك بتعديل هذا المنتج'));
         }
 
         $product->update(['is_active' => !$product->is_active]);
@@ -699,7 +690,7 @@ class FacilityProductController extends Controller
 
         if (!$facility || $product->facility_id !== $facility->id) {
             return redirect()->route('facility.products.index')
-                ->with('error', 'غير مصرح لك بتعديل هذا المنتج');
+                ->with('error', __('غير مصرح لك بتعديل هذا المنتج'));
         }
 
         $product->update(['is_featured' => !$product->is_featured]);
@@ -717,7 +708,7 @@ class FacilityProductController extends Controller
 
         if (!$facility || $product->facility_id !== $facility->id) {
             return redirect()->route('facility.products.index')
-                ->with('error', 'غير مصرح لك بعرض هذا المنتج');
+                ->with('error', __('غير مصرح لك بعرض هذا المنتج'));
         }
 
         $product->load(['category', 'statuses', 'features', 'attributes.translations']);
@@ -734,7 +725,7 @@ class FacilityProductController extends Controller
 
         if (!$facility || $product->facility_id !== $facility->id) {
             return redirect()->route('facility.products.index')
-                ->with('error', 'غير مصرح لك بعرض هذا المنتج');
+                ->with('error', __('غير مصرح لك بعرض هذا المنتج'));
         }
 
         $product->load([
@@ -933,5 +924,158 @@ class FacilityProductController extends Controller
                 );
             }
         }
+    }
+
+    /**
+     * الوحدات = العقارات الطرفية (ليس لها أبناء)
+     */
+    private function facilityUnits(Facility $facility)
+    {
+        $all = $facility->products()->with('translations')->get(['id', 'parent_id', 'facility_id', 'category_id', 'is_active']);
+        $parentIds = $all->pluck('parent_id')->filter()->unique();
+        return $all->reject(fn ($p) => $parentIds->contains($p->id))->values();
+    }
+
+    private function activeContractsFor($facility, $unitIds)
+    {
+        $today = now()->toDateString();
+        return \App\Models\Contract::where('facility_id', $facility->id)
+            ->where('status', 'active')
+            ->whereIn('product_id', $unitIds)
+            ->whereDate('start_date', '<=', $today)
+            ->where(fn ($q) => $q->whereNull('end_date')->orWhereDate('end_date', '>=', $today))
+            ->with(['tenant', 'user'])
+            ->get()
+            ->keyBy('product_id');
+    }
+
+    /**
+     * الوحدات الشاغرة (بدون عقد نشط)
+     */
+    public function vacant()
+    {
+        $facility = Auth::user()->facilities()->firstOrFail();
+
+        $units = $this->facilityUnits($facility);
+        $occupiedIds = $this->activeContractsFor($facility, $units->pluck('id'))->keys();
+
+        $vacant = Product::with(['translations', 'parent.translations', 'parent.parent.translations', 'category'])
+            ->whereIn('id', $units->pluck('id')->diff($occupiedIds))
+            ->get();
+
+        $offeredIds = Offer::where('facility_id', $facility->id)->where('is_active', true)
+            ->pluck('product_id')->unique();
+
+        return view('facility.products.vacant', compact('vacant', 'offeredIds'));
+    }
+
+    /**
+     * خارطة الإشغال لوحدات أصل معيّن
+     */
+    public function occupancyMap(Request $request)
+    {
+        $facility = Auth::user()->facilities()->firstOrFail();
+
+        $all = $facility->products()->with('translations')->get(['id', 'parent_id', 'facility_id']);
+        $parentIds = $all->pluck('parent_id')->filter()->unique();
+        $parents = $all->filter(fn ($p) => $parentIds->contains($p->id))->values();
+
+        $selected = $request->filled('parent_id') ? $parents->firstWhere('id', (int) $request->parent_id) : $parents->first();
+
+        $tiles = collect();
+        if ($selected) {
+            $units = $all->where('parent_id', $selected->id)->values();
+            $contracts = $this->activeContractsFor($facility, $units->pluck('id'));
+            $maintenanceUnitIds = MaintenanceRequest::where('facility_id', $facility->id)
+                ->whereIn('product_id', $units->pluck('id'))
+                ->whereNotIn('status', ['completed', 'cancelled'])
+                ->pluck('product_id')->unique();
+
+            $arrearsContractIds = Invoice::where('facility_id', $facility->id)
+                ->where('due_date', '<', now()->toDateString())
+                ->where('remaining_amount', '>', 0)
+                ->whereNotIn('status', ['paid', 'cancelled'])
+                ->pluck('contract_id')->unique();
+
+            $tiles = $units->map(function ($unit) use ($contracts, $maintenanceUnitIds, $arrearsContractIds) {
+                $contract = $contracts->get($unit->id);
+                $state = $contract ? ($arrearsContractIds->contains($contract->id) ? 'overdue' : 'occupied') : 'vacant';
+                return (object) [
+                    'unit' => $unit,
+                    'state' => $state,
+                    'contract' => $contract,
+                    'maintenance' => $maintenanceUnitIds->contains($unit->id),
+                ];
+            });
+        }
+
+        return view('facility.products.occupancy_map', compact('parents', 'selected', 'tiles'));
+    }
+
+    /**
+     * الجدول الزمني لإشغال وحدات أصل معيّن — 12 شهراً
+     */
+    public function timeline(Request $request)
+    {
+        $facility = Auth::user()->facilities()->firstOrFail();
+
+        $all = $facility->products()->with('translations')->get(['id', 'parent_id', 'facility_id']);
+        $parentIds = $all->pluck('parent_id')->filter()->unique();
+        $parents = $all->filter(fn ($p) => $parentIds->contains($p->id))->values();
+
+        $selected = $request->filled('parent_id') ? $parents->firstWhere('id', (int) $request->parent_id) : $parents->first();
+
+        $windowStart = now()->startOfMonth();
+        $windowEnd = now()->addMonths(11)->endOfMonth();
+        $windowDays = $windowStart->diffInDays($windowEnd) ?: 1;
+
+        $rows = collect();
+        if ($selected) {
+            $units = $all->where('parent_id', $selected->id)->values();
+            $contracts = \App\Models\Contract::where('facility_id', $facility->id)
+                ->whereIn('product_id', $units->pluck('id'))
+                ->whereDate('start_date', '<=', $windowEnd)
+                ->where(fn ($q) => $q->whereNull('end_date')->orWhereDate('end_date', '>=', $windowStart))
+                ->with(['tenant', 'user'])
+                ->orderBy('start_date')
+                ->get()
+                ->groupBy('product_id');
+
+            $rows = $units->map(function ($unit) use ($contracts, $windowStart, $windowEnd, $windowDays) {
+                $segments = collect();
+                $cursor = $windowStart->copy();
+
+                foreach ($contracts->get($unit->id, collect()) as $contract) {
+                    $start = $contract->start_date->copy()->max($windowStart);
+                    $end = ($contract->end_date?->copy() ?? $windowEnd->copy())->min($windowEnd);
+
+                    if ($start->gt($cursor)) {
+                        $segments->push((object) [
+                            'type' => 'gap',
+                            'width' => round($cursor->diffInDays($start) / $windowDays * 100, 2),
+                        ]);
+                    }
+                    if ($end->gte($start)) {
+                        $segments->push((object) [
+                            'type' => 'contract',
+                            'width' => round($start->diffInDays($end->copy()->addDay()) / $windowDays * 100, 2),
+                            'contract' => $contract,
+                            'expiring' => $contract->end_date && $contract->end_date->lte(now()->addDays(60)),
+                        ]);
+                        $cursor = $end->copy()->addDay()->max($cursor);
+                    }
+                }
+                if ($cursor->lte($windowEnd)) {
+                    $segments->push((object) [
+                        'type' => 'gap',
+                        'width' => round($cursor->diffInDays($windowEnd) / $windowDays * 100, 2),
+                    ]);
+                }
+
+                return (object) ['unit' => $unit, 'segments' => $segments];
+            });
+        }
+
+        return view('facility.products.timeline', compact('parents', 'selected', 'rows', 'windowStart', 'windowEnd'));
     }
 }

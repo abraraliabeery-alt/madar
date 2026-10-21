@@ -37,7 +37,7 @@ class AdminUserManagementController extends Controller
             'new_users_today' => User::whereDate('created_at', today())->count(),
             'new_users_this_month' => User::whereMonth('created_at', now()->month)->count(),
             'verified_users' => User::whereNotNull('email_verified_at')->count(),
-            'users_with_phone' => User::whereNotNull('phone')->count(),
+            'users_with_phone' => User::whereNotNull('phone_number')->count(),
             'users_with_profile_picture' => User::whereNotNull('profile_picture')->count(),
         ];
 

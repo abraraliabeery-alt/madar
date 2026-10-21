@@ -65,7 +65,7 @@ class RouteServiceProvider extends ServiceProvider
                 ->group(base_path('routes/admin.php'));
 
             // Facility Routes - Facility management routes
-            Route::middleware(['web', 'auth', 'role:facility'])
+            Route::middleware(['web', 'auth', 'role:admin,facility'])
                 ->prefix('facility')
                 ->name('facility.')
                 ->group(base_path('routes/facility.php'));

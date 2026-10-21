@@ -53,13 +53,13 @@ class FacilityFinancialController extends Controller
         // الإحصائيات الأساسية
         $stats = [
             'total_offers' => $facility->offers()->count(),
-            'active_offers' => $facility->offers()->where('status', 'active')->count(),
+            'active_offers' => $facility->offers()->where('is_active', true)->count(),
             'total_contracts' => $facility->contracts()->count(),
             'active_contracts' => $facility->contracts()->where('status', 'active')->count(),
             'pending_contracts' => $facility->contracts()->where('status', 'draft')->count(),
             'total_revenue' => $facility->contracts()
                 ->where('status', 'active')
-                ->sum(DB::raw('offer_price + COALESCE(deposit_amount, 0)')),
+                ->sum(DB::raw('COALESCE(total_amount, 0) + COALESCE(deposit_amount, 0)')),
             'received_payments' => $facility->payments()
                 ->where('status', 'confirmed')
                 ->sum('amount'),
@@ -175,7 +175,7 @@ class FacilityFinancialController extends Controller
 
         // عروض بدون عقود
         $offersWithoutContracts = $facility->offers()
-            ->where('status', 'active')
+            ->where('is_active', true)
             ->whereDoesntHave('contracts')
             ->count();
 
@@ -223,7 +223,7 @@ class FacilityFinancialController extends Controller
 
         // الفلترة
         if ($request->filled('status')) {
-            $query->where('status', $request->status);
+            $query->where('is_active', $request->status === 'active');
         }
 
         if ($request->filled('offer_type')) {
@@ -256,8 +256,8 @@ class FacilityFinancialController extends Controller
         // إحصائيات سريعة
         $stats = [
             'total' => $facility->offers()->count(),
-            'active' => $facility->offers()->where('status', 'active')->count(),
-            'inactive' => $facility->offers()->where('status', 'inactive')->count(),
+            'active' => $facility->offers()->where('is_active', true)->count(),
+            'inactive' => $facility->offers()->where('is_active', false)->count(),
             'sale_offers' => $facility->offers()->where('offer_type', 'sale')->count(),
             'rent_offers' => $facility->offers()->where('offer_type', 'rent')->count(),
             'avg_price' => $facility->offers()->avg('price'),
@@ -287,8 +287,12 @@ class FacilityFinancialController extends Controller
                 'status' => 'required|in:active,inactive',
             ]);
 
+            $validated['is_active'] = $validated['status'] === 'active';
+            $validated['facility_id'] = $facility->id;
+            unset($validated['status']);
+
             try {
-                $offer = $this->offerService->createOffer($validated, $facility->id);
+                $offer = $this->offerService->createOffer($validated);
                 
                 return redirect()
                     ->route('facility.financial.offers')
@@ -303,7 +307,7 @@ class FacilityFinancialController extends Controller
         // الحصول على المنتجات المتاحة (بدون عروض نشطة)
         $products = $facility->products()
             ->whereDoesntHave('offers', function ($query) {
-                $query->where('status', 'active');
+                $query->where('is_active', true);
             })
             ->get();
 
@@ -331,8 +335,11 @@ class FacilityFinancialController extends Controller
                 'status' => 'required|in:active,inactive',
             ]);
 
+            $validated['is_active'] = $validated['status'] === 'active';
+            unset($validated['status']);
+
             try {
-                $this->offerService->updateOffer($offer->id, $validated);
+                $this->offerService->updateOffer($offer, $validated);
                 
                 return redirect()
                     ->route('facility.financial.offers')
@@ -357,12 +364,12 @@ class FacilityFinancialController extends Controller
         $offer = $facility->offers()->findOrFail($id);
 
         try {
-            $this->offerService->toggleOfferStatus($offer->id);
+            $this->offerService->toggleOfferStatus($offer);
             
             return response()->json([
                 'success' => true,
                 'message' => __('facility_management.offer_status_updated'),
-                'new_status' => $offer->fresh()->status
+                'new_status' => $offer->fresh()->is_active ? 'active' : 'inactive'
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -431,7 +438,7 @@ class FacilityFinancialController extends Controller
             'completed' => $facility->contracts()->where('status', 'completed')->count(),
             'cancelled' => $facility->contracts()->where('status', 'cancelled')->count(),
             'total_value' => $facility->contracts()->where('status', 'active')->sum('total_amount'),
-            'received_amount' => $facility->contracts()->where('status', 'active')->sum('paid_amount'),
+            'received_amount' => $facility->payments()->confirmed()->whereHas('contract', fn ($q) => $q->where('status', 'active'))->sum('amount'),
         ];
 
         return view('facility.financial.contracts', compact('facility', 'contracts', 'stats'));
@@ -604,10 +611,7 @@ class FacilityFinancialController extends Controller
             DB::transaction(function () use ($payment) {
                 // تحديث حالة الدفعة
                 $payment->update(['status' => 'confirmed']);
-
-                // تحديث العقد
                 $contract = $payment->contract;
-                $contract->increment('paid_amount', $payment->amount);
 
                 // تحديث الفاتورة إن وجدت
                 if ($payment->invoice_id) {

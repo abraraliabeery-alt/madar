@@ -143,7 +143,7 @@ class ApiUserController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم تحديث الإعدادات بنجاح'
+            'message' => __('تم تحديث الإعدادات بنجاح')
         ]);
     }
 
@@ -176,7 +176,7 @@ class ApiUserController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم تحديث إعدادات الخصوصية بنجاح'
+            'message' => __('تم تحديث إعدادات الخصوصية بنجاح')
         ]);
     }
 
@@ -209,7 +209,7 @@ class ApiUserController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم تحديث إعدادات الأمان بنجاح'
+            'message' => __('تم تحديث إعدادات الأمان بنجاح')
         ]);
     }
 }

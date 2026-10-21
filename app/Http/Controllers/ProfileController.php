@@ -79,7 +79,7 @@ class ProfileController extends Controller
 
         $user->update($data);
 
-        return redirect()->back()->with('success', 'تم تحديث الملف الشخصي بنجاح');
+        return redirect()->back()->with('success', __('تم تحديث الملف الشخصي بنجاح'));
     }
 
     public function changePassword()
@@ -97,14 +97,14 @@ class ProfileController extends Controller
         $user = Auth::user();
 
         if (!Hash::check($request->current_password, $user->password)) {
-            return back()->withErrors(['current_password' => 'كلمة المرور الحالية غير صحيحة']);
+            return back()->withErrors(['current_password' => __('كلمة المرور الحالية غير صحيحة')]);
         }
 
         $user->update([
             'password' => Hash::make($request->password)
         ]);
 
-        return redirect()->back()->with('success', 'تم تغيير كلمة المرور بنجاح');
+        return redirect()->back()->with('success', __('تم تغيير كلمة المرور بنجاح'));
     }
 
     /**

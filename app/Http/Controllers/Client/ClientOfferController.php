@@ -110,13 +110,13 @@ class ClientOfferController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'تم إضافة العرض للمفضلة'
+                'message' => __('تم إضافة العرض للمفضلة')
             ]);
         }
 
         return response()->json([
             'success' => false,
-            'message' => 'يجب تسجيل الدخول أولاً'
+            'message' => __('يجب تسجيل الدخول أولاً')
         ], 401);
     }
 
@@ -131,13 +131,13 @@ class ClientOfferController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'تم إزالة العرض من المفضلة'
+                'message' => __('تم إزالة العرض من المفضلة')
             ]);
         }
 
         return response()->json([
             'success' => false,
-            'message' => 'يجب تسجيل الدخول أولاً'
+            'message' => __('يجب تسجيل الدخول أولاً')
         ], 401);
     }
 
@@ -158,7 +158,7 @@ class ClientOfferController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم إرسال طلبك بنجاح. سنتواصل معك قريباً.'
+            'message' => __('تم إرسال طلبك بنجاح. سنتواصل معك قريباً.')
         ]);
     }
 
@@ -176,7 +176,7 @@ class ClientOfferController extends Controller
         if (!Auth::check()) {
             return response()->json([
                 'success' => false,
-                'message' => 'يجب تسجيل الدخول أولاً'
+                'message' => __('يجب تسجيل الدخول أولاً')
             ], 401);
         }
 
@@ -185,7 +185,7 @@ class ClientOfferController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم حجز موعد الزيارة بنجاح'
+            'message' => __('تم حجز موعد الزيارة بنجاح')
         ]);
     }
 
@@ -197,7 +197,7 @@ class ClientOfferController extends Controller
         $offerIds = $request->get('offers', []);
         
         if (count($offerIds) < 2) {
-            return redirect()->back()->with('error', 'يجب اختيار عرضين على الأقل للمقارنة');
+            return redirect()->back()->with('error', __('يجب اختيار عرضين على الأقل للمقارنة'));
         }
 
         $offers = Offer::whereIn('id', $offerIds)

@@ -22,6 +22,16 @@ class Kernel extends ConsoleKernel
                 ->dailyAt('08:00')
                 ->withoutOverlapping()
                 ->onOneServer();
+
+            $schedule->command('invoices:generate-due')
+                ->dailyAt('08:15')
+                ->withoutOverlapping()
+                ->onOneServer();
+
+            $schedule->command('reminders:rentals')
+                ->dailyAt('08:30')
+                ->withoutOverlapping()
+                ->onOneServer();
         }
     }
 

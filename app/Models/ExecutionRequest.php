@@ -11,7 +11,6 @@ class ExecutionRequest extends Model
 
     protected $fillable = [
         'facility_id',
-        'project_id',
         'product_id',
         'type',
         'status',
@@ -32,11 +31,6 @@ class ExecutionRequest extends Model
     public function facility()
     {
         return $this->belongsTo(Facility::class);
-    }
-
-    public function project()
-    {
-        return $this->belongsTo(Project::class);
     }
 
     public function product()

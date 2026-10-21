@@ -73,6 +73,6 @@ class BankLoanController extends Controller
         }
 
         return redirect()->route('bank.loans.requests')
-            ->with('success', 'تم إرسال عرض التمويل بنجاح');
+            ->with('success', __('تم إرسال عرض التمويل بنجاح'));
     }
 }

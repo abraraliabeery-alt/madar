@@ -47,7 +47,7 @@ class AdminFacilityController extends Controller
     public function create()
     {
         $owners = User::whereHas('roles', function ($q) {
-            $q->where('name', 'facility_owner');
+            $q->where('name', 'facility');
         })->get();
         $facilityCategories = \App\Models\FacilityCategory::all();
         $statuses = Status::all();
@@ -118,7 +118,7 @@ class AdminFacilityController extends Controller
 
         if (!$firstTranslationName) {
             return back()
-                ->withErrors(['translations' => 'يجب إدخال اسم المنشأة في ترجمة واحدة على الأقل'])
+                ->withErrors(['translations' => __('يجب إدخال اسم المنشأة في ترجمة واحدة على الأقل')])
                 ->withInput();
         }
 
@@ -151,7 +151,7 @@ class AdminFacilityController extends Controller
         }
 
         return redirect()->route('admin.facilities.index')
-            ->with('success', 'تم إنشاء المنشأة بنجاح');
+            ->with('success', __('تم إنشاء المنشأة بنجاح'));
     }
 
     /**
@@ -161,7 +161,7 @@ class AdminFacilityController extends Controller
     {
         $facility->load(['owner', 'facilityCategory', 'statuses', 'translations']);
         $owners = User::whereHas('roles', function ($q) {
-            $q->where('name', 'facility_owner');
+            $q->where('name', 'facility');
         })->get();
         $facilityCategories = \App\Models\FacilityCategory::all();
         $statuses = Status::all();
@@ -232,7 +232,7 @@ class AdminFacilityController extends Controller
 
         if (!$firstTranslationName) {
             return back()
-                ->withErrors(['translations' => 'يجب إدخال اسم المنشأة في ترجمة واحدة على الأقل'])
+                ->withErrors(['translations' => __('يجب إدخال اسم المنشأة في ترجمة واحدة على الأقل')])
                 ->withInput();
         }
 
@@ -282,7 +282,7 @@ class AdminFacilityController extends Controller
         $facility->translations()->whereNotIn('locale', $incomingLocales)->delete();
 
         return redirect()->route('admin.facilities.index')
-            ->with('success', 'تم تحديث بيانات المنشأة بنجاح');
+            ->with('success', __('تم تحديث بيانات المنشأة بنجاح'));
     }
 
     /**
@@ -301,7 +301,7 @@ class AdminFacilityController extends Controller
         $facility->delete();
 
         return redirect()->route('admin.facilities.index')
-            ->with('success', 'تم حذف المنشأة بنجاح');
+            ->with('success', __('تم حذف المنشأة بنجاح'));
     }
 
     /**

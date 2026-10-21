@@ -13,6 +13,7 @@ class Booking extends Model
         'product_id',
         'offer_id',
         'facility_id',
+        'lead_id',
         'user_id',
         'name',
         'email',
@@ -22,6 +23,11 @@ class Booking extends Model
         'message',
         'visit_type',
         'status',
+        'total_amount',
+        'payment_method',
+        'is_confirmed',
+        'is_paid',
+        'expires_at',
         'reschedule_reason',
         'cancellation_reason',
         'rescheduled_at',
@@ -44,6 +50,11 @@ class Booking extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function lead()
+    {
+        return $this->belongsTo(Lead::class);
     }
 
     public function offer()

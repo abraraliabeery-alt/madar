@@ -28,7 +28,7 @@ class FinancialReportController extends Controller
         
         if (!$facility) {
             return redirect()->route('facility.create')
-                ->with('error', 'يجب إنشاء منشأة أولاً');
+                ->with('error', __('يجب إنشاء منشأة أولاً'));
         }
         
         $periods = AccountingPeriod::where('facility_id', $facility->id)
@@ -92,7 +92,7 @@ class FinancialReportController extends Controller
         
         if (!$facility) {
             return redirect()->route('facility.create')
-                ->with('error', 'يجب إنشاء منشأة أولاً');
+                ->with('error', __('يجب إنشاء منشأة أولاً'));
         }
         
         $periodId = $request->period_id;
@@ -161,7 +161,7 @@ class FinancialReportController extends Controller
         
         if (!$facility) {
             return redirect()->route('facility.create')
-                ->with('error', 'يجب إنشاء منشأة أولاً');
+                ->with('error', __('يجب إنشاء منشأة أولاً'));
         }
         
         $periodId = $request->period_id;
@@ -375,7 +375,7 @@ class FinancialReportController extends Controller
         
         if (!$facility) {
             return redirect()->route('facility.create')
-                ->with('error', 'يجب إنشاء منشأة أولاً');
+                ->with('error', __('يجب إنشاء منشأة أولاً'));
         }
 
         $periodId = $request->period_id;
@@ -420,7 +420,7 @@ class FinancialReportController extends Controller
         // يمكن استخدام مكتبة مثل ZipArchive أو Laravel Excel
         
         return response()->json([
-            'message' => 'تم تجهيز التقارير للتصدير',
+            'message' => __('تم تجهيز التقارير للتصدير'),
             'data' => $reportsData,
             'download_url' => route('facility.accounting.reports.download', ['file' => $zipFileName])
         ]);
@@ -524,7 +524,7 @@ class FinancialReportController extends Controller
         
         if (!$facility) {
             return redirect()->route('facility.create')
-                ->with('error', 'يجب إنشاء منشأة أولاً');
+                ->with('error', __('يجب إنشاء منشأة أولاً'));
         }
 
         $periodId = $request->period_id;
@@ -576,7 +576,7 @@ class FinancialReportController extends Controller
         
         if (!$facility) {
             return redirect()->route('facility.create')
-                ->with('error', 'يجب إنشاء منشأة أولاً');
+                ->with('error', __('يجب إنشاء منشأة أولاً'));
         }
 
         $periodId = $request->period_id;
@@ -624,7 +624,7 @@ class FinancialReportController extends Controller
         
         if (!$facility) {
             return redirect()->route('facility.create')
-                ->with('error', 'يجب إنشاء منشأة أولاً');
+                ->with('error', __('يجب إنشاء منشأة أولاً'));
         }
 
         $periodId = $request->period_id;
@@ -672,7 +672,7 @@ class FinancialReportController extends Controller
         
         if (!$facility) {
             return redirect()->route('facility.create')
-                ->with('error', 'يجب إنشاء منشأة أولاً');
+                ->with('error', __('يجب إنشاء منشأة أولاً'));
         }
 
         $periodId = $request->period_id;
@@ -735,7 +735,7 @@ class FinancialReportController extends Controller
         
         if (!$facility) {
             return redirect()->route('facility.create')
-                ->with('error', 'يجب إنشاء منشأة أولاً');
+                ->with('error', __('يجب إنشاء منشأة أولاً'));
         }
 
         $periods = AccountingPeriod::where('facility_id', $facility->id)
@@ -746,12 +746,92 @@ class FinancialReportController extends Controller
     }
 
     /**
+     * تنزيل CSV بالعربية — يضيف BOM ليتصحّح العرض في Excel
+     */
+    private function exportCsv(string $filename, array $columns, iterable $rows)
+    {
+        return response()->streamDownload(function () use ($columns, $rows) {
+            $out = fopen('php://output', 'w');
+            fprintf($out, chr(0xEF) . chr(0xBB) . chr(0xBF));
+            fputcsv($out, $columns);
+            foreach ($rows as $row) {
+                fputcsv($out, $row);
+            }
+            fclose($out);
+        }, $filename, [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ]);
+    }
+
+    /**
+     * تصدير أرصدة الحسابات
+     */
+    public function exportAccountDetails(Request $request)
+    {
+        $facility = Auth::user()->facilities()->firstOrFail();
+
+        $startDate = $request->start_date ?? Carbon::now()->startOfMonth()->toDateString();
+        $endDate = $request->end_date ?? Carbon::now()->endOfMonth()->toDateString();
+
+        $accounts = ChartOfAccount::where('facility_id', $facility->id)
+            ->where('is_active', true)
+            ->get();
+
+        $rows = [];
+        foreach ($accounts as $account) {
+            $rows[] = [
+                $account->account_code ?? $account->code ?? $account->id,
+                $account->account_name ?? $account->name,
+                $account->account_type ?? '',
+                $account->getBalanceForPeriod($startDate, $endDate),
+            ];
+        }
+
+        return $this->exportCsv(
+            'account-details-' . now()->format('Y-m-d') . '.csv',
+            ['رقم الحساب', 'اسم الحساب', 'النوع', 'الرصيد'],
+            $rows
+        );
+    }
+
+    /**
+     * تصدير تقرير مخصص — القيود ضمن الفترة المحددة
+     */
+    public function exportCustomReport(Request $request)
+    {
+        $facility = Auth::user()->facilities()->firstOrFail();
+
+        $request->validate([
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+        ]);
+
+        $entries = AccountingEntry::where('facility_id', $facility->id)
+            ->where('is_reversed', false)
+            ->when($request->start_date, fn ($q) => $q->where('entry_date', '>=', $request->start_date))
+            ->when($request->end_date, fn ($q) => $q->where('entry_date', '<=', $request->end_date))
+            ->when($request->account_type, fn ($q) => $q->where('account_type', $request->account_type))
+            ->orderBy('entry_date')
+            ->get();
+
+        return $this->exportCsv(
+            'custom-report-' . now()->format('Y-m-d') . '.csv',
+            ['#', 'التاريخ', 'الوصف', 'نوع الحساب', 'مدين/دائن', 'المبلغ'],
+            $entries->map(fn ($e) => [
+                $e->id, $e->entry_date, $e->description,
+                $e->account_type, $e->entry_type, $e->amount,
+            ])
+        );
+    }
+
+    /**
      * تصدير قائمة الدخل
      */
     public function exportIncomeStatement(Request $request)
     {
         // Implementation for exporting income statement
-        return response()->json(['message' => 'تصدير قائمة الدخل']);
+        return response()->json(['message' => __('تصدير قائمة الدخل')]);
     }
 
     /**
@@ -760,7 +840,7 @@ class FinancialReportController extends Controller
     public function exportBalanceSheet(Request $request)
     {
         // Implementation for exporting balance sheet
-        return response()->json(['message' => 'تصدير الميزانية العمومية']);
+        return response()->json(['message' => __('تصدير الميزانية العمومية')]);
     }
 
     /**
@@ -769,7 +849,7 @@ class FinancialReportController extends Controller
     public function exportCashFlow(Request $request)
     {
         // Implementation for exporting cash flow
-        return response()->json(['message' => 'تصدير التدفق النقدي']);
+        return response()->json(['message' => __('تصدير التدفق النقدي')]);
     }
 
     /**
@@ -778,7 +858,7 @@ class FinancialReportController extends Controller
     public function exportBudgetReport(Request $request)
     {
         // Implementation for exporting budget report
-        return response()->json(['message' => 'تصدير تقرير الميزانية']);
+        return response()->json(['message' => __('تصدير تقرير الميزانية')]);
     }
 
     /**
@@ -787,6 +867,6 @@ class FinancialReportController extends Controller
     public function exportTrialBalance(Request $request)
     {
         // Implementation for exporting trial balance
-        return response()->json(['message' => 'تصدير ميزان المراجعة']);
+        return response()->json(['message' => __('تصدير ميزان المراجعة')]);
     }
 }

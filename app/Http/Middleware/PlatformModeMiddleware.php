@@ -17,11 +17,18 @@ class PlatformModeMiddleware
     {
         $capability = trim($capability);
 
-        if ($capability === 'real_estate' && !PlatformModeHelper::allowsRealEstate()) {
-            abort(404);
-        }
+        // Inside the facility panel, the facility's own category decides what is
+        // allowed (a hybrid facility keeps both sections even if the public site
+        // mode is narrower). Other contexts fall back to the site mode.
+        $facility = $request->routeIs('facility.*') ? $request->user()?->mainFacility() : null;
+        $facilityMode = $facility?->facilityCategory?->platform_mode
+            ?? ($facility ? PlatformModeHelper::MODE_LIFECYCLE : null);
 
-        if ($capability === 'contracting' && !PlatformModeHelper::allowsContracting()) {
+        $allowed = $facilityMode !== null
+            ? in_array($facilityMode, [$capability, PlatformModeHelper::MODE_LIFECYCLE], true)
+            : ($capability === 'real_estate' ? PlatformModeHelper::allowsRealEstate() : PlatformModeHelper::allowsContracting());
+
+        if (!$allowed) {
             abort(404);
         }
 

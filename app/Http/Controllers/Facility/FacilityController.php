@@ -15,12 +15,14 @@ use App\Models\Invoice;
 use App\Models\Payment;
 use App\Models\ExecutionRequest;
 use App\Models\ExecutionBid;
-use App\Models\LoanRequest;
-use App\Models\Bank;
 use App\Models\FacilityDocument;
+use App\Models\Lead;
+use App\Models\LeadActivity;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Hash;
+use App\Models\MaintenanceRequest;
 
 class FacilityController extends Controller
 {
@@ -106,7 +108,7 @@ class FacilityController extends Controller
 
         if (!$facility) {
             return redirect()->route('facility.onboarding.create')
-                ->with('error', 'يجب إنشاء منشأة أولاً');
+                ->with('error', __('يجب إنشاء منشأة أولاً'));
         }
 
         // Redirect to enhanced home-v2 when feature flag is enabled
@@ -139,9 +141,118 @@ class FacilityController extends Controller
             'total_payments' => $facility->payments()->count(),
             'recent_tasks' => $facility->tasks()->with(['assignedTo'])->latest()->take(5)->get(),
             'completed_tasks' => $facility->tasks()->where('status', 'completed')->count(),
+            'unread_notifications' => $user->unreadNotifications()->count(),
         ];
 
-        return view('facility.dashboard', compact('facility', 'stats'));
+        $category = $facility->facilityCategory;
+        $isRealEstate = $category?->isRealEstate() ?? true;
+        $isContracting = $category?->isContracting() ?? true;
+
+        if ($isRealEstate) {
+            $stats = array_merge($stats, $this->realEstateDashboardStats($facility));
+        }
+
+        return view('facility.dashboard', compact('facility', 'stats', 'isRealEstate', 'isContracting'));
+    }
+
+    private function realEstateDashboardStats(Facility $facility): array
+    {
+        $today = now();
+        $confirmedPayments = fn () => $facility->payments()->where('status', 'confirmed');
+        $openInvoices = fn () => $facility->invoices()->where('remaining_amount', '>', 0)->whereNotIn('status', ['paid', 'cancelled']);
+
+        $revenueTrend = [];
+        for ($i = 5; $i >= 0; $i--) {
+            $month = $today->copy()->subMonths($i);
+            $revenueTrend[$month->format('Y-m')] = (float) $confirmedPayments()
+                ->whereYear('payment_date', $month->year)
+                ->whereMonth('payment_date', $month->month)
+                ->sum('amount');
+        }
+
+        $overdueInvoices = $openInvoices()->whereDate('due_date', '<', $today->toDateString());
+        $overdueContracts = (clone $overdueInvoices)->whereNotNull('contract_id')->distinct()->count('contract_id');
+        $overdueAmount = (float) (clone $overdueInvoices)->sum('remaining_amount');
+
+        $totalProperties = $facility->products()->count();
+        $rentedProperties = $facility->products()
+            ->whereHas('contracts', fn ($q) => $q->where('status', 'active'))
+            ->count();
+
+        $leadIds = $facility->leads()->pluck('id');
+        $followupsToday = LeadActivity::with('lead')
+            ->whereIn('lead_id', $leadIds)
+            ->whereBetween('follow_up_at', [$today->copy()->startOfDay(), $today->copy()->endOfDay()])
+            ->orderBy('follow_up_at');
+
+        $suggestions = collect();
+        if ($overdueAmount > 0) {
+            $suggestions->push((object) [
+                'icon' => 'fa-triangle-exclamation', 'color' => 'danger',
+                'text' => 'لديك فواتير متأخرة بقيمة ' . number_format($overdueAmount, 0) . ' ر.س — تابع التحصيل',
+                'url' => route('facility.invoices.index'), 'action' => 'عرض الفواتير', 'method' => 'GET',
+            ]);
+        }
+        $vacant = $totalProperties - $rentedProperties;
+        if ($vacant > 0) {
+            $suggestions->push((object) [
+                'icon' => 'fa-door-open', 'color' => 'warning',
+                'text' => "{$vacant} عقار شاغر — أنشئ عرضاً لتسويقه",
+                'url' => route('facility.offers.index'), 'action' => 'العروض', 'method' => 'GET',
+            ]);
+        }
+
+        $recentActivity = collect()
+            ->merge($confirmedPayments()->latest()->take(4)->get()->map(fn ($p) => (object) [
+                'color' => 'success', 'icon' => 'fa-money-bill-wave',
+                'text' => 'دفعة مؤكدة ' . number_format($p->amount, 0) . ' ر.س', 'time' => $p->created_at,
+            ]))
+            ->merge($facility->bookings()->latest()->take(4)->get()->map(fn ($b) => (object) [
+                'color' => 'warning', 'icon' => 'fa-calendar-check',
+                'text' => 'طلب معاينة من ' . ($b->name ?: 'زائر'), 'time' => $b->created_at,
+            ]))
+            ->merge($facility->leads()->latest()->take(4)->get()->map(fn ($l) => (object) [
+                'color' => 'primary', 'icon' => 'fa-user-plus',
+                'text' => 'عميل محتمل جديد: ' . $l->name, 'time' => $l->created_at,
+            ]))
+            ->sortByDesc('time')
+            ->take(6)
+            ->values();
+
+        return [
+            'collected_month' => $revenueTrend[$today->format('Y-m')],
+            'collected_prev_month' => $revenueTrend[$today->copy()->subMonth()->format('Y-m')],
+            'collection_target' => null,
+            'receivables_due' => (float) $openInvoices()->sum('remaining_amount'),
+            'overdue_contracts' => $overdueContracts,
+            'expected_next_month' => (float) $openInvoices()
+                ->whereYear('due_date', $today->year)
+                ->whereMonth('due_date', $today->month)
+                ->sum('remaining_amount'),
+            'active_contracts' => $facility->contracts()->where('status', 'active')->count(),
+            'occupancy' => ['total' => $totalProperties, 'rented' => $rentedProperties],
+            'suggestions' => $suggestions,
+            'total_properties' => $totalProperties,
+            'total_tenants' => $facility->tenants()->count(),
+            'total_bookings' => $facility->bookings()->count(),
+            'new_leads' => $facility->leads()->where('stage', Lead::STAGE_NEW)->count(),
+            'due_followups' => (clone $followupsToday)->count(),
+            'today_viewings' => $facility->bookings()->whereDate('preferred_date', $today->toDateString())->count(),
+            'today_viewings_list' => $facility->bookings()
+                ->with(['user', 'product'])
+                ->whereDate('preferred_date', $today->toDateString())
+                ->orderBy('preferred_time')
+                ->take(5)
+                ->get(),
+            'due_followups_list' => $followupsToday->take(5)->get(),
+            'recent_contracts' => $facility->contracts()->with(['tenant.translations', 'user'])->latest()->take(5)->get(),
+            'recent_activity' => $recentActivity,
+            'revenue_trend' => $revenueTrend,
+            'contracts_by_status' => $facility->contracts()
+                ->selectRaw('status, COUNT(*) as total')
+                ->groupBy('status')
+                ->pluck('total', 'status'),
+        ];
     }
 
     /**
@@ -154,7 +265,7 @@ class FacilityController extends Controller
 
         if (!$facility) {
             return redirect()->route('facility.onboarding.create')
-                ->with('error', 'يجب إنشاء منشأة أولاً');
+                ->with('error', __('يجب إنشاء منشأة أولاً'));
         }
 
         // Optional UI v2: derive time range filters (non-breaking)
@@ -330,7 +441,7 @@ class FacilityController extends Controller
 
         if ($user->facilities()->exists()) {
             return redirect()->route('facility.dashboard')
-                ->with('error', 'لديك منشأة بالفعل');
+                ->with('error', __('لديك منشأة بالفعل'));
         }
 
         return redirect()->route('facility.onboarding.create');
@@ -361,7 +472,7 @@ class FacilityController extends Controller
         $this->createFacilityMinimalFromRequest($request);
 
         return redirect()->route('facility.dashboard')
-            ->with('success', 'تم إنشاء المنشأة بنجاح');
+            ->with('success', __('تم إنشاء المنشأة بنجاح'));
     }
 
     public function onboardingStore(Request $request)
@@ -379,7 +490,7 @@ class FacilityController extends Controller
         $this->createFacilityMinimalFromRequest($request);
 
         return redirect()->route('facility.dashboard')
-            ->with('success', 'تم إنشاء المنشأة بنجاح');
+            ->with('success', __('تم إنشاء المنشأة بنجاح'));
     }
 
     /**
@@ -458,7 +569,7 @@ class FacilityController extends Controller
         $facility->update($facilityData);
 
         return redirect()->route('facility.dashboard')
-            ->with('success', 'تم تحديث بيانات المنشأة بنجاح');
+            ->with('success', __('تم تحديث بيانات المنشأة بنجاح'));
     }
 
     /**
@@ -516,7 +627,7 @@ class FacilityController extends Controller
 
         $facility->update($request->all());
 
-        return redirect()->back()->with('success', 'تم تحديث الإعدادات بنجاح');
+        return redirect()->back()->with('success', __('تم تحديث الإعدادات بنجاح'));
     }
 
     /**
@@ -588,7 +699,7 @@ class FacilityController extends Controller
         $facility->customization_settings = $settings;
         $facility->save();
 
-        return redirect()->route('facility.profile')->with('success', 'تم تحديث الملف التعريفي');
+        return redirect()->route('facility.profile')->with('success', __('تم تحديث الملف التعريفي'));
     }
 
     /**
@@ -605,98 +716,188 @@ class FacilityController extends Controller
     }
 
     /**
-     * قائمة بسيطة للبنوك (قراءة فقط)
-     */
-    public function banks()
-    {
-        $facility = Auth::user()->facilities()->first();
-        if (!$facility) {
-            return redirect()->route('facility.create');
-        }
-
-        $banks = Bank::orderBy('name')->get();
-
-        return view('facility.banks.index', compact('facility', 'banks'));
-    }
-
-    /**
-     * لوحة طلبات التمويل للعقارات التابعة للمنشأة
-     */
-    public function loanRequests(Request $request)
-    {
-        $user = Auth::user();
-        $facility = $user->facilities()->first();
-
-        if (!$facility) {
-            return redirect()->route('facility.create')
-                ->with('error', 'يجب إنشاء منشأة أولاً');
-        }
-
-        // طلبات التمويل المرتبطة بعقارات هذه المنشأة فقط
-        $query = LoanRequest::with(['user', 'product', 'chosenOffer', 'advisor'])
-            ->withCount('offers')
-            ->whereHas('product', function ($q) use ($facility) {
-                $q->where('facility_id', $facility->id);
-            });
-
-        // فلترة بسيطة حسب الحالة إن وجدت
-        if ($request->filled('status')) {
-            $query->where('status', $request->get('status'));
-        }
-
-        $loanRequests = $query
-            ->orderByDesc('created_at')
-            ->paginate(20)
-            ->appends($request->query());
-
-        // إحصائيات سريعة
-        $stats = [
-            'total' => (clone $query)->count(),
-            'new' => (clone $query)->where('status', 'new')->count(),
-            'dispatched' => (clone $query)->where('status', 'dispatched')->count(),
-            'competing' => (clone $query)->where('status', 'competing')->count(),
-            'offers_received' => (clone $query)->where('status', 'offers_received')->count(),
-            'selected' => (clone $query)->where('status', 'selected')->count(),
-            'advising' => (clone $query)->where('status', 'advising')->count(),
-            'completed' => (clone $query)->where('status', 'completed')->count(),
-        ];
-
-        return view('facility.loans.requests', compact('facility', 'loanRequests', 'stats'));
-    }
-
-    /**
-     * عرض تفاصيل طلب تمويل واحد من لوحة المنشأة
-     */
-    public function showLoanRequest(LoanRequest $loanRequest)
-    {
-        $user = Auth::user();
-        $facility = $user->facilities()->first();
-
-        if (!$facility) {
-            return redirect()->route('facility.create')
-                ->with('error', 'يجب إنشاء منشأة أولاً');
-        }
-
-        // التأكد أن الطلب مرتبط بعقار تابع لهذه المنشأة
-        if (!$loanRequest->product || $loanRequest->product->facility_id !== $facility->id) {
-            abort(403, 'هذا الطلب لا يخص عقارات هذه المنشأة');
-        }
-
-        $loanRequest->load(['product', 'user', 'offers.banker', 'chosenOffer', 'advisor']);
-
-        $contract = Contract::where('product_id', $loanRequest->product_id)
-            ->where('user_id', $loanRequest->user_id)
-            ->latest()
-            ->first();
-
-        return view('facility.loans.show', compact('facility', 'loanRequest', 'contract'));
-    }
-
-    /**
      * تعليم الإشعارات كمقروءة
      */
     public function markNotificationsRead(Request $request)
     {
-        return redirect()->route('facility.notifications')->with('success', 'تم تعليم الإشعارات كمقروءة');
+        return redirect()->route('facility.notifications')->with('success', __('تم تعليم الإشعارات كمقروءة'));
+    }
+
+    /**
+     * تغيير كلمة المرور
+     */
+    public function changePassword()
+    {
+        return view('facility.change-password');
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $user = Auth::user();
+
+        if (!Hash::check($request->current_password, $user->password)) {
+            return back()->withErrors(['current_password' => __('كلمة المرور الحالية غير صحيحة')]);
+        }
+
+        $user->update([
+            'password' => Hash::make($request->password),
+            'password_changed_at' => now(),
+        ]);
+
+        return back()->with('success', __('تم تغيير كلمة المرور بنجاح'));
+    }
+
+    /**
+     * نظرة عامة على مجموعة المنشآت التابعة للمستخدم
+     */
+    public function group()
+    {
+        $facilities = Auth::user()->facilities()->with('facilityCategory')->get();
+
+        $rows = $facilities->map(function ($facility) {
+            $contracts = Contract::where('facility_id', $facility->id);
+            return [
+                'facility' => $facility,
+                'products' => Product::where('facility_id', $facility->id)->count(),
+                'contracts' => (clone $contracts)->count(),
+                'active_contracts' => (clone $contracts)->where('status', 'active')->count(),
+                'execution_requests' => ExecutionRequest::where('facility_id', $facility->id)->count(),
+                'open_maintenance' => MaintenanceRequest::where('facility_id', $facility->id)
+                    ->whereNotIn('status', ['completed', 'cancelled'])->count(),
+                'invoices_total' => Invoice::where('facility_id', $facility->id)->sum('amount'),
+                'invoices_paid' => Payment::where('facility_id', $facility->id)->where('status', 'confirmed')->sum('amount'),
+            ];
+        });
+
+        $totals = [
+            'facilities' => $facilities->count(),
+            'products' => $rows->sum('products'),
+            'contracts' => $rows->sum('contracts'),
+            'active_contracts' => $rows->sum('active_contracts'),
+            'execution_requests' => $rows->sum('execution_requests'),
+            'open_maintenance' => $rows->sum('open_maintenance'),
+            'invoices_total' => $rows->sum('invoices_total'),
+            'invoices_paid' => $rows->sum('invoices_paid'),
+        ];
+
+        return view('facility.group', compact('rows', 'totals'));
+    }
+
+    /**
+     * مركز التقارير
+     */
+    public function reports()
+    {
+        return view('facility.reports.index');
+    }
+
+    public function bookingReports()
+    {
+        $facility = Auth::user()->facilities()->firstOrFail();
+        $bookings = $facility->bookings()->with(['product.translations', 'user'])->latest()->paginate(15);
+
+        $stats = [
+            'total' => $facility->bookings()->count(),
+            'pending' => $facility->bookings()->where('status', 'pending')->count(),
+            'confirmed' => $facility->bookings()->where('is_confirmed', true)->count(),
+            'revenue' => $facility->bookings()->where('is_paid', true)->sum('total_amount'),
+        ];
+
+        return view('facility.reports.bookings', compact('bookings', 'stats'));
+    }
+
+    public function productReports()
+    {
+        $facility = Auth::user()->facilities()->firstOrFail();
+        $products = $facility->products()->with('translations')
+            ->withCount('bookings')
+            ->latest()->paginate(15);
+
+        $stats = [
+            'total' => $facility->products()->count(),
+            'active' => $facility->products()->where('is_active', true)->count(),
+        ];
+
+        return view('facility.reports.products', compact('products', 'stats'));
+    }
+
+    public function revenueReports()
+    {
+        $facility = Auth::user()->facilities()->firstOrFail();
+
+        $monthly = Payment::where('facility_id', $facility->id)
+            ->where('status', 'confirmed')
+            ->selectRaw('YEAR(payment_date) as y, MONTH(payment_date) as m, COUNT(*) as cnt, SUM(amount) as total')
+            ->groupBy('y', 'm')
+            ->orderByDesc('y')->orderByDesc('m')
+            ->limit(12)
+            ->get();
+
+        return view('facility.reports.revenue', [
+            'total' => Contract::where('facility_id', $facility->id)->sum('total_amount'),
+            'invoicesTotal' => Invoice::where('facility_id', $facility->id)->sum('amount'),
+            'paymentsTotal' => Payment::where('facility_id', $facility->id)->where('status', 'confirmed')->sum('amount'),
+            'monthly' => $monthly,
+        ]);
+    }
+
+    /**
+     * بحث عام داخل منشأة المستخدم — يرجع JSON للبحث السريع في الترويسة
+     */
+    public function globalSearch(Request $request)
+    {
+        $query = trim((string) $request->get('q', ''));
+
+        if (mb_strlen($query) < 2) {
+            return response()->json(['results' => []]);
+        }
+
+        $facility = Auth::user()->facilities()->first();
+        if (!$facility) {
+            return response()->json(['results' => []]);
+        }
+
+        $results = collect();
+
+        $products = $facility->products()
+            ->where(function ($q) use ($query) {
+                $q->where('address', 'like', "%{$query}%")
+                    ->orWhere('booking_number', 'like', "%{$query}%")
+                    ->orWhereHas('translations', fn ($t) => $t->where('title', 'like', "%{$query}%"));
+            })
+            ->take(4)->get()
+            ->map(fn ($p) => [
+                'type' => 'product',
+                'title' => $p->getTranslatedTitle() ?: ('#' . $p->id),
+                'subtitle' => 'عقار',
+                'url' => route('facility.products.show', $p),
+            ]);
+
+        $bookings = $facility->bookings()
+            ->where(fn ($q) => $q->where('id', $query)->orWhere('name', 'like', "%{$query}%"))
+            ->take(3)->get()
+            ->map(fn ($b) => [
+                'type' => 'booking',
+                'title' => 'حجز #' . $b->id,
+                'subtitle' => $b->name ?? 'حجز',
+                'url' => route('facility.bookings.show', $b),
+            ]);
+
+        $contracts = Contract::where('facility_id', $facility->id)
+            ->where('contract_number', 'like', "%{$query}%")
+            ->take(3)->get()
+            ->map(fn ($c) => [
+                'type' => 'contract',
+                'title' => $c->contract_number ?? ('عقد #' . $c->id),
+                'subtitle' => 'عقد',
+                'url' => route('facility.contracts.show', $c),
+            ]);
+
+        return response()->json(['results' => $results->merge($products)->merge($bookings)->merge($contracts)->values()]);
     }
 }

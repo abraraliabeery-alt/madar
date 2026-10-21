@@ -42,7 +42,7 @@ class BookingController extends Controller
         // إذا لم يتم العثور على منتج، إعادة توجيه
         if (!$product) {
             return redirect()->route('products.index')
-                ->with('error', 'المنتج غير موجود');
+                ->with('error', __('المنتج غير موجود'));
         }
         
         return view('public.bookings.create', compact('offer', 'product', 'facility'));
@@ -95,11 +95,11 @@ class BookingController extends Controller
             // يمكن إضافة منطق الإشعارات هنا
             
             return redirect()->route('public.bookings.success', $booking->id)
-                ->with('success', 'تم إرسال طلب الحجز بنجاح. سنتواصل معك قريباً لتأكيد الموعد.');
+                ->with('success', __('تم إرسال طلب الحجز بنجاح. سنتواصل معك قريباً لتأكيد الموعد.'));
                 
         } catch (\Exception $e) {
             return redirect()->back()
-                ->with('error', 'حدث خطأ في إرسال طلب الحجز: ' . $e->getMessage())
+                ->with('error', __('حدث خطأ في إرسال طلب الحجز: ') . $e->getMessage())
                 ->withInput();
         }
     }
@@ -138,7 +138,7 @@ class BookingController extends Controller
             
         if ($booking->status !== 'pending') {
             return redirect()->back()
-                ->with('error', 'لا يمكن إلغاء هذا الحجز');
+                ->with('error', __('لا يمكن إلغاء هذا الحجز'));
         }
         
         $booking->update([
@@ -148,7 +148,7 @@ class BookingController extends Controller
         ]);
         
         return redirect()->back()
-            ->with('success', 'تم إلغاء الحجز بنجاح');
+            ->with('success', __('تم إلغاء الحجز بنجاح'));
     }
     
     /**
@@ -172,7 +172,7 @@ class BookingController extends Controller
             
         if (!in_array($booking->status, ['pending', 'confirmed'])) {
             return redirect()->back()
-                ->with('error', 'لا يمكن إعادة جدولة هذا الحجز');
+                ->with('error', __('لا يمكن إعادة جدولة هذا الحجز'));
         }
         
         $booking->update([
@@ -184,6 +184,6 @@ class BookingController extends Controller
         ]);
         
         return redirect()->back()
-            ->with('success', 'تم إرسال طلب إعادة الجدولة بنجاح');
+            ->with('success', __('تم إرسال طلب إعادة الجدولة بنجاح'));
     }
 }

@@ -63,7 +63,7 @@ class AdminProjectCategoryController extends Controller
 
         if (!$firstTranslationName) {
             return back()
-                ->withErrors(['translations' => 'يجب إدخال اسم التصنيف في ترجمة واحدة على الأقل'])
+                ->withErrors(['translations' => __('يجب إدخال اسم التصنيف في ترجمة واحدة على الأقل')])
                 ->withInput();
         }
 
@@ -95,7 +95,7 @@ class AdminProjectCategoryController extends Controller
         }
 
         return redirect()->route('admin.project-categories.index')
-            ->with('success', 'تم إنشاء تصنيف المشاريع بنجاح');
+            ->with('success', __('تم إنشاء تصنيف المشاريع بنجاح'));
     }
 
     public function edit(ProjectCategory $projectCategory)
@@ -147,7 +147,7 @@ class AdminProjectCategoryController extends Controller
 
         if (!$firstTranslationName) {
             return back()
-                ->withErrors(['translations' => 'يجب إدخال اسم التصنيف في ترجمة واحدة على الأقل'])
+                ->withErrors(['translations' => __('يجب إدخال اسم التصنيف في ترجمة واحدة على الأقل')])
                 ->withInput();
         }
 
@@ -194,14 +194,14 @@ class AdminProjectCategoryController extends Controller
         $projectCategory->translations()->whereNotIn('locale', $incomingLocales)->delete();
 
         return redirect()->route('admin.project-categories.index')
-            ->with('success', 'تم تحديث تصنيف المشاريع بنجاح');
+            ->with('success', __('تم تحديث تصنيف المشاريع بنجاح'));
     }
 
     public function destroy(ProjectCategory $projectCategory)
     {
         if ($projectCategory->projects()->count() > 0) {
             return redirect()->back()
-                ->with('error', 'لا يمكن حذف التصنيف لوجود مشاريع مرتبطة به');
+                ->with('error', __('لا يمكن حذف التصنيف لوجود مشاريع مرتبطة به'));
         }
 
         if ($projectCategory->icon) {
@@ -214,7 +214,7 @@ class AdminProjectCategoryController extends Controller
         $projectCategory->delete();
 
         return redirect()->route('admin.project-categories.index')
-            ->with('success', 'تم حذف تصنيف المشاريع بنجاح');
+            ->with('success', __('تم حذف تصنيف المشاريع بنجاح'));
     }
 
     public function toggleStatus(ProjectCategory $projectCategory)
@@ -222,7 +222,7 @@ class AdminProjectCategoryController extends Controller
         $projectCategory->update(['is_active' => !$projectCategory->is_active]);
 
         return redirect()->back()
-            ->with('success', 'تم تحديث حالة التصنيف بنجاح');
+            ->with('success', __('تم تحديث حالة التصنيف بنجاح'));
     }
 
     public function toggleFeatured(ProjectCategory $projectCategory)
@@ -230,7 +230,7 @@ class AdminProjectCategoryController extends Controller
         $projectCategory->update(['is_featured' => !$projectCategory->is_featured]);
 
         return redirect()->back()
-            ->with('success', 'تم تحديث حالة الميزة بنجاح');
+            ->with('success', __('تم تحديث حالة الميزة بنجاح'));
     }
 
     public function reorder(Request $request)
@@ -248,7 +248,7 @@ class AdminProjectCategoryController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم ترتيب التصنيفات بنجاح'
+            'message' => __('تم ترتيب التصنيفات بنجاح')
         ]);
     }
 

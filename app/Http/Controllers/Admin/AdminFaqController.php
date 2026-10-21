@@ -49,7 +49,7 @@ class AdminFaqController extends Controller
         Faq::create($request->all());
 
         return redirect()->route('admin.faqs.index')
-            ->with('success', 'تم إضافة السؤال بنجاح');
+            ->with('success', __('تم إضافة السؤال بنجاح'));
     }
 
     /**
@@ -83,7 +83,7 @@ class AdminFaqController extends Controller
         $faq->update($request->all());
 
         return redirect()->route('admin.faqs.index')
-            ->with('success', 'تم تحديث السؤال بنجاح');
+            ->with('success', __('تم تحديث السؤال بنجاح'));
     }
 
     /**
@@ -94,7 +94,7 @@ class AdminFaqController extends Controller
         $faq->delete();
 
         return redirect()->route('admin.faqs.index')
-            ->with('success', 'تم حذف السؤال بنجاح');
+            ->with('success', __('تم حذف السؤال بنجاح'));
     }
 
     /**
@@ -105,7 +105,7 @@ class AdminFaqController extends Controller
         $faq->update(['is_active' => !$faq->is_active]);
 
         return redirect()->route('admin.faqs.index')
-            ->with('success', 'تم تغيير حالة السؤال بنجاح');
+            ->with('success', __('تم تغيير حالة السؤال بنجاح'));
     }
 
     /**

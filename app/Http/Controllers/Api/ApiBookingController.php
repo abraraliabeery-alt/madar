@@ -47,7 +47,7 @@ class ApiBookingController extends Controller
         if ($conflictingBooking) {
             return response()->json([
                 'success' => false,
-                'message' => 'هذا الموعد محجوز مسبقاً'
+                'message' => __('هذا الموعد محجوز مسبقاً')
             ], 400);
         }
 
@@ -55,7 +55,7 @@ class ApiBookingController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم إنشاء الحجز بنجاح',
+            'message' => __('تم إنشاء الحجز بنجاح'),
             'data' => $booking
         ]);
     }
@@ -88,7 +88,7 @@ class ApiBookingController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم تحديث الحجز بنجاح',
+            'message' => __('تم تحديث الحجز بنجاح'),
             'data' => $booking
         ]);
     }
@@ -102,7 +102,7 @@ class ApiBookingController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم حذف الحجز بنجاح'
+            'message' => __('تم حذف الحجز بنجاح')
         ]);
     }
 
@@ -115,7 +115,7 @@ class ApiBookingController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم إلغاء الحجز بنجاح'
+            'message' => __('تم إلغاء الحجز بنجاح')
         ]);
     }
 
@@ -133,7 +133,7 @@ class ApiBookingController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم إعادة جدولة الحجز بنجاح'
+            'message' => __('تم إعادة جدولة الحجز بنجاح')
         ]);
     }
 
@@ -154,7 +154,7 @@ class ApiBookingController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم إضافة التقييم بنجاح'
+            'message' => __('تم إضافة التقييم بنجاح')
         ]);
     }
 }

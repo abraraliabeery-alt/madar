@@ -41,8 +41,4 @@ class StageAttribute extends Model
         return $translation ? $translation->name : '';
     }
 
-    public function projectValues()
-    {
-        return $this->hasMany(ProjectStageAttributeValue::class);
-    }
 }

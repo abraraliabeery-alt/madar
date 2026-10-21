@@ -51,7 +51,7 @@ class MarketingProductRequestController extends Controller
         return response()->json([
             'request' => $requestRecord,
             'matches' => $matches,
-            'message' => 'تم استلام طلب التسويق بنجاح، وسنتواصل معك قريباً.',
+            'message' => __('تم استلام طلب التسويق بنجاح، وسنتواصل معك قريباً.'),
         ]);
     }
 

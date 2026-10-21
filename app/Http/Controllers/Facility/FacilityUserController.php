@@ -12,6 +12,7 @@ use App\Models\Booking;
 use App\Models\UserFacilityRole;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class FacilityUserController extends Controller
@@ -26,7 +27,7 @@ class FacilityUserController extends Controller
 
         if (!$facility) {
             return redirect()->route('facility.onboarding.create')
-                ->with('error', 'يجب إنشاء منشأة أولاً');
+                ->with('error', __('يجب إنشاء منشأة أولاً'));
         }
 
         // التحقق من أن المستخدم جزء من هذه المنشأة
@@ -86,10 +87,10 @@ class FacilityUserController extends Controller
         
         if (!$facility) {
             return redirect()->route('facility.onboarding.create')
-                ->with('error', 'يجب إنشاء منشأة أولاً');
+                ->with('error', __('يجب إنشاء منشأة أولاً'));
         }
 
-        $query = $facility->users()->with(['roles', 'bank']);
+        $query = $facility->users()->with(['roles']);
 
         // فلترة حسب الدور
         if ($request->has('role_id') && $request->role_id) {
@@ -123,7 +124,7 @@ class FacilityUserController extends Controller
         
         if (!$facility) {
             return redirect()->route('facility.onboarding.create')
-                ->with('error', 'يجب إنشاء منشأة أولاً');
+                ->with('error', __('يجب إنشاء منشأة أولاً'));
         }
 
         $roles = $facility->roles;
@@ -143,7 +144,7 @@ class FacilityUserController extends Controller
         
         if (!$facility) {
             return redirect()->route('facility.onboarding.create')
-                ->with('error', 'يجب إنشاء منشأة أولاً');
+                ->with('error', __('يجب إنشاء منشأة أولاً'));
         }
 
         $request->validate([
@@ -156,7 +157,7 @@ class FacilityUserController extends Controller
         // التحقق من أن المستخدم غير موجود في المنشأة
         if ($facility->users()->where('user_id', $user->id)->exists()) {
             return redirect()->back()
-                ->with('error', 'المستخدم موجود بالفعل في هذه المنشأة');
+                ->with('error', __('المستخدم موجود بالفعل في هذه المنشأة'));
         }
 
         // إضافة المستخدم إلى المنشأة
@@ -170,7 +171,7 @@ class FacilityUserController extends Controller
         ]);
 
         return redirect()->route('facility.users.index')
-            ->with('success', 'تم إضافة المستخدم بنجاح');
+            ->with('success', __('تم إضافة المستخدم بنجاح'));
     }
 
     /**
@@ -182,7 +183,7 @@ class FacilityUserController extends Controller
         
         if (!$facility) {
             return redirect()->route('facility.onboarding.create')
-                ->with('error', 'يجب إنشاء منشأة أولاً');
+                ->with('error', __('يجب إنشاء منشأة أولاً'));
         }
 
         $request->validate([
@@ -217,7 +218,7 @@ class FacilityUserController extends Controller
         ]);
 
         return redirect()->route('facility.users.index')
-            ->with('success', 'تم إنشاء المستخدم وإضافته للمنشأة بنجاح');
+            ->with('success', __('تم إنشاء المستخدم وإضافته للمنشأة بنجاح'));
     }
 
     /**
@@ -229,7 +230,7 @@ class FacilityUserController extends Controller
         
         if (!$facility) {
             return redirect()->route('facility.onboarding.create')
-                ->with('error', 'يجب إنشاء منشأة أولاً');
+                ->with('error', __('يجب إنشاء منشأة أولاً'));
         }
 
         // التحقق من أن المستخدم ينتمي للمنشأة
@@ -237,7 +238,7 @@ class FacilityUserController extends Controller
             abort(403, 'غير مسموح بالوصول لهذا المستخدم');
         }
 
-        $user->load(['roles', 'bank']);
+        $user->load(['roles']);
         $userRoles = $user->roles()->where('facility_id', $facility->id)->get();
 
         return view('facility.users.show', compact('user', 'userRoles', 'facility'));
@@ -252,7 +253,7 @@ class FacilityUserController extends Controller
         
         if (!$facility) {
             return redirect()->route('facility.onboarding.create')
-                ->with('error', 'يجب إنشاء منشأة أولاً');
+                ->with('error', __('يجب إنشاء منشأة أولاً'));
         }
 
         // التحقق من أن المستخدم ينتمي للمنشأة
@@ -275,7 +276,7 @@ class FacilityUserController extends Controller
         
         if (!$facility) {
             return redirect()->route('facility.onboarding.create')
-                ->with('error', 'يجب إنشاء منشأة أولاً');
+                ->with('error', __('يجب إنشاء منشأة أولاً'));
         }
 
         // التحقق من أن المستخدم ينتمي للمنشأة
@@ -322,7 +323,7 @@ class FacilityUserController extends Controller
         }
 
         return redirect()->route('facility.users.index')
-            ->with('success', 'تم تحديث بيانات المستخدم بنجاح');
+            ->with('success', __('تم تحديث بيانات المستخدم بنجاح'));
     }
 
     /**
@@ -334,7 +335,7 @@ class FacilityUserController extends Controller
         
         if (!$facility) {
             return redirect()->route('facility.onboarding.create')
-                ->with('error', 'يجب إنشاء منشأة أولاً');
+                ->with('error', __('يجب إنشاء منشأة أولاً'));
         }
 
         // التحقق من أن المستخدم ينتمي للمنشأة
@@ -345,7 +346,7 @@ class FacilityUserController extends Controller
         // منع إزالة مالك المنشأة
         if ($facility->owner_user_id == $user->id) {
             return redirect()->back()
-                ->with('error', 'لا يمكن إزالة مالك المنشأة');
+                ->with('error', __('لا يمكن إزالة مالك المنشأة'));
         }
 
         // حذف الأدوار
@@ -357,7 +358,7 @@ class FacilityUserController extends Controller
         $facility->users()->detach($user->id);
 
         return redirect()->route('facility.users.index')
-            ->with('success', 'تم إزالة المستخدم من المنشأة بنجاح');
+            ->with('success', __('تم إزالة المستخدم من المنشأة بنجاح'));
     }
 
     /**
@@ -369,7 +370,7 @@ class FacilityUserController extends Controller
         
         if (!$facility) {
             return redirect()->route('facility.onboarding.create')
-                ->with('error', 'يجب إنشاء منشأة أولاً');
+                ->with('error', __('يجب إنشاء منشأة أولاً'));
         }
 
         // التحقق من أن المستخدم ينتمي للمنشأة
@@ -380,7 +381,7 @@ class FacilityUserController extends Controller
         // منع حذف مالك المنشأة
         if ($facility->owner_user_id == $user->id) {
             return redirect()->back()
-                ->with('error', 'لا يمكن حذف مالك المنشأة');
+                ->with('error', __('لا يمكن حذف مالك المنشأة'));
         }
 
         // حذف الأدوار
@@ -395,7 +396,7 @@ class FacilityUserController extends Controller
         $user->delete();
 
         return redirect()->route('facility.users.index')
-            ->with('success', 'تم حذف المستخدم نهائياً بنجاح');
+            ->with('success', __('تم حذف المستخدم نهائياً بنجاح'));
     }
 
     /**
@@ -407,7 +408,7 @@ class FacilityUserController extends Controller
         
         if (!$facility) {
             return redirect()->route('facility.onboarding.create')
-                ->with('error', 'يجب إنشاء منشأة أولاً');
+                ->with('error', __('يجب إنشاء منشأة أولاً'));
         }
 
         $request->validate([
@@ -418,7 +419,7 @@ class FacilityUserController extends Controller
         $role = Role::findOrFail($request->role_id);
         if ($role->facility_id != $facility->id) {
             return redirect()->back()
-                ->with('error', 'هذا الدور لا ينتمي لهذه المنشأة');
+                ->with('error', __('هذا الدور لا ينتمي لهذه المنشأة'));
         }
 
         // التحقق من عدم وجود الدور مسبقاً
@@ -427,7 +428,7 @@ class FacilityUserController extends Controller
             ->where('role_id', $request->role_id)
             ->exists()) {
             return redirect()->back()
-                ->with('error', 'المستخدم لديه هذا الدور بالفعل');
+                ->with('error', __('المستخدم لديه هذا الدور بالفعل'));
         }
 
         UserFacilityRole::create([
@@ -437,7 +438,7 @@ class FacilityUserController extends Controller
         ]);
 
         return redirect()->back()
-            ->with('success', 'تم تعيين الدور بنجاح');
+            ->with('success', __('تم تعيين الدور بنجاح'));
     }
 
     /**
@@ -449,7 +450,7 @@ class FacilityUserController extends Controller
         
         if (!$facility) {
             return redirect()->route('facility.onboarding.create')
-                ->with('error', 'يجب إنشاء منشأة أولاً');
+                ->with('error', __('يجب إنشاء منشأة أولاً'));
         }
 
         UserFacilityRole::where('user_id', $user->id)
@@ -458,7 +459,7 @@ class FacilityUserController extends Controller
             ->delete();
 
         return redirect()->back()
-            ->with('success', 'تم إلغاء الدور بنجاح');
+            ->with('success', __('تم إلغاء الدور بنجاح'));
     }
 
     /**
@@ -470,25 +471,58 @@ class FacilityUserController extends Controller
         
         if (!$facility) {
             return redirect()->route('facility.onboarding.create')
-                ->with('error', 'يجب إنشاء منشأة أولاً');
+                ->with('error', __('يجب إنشاء منشأة أولاً'));
         }
 
+        $totalUsers = $facility->users()->count();
+        $verifiedUsers = $facility->users()
+            ->where(fn ($q) => $q->whereNotNull('users.email_verified_at')->orWhereNotNull('users.phone_verified_at'))
+            ->count();
+        $usersWithAvatar = $facility->users()->whereNotNull('users.profile_picture')->count();
+
         $stats = [
-            'total_users' => $facility->users()->count(),
-            'users_by_role' => $facility->users()
-                ->join('user_facility_role', 'users.id', '=', 'user_facility_role.user_id')
-                ->join('roles', 'user_facility_role.role_id', '=', 'roles.id')
-                ->selectRaw('roles.name, COUNT(*) as count')
-                ->groupBy('roles.id', 'roles.name')
-                ->get(),
-            'recent_users' => $facility->users()
-                ->with(['roles'])
-                ->latest()
-                ->take(5)
-                ->get(),
+            'total_users' => $totalUsers,
+            'active_users' => $facility->users()->where('users.is_active', true)->count(),
+            'inactive_users' => $facility->users()->where('users.is_active', false)->count(),
+            'new_users_this_month' => $facility->users()->whereMonth('users.created_at', now()->month)
+                ->whereYear('users.created_at', now()->year)->count(),
+            'verified_users' => $verifiedUsers,
+            'unverified_users' => $totalUsers - $verifiedUsers,
+            'verified_percentage' => $totalUsers ? round($verifiedUsers / $totalUsers * 100, 1) : 0,
+            'unverified_percentage' => $totalUsers ? round(($totalUsers - $verifiedUsers) / $totalUsers * 100, 1) : 0,
+            'users_with_avatar' => $usersWithAvatar,
+            'avatar_percentage' => $totalUsers ? round($usersWithAvatar / $totalUsers * 100, 1) : 0,
         ];
 
-        return view('facility.users.statistics', compact('stats', 'facility'));
+        $maleCount = $facility->users()->where('users.gender', 'male')->count();
+        $femaleCount = $facility->users()->where('users.gender', 'female')->count();
+        $genderStats = [
+            'male' => $maleCount,
+            'female' => $femaleCount,
+            'male_percentage' => $totalUsers ? round($maleCount / $totalUsers * 100, 1) : 0,
+            'female_percentage' => $totalUsers ? round($femaleCount / $totalUsers * 100, 1) : 0,
+        ];
+
+        $roleStats = DB::table('user_facility_role')
+            ->join('roles', 'user_facility_role.role_id', '=', 'roles.id')
+            ->where('user_facility_role.facility_id', $facility->id)
+            ->selectRaw('roles.name, COUNT(*) as users_count')
+            ->groupBy('roles.id', 'roles.name')
+            ->get()
+            ->map(fn ($r) => tap($r, fn ($x) => $x->percentage = $totalUsers ? round($x->users_count / $totalUsers * 100, 1) : 0));
+
+        $recentUsers = $facility->users()->latest('users.created_at')->take(5)->get();
+
+        $monthlyStats = collect(range(0, 5))->map(function ($i) use ($facility) {
+            $date = now()->subMonths($i);
+            $count = $facility->users()->whereYear('users.created_at', $date->year)
+                ->whereMonth('users.created_at', $date->month)->count();
+            return ['month_name' => $date->translatedFormat('F'), 'year' => $date->year, 'new_users' => $count];
+        })->reverse()->values();
+        $monthlyTotal = max($monthlyStats->sum('new_users'), 1);
+        $monthlyStats->transform(fn ($m) => $m + ['percentage' => round($m['new_users'] / $monthlyTotal * 100, 1)]);
+
+        return view('facility.users.statistics', compact('stats', 'roleStats', 'recentUsers', 'monthlyStats', 'genderStats', 'facility'));
     }
 
     /**
@@ -500,10 +534,10 @@ class FacilityUserController extends Controller
         
         if (!$facility) {
             return redirect()->route('facility.onboarding.create')
-                ->with('error', 'يجب إنشاء منشأة أولاً');
+                ->with('error', __('يجب إنشاء منشأة أولاً'));
         }
 
-        $query = $facility->users()->with(['roles', 'bank']);
+        $query = $facility->users()->with(['roles']);
 
         // تطبيق نفس الفلاتر المستخدمة في index
         if ($request->has('role_id') && $request->role_id) {

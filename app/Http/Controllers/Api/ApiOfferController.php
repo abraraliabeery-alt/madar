@@ -56,7 +56,7 @@ class ApiOfferController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم إنشاء العرض بنجاح',
+            'message' => __('تم إنشاء العرض بنجاح'),
             'data' => $offer->load(['product', 'translations'])
         ], 201);
     }
@@ -95,7 +95,7 @@ class ApiOfferController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم تحديث العرض بنجاح',
+            'message' => __('تم تحديث العرض بنجاح'),
             'data' => $offer->load(['product', 'translations'])
         ]);
     }
@@ -109,7 +109,7 @@ class ApiOfferController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم حذف العرض بنجاح'
+            'message' => __('تم حذف العرض بنجاح')
         ]);
     }
 
@@ -153,7 +153,7 @@ class ApiOfferController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم نسخ العرض بنجاح',
+            'message' => __('تم نسخ العرض بنجاح'),
             'data' => $newOffer->load(['product', 'translations'])
         ], 201);
     }

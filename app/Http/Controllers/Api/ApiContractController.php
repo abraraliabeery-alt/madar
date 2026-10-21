@@ -80,7 +80,7 @@ class ApiContractController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم إنشاء العقد بنجاح',
+            'message' => __('تم إنشاء العقد بنجاح'),
             'data' => $contract->load(['product', 'offer', 'user', 'owner', 'invoices'])
         ], 201);
     }
@@ -131,7 +131,7 @@ class ApiContractController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم تحديث العقد بنجاح',
+            'message' => __('تم تحديث العقد بنجاح'),
             'data' => $contract->load(['product', 'offer', 'user', 'owner'])
         ]);
     }
@@ -145,7 +145,7 @@ class ApiContractController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم حذف العقد بنجاح'
+            'message' => __('تم حذف العقد بنجاح')
         ]);
     }
 
@@ -162,7 +162,7 @@ class ApiContractController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم تحديث حالة العقد بنجاح',
+            'message' => __('تم تحديث حالة العقد بنجاح'),
             'data' => $contract
         ]);
     }
@@ -180,7 +180,7 @@ class ApiContractController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم إلغاء العقد بنجاح',
+            'message' => __('تم إلغاء العقد بنجاح'),
             'data' => $contract
         ]);
     }
@@ -210,7 +210,7 @@ class ApiContractController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم تسجيل الدفعة بنجاح',
+            'message' => __('تم تسجيل الدفعة بنجاح'),
             'data' => $payment->load(['invoice', 'contract'])
         ], 201);
     }

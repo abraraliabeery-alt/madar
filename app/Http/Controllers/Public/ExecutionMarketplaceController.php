@@ -208,7 +208,7 @@ class ExecutionMarketplaceController extends Controller
 
         if (!$facility || !$facility->isExecutionEligible()) {
             return back()->withErrors([
-                'execution' => 'حسابك غير مرتبط بمنشأة مصنَّفة كمنفِّذ، لذلك لا يمكنك تقديم عروض تنفيذ حالياً.'
+                'execution' => __('حسابك غير مرتبط بمنشأة مصنَّفة كمنفِّذ، لذلك لا يمكنك تقديم عروض تنفيذ حالياً.')
             ]);
         }
 
@@ -218,7 +218,7 @@ class ExecutionMarketplaceController extends Controller
                 : Carbon::parse($executionRequest->due_date);
             if (now()->startOfDay()->gt($due->endOfDay())) {
                 return back()->withErrors([
-                    'execution' => 'انتهى وقت التقديم على هذا الطلب.'
+                    'execution' => __('انتهى وقت التقديم على هذا الطلب.')
                 ]);
             }
         }
@@ -269,7 +269,7 @@ class ExecutionMarketplaceController extends Controller
 
         if ($existingBid && in_array($existingBid->status, ['accepted', 'rejected'], true)) {
             return back()->withErrors([
-                'execution' => 'لا يمكن تعديل العرض بعد اتخاذ قرار بشأنه.'
+                'execution' => __('لا يمكن تعديل العرض بعد اتخاذ قرار بشأنه.')
             ]);
         }
 
@@ -279,7 +279,7 @@ class ExecutionMarketplaceController extends Controller
         }
         if ($isFinalLocked) {
             return back()->withErrors([
-                'execution' => 'تم إرسال العرض بشكل نهائي ولا يمكن تعديله.'
+                'execution' => __('تم إرسال العرض بشكل نهائي ولا يمكن تعديله.')
             ]);
         }
 
@@ -503,14 +503,14 @@ class ExecutionMarketplaceController extends Controller
                 $hasLegacyText = !empty(trim((string) ($data['technical_plan'] ?? data_get($existingBid?->data, 'technical.plan') ?? '')));
                 if (!$hasTechnicalPdf && !$hasLegacyText) {
                     return back()->withErrors([
-                        'execution' => 'المرفقات المطلوبة غير مكتملة قبل الإرسال النهائي.'
+                        'execution' => __('المرفقات المطلوبة غير مكتملة قبل الإرسال النهائي.')
                     ]);
                 }
             }
 
             if (($requirements['required_attachments_min'] ?? 1) > 0 && count($attachments) < (int) $requirements['required_attachments_min']) {
                 return back()->withErrors([
-                    'execution' => 'المرفقات المطلوبة غير مكتملة قبل الإرسال النهائي.'
+                    'execution' => __('المرفقات المطلوبة غير مكتملة قبل الإرسال النهائي.')
                 ]);
             }
 
@@ -540,7 +540,7 @@ class ExecutionMarketplaceController extends Controller
 
                 if (!$hasType) {
                     return back()->withErrors([
-                        'execution' => 'المرفقات المطلوبة غير مكتملة قبل الإرسال النهائي.'
+                        'execution' => __('المرفقات المطلوبة غير مكتملة قبل الإرسال النهائي.')
                     ]);
                 }
             }
@@ -613,7 +613,7 @@ class ExecutionMarketplaceController extends Controller
         $facility = $user->facilities()->first();
         if (!$facility) {
             return redirect()->route('public.execution.bids.form', $executionRequest)->withErrors([
-                'execution' => 'حسابك غير مرتبط بمنشأة، لذلك لا يمكن معاينة PDF لهذا العرض.'
+                'execution' => __('حسابك غير مرتبط بمنشأة، لذلك لا يمكن معاينة PDF لهذا العرض.')
             ]);
         }
 
@@ -646,7 +646,7 @@ class ExecutionMarketplaceController extends Controller
         $facility = $user->facilities()->first();
         if (!$facility) {
             return redirect()->route('public.execution.bids.form', $executionRequest)->withErrors([
-                'execution' => 'حسابك غير مرتبط بمنشأة، لذلك لا يمكن تنزيل PDF لهذا العرض.'
+                'execution' => __('حسابك غير مرتبط بمنشأة، لذلك لا يمكن تنزيل PDF لهذا العرض.')
             ]);
         }
 

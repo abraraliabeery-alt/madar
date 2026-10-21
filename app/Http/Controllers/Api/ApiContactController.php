@@ -25,7 +25,7 @@ class ApiContactController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم إرسال الرسالة بنجاح'
+            'message' => __('تم إرسال الرسالة بنجاح')
         ]);
     }
 
@@ -48,7 +48,7 @@ class ApiContactController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم إرسال طلب عرض السعر بنجاح'
+            'message' => __('تم إرسال طلب عرض السعر بنجاح')
         ]);
     }
 
@@ -68,7 +68,7 @@ class ApiContactController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم إرسال التغذية الراجعة بنجاح'
+            'message' => __('تم إرسال التغذية الراجعة بنجاح')
         ]);
     }
 }

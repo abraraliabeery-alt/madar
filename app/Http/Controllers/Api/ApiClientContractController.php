@@ -62,13 +62,13 @@ class ApiClientContractController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $offers,
-                'message' => 'تم جلب العروض بنجاح'
+                'message' => __('تم جلب العروض بنجاح')
             ]);
             
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'حدث خطأ في جلب العروض: ' . $e->getMessage()
+                'message' => __('حدث خطأ في جلب العروض: ') . $e->getMessage()
             ], 500);
         }
     }
@@ -88,13 +88,13 @@ class ApiClientContractController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $offer,
-                'message' => 'تم جلب تفاصيل العرض بنجاح'
+                'message' => __('تم جلب تفاصيل العرض بنجاح')
             ]);
             
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'العرض غير موجود أو غير متاح'
+                'message' => __('العرض غير موجود أو غير متاح')
             ], 404);
         }
     }
@@ -116,7 +116,7 @@ class ApiClientContractController extends Controller
             if ($validator->fails()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'بيانات غير صحيحة',
+                    'message' => __('بيانات غير صحيحة'),
                     'errors' => $validator->errors()
                 ], 422);
             }
@@ -131,7 +131,7 @@ class ApiClientContractController extends Controller
             if ($existingActiveContract) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'العقار غير متاح حالياً - يوجد عقد نشط'
+                    'message' => __('العقار غير متاح حالياً - يوجد عقد نشط')
                 ], 409);
             }
 
@@ -158,13 +158,13 @@ class ApiClientContractController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $contract->load(['product', 'offer', 'invoices']),
-                'message' => 'تم إنشاء طلب العقد بنجاح - في انتظار الموافقة'
+                'message' => __('تم إنشاء طلب العقد بنجاح - في انتظار الموافقة')
             ], 201);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'حدث خطأ في إنشاء العقد: ' . $e->getMessage()
+                'message' => __('حدث خطأ في إنشاء العقد: ') . $e->getMessage()
             ], 500);
         }
     }
@@ -184,13 +184,13 @@ class ApiClientContractController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $contracts,
-                'message' => 'تم جلب العقود بنجاح'
+                'message' => __('تم جلب العقود بنجاح')
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'حدث خطأ في جلب العقود: ' . $e->getMessage()
+                'message' => __('حدث خطأ في جلب العقود: ') . $e->getMessage()
             ], 500);
         }
     }
@@ -209,13 +209,13 @@ class ApiClientContractController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $contract,
-                'message' => 'تم جلب تفاصيل العقد بنجاح'
+                'message' => __('تم جلب تفاصيل العقد بنجاح')
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'العقد غير موجود'
+                'message' => __('العقد غير موجود')
             ], 404);
         }
     }
@@ -237,13 +237,13 @@ class ApiClientContractController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $invoices,
-                'message' => 'تم جلب الفواتير بنجاح'
+                'message' => __('تم جلب الفواتير بنجاح')
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'حدث خطأ في جلب الفواتير: ' . $e->getMessage()
+                'message' => __('حدث خطأ في جلب الفواتير: ') . $e->getMessage()
             ], 500);
         }
     }
@@ -268,7 +268,7 @@ class ApiClientContractController extends Controller
             if ($validator->fails()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'بيانات غير صحيحة',
+                    'message' => __('بيانات غير صحيحة'),
                     'errors' => $validator->errors()
                 ], 422);
             }
@@ -282,7 +282,7 @@ class ApiClientContractController extends Controller
             if ($request->amount > $invoice->remaining_amount) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'المبلغ يتجاوز المبلغ المتبقي للفاتورة'
+                    'message' => __('المبلغ يتجاوز المبلغ المتبقي للفاتورة')
                 ], 422);
             }
 
@@ -306,13 +306,13 @@ class ApiClientContractController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $payment->load(['invoice', 'contract']),
-                'message' => 'تم تسجيل الدفعة بنجاح - في انتظار التأكيد'
+                'message' => __('تم تسجيل الدفعة بنجاح - في انتظار التأكيد')
             ], 201);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'حدث خطأ في تسجيل الدفعة: ' . $e->getMessage()
+                'message' => __('حدث خطأ في تسجيل الدفعة: ') . $e->getMessage()
             ], 500);
         }
     }
@@ -334,13 +334,13 @@ class ApiClientContractController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $payments,
-                'message' => 'تم جلب المدفوعات بنجاح'
+                'message' => __('تم جلب المدفوعات بنجاح')
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'حدث خطأ في جلب المدفوعات: ' . $e->getMessage()
+                'message' => __('حدث خطأ في جلب المدفوعات: ') . $e->getMessage()
             ], 500);
         }
     }
@@ -360,13 +360,13 @@ class ApiClientContractController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'تم إلغاء العقد بنجاح'
+                'message' => __('تم إلغاء العقد بنجاح')
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'لا يمكن إلغاء هذا العقد'
+                'message' => __('لا يمكن إلغاء هذا العقد')
             ], 422);
         }
     }
@@ -408,13 +408,13 @@ class ApiClientContractController extends Controller
                     'overdue_invoices' => $overdueInvoices,
                     'payment_rate' => $totalValue > 0 ? ($totalPaid / $totalValue) * 100 : 0,
                 ],
-                'message' => 'تم جلب الملخص المالي بنجاح'
+                'message' => __('تم جلب الملخص المالي بنجاح')
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'حدث خطأ في جلب الملخص المالي: ' . $e->getMessage()
+                'message' => __('حدث خطأ في جلب الملخص المالي: ') . $e->getMessage()
             ], 500);
         }
     }

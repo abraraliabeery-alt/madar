@@ -138,7 +138,7 @@ class FacilityOfferController extends Controller
         }
 
         return redirect()->route('facility.offers.index')
-            ->with('success', 'تم إنشاء العرض بنجاح');
+            ->with('success', __('تم إنشاء العرض بنجاح'));
     }
 
     /**
@@ -223,7 +223,7 @@ class FacilityOfferController extends Controller
         }
 
         return redirect()->route('facility.offers.index')
-            ->with('success', 'تم تحديث العرض بنجاح');
+            ->with('success', __('تم تحديث العرض بنجاح'));
     }
 
     /**
@@ -236,7 +236,7 @@ class FacilityOfferController extends Controller
         $offer->delete();
 
         return redirect()->route('facility.offers.index')
-            ->with('success', 'تم حذف العرض بنجاح');
+            ->with('success', __('تم حذف العرض بنجاح'));
     }
 
     /**
@@ -267,7 +267,7 @@ class FacilityOfferController extends Controller
         $newOffer = $this->offerService->copyOffer($offer, $request->product_id);
 
         return redirect()->route('facility.offers.index')
-            ->with('success', 'تم نسخ العرض بنجاح');
+            ->with('success', __('تم نسخ العرض بنجاح'));
     }
 
     /**

@@ -70,7 +70,7 @@ class AdminRoleController extends Controller
 
         if (!$firstTranslationName) {
             return back()
-                ->withErrors(['translations' => 'يجب إدخال اسم الدور في ترجمة واحدة على الأقل'])
+                ->withErrors(['translations' => __('يجب إدخال اسم الدور في ترجمة واحدة على الأقل')])
                 ->withInput();
         }
 
@@ -94,7 +94,7 @@ class AdminRoleController extends Controller
         }
 
         return redirect()->route('admin.roles.index')
-            ->with('success', 'تم إنشاء الدور بنجاح');
+            ->with('success', __('تم إنشاء الدور بنجاح'));
     }
 
     /**
@@ -149,7 +149,7 @@ class AdminRoleController extends Controller
 
         if (!$firstTranslationName) {
             return back()
-                ->withErrors(['translations' => 'يجب إدخال اسم الدور في ترجمة واحدة على الأقل'])
+                ->withErrors(['translations' => __('يجب إدخال اسم الدور في ترجمة واحدة على الأقل')])
                 ->withInput();
         }
 
@@ -178,7 +178,7 @@ class AdminRoleController extends Controller
         $role->permissions()->sync($request->permissions ?? []);
 
         return redirect()->route('admin.roles.index')
-            ->with('success', 'تم تحديث الدور بنجاح');
+            ->with('success', __('تم تحديث الدور بنجاح'));
     }
 
     /**
@@ -188,13 +188,13 @@ class AdminRoleController extends Controller
     {
         if ($role->users()->count() > 0) {
             return redirect()->back()
-                ->with('error', 'لا يمكن حذف الدور لوجود مستخدمين مرتبطين به');
+                ->with('error', __('لا يمكن حذف الدور لوجود مستخدمين مرتبطين به'));
         }
 
         $role->delete();
 
         return redirect()->route('admin.roles.index')
-            ->with('success', 'تم حذف الدور بنجاح');
+            ->with('success', __('تم حذف الدور بنجاح'));
     }
 
     /**

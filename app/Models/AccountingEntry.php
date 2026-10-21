@@ -230,8 +230,21 @@ class AccountingEntry extends Model
         return $entries;
     }
 
-    public static function createRevenueEntry($amount, $description, $contractId, $facilityId, $periodId, $referenceType = null, $referenceId = null, $accountId = null, $createdBy = null)
+    protected static function resolvePeriodId($facilityId)
     {
+        return AccountingPeriod::where('facility_id', $facilityId)
+            ->where('is_current', true)
+            ->value('id')
+            ?: AccountingPeriod::where('facility_id', $facilityId)
+                ->whereDate('start_date', '<=', now())
+                ->whereDate('end_date', '>=', now())
+                ->value('id');
+    }
+
+    public static function createRevenueEntry($amount, $description, $contractId, $facilityId, $referenceType = null, $referenceId = null, $accountId = null, $createdBy = null, $periodId = null)
+    {
+        $periodId = $periodId ?: self::resolvePeriodId($facilityId);
+        $createdBy = $createdBy ?: \Illuminate\Support\Facades\Auth::id();
         // البحث عن حساب الإيرادات
         $revenueAccount = $accountId ? 
             ChartOfAccount::find($accountId) : 
@@ -260,8 +273,10 @@ class AccountingEntry extends Model
         ]);
     }
 
-    public static function createReceivableEntry($amount, $description, $contractId, $facilityId, $periodId, $referenceType = null, $referenceId = null, $accountId = null, $createdBy = null)
+    public static function createReceivableEntry($amount, $description, $contractId, $facilityId, $referenceType = null, $referenceId = null, $accountId = null, $createdBy = null, $periodId = null)
     {
+        $periodId = $periodId ?: self::resolvePeriodId($facilityId);
+        $createdBy = $createdBy ?: \Illuminate\Support\Facades\Auth::id();
         // البحث عن حساب الذمم المدينة
         $receivableAccount = $accountId ? 
             ChartOfAccount::find($accountId) : 
@@ -290,8 +305,10 @@ class AccountingEntry extends Model
         ]);
     }
 
-    public static function createCommissionEntry($amount, $description, $contractId, $facilityId, $periodId, $referenceType = null, $referenceId = null, $createdBy = null)
+    public static function createCommissionEntry($amount, $description, $contractId, $facilityId, $referenceType = null, $referenceId = null, $createdBy = null, $periodId = null)
     {
+        $periodId = $periodId ?: self::resolvePeriodId($facilityId);
+        $createdBy = $createdBy ?: \Illuminate\Support\Facades\Auth::id();
         return self::create([
             'entry_type' => 'debit',
             'account_type' => 'expense',
@@ -307,8 +324,10 @@ class AccountingEntry extends Model
         ]);
     }
 
-    public static function createLiabilityEntry($amount, $description, $contractId, $facilityId, $periodId, $referenceType = null, $referenceId = null, $accountId = null, $createdBy = null)
+    public static function createLiabilityEntry($amount, $description, $contractId, $facilityId, $referenceType = null, $referenceId = null, $accountId = null, $createdBy = null, $periodId = null)
     {
+        $periodId = $periodId ?: self::resolvePeriodId($facilityId);
+        $createdBy = $createdBy ?: \Illuminate\Support\Facades\Auth::id();
         // البحث عن حساب الخصوم
         $liabilityAccount = $accountId ? 
             ChartOfAccount::find($accountId) : 

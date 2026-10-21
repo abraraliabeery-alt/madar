@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Facility;
 use App\Models\Product;
-use App\Models\Project;
 use App\Models\Booking;
 use App\Models\Contract;
 use App\Models\Setting;
@@ -58,7 +57,7 @@ class AdminController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => 'تعذر تشغيل مساعد الإدارة. تحقق من إعداد مزود الذكاء الاصطناعي.',
+                'message' => __('admin.dashboard.ai.run_error'),
             ], 422);
         }
     }
@@ -85,9 +84,6 @@ class AdminController extends Controller
             'bookings' => Booking::whereYear('created_at', $currentYear)
                                  ->whereMonth('created_at', $currentMonth)
                                  ->count(),
-            'projects' => Project::whereYear('created_at', $currentYear)
-                                 ->whereMonth('created_at', $currentMonth)
-                                 ->count(),
         ];
 
         // إحصائيات الشهر السابق للمقارنة
@@ -103,9 +99,6 @@ class AdminController extends Controller
                                  ->whereMonth('created_at', $lastMonth->month)
                                  ->count(),
             'bookings' => Booking::whereYear('created_at', $lastMonth->year)
-                                 ->whereMonth('created_at', $lastMonth->month)
-                                 ->count(),
-            'projects' => Project::whereYear('created_at', $lastMonth->year)
                                  ->whereMonth('created_at', $lastMonth->month)
                                  ->count(),
         ];
@@ -193,7 +186,7 @@ class AdminController extends Controller
             Setting::setValue($key, $value);
         }
 
-        return redirect()->back()->with('success', 'تم تحديث الإعدادات بنجاح');
+        return redirect()->back()->with('success', __('تم تحديث الإعدادات بنجاح'));
     }
 
     /**
@@ -202,7 +195,23 @@ class AdminController extends Controller
     public function logs()
     {
         // يمكن استخدام Laravel Log أو جدول منفصل للسجلات
-        return view('admin.logs');
+        $logs = [];
+        $path = storage_path('logs/laravel.log');
+        if (is_readable($path)) {
+            $file = new \SplFileObject($path, 'r');
+            $file->seek(PHP_INT_MAX);
+            $last = $file->key();
+            for ($i = max(0, $last - 300); $i <= $last; $i++) {
+                $file->seek($i);
+                $line = rtrim((string) $file->current());
+                if ($line !== '') {
+                    $logs[] = mb_strimwidth($line, 0, 500, '…') . "\n";
+                }
+            }
+            $logs = array_reverse($logs);
+        }
+
+        return view('admin.logs', compact('logs'));
     }
 
     /**
@@ -397,7 +406,7 @@ class AdminController extends Controller
 
         $user->notifications()->where('id', $request->notification_id)->update(['read_at' => now()]);
 
-        return redirect()->back()->with('success', 'تم تحديث حالة الإشعار');
+        return redirect()->back()->with('success', __('تم تحديث حالة الإشعار'));
     }
 
     /**
@@ -408,7 +417,7 @@ class AdminController extends Controller
         $user = Auth::user();
         $user->unreadNotifications->markAsRead();
 
-        return redirect()->back()->with('success', 'تم تحديث جميع الإشعارات');
+        return redirect()->back()->with('success', __('تم تحديث جميع الإشعارات'));
     }
 
     /**
@@ -437,7 +446,7 @@ class AdminController extends Controller
 
         $user->update($request->all());
 
-        return redirect()->back()->with('success', 'تم تحديث إعدادات الإشعارات بنجاح');
+        return redirect()->back()->with('success', __('تم تحديث إعدادات الإشعارات بنجاح'));
     }
 
     /**
@@ -642,5 +651,34 @@ class AdminController extends Controller
         ];
 
         return view('admin.search-results', compact('results', 'query'));
+    }
+
+    /**
+     * تغيير كلمة المرور
+     */
+    public function changePassword()
+    {
+        return view('admin.change-password');
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $user = Auth::user();
+
+        if (!\Illuminate\Support\Facades\Hash::check($request->current_password, $user->password)) {
+            return back()->withErrors(['current_password' => __('كلمة المرور الحالية غير صحيحة')]);
+        }
+
+        $user->update([
+            'password' => \Illuminate\Support\Facades\Hash::make($request->password),
+            'password_changed_at' => now(),
+        ]);
+
+        return back()->with('success', __('تم تغيير كلمة المرور بنجاح'));
     }
 }

@@ -55,6 +55,6 @@ class MenuAdminController extends Controller
             }
         });
 
-        return redirect()->back()->with('success', 'تم تحديث القوائم بنجاح');
+        return redirect()->back()->with('success', __('تم تحديث القوائم بنجاح'));
     }
 }

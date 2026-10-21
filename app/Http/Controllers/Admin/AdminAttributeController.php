@@ -166,7 +166,7 @@ class AdminAttributeController extends Controller
 
         if (!$firstTranslationName) {
             return back()
-                ->withErrors(['translations' => 'يجب إدخال اسم الخاصية في ترجمة واحدة على الأقل'])
+                ->withErrors(['translations' => __('يجب إدخال اسم الخاصية في ترجمة واحدة على الأقل')])
                 ->withInput();
         }
 
@@ -198,7 +198,7 @@ class AdminAttributeController extends Controller
         }
 
         return redirect()->route('admin.attributes.index')
-            ->with('success', 'تم إنشاء الخاصية بنجاح');
+            ->with('success', __('تم إنشاء الخاصية بنجاح'));
     }
 
     /**
@@ -254,7 +254,7 @@ class AdminAttributeController extends Controller
 
         if (!$firstTranslationName) {
             return back()
-                ->withErrors(['translations' => 'يجب إدخال اسم الخاصية في ترجمة واحدة على الأقل'])
+                ->withErrors(['translations' => __('يجب إدخال اسم الخاصية في ترجمة واحدة على الأقل')])
                 ->withInput();
         }
 
@@ -301,7 +301,7 @@ class AdminAttributeController extends Controller
             ->delete();
 
         return redirect()->route('admin.attributes.index')
-            ->with('success', 'تم تحديث الخاصية بنجاح');
+            ->with('success', __('تم تحديث الخاصية بنجاح'));
     }
 
     /**
@@ -317,7 +317,7 @@ class AdminAttributeController extends Controller
         $attribute->delete();
 
         return redirect()->route('admin.attributes.index')
-            ->with('success', 'تم حذف الخاصية بنجاح');
+            ->with('success', __('تم حذف الخاصية بنجاح'));
     }
 
     /**

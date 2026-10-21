@@ -53,7 +53,7 @@ class ApiLoanController extends Controller
             })
             ->first();
         if ($activeClaim) {
-            return response()->json(['message' => 'الطلب محجوز حاليًا'], 409);
+            return response()->json(['message' => __('الطلب محجوز حاليًا')], 409);
         }
 
         $claim = $loanRequest->claims()->create([
@@ -79,7 +79,7 @@ class ApiLoanController extends Controller
             ->where('status', 'active')
             ->first();
         if (!$claim) {
-            return response()->json(['message' => 'لا يوجد Claim نشط'], 404);
+            return response()->json(['message' => __('لا يوجد Claim نشط')], 404);
         }
         $claim->update([
             'status' => 'released',
@@ -119,10 +119,10 @@ class ApiLoanController extends Controller
     {
         $userId = Auth::id();
         if ($loanRequest->user_id !== $userId) {
-            return response()->json(['message' => 'غير مصرح'], 403);
+            return response()->json(['message' => __('غير مصرح')], 403);
         }
         if ($offer->loan_request_id !== $loanRequest->id) {
-            return response()->json(['message' => 'العرض لا ينتمي لهذا الطلب'], 422);
+            return response()->json(['message' => __('العرض لا ينتمي لهذا الطلب')], 422);
         }
 
         $loanRequest->update([

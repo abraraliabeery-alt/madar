@@ -99,7 +99,7 @@ class UserSettingsController extends Controller
             'user_agent' => $request->userAgent(),
         ]);
         
-        return redirect()->back()->with('success', 'تم تحديث إعدادات الإشعارات بنجاح');
+        return redirect()->back()->with('success', __('تم تحديث إعدادات الإشعارات بنجاح'));
     }
 
     /**
@@ -137,7 +137,7 @@ class UserSettingsController extends Controller
             'user_agent' => $request->userAgent(),
         ]);
         
-        return redirect()->back()->with('success', 'تم تحديث إعدادات الخصوصية بنجاح');
+        return redirect()->back()->with('success', __('تم تحديث إعدادات الخصوصية بنجاح'));
     }
 
     /**
@@ -174,7 +174,7 @@ class UserSettingsController extends Controller
             'user_agent' => $request->userAgent(),
         ]);
         
-        return redirect()->back()->with('success', 'تم تحديث التفضيلات بنجاح');
+        return redirect()->back()->with('success', __('تم تحديث التفضيلات بنجاح'));
     }
 
     /**
@@ -209,7 +209,7 @@ class UserSettingsController extends Controller
             'user_agent' => $request->userAgent(),
         ]);
         
-        return redirect()->back()->with('success', 'تم تحديث إعدادات الأمان بنجاح');
+        return redirect()->back()->with('success', __('تم تحديث إعدادات الأمان بنجاح'));
     }
 
     /**
@@ -238,7 +238,7 @@ class UserSettingsController extends Controller
             'user_agent' => $request->userAgent(),
         ]);
         
-        return redirect()->back()->with('success', 'تم تغيير كلمة المرور بنجاح');
+        return redirect()->back()->with('success', __('تم تغيير كلمة المرور بنجاح'));
     }
 
     /**
@@ -271,7 +271,7 @@ class UserSettingsController extends Controller
             'user_agent' => $request->userAgent(),
         ]);
         
-        return redirect()->back()->with('success', 'تم تحديث صورة الملف الشخصي بنجاح');
+        return redirect()->back()->with('success', __('تم تحديث صورة الملف الشخصي بنجاح'));
     }
 
     /**
@@ -296,7 +296,7 @@ class UserSettingsController extends Controller
             ]);
         }
         
-        return redirect()->back()->with('success', 'تم حذف صورة الملف الشخصي بنجاح');
+        return redirect()->back()->with('success', __('تم حذف صورة الملف الشخصي بنجاح'));
     }
 
     /**
@@ -346,7 +346,7 @@ class UserSettingsController extends Controller
         
         Auth::logout();
         
-        return redirect()->route('login')->with('success', 'تم حذف الحساب بنجاح');
+        return redirect()->route('login')->with('success', __('تم حذف الحساب بنجاح'));
     }
 
     /**
@@ -394,6 +394,6 @@ class UserSettingsController extends Controller
             'user_agent' => request()->userAgent(),
         ]);
         
-        return redirect()->back()->with('success', 'تم مسح سجل النشاط بنجاح');
+        return redirect()->back()->with('success', __('تم مسح سجل النشاط بنجاح'));
     }
 }

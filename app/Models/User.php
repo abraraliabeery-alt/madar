@@ -7,11 +7,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasApiTokens;
     // إضافة softDeletes إذا كان مطلوبًا
     // use SoftDeletes;
 
@@ -45,7 +46,6 @@ class User extends Authenticatable
         'bank_account',
         'role_id',
         'facility_id',
-        'bank_id',
         'latitude',
         'longitude',
         'google_maps_url',
@@ -143,11 +143,26 @@ class User extends Authenticatable
 
     private function createMainFacility()
     {
+        $hybridCategory = FacilityCategory::query()
+            ->where('platform_mode', 'lifecycle')
+            ->first();
+
+        if (! $hybridCategory) {
+            $hybridCategory = FacilityCategory::create([
+                'name' => 'hybrid',
+                'display_name' => 'شركة قابضة / مطور',
+                'description' => 'منشأة هجينة تجمع بين العقارات والمقاولات',
+                'is_active' => true,
+                'platform_mode' => 'lifecycle',
+            ]);
+        }
+
         $facility = Facility::firstOrCreate(
             ['owner_user_id' => $this->id],
             [
                 'name' => $this->name . ' (Main)',
                 'slug' => \Illuminate\Support\Str::slug($this->name . '-main-' . $this->id),
+                'facility_category_id' => $hybridCategory->id,
                 'is_active' => true,
                 'is_verified' => true,
                 'is_primary' => true,
@@ -180,21 +195,6 @@ class User extends Authenticatable
         return $this->hasMany(Product::class, 'owner_user_id');
     }
 
-    public function clientProjects()
-    {
-        return $this->hasMany(Project::class, 'client_user_id');
-    }
-
-    public function bank()
-    {
-        return $this->belongsTo(Bank::class);
-    }
-
-    public function customerBanks()
-    {
-        return $this->belongsToMany(Bank::class, 'bank_customer')->withTimestamps();
-    }
-
     public function appointments()
     {
         return $this->hasMany(Appointment::class);
@@ -203,6 +203,11 @@ class User extends Authenticatable
     public function comments()
     {
         return $this->hasMany(Comment::class);
+    }
+
+    public function supportTickets()
+    {
+        return $this->hasMany(SupportTicket::class);
     }
 
     public function favoriteProducts()

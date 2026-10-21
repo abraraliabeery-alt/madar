@@ -80,7 +80,7 @@ class AdminCategoryController extends Controller
 
         if (!$firstTranslationName) {
             return back()
-                ->withErrors(['translations' => 'يجب إدخال اسم الفئة في ترجمة واحدة على الأقل'])
+                ->withErrors(['translations' => __('يجب إدخال اسم الفئة في ترجمة واحدة على الأقل')])
                 ->withInput();
         }
 
@@ -114,7 +114,7 @@ class AdminCategoryController extends Controller
         }
 
         return redirect()->route('admin.categories.index')
-            ->with('success', 'تم إنشاء الفئة بنجاح');
+            ->with('success', __('تم إنشاء الفئة بنجاح'));
     }
 
     /**
@@ -172,7 +172,7 @@ class AdminCategoryController extends Controller
 
         if (!$firstTranslationName) {
             return back()
-                ->withErrors(['translations' => 'يجب إدخال اسم الفئة في ترجمة واحدة على الأقل'])
+                ->withErrors(['translations' => __('يجب إدخال اسم الفئة في ترجمة واحدة على الأقل')])
                 ->withInput();
         }
 
@@ -223,7 +223,7 @@ class AdminCategoryController extends Controller
         $category->translations()->whereNotIn('locale', $incomingLocales)->delete();
 
         return redirect()->route('admin.categories.index')
-            ->with('success', 'تم تحديث الفئة بنجاح');
+            ->with('success', __('تم تحديث الفئة بنجاح'));
     }
 
     /**
@@ -234,7 +234,7 @@ class AdminCategoryController extends Controller
         // التحقق من وجود منتجات مرتبطة
         if ($category->products()->count() > 0) {
             return redirect()->back()
-                ->with('error', 'لا يمكن حذف الفئة لوجود منتجات مرتبطة بها');
+                ->with('error', __('لا يمكن حذف الفئة لوجود منتجات مرتبطة بها'));
         }
 
         // حذف الصور
@@ -248,7 +248,7 @@ class AdminCategoryController extends Controller
         $category->delete();
 
         return redirect()->route('admin.categories.index')
-            ->with('success', 'تم حذف الفئة بنجاح');
+            ->with('success', __('تم حذف الفئة بنجاح'));
     }
 
     /**
@@ -259,7 +259,7 @@ class AdminCategoryController extends Controller
         $category->update(['is_active' => !$category->is_active]);
 
         return redirect()->back()
-            ->with('success', 'تم تحديث حالة الفئة بنجاح');
+            ->with('success', __('تم تحديث حالة الفئة بنجاح'));
     }
 
     /**
@@ -270,7 +270,7 @@ class AdminCategoryController extends Controller
         $category->update(['is_featured' => !$category->is_featured]);
 
         return redirect()->back()
-            ->with('success', 'تم تحديث حالة مميزة الفئة بنجاح');
+            ->with('success', __('تم تحديث حالة مميزة الفئة بنجاح'));
     }
 
     /**
@@ -310,7 +310,7 @@ class AdminCategoryController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم ترتيب الفئات بنجاح'
+            'message' => __('تم ترتيب الفئات بنجاح')
         ]);
     }
 

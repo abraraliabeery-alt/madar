@@ -221,6 +221,25 @@ class FinancialReportService
     }
 
     /**
+     * تقرير المنشأة الشامل (للتصدير)
+     */
+    public function generateFacilityReport(int $facilityId, $dateFrom = null, $dateTo = null)
+    {
+        $startDate = $dateFrom ? Carbon::parse($dateFrom) : now()->startOfMonth();
+        $endDate = $dateTo ? Carbon::parse($dateTo) : now()->endOfMonth();
+
+        return array_merge(
+            $this->getFacilityFinancialSummary($facilityId, $startDate, $endDate),
+            [
+                'contracts' => Contract::where('facility_id', $facilityId)
+                    ->whereBetween('created_at', [$startDate, $endDate])
+                    ->with(['client', 'offer.product'])
+                    ->get(),
+            ]
+        );
+    }
+
+    /**
      * تقرير العقود
      */
     public function getContractsReport(int $facilityId = null, Carbon $startDate = null, Carbon $endDate = null)

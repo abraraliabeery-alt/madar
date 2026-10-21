@@ -20,7 +20,7 @@ class NewsletterController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم الاشتراك في النشرة الإخبارية بنجاح'
+            'message' => __('تم الاشتراك في النشرة الإخبارية بنجاح')
         ]);
     }
 
@@ -37,7 +37,7 @@ class NewsletterController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم إلغاء الاشتراك من النشرة الإخبارية'
+            'message' => __('تم إلغاء الاشتراك من النشرة الإخبارية')
         ]);
     }
 }

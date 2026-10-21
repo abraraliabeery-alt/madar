@@ -33,11 +33,6 @@ class Feature extends Model
         return $this->belongsToMany(Product::class, 'product_feature');
     }
 
-    public function buildings()
-    {
-        return $this->belongsToMany(Building::class, 'product_feature');
-    }
-
     public function translations()
     {
         return $this->hasMany(FeatureTranslation::class);

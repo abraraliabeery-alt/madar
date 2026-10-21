@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Facility;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Booking;
+use App\Models\Lead;
 use App\Models\Product;
+use App\Models\User;
 use App\Models\Status;
 use Illuminate\Support\Facades\Auth;
 
@@ -66,7 +68,7 @@ class FacilityBookingController extends Controller
     /**
      * عرض صفحة إنشاء حجز جديد
      */
-    public function create()
+    public function create(Request $request)
     {
         $facility = Auth::user()->facilities()->first();
 
@@ -75,9 +77,11 @@ class FacilityBookingController extends Controller
         }
 
         $products = $facility->products()->where('is_active', true)->get();
-        $statuses = Status::all();
+        $statuses = collect();
+        $users = User::whereHas('roles', fn ($q) => $q->where('name', 'client'))->orderBy('name')->get(['id', 'name']);
+        $lead = $request->filled('lead_id') ? $facility->leads()->find($request->lead_id) : null;
 
-        return view('facility.bookings.create', compact('products', 'statuses'));
+        return view('facility.bookings.create', compact('products', 'statuses', 'users', 'lead'));
     }
 
     /**
@@ -92,12 +96,17 @@ class FacilityBookingController extends Controller
         }
 
         $request->validate([
-            'user_id' => 'required|exists:users,id',
+            'user_id' => 'nullable|exists:users,id',
+            'lead_id' => 'nullable|integer',
             'product_id' => 'required|exists:products,id',
-            'status' => 'required|string',
+            'status' => 'required|in:pending,confirmed,cancelled,reserved',
             'total_amount' => 'required|numeric|min:0',
+            'name' => 'nullable|string|max:255',
+            'phone' => 'nullable|string|max:30',
+            'preferred_date' => 'nullable|date',
+            'preferred_time' => 'nullable|date_format:H:i',
             'payment_method' => 'nullable|string',
-            'notes' => 'nullable|string',
+            'message' => 'nullable|string',
             'is_confirmed' => 'boolean',
             'is_paid' => 'boolean',
         ]);
@@ -106,22 +115,35 @@ class FacilityBookingController extends Controller
         $product = $facility->products()->find($request->product_id);
         if (!$product) {
             return redirect()->back()
-                ->with('error', 'المنتج غير موجود في منشأتك')
+                ->with('error', __('المنتج غير موجود في منشأتك'))
                 ->withInput();
         }
 
+        $lead = $request->filled('lead_id') ? $facility->leads()->find($request->lead_id) : null;
+
         $booking = Booking::create([
+            'facility_id' => $facility->id,
+            'lead_id' => $lead?->id,
             'user_id' => $request->user_id,
             'product_id' => $request->product_id,
+            'name' => $request->name,
+            'phone' => $request->phone,
+            'preferred_date' => $request->preferred_date,
+            'preferred_time' => $request->preferred_time,
+            'message' => $request->message,
             'total_amount' => $request->total_amount,
             'payment_method' => $request->payment_method,
             'status' => $request->status,
-            'is_confirmed' => $request->is_confirmed ?? false,
-            'is_paid' => $request->is_paid ?? false,
+            'is_confirmed' => $request->boolean('is_confirmed'),
+            'is_paid' => $request->boolean('is_paid'),
         ]);
 
+        if ($lead && in_array($lead->stage, [Lead::STAGE_NEW, Lead::STAGE_CONTACTED], true)) {
+            $lead->update(['stage' => Lead::STAGE_VIEWING]);
+        }
+
         return redirect()->route('facility.bookings.index')
-            ->with('success', 'تم إنشاء الحجز بنجاح');
+            ->with('success', __('تم إنشاء الحجز بنجاح'));
     }
 
     /**
@@ -133,7 +155,7 @@ class FacilityBookingController extends Controller
 
         if (!$facility || $booking->product->facility_id !== $facility->id) {
             return redirect()->route('facility.bookings.index')
-                ->with('error', 'غير مصرح لك بتعديل هذا الحجز');
+                ->with('error', __('غير مصرح لك بتعديل هذا الحجز'));
         }
 
         $booking->load(['user', 'product']);
@@ -152,7 +174,7 @@ class FacilityBookingController extends Controller
 
         if (!$facility || $booking->product->facility_id !== $facility->id) {
             return redirect()->route('facility.bookings.index')
-                ->with('error', 'غير مصرح لك بتعديل هذا الحجز');
+                ->with('error', __('غير مصرح لك بتعديل هذا الحجز'));
         }
 
         $request->validate([
@@ -170,14 +192,14 @@ class FacilityBookingController extends Controller
         $product = $facility->products()->find($request->product_id);
         if (!$product) {
             return redirect()->back()
-                ->with('error', 'المنتج غير موجود في منشأتك')
+                ->with('error', __('المنتج غير موجود في منشأتك'))
                 ->withInput();
         }
 
         $booking->update($request->all());
 
         return redirect()->route('facility.bookings.index')
-            ->with('success', 'تم تحديث الحجز بنجاح');
+            ->with('success', __('تم تحديث الحجز بنجاح'));
     }
 
     /**
@@ -189,13 +211,13 @@ class FacilityBookingController extends Controller
 
         if (!$facility || $booking->product->facility_id !== $facility->id) {
             return redirect()->route('facility.bookings.index')
-                ->with('error', 'غير مصرح لك بحذف هذا الحجز');
+                ->with('error', __('غير مصرح لك بحذف هذا الحجز'));
         }
 
         $booking->delete();
 
         return redirect()->route('facility.bookings.index')
-            ->with('success', 'تم حذف الحجز بنجاح');
+            ->with('success', __('تم حذف الحجز بنجاح'));
     }
 
     /**
@@ -207,12 +229,12 @@ class FacilityBookingController extends Controller
 
         if (!$facility || $booking->product->facility_id !== $facility->id) {
             return redirect()->route('facility.bookings.index')
-                ->with('error', 'غير مصرح لك بتعديل هذا الحجز');
+                ->with('error', __('غير مصرح لك بتعديل هذا الحجز'));
         }
 
         $booking->update(['is_confirmed' => true]);
 
-        return redirect()->back()->with('success', 'تم تأكيد الحجز بنجاح');
+        return redirect()->back()->with('success', __('تم تأكيد الحجز بنجاح'));
     }
 
     /**
@@ -224,12 +246,12 @@ class FacilityBookingController extends Controller
 
         if (!$facility || $booking->product->facility_id !== $facility->id) {
             return redirect()->route('facility.bookings.index')
-                ->with('error', 'غير مصرح لك بتعديل هذا الحجز');
+                ->with('error', __('غير مصرح لك بتعديل هذا الحجز'));
         }
 
         $booking->update(['is_confirmed' => false]);
 
-        return redirect()->back()->with('success', 'تم إلغاء تأكيد الحجز بنجاح');
+        return redirect()->back()->with('success', __('تم إلغاء تأكيد الحجز بنجاح'));
     }
 
     /**
@@ -241,7 +263,7 @@ class FacilityBookingController extends Controller
 
         if (!$facility || $booking->product->facility_id !== $facility->id) {
             return redirect()->route('facility.bookings.index')
-                ->with('error', 'غير مصرح لك بتعديل هذا الحجز');
+                ->with('error', __('غير مصرح لك بتعديل هذا الحجز'));
         }
 
         $booking->update(['is_paid' => !$booking->is_paid]);
@@ -259,7 +281,7 @@ class FacilityBookingController extends Controller
 
         if (!$facility || $booking->product->facility_id !== $facility->id) {
             return redirect()->route('facility.bookings.index')
-                ->with('error', 'غير مصرح لك بعرض هذا الحجز');
+                ->with('error', __('غير مصرح لك بعرض هذا الحجز'));
         }
 
         $booking->load(['user', 'product']);
@@ -307,15 +329,17 @@ class FacilityBookingController extends Controller
 
         $bookings = $facility->bookings()
             ->with(['user', 'product'])
-            ->where('booking_date', '>=', now()->startOfMonth())
-            ->where('booking_date', '<=', now()->endOfMonth())
+            ->whereNotNull('preferred_date')
+            ->where('preferred_date', '>=', now()->startOfMonth())
+            ->where('preferred_date', '<=', now()->endOfMonth())
             ->get()
             ->map(function ($booking) {
+                $start = $booking->preferred_date->toDateString() . 'T' . ($booking->preferred_time ?? '09:00');
                 return [
                     'id' => $booking->id,
-                    'title' => $booking->user->name . ' - ' . $booking->product->name,
-                    'start' => $booking->booking_date . 'T' . $booking->booking_time,
-                    'end' => $booking->booking_date . 'T' . date('H:i', strtotime($booking->booking_time . ' +' . $booking->duration . ' hours')),
+                    'title' => ($booking->user?->name ?? $booking->name ?? '#') . ' - ' . ($booking->product?->getTranslatedTitle() ?? '—'),
+                    'start' => $start,
+                    'end' => $booking->preferred_date->toDateString() . 'T' . date('H:i', strtotime(($booking->preferred_time ?? '09:00') . ' +1 hour')),
                     'url' => route('facility.bookings.show', $booking->id),
                     'className' => $booking->is_confirmed ? 'confirmed-booking' : 'pending-booking',
                 ];

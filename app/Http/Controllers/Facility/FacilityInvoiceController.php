@@ -127,12 +127,12 @@ class FacilityInvoiceController extends Controller
             DB::commit();
 
             return redirect()->route('facility.invoices.index')
-                ->with('success', 'تم إنشاء الفاتورة بنجاح');
+                ->with('success', __('تم إنشاء الفاتورة بنجاح'));
 
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->back()
-                ->with('error', 'حدث خطأ أثناء إنشاء الفاتورة: ' . $e->getMessage())
+                ->with('error', __('حدث خطأ أثناء إنشاء الفاتورة: ') . $e->getMessage())
                 ->withInput();
         }
     }
@@ -212,12 +212,12 @@ class FacilityInvoiceController extends Controller
             DB::commit();
 
             return redirect()->route('facility.invoices.index')
-                ->with('success', 'تم تحديث الفاتورة بنجاح');
+                ->with('success', __('تم تحديث الفاتورة بنجاح'));
 
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->back()
-                ->with('error', 'حدث خطأ أثناء تحديث الفاتورة: ' . $e->getMessage())
+                ->with('error', __('حدث خطأ أثناء تحديث الفاتورة: ') . $e->getMessage())
                 ->withInput();
         }
     }
@@ -232,7 +232,7 @@ class FacilityInvoiceController extends Controller
         $invoice->delete();
 
         return redirect()->route('facility.invoices.index')
-            ->with('success', 'تم حذف الفاتورة بنجاح');
+            ->with('success', __('تم حذف الفاتورة بنجاح'));
     }
 
     /**
@@ -243,10 +243,10 @@ class FacilityInvoiceController extends Controller
         $this->authorize('update', $invoice);
         
         if ($invoice->sendPaymentReminder()) {
-            return redirect()->back()->with('success', 'تم إرسال التذكير بنجاح');
+            return redirect()->back()->with('success', __('تم إرسال التذكير بنجاح'));
         }
 
-        return redirect()->back()->with('error', 'لا يمكن إرسال التذكير في الوقت الحالي');
+        return redirect()->back()->with('error', __('لا يمكن إرسال التذكير في الوقت الحالي'));
     }
 
     /**

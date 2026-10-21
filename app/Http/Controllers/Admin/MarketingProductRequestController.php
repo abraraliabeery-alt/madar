@@ -94,7 +94,7 @@ class MarketingProductRequestController extends Controller
         $marketingProductRequest->save();
 
         return redirect()->route('admin.marketing-product-requests.index')
-            ->with('success', 'تم تحديث طلب التسويق بنجاح.');
+            ->with('success', __('تم تحديث طلب التسويق بنجاح.'));
     }
 
     public function updateStatus(Request $request, MarketingProductRequest $marketingProductRequest)
@@ -114,7 +114,7 @@ class MarketingProductRequestController extends Controller
         $marketingProductRequest->status = $validated['status'];
         $marketingProductRequest->save();
 
-        return redirect()->back()->with('success', 'تم تحديث الحالة إلى: ' . MarketingProductRequest::statuses()[$validated['status']]);
+        return redirect()->back()->with('success', __('تم تحديث الحالة إلى: ') . MarketingProductRequest::statuses()[$validated['status']]);
     }
 
     public function destroy(MarketingProductRequest $marketingProductRequest)
@@ -122,7 +122,7 @@ class MarketingProductRequestController extends Controller
         $marketingProductRequest->delete();
 
         return redirect()->route('admin.marketing-product-requests.index')
-            ->with('success', 'تم حذف الطلب بنجاح.');
+            ->with('success', __('تم حذف الطلب بنجاح.'));
     }
 
     public function bulkAction(Request $request)

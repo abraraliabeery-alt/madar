@@ -50,7 +50,17 @@ class Tenant extends Model
 
     public function getTranslatedName($locale = null)
     {
-        $translation = $this->getTranslation($locale);
+        $translation = $this->getTranslation($locale) ?? $this->translations->first();
         return $translation ? $translation->name : null;
+    }
+
+    public function getNameAttribute()
+    {
+        return $this->getTranslatedName();
+    }
+
+    public function contracts()
+    {
+        return $this->hasMany(Contract::class);
     }
 }

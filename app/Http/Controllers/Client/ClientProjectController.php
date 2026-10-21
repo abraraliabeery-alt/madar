@@ -114,7 +114,7 @@ class ClientProjectController extends Controller
                 $value = $request->input('stage_attributes.'.$attribute->id);
                 if ($value === null || $value === '') {
                     return back()
-                        ->withErrors(['stage_attributes.'.$attribute->id => 'هذا الحقل مطلوب'])
+                        ->withErrors(['stage_attributes.'.$attribute->id => __('هذا الحقل مطلوب')])
                         ->withInput();
                 }
             }
@@ -130,7 +130,7 @@ class ClientProjectController extends Controller
                 $value = $request->input('attributes.'.$attribute->id.'.value');
                 if ($value === null || $value === '') {
                     return back()
-                        ->withErrors(['attributes.'.$attribute->id.'.value' => 'هذا الحقل مطلوب'])
+                        ->withErrors(['attributes.'.$attribute->id.'.value' => __('هذا الحقل مطلوب')])
                         ->withInput();
                 }
             }
@@ -142,7 +142,7 @@ class ClientProjectController extends Controller
 
         if ($translations->isEmpty()) {
             return back()
-                ->withErrors(['translations' => 'اسم المشروع مطلوب في لغة واحدة على الأقل'])
+                ->withErrors(['translations' => __('اسم المشروع مطلوب في لغة واحدة على الأقل')])
                 ->withInput();
         }
 
@@ -287,6 +287,6 @@ class ClientProjectController extends Controller
             }
         }
 
-        return redirect()->route('client.dashboard')->with('success', 'تم إنشاء المشروع بنجاح');
+        return redirect()->route('client.dashboard')->with('success', __('تم إنشاء المشروع بنجاح'));
     }
 }

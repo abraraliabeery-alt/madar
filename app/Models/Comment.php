@@ -11,6 +11,7 @@ class Comment extends Model
 
     protected $fillable = [
         'product_id',
+        'facility_id',
         'user_id',
         'comment',
         'rating',
@@ -20,6 +21,11 @@ class Comment extends Model
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function facility()
+    {
+        return $this->belongsTo(Facility::class);
     }
 
     public function user()

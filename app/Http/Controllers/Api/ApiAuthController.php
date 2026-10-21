@@ -27,7 +27,7 @@ class ApiAuthController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'بيانات غير صحيحة',
+                'message' => __('بيانات غير صحيحة'),
                 'errors' => $validator->errors()
             ], 422);
         }
@@ -37,14 +37,14 @@ class ApiAuthController extends Controller
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
                 'success' => false,
-                'message' => 'بيانات تسجيل الدخول غير صحيحة'
+                'message' => __('بيانات تسجيل الدخول غير صحيحة')
             ], 401);
         }
 
         if (!$user->is_active) {
             return response()->json([
                 'success' => false,
-                'message' => 'الحساب غير مفعل'
+                'message' => __('الحساب غير مفعل')
             ], 403);
         }
 
@@ -56,7 +56,7 @@ class ApiAuthController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم تسجيل الدخول بنجاح',
+            'message' => __('تم تسجيل الدخول بنجاح'),
             'data' => [
                 'user' => $user,
                 'token' => $token,
@@ -77,7 +77,7 @@ class ApiAuthController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'بيانات غير صحيحة',
+                'message' => __('بيانات غير صحيحة'),
                 'errors' => $validator->errors(),
             ], 422);
         }
@@ -118,7 +118,7 @@ class ApiAuthController extends Controller
         if ($sms->isConfigured() && !$smsSent) {
             return response()->json([
                 'success' => false,
-                'message' => 'تعذر إرسال رمز التحقق، حاول لاحقاً',
+                'message' => __('تعذر إرسال رمز التحقق، حاول لاحقاً'),
                 'data' => [
                     'phone_number' => $phone,
                 ],
@@ -128,7 +128,7 @@ class ApiAuthController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم إرسال رمز التحقق بنجاح',
+            'message' => __('تم إرسال رمز التحقق بنجاح'),
             'data' => [
                 'phone_number' => $phone,
                 // في بيئة التطوير يمكن إظهار الكود للاختبار، وفي الإنتاج لا يُعاد
@@ -151,7 +151,7 @@ class ApiAuthController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'بيانات غير صحيحة',
+                'message' => __('بيانات غير صحيحة'),
                 'errors' => $validator->errors(),
             ], 422);
         }
@@ -162,7 +162,7 @@ class ApiAuthController extends Controller
         if (!$user) {
             return response()->json([
                 'success' => false,
-                'message' => 'رقم الجوال غير معروف، الرجاء طلب الكود أولاً',
+                'message' => __('رقم الجوال غير معروف، الرجاء طلب الكود أولاً'),
             ], 404);
         }
 
@@ -170,7 +170,7 @@ class ApiAuthController extends Controller
         if (!$user->otp_code || !$user->otp_expires_at) {
             return response()->json([
                 'success' => false,
-                'message' => 'لا يوجد رمز تحقق فعال، الرجاء طلب كود جديد',
+                'message' => __('لا يوجد رمز تحقق فعال، الرجاء طلب كود جديد'),
             ], 400);
         }
 
@@ -182,7 +182,7 @@ class ApiAuthController extends Controller
         if ($user->otp_code !== $request->otp && !((app()->environment('local') && $masterOtp !== '') && $request->otp === $masterOtp)) {
             return response()->json([
                 'success' => false,
-                'message' => 'رمز التحقق غير صحيح',
+                'message' => __('رمز التحقق غير صحيح'),
             ], 400);
         }
 
@@ -194,7 +194,7 @@ class ApiAuthController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => 'انتهت صلاحية رمز التحقق، الرجاء طلب كود جديد',
+                'message' => __('انتهت صلاحية رمز التحقق، الرجاء طلب كود جديد'),
             ], 400);
         }
 
@@ -212,7 +212,7 @@ class ApiAuthController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم تسجيل الدخول برقم الجوال بنجاح',
+            'message' => __('تم تسجيل الدخول برقم الجوال بنجاح'),
             'data' => [
                 'user' => $user,
                 'token' => $token,
@@ -238,7 +238,7 @@ class ApiAuthController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'بيانات غير صحيحة',
+                'message' => __('بيانات غير صحيحة'),
                 'errors' => $validator->errors()
             ], 422);
         }
@@ -261,7 +261,7 @@ class ApiAuthController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم إنشاء الحساب بنجاح',
+            'message' => __('تم إنشاء الحساب بنجاح'),
             'data' => [
                 'user' => $user,
                 'token' => $token,
@@ -279,7 +279,7 @@ class ApiAuthController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم تسجيل الخروج بنجاح'
+            'message' => __('تم تسجيل الخروج بنجاح')
         ]);
     }
 
@@ -292,7 +292,7 @@ class ApiAuthController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم تسجيل الخروج من جميع الأجهزة بنجاح'
+            'message' => __('تم تسجيل الخروج من جميع الأجهزة بنجاح')
         ]);
     }
 
@@ -309,7 +309,7 @@ class ApiAuthController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'بيانات غير صحيحة',
+                'message' => __('بيانات غير صحيحة'),
                 'errors' => $validator->errors()
             ], 422);
         }
@@ -319,7 +319,7 @@ class ApiAuthController extends Controller
         if (!Hash::check($request->current_password, $user->password)) {
             return response()->json([
                 'success' => false,
-                'message' => 'كلمة المرور الحالية غير صحيحة'
+                'message' => __('كلمة المرور الحالية غير صحيحة')
             ], 400);
         }
 
@@ -329,7 +329,7 @@ class ApiAuthController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم تحديث كلمة المرور بنجاح'
+            'message' => __('تم تحديث كلمة المرور بنجاح')
         ]);
     }
 
@@ -339,7 +339,7 @@ class ApiAuthController extends Controller
     public function profile(Request $request)
     {
         $user = $request->user();
-        $user->load(['roles', 'facilities', 'bank']);
+        $user->load(['roles', 'facilities']);
 
         return response()->json([
             'success' => true,
@@ -378,17 +378,17 @@ class ApiAuthController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'بيانات غير صحيحة',
+                'message' => __('بيانات غير صحيحة'),
                 'errors' => $validator->errors()
             ], 422);
         }
 
         $user->update($request->all());
-        $user->load(['roles', 'facilities', 'bank']);
+        $user->load(['roles', 'facilities']);
 
         return response()->json([
             'success' => true,
-            'message' => 'تم تحديث الملف الشخصي بنجاح',
+            'message' => __('تم تحديث الملف الشخصي بنجاح'),
             'data' => $user
         ]);
     }
@@ -405,7 +405,7 @@ class ApiAuthController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'بيانات غير صحيحة',
+                'message' => __('بيانات غير صحيحة'),
                 'errors' => $validator->errors()
             ], 422);
         }
@@ -423,7 +423,7 @@ class ApiAuthController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم تحديث الصورة الشخصية بنجاح',
+            'message' => __('تم تحديث الصورة الشخصية بنجاح'),
             'data' => [
                 'avatar_url' => \Storage::disk('public')->url($avatarPath)
             ]
@@ -442,7 +442,7 @@ class ApiAuthController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'بيانات غير صحيحة',
+                'message' => __('بيانات غير صحيحة'),
                 'errors' => $validator->errors()
             ], 422);
         }
@@ -452,7 +452,7 @@ class ApiAuthController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم إرسال رمز إعادة تعيين كلمة المرور'
+            'message' => __('تم إرسال رمز إعادة تعيين كلمة المرور')
         ]);
     }
 
@@ -470,7 +470,7 @@ class ApiAuthController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => 'بيانات غير صحيحة',
+                'message' => __('بيانات غير صحيحة'),
                 'errors' => $validator->errors()
             ], 422);
         }
@@ -480,7 +480,7 @@ class ApiAuthController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تم إعادة تعيين كلمة المرور بنجاح'
+            'message' => __('تم إعادة تعيين كلمة المرور بنجاح')
         ]);
     }
 }

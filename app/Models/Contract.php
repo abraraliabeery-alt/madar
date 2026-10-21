@@ -13,9 +13,13 @@ class Contract extends Model
         'product_id',
         'offer_id',
         'user_id',
+        'tenant_id',
         'owner_id',
+        'property_owner_id',
+        'lead_id',
         'contract_type', // 'sale', 'rent'
         'contract_number',
+        'ejar_contract_number', // رقم توثيق العقد في شبكة إيجار
         'start_date',
         'end_date',
         'total_amount',
@@ -47,9 +51,9 @@ class Contract extends Model
         'next_payment_date' => 'date',
         'total_amount' => 'decimal:2',
         'deposit_amount' => 'decimal:2',
-        'commission_rate' => 'decimal:5,4',
+        'commission_rate' => 'decimal:4',
         'commission_amount' => 'decimal:2',
-        'late_fee_rate' => 'decimal:5,4',
+        'late_fee_rate' => 'decimal:4',
         'late_fee_amount' => 'decimal:2',
         'early_payment_discount' => 'decimal:2',
         'is_active' => 'boolean',
@@ -76,9 +80,29 @@ class Contract extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function client()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
     public function owner()
     {
         return $this->belongsTo(User::class, 'owner_id');
+    }
+
+    public function propertyOwner()
+    {
+        return $this->belongsTo(Owner::class, 'property_owner_id');
+    }
+
+    public function tenant()
+    {
+        return $this->belongsTo(Tenant::class);
+    }
+
+    public function lead()
+    {
+        return $this->belongsTo(Lead::class);
     }
 
     public function facility()
@@ -94,11 +118,6 @@ class Contract extends Model
     public function translations()
     {
         return $this->hasMany(ContractTranslation::class);
-    }
-
-    public function buildings()
-    {
-        return $this->hasMany(Building::class);
     }
 
     public function invoices()
@@ -128,9 +147,9 @@ class Contract extends Model
     }
 
     // Accessor to get the current status
-    public function getStatusAttribute()
+    public function getStatusAttribute($value)
     {
-        return $this->statuses()->latest()->first();
+        return $this->statuses()->latest()->first() ?? $value;
     }
 
     // Scopes
@@ -211,6 +230,18 @@ class Contract extends Model
     public function getRemainingAmount()
     {
         return $this->total_amount - $this->getTotalPaidAmount();
+    }
+
+    public function getPaidAmountAttribute(): float
+    {
+        return (float) ($this->relationLoaded('payments')
+            ? $this->payments->where('status', 'confirmed')->sum('amount')
+            : $this->getTotalPaidAmount());
+    }
+
+    public function getRemainingAmountAttribute(): float
+    {
+        return (float) $this->total_amount - $this->paid_amount;
     }
 
     public function isFullyPaid()

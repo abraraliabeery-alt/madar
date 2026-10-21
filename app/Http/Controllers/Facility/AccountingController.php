@@ -32,7 +32,7 @@ class AccountingController extends Controller
         
         if (!$facility) {
             return redirect()->route('facility.create')
-                ->with('error', 'يجب إنشاء منشأة أولاً');
+                ->with('error', __('يجب إنشاء منشأة أولاً'));
         }
         
         // إحصائيات سريعة
@@ -81,7 +81,7 @@ class AccountingController extends Controller
         
         if (!$facility) {
             return redirect()->route('facility.create')
-                ->with('error', 'يجب إنشاء منشأة أولاً');
+                ->with('error', __('يجب إنشاء منشأة أولاً'));
         }
         
         $accounts = ChartOfAccount::where('facility_id', $facility->id)
@@ -120,7 +120,7 @@ class AccountingController extends Controller
         
         if (!$facility) {
             return redirect()->route('facility.create')
-                ->with('error', 'يجب إنشاء منشأة أولاً');
+                ->with('error', __('يجب إنشاء منشأة أولاً'));
         }
 
         try {
@@ -146,10 +146,10 @@ class AccountingController extends Controller
             }
 
             return redirect()->route('facility.accounting.entries.index')
-                ->with('success', 'تم إنشاء القيد المحاسبي بنجاح');
+                ->with('success', __('تم إنشاء القيد المحاسبي بنجاح'));
 
         } catch (\Exception $e) {
-            return back()->with('error', 'حدث خطأ أثناء إنشاء القيد: ' . $e->getMessage());
+            return back()->with('error', __('حدث خطأ أثناء إنشاء القيد: ') . $e->getMessage());
         }
     }
 
@@ -162,7 +162,7 @@ class AccountingController extends Controller
         
         if (!$facility) {
             return redirect()->route('facility.create')
-                ->with('error', 'يجب إنشاء منشأة أولاً');
+                ->with('error', __('يجب إنشاء منشأة أولاً'));
         }
         
         $query = AccountingEntry::where('facility_id', $facility->id)
@@ -230,15 +230,15 @@ class AccountingController extends Controller
         ]);
 
         if (!$entry->canBeReversed()) {
-            return back()->with('error', 'لا يمكن إلغاء هذا القيد');
+            return back()->with('error', __('لا يمكن إلغاء هذا القيد'));
         }
 
         try {
             $entry->reverse(Auth::id(), $request->reason);
             
-            return back()->with('success', 'تم إلغاء القيد المحاسبي بنجاح');
+            return back()->with('success', __('تم إلغاء القيد المحاسبي بنجاح'));
         } catch (\Exception $e) {
-            return back()->with('error', 'حدث خطأ أثناء إلغاء القيد: ' . $e->getMessage());
+            return back()->with('error', __('حدث خطأ أثناء إلغاء القيد: ') . $e->getMessage());
         }
     }
 
@@ -310,7 +310,7 @@ class AccountingController extends Controller
         
         if (!$facility) {
             return redirect()->route('facility.create')
-                ->with('error', 'يجب إنشاء منشأة أولاً');
+                ->with('error', __('يجب إنشاء منشأة أولاً'));
         }
         
         $query = AccountingEntry::where('facility_id', $facility->id)
@@ -388,7 +388,7 @@ class AccountingController extends Controller
         
         if (!$facility) {
             return redirect()->route('facility.create')
-                ->with('error', 'يجب إنشاء منشأة أولاً');
+                ->with('error', __('يجب إنشاء منشأة أولاً'));
         }
         
         // التحقق من وجود دليل الحسابات
@@ -416,7 +416,7 @@ class AccountingController extends Controller
         
         if (!$facility) {
             return redirect()->route('facility.create')
-                ->with('error', 'يجب إنشاء منشأة أولاً');
+                ->with('error', __('يجب إنشاء منشأة أولاً'));
         }
         
         try {
@@ -440,10 +440,10 @@ class AccountingController extends Controller
             }
 
             return redirect()->route('facility.accounting.dashboard')
-                ->with('success', 'تم إنشاء الإعدادات الافتراضية بنجاح');
+                ->with('success', __('تم إنشاء الإعدادات الافتراضية بنجاح'));
 
         } catch (\Exception $e) {
-            return back()->with('error', 'حدث خطأ أثناء إنشاء الإعدادات: ' . $e->getMessage());
+            return back()->with('error', __('حدث خطأ أثناء إنشاء الإعدادات: ') . $e->getMessage());
         }
     }
 }

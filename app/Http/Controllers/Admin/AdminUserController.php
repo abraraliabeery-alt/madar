@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Facility;
-use App\Models\Bank;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
@@ -19,7 +18,7 @@ class AdminUserController extends Controller
      */
     public function index(Request $request)
     {
-        $query = User::with(['roles', 'facilities', 'bank']);
+        $query = User::with(['roles', 'facilities']);
 
         // فلترة حسب الدور
         if ($request->has('role_id') && $request->role_id) {
@@ -58,9 +57,8 @@ class AdminUserController extends Controller
     {
         $roles = Role::all();
         $facilities = Facility::all();
-        $banks = Bank::all();
 
-        return view('admin.users.create', compact('roles', 'facilities', 'banks'));
+        return view('admin.users.create', compact('roles', 'facilities'));
     }
 
     /**
@@ -75,7 +73,6 @@ class AdminUserController extends Controller
             'password' => 'required|string|min:8|confirmed',
             'role_id' => 'required|exists:roles,id',
             'facility_id' => 'nullable|exists:facilities,id',
-            'bank_id' => 'nullable|exists:banks,id',
             'bank_account' => 'nullable|string',
             'is_multilanguage_enabled' => 'boolean',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -92,17 +89,7 @@ class AdminUserController extends Controller
             'youtube' => 'nullable|url',
             'whatsapp_number' => 'nullable|string',
             'telegram' => 'nullable|string',
-            'customer_banks' => 'sometimes|array',
-            'customer_banks.*' => 'exists:banks,id',
         ]);
-
-        // Enforce bank selection if role is bank_employee
-        $role = Role::findOrFail($request->role_id);
-        if ($role && $role->name === 'bank_employee') {
-            $request->validate([
-                'bank_id' => 'required|exists:banks,id',
-            ]);
-        }
 
         $userData = $request->except(['password', 'password_confirmation', 'avatar']);
         $userData['password'] = Hash::make($request->password);
@@ -118,24 +105,13 @@ class AdminUserController extends Controller
         // ربط المستخدم بالدور
         $user->roles()->attach($request->role_id);
 
-        // If role is not bank_employee, ensure bank_id is null
-        if ($role->name !== 'bank_employee' && $user->bank_id) {
-            $user->bank_id = null;
-            $user->save();
-        }
-
         // ربط المستخدم بالمنشأة إذا تم تحديدها
         if ($request->facility_id) {
             $user->facilities()->attach($request->facility_id);
         }
 
-        // ربط المستخدم كبنك عميل (متعدد)
-        if ($request->has('customer_banks')) {
-            $user->customerBanks()->sync($request->customer_banks);
-        }
-
         return redirect()->route('admin.users.index')
-            ->with('success', 'تم إنشاء المستخدم بنجاح');
+            ->with('success', __('تم إنشاء المستخدم بنجاح'));
     }
 
     /**
@@ -143,12 +119,11 @@ class AdminUserController extends Controller
      */
     public function edit(User $user)
     {
-        $user->load(['roles', 'facilities', 'bank', 'customerBanks']);
+        $user->load(['roles', 'facilities']);
         $roles = Role::all();
         $facilities = Facility::all();
-        $banks = Bank::all();
 
-        return view('admin.users.edit', compact('user', 'roles', 'facilities', 'banks'));
+        return view('admin.users.edit', compact('user', 'roles', 'facilities'));
     }
 
     /**
@@ -163,7 +138,6 @@ class AdminUserController extends Controller
             'password' => 'nullable|string|min:8|confirmed',
             'role_id' => 'required|exists:roles,id',
             'facility_id' => 'nullable|exists:facilities,id',
-            'bank_id' => 'nullable|exists:banks,id',
             'bank_account' => 'nullable|string',
             'is_multilanguage_enabled' => 'boolean',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -181,14 +155,6 @@ class AdminUserController extends Controller
             'whatsapp_number' => 'nullable|string',
             'telegram' => 'nullable|string',
         ]);
-
-        // Enforce bank selection if role is bank_employee
-        $role = Role::findOrFail($request->role_id);
-        if ($role && $role->name === 'bank_employee') {
-            $request->validate([
-                'bank_id' => 'required|exists:banks,id',
-            ]);
-        }
 
         $userData = $request->except(['password', 'password_confirmation', 'avatar']);
 
@@ -212,14 +178,6 @@ class AdminUserController extends Controller
         // تحديث الدور
         $user->roles()->sync([$request->role_id]);
 
-        // If role is not bank_employee, nullify bank_id
-        if ($role->name !== 'bank_employee') {
-            if ($user->bank_id) {
-                $user->bank_id = null;
-                $user->save();
-            }
-        }
-
         // تحديث المنشأة
         if ($request->facility_id) {
             $user->facilities()->sync([$request->facility_id]);
@@ -227,15 +185,8 @@ class AdminUserController extends Controller
             $user->facilities()->detach();
         }
 
-        // تحديث بنوك العميل
-        if ($request->has('customer_banks')) {
-            $user->customerBanks()->sync($request->customer_banks);
-        } else {
-            $user->customerBanks()->sync([]);
-        }
-
         return redirect()->route('admin.users.index')
-            ->with('success', 'تم تحديث بيانات المستخدم بنجاح');
+            ->with('success', __('تم تحديث بيانات المستخدم بنجاح'));
     }
 
     /**
@@ -251,7 +202,7 @@ class AdminUserController extends Controller
         $user->delete();
 
         return redirect()->route('admin.users.index')
-            ->with('success', 'تم حذف المستخدم بنجاح');
+            ->with('success', __('تم حذف المستخدم بنجاح'));
     }
 
     /**
@@ -270,7 +221,7 @@ class AdminUserController extends Controller
      */
     public function show(User $user)
     {
-        $user->load(['roles', 'facilities', 'bank', 'bookings', 'products']);
+        $user->load(['roles', 'facilities', 'bookings', 'products']);
 
         return view('admin.users.show', compact('user'));
     }

@@ -513,7 +513,7 @@ class ProductController extends Controller
 
         if (!$user) {
             return redirect()->back()
-                ->with('error', 'يجب تسجيل الدخول لإضافة تعليق');
+                ->with('error', __('يجب تسجيل الدخول لإضافة تعليق'));
         }
 
         // التحقق من أن المستخدم لم يعلق على هذا المنتج من قبل
@@ -521,7 +521,7 @@ class ProductController extends Controller
 
         if ($existingComment) {
             return redirect()->back()
-                ->with('error', 'لقد علقت على هذا المنتج من قبل');
+                ->with('error', __('لقد علقت على هذا المنتج من قبل'));
         }
 
         $product->comments()->create([
@@ -531,7 +531,7 @@ class ProductController extends Controller
         ]);
 
         return redirect()->back()
-            ->with('success', 'تم إضافة تعليقك بنجاح');
+            ->with('success', __('تم إضافة تعليقك بنجاح'));
     }
 
     /**
@@ -543,17 +543,17 @@ class ProductController extends Controller
 
         if (!$user) {
             return redirect()->back()
-                ->with('error', 'يجب تسجيل الدخول لإضافة المنتج للمفضلة');
+                ->with('error', __('يجب تسجيل الدخول لإضافة المنتج للمفضلة'));
         }
 
         if (!$user->favoriteProducts()->where('products.id', $product->id)->exists()) {
             $user->favoriteProducts()->attach($product->id);
             return redirect()->back()
-                ->with('success', 'تم إضافة المنتج للمفضلة بنجاح');
+                ->with('success', __('تم إضافة المنتج للمفضلة بنجاح'));
         }
 
         return redirect()->back()
-            ->with('error', 'المنتج موجود بالفعل في المفضلة');
+            ->with('error', __('المنتج موجود بالفعل في المفضلة'));
     }
 
     /**
@@ -565,12 +565,12 @@ class ProductController extends Controller
 
         if (!$user) {
             return redirect()->back()
-                ->with('error', 'يجب تسجيل الدخول');
+                ->with('error', __('يجب تسجيل الدخول'));
         }
 
         $user->favoriteProducts()->detach($product->id);
 
         return redirect()->back()
-            ->with('success', 'تم إزالة المنتج من المفضلة بنجاح');
+            ->with('success', __('تم إزالة المنتج من المفضلة بنجاح'));
     }
 }
