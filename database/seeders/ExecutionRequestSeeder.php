@@ -97,7 +97,6 @@ class ExecutionRequestSeeder extends Seeder
 
             $req = ExecutionRequest::create([
                 'facility_id' => $facility->id,
-                'project_id' => null,
                 'product_id' => null,
                 'type' => $tpl['type'],
                 'status' => $tpl['status'],

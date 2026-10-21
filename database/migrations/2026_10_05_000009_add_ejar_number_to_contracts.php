@@ -8,15 +8,15 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('attributes', function (Blueprint $table) {
-            $table->boolean('for_projects')->default(false)->after('show_in_card');
+        Schema::table('contracts', function (Blueprint $table) {
+            $table->string('ejar_contract_number')->nullable()->after('contract_number');
         });
     }
 
     public function down(): void
     {
-        Schema::table('attributes', function (Blueprint $table) {
-            $table->dropColumn('for_projects');
+        Schema::table('contracts', function (Blueprint $table) {
+            $table->dropColumn('ejar_contract_number');
         });
     }
 };

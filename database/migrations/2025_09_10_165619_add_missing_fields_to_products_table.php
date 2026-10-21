@@ -18,8 +18,7 @@ return new class extends Migration
             }
             $table->unsignedBigInteger('status_id')->nullable()->after('city_id');
             $table->unsignedBigInteger('building_id')->nullable()->after('status_id');
-            $table->unsignedBigInteger('project_id')->nullable()->after('building_id');
-            $table->unsignedBigInteger('package_id')->nullable()->after('project_id');
+            $table->unsignedBigInteger('package_id')->nullable()->after('building_id');
             
             
             // Rename image to main_image for consistency with controller
@@ -28,7 +27,6 @@ return new class extends Migration
             // Add foreign key constraints
             $table->foreign('status_id')->references('id')->on('statuses')->onDelete('set null');
             $table->foreign('building_id')->references('id')->on('buildings')->onDelete('set null');
-            $table->foreign('project_id')->references('id')->on('projects')->onDelete('set null');
             $table->foreign('package_id')->references('id')->on('packages')->onDelete('set null');
         });
     }
@@ -43,7 +41,6 @@ return new class extends Migration
             $table->dropForeign(['city_id']);
             $table->dropForeign(['status_id']);
             $table->dropForeign(['building_id']);
-            $table->dropForeign(['project_id']);
             $table->dropForeign(['package_id']);
             
             // Drop added columns
@@ -51,7 +48,6 @@ return new class extends Migration
                 'city_id',
                 'status_id', 
                 'building_id',
-                'project_id',
                 'package_id'
             ]);
             

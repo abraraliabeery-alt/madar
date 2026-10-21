@@ -11,7 +11,6 @@ return new class extends Migration
         Schema::create('execution_requests', function (Blueprint $table) {
             $table->id();
             $table->foreignId('facility_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('project_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('product_id')->nullable()->constrained()->nullOnDelete();
             $table->string('type')->nullable();
             $table->string('status')->default('draft'); // draft, open, in_review, awarded, closed, cancelled

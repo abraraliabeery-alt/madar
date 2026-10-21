@@ -24,7 +24,6 @@ return new class extends Migration
             $table->string('bank_account')->nullable();
             $table->unsignedBigInteger('role_id')->nullable();
             $table->unsignedBigInteger('facility_id')->nullable();
-            $table->unsignedBigInteger('bank_id')->nullable();
             $table->decimal('latitude', 10, 7)->nullable();
             $table->decimal('longitude', 10, 7)->nullable();
             $table->string('google_maps_url')->nullable();

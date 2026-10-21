@@ -86,21 +86,21 @@ class PermissionSeeder extends Seeder
                 'name' => 'products.create',
                 'translations' => [
                     'ar' => ['name' => 'products.create', 'display_name' => 'إنشاء مشروع/طلب تنفيذ'],
-                    'en' => ['name' => 'products.create', 'display_name' => 'Create Project/Request'],
+                    'en' => ['name' => 'products.create', 'display_name' => 'Create Product/Request'],
                 ]
             ],
             [
                 'name' => 'products.edit',
                 'translations' => [
                     'ar' => ['name' => 'products.edit', 'display_name' => 'تعديل مشروع/طلب تنفيذ'],
-                    'en' => ['name' => 'products.edit', 'display_name' => 'Edit Project/Request'],
+                    'en' => ['name' => 'products.edit', 'display_name' => 'Edit Product/Request'],
                 ]
             ],
             [
                 'name' => 'products.delete',
                 'translations' => [
                     'ar' => ['name' => 'products.delete', 'display_name' => 'حذف مشروع/طلب تنفيذ'],
-                    'en' => ['name' => 'products.delete', 'display_name' => 'Delete Project/Request'],
+                    'en' => ['name' => 'products.delete', 'display_name' => 'Delete Product/Request'],
                 ]
             ],
 
