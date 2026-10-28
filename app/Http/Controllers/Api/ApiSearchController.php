@@ -26,8 +26,11 @@ class ApiSearchController extends Controller
         $products = Product::where('is_active', true)
             ->where('is_verified', true)
             ->where(function($q) use ($query) {
-                $q->where('title', 'like', "%{$query}%")
-                  ->orWhere('description', 'like', "%{$query}%");
+                $q->where('address', 'like', "%{$query}%")
+                  ->orWhereHas('translations', function($tq) use ($query) {
+                      $tq->where('title', 'like', "%{$query}%")
+                         ->orWhere('description', 'like', "%{$query}%");
+                  });
             })
             ->with(['facility', 'category'])
             ->take(10)
@@ -62,8 +65,11 @@ class ApiSearchController extends Controller
 
         if ($request->has('q')) {
             $query->where(function($q) use ($request) {
-                $q->where('title', 'like', "%{$request->q}%")
-                  ->orWhere('description', 'like', "%{$request->q}%");
+                $q->where('address', 'like', "%{$request->q}%")
+                  ->orWhereHas('translations', function($tq) use ($request) {
+                      $tq->where('title', 'like', "%{$request->q}%")
+                         ->orWhere('description', 'like', "%{$request->q}%");
+                  });
             });
         }
 

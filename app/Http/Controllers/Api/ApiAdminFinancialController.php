@@ -150,7 +150,7 @@ class ApiAdminFinancialController extends Controller
             }
 
             if ($request->has('search')) {
-                $query->whereHas('product', function($q) use ($request) {
+                $query->whereHas('product.translations', function($q) use ($request) {
                     $q->where('title', 'like', '%' . $request->search . '%');
                 });
             }

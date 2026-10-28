@@ -150,7 +150,7 @@ class AdminFinancialController extends Controller
             }
 
             if ($request->has('search') && $request->search) {
-                $query->whereHas('product', function($q) use ($request) {
+                $query->whereHas('product.translations', function($q) use ($request) {
                     $q->where('title', 'like', '%' . $request->search . '%');
                 });
             }

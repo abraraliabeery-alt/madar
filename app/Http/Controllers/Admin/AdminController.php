@@ -520,9 +520,11 @@ class AdminController extends Controller
         $results = $results->merge($facilities);
 
         // البحث في المنتجات
-        $products = Product::where('title', 'like', "%{$query}%")
-                          ->orWhere('description', 'like', "%{$query}%")
-                          ->orWhere('address', 'like', "%{$query}%")
+        $products = Product::where('address', 'like', "%{$query}%")
+                          ->orWhereHas('translations', function($tq) use ($query) {
+                              $tq->where('title', 'like', "%{$query}%")
+                                 ->orWhere('description', 'like', "%{$query}%");
+                          })
                           ->take(3)
                           ->get()
                           ->map(function ($product) {
@@ -574,7 +576,10 @@ class AdminController extends Controller
         $results = $results->merge($categories);
 
         // البحث في المميزات
-        $features = Feature::where('name', 'like', "%{$query}%")
+        $features = Feature::where('description', 'like', "%{$query}%")
+                          ->orWhereHas('translations', function($q) use ($query) {
+                              $q->where('name', 'like', "%{$query}%");
+                          })
                           ->take(2)
                           ->get()
                           ->map(function ($feature) {
@@ -632,9 +637,11 @@ class AdminController extends Controller
             'facilities' => Facility::where('name', 'like', "%{$query}%")
                                   ->orWhere('description', 'like', "%{$query}%")
                                   ->paginate(10),
-            'products' => Product::where('title', 'like', "%{$query}%")
-                                ->orWhere('description', 'like', "%{$query}%")
-                                ->orWhere('address', 'like', "%{$query}%")
+            'products' => Product::where('address', 'like', "%{$query}%")
+                                ->orWhereHas('translations', function($tq) use ($query) {
+                                    $tq->where('title', 'like', "%{$query}%")
+                                       ->orWhere('description', 'like', "%{$query}%");
+                                })
                                 ->paginate(10),
             'bookings' => Booking::where('id', 'like', "%{$query}%")
                                 ->orWhere('status', 'like', "%{$query}%")

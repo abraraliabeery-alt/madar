@@ -153,8 +153,10 @@ class ClientFinancialController extends Controller
 
             if ($request->has('search') && $request->search) {
                 $query->whereHas('product', function($q) use ($request) {
-                    $q->where('title', 'like', '%' . $request->search . '%')
-                      ->orWhere('address', 'like', '%' . $request->search . '%');
+                    $q->where('address', 'like', '%' . $request->search . '%')
+                      ->orWhereHas('translations', function($t) use ($request) {
+                          $t->where('title', 'like', '%' . $request->search . '%');
+                      });
                 });
             }
 
